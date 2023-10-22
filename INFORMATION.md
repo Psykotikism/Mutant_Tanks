@@ -3232,8 +3232,10 @@
 				// --
 				// Character limit: 32
 				// --
-				// Empty: "Smoker"/"Boomer"/"Hunter"/"Spitter"/"Jockey"/"Charger"
+				// Empty: "Special Infected"/"Smoker"/"Boomer"/"Hunter"/"Spitter"/"Jockey"/"Charger"
 				// Not Empty: Special Infected's custom name
+				// --
+				// Alternatives: "Smoker Name"/"Boomer Name"/"Hunter Name"/"Spitter Name"/"Jockey Name"/"Charger Name"
 				"Special Name"				"Special #1"
 
 				// Enable Mutant Special Infected types.
@@ -3280,6 +3282,8 @@
 				// -1/"ignore"/"exclude"/"filter"/"remove": Let the setting with the same name from each player-controlled Mutant Special Infected's "General" section decide.
 				// 0/"disabled"/"false"/"off"/"no": OFF
 				// 1/"enabled"/"true"/"on"/"yes": ON
+				// --
+				// Alternatives: "Smoker Note"/"Boomer Note"/"Hunter Note"/"Spitter Note"/"Jockey Note"/"Charger Note"
 				"Special Note"				"0"
 
 				// The model used by the Mutant Special Infected.

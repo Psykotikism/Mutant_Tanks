@@ -93,6 +93,7 @@ enum struct esBuryPlayer
 	int g_iHumanCooldown;
 	int g_iHumanRangeCooldown;
 	int g_iImmunityFlags;
+	int g_iInfectedType;
 	int g_iOwner;
 	int g_iRangeCooldown;
 	int g_iRequiresHumans;
@@ -128,7 +129,7 @@ enum struct esBuryTeammate
 	int g_iRequiresHumans;
 }
 
-esBuryTeammate g_esBuryTeammate[MAXPLAYERS + 1];
+esBuryTeammate g_esBuryTeammate[MAXPLAYERS + 1][6];
 
 enum struct esBuryAbility
 {
@@ -188,7 +189,7 @@ enum struct esBurySpecial
 	int g_iRequiresHumans;
 }
 
-esBurySpecial g_esBurySpecial[MT_MAXTYPES + 1];
+esBurySpecial g_esBurySpecial[MT_MAXTYPES + 1][6];
 
 enum struct esBuryCache
 {
@@ -683,28 +684,31 @@ public void MT_OnConfigsLoad(int mode)
 				g_esBuryAbility[iIndex].g_iBuryRangeCooldown = 0;
 				g_esBuryAbility[iIndex].g_iBurySight = 0;
 
-				g_esBurySpecial[iIndex].g_flCloseAreasOnly = -1.0;
-				g_esBurySpecial[iIndex].g_iComboAbility = -1;
-				g_esBurySpecial[iIndex].g_iHumanAbility = -1;
-				g_esBurySpecial[iIndex].g_iHumanAmmo = -1;
-				g_esBurySpecial[iIndex].g_iHumanCooldown = -1;
-				g_esBurySpecial[iIndex].g_iHumanRangeCooldown = -1;
-				g_esBurySpecial[iIndex].g_flOpenAreasOnly = -1.0;
-				g_esBurySpecial[iIndex].g_iRequiresHumans = -1;
-				g_esBurySpecial[iIndex].g_iBuryAbility = -1;
-				g_esBurySpecial[iIndex].g_iBuryEffect = -1;
-				g_esBurySpecial[iIndex].g_iBuryMessage = -1;
-				g_esBurySpecial[iIndex].g_flBuryBuffer = -1.0;
-				g_esBurySpecial[iIndex].g_flBuryChance = -1.0;
-				g_esBurySpecial[iIndex].g_iBuryCooldown = -1;
-				g_esBurySpecial[iIndex].g_flBuryDuration = -1.0;
-				g_esBurySpecial[iIndex].g_flBuryHeight = -1.0;
-				g_esBurySpecial[iIndex].g_iBuryHit = -1;
-				g_esBurySpecial[iIndex].g_iBuryHitMode = -1;
-				g_esBurySpecial[iIndex].g_flBuryRange = -1.0;
-				g_esBurySpecial[iIndex].g_flBuryRangeChance = -1.0;
-				g_esBurySpecial[iIndex].g_iBuryRangeCooldown = -1;
-				g_esBurySpecial[iIndex].g_iBurySight = -1;
+				for (int iSpecType = 0; iSpecType < 6; iSpecType++)
+				{
+					g_esBurySpecial[iIndex][iSpecType].g_flCloseAreasOnly = -1.0;
+					g_esBurySpecial[iIndex][iSpecType].g_iComboAbility = -1;
+					g_esBurySpecial[iIndex][iSpecType].g_iHumanAbility = -1;
+					g_esBurySpecial[iIndex][iSpecType].g_iHumanAmmo = -1;
+					g_esBurySpecial[iIndex][iSpecType].g_iHumanCooldown = -1;
+					g_esBurySpecial[iIndex][iSpecType].g_iHumanRangeCooldown = -1;
+					g_esBurySpecial[iIndex][iSpecType].g_flOpenAreasOnly = -1.0;
+					g_esBurySpecial[iIndex][iSpecType].g_iRequiresHumans = -1;
+					g_esBurySpecial[iIndex][iSpecType].g_iBuryAbility = -1;
+					g_esBurySpecial[iIndex][iSpecType].g_iBuryEffect = -1;
+					g_esBurySpecial[iIndex][iSpecType].g_iBuryMessage = -1;
+					g_esBurySpecial[iIndex][iSpecType].g_flBuryBuffer = -1.0;
+					g_esBurySpecial[iIndex][iSpecType].g_flBuryChance = -1.0;
+					g_esBurySpecial[iIndex][iSpecType].g_iBuryCooldown = -1;
+					g_esBurySpecial[iIndex][iSpecType].g_flBuryDuration = -1.0;
+					g_esBurySpecial[iIndex][iSpecType].g_flBuryHeight = -1.0;
+					g_esBurySpecial[iIndex][iSpecType].g_iBuryHit = -1;
+					g_esBurySpecial[iIndex][iSpecType].g_iBuryHitMode = -1;
+					g_esBurySpecial[iIndex][iSpecType].g_flBuryRange = -1.0;
+					g_esBurySpecial[iIndex][iSpecType].g_flBuryRangeChance = -1.0;
+					g_esBurySpecial[iIndex][iSpecType].g_iBuryRangeCooldown = -1;
+					g_esBurySpecial[iIndex][iSpecType].g_iBurySight = -1;
+				}
 			}
 		}
 		case 3:
@@ -736,65 +740,68 @@ public void MT_OnConfigsLoad(int mode)
 				g_esBuryPlayer[iPlayer].g_iBuryRangeCooldown = -1;
 				g_esBuryPlayer[iPlayer].g_iBurySight = -1;
 
-				g_esBuryTeammate[iPlayer].g_flCloseAreasOnly = -1.0;
-				g_esBuryTeammate[iPlayer].g_iComboAbility = -1;
-				g_esBuryTeammate[iPlayer].g_iHumanAbility = -1;
-				g_esBuryTeammate[iPlayer].g_iHumanAmmo = -1;
-				g_esBuryTeammate[iPlayer].g_iHumanCooldown = -1;
-				g_esBuryTeammate[iPlayer].g_iHumanRangeCooldown = -1;
-				g_esBuryTeammate[iPlayer].g_flOpenAreasOnly = -1.0;
-				g_esBuryTeammate[iPlayer].g_iRequiresHumans = -1;
-				g_esBuryTeammate[iPlayer].g_iBuryAbility = -1;
-				g_esBuryTeammate[iPlayer].g_iBuryEffect = -1;
-				g_esBuryTeammate[iPlayer].g_iBuryMessage = -1;
-				g_esBuryTeammate[iPlayer].g_flBuryBuffer = -1.0;
-				g_esBuryTeammate[iPlayer].g_flBuryChance = -1.0;
-				g_esBuryTeammate[iPlayer].g_iBuryCooldown = -1;
-				g_esBuryTeammate[iPlayer].g_flBuryDuration = -1.0;
-				g_esBuryTeammate[iPlayer].g_flBuryHeight = -1.0;
-				g_esBuryTeammate[iPlayer].g_iBuryHit = -1;
-				g_esBuryTeammate[iPlayer].g_iBuryHitMode = -1;
-				g_esBuryTeammate[iPlayer].g_flBuryRange = -1.0;
-				g_esBuryTeammate[iPlayer].g_flBuryRangeChance = -1.0;
-				g_esBuryTeammate[iPlayer].g_iBuryRangeCooldown = -1;
-				g_esBuryTeammate[iPlayer].g_iBurySight = -1;
+				for (int iSpecType = 0; iSpecType < 6; iSpecType++)
+				{
+					g_esBuryTeammate[iPlayer][iSpecType].g_flCloseAreasOnly = -1.0;
+					g_esBuryTeammate[iPlayer][iSpecType].g_iComboAbility = -1;
+					g_esBuryTeammate[iPlayer][iSpecType].g_iHumanAbility = -1;
+					g_esBuryTeammate[iPlayer][iSpecType].g_iHumanAmmo = -1;
+					g_esBuryTeammate[iPlayer][iSpecType].g_iHumanCooldown = -1;
+					g_esBuryTeammate[iPlayer][iSpecType].g_iHumanRangeCooldown = -1;
+					g_esBuryTeammate[iPlayer][iSpecType].g_flOpenAreasOnly = -1.0;
+					g_esBuryTeammate[iPlayer][iSpecType].g_iRequiresHumans = -1;
+					g_esBuryTeammate[iPlayer][iSpecType].g_iBuryAbility = -1;
+					g_esBuryTeammate[iPlayer][iSpecType].g_iBuryEffect = -1;
+					g_esBuryTeammate[iPlayer][iSpecType].g_iBuryMessage = -1;
+					g_esBuryTeammate[iPlayer][iSpecType].g_flBuryBuffer = -1.0;
+					g_esBuryTeammate[iPlayer][iSpecType].g_flBuryChance = -1.0;
+					g_esBuryTeammate[iPlayer][iSpecType].g_iBuryCooldown = -1;
+					g_esBuryTeammate[iPlayer][iSpecType].g_flBuryDuration = -1.0;
+					g_esBuryTeammate[iPlayer][iSpecType].g_flBuryHeight = -1.0;
+					g_esBuryTeammate[iPlayer][iSpecType].g_iBuryHit = -1;
+					g_esBuryTeammate[iPlayer][iSpecType].g_iBuryHitMode = -1;
+					g_esBuryTeammate[iPlayer][iSpecType].g_flBuryRange = -1.0;
+					g_esBuryTeammate[iPlayer][iSpecType].g_flBuryRangeChance = -1.0;
+					g_esBuryTeammate[iPlayer][iSpecType].g_iBuryRangeCooldown = -1;
+					g_esBuryTeammate[iPlayer][iSpecType].g_iBurySight = -1;
+				}
 			}
 		}
 	}
 }
 
 #if defined MT_ABILITIES_MAIN
-void vBuryConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
+void vBuryConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, const char[] specName, int specType)
 #else
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, const char[] specName, int specType)
 #endif
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esBuryTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esBuryTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
-			g_esBuryTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esBuryTeammate[admin].g_iComboAbility, value, -1, 1);
-			g_esBuryTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esBuryTeammate[admin].g_iHumanAbility, value, -1, 2);
-			g_esBuryTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esBuryTeammate[admin].g_iHumanAmmo, value, -1, 99999);
-			g_esBuryTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esBuryTeammate[admin].g_iHumanCooldown, value, -1, 99999);
-			g_esBuryTeammate[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esBuryTeammate[admin].g_iHumanRangeCooldown, value, -1, 99999);
-			g_esBuryTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esBuryTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
-			g_esBuryTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esBuryTeammate[admin].g_iRequiresHumans, value, -1, 32);
-			g_esBuryTeammate[admin].g_iBuryAbility = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esBuryTeammate[admin].g_iBuryAbility, value, -1, 1);
-			g_esBuryTeammate[admin].g_iBuryEffect = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esBuryTeammate[admin].g_iBuryEffect, value, -1, 7);
-			g_esBuryTeammate[admin].g_iBuryMessage = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esBuryTeammate[admin].g_iBuryMessage, value, -1, 3);
-			g_esBuryTeammate[admin].g_iBurySight = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esBuryTeammate[admin].g_iBurySight, value, -1, 2);
-			g_esBuryTeammate[admin].g_flBuryBuffer = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryBuffer", "Bury Buffer", "Bury_Buffer", "buffer", g_esBuryTeammate[admin].g_flBuryBuffer, value, -1.0,float(MT_MAXHEALTH));
-			g_esBuryTeammate[admin].g_flBuryChance = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryChance", "Bury Chance", "Bury_Chance", "chance", g_esBuryTeammate[admin].g_flBuryChance, value, -1.0, 100.0);
-			g_esBuryTeammate[admin].g_iBuryCooldown = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryCooldown", "Bury Cooldown", "Bury_Cooldown", "cooldown", g_esBuryTeammate[admin].g_iBuryCooldown, value, -1, 99999);
-			g_esBuryTeammate[admin].g_flBuryDuration = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryDuration", "Bury Duration", "Bury_Duration", "duration", g_esBuryTeammate[admin].g_flBuryDuration, value, -1.0, 99999.0);
-			g_esBuryTeammate[admin].g_flBuryHeight = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryHeight", "Bury Height", "Bury_Height", "height", g_esBuryTeammate[admin].g_flBuryHeight, value, -1.0, 99999.0);
-			g_esBuryTeammate[admin].g_iBuryHit = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryHit", "Bury Hit", "Bury_Hit", "hit", g_esBuryTeammate[admin].g_iBuryHit, value, -1, 1);
-			g_esBuryTeammate[admin].g_iBuryHitMode = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryHitMode", "Bury Hit Mode", "Bury_Hit_Mode", "hitmode", g_esBuryTeammate[admin].g_iBuryHitMode, value, -1, 2);
-			g_esBuryTeammate[admin].g_flBuryRange = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryRange", "Bury Range", "Bury_Range", "range", g_esBuryTeammate[admin].g_flBuryRange, value, -1.0, 99999.0);
-			g_esBuryTeammate[admin].g_flBuryRangeChance = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryRangeChance", "Bury Range Chance", "Bury_Range_Chance", "rangechance", g_esBuryTeammate[admin].g_flBuryRangeChance, value, -1.0, 100.0);
-			g_esBuryTeammate[admin].g_iBuryRangeCooldown = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryRangeCooldown", "Bury Range Cooldown", "Bury_Range_Cooldown", "rangecooldown", g_esBuryTeammate[admin].g_iBuryRangeCooldown, value, -1, 99999);
+			g_esBuryTeammate[admin][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esBuryTeammate[admin][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esBuryTeammate[admin][specType].g_iComboAbility = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esBuryTeammate[admin][specType].g_iComboAbility, value, -1, 1, specName, specType);
+			g_esBuryTeammate[admin][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esBuryTeammate[admin][specType].g_iHumanAbility, value, -1, 2, specName, specType);
+			g_esBuryTeammate[admin][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esBuryTeammate[admin][specType].g_iHumanAmmo, value, -1, 99999, specName, specType);
+			g_esBuryTeammate[admin][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esBuryTeammate[admin][specType].g_iHumanCooldown, value, -1, 99999, specName, specType);
+			g_esBuryTeammate[admin][specType].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esBuryTeammate[admin][specType].g_iHumanRangeCooldown, value, -1, 99999, specName, specType);
+			g_esBuryTeammate[admin][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esBuryTeammate[admin][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esBuryTeammate[admin][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esBuryTeammate[admin][specType].g_iRequiresHumans, value, -1, 32, specName, specType);
+			g_esBuryTeammate[admin][specType].g_iBuryAbility = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esBuryTeammate[admin][specType].g_iBuryAbility, value, -1, 1, specName, specType);
+			g_esBuryTeammate[admin][specType].g_iBuryEffect = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esBuryTeammate[admin][specType].g_iBuryEffect, value, -1, 7, specName, specType);
+			g_esBuryTeammate[admin][specType].g_iBuryMessage = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esBuryTeammate[admin][specType].g_iBuryMessage, value, -1, 3, specName, specType);
+			g_esBuryTeammate[admin][specType].g_iBurySight = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esBuryTeammate[admin][specType].g_iBurySight, value, -1, 2, specName, specType);
+			g_esBuryTeammate[admin][specType].g_flBuryBuffer = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryBuffer", "Bury Buffer", "Bury_Buffer", "buffer", g_esBuryTeammate[admin][specType].g_flBuryBuffer, value, -1.0,float(MT_MAXHEALTH), specName, specType);
+			g_esBuryTeammate[admin][specType].g_flBuryChance = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryChance", "Bury Chance", "Bury_Chance", "chance", g_esBuryTeammate[admin][specType].g_flBuryChance, value, -1.0, 100.0, specName, specType);
+			g_esBuryTeammate[admin][specType].g_iBuryCooldown = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryCooldown", "Bury Cooldown", "Bury_Cooldown", "cooldown", g_esBuryTeammate[admin][specType].g_iBuryCooldown, value, -1, 99999, specName, specType);
+			g_esBuryTeammate[admin][specType].g_flBuryDuration = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryDuration", "Bury Duration", "Bury_Duration", "duration", g_esBuryTeammate[admin][specType].g_flBuryDuration, value, -1.0, 99999.0, specName, specType);
+			g_esBuryTeammate[admin][specType].g_flBuryHeight = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryHeight", "Bury Height", "Bury_Height", "height", g_esBuryTeammate[admin][specType].g_flBuryHeight, value, -1.0, 99999.0, specName, specType);
+			g_esBuryTeammate[admin][specType].g_iBuryHit = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryHit", "Bury Hit", "Bury_Hit", "hit", g_esBuryTeammate[admin][specType].g_iBuryHit, value, -1, 1, specName, specType);
+			g_esBuryTeammate[admin][specType].g_iBuryHitMode = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryHitMode", "Bury Hit Mode", "Bury_Hit_Mode", "hitmode", g_esBuryTeammate[admin][specType].g_iBuryHitMode, value, -1, 2, specName, specType);
+			g_esBuryTeammate[admin][specType].g_flBuryRange = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryRange", "Bury Range", "Bury_Range", "range", g_esBuryTeammate[admin][specType].g_flBuryRange, value, -1.0, 99999.0, specName, specType);
+			g_esBuryTeammate[admin][specType].g_flBuryRangeChance = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryRangeChance", "Bury Range Chance", "Bury_Range_Chance", "rangechance", g_esBuryTeammate[admin][specType].g_flBuryRangeChance, value, -1.0, 100.0, specName, specType);
+			g_esBuryTeammate[admin][specType].g_iBuryRangeCooldown = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryRangeCooldown", "Bury Range Cooldown", "Bury_Range_Cooldown", "rangecooldown", g_esBuryTeammate[admin][specType].g_iBuryRangeCooldown, value, -1, 99999, specName, specType);
 		}
 		else
 		{
@@ -829,28 +836,28 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esBurySpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esBurySpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
-			g_esBurySpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esBurySpecial[type].g_iComboAbility, value, -1, 1);
-			g_esBurySpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esBurySpecial[type].g_iHumanAbility, value, -1, 2);
-			g_esBurySpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esBurySpecial[type].g_iHumanAmmo, value, -1, 99999);
-			g_esBurySpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esBurySpecial[type].g_iHumanCooldown, value, -1, 99999);
-			g_esBurySpecial[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esBurySpecial[type].g_iHumanRangeCooldown, value, -1, 99999);
-			g_esBurySpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esBurySpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
-			g_esBurySpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esBurySpecial[type].g_iRequiresHumans, value, -1, 32);
-			g_esBurySpecial[type].g_iBuryAbility = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esBurySpecial[type].g_iBuryAbility, value, -1, 1);
-			g_esBurySpecial[type].g_iBuryEffect = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esBurySpecial[type].g_iBuryEffect, value, -1, 7);
-			g_esBurySpecial[type].g_iBuryMessage = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esBurySpecial[type].g_iBuryMessage, value, -1, 3);
-			g_esBurySpecial[type].g_iBurySight = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esBurySpecial[type].g_iBurySight, value, -1, 2);
-			g_esBurySpecial[type].g_flBuryBuffer = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryBuffer", "Bury Buffer", "Bury_Buffer", "buffer", g_esBurySpecial[type].g_flBuryBuffer, value, -1.0,float(MT_MAXHEALTH));
-			g_esBurySpecial[type].g_flBuryChance = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryChance", "Bury Chance", "Bury_Chance", "chance", g_esBurySpecial[type].g_flBuryChance, value, -1.0, 100.0);
-			g_esBurySpecial[type].g_iBuryCooldown = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryCooldown", "Bury Cooldown", "Bury_Cooldown", "cooldown", g_esBurySpecial[type].g_iBuryCooldown, value, -1, 99999);
-			g_esBurySpecial[type].g_flBuryDuration = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryDuration", "Bury Duration", "Bury_Duration", "duration", g_esBurySpecial[type].g_flBuryDuration, value, -1.0, 99999.0);
-			g_esBurySpecial[type].g_flBuryHeight = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryHeight", "Bury Height", "Bury_Height", "height", g_esBurySpecial[type].g_flBuryHeight, value, -1.0, 99999.0);
-			g_esBurySpecial[type].g_iBuryHit = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryHit", "Bury Hit", "Bury_Hit", "hit", g_esBurySpecial[type].g_iBuryHit, value, -1, 1);
-			g_esBurySpecial[type].g_iBuryHitMode = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryHitMode", "Bury Hit Mode", "Bury_Hit_Mode", "hitmode", g_esBurySpecial[type].g_iBuryHitMode, value, -1, 2);
-			g_esBurySpecial[type].g_flBuryRange = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryRange", "Bury Range", "Bury_Range", "range", g_esBurySpecial[type].g_flBuryRange, value, -1.0, 99999.0);
-			g_esBurySpecial[type].g_flBuryRangeChance = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryRangeChance", "Bury Range Chance", "Bury_Range_Chance", "rangechance", g_esBurySpecial[type].g_flBuryRangeChance, value, -1.0, 100.0);
-			g_esBurySpecial[type].g_iBuryRangeCooldown = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryRangeCooldown", "Bury Range Cooldown", "Bury_Range_Cooldown", "rangecooldown", g_esBurySpecial[type].g_iBuryRangeCooldown, value, -1, 99999);
+			g_esBurySpecial[type][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esBurySpecial[type][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esBurySpecial[type][specType].g_iComboAbility = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esBurySpecial[type][specType].g_iComboAbility, value, -1, 1, specName, specType);
+			g_esBurySpecial[type][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esBurySpecial[type][specType].g_iHumanAbility, value, -1, 2, specName, specType);
+			g_esBurySpecial[type][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esBurySpecial[type][specType].g_iHumanAmmo, value, -1, 99999, specName, specType);
+			g_esBurySpecial[type][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esBurySpecial[type][specType].g_iHumanCooldown, value, -1, 99999, specName, specType);
+			g_esBurySpecial[type][specType].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esBurySpecial[type][specType].g_iHumanRangeCooldown, value, -1, 99999, specName, specType);
+			g_esBurySpecial[type][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esBurySpecial[type][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esBurySpecial[type][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esBurySpecial[type][specType].g_iRequiresHumans, value, -1, 32, specName, specType);
+			g_esBurySpecial[type][specType].g_iBuryAbility = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esBurySpecial[type][specType].g_iBuryAbility, value, -1, 1, specName, specType);
+			g_esBurySpecial[type][specType].g_iBuryEffect = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esBurySpecial[type][specType].g_iBuryEffect, value, -1, 7, specName, specType);
+			g_esBurySpecial[type][specType].g_iBuryMessage = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esBurySpecial[type][specType].g_iBuryMessage, value, -1, 3, specName, specType);
+			g_esBurySpecial[type][specType].g_iBurySight = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esBurySpecial[type][specType].g_iBurySight, value, -1, 2, specName, specType);
+			g_esBurySpecial[type][specType].g_flBuryBuffer = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryBuffer", "Bury Buffer", "Bury_Buffer", "buffer", g_esBurySpecial[type][specType].g_flBuryBuffer, value, -1.0,float(MT_MAXHEALTH), specName, specType);
+			g_esBurySpecial[type][specType].g_flBuryChance = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryChance", "Bury Chance", "Bury_Chance", "chance", g_esBurySpecial[type][specType].g_flBuryChance, value, -1.0, 100.0, specName, specType);
+			g_esBurySpecial[type][specType].g_iBuryCooldown = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryCooldown", "Bury Cooldown", "Bury_Cooldown", "cooldown", g_esBurySpecial[type][specType].g_iBuryCooldown, value, -1, 99999, specName, specType);
+			g_esBurySpecial[type][specType].g_flBuryDuration = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryDuration", "Bury Duration", "Bury_Duration", "duration", g_esBurySpecial[type][specType].g_flBuryDuration, value, -1.0, 99999.0, specName, specType);
+			g_esBurySpecial[type][specType].g_flBuryHeight = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryHeight", "Bury Height", "Bury_Height", "height", g_esBurySpecial[type][specType].g_flBuryHeight, value, -1.0, 99999.0, specName, specType);
+			g_esBurySpecial[type][specType].g_iBuryHit = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryHit", "Bury Hit", "Bury_Hit", "hit", g_esBurySpecial[type][specType].g_iBuryHit, value, -1, 1, specName, specType);
+			g_esBurySpecial[type][specType].g_iBuryHitMode = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryHitMode", "Bury Hit Mode", "Bury_Hit_Mode", "hitmode", g_esBurySpecial[type][specType].g_iBuryHitMode, value, -1, 2, specName, specType);
+			g_esBurySpecial[type][specType].g_flBuryRange = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryRange", "Bury Range", "Bury_Range", "range", g_esBurySpecial[type][specType].g_flBuryRange, value, -1.0, 99999.0, specName, specType);
+			g_esBurySpecial[type][specType].g_flBuryRangeChance = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryRangeChance", "Bury Range Chance", "Bury_Range_Chance", "rangechance", g_esBurySpecial[type][specType].g_flBuryRangeChance, value, -1.0, 100.0, specName, specType);
+			g_esBurySpecial[type][specType].g_iBuryRangeCooldown = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryRangeCooldown", "Bury Range Cooldown", "Bury_Range_Cooldown", "rangecooldown", g_esBurySpecial[type][specType].g_iBuryRangeCooldown, value, -1, 99999, specName, specType);
 		}
 		else
 		{
@@ -889,32 +896,34 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esBuryPlayer[tank].g_iInfectedType = iGetInfectedType(tank);
 	g_esBuryPlayer[tank].g_iTankType = apply ? type : 0;
+	int iSpecType = g_esBuryPlayer[tank].g_iInfectedType;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esBuryCache[tank].g_flBuryBuffer = flGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_flBuryBuffer, g_esBuryPlayer[tank].g_flBuryBuffer, g_esBurySpecial[type].g_flBuryBuffer, g_esBuryAbility[type].g_flBuryBuffer, 1);
-		g_esBuryCache[tank].g_flBuryChance = flGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_flBuryChance, g_esBuryPlayer[tank].g_flBuryChance, g_esBurySpecial[type].g_flBuryChance, g_esBuryAbility[type].g_flBuryChance, 1);
-		g_esBuryCache[tank].g_flBuryDuration = flGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_flBuryDuration, g_esBuryPlayer[tank].g_flBuryDuration, g_esBurySpecial[type].g_flBuryDuration, g_esBuryAbility[type].g_flBuryDuration, 1);
-		g_esBuryCache[tank].g_flBuryHeight = flGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_flBuryHeight, g_esBuryPlayer[tank].g_flBuryHeight, g_esBurySpecial[type].g_flBuryHeight, g_esBuryAbility[type].g_flBuryHeight, 1);
-		g_esBuryCache[tank].g_flBuryRange = flGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_flBuryRange, g_esBuryPlayer[tank].g_flBuryRange, g_esBurySpecial[type].g_flBuryRange, g_esBuryAbility[type].g_flBuryRange, 1);
-		g_esBuryCache[tank].g_flBuryRangeChance = flGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_flBuryRangeChance, g_esBuryPlayer[tank].g_flBuryRangeChance, g_esBurySpecial[type].g_flBuryRangeChance, g_esBuryAbility[type].g_flBuryRangeChance, 1);
-		g_esBuryCache[tank].g_iBuryAbility = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iBuryAbility, g_esBuryPlayer[tank].g_iBuryAbility, g_esBurySpecial[type].g_iBuryAbility, g_esBuryAbility[type].g_iBuryAbility, 1);
-		g_esBuryCache[tank].g_iBuryCooldown = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iBuryCooldown, g_esBuryPlayer[tank].g_iBuryCooldown, g_esBurySpecial[type].g_iBuryCooldown, g_esBuryAbility[type].g_iBuryCooldown, 1);
-		g_esBuryCache[tank].g_iBuryEffect = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iBuryEffect, g_esBuryPlayer[tank].g_iBuryEffect, g_esBurySpecial[type].g_iBuryEffect, g_esBuryAbility[type].g_iBuryEffect, 1);
-		g_esBuryCache[tank].g_iBuryHit = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iBuryHit, g_esBuryPlayer[tank].g_iBuryHit, g_esBurySpecial[type].g_iBuryHit, g_esBuryAbility[type].g_iBuryHit, 1);
-		g_esBuryCache[tank].g_iBuryHitMode = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iBuryHitMode, g_esBuryPlayer[tank].g_iBuryHitMode, g_esBurySpecial[type].g_iBuryHitMode, g_esBuryAbility[type].g_iBuryHitMode, 1);
-		g_esBuryCache[tank].g_iBuryMessage = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iBuryMessage, g_esBuryPlayer[tank].g_iBuryMessage, g_esBurySpecial[type].g_iBuryMessage, g_esBuryAbility[type].g_iBuryMessage, 1);
-		g_esBuryCache[tank].g_iBuryRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iBuryRangeCooldown, g_esBuryPlayer[tank].g_iBuryRangeCooldown, g_esBurySpecial[type].g_iBuryRangeCooldown, g_esBuryAbility[type].g_iBuryRangeCooldown, 1);
-		g_esBuryCache[tank].g_iBurySight = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iBurySight, g_esBuryPlayer[tank].g_iBurySight, g_esBurySpecial[type].g_iBurySight, g_esBuryAbility[type].g_iBurySight, 1);
-		g_esBuryCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_flCloseAreasOnly, g_esBuryPlayer[tank].g_flCloseAreasOnly, g_esBurySpecial[type].g_flCloseAreasOnly, g_esBuryAbility[type].g_flCloseAreasOnly, 1);
-		g_esBuryCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iComboAbility, g_esBuryPlayer[tank].g_iComboAbility, g_esBurySpecial[type].g_iComboAbility, g_esBuryAbility[type].g_iComboAbility, 1);
-		g_esBuryCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iHumanAbility, g_esBuryPlayer[tank].g_iHumanAbility, g_esBurySpecial[type].g_iHumanAbility, g_esBuryAbility[type].g_iHumanAbility, 1);
-		g_esBuryCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iHumanAmmo, g_esBuryPlayer[tank].g_iHumanAmmo, g_esBurySpecial[type].g_iHumanAmmo, g_esBuryAbility[type].g_iHumanAmmo, 1);
-		g_esBuryCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iHumanCooldown, g_esBuryPlayer[tank].g_iHumanCooldown, g_esBurySpecial[type].g_iHumanCooldown, g_esBuryAbility[type].g_iHumanCooldown, 1);
-		g_esBuryCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iHumanRangeCooldown, g_esBuryPlayer[tank].g_iHumanRangeCooldown, g_esBurySpecial[type].g_iHumanRangeCooldown, g_esBuryAbility[type].g_iHumanRangeCooldown, 1);
-		g_esBuryCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_flOpenAreasOnly, g_esBuryPlayer[tank].g_flOpenAreasOnly, g_esBurySpecial[type].g_flOpenAreasOnly, g_esBuryAbility[type].g_flOpenAreasOnly, 1);
-		g_esBuryCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iRequiresHumans, g_esBuryPlayer[tank].g_iRequiresHumans, g_esBurySpecial[type].g_iRequiresHumans, g_esBuryAbility[type].g_iRequiresHumans, 1);
+		g_esBuryCache[tank].g_flBuryBuffer = flGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank][iSpecType - 1].g_flBuryBuffer, g_esBuryPlayer[tank].g_flBuryBuffer, g_esBurySpecial[type][iSpecType - 1].g_flBuryBuffer, g_esBuryAbility[type].g_flBuryBuffer, 1);
+		g_esBuryCache[tank].g_flBuryChance = flGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank][iSpecType - 1].g_flBuryChance, g_esBuryPlayer[tank].g_flBuryChance, g_esBurySpecial[type][iSpecType - 1].g_flBuryChance, g_esBuryAbility[type].g_flBuryChance, 1);
+		g_esBuryCache[tank].g_flBuryDuration = flGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank][iSpecType - 1].g_flBuryDuration, g_esBuryPlayer[tank].g_flBuryDuration, g_esBurySpecial[type][iSpecType - 1].g_flBuryDuration, g_esBuryAbility[type].g_flBuryDuration, 1);
+		g_esBuryCache[tank].g_flBuryHeight = flGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank][iSpecType - 1].g_flBuryHeight, g_esBuryPlayer[tank].g_flBuryHeight, g_esBurySpecial[type][iSpecType - 1].g_flBuryHeight, g_esBuryAbility[type].g_flBuryHeight, 1);
+		g_esBuryCache[tank].g_flBuryRange = flGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank][iSpecType - 1].g_flBuryRange, g_esBuryPlayer[tank].g_flBuryRange, g_esBurySpecial[type][iSpecType - 1].g_flBuryRange, g_esBuryAbility[type].g_flBuryRange, 1);
+		g_esBuryCache[tank].g_flBuryRangeChance = flGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank][iSpecType - 1].g_flBuryRangeChance, g_esBuryPlayer[tank].g_flBuryRangeChance, g_esBurySpecial[type][iSpecType - 1].g_flBuryRangeChance, g_esBuryAbility[type].g_flBuryRangeChance, 1);
+		g_esBuryCache[tank].g_iBuryAbility = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank][iSpecType - 1].g_iBuryAbility, g_esBuryPlayer[tank].g_iBuryAbility, g_esBurySpecial[type][iSpecType - 1].g_iBuryAbility, g_esBuryAbility[type].g_iBuryAbility, 1);
+		g_esBuryCache[tank].g_iBuryCooldown = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank][iSpecType - 1].g_iBuryCooldown, g_esBuryPlayer[tank].g_iBuryCooldown, g_esBurySpecial[type][iSpecType - 1].g_iBuryCooldown, g_esBuryAbility[type].g_iBuryCooldown, 1);
+		g_esBuryCache[tank].g_iBuryEffect = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank][iSpecType - 1].g_iBuryEffect, g_esBuryPlayer[tank].g_iBuryEffect, g_esBurySpecial[type][iSpecType - 1].g_iBuryEffect, g_esBuryAbility[type].g_iBuryEffect, 1);
+		g_esBuryCache[tank].g_iBuryHit = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank][iSpecType - 1].g_iBuryHit, g_esBuryPlayer[tank].g_iBuryHit, g_esBurySpecial[type][iSpecType - 1].g_iBuryHit, g_esBuryAbility[type].g_iBuryHit, 1);
+		g_esBuryCache[tank].g_iBuryHitMode = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank][iSpecType - 1].g_iBuryHitMode, g_esBuryPlayer[tank].g_iBuryHitMode, g_esBurySpecial[type][iSpecType - 1].g_iBuryHitMode, g_esBuryAbility[type].g_iBuryHitMode, 1);
+		g_esBuryCache[tank].g_iBuryMessage = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank][iSpecType - 1].g_iBuryMessage, g_esBuryPlayer[tank].g_iBuryMessage, g_esBurySpecial[type][iSpecType - 1].g_iBuryMessage, g_esBuryAbility[type].g_iBuryMessage, 1);
+		g_esBuryCache[tank].g_iBuryRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank][iSpecType - 1].g_iBuryRangeCooldown, g_esBuryPlayer[tank].g_iBuryRangeCooldown, g_esBurySpecial[type][iSpecType - 1].g_iBuryRangeCooldown, g_esBuryAbility[type].g_iBuryRangeCooldown, 1);
+		g_esBuryCache[tank].g_iBurySight = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank][iSpecType - 1].g_iBurySight, g_esBuryPlayer[tank].g_iBurySight, g_esBurySpecial[type][iSpecType - 1].g_iBurySight, g_esBuryAbility[type].g_iBurySight, 1);
+		g_esBuryCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank][iSpecType - 1].g_flCloseAreasOnly, g_esBuryPlayer[tank].g_flCloseAreasOnly, g_esBurySpecial[type][iSpecType - 1].g_flCloseAreasOnly, g_esBuryAbility[type].g_flCloseAreasOnly, 1);
+		g_esBuryCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank][iSpecType - 1].g_iComboAbility, g_esBuryPlayer[tank].g_iComboAbility, g_esBurySpecial[type][iSpecType - 1].g_iComboAbility, g_esBuryAbility[type].g_iComboAbility, 1);
+		g_esBuryCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank][iSpecType - 1].g_iHumanAbility, g_esBuryPlayer[tank].g_iHumanAbility, g_esBurySpecial[type][iSpecType - 1].g_iHumanAbility, g_esBuryAbility[type].g_iHumanAbility, 1);
+		g_esBuryCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank][iSpecType - 1].g_iHumanAmmo, g_esBuryPlayer[tank].g_iHumanAmmo, g_esBurySpecial[type][iSpecType - 1].g_iHumanAmmo, g_esBuryAbility[type].g_iHumanAmmo, 1);
+		g_esBuryCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank][iSpecType - 1].g_iHumanCooldown, g_esBuryPlayer[tank].g_iHumanCooldown, g_esBurySpecial[type][iSpecType - 1].g_iHumanCooldown, g_esBuryAbility[type].g_iHumanCooldown, 1);
+		g_esBuryCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank][iSpecType - 1].g_iHumanRangeCooldown, g_esBuryPlayer[tank].g_iHumanRangeCooldown, g_esBurySpecial[type][iSpecType - 1].g_iHumanRangeCooldown, g_esBuryAbility[type].g_iHumanRangeCooldown, 1);
+		g_esBuryCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank][iSpecType - 1].g_flOpenAreasOnly, g_esBuryPlayer[tank].g_flOpenAreasOnly, g_esBurySpecial[type][iSpecType - 1].g_flOpenAreasOnly, g_esBuryAbility[type].g_flOpenAreasOnly, 1);
+		g_esBuryCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank][iSpecType - 1].g_iRequiresHumans, g_esBuryPlayer[tank].g_iRequiresHumans, g_esBurySpecial[type][iSpecType - 1].g_iRequiresHumans, g_esBuryAbility[type].g_iRequiresHumans, 1);
 	}
 	else
 	{

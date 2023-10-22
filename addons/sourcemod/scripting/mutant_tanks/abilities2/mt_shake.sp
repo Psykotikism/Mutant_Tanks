@@ -88,6 +88,7 @@ enum struct esShakePlayer
 	int g_iHumanCooldown;
 	int g_iHumanRangeCooldown;
 	int g_iImmunityFlags;
+	int g_iInfectedType;
 	int g_iOwner;
 	int g_iRangeCooldown;
 	int g_iRequiresHumans;
@@ -135,7 +136,7 @@ enum struct esShakeTeammate
 	int g_iShakeSight;
 }
 
-esShakeTeammate g_esShakeTeammate[MAXPLAYERS + 1];
+esShakeTeammate g_esShakeTeammate[MAXPLAYERS + 1][6];
 
 enum struct esShakeAbility
 {
@@ -199,7 +200,7 @@ enum struct esShakeSpecial
 	int g_iShakeSight;
 }
 
-esShakeSpecial g_esShakeSpecial[MT_MAXTYPES + 1];
+esShakeSpecial g_esShakeSpecial[MT_MAXTYPES + 1][6];
 
 enum struct esShakeCache
 {
@@ -624,30 +625,33 @@ public void MT_OnConfigsLoad(int mode)
 				g_esShakeAbility[iIndex].g_iShakeRangeCooldown = 0;
 				g_esShakeAbility[iIndex].g_iShakeSight = 0;
 
-				g_esShakeSpecial[iIndex].g_flCloseAreasOnly = -1.0;
-				g_esShakeSpecial[iIndex].g_iComboAbility = -1;
-				g_esShakeSpecial[iIndex].g_iHumanAbility = -1;
-				g_esShakeSpecial[iIndex].g_iHumanAmmo = -1;
-				g_esShakeSpecial[iIndex].g_iHumanCooldown = -1;
-				g_esShakeSpecial[iIndex].g_iHumanRangeCooldown = -1;
-				g_esShakeSpecial[iIndex].g_flOpenAreasOnly = -1.0;
-				g_esShakeSpecial[iIndex].g_iRequiresHumans = -1;
-				g_esShakeSpecial[iIndex].g_iShakeAbility = -1;
-				g_esShakeSpecial[iIndex].g_iShakeEffect = -1;
-				g_esShakeSpecial[iIndex].g_iShakeMessage = -1;
-				g_esShakeSpecial[iIndex].g_flShakeChance = -1.0;
-				g_esShakeSpecial[iIndex].g_iShakeCooldown = -1;
-				g_esShakeSpecial[iIndex].g_iShakeDeath = -1;
-				g_esShakeSpecial[iIndex].g_flShakeDeathChance = -1.0;
-				g_esShakeSpecial[iIndex].g_flShakeDeathRange = -1.0;
-				g_esShakeSpecial[iIndex].g_iShakeDuration = -1;
-				g_esShakeSpecial[iIndex].g_iShakeHit = -1;
-				g_esShakeSpecial[iIndex].g_iShakeHitMode = -1;
-				g_esShakeSpecial[iIndex].g_flShakeInterval = -1.0;
-				g_esShakeSpecial[iIndex].g_flShakeRange = -1.0;
-				g_esShakeSpecial[iIndex].g_flShakeRangeChance = -1.0;
-				g_esShakeSpecial[iIndex].g_iShakeRangeCooldown = -1;
-				g_esShakeSpecial[iIndex].g_iShakeSight = -1;
+				for (int iSpecType = 0; iSpecType < 6; iSpecType++)
+				{
+					g_esShakeSpecial[iIndex][iSpecType].g_flCloseAreasOnly = -1.0;
+					g_esShakeSpecial[iIndex][iSpecType].g_iComboAbility = -1;
+					g_esShakeSpecial[iIndex][iSpecType].g_iHumanAbility = -1;
+					g_esShakeSpecial[iIndex][iSpecType].g_iHumanAmmo = -1;
+					g_esShakeSpecial[iIndex][iSpecType].g_iHumanCooldown = -1;
+					g_esShakeSpecial[iIndex][iSpecType].g_iHumanRangeCooldown = -1;
+					g_esShakeSpecial[iIndex][iSpecType].g_flOpenAreasOnly = -1.0;
+					g_esShakeSpecial[iIndex][iSpecType].g_iRequiresHumans = -1;
+					g_esShakeSpecial[iIndex][iSpecType].g_iShakeAbility = -1;
+					g_esShakeSpecial[iIndex][iSpecType].g_iShakeEffect = -1;
+					g_esShakeSpecial[iIndex][iSpecType].g_iShakeMessage = -1;
+					g_esShakeSpecial[iIndex][iSpecType].g_flShakeChance = -1.0;
+					g_esShakeSpecial[iIndex][iSpecType].g_iShakeCooldown = -1;
+					g_esShakeSpecial[iIndex][iSpecType].g_iShakeDeath = -1;
+					g_esShakeSpecial[iIndex][iSpecType].g_flShakeDeathChance = -1.0;
+					g_esShakeSpecial[iIndex][iSpecType].g_flShakeDeathRange = -1.0;
+					g_esShakeSpecial[iIndex][iSpecType].g_iShakeDuration = -1;
+					g_esShakeSpecial[iIndex][iSpecType].g_iShakeHit = -1;
+					g_esShakeSpecial[iIndex][iSpecType].g_iShakeHitMode = -1;
+					g_esShakeSpecial[iIndex][iSpecType].g_flShakeInterval = -1.0;
+					g_esShakeSpecial[iIndex][iSpecType].g_flShakeRange = -1.0;
+					g_esShakeSpecial[iIndex][iSpecType].g_flShakeRangeChance = -1.0;
+					g_esShakeSpecial[iIndex][iSpecType].g_iShakeRangeCooldown = -1;
+					g_esShakeSpecial[iIndex][iSpecType].g_iShakeSight = -1;
+				}
 			}
 		}
 		case 3:
@@ -681,69 +685,72 @@ public void MT_OnConfigsLoad(int mode)
 				g_esShakePlayer[iPlayer].g_iShakeRangeCooldown = -1;
 				g_esShakePlayer[iPlayer].g_iShakeSight = -1;
 
-				g_esShakeTeammate[iPlayer].g_flCloseAreasOnly = -1.0;
-				g_esShakeTeammate[iPlayer].g_iComboAbility = -1;
-				g_esShakeTeammate[iPlayer].g_iHumanAbility = -1;
-				g_esShakeTeammate[iPlayer].g_iHumanAmmo = -1;
-				g_esShakeTeammate[iPlayer].g_iHumanCooldown = -1;
-				g_esShakeTeammate[iPlayer].g_iHumanRangeCooldown = -1;
-				g_esShakeTeammate[iPlayer].g_flOpenAreasOnly = -1.0;
-				g_esShakeTeammate[iPlayer].g_iRequiresHumans = -1;
-				g_esShakeTeammate[iPlayer].g_iShakeAbility = -1;
-				g_esShakeTeammate[iPlayer].g_iShakeEffect = -1;
-				g_esShakeTeammate[iPlayer].g_iShakeMessage = -1;
-				g_esShakeTeammate[iPlayer].g_flShakeChance = -1.0;
-				g_esShakeTeammate[iPlayer].g_iShakeCooldown = -1;
-				g_esShakeTeammate[iPlayer].g_iShakeDeath = -1;
-				g_esShakeTeammate[iPlayer].g_flShakeDeathChance = -1.0;
-				g_esShakeTeammate[iPlayer].g_flShakeDeathRange = -1.0;
-				g_esShakeTeammate[iPlayer].g_iShakeDuration = -1;
-				g_esShakeTeammate[iPlayer].g_iShakeHit = -1;
-				g_esShakeTeammate[iPlayer].g_iShakeHitMode = -1;
-				g_esShakeTeammate[iPlayer].g_flShakeInterval = -1.0;
-				g_esShakeTeammate[iPlayer].g_flShakeRange = -1.0;
-				g_esShakeTeammate[iPlayer].g_flShakeRangeChance = -1.0;
-				g_esShakeTeammate[iPlayer].g_iShakeRangeCooldown = -1;
-				g_esShakeTeammate[iPlayer].g_iShakeSight = -1;
+				for (int iSpecType = 0; iSpecType < 6; iSpecType++)
+				{
+					g_esShakeTeammate[iPlayer][iSpecType].g_flCloseAreasOnly = -1.0;
+					g_esShakeTeammate[iPlayer][iSpecType].g_iComboAbility = -1;
+					g_esShakeTeammate[iPlayer][iSpecType].g_iHumanAbility = -1;
+					g_esShakeTeammate[iPlayer][iSpecType].g_iHumanAmmo = -1;
+					g_esShakeTeammate[iPlayer][iSpecType].g_iHumanCooldown = -1;
+					g_esShakeTeammate[iPlayer][iSpecType].g_iHumanRangeCooldown = -1;
+					g_esShakeTeammate[iPlayer][iSpecType].g_flOpenAreasOnly = -1.0;
+					g_esShakeTeammate[iPlayer][iSpecType].g_iRequiresHumans = -1;
+					g_esShakeTeammate[iPlayer][iSpecType].g_iShakeAbility = -1;
+					g_esShakeTeammate[iPlayer][iSpecType].g_iShakeEffect = -1;
+					g_esShakeTeammate[iPlayer][iSpecType].g_iShakeMessage = -1;
+					g_esShakeTeammate[iPlayer][iSpecType].g_flShakeChance = -1.0;
+					g_esShakeTeammate[iPlayer][iSpecType].g_iShakeCooldown = -1;
+					g_esShakeTeammate[iPlayer][iSpecType].g_iShakeDeath = -1;
+					g_esShakeTeammate[iPlayer][iSpecType].g_flShakeDeathChance = -1.0;
+					g_esShakeTeammate[iPlayer][iSpecType].g_flShakeDeathRange = -1.0;
+					g_esShakeTeammate[iPlayer][iSpecType].g_iShakeDuration = -1;
+					g_esShakeTeammate[iPlayer][iSpecType].g_iShakeHit = -1;
+					g_esShakeTeammate[iPlayer][iSpecType].g_iShakeHitMode = -1;
+					g_esShakeTeammate[iPlayer][iSpecType].g_flShakeInterval = -1.0;
+					g_esShakeTeammate[iPlayer][iSpecType].g_flShakeRange = -1.0;
+					g_esShakeTeammate[iPlayer][iSpecType].g_flShakeRangeChance = -1.0;
+					g_esShakeTeammate[iPlayer][iSpecType].g_iShakeRangeCooldown = -1;
+					g_esShakeTeammate[iPlayer][iSpecType].g_iShakeSight = -1;
+				}
 			}
 		}
 	}
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vShakeConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
+void vShakeConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, const char[] specName, int specType)
 #else
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, const char[] specName, int specType)
 #endif
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esShakeTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esShakeTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
-			g_esShakeTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esShakeTeammate[admin].g_iComboAbility, value, -1, 1);
-			g_esShakeTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esShakeTeammate[admin].g_iHumanAbility, value, -1, 2);
-			g_esShakeTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esShakeTeammate[admin].g_iHumanAmmo, value, -1, 99999);
-			g_esShakeTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esShakeTeammate[admin].g_iHumanCooldown, value, -1, 99999);
-			g_esShakeTeammate[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esShakeTeammate[admin].g_iHumanRangeCooldown, value, -1, 99999);
-			g_esShakeTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esShakeTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
-			g_esShakeTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esShakeTeammate[admin].g_iRequiresHumans, value, -1, 32);
-			g_esShakeTeammate[admin].g_iShakeAbility = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esShakeTeammate[admin].g_iShakeAbility, value, -1, 1);
-			g_esShakeTeammate[admin].g_iShakeEffect = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esShakeTeammate[admin].g_iShakeEffect, value, -1, 7);
-			g_esShakeTeammate[admin].g_iShakeMessage = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esShakeTeammate[admin].g_iShakeMessage, value, -1, 3);
-			g_esShakeTeammate[admin].g_iShakeSight = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esShakeTeammate[admin].g_iShakeSight, value, -1, 2);
-			g_esShakeTeammate[admin].g_flShakeChance = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeChance", "Shake Chance", "Shake_Chance", "chance", g_esShakeTeammate[admin].g_flShakeChance, value, -1.0, 100.0);
-			g_esShakeTeammate[admin].g_iShakeCooldown = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeCooldown", "Shake Cooldown", "Shake_Cooldown", "cooldown", g_esShakeTeammate[admin].g_iShakeCooldown, value, -1, 99999);
-			g_esShakeTeammate[admin].g_iShakeDeath = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeDeath", "Shake Death", "Shake_Death", "death", g_esShakeTeammate[admin].g_iShakeDeath, value, -1, 1);
-			g_esShakeTeammate[admin].g_flShakeDeathChance = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeDeathChance", "Shake Death Chance", "Shake_Death_Chance", "deathchance", g_esShakeTeammate[admin].g_flShakeDeathChance, value, -1.0, 100.0);
-			g_esShakeTeammate[admin].g_flShakeDeathRange = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeDeathRange", "Shake Death Range", "Shake_Death_Range", "deathrange", g_esShakeTeammate[admin].g_flShakeDeathRange, value, -1.0, 99999.0);
-			g_esShakeTeammate[admin].g_iShakeDuration = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeDuration", "Shake Duration", "Shake_Duration", "duration", g_esShakeTeammate[admin].g_iShakeDuration, value, -1, 99999);
-			g_esShakeTeammate[admin].g_iShakeHit = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeHit", "Shake Hit", "Shake_Hit", "hit", g_esShakeTeammate[admin].g_iShakeHit, value, -1, 1);
-			g_esShakeTeammate[admin].g_iShakeHitMode = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeHitMode", "Shake Hit Mode", "Shake_Hit_Mode", "hitmode", g_esShakeTeammate[admin].g_iShakeHitMode, value, -1, 2);
-			g_esShakeTeammate[admin].g_flShakeInterval = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeInterval", "Shake Interval", "Shake_Interval", "interval", g_esShakeTeammate[admin].g_flShakeInterval, value, -1.0, 99999.0);
-			g_esShakeTeammate[admin].g_flShakeRange = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeRange", "Shake Range", "Shake_Range", "range", g_esShakeTeammate[admin].g_flShakeRange, value, -1.0, 99999.0);
-			g_esShakeTeammate[admin].g_flShakeRangeChance = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeRangeChance", "Shake Range Chance", "Shake_Range_Chance", "rangechance", g_esShakeTeammate[admin].g_flShakeRangeChance, value, -1.0, 100.0);
-			g_esShakeTeammate[admin].g_iShakeRangeCooldown = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeRangeCooldown", "Shake Range Cooldown", "Shake_Range_Cooldown", "rangecooldown", g_esShakeTeammate[admin].g_iShakeRangeCooldown, value, -1, 99999);
+			g_esShakeTeammate[admin][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esShakeTeammate[admin][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esShakeTeammate[admin][specType].g_iComboAbility = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esShakeTeammate[admin][specType].g_iComboAbility, value, -1, 1, specName, specType);
+			g_esShakeTeammate[admin][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esShakeTeammate[admin][specType].g_iHumanAbility, value, -1, 2, specName, specType);
+			g_esShakeTeammate[admin][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esShakeTeammate[admin][specType].g_iHumanAmmo, value, -1, 99999, specName, specType);
+			g_esShakeTeammate[admin][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esShakeTeammate[admin][specType].g_iHumanCooldown, value, -1, 99999, specName, specType);
+			g_esShakeTeammate[admin][specType].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esShakeTeammate[admin][specType].g_iHumanRangeCooldown, value, -1, 99999, specName, specType);
+			g_esShakeTeammate[admin][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esShakeTeammate[admin][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esShakeTeammate[admin][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esShakeTeammate[admin][specType].g_iRequiresHumans, value, -1, 32, specName, specType);
+			g_esShakeTeammate[admin][specType].g_iShakeAbility = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esShakeTeammate[admin][specType].g_iShakeAbility, value, -1, 1, specName, specType);
+			g_esShakeTeammate[admin][specType].g_iShakeEffect = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esShakeTeammate[admin][specType].g_iShakeEffect, value, -1, 7, specName, specType);
+			g_esShakeTeammate[admin][specType].g_iShakeMessage = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esShakeTeammate[admin][specType].g_iShakeMessage, value, -1, 3, specName, specType);
+			g_esShakeTeammate[admin][specType].g_iShakeSight = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esShakeTeammate[admin][specType].g_iShakeSight, value, -1, 2, specName, specType);
+			g_esShakeTeammate[admin][specType].g_flShakeChance = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeChance", "Shake Chance", "Shake_Chance", "chance", g_esShakeTeammate[admin][specType].g_flShakeChance, value, -1.0, 100.0, specName, specType);
+			g_esShakeTeammate[admin][specType].g_iShakeCooldown = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeCooldown", "Shake Cooldown", "Shake_Cooldown", "cooldown", g_esShakeTeammate[admin][specType].g_iShakeCooldown, value, -1, 99999, specName, specType);
+			g_esShakeTeammate[admin][specType].g_iShakeDeath = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeDeath", "Shake Death", "Shake_Death", "death", g_esShakeTeammate[admin][specType].g_iShakeDeath, value, -1, 1, specName, specType);
+			g_esShakeTeammate[admin][specType].g_flShakeDeathChance = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeDeathChance", "Shake Death Chance", "Shake_Death_Chance", "deathchance", g_esShakeTeammate[admin][specType].g_flShakeDeathChance, value, -1.0, 100.0, specName, specType);
+			g_esShakeTeammate[admin][specType].g_flShakeDeathRange = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeDeathRange", "Shake Death Range", "Shake_Death_Range", "deathrange", g_esShakeTeammate[admin][specType].g_flShakeDeathRange, value, -1.0, 99999.0, specName, specType);
+			g_esShakeTeammate[admin][specType].g_iShakeDuration = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeDuration", "Shake Duration", "Shake_Duration", "duration", g_esShakeTeammate[admin][specType].g_iShakeDuration, value, -1, 99999, specName, specType);
+			g_esShakeTeammate[admin][specType].g_iShakeHit = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeHit", "Shake Hit", "Shake_Hit", "hit", g_esShakeTeammate[admin][specType].g_iShakeHit, value, -1, 1, specName, specType);
+			g_esShakeTeammate[admin][specType].g_iShakeHitMode = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeHitMode", "Shake Hit Mode", "Shake_Hit_Mode", "hitmode", g_esShakeTeammate[admin][specType].g_iShakeHitMode, value, -1, 2, specName, specType);
+			g_esShakeTeammate[admin][specType].g_flShakeInterval = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeInterval", "Shake Interval", "Shake_Interval", "interval", g_esShakeTeammate[admin][specType].g_flShakeInterval, value, -1.0, 99999.0, specName, specType);
+			g_esShakeTeammate[admin][specType].g_flShakeRange = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeRange", "Shake Range", "Shake_Range", "range", g_esShakeTeammate[admin][specType].g_flShakeRange, value, -1.0, 99999.0, specName, specType);
+			g_esShakeTeammate[admin][specType].g_flShakeRangeChance = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeRangeChance", "Shake Range Chance", "Shake_Range_Chance", "rangechance", g_esShakeTeammate[admin][specType].g_flShakeRangeChance, value, -1.0, 100.0, specName, specType);
+			g_esShakeTeammate[admin][specType].g_iShakeRangeCooldown = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeRangeCooldown", "Shake Range Cooldown", "Shake_Range_Cooldown", "rangecooldown", g_esShakeTeammate[admin][specType].g_iShakeRangeCooldown, value, -1, 99999, specName, specType);
 		}
 		else
 		{
@@ -780,30 +787,30 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esShakeSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esShakeSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
-			g_esShakeSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esShakeSpecial[type].g_iComboAbility, value, -1, 1);
-			g_esShakeSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esShakeSpecial[type].g_iHumanAbility, value, -1, 2);
-			g_esShakeSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esShakeSpecial[type].g_iHumanAmmo, value, -1, 99999);
-			g_esShakeSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esShakeSpecial[type].g_iHumanCooldown, value, -1, 99999);
-			g_esShakeSpecial[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esShakeSpecial[type].g_iHumanRangeCooldown, value, -1, 99999);
-			g_esShakeSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esShakeSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
-			g_esShakeSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esShakeSpecial[type].g_iRequiresHumans, value, -1, 32);
-			g_esShakeSpecial[type].g_iShakeAbility = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esShakeSpecial[type].g_iShakeAbility, value, -1, 1);
-			g_esShakeSpecial[type].g_iShakeEffect = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esShakeSpecial[type].g_iShakeEffect, value, -1, 7);
-			g_esShakeSpecial[type].g_iShakeMessage = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esShakeSpecial[type].g_iShakeMessage, value, -1, 3);
-			g_esShakeSpecial[type].g_iShakeSight = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esShakeSpecial[type].g_iShakeSight, value, -1, 2);
-			g_esShakeSpecial[type].g_flShakeChance = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeChance", "Shake Chance", "Shake_Chance", "chance", g_esShakeSpecial[type].g_flShakeChance, value, -1.0, 100.0);
-			g_esShakeSpecial[type].g_iShakeDeath = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeDeath", "Shake Death", "Shake_Death", "death", g_esShakeSpecial[type].g_iShakeDeath, value, -1, 1);
-			g_esShakeSpecial[type].g_iShakeCooldown = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeCooldown", "Shake Cooldown", "Shake_Cooldown", "cooldown", g_esShakeSpecial[type].g_iShakeCooldown, value, -1, 99999);
-			g_esShakeSpecial[type].g_flShakeDeathChance = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeDeathChance", "Shake Death Chance", "Shake_Death_Chance", "deathchance", g_esShakeSpecial[type].g_flShakeDeathChance, value, -1.0, 100.0);
-			g_esShakeSpecial[type].g_flShakeDeathRange = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeDeathRange", "Shake Death Range", "Shake_Death_Range", "deathrange", g_esShakeSpecial[type].g_flShakeDeathRange, value, -1.0, 99999.0);
-			g_esShakeSpecial[type].g_iShakeDuration = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeDuration", "Shake Duration", "Shake_Duration", "duration", g_esShakeSpecial[type].g_iShakeDuration, value, -1, 99999);
-			g_esShakeSpecial[type].g_iShakeHit = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeHit", "Shake Hit", "Shake_Hit", "hit", g_esShakeSpecial[type].g_iShakeHit, value, -1, 1);
-			g_esShakeSpecial[type].g_iShakeHitMode = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeHitMode", "Shake Hit Mode", "Shake_Hit_Mode", "hitmode", g_esShakeSpecial[type].g_iShakeHitMode, value, -1, 2);
-			g_esShakeSpecial[type].g_flShakeInterval = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeInterval", "Shake Interval", "Shake_Interval", "interval", g_esShakeSpecial[type].g_flShakeInterval, value, -1.0, 99999.0);
-			g_esShakeSpecial[type].g_flShakeRange = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeRange", "Shake Range", "Shake_Range", "range", g_esShakeSpecial[type].g_flShakeRange, value, -1.0, 99999.0);
-			g_esShakeSpecial[type].g_flShakeRangeChance = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeRangeChance", "Shake Range Chance", "Shake_Range_Chance", "rangechance", g_esShakeSpecial[type].g_flShakeRangeChance, value, -1.0, 100.0);
-			g_esShakeSpecial[type].g_iShakeRangeCooldown = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeRangeCooldown", "Shake Range Cooldown", "Shake_Range_Cooldown", "rangecooldown", g_esShakeSpecial[type].g_iShakeRangeCooldown, value, -1, 99999);
+			g_esShakeSpecial[type][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esShakeSpecial[type][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esShakeSpecial[type][specType].g_iComboAbility = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esShakeSpecial[type][specType].g_iComboAbility, value, -1, 1, specName, specType);
+			g_esShakeSpecial[type][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esShakeSpecial[type][specType].g_iHumanAbility, value, -1, 2, specName, specType);
+			g_esShakeSpecial[type][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esShakeSpecial[type][specType].g_iHumanAmmo, value, -1, 99999, specName, specType);
+			g_esShakeSpecial[type][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esShakeSpecial[type][specType].g_iHumanCooldown, value, -1, 99999, specName, specType);
+			g_esShakeSpecial[type][specType].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esShakeSpecial[type][specType].g_iHumanRangeCooldown, value, -1, 99999, specName, specType);
+			g_esShakeSpecial[type][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esShakeSpecial[type][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esShakeSpecial[type][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esShakeSpecial[type][specType].g_iRequiresHumans, value, -1, 32, specName, specType);
+			g_esShakeSpecial[type][specType].g_iShakeAbility = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esShakeSpecial[type][specType].g_iShakeAbility, value, -1, 1, specName, specType);
+			g_esShakeSpecial[type][specType].g_iShakeEffect = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esShakeSpecial[type][specType].g_iShakeEffect, value, -1, 7, specName, specType);
+			g_esShakeSpecial[type][specType].g_iShakeMessage = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esShakeSpecial[type][specType].g_iShakeMessage, value, -1, 3, specName, specType);
+			g_esShakeSpecial[type][specType].g_iShakeSight = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esShakeSpecial[type][specType].g_iShakeSight, value, -1, 2, specName, specType);
+			g_esShakeSpecial[type][specType].g_flShakeChance = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeChance", "Shake Chance", "Shake_Chance", "chance", g_esShakeSpecial[type][specType].g_flShakeChance, value, -1.0, 100.0, specName, specType);
+			g_esShakeSpecial[type][specType].g_iShakeDeath = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeDeath", "Shake Death", "Shake_Death", "death", g_esShakeSpecial[type][specType].g_iShakeDeath, value, -1, 1, specName, specType);
+			g_esShakeSpecial[type][specType].g_iShakeCooldown = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeCooldown", "Shake Cooldown", "Shake_Cooldown", "cooldown", g_esShakeSpecial[type][specType].g_iShakeCooldown, value, -1, 99999, specName, specType);
+			g_esShakeSpecial[type][specType].g_flShakeDeathChance = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeDeathChance", "Shake Death Chance", "Shake_Death_Chance", "deathchance", g_esShakeSpecial[type][specType].g_flShakeDeathChance, value, -1.0, 100.0, specName, specType);
+			g_esShakeSpecial[type][specType].g_flShakeDeathRange = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeDeathRange", "Shake Death Range", "Shake_Death_Range", "deathrange", g_esShakeSpecial[type][specType].g_flShakeDeathRange, value, -1.0, 99999.0, specName, specType);
+			g_esShakeSpecial[type][specType].g_iShakeDuration = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeDuration", "Shake Duration", "Shake_Duration", "duration", g_esShakeSpecial[type][specType].g_iShakeDuration, value, -1, 99999, specName, specType);
+			g_esShakeSpecial[type][specType].g_iShakeHit = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeHit", "Shake Hit", "Shake_Hit", "hit", g_esShakeSpecial[type][specType].g_iShakeHit, value, -1, 1, specName, specType);
+			g_esShakeSpecial[type][specType].g_iShakeHitMode = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeHitMode", "Shake Hit Mode", "Shake_Hit_Mode", "hitmode", g_esShakeSpecial[type][specType].g_iShakeHitMode, value, -1, 2, specName, specType);
+			g_esShakeSpecial[type][specType].g_flShakeInterval = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeInterval", "Shake Interval", "Shake_Interval", "interval", g_esShakeSpecial[type][specType].g_flShakeInterval, value, -1.0, 99999.0, specName, specType);
+			g_esShakeSpecial[type][specType].g_flShakeRange = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeRange", "Shake Range", "Shake_Range", "range", g_esShakeSpecial[type][specType].g_flShakeRange, value, -1.0, 99999.0, specName, specType);
+			g_esShakeSpecial[type][specType].g_flShakeRangeChance = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeRangeChance", "Shake Range Chance", "Shake_Range_Chance", "rangechance", g_esShakeSpecial[type][specType].g_flShakeRangeChance, value, -1.0, 100.0, specName, specType);
+			g_esShakeSpecial[type][specType].g_iShakeRangeCooldown = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeRangeCooldown", "Shake Range Cooldown", "Shake_Range_Cooldown", "rangecooldown", g_esShakeSpecial[type][specType].g_iShakeRangeCooldown, value, -1, 99999, specName, specType);
 		}
 		else
 		{
@@ -844,34 +851,36 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esShakePlayer[tank].g_iInfectedType = iGetInfectedType(tank);
 	g_esShakePlayer[tank].g_iTankType = apply ? type : 0;
+	int iSpecType = g_esShakePlayer[tank].g_iInfectedType;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esShakeCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank].g_flCloseAreasOnly, g_esShakePlayer[tank].g_flCloseAreasOnly, g_esShakeSpecial[type].g_flCloseAreasOnly, g_esShakeAbility[type].g_flCloseAreasOnly, 1);
-		g_esShakeCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank].g_iComboAbility, g_esShakePlayer[tank].g_iComboAbility, g_esShakeSpecial[type].g_iComboAbility, g_esShakeAbility[type].g_iComboAbility, 1);
-		g_esShakeCache[tank].g_flShakeChance = flGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank].g_flShakeChance, g_esShakePlayer[tank].g_flShakeChance, g_esShakeSpecial[type].g_flShakeChance, g_esShakeAbility[type].g_flShakeChance, 1);
-		g_esShakeCache[tank].g_flShakeDeathChance = flGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank].g_flShakeDeathChance, g_esShakePlayer[tank].g_flShakeDeathChance, g_esShakeSpecial[type].g_flShakeDeathChance, g_esShakeAbility[type].g_flShakeDeathChance, 1);
-		g_esShakeCache[tank].g_flShakeDeathRange = flGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank].g_flShakeDeathRange, g_esShakePlayer[tank].g_flShakeDeathRange, g_esShakeSpecial[type].g_flShakeDeathRange, g_esShakeAbility[type].g_flShakeDeathRange, 1);
-		g_esShakeCache[tank].g_flShakeInterval = flGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank].g_flShakeInterval, g_esShakePlayer[tank].g_flShakeInterval, g_esShakeSpecial[type].g_flShakeInterval, g_esShakeAbility[type].g_flShakeInterval, 1);
-		g_esShakeCache[tank].g_flShakeRange = flGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank].g_flShakeRange, g_esShakePlayer[tank].g_flShakeRange, g_esShakeSpecial[type].g_flShakeRange, g_esShakeAbility[type].g_flShakeRange, 1);
-		g_esShakeCache[tank].g_flShakeRangeChance = flGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank].g_flShakeRangeChance, g_esShakePlayer[tank].g_flShakeRangeChance, g_esShakeSpecial[type].g_flShakeRangeChance, g_esShakeAbility[type].g_flShakeRangeChance, 1);
-		g_esShakeCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank].g_iHumanAbility, g_esShakePlayer[tank].g_iHumanAbility, g_esShakeSpecial[type].g_iHumanAbility, g_esShakeAbility[type].g_iHumanAbility, 1);
-		g_esShakeCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank].g_iHumanAmmo, g_esShakePlayer[tank].g_iHumanAmmo, g_esShakeSpecial[type].g_iHumanAmmo, g_esShakeAbility[type].g_iHumanAmmo, 1);
-		g_esShakeCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank].g_iHumanCooldown, g_esShakePlayer[tank].g_iHumanCooldown, g_esShakeSpecial[type].g_iHumanCooldown, g_esShakeAbility[type].g_iHumanCooldown, 1);
-		g_esShakeCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank].g_iHumanRangeCooldown, g_esShakePlayer[tank].g_iHumanRangeCooldown, g_esShakeSpecial[type].g_iHumanRangeCooldown, g_esShakeAbility[type].g_iHumanRangeCooldown, 1);
-		g_esShakeCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank].g_flOpenAreasOnly, g_esShakePlayer[tank].g_flOpenAreasOnly, g_esShakeSpecial[type].g_flOpenAreasOnly, g_esShakeAbility[type].g_flOpenAreasOnly, 1);
-		g_esShakeCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank].g_iRequiresHumans, g_esShakePlayer[tank].g_iRequiresHumans, g_esShakeSpecial[type].g_iRequiresHumans, g_esShakeAbility[type].g_iRequiresHumans, 1);
-		g_esShakeCache[tank].g_iShakeAbility = iGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank].g_iShakeAbility, g_esShakePlayer[tank].g_iShakeAbility, g_esShakeSpecial[type].g_iShakeAbility, g_esShakeAbility[type].g_iShakeAbility, 1);
-		g_esShakeCache[tank].g_iShakeCooldown = iGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank].g_iShakeCooldown, g_esShakePlayer[tank].g_iShakeCooldown, g_esShakeSpecial[type].g_iShakeCooldown, g_esShakeAbility[type].g_iShakeCooldown, 1);
-		g_esShakeCache[tank].g_iShakeDeath = iGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank].g_iShakeDeath, g_esShakePlayer[tank].g_iShakeDeath, g_esShakeSpecial[type].g_iShakeDeath, g_esShakeAbility[type].g_iShakeDeath, 1);
-		g_esShakeCache[tank].g_iShakeDuration = iGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank].g_iShakeDuration, g_esShakePlayer[tank].g_iShakeDuration, g_esShakeSpecial[type].g_iShakeDuration, g_esShakeAbility[type].g_iShakeDuration, 1);
-		g_esShakeCache[tank].g_iShakeEffect = iGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank].g_iShakeEffect, g_esShakePlayer[tank].g_iShakeEffect, g_esShakeSpecial[type].g_iShakeEffect, g_esShakeAbility[type].g_iShakeEffect, 1);
-		g_esShakeCache[tank].g_iShakeHit = iGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank].g_iShakeHit, g_esShakePlayer[tank].g_iShakeHit, g_esShakeSpecial[type].g_iShakeHit, g_esShakeAbility[type].g_iShakeHit, 1);
-		g_esShakeCache[tank].g_iShakeHitMode = iGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank].g_iShakeHitMode, g_esShakePlayer[tank].g_iShakeHitMode, g_esShakeSpecial[type].g_iShakeHitMode, g_esShakeAbility[type].g_iShakeHitMode, 1);
-		g_esShakeCache[tank].g_iShakeMessage = iGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank].g_iShakeMessage, g_esShakePlayer[tank].g_iShakeMessage, g_esShakeSpecial[type].g_iShakeMessage, g_esShakeAbility[type].g_iShakeMessage, 1);
-		g_esShakeCache[tank].g_iShakeRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank].g_iShakeRangeCooldown, g_esShakePlayer[tank].g_iShakeRangeCooldown, g_esShakeSpecial[type].g_iShakeRangeCooldown, g_esShakeAbility[type].g_iShakeRangeCooldown, 1);
-		g_esShakeCache[tank].g_iShakeSight = iGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank].g_iShakeSight, g_esShakePlayer[tank].g_iShakeSight, g_esShakeSpecial[type].g_iShakeSight, g_esShakeAbility[type].g_iShakeSight, 1);
+		g_esShakeCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank][iSpecType - 1].g_flCloseAreasOnly, g_esShakePlayer[tank].g_flCloseAreasOnly, g_esShakeSpecial[type][iSpecType - 1].g_flCloseAreasOnly, g_esShakeAbility[type].g_flCloseAreasOnly, 1);
+		g_esShakeCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank][iSpecType - 1].g_iComboAbility, g_esShakePlayer[tank].g_iComboAbility, g_esShakeSpecial[type][iSpecType - 1].g_iComboAbility, g_esShakeAbility[type].g_iComboAbility, 1);
+		g_esShakeCache[tank].g_flShakeChance = flGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank][iSpecType - 1].g_flShakeChance, g_esShakePlayer[tank].g_flShakeChance, g_esShakeSpecial[type][iSpecType - 1].g_flShakeChance, g_esShakeAbility[type].g_flShakeChance, 1);
+		g_esShakeCache[tank].g_flShakeDeathChance = flGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank][iSpecType - 1].g_flShakeDeathChance, g_esShakePlayer[tank].g_flShakeDeathChance, g_esShakeSpecial[type][iSpecType - 1].g_flShakeDeathChance, g_esShakeAbility[type].g_flShakeDeathChance, 1);
+		g_esShakeCache[tank].g_flShakeDeathRange = flGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank][iSpecType - 1].g_flShakeDeathRange, g_esShakePlayer[tank].g_flShakeDeathRange, g_esShakeSpecial[type][iSpecType - 1].g_flShakeDeathRange, g_esShakeAbility[type].g_flShakeDeathRange, 1);
+		g_esShakeCache[tank].g_flShakeInterval = flGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank][iSpecType - 1].g_flShakeInterval, g_esShakePlayer[tank].g_flShakeInterval, g_esShakeSpecial[type][iSpecType - 1].g_flShakeInterval, g_esShakeAbility[type].g_flShakeInterval, 1);
+		g_esShakeCache[tank].g_flShakeRange = flGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank][iSpecType - 1].g_flShakeRange, g_esShakePlayer[tank].g_flShakeRange, g_esShakeSpecial[type][iSpecType - 1].g_flShakeRange, g_esShakeAbility[type].g_flShakeRange, 1);
+		g_esShakeCache[tank].g_flShakeRangeChance = flGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank][iSpecType - 1].g_flShakeRangeChance, g_esShakePlayer[tank].g_flShakeRangeChance, g_esShakeSpecial[type][iSpecType - 1].g_flShakeRangeChance, g_esShakeAbility[type].g_flShakeRangeChance, 1);
+		g_esShakeCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank][iSpecType - 1].g_iHumanAbility, g_esShakePlayer[tank].g_iHumanAbility, g_esShakeSpecial[type][iSpecType - 1].g_iHumanAbility, g_esShakeAbility[type].g_iHumanAbility, 1);
+		g_esShakeCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank][iSpecType - 1].g_iHumanAmmo, g_esShakePlayer[tank].g_iHumanAmmo, g_esShakeSpecial[type][iSpecType - 1].g_iHumanAmmo, g_esShakeAbility[type].g_iHumanAmmo, 1);
+		g_esShakeCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank][iSpecType - 1].g_iHumanCooldown, g_esShakePlayer[tank].g_iHumanCooldown, g_esShakeSpecial[type][iSpecType - 1].g_iHumanCooldown, g_esShakeAbility[type].g_iHumanCooldown, 1);
+		g_esShakeCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank][iSpecType - 1].g_iHumanRangeCooldown, g_esShakePlayer[tank].g_iHumanRangeCooldown, g_esShakeSpecial[type][iSpecType - 1].g_iHumanRangeCooldown, g_esShakeAbility[type].g_iHumanRangeCooldown, 1);
+		g_esShakeCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank][iSpecType - 1].g_flOpenAreasOnly, g_esShakePlayer[tank].g_flOpenAreasOnly, g_esShakeSpecial[type][iSpecType - 1].g_flOpenAreasOnly, g_esShakeAbility[type].g_flOpenAreasOnly, 1);
+		g_esShakeCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank][iSpecType - 1].g_iRequiresHumans, g_esShakePlayer[tank].g_iRequiresHumans, g_esShakeSpecial[type][iSpecType - 1].g_iRequiresHumans, g_esShakeAbility[type].g_iRequiresHumans, 1);
+		g_esShakeCache[tank].g_iShakeAbility = iGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank][iSpecType - 1].g_iShakeAbility, g_esShakePlayer[tank].g_iShakeAbility, g_esShakeSpecial[type][iSpecType - 1].g_iShakeAbility, g_esShakeAbility[type].g_iShakeAbility, 1);
+		g_esShakeCache[tank].g_iShakeCooldown = iGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank][iSpecType - 1].g_iShakeCooldown, g_esShakePlayer[tank].g_iShakeCooldown, g_esShakeSpecial[type][iSpecType - 1].g_iShakeCooldown, g_esShakeAbility[type].g_iShakeCooldown, 1);
+		g_esShakeCache[tank].g_iShakeDeath = iGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank][iSpecType - 1].g_iShakeDeath, g_esShakePlayer[tank].g_iShakeDeath, g_esShakeSpecial[type][iSpecType - 1].g_iShakeDeath, g_esShakeAbility[type].g_iShakeDeath, 1);
+		g_esShakeCache[tank].g_iShakeDuration = iGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank][iSpecType - 1].g_iShakeDuration, g_esShakePlayer[tank].g_iShakeDuration, g_esShakeSpecial[type][iSpecType - 1].g_iShakeDuration, g_esShakeAbility[type].g_iShakeDuration, 1);
+		g_esShakeCache[tank].g_iShakeEffect = iGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank][iSpecType - 1].g_iShakeEffect, g_esShakePlayer[tank].g_iShakeEffect, g_esShakeSpecial[type][iSpecType - 1].g_iShakeEffect, g_esShakeAbility[type].g_iShakeEffect, 1);
+		g_esShakeCache[tank].g_iShakeHit = iGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank][iSpecType - 1].g_iShakeHit, g_esShakePlayer[tank].g_iShakeHit, g_esShakeSpecial[type][iSpecType - 1].g_iShakeHit, g_esShakeAbility[type].g_iShakeHit, 1);
+		g_esShakeCache[tank].g_iShakeHitMode = iGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank][iSpecType - 1].g_iShakeHitMode, g_esShakePlayer[tank].g_iShakeHitMode, g_esShakeSpecial[type][iSpecType - 1].g_iShakeHitMode, g_esShakeAbility[type].g_iShakeHitMode, 1);
+		g_esShakeCache[tank].g_iShakeMessage = iGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank][iSpecType - 1].g_iShakeMessage, g_esShakePlayer[tank].g_iShakeMessage, g_esShakeSpecial[type][iSpecType - 1].g_iShakeMessage, g_esShakeAbility[type].g_iShakeMessage, 1);
+		g_esShakeCache[tank].g_iShakeRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank][iSpecType - 1].g_iShakeRangeCooldown, g_esShakePlayer[tank].g_iShakeRangeCooldown, g_esShakeSpecial[type][iSpecType - 1].g_iShakeRangeCooldown, g_esShakeAbility[type].g_iShakeRangeCooldown, 1);
+		g_esShakeCache[tank].g_iShakeSight = iGetSubSettingValue(apply, bHuman, g_esShakeTeammate[tank][iSpecType - 1].g_iShakeSight, g_esShakePlayer[tank].g_iShakeSight, g_esShakeSpecial[type][iSpecType - 1].g_iShakeSight, g_esShakeAbility[type].g_iShakeSight, 1);
 	}
 	else
 	{

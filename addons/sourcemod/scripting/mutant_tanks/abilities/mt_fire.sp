@@ -100,6 +100,7 @@ enum struct esFirePlayer
 	int g_iHumanRangeCooldown;
 	int g_iHumanRockCooldown;
 	int g_iImmunityFlags;
+	int g_iInfectedType;
 	int g_iRangeCooldown;
 	int g_iRequiresHumans;
 	int g_iRockCooldown;
@@ -138,7 +139,7 @@ enum struct esFireTeammate
 	int g_iRequiresHumans;
 }
 
-esFireTeammate g_esFireTeammate[MAXPLAYERS + 1];
+esFireTeammate g_esFireTeammate[MAXPLAYERS + 1][6];
 
 enum struct esFireAbility
 {
@@ -204,7 +205,7 @@ enum struct esFireSpecial
 	int g_iRequiresHumans;
 }
 
-esFireSpecial g_esFireSpecial[MT_MAXTYPES + 1];
+esFireSpecial g_esFireSpecial[MT_MAXTYPES + 1][6];
 
 enum struct esFireCache
 {
@@ -642,31 +643,34 @@ public void MT_OnConfigsLoad(int mode)
 				g_esFireAbility[iIndex].g_iFireRockCooldown = 0;
 				g_esFireAbility[iIndex].g_iFireSight = 0;
 
-				g_esFireSpecial[iIndex].g_flCloseAreasOnly = -1.0;
-				g_esFireSpecial[iIndex].g_iComboAbility = -1;
-				g_esFireSpecial[iIndex].g_iHumanAbility = -1;
-				g_esFireSpecial[iIndex].g_iHumanAmmo = -1;
-				g_esFireSpecial[iIndex].g_iHumanCooldown = -1;
-				g_esFireSpecial[iIndex].g_iHumanRangeCooldown = -1;
-				g_esFireSpecial[iIndex].g_iHumanRockCooldown = -1;
-				g_esFireSpecial[iIndex].g_flOpenAreasOnly = -1.0;
-				g_esFireSpecial[iIndex].g_iRequiresHumans = -1;
-				g_esFireSpecial[iIndex].g_iFireAbility = -1;
-				g_esFireSpecial[iIndex].g_iFireEffect = -1;
-				g_esFireSpecial[iIndex].g_iFireMessage = -1;
-				g_esFireSpecial[iIndex].g_flFireChance = -1.0;
-				g_esFireSpecial[iIndex].g_iFireCooldown = -1;
-				g_esFireSpecial[iIndex].g_iFireDeath = -1;
-				g_esFireSpecial[iIndex].g_flFireDeathChance = -1.0;
-				g_esFireSpecial[iIndex].g_iFireHit = -1;
-				g_esFireSpecial[iIndex].g_iFireHitMode = -1;
-				g_esFireSpecial[iIndex].g_flFireRange = -1.0;
-				g_esFireSpecial[iIndex].g_flFireRangeChance = -1.0;
-				g_esFireSpecial[iIndex].g_iFireRangeCooldown = -1;
-				g_esFireSpecial[iIndex].g_iFireRockBreak = -1;
-				g_esFireSpecial[iIndex].g_flFireRockChance = -1.0;
-				g_esFireSpecial[iIndex].g_iFireRockCooldown = -1;
-				g_esFireSpecial[iIndex].g_iFireSight = -1;
+				for (int iSpecType = 0; iSpecType < 6; iSpecType++)
+				{
+					g_esFireSpecial[iIndex][iSpecType].g_flCloseAreasOnly = -1.0;
+					g_esFireSpecial[iIndex][iSpecType].g_iComboAbility = -1;
+					g_esFireSpecial[iIndex][iSpecType].g_iHumanAbility = -1;
+					g_esFireSpecial[iIndex][iSpecType].g_iHumanAmmo = -1;
+					g_esFireSpecial[iIndex][iSpecType].g_iHumanCooldown = -1;
+					g_esFireSpecial[iIndex][iSpecType].g_iHumanRangeCooldown = -1;
+					g_esFireSpecial[iIndex][iSpecType].g_iHumanRockCooldown = -1;
+					g_esFireSpecial[iIndex][iSpecType].g_flOpenAreasOnly = -1.0;
+					g_esFireSpecial[iIndex][iSpecType].g_iRequiresHumans = -1;
+					g_esFireSpecial[iIndex][iSpecType].g_iFireAbility = -1;
+					g_esFireSpecial[iIndex][iSpecType].g_iFireEffect = -1;
+					g_esFireSpecial[iIndex][iSpecType].g_iFireMessage = -1;
+					g_esFireSpecial[iIndex][iSpecType].g_flFireChance = -1.0;
+					g_esFireSpecial[iIndex][iSpecType].g_iFireCooldown = -1;
+					g_esFireSpecial[iIndex][iSpecType].g_iFireDeath = -1;
+					g_esFireSpecial[iIndex][iSpecType].g_flFireDeathChance = -1.0;
+					g_esFireSpecial[iIndex][iSpecType].g_iFireHit = -1;
+					g_esFireSpecial[iIndex][iSpecType].g_iFireHitMode = -1;
+					g_esFireSpecial[iIndex][iSpecType].g_flFireRange = -1.0;
+					g_esFireSpecial[iIndex][iSpecType].g_flFireRangeChance = -1.0;
+					g_esFireSpecial[iIndex][iSpecType].g_iFireRangeCooldown = -1;
+					g_esFireSpecial[iIndex][iSpecType].g_iFireRockBreak = -1;
+					g_esFireSpecial[iIndex][iSpecType].g_flFireRockChance = -1.0;
+					g_esFireSpecial[iIndex][iSpecType].g_iFireRockCooldown = -1;
+					g_esFireSpecial[iIndex][iSpecType].g_iFireSight = -1;
+				}
 			}
 		}
 		case 3:
@@ -701,71 +705,74 @@ public void MT_OnConfigsLoad(int mode)
 				g_esFirePlayer[iPlayer].g_iFireRockCooldown = -1;
 				g_esFirePlayer[iPlayer].g_iFireSight = -1;
 
-				g_esFireTeammate[iPlayer].g_flCloseAreasOnly = -1.0;
-				g_esFireTeammate[iPlayer].g_iComboAbility = -1;
-				g_esFireTeammate[iPlayer].g_iHumanAbility = -1;
-				g_esFireTeammate[iPlayer].g_iHumanAmmo = -1;
-				g_esFireTeammate[iPlayer].g_iHumanCooldown = -1;
-				g_esFireTeammate[iPlayer].g_iHumanRangeCooldown = -1;
-				g_esFireTeammate[iPlayer].g_iHumanRockCooldown = -1;
-				g_esFireTeammate[iPlayer].g_flOpenAreasOnly = -1.0;
-				g_esFireTeammate[iPlayer].g_iRequiresHumans = -1;
-				g_esFireTeammate[iPlayer].g_iFireAbility = -1;
-				g_esFireTeammate[iPlayer].g_iFireEffect = -1;
-				g_esFireTeammate[iPlayer].g_iFireMessage = -1;
-				g_esFireTeammate[iPlayer].g_flFireChance = -1.0;
-				g_esFireTeammate[iPlayer].g_iFireCooldown = -1;
-				g_esFireTeammate[iPlayer].g_iFireDeath = -1;
-				g_esFireTeammate[iPlayer].g_flFireDeathChance = -1.0;
-				g_esFireTeammate[iPlayer].g_iFireHit = -1;
-				g_esFireTeammate[iPlayer].g_iFireHitMode = -1;
-				g_esFireTeammate[iPlayer].g_flFireRange = -1.0;
-				g_esFireTeammate[iPlayer].g_flFireRangeChance = -1.0;
-				g_esFireTeammate[iPlayer].g_iFireRangeCooldown = -1;
-				g_esFireTeammate[iPlayer].g_iFireRockBreak = -1;
-				g_esFireTeammate[iPlayer].g_flFireRockChance = -1.0;
-				g_esFireTeammate[iPlayer].g_iFireRockCooldown = -1;
-				g_esFireTeammate[iPlayer].g_iFireSight = -1;
+				for (int iSpecType = 0; iSpecType < 6; iSpecType++)
+				{
+					g_esFireTeammate[iPlayer][iSpecType].g_flCloseAreasOnly = -1.0;
+					g_esFireTeammate[iPlayer][iSpecType].g_iComboAbility = -1;
+					g_esFireTeammate[iPlayer][iSpecType].g_iHumanAbility = -1;
+					g_esFireTeammate[iPlayer][iSpecType].g_iHumanAmmo = -1;
+					g_esFireTeammate[iPlayer][iSpecType].g_iHumanCooldown = -1;
+					g_esFireTeammate[iPlayer][iSpecType].g_iHumanRangeCooldown = -1;
+					g_esFireTeammate[iPlayer][iSpecType].g_iHumanRockCooldown = -1;
+					g_esFireTeammate[iPlayer][iSpecType].g_flOpenAreasOnly = -1.0;
+					g_esFireTeammate[iPlayer][iSpecType].g_iRequiresHumans = -1;
+					g_esFireTeammate[iPlayer][iSpecType].g_iFireAbility = -1;
+					g_esFireTeammate[iPlayer][iSpecType].g_iFireEffect = -1;
+					g_esFireTeammate[iPlayer][iSpecType].g_iFireMessage = -1;
+					g_esFireTeammate[iPlayer][iSpecType].g_flFireChance = -1.0;
+					g_esFireTeammate[iPlayer][iSpecType].g_iFireCooldown = -1;
+					g_esFireTeammate[iPlayer][iSpecType].g_iFireDeath = -1;
+					g_esFireTeammate[iPlayer][iSpecType].g_flFireDeathChance = -1.0;
+					g_esFireTeammate[iPlayer][iSpecType].g_iFireHit = -1;
+					g_esFireTeammate[iPlayer][iSpecType].g_iFireHitMode = -1;
+					g_esFireTeammate[iPlayer][iSpecType].g_flFireRange = -1.0;
+					g_esFireTeammate[iPlayer][iSpecType].g_flFireRangeChance = -1.0;
+					g_esFireTeammate[iPlayer][iSpecType].g_iFireRangeCooldown = -1;
+					g_esFireTeammate[iPlayer][iSpecType].g_iFireRockBreak = -1;
+					g_esFireTeammate[iPlayer][iSpecType].g_flFireRockChance = -1.0;
+					g_esFireTeammate[iPlayer][iSpecType].g_iFireRockCooldown = -1;
+					g_esFireTeammate[iPlayer][iSpecType].g_iFireSight = -1;
+				}
 			}
 		}
 	}
 }
 
 #if defined MT_ABILITIES_MAIN
-void vFireConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
+void vFireConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, const char[] specName, int specType)
 #else
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, const char[] specName, int specType)
 #endif
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esFireTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esFireTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
-			g_esFireTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFireTeammate[admin].g_iComboAbility, value, -1, 1);
-			g_esFireTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFireTeammate[admin].g_iHumanAbility, value, -1, 2);
-			g_esFireTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFireTeammate[admin].g_iHumanAmmo, value, -1, 99999);
-			g_esFireTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFireTeammate[admin].g_iHumanCooldown, value, -1, 99999);
-			g_esFireTeammate[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esFireTeammate[admin].g_iHumanRangeCooldown, value, -1, 99999);
-			g_esFireTeammate[admin].g_iHumanRockCooldown = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "HumanRockCooldown", "Human Rock Cooldown", "Human_Rock_Cooldown", "hrockcooldown", g_esFireTeammate[admin].g_iHumanRockCooldown, value, -1, 99999);
-			g_esFireTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFireTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
-			g_esFireTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFireTeammate[admin].g_iRequiresHumans, value, -1, 32);
-			g_esFireTeammate[admin].g_iFireAbility = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFireTeammate[admin].g_iFireAbility, value, -1, 1);
-			g_esFireTeammate[admin].g_iFireEffect = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esFireTeammate[admin].g_iFireEffect, value, -1, 7);
-			g_esFireTeammate[admin].g_iFireMessage = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esFireTeammate[admin].g_iFireMessage, value, -1, 7);
-			g_esFireTeammate[admin].g_iFireSight = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esFireTeammate[admin].g_iFireSight, value, -1, 2);
-			g_esFireTeammate[admin].g_flFireChance = flGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireChance", "Fire Chance", "Fire_Chance", "chance", g_esFireTeammate[admin].g_flFireChance, value, -1.0, 100.0);
-			g_esFireTeammate[admin].g_iFireCooldown = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireCooldown", "Fire Cooldown", "Fire_Cooldown", "cooldown", g_esFireTeammate[admin].g_iFireCooldown, value, -1, 99999);
-			g_esFireTeammate[admin].g_iFireDeath = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireDeath", "Fire Death", "Fire_Death", "death", g_esFireTeammate[admin].g_iFireDeath, value, -1, 1);
-			g_esFireTeammate[admin].g_flFireDeathChance = flGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireDeathChance", "Fire Death Chance", "Fire_Death_Chance", "deathchance", g_esFireTeammate[admin].g_flFireDeathChance, value, -1.0, 99999.0);
-			g_esFireTeammate[admin].g_iFireHit = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireHit", "Fire Hit", "Fire_Hit", "hit", g_esFireTeammate[admin].g_iFireHit, value, -1, 1);
-			g_esFireTeammate[admin].g_iFireHitMode = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireHitMode", "Fire Hit Mode", "Fire_Hit_Mode", "hitmode", g_esFireTeammate[admin].g_iFireHitMode, value, -1, 2);
-			g_esFireTeammate[admin].g_flFireRange = flGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireRange", "Fire Range", "Fire_Range", "range", g_esFireTeammate[admin].g_flFireRange, value, -1.0, 99999.0);
-			g_esFireTeammate[admin].g_flFireRangeChance = flGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireRangeChance", "Fire Range Chance", "Fire_Range_Chance", "rangechance", g_esFireTeammate[admin].g_flFireRangeChance, value, -1.0, 100.0);
-			g_esFireTeammate[admin].g_iFireRangeCooldown = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireRangeCooldown", "Fire Range Cooldown", "Fire_Range_Cooldown", "rangecooldown", g_esFireTeammate[admin].g_iFireRangeCooldown, value, -1, 99999);
-			g_esFireTeammate[admin].g_iFireRockBreak = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireRockBreak", "Fire Rock Break", "Fire_Rock_Break", "rock", g_esFireTeammate[admin].g_iFireRockBreak, value, -1, 1);
-			g_esFireTeammate[admin].g_flFireRockChance = flGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireRockChance", "Fire Rock Chance", "Fire_Rock_Chance", "rockchance", g_esFireTeammate[admin].g_flFireRockChance, value, -1.0, 100.0);
-			g_esFireTeammate[admin].g_iFireRockCooldown = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireRockCooldown", "Fire Rock Cooldown", "Fire_Rock_Cooldown", "rockcooldown", g_esFireTeammate[admin].g_iFireRockCooldown, value, -1, 99999);
+			g_esFireTeammate[admin][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esFireTeammate[admin][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esFireTeammate[admin][specType].g_iComboAbility = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFireTeammate[admin][specType].g_iComboAbility, value, -1, 1, specName, specType);
+			g_esFireTeammate[admin][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFireTeammate[admin][specType].g_iHumanAbility, value, -1, 2, specName, specType);
+			g_esFireTeammate[admin][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFireTeammate[admin][specType].g_iHumanAmmo, value, -1, 99999, specName, specType);
+			g_esFireTeammate[admin][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFireTeammate[admin][specType].g_iHumanCooldown, value, -1, 99999, specName, specType);
+			g_esFireTeammate[admin][specType].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esFireTeammate[admin][specType].g_iHumanRangeCooldown, value, -1, 99999, specName, specType);
+			g_esFireTeammate[admin][specType].g_iHumanRockCooldown = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "HumanRockCooldown", "Human Rock Cooldown", "Human_Rock_Cooldown", "hrockcooldown", g_esFireTeammate[admin][specType].g_iHumanRockCooldown, value, -1, 99999, specName, specType);
+			g_esFireTeammate[admin][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFireTeammate[admin][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esFireTeammate[admin][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFireTeammate[admin][specType].g_iRequiresHumans, value, -1, 32, specName, specType);
+			g_esFireTeammate[admin][specType].g_iFireAbility = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFireTeammate[admin][specType].g_iFireAbility, value, -1, 1, specName, specType);
+			g_esFireTeammate[admin][specType].g_iFireEffect = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esFireTeammate[admin][specType].g_iFireEffect, value, -1, 7, specName, specType);
+			g_esFireTeammate[admin][specType].g_iFireMessage = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esFireTeammate[admin][specType].g_iFireMessage, value, -1, 7, specName, specType);
+			g_esFireTeammate[admin][specType].g_iFireSight = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esFireTeammate[admin][specType].g_iFireSight, value, -1, 2, specName, specType);
+			g_esFireTeammate[admin][specType].g_flFireChance = flGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireChance", "Fire Chance", "Fire_Chance", "chance", g_esFireTeammate[admin][specType].g_flFireChance, value, -1.0, 100.0, specName, specType);
+			g_esFireTeammate[admin][specType].g_iFireCooldown = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireCooldown", "Fire Cooldown", "Fire_Cooldown", "cooldown", g_esFireTeammate[admin][specType].g_iFireCooldown, value, -1, 99999, specName, specType);
+			g_esFireTeammate[admin][specType].g_iFireDeath = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireDeath", "Fire Death", "Fire_Death", "death", g_esFireTeammate[admin][specType].g_iFireDeath, value, -1, 1, specName, specType);
+			g_esFireTeammate[admin][specType].g_flFireDeathChance = flGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireDeathChance", "Fire Death Chance", "Fire_Death_Chance", "deathchance", g_esFireTeammate[admin][specType].g_flFireDeathChance, value, -1.0, 99999.0, specName, specType);
+			g_esFireTeammate[admin][specType].g_iFireHit = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireHit", "Fire Hit", "Fire_Hit", "hit", g_esFireTeammate[admin][specType].g_iFireHit, value, -1, 1, specName, specType);
+			g_esFireTeammate[admin][specType].g_iFireHitMode = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireHitMode", "Fire Hit Mode", "Fire_Hit_Mode", "hitmode", g_esFireTeammate[admin][specType].g_iFireHitMode, value, -1, 2, specName, specType);
+			g_esFireTeammate[admin][specType].g_flFireRange = flGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireRange", "Fire Range", "Fire_Range", "range", g_esFireTeammate[admin][specType].g_flFireRange, value, -1.0, 99999.0, specName, specType);
+			g_esFireTeammate[admin][specType].g_flFireRangeChance = flGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireRangeChance", "Fire Range Chance", "Fire_Range_Chance", "rangechance", g_esFireTeammate[admin][specType].g_flFireRangeChance, value, -1.0, 100.0, specName, specType);
+			g_esFireTeammate[admin][specType].g_iFireRangeCooldown = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireRangeCooldown", "Fire Range Cooldown", "Fire_Range_Cooldown", "rangecooldown", g_esFireTeammate[admin][specType].g_iFireRangeCooldown, value, -1, 99999, specName, specType);
+			g_esFireTeammate[admin][specType].g_iFireRockBreak = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireRockBreak", "Fire Rock Break", "Fire_Rock_Break", "rock", g_esFireTeammate[admin][specType].g_iFireRockBreak, value, -1, 1, specName, specType);
+			g_esFireTeammate[admin][specType].g_flFireRockChance = flGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireRockChance", "Fire Rock Chance", "Fire_Rock_Chance", "rockchance", g_esFireTeammate[admin][specType].g_flFireRockChance, value, -1.0, 100.0, specName, specType);
+			g_esFireTeammate[admin][specType].g_iFireRockCooldown = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireRockCooldown", "Fire Rock Cooldown", "Fire_Rock_Cooldown", "rockcooldown", g_esFireTeammate[admin][specType].g_iFireRockCooldown, value, -1, 99999, specName, specType);
 		}
 		else
 		{
@@ -803,31 +810,31 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esFireSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esFireSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
-			g_esFireSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFireSpecial[type].g_iComboAbility, value, -1, 1);
-			g_esFireSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFireSpecial[type].g_iHumanAbility, value, -1, 2);
-			g_esFireSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFireSpecial[type].g_iHumanAmmo, value, -1, 99999);
-			g_esFireSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFireSpecial[type].g_iHumanCooldown, value, -1, 99999);
-			g_esFireSpecial[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esFireSpecial[type].g_iHumanRangeCooldown, value, -1, 99999);
-			g_esFireSpecial[type].g_iHumanRockCooldown = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "HumanRockCooldown", "Human Rock Cooldown", "Human_Rock_Cooldown", "hrockcooldown", g_esFireSpecial[type].g_iHumanRockCooldown, value, -1, 99999);
-			g_esFireSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFireSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
-			g_esFireSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFireSpecial[type].g_iRequiresHumans, value, -1, 32);
-			g_esFireSpecial[type].g_iFireAbility = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFireSpecial[type].g_iFireAbility, value, -1, 1);
-			g_esFireSpecial[type].g_iFireEffect = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esFireSpecial[type].g_iFireEffect, value, -1, 7);
-			g_esFireSpecial[type].g_iFireMessage = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esFireSpecial[type].g_iFireMessage, value, -1, 7);
-			g_esFireSpecial[type].g_iFireSight = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esFireSpecial[type].g_iFireSight, value, -1, 2);
-			g_esFireSpecial[type].g_flFireChance = flGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireChance", "Fire Chance", "Fire_Chance", "chance", g_esFireSpecial[type].g_flFireChance, value, -1.0, 100.0);
-			g_esFireSpecial[type].g_iFireCooldown = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireCooldown", "Fire Cooldown", "Fire_Cooldown", "cooldown", g_esFireSpecial[type].g_iFireCooldown, value, -1, 99999);
-			g_esFireSpecial[type].g_iFireDeath = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireDeath", "Fire Death", "Fire_Death", "death", g_esFireSpecial[type].g_iFireDeath, value, -1, 1);
-			g_esFireSpecial[type].g_flFireDeathChance = flGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireDeathChance", "Fire Death Chance", "Fire_Death_Chance", "deathchance", g_esFireSpecial[type].g_flFireDeathChance, value, -1.0, 99999.0);
-			g_esFireSpecial[type].g_iFireHit = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireHit", "Fire Hit", "Fire_Hit", "hit", g_esFireSpecial[type].g_iFireHit, value, -1, 1);
-			g_esFireSpecial[type].g_iFireHitMode = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireHitMode", "Fire Hit Mode", "Fire_Hit_Mode", "hitmode", g_esFireSpecial[type].g_iFireHitMode, value, -1, 2);
-			g_esFireSpecial[type].g_flFireRange = flGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireRange", "Fire Range", "Fire_Range", "range", g_esFireSpecial[type].g_flFireRange, value, -1.0, 99999.0);
-			g_esFireSpecial[type].g_flFireRangeChance = flGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireRangeChance", "Fire Range Chance", "Fire_Range_Chance", "rangechance", g_esFireSpecial[type].g_flFireRangeChance, value, -1.0, 100.0);
-			g_esFireSpecial[type].g_iFireRangeCooldown = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireRangeCooldown", "Fire Range Cooldown", "Fire_Range_Cooldown", "rangecooldown", g_esFireSpecial[type].g_iFireRangeCooldown, value, -1, 99999);
-			g_esFireSpecial[type].g_iFireRockBreak = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireRockBreak", "Fire Rock Break", "Fire_Rock_Break", "rock", g_esFireSpecial[type].g_iFireRockBreak, value, -1, 1);
-			g_esFireSpecial[type].g_flFireRockChance = flGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireRockChance", "Fire Rock Chance", "Fire_Rock_Chance", "rockchance", g_esFireSpecial[type].g_flFireRockChance, value, -1.0, 100.0);
-			g_esFireSpecial[type].g_iFireRockCooldown = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireRockCooldown", "Fire Rock Cooldown", "Fire_Rock_Cooldown", "rockcooldown", g_esFireSpecial[type].g_iFireRockCooldown, value, -1, 99999);
+			g_esFireSpecial[type][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esFireSpecial[type][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esFireSpecial[type][specType].g_iComboAbility = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFireSpecial[type][specType].g_iComboAbility, value, -1, 1, specName, specType);
+			g_esFireSpecial[type][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFireSpecial[type][specType].g_iHumanAbility, value, -1, 2, specName, specType);
+			g_esFireSpecial[type][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFireSpecial[type][specType].g_iHumanAmmo, value, -1, 99999, specName, specType);
+			g_esFireSpecial[type][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFireSpecial[type][specType].g_iHumanCooldown, value, -1, 99999, specName, specType);
+			g_esFireSpecial[type][specType].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esFireSpecial[type][specType].g_iHumanRangeCooldown, value, -1, 99999, specName, specType);
+			g_esFireSpecial[type][specType].g_iHumanRockCooldown = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "HumanRockCooldown", "Human Rock Cooldown", "Human_Rock_Cooldown", "hrockcooldown", g_esFireSpecial[type][specType].g_iHumanRockCooldown, value, -1, 99999, specName, specType);
+			g_esFireSpecial[type][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFireSpecial[type][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esFireSpecial[type][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFireSpecial[type][specType].g_iRequiresHumans, value, -1, 32, specName, specType);
+			g_esFireSpecial[type][specType].g_iFireAbility = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFireSpecial[type][specType].g_iFireAbility, value, -1, 1, specName, specType);
+			g_esFireSpecial[type][specType].g_iFireEffect = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esFireSpecial[type][specType].g_iFireEffect, value, -1, 7, specName, specType);
+			g_esFireSpecial[type][specType].g_iFireMessage = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esFireSpecial[type][specType].g_iFireMessage, value, -1, 7, specName, specType);
+			g_esFireSpecial[type][specType].g_iFireSight = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esFireSpecial[type][specType].g_iFireSight, value, -1, 2, specName, specType);
+			g_esFireSpecial[type][specType].g_flFireChance = flGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireChance", "Fire Chance", "Fire_Chance", "chance", g_esFireSpecial[type][specType].g_flFireChance, value, -1.0, 100.0, specName, specType);
+			g_esFireSpecial[type][specType].g_iFireCooldown = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireCooldown", "Fire Cooldown", "Fire_Cooldown", "cooldown", g_esFireSpecial[type][specType].g_iFireCooldown, value, -1, 99999, specName, specType);
+			g_esFireSpecial[type][specType].g_iFireDeath = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireDeath", "Fire Death", "Fire_Death", "death", g_esFireSpecial[type][specType].g_iFireDeath, value, -1, 1, specName, specType);
+			g_esFireSpecial[type][specType].g_flFireDeathChance = flGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireDeathChance", "Fire Death Chance", "Fire_Death_Chance", "deathchance", g_esFireSpecial[type][specType].g_flFireDeathChance, value, -1.0, 99999.0, specName, specType);
+			g_esFireSpecial[type][specType].g_iFireHit = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireHit", "Fire Hit", "Fire_Hit", "hit", g_esFireSpecial[type][specType].g_iFireHit, value, -1, 1, specName, specType);
+			g_esFireSpecial[type][specType].g_iFireHitMode = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireHitMode", "Fire Hit Mode", "Fire_Hit_Mode", "hitmode", g_esFireSpecial[type][specType].g_iFireHitMode, value, -1, 2, specName, specType);
+			g_esFireSpecial[type][specType].g_flFireRange = flGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireRange", "Fire Range", "Fire_Range", "range", g_esFireSpecial[type][specType].g_flFireRange, value, -1.0, 99999.0, specName, specType);
+			g_esFireSpecial[type][specType].g_flFireRangeChance = flGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireRangeChance", "Fire Range Chance", "Fire_Range_Chance", "rangechance", g_esFireSpecial[type][specType].g_flFireRangeChance, value, -1.0, 100.0, specName, specType);
+			g_esFireSpecial[type][specType].g_iFireRangeCooldown = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireRangeCooldown", "Fire Range Cooldown", "Fire_Range_Cooldown", "rangecooldown", g_esFireSpecial[type][specType].g_iFireRangeCooldown, value, -1, 99999, specName, specType);
+			g_esFireSpecial[type][specType].g_iFireRockBreak = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireRockBreak", "Fire Rock Break", "Fire_Rock_Break", "rock", g_esFireSpecial[type][specType].g_iFireRockBreak, value, -1, 1, specName, specType);
+			g_esFireSpecial[type][specType].g_flFireRockChance = flGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireRockChance", "Fire Rock Chance", "Fire_Rock_Chance", "rockchance", g_esFireSpecial[type][specType].g_flFireRockChance, value, -1.0, 100.0, specName, specType);
+			g_esFireSpecial[type][specType].g_iFireRockCooldown = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FireRockCooldown", "Fire Rock Cooldown", "Fire_Rock_Cooldown", "rockcooldown", g_esFireSpecial[type][specType].g_iFireRockCooldown, value, -1, 99999, specName, specType);
 		}
 		else
 		{
@@ -869,35 +876,37 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esFirePlayer[tank].g_iInfectedType = iGetInfectedType(tank);
 	g_esFirePlayer[tank].g_iTankType = apply ? type : 0;
+	int iSpecType = g_esFirePlayer[tank].g_iInfectedType;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esFireCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank].g_flCloseAreasOnly, g_esFirePlayer[tank].g_flCloseAreasOnly, g_esFireSpecial[type].g_flCloseAreasOnly, g_esFireAbility[type].g_flCloseAreasOnly, 1);
-		g_esFireCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank].g_iComboAbility, g_esFirePlayer[tank].g_iComboAbility, g_esFireSpecial[type].g_iComboAbility, g_esFireAbility[type].g_iComboAbility, 1);
-		g_esFireCache[tank].g_flFireChance = flGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank].g_flFireChance, g_esFirePlayer[tank].g_flFireChance, g_esFireSpecial[type].g_flFireChance, g_esFireAbility[type].g_flFireChance, 1);
-		g_esFireCache[tank].g_iFireCooldown = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank].g_iFireCooldown, g_esFirePlayer[tank].g_iFireCooldown, g_esFireSpecial[type].g_iFireCooldown, g_esFireAbility[type].g_iFireCooldown, 1);
-		g_esFireCache[tank].g_flFireDeathChance = flGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank].g_flFireDeathChance, g_esFirePlayer[tank].g_flFireDeathChance, g_esFireSpecial[type].g_flFireDeathChance, g_esFireAbility[type].g_flFireDeathChance, 1);
-		g_esFireCache[tank].g_flFireRange = flGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank].g_flFireRange, g_esFirePlayer[tank].g_flFireRange, g_esFireSpecial[type].g_flFireRange, g_esFireAbility[type].g_flFireRange, 1);
-		g_esFireCache[tank].g_flFireRangeChance = flGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank].g_flFireRangeChance, g_esFirePlayer[tank].g_flFireRangeChance, g_esFireSpecial[type].g_flFireRangeChance, g_esFireAbility[type].g_flFireRangeChance, 1);
-		g_esFireCache[tank].g_flFireRockChance = flGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank].g_flFireRockChance, g_esFirePlayer[tank].g_flFireRockChance, g_esFireSpecial[type].g_flFireRockChance, g_esFireAbility[type].g_flFireRockChance, 1);
-		g_esFireCache[tank].g_iFireAbility = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank].g_iFireAbility, g_esFirePlayer[tank].g_iFireAbility, g_esFireSpecial[type].g_iFireAbility, g_esFireAbility[type].g_iFireAbility, 1);
-		g_esFireCache[tank].g_iFireDeath = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank].g_iFireDeath, g_esFirePlayer[tank].g_iFireDeath, g_esFireSpecial[type].g_iFireDeath, g_esFireAbility[type].g_iFireDeath, 1);
-		g_esFireCache[tank].g_iFireEffect = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank].g_iFireEffect, g_esFirePlayer[tank].g_iFireEffect, g_esFireSpecial[type].g_iFireEffect, g_esFireAbility[type].g_iFireEffect, 1);
-		g_esFireCache[tank].g_iFireHit = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank].g_iFireHit, g_esFirePlayer[tank].g_iFireHit, g_esFireSpecial[type].g_iFireHit, g_esFireAbility[type].g_iFireHit, 1);
-		g_esFireCache[tank].g_iFireHitMode = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank].g_iFireHitMode, g_esFirePlayer[tank].g_iFireHitMode, g_esFireSpecial[type].g_iFireHitMode, g_esFireAbility[type].g_iFireHitMode, 1);
-		g_esFireCache[tank].g_iFireMessage = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank].g_iFireMessage, g_esFirePlayer[tank].g_iFireMessage, g_esFireSpecial[type].g_iFireMessage, g_esFireAbility[type].g_iFireMessage, 1);
-		g_esFireCache[tank].g_iFireRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank].g_iFireRangeCooldown, g_esFirePlayer[tank].g_iFireRangeCooldown, g_esFireSpecial[type].g_iFireRangeCooldown, g_esFireAbility[type].g_iFireRangeCooldown, 1);
-		g_esFireCache[tank].g_iFireRockBreak = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank].g_iFireRockBreak, g_esFirePlayer[tank].g_iFireRockBreak, g_esFireSpecial[type].g_iFireRockBreak, g_esFireAbility[type].g_iFireRockBreak, 1);
-		g_esFireCache[tank].g_iFireRockCooldown = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank].g_iFireRockCooldown, g_esFirePlayer[tank].g_iFireRockCooldown, g_esFireSpecial[type].g_iFireRockCooldown, g_esFireAbility[type].g_iFireRockCooldown, 1);
-		g_esFireCache[tank].g_iFireSight = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank].g_iFireSight, g_esFirePlayer[tank].g_iFireSight, g_esFireSpecial[type].g_iFireSight, g_esFireAbility[type].g_iFireSight, 1);
-		g_esFireCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank].g_iHumanAbility, g_esFirePlayer[tank].g_iHumanAbility, g_esFireSpecial[type].g_iHumanAbility, g_esFireAbility[type].g_iHumanAbility, 1);
-		g_esFireCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank].g_iHumanAmmo, g_esFirePlayer[tank].g_iHumanAmmo, g_esFireSpecial[type].g_iHumanAmmo, g_esFireAbility[type].g_iHumanAmmo, 1);
-		g_esFireCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank].g_iHumanCooldown, g_esFirePlayer[tank].g_iHumanCooldown, g_esFireSpecial[type].g_iHumanCooldown, g_esFireAbility[type].g_iHumanCooldown, 1);
-		g_esFireCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank].g_iHumanRangeCooldown, g_esFirePlayer[tank].g_iHumanRangeCooldown, g_esFireSpecial[type].g_iHumanRangeCooldown, g_esFireAbility[type].g_iHumanRangeCooldown, 1);
-		g_esFireCache[tank].g_iHumanRockCooldown = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank].g_iHumanRockCooldown, g_esFirePlayer[tank].g_iHumanRockCooldown, g_esFireSpecial[type].g_iHumanRockCooldown, g_esFireAbility[type].g_iHumanRockCooldown, 1);
-		g_esFireCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank].g_flOpenAreasOnly, g_esFirePlayer[tank].g_flOpenAreasOnly, g_esFireSpecial[type].g_flOpenAreasOnly, g_esFireAbility[type].g_flOpenAreasOnly, 1);
-		g_esFireCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank].g_iRequiresHumans, g_esFirePlayer[tank].g_iRequiresHumans, g_esFireSpecial[type].g_iRequiresHumans, g_esFireAbility[type].g_iRequiresHumans, 1);
+		g_esFireCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank][iSpecType - 1].g_flCloseAreasOnly, g_esFirePlayer[tank].g_flCloseAreasOnly, g_esFireSpecial[type][iSpecType - 1].g_flCloseAreasOnly, g_esFireAbility[type].g_flCloseAreasOnly, 1);
+		g_esFireCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank][iSpecType - 1].g_iComboAbility, g_esFirePlayer[tank].g_iComboAbility, g_esFireSpecial[type][iSpecType - 1].g_iComboAbility, g_esFireAbility[type].g_iComboAbility, 1);
+		g_esFireCache[tank].g_flFireChance = flGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank][iSpecType - 1].g_flFireChance, g_esFirePlayer[tank].g_flFireChance, g_esFireSpecial[type][iSpecType - 1].g_flFireChance, g_esFireAbility[type].g_flFireChance, 1);
+		g_esFireCache[tank].g_iFireCooldown = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank][iSpecType - 1].g_iFireCooldown, g_esFirePlayer[tank].g_iFireCooldown, g_esFireSpecial[type][iSpecType - 1].g_iFireCooldown, g_esFireAbility[type].g_iFireCooldown, 1);
+		g_esFireCache[tank].g_flFireDeathChance = flGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank][iSpecType - 1].g_flFireDeathChance, g_esFirePlayer[tank].g_flFireDeathChance, g_esFireSpecial[type][iSpecType - 1].g_flFireDeathChance, g_esFireAbility[type].g_flFireDeathChance, 1);
+		g_esFireCache[tank].g_flFireRange = flGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank][iSpecType - 1].g_flFireRange, g_esFirePlayer[tank].g_flFireRange, g_esFireSpecial[type][iSpecType - 1].g_flFireRange, g_esFireAbility[type].g_flFireRange, 1);
+		g_esFireCache[tank].g_flFireRangeChance = flGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank][iSpecType - 1].g_flFireRangeChance, g_esFirePlayer[tank].g_flFireRangeChance, g_esFireSpecial[type][iSpecType - 1].g_flFireRangeChance, g_esFireAbility[type].g_flFireRangeChance, 1);
+		g_esFireCache[tank].g_flFireRockChance = flGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank][iSpecType - 1].g_flFireRockChance, g_esFirePlayer[tank].g_flFireRockChance, g_esFireSpecial[type][iSpecType - 1].g_flFireRockChance, g_esFireAbility[type].g_flFireRockChance, 1);
+		g_esFireCache[tank].g_iFireAbility = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank][iSpecType - 1].g_iFireAbility, g_esFirePlayer[tank].g_iFireAbility, g_esFireSpecial[type][iSpecType - 1].g_iFireAbility, g_esFireAbility[type].g_iFireAbility, 1);
+		g_esFireCache[tank].g_iFireDeath = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank][iSpecType - 1].g_iFireDeath, g_esFirePlayer[tank].g_iFireDeath, g_esFireSpecial[type][iSpecType - 1].g_iFireDeath, g_esFireAbility[type].g_iFireDeath, 1);
+		g_esFireCache[tank].g_iFireEffect = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank][iSpecType - 1].g_iFireEffect, g_esFirePlayer[tank].g_iFireEffect, g_esFireSpecial[type][iSpecType - 1].g_iFireEffect, g_esFireAbility[type].g_iFireEffect, 1);
+		g_esFireCache[tank].g_iFireHit = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank][iSpecType - 1].g_iFireHit, g_esFirePlayer[tank].g_iFireHit, g_esFireSpecial[type][iSpecType - 1].g_iFireHit, g_esFireAbility[type].g_iFireHit, 1);
+		g_esFireCache[tank].g_iFireHitMode = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank][iSpecType - 1].g_iFireHitMode, g_esFirePlayer[tank].g_iFireHitMode, g_esFireSpecial[type][iSpecType - 1].g_iFireHitMode, g_esFireAbility[type].g_iFireHitMode, 1);
+		g_esFireCache[tank].g_iFireMessage = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank][iSpecType - 1].g_iFireMessage, g_esFirePlayer[tank].g_iFireMessage, g_esFireSpecial[type][iSpecType - 1].g_iFireMessage, g_esFireAbility[type].g_iFireMessage, 1);
+		g_esFireCache[tank].g_iFireRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank][iSpecType - 1].g_iFireRangeCooldown, g_esFirePlayer[tank].g_iFireRangeCooldown, g_esFireSpecial[type][iSpecType - 1].g_iFireRangeCooldown, g_esFireAbility[type].g_iFireRangeCooldown, 1);
+		g_esFireCache[tank].g_iFireRockBreak = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank][iSpecType - 1].g_iFireRockBreak, g_esFirePlayer[tank].g_iFireRockBreak, g_esFireSpecial[type][iSpecType - 1].g_iFireRockBreak, g_esFireAbility[type].g_iFireRockBreak, 1);
+		g_esFireCache[tank].g_iFireRockCooldown = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank][iSpecType - 1].g_iFireRockCooldown, g_esFirePlayer[tank].g_iFireRockCooldown, g_esFireSpecial[type][iSpecType - 1].g_iFireRockCooldown, g_esFireAbility[type].g_iFireRockCooldown, 1);
+		g_esFireCache[tank].g_iFireSight = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank][iSpecType - 1].g_iFireSight, g_esFirePlayer[tank].g_iFireSight, g_esFireSpecial[type][iSpecType - 1].g_iFireSight, g_esFireAbility[type].g_iFireSight, 1);
+		g_esFireCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank][iSpecType - 1].g_iHumanAbility, g_esFirePlayer[tank].g_iHumanAbility, g_esFireSpecial[type][iSpecType - 1].g_iHumanAbility, g_esFireAbility[type].g_iHumanAbility, 1);
+		g_esFireCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank][iSpecType - 1].g_iHumanAmmo, g_esFirePlayer[tank].g_iHumanAmmo, g_esFireSpecial[type][iSpecType - 1].g_iHumanAmmo, g_esFireAbility[type].g_iHumanAmmo, 1);
+		g_esFireCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank][iSpecType - 1].g_iHumanCooldown, g_esFirePlayer[tank].g_iHumanCooldown, g_esFireSpecial[type][iSpecType - 1].g_iHumanCooldown, g_esFireAbility[type].g_iHumanCooldown, 1);
+		g_esFireCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank][iSpecType - 1].g_iHumanRangeCooldown, g_esFirePlayer[tank].g_iHumanRangeCooldown, g_esFireSpecial[type][iSpecType - 1].g_iHumanRangeCooldown, g_esFireAbility[type].g_iHumanRangeCooldown, 1);
+		g_esFireCache[tank].g_iHumanRockCooldown = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank][iSpecType - 1].g_iHumanRockCooldown, g_esFirePlayer[tank].g_iHumanRockCooldown, g_esFireSpecial[type][iSpecType - 1].g_iHumanRockCooldown, g_esFireAbility[type].g_iHumanRockCooldown, 1);
+		g_esFireCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank][iSpecType - 1].g_flOpenAreasOnly, g_esFirePlayer[tank].g_flOpenAreasOnly, g_esFireSpecial[type][iSpecType - 1].g_flOpenAreasOnly, g_esFireAbility[type].g_flOpenAreasOnly, 1);
+		g_esFireCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank][iSpecType - 1].g_iRequiresHumans, g_esFirePlayer[tank].g_iRequiresHumans, g_esFireSpecial[type][iSpecType - 1].g_iRequiresHumans, g_esFireAbility[type].g_iRequiresHumans, 1);
 	}
 	else
 	{

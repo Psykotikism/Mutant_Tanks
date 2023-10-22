@@ -1482,124 +1482,124 @@ public void MT_OnConfigsLoad(int mode)
 #endif
 }
 
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, const char[] specName, int specType)
 {
 #if defined MT_MENU_ABSORB
-	vAbsorbConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+	vAbsorbConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection, specName, specType);
 #endif
 #if defined MT_MENU_ACID
-	vAcidConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+	vAcidConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection, specName, specType);
 #endif
 #if defined MT_MENU_AIMLESS
-	vAimlessConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+	vAimlessConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection, specName, specType);
 #endif
 #if defined MT_MENU_AMMO
-	vAmmoConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+	vAmmoConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection, specName, specType);
 #endif
 #if defined MT_MENU_BLIND
-	vBlindConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+	vBlindConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection, specName, specType);
 #endif
 #if defined MT_MENU_BOMB
-	vBombConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+	vBombConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection, specName, specType);
 #endif
 #if defined MT_MENU_BURY
-	vBuryConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+	vBuryConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection, specName, specType);
 #endif
 #if defined MT_MENU_CAR
-	vCarConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+	vCarConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection, specName, specType);
 #endif
 #if defined MT_MENU_CHOKE
-	vChokeConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+	vChokeConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection, specName, specType);
 #endif
 #if defined MT_MENU_CLONE
-	vCloneConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+	vCloneConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection, specName, specType);
 #endif
 #if defined MT_MENU_CLOUD
-	vCloudConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+	vCloudConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection, specName, specType);
 #endif
 #if defined MT_MENU_DROP
-	vDropConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+	vDropConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection, specName, specType);
 #endif
 #if defined MT_MENU_DRUG
-	vDrugConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+	vDrugConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection, specName, specType);
 #endif
 #if defined MT_MENU_DRUNK
-	vDrunkConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+	vDrunkConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection, specName, specType);
 #endif
 #if defined MT_MENU_ELECTRIC
-	vElectricConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+	vElectricConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection, specName, specType);
 #endif
 #if defined MT_MENU_ENFORCE
-	vEnforceConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+	vEnforceConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection, specName, specType);
 #endif
 #if defined MT_MENU_FAST
-	vFastConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+	vFastConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection, specName, specType);
 #endif
 #if defined MT_MENU_FIRE
-	vFireConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+	vFireConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection, specName, specType);
 #endif
 #if defined MT_MENU_FLING
-	vFlingConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+	vFlingConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection, specName, specType);
 #endif
 #if defined MT_MENU_FLY
-	vFlyConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+	vFlyConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection, specName, specType);
 #endif
 #if defined MT_MENU_FRAGILE
-	vFragileConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+	vFragileConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection, specName, specType);
 #endif
 #if defined MT_MENU_GHOST
-	vGhostConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+	vGhostConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection, specName, specType);
 #endif
 #if defined MT_MENU_GOD
-	vGodConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+	vGodConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection, specName, specType);
 #endif
 #if defined MT_MENU_GRAVITY
-	vGravityConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+	vGravityConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection, specName, specType);
 #endif
 #if defined MT_MENU_GUNNER
-	vGunnerConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+	vGunnerConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection, specName, specType);
 #endif
 #if defined MT_MENU_HEAL
-	vHealConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+	vHealConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection, specName, specType);
 #endif
 #if defined MT_MENU_HIT
-	vHitConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+	vHitConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection, specName, specType);
 #endif
 #if defined MT_MENU_HURT
-	vHurtConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+	vHurtConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection, specName, specType);
 #endif
 #if defined MT_MENU_HYPNO
-	vHypnoConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+	vHypnoConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection, specName, specType);
 #endif
 #if defined MT_MENU_ICE
-	vIceConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+	vIceConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection, specName, specType);
 #endif
 #if defined MT_MENU_IDLE
-	vIdleConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+	vIdleConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection, specName, specType);
 #endif
 #if defined MT_MENU_INVERT
-	vInvertConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+	vInvertConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection, specName, specType);
 #endif
 #if defined MT_MENU_ITEM
-	vItemConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+	vItemConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection, specName, specType);
 #endif
 #if defined MT_MENU_JUMP
-	vJumpConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+	vJumpConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection, specName, specType);
 #endif
 #if defined MT_MENU_KAMIKAZE
-	vKamikazeConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+	vKamikazeConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection, specName, specType);
 #endif
 #if defined MT_MENU_LAG
-	vLagConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+	vLagConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection, specName, specType);
 #endif
 #if defined MT_MENU_LASER
-	vLaserConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+	vLaserConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection, specName, specType);
 #endif
 #if defined MT_MENU_LEECH
-	vLeechConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+	vLeechConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection, specName, specType);
 #endif
 #if defined MT_MENU_LIGHTNING
-	vLightningConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+	vLightningConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection, specName, specType);
 #endif
 }
 

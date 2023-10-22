@@ -79,6 +79,7 @@ enum struct esRecoilPlayer
 	int g_iHumanCooldown;
 	int g_iHumanRangeCooldown;
 	int g_iImmunityFlags;
+	int g_iInfectedType;
 	int g_iOwner;
 	int g_iRangeCooldown;
 	int g_iRecoilAbility;
@@ -120,7 +121,7 @@ enum struct esRecoilTeammate
 	int g_iRequiresHumans;
 }
 
-esRecoilTeammate g_esRecoilTeammate[MAXPLAYERS + 1];
+esRecoilTeammate g_esRecoilTeammate[MAXPLAYERS + 1][6];
 
 enum struct esRecoilAbility
 {
@@ -176,7 +177,7 @@ enum struct esRecoilSpecial
 	int g_iRequiresHumans;
 }
 
-esRecoilSpecial g_esRecoilSpecial[MT_MAXTYPES + 1];
+esRecoilSpecial g_esRecoilSpecial[MT_MAXTYPES + 1][6];
 
 enum struct esRecoilCache
 {
@@ -589,26 +590,29 @@ public void MT_OnConfigsLoad(int mode)
 				g_esRecoilAbility[iIndex].g_iRecoilRangeCooldown = 0;
 				g_esRecoilAbility[iIndex].g_iRecoilSight = 0;
 
-				g_esRecoilSpecial[iIndex].g_flCloseAreasOnly = -1.0;
-				g_esRecoilSpecial[iIndex].g_iComboAbility = -1;
-				g_esRecoilSpecial[iIndex].g_iHumanAbility = -1;
-				g_esRecoilSpecial[iIndex].g_iHumanAmmo = -1;
-				g_esRecoilSpecial[iIndex].g_iHumanCooldown = -1;
-				g_esRecoilSpecial[iIndex].g_iHumanRangeCooldown = -1;
-				g_esRecoilSpecial[iIndex].g_flOpenAreasOnly = -1.0;
-				g_esRecoilSpecial[iIndex].g_iRequiresHumans = -1;
-				g_esRecoilSpecial[iIndex].g_iRecoilAbility = -1;
-				g_esRecoilSpecial[iIndex].g_iRecoilEffect = -1;
-				g_esRecoilSpecial[iIndex].g_iRecoilMessage = -1;
-				g_esRecoilSpecial[iIndex].g_flRecoilChance = -1.0;
-				g_esRecoilSpecial[iIndex].g_iRecoilCooldown = -1;
-				g_esRecoilSpecial[iIndex].g_flRecoilDuration = -1.0;
-				g_esRecoilSpecial[iIndex].g_iRecoilHit = -1;
-				g_esRecoilSpecial[iIndex].g_iRecoilHitMode = -1;
-				g_esRecoilSpecial[iIndex].g_flRecoilRange = -1.0;
-				g_esRecoilSpecial[iIndex].g_flRecoilRangeChance = -1.0;
-				g_esRecoilSpecial[iIndex].g_iRecoilRangeCooldown = -1;
-				g_esRecoilSpecial[iIndex].g_iRecoilSight = -1;
+				for (int iSpecType = 0; iSpecType < 6; iSpecType++)
+				{
+					g_esRecoilSpecial[iIndex][iSpecType].g_flCloseAreasOnly = -1.0;
+					g_esRecoilSpecial[iIndex][iSpecType].g_iComboAbility = -1;
+					g_esRecoilSpecial[iIndex][iSpecType].g_iHumanAbility = -1;
+					g_esRecoilSpecial[iIndex][iSpecType].g_iHumanAmmo = -1;
+					g_esRecoilSpecial[iIndex][iSpecType].g_iHumanCooldown = -1;
+					g_esRecoilSpecial[iIndex][iSpecType].g_iHumanRangeCooldown = -1;
+					g_esRecoilSpecial[iIndex][iSpecType].g_flOpenAreasOnly = -1.0;
+					g_esRecoilSpecial[iIndex][iSpecType].g_iRequiresHumans = -1;
+					g_esRecoilSpecial[iIndex][iSpecType].g_iRecoilAbility = -1;
+					g_esRecoilSpecial[iIndex][iSpecType].g_iRecoilEffect = -1;
+					g_esRecoilSpecial[iIndex][iSpecType].g_iRecoilMessage = -1;
+					g_esRecoilSpecial[iIndex][iSpecType].g_flRecoilChance = -1.0;
+					g_esRecoilSpecial[iIndex][iSpecType].g_iRecoilCooldown = -1;
+					g_esRecoilSpecial[iIndex][iSpecType].g_flRecoilDuration = -1.0;
+					g_esRecoilSpecial[iIndex][iSpecType].g_iRecoilHit = -1;
+					g_esRecoilSpecial[iIndex][iSpecType].g_iRecoilHitMode = -1;
+					g_esRecoilSpecial[iIndex][iSpecType].g_flRecoilRange = -1.0;
+					g_esRecoilSpecial[iIndex][iSpecType].g_flRecoilRangeChance = -1.0;
+					g_esRecoilSpecial[iIndex][iSpecType].g_iRecoilRangeCooldown = -1;
+					g_esRecoilSpecial[iIndex][iSpecType].g_iRecoilSight = -1;
+				}
 			}
 		}
 		case 3:
@@ -638,61 +642,64 @@ public void MT_OnConfigsLoad(int mode)
 				g_esRecoilPlayer[iPlayer].g_iRecoilRangeCooldown = -1;
 				g_esRecoilPlayer[iPlayer].g_iRecoilSight = -1;
 
-				g_esRecoilTeammate[iPlayer].g_flCloseAreasOnly = -1.0;
-				g_esRecoilTeammate[iPlayer].g_iComboAbility = -1;
-				g_esRecoilTeammate[iPlayer].g_iHumanAbility = -1;
-				g_esRecoilTeammate[iPlayer].g_iHumanAmmo = -1;
-				g_esRecoilTeammate[iPlayer].g_iHumanCooldown = -1;
-				g_esRecoilTeammate[iPlayer].g_iHumanRangeCooldown = -1;
-				g_esRecoilTeammate[iPlayer].g_flOpenAreasOnly = -1.0;
-				g_esRecoilTeammate[iPlayer].g_iRequiresHumans = -1;
-				g_esRecoilTeammate[iPlayer].g_iRecoilAbility = -1;
-				g_esRecoilTeammate[iPlayer].g_iRecoilEffect = -1;
-				g_esRecoilTeammate[iPlayer].g_iRecoilMessage = -1;
-				g_esRecoilTeammate[iPlayer].g_flRecoilChance = -1.0;
-				g_esRecoilTeammate[iPlayer].g_iRecoilCooldown = -1;
-				g_esRecoilTeammate[iPlayer].g_flRecoilDuration = -1.0;
-				g_esRecoilTeammate[iPlayer].g_iRecoilHit = -1;
-				g_esRecoilTeammate[iPlayer].g_iRecoilHitMode = -1;
-				g_esRecoilTeammate[iPlayer].g_flRecoilRange = -1.0;
-				g_esRecoilTeammate[iPlayer].g_flRecoilRangeChance = -1.0;
-				g_esRecoilTeammate[iPlayer].g_iRecoilRangeCooldown = -1;
-				g_esRecoilTeammate[iPlayer].g_iRecoilSight = -1;
+				for (int iSpecType = 0; iSpecType < 6; iSpecType++)
+				{
+					g_esRecoilTeammate[iPlayer][iSpecType].g_flCloseAreasOnly = -1.0;
+					g_esRecoilTeammate[iPlayer][iSpecType].g_iComboAbility = -1;
+					g_esRecoilTeammate[iPlayer][iSpecType].g_iHumanAbility = -1;
+					g_esRecoilTeammate[iPlayer][iSpecType].g_iHumanAmmo = -1;
+					g_esRecoilTeammate[iPlayer][iSpecType].g_iHumanCooldown = -1;
+					g_esRecoilTeammate[iPlayer][iSpecType].g_iHumanRangeCooldown = -1;
+					g_esRecoilTeammate[iPlayer][iSpecType].g_flOpenAreasOnly = -1.0;
+					g_esRecoilTeammate[iPlayer][iSpecType].g_iRequiresHumans = -1;
+					g_esRecoilTeammate[iPlayer][iSpecType].g_iRecoilAbility = -1;
+					g_esRecoilTeammate[iPlayer][iSpecType].g_iRecoilEffect = -1;
+					g_esRecoilTeammate[iPlayer][iSpecType].g_iRecoilMessage = -1;
+					g_esRecoilTeammate[iPlayer][iSpecType].g_flRecoilChance = -1.0;
+					g_esRecoilTeammate[iPlayer][iSpecType].g_iRecoilCooldown = -1;
+					g_esRecoilTeammate[iPlayer][iSpecType].g_flRecoilDuration = -1.0;
+					g_esRecoilTeammate[iPlayer][iSpecType].g_iRecoilHit = -1;
+					g_esRecoilTeammate[iPlayer][iSpecType].g_iRecoilHitMode = -1;
+					g_esRecoilTeammate[iPlayer][iSpecType].g_flRecoilRange = -1.0;
+					g_esRecoilTeammate[iPlayer][iSpecType].g_flRecoilRangeChance = -1.0;
+					g_esRecoilTeammate[iPlayer][iSpecType].g_iRecoilRangeCooldown = -1;
+					g_esRecoilTeammate[iPlayer][iSpecType].g_iRecoilSight = -1;
+				}
 			}
 		}
 	}
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vRecoilConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
+void vRecoilConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, const char[] specName, int specType)
 #else
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, const char[] specName, int specType)
 #endif
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esRecoilTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esRecoilTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
-			g_esRecoilTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRecoilTeammate[admin].g_iComboAbility, value, -1, 1);
-			g_esRecoilTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRecoilTeammate[admin].g_iHumanAbility, value, -1, 2);
-			g_esRecoilTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRecoilTeammate[admin].g_iHumanAmmo, value, -1, 99999);
-			g_esRecoilTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRecoilTeammate[admin].g_iHumanCooldown, value, -1, 99999);
-			g_esRecoilTeammate[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esRecoilTeammate[admin].g_iHumanRangeCooldown, value, -1, 99999);
-			g_esRecoilTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRecoilTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
-			g_esRecoilTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRecoilTeammate[admin].g_iRequiresHumans, value, -1, 32);
-			g_esRecoilTeammate[admin].g_iRecoilAbility = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRecoilTeammate[admin].g_iRecoilAbility, value, -1, 1);
-			g_esRecoilTeammate[admin].g_iRecoilEffect = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRecoilTeammate[admin].g_iRecoilEffect, value, -1, 7);
-			g_esRecoilTeammate[admin].g_iRecoilMessage = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRecoilTeammate[admin].g_iRecoilMessage, value, -1, 3);
-			g_esRecoilTeammate[admin].g_iRecoilSight = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRecoilTeammate[admin].g_iRecoilSight, value, -1, 2);
-			g_esRecoilTeammate[admin].g_flRecoilChance = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilChance", "Recoil Chance", "Recoil_Chance", "chance", g_esRecoilTeammate[admin].g_flRecoilChance, value, -1.0, 100.0);
-			g_esRecoilTeammate[admin].g_iRecoilCooldown = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilCooldown", "Recoil Cooldown", "Recoil_Cooldown", "cooldown", g_esRecoilTeammate[admin].g_iRecoilCooldown, value, -1, 99999);
-			g_esRecoilTeammate[admin].g_flRecoilDuration = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilDuration", "Recoil Duration", "Recoil_Duration", "duration", g_esRecoilTeammate[admin].g_flRecoilDuration, value, -1.0, 99999.0);
-			g_esRecoilTeammate[admin].g_iRecoilHit = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilHit", "Recoil Hit", "Recoil_Hit", "hit", g_esRecoilTeammate[admin].g_iRecoilHit, value, -1, 1);
-			g_esRecoilTeammate[admin].g_iRecoilHitMode = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilHitMode", "Recoil Hit Mode", "Recoil_Hit_Mode", "hitmode", g_esRecoilTeammate[admin].g_iRecoilHitMode, value, -1, 2);
-			g_esRecoilTeammate[admin].g_flRecoilRange = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilRange", "Recoil Range", "Recoil_Range", "range", g_esRecoilTeammate[admin].g_flRecoilRange, value, -1.0, 99999.0);
-			g_esRecoilTeammate[admin].g_flRecoilRangeChance = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilRangeChance", "Recoil Range Chance", "Recoil_Range_Chance", "rangechance", g_esRecoilTeammate[admin].g_flRecoilRangeChance, value, -1.0, 100.0);
-			g_esRecoilTeammate[admin].g_iRecoilRangeCooldown = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilRangeCooldown", "Recoil Range Cooldown", "Recoil_Range_Cooldown", "rangecooldown", g_esRecoilTeammate[admin].g_iRecoilRangeCooldown, value, -1, 99999);
+			g_esRecoilTeammate[admin][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esRecoilTeammate[admin][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esRecoilTeammate[admin][specType].g_iComboAbility = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRecoilTeammate[admin][specType].g_iComboAbility, value, -1, 1, specName, specType);
+			g_esRecoilTeammate[admin][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRecoilTeammate[admin][specType].g_iHumanAbility, value, -1, 2, specName, specType);
+			g_esRecoilTeammate[admin][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRecoilTeammate[admin][specType].g_iHumanAmmo, value, -1, 99999, specName, specType);
+			g_esRecoilTeammate[admin][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRecoilTeammate[admin][specType].g_iHumanCooldown, value, -1, 99999, specName, specType);
+			g_esRecoilTeammate[admin][specType].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esRecoilTeammate[admin][specType].g_iHumanRangeCooldown, value, -1, 99999, specName, specType);
+			g_esRecoilTeammate[admin][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRecoilTeammate[admin][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esRecoilTeammate[admin][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRecoilTeammate[admin][specType].g_iRequiresHumans, value, -1, 32, specName, specType);
+			g_esRecoilTeammate[admin][specType].g_iRecoilAbility = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRecoilTeammate[admin][specType].g_iRecoilAbility, value, -1, 1, specName, specType);
+			g_esRecoilTeammate[admin][specType].g_iRecoilEffect = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRecoilTeammate[admin][specType].g_iRecoilEffect, value, -1, 7, specName, specType);
+			g_esRecoilTeammate[admin][specType].g_iRecoilMessage = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRecoilTeammate[admin][specType].g_iRecoilMessage, value, -1, 3, specName, specType);
+			g_esRecoilTeammate[admin][specType].g_iRecoilSight = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRecoilTeammate[admin][specType].g_iRecoilSight, value, -1, 2, specName, specType);
+			g_esRecoilTeammate[admin][specType].g_flRecoilChance = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilChance", "Recoil Chance", "Recoil_Chance", "chance", g_esRecoilTeammate[admin][specType].g_flRecoilChance, value, -1.0, 100.0, specName, specType);
+			g_esRecoilTeammate[admin][specType].g_iRecoilCooldown = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilCooldown", "Recoil Cooldown", "Recoil_Cooldown", "cooldown", g_esRecoilTeammate[admin][specType].g_iRecoilCooldown, value, -1, 99999, specName, specType);
+			g_esRecoilTeammate[admin][specType].g_flRecoilDuration = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilDuration", "Recoil Duration", "Recoil_Duration", "duration", g_esRecoilTeammate[admin][specType].g_flRecoilDuration, value, -1.0, 99999.0, specName, specType);
+			g_esRecoilTeammate[admin][specType].g_iRecoilHit = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilHit", "Recoil Hit", "Recoil_Hit", "hit", g_esRecoilTeammate[admin][specType].g_iRecoilHit, value, -1, 1, specName, specType);
+			g_esRecoilTeammate[admin][specType].g_iRecoilHitMode = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilHitMode", "Recoil Hit Mode", "Recoil_Hit_Mode", "hitmode", g_esRecoilTeammate[admin][specType].g_iRecoilHitMode, value, -1, 2, specName, specType);
+			g_esRecoilTeammate[admin][specType].g_flRecoilRange = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilRange", "Recoil Range", "Recoil_Range", "range", g_esRecoilTeammate[admin][specType].g_flRecoilRange, value, -1.0, 99999.0, specName, specType);
+			g_esRecoilTeammate[admin][specType].g_flRecoilRangeChance = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilRangeChance", "Recoil Range Chance", "Recoil_Range_Chance", "rangechance", g_esRecoilTeammate[admin][specType].g_flRecoilRangeChance, value, -1.0, 100.0, specName, specType);
+			g_esRecoilTeammate[admin][specType].g_iRecoilRangeCooldown = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilRangeCooldown", "Recoil Range Cooldown", "Recoil_Range_Cooldown", "rangecooldown", g_esRecoilTeammate[admin][specType].g_iRecoilRangeCooldown, value, -1, 99999, specName, specType);
 		}
 		else
 		{
@@ -725,26 +732,26 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esRecoilSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esRecoilSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
-			g_esRecoilSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRecoilSpecial[type].g_iComboAbility, value, -1, 1);
-			g_esRecoilSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRecoilSpecial[type].g_iHumanAbility, value, -1, 2);
-			g_esRecoilSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRecoilSpecial[type].g_iHumanAmmo, value, -1, 99999);
-			g_esRecoilSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRecoilSpecial[type].g_iHumanCooldown, value, -1, 99999);
-			g_esRecoilSpecial[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esRecoilSpecial[type].g_iHumanRangeCooldown, value, -1, 99999);
-			g_esRecoilSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRecoilSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
-			g_esRecoilSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRecoilSpecial[type].g_iRequiresHumans, value, -1, 32);
-			g_esRecoilSpecial[type].g_iRecoilAbility = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRecoilSpecial[type].g_iRecoilAbility, value, -1, 1);
-			g_esRecoilSpecial[type].g_iRecoilEffect = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRecoilSpecial[type].g_iRecoilEffect, value, -1, 7);
-			g_esRecoilSpecial[type].g_iRecoilMessage = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRecoilSpecial[type].g_iRecoilMessage, value, -1, 3);
-			g_esRecoilSpecial[type].g_iRecoilSight = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRecoilSpecial[type].g_iRecoilSight, value, -1, 2);
-			g_esRecoilSpecial[type].g_flRecoilChance = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilChance", "Recoil Chance", "Recoil_Chance", "chance", g_esRecoilSpecial[type].g_flRecoilChance, value, -1.0, 100.0);
-			g_esRecoilSpecial[type].g_iRecoilCooldown = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilCooldown", "Recoil Cooldown", "Recoil_Cooldown", "cooldown", g_esRecoilSpecial[type].g_iRecoilCooldown, value, -1, 99999);
-			g_esRecoilSpecial[type].g_flRecoilDuration = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilDuration", "Recoil Duration", "Recoil_Duration", "duration", g_esRecoilSpecial[type].g_flRecoilDuration, value, -1.0, 99999.0);
-			g_esRecoilSpecial[type].g_iRecoilHit = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilHit", "Recoil Hit", "Recoil_Hit", "hit", g_esRecoilSpecial[type].g_iRecoilHit, value, -1, 1);
-			g_esRecoilSpecial[type].g_iRecoilHitMode = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilHitMode", "Recoil Hit Mode", "Recoil_Hit_Mode", "hitmode", g_esRecoilSpecial[type].g_iRecoilHitMode, value, -1, 2);
-			g_esRecoilSpecial[type].g_flRecoilRange = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilRange", "Recoil Range", "Recoil_Range", "range", g_esRecoilSpecial[type].g_flRecoilRange, value, -1.0, 99999.0);
-			g_esRecoilSpecial[type].g_flRecoilRangeChance = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilRangeChance", "Recoil Range Chance", "Recoil_Range_Chance", "rangechance", g_esRecoilSpecial[type].g_flRecoilRangeChance, value, -1.0, 100.0);
-			g_esRecoilSpecial[type].g_iRecoilRangeCooldown = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilRangeCooldown", "Recoil Range Cooldown", "Recoil_Range_Cooldown", "rangecooldown", g_esRecoilSpecial[type].g_iRecoilRangeCooldown, value, -1, 99999);
+			g_esRecoilSpecial[type][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esRecoilSpecial[type][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esRecoilSpecial[type][specType].g_iComboAbility = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRecoilSpecial[type][specType].g_iComboAbility, value, -1, 1, specName, specType);
+			g_esRecoilSpecial[type][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRecoilSpecial[type][specType].g_iHumanAbility, value, -1, 2, specName, specType);
+			g_esRecoilSpecial[type][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRecoilSpecial[type][specType].g_iHumanAmmo, value, -1, 99999, specName, specType);
+			g_esRecoilSpecial[type][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRecoilSpecial[type][specType].g_iHumanCooldown, value, -1, 99999, specName, specType);
+			g_esRecoilSpecial[type][specType].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esRecoilSpecial[type][specType].g_iHumanRangeCooldown, value, -1, 99999, specName, specType);
+			g_esRecoilSpecial[type][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRecoilSpecial[type][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esRecoilSpecial[type][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRecoilSpecial[type][specType].g_iRequiresHumans, value, -1, 32, specName, specType);
+			g_esRecoilSpecial[type][specType].g_iRecoilAbility = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRecoilSpecial[type][specType].g_iRecoilAbility, value, -1, 1, specName, specType);
+			g_esRecoilSpecial[type][specType].g_iRecoilEffect = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRecoilSpecial[type][specType].g_iRecoilEffect, value, -1, 7, specName, specType);
+			g_esRecoilSpecial[type][specType].g_iRecoilMessage = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRecoilSpecial[type][specType].g_iRecoilMessage, value, -1, 3, specName, specType);
+			g_esRecoilSpecial[type][specType].g_iRecoilSight = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRecoilSpecial[type][specType].g_iRecoilSight, value, -1, 2, specName, specType);
+			g_esRecoilSpecial[type][specType].g_flRecoilChance = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilChance", "Recoil Chance", "Recoil_Chance", "chance", g_esRecoilSpecial[type][specType].g_flRecoilChance, value, -1.0, 100.0, specName, specType);
+			g_esRecoilSpecial[type][specType].g_iRecoilCooldown = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilCooldown", "Recoil Cooldown", "Recoil_Cooldown", "cooldown", g_esRecoilSpecial[type][specType].g_iRecoilCooldown, value, -1, 99999, specName, specType);
+			g_esRecoilSpecial[type][specType].g_flRecoilDuration = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilDuration", "Recoil Duration", "Recoil_Duration", "duration", g_esRecoilSpecial[type][specType].g_flRecoilDuration, value, -1.0, 99999.0, specName, specType);
+			g_esRecoilSpecial[type][specType].g_iRecoilHit = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilHit", "Recoil Hit", "Recoil_Hit", "hit", g_esRecoilSpecial[type][specType].g_iRecoilHit, value, -1, 1, specName, specType);
+			g_esRecoilSpecial[type][specType].g_iRecoilHitMode = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilHitMode", "Recoil Hit Mode", "Recoil_Hit_Mode", "hitmode", g_esRecoilSpecial[type][specType].g_iRecoilHitMode, value, -1, 2, specName, specType);
+			g_esRecoilSpecial[type][specType].g_flRecoilRange = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilRange", "Recoil Range", "Recoil_Range", "range", g_esRecoilSpecial[type][specType].g_flRecoilRange, value, -1.0, 99999.0, specName, specType);
+			g_esRecoilSpecial[type][specType].g_flRecoilRangeChance = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilRangeChance", "Recoil Range Chance", "Recoil_Range_Chance", "rangechance", g_esRecoilSpecial[type][specType].g_flRecoilRangeChance, value, -1.0, 100.0, specName, specType);
+			g_esRecoilSpecial[type][specType].g_iRecoilRangeCooldown = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilRangeCooldown", "Recoil Range Cooldown", "Recoil_Range_Cooldown", "rangecooldown", g_esRecoilSpecial[type][specType].g_iRecoilRangeCooldown, value, -1, 99999, specName, specType);
 		}
 		else
 		{
@@ -781,30 +788,32 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esRecoilPlayer[tank].g_iInfectedType = iGetInfectedType(tank);
 	g_esRecoilPlayer[tank].g_iTankType = apply ? type : 0;
+	int iSpecType = g_esRecoilPlayer[tank].g_iInfectedType;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esRecoilCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esRecoilTeammate[tank].g_flCloseAreasOnly, g_esRecoilPlayer[tank].g_flCloseAreasOnly, g_esRecoilSpecial[type].g_flCloseAreasOnly, g_esRecoilAbility[type].g_flCloseAreasOnly, 1);
-		g_esRecoilCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esRecoilTeammate[tank].g_iComboAbility, g_esRecoilPlayer[tank].g_iComboAbility, g_esRecoilSpecial[type].g_iComboAbility, g_esRecoilAbility[type].g_iComboAbility, 1);
-		g_esRecoilCache[tank].g_flRecoilChance = flGetSubSettingValue(apply, bHuman, g_esRecoilTeammate[tank].g_flRecoilChance, g_esRecoilPlayer[tank].g_flRecoilChance, g_esRecoilSpecial[type].g_flRecoilChance, g_esRecoilAbility[type].g_flRecoilChance, 1);
-		g_esRecoilCache[tank].g_flRecoilDuration = flGetSubSettingValue(apply, bHuman, g_esRecoilTeammate[tank].g_flRecoilDuration, g_esRecoilPlayer[tank].g_flRecoilDuration, g_esRecoilSpecial[type].g_flRecoilDuration, g_esRecoilAbility[type].g_flRecoilDuration, 1);
-		g_esRecoilCache[tank].g_flRecoilRange = flGetSubSettingValue(apply, bHuman, g_esRecoilTeammate[tank].g_flRecoilRange, g_esRecoilPlayer[tank].g_flRecoilRange, g_esRecoilSpecial[type].g_flRecoilRange, g_esRecoilAbility[type].g_flRecoilRange, 1);
-		g_esRecoilCache[tank].g_flRecoilRangeChance = flGetSubSettingValue(apply, bHuman, g_esRecoilTeammate[tank].g_flRecoilRangeChance, g_esRecoilPlayer[tank].g_flRecoilRangeChance, g_esRecoilSpecial[type].g_flRecoilRangeChance, g_esRecoilAbility[type].g_flRecoilRangeChance, 1);
-		g_esRecoilCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esRecoilTeammate[tank].g_iHumanAbility, g_esRecoilPlayer[tank].g_iHumanAbility, g_esRecoilSpecial[type].g_iHumanAbility, g_esRecoilAbility[type].g_iHumanAbility, 1);
-		g_esRecoilCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esRecoilTeammate[tank].g_iHumanAmmo, g_esRecoilPlayer[tank].g_iHumanAmmo, g_esRecoilSpecial[type].g_iHumanAmmo, g_esRecoilAbility[type].g_iHumanAmmo, 1);
-		g_esRecoilCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esRecoilTeammate[tank].g_iHumanCooldown, g_esRecoilPlayer[tank].g_iHumanCooldown, g_esRecoilSpecial[type].g_iHumanCooldown, g_esRecoilAbility[type].g_iHumanCooldown, 1);
-		g_esRecoilCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esRecoilTeammate[tank].g_iHumanRangeCooldown, g_esRecoilPlayer[tank].g_iHumanRangeCooldown, g_esRecoilSpecial[type].g_iHumanRangeCooldown, g_esRecoilAbility[type].g_iHumanRangeCooldown, 1);
-		g_esRecoilCache[tank].g_iRecoilAbility = iGetSubSettingValue(apply, bHuman, g_esRecoilTeammate[tank].g_iRecoilAbility, g_esRecoilPlayer[tank].g_iRecoilAbility, g_esRecoilSpecial[type].g_iRecoilAbility, g_esRecoilAbility[type].g_iRecoilAbility, 1);
-		g_esRecoilCache[tank].g_iRecoilCooldown = iGetSubSettingValue(apply, bHuman, g_esRecoilTeammate[tank].g_iRecoilCooldown, g_esRecoilPlayer[tank].g_iRecoilCooldown, g_esRecoilSpecial[type].g_iRecoilCooldown, g_esRecoilAbility[type].g_iRecoilCooldown, 1);
-		g_esRecoilCache[tank].g_iRecoilEffect = iGetSubSettingValue(apply, bHuman, g_esRecoilTeammate[tank].g_iRecoilEffect, g_esRecoilPlayer[tank].g_iRecoilEffect, g_esRecoilSpecial[type].g_iRecoilEffect, g_esRecoilAbility[type].g_iRecoilEffect, 1);
-		g_esRecoilCache[tank].g_iRecoilHit = iGetSubSettingValue(apply, bHuman, g_esRecoilTeammate[tank].g_iRecoilHit, g_esRecoilPlayer[tank].g_iRecoilHit, g_esRecoilSpecial[type].g_iRecoilHit, g_esRecoilAbility[type].g_iRecoilHit, 1);
-		g_esRecoilCache[tank].g_iRecoilHitMode = iGetSubSettingValue(apply, bHuman, g_esRecoilTeammate[tank].g_iRecoilHitMode, g_esRecoilPlayer[tank].g_iRecoilHitMode, g_esRecoilSpecial[type].g_iRecoilHitMode, g_esRecoilAbility[type].g_iRecoilHitMode, 1);
-		g_esRecoilCache[tank].g_iRecoilMessage = iGetSubSettingValue(apply, bHuman, g_esRecoilTeammate[tank].g_iRecoilMessage, g_esRecoilPlayer[tank].g_iRecoilMessage, g_esRecoilSpecial[type].g_iRecoilMessage, g_esRecoilAbility[type].g_iRecoilMessage, 1);
-		g_esRecoilCache[tank].g_iRecoilRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esRecoilTeammate[tank].g_iRecoilRangeCooldown, g_esRecoilPlayer[tank].g_iRecoilRangeCooldown, g_esRecoilSpecial[type].g_iRecoilRangeCooldown, g_esRecoilAbility[type].g_iRecoilRangeCooldown, 1);
-		g_esRecoilCache[tank].g_iRecoilSight = iGetSubSettingValue(apply, bHuman, g_esRecoilTeammate[tank].g_iRecoilSight, g_esRecoilPlayer[tank].g_iRecoilSight, g_esRecoilSpecial[type].g_iRecoilSight, g_esRecoilAbility[type].g_iRecoilSight, 1);
-		g_esRecoilCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esRecoilTeammate[tank].g_flOpenAreasOnly, g_esRecoilPlayer[tank].g_flOpenAreasOnly, g_esRecoilSpecial[type].g_flOpenAreasOnly, g_esRecoilAbility[type].g_flOpenAreasOnly, 1);
-		g_esRecoilCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esRecoilTeammate[tank].g_iRequiresHumans, g_esRecoilPlayer[tank].g_iRequiresHumans, g_esRecoilSpecial[type].g_iRequiresHumans, g_esRecoilAbility[type].g_iRequiresHumans, 1);
+		g_esRecoilCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esRecoilTeammate[tank][iSpecType - 1].g_flCloseAreasOnly, g_esRecoilPlayer[tank].g_flCloseAreasOnly, g_esRecoilSpecial[type][iSpecType - 1].g_flCloseAreasOnly, g_esRecoilAbility[type].g_flCloseAreasOnly, 1);
+		g_esRecoilCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esRecoilTeammate[tank][iSpecType - 1].g_iComboAbility, g_esRecoilPlayer[tank].g_iComboAbility, g_esRecoilSpecial[type][iSpecType - 1].g_iComboAbility, g_esRecoilAbility[type].g_iComboAbility, 1);
+		g_esRecoilCache[tank].g_flRecoilChance = flGetSubSettingValue(apply, bHuman, g_esRecoilTeammate[tank][iSpecType - 1].g_flRecoilChance, g_esRecoilPlayer[tank].g_flRecoilChance, g_esRecoilSpecial[type][iSpecType - 1].g_flRecoilChance, g_esRecoilAbility[type].g_flRecoilChance, 1);
+		g_esRecoilCache[tank].g_flRecoilDuration = flGetSubSettingValue(apply, bHuman, g_esRecoilTeammate[tank][iSpecType - 1].g_flRecoilDuration, g_esRecoilPlayer[tank].g_flRecoilDuration, g_esRecoilSpecial[type][iSpecType - 1].g_flRecoilDuration, g_esRecoilAbility[type].g_flRecoilDuration, 1);
+		g_esRecoilCache[tank].g_flRecoilRange = flGetSubSettingValue(apply, bHuman, g_esRecoilTeammate[tank][iSpecType - 1].g_flRecoilRange, g_esRecoilPlayer[tank].g_flRecoilRange, g_esRecoilSpecial[type][iSpecType - 1].g_flRecoilRange, g_esRecoilAbility[type].g_flRecoilRange, 1);
+		g_esRecoilCache[tank].g_flRecoilRangeChance = flGetSubSettingValue(apply, bHuman, g_esRecoilTeammate[tank][iSpecType - 1].g_flRecoilRangeChance, g_esRecoilPlayer[tank].g_flRecoilRangeChance, g_esRecoilSpecial[type][iSpecType - 1].g_flRecoilRangeChance, g_esRecoilAbility[type].g_flRecoilRangeChance, 1);
+		g_esRecoilCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esRecoilTeammate[tank][iSpecType - 1].g_iHumanAbility, g_esRecoilPlayer[tank].g_iHumanAbility, g_esRecoilSpecial[type][iSpecType - 1].g_iHumanAbility, g_esRecoilAbility[type].g_iHumanAbility, 1);
+		g_esRecoilCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esRecoilTeammate[tank][iSpecType - 1].g_iHumanAmmo, g_esRecoilPlayer[tank].g_iHumanAmmo, g_esRecoilSpecial[type][iSpecType - 1].g_iHumanAmmo, g_esRecoilAbility[type].g_iHumanAmmo, 1);
+		g_esRecoilCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esRecoilTeammate[tank][iSpecType - 1].g_iHumanCooldown, g_esRecoilPlayer[tank].g_iHumanCooldown, g_esRecoilSpecial[type][iSpecType - 1].g_iHumanCooldown, g_esRecoilAbility[type].g_iHumanCooldown, 1);
+		g_esRecoilCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esRecoilTeammate[tank][iSpecType - 1].g_iHumanRangeCooldown, g_esRecoilPlayer[tank].g_iHumanRangeCooldown, g_esRecoilSpecial[type][iSpecType - 1].g_iHumanRangeCooldown, g_esRecoilAbility[type].g_iHumanRangeCooldown, 1);
+		g_esRecoilCache[tank].g_iRecoilAbility = iGetSubSettingValue(apply, bHuman, g_esRecoilTeammate[tank][iSpecType - 1].g_iRecoilAbility, g_esRecoilPlayer[tank].g_iRecoilAbility, g_esRecoilSpecial[type][iSpecType - 1].g_iRecoilAbility, g_esRecoilAbility[type].g_iRecoilAbility, 1);
+		g_esRecoilCache[tank].g_iRecoilCooldown = iGetSubSettingValue(apply, bHuman, g_esRecoilTeammate[tank][iSpecType - 1].g_iRecoilCooldown, g_esRecoilPlayer[tank].g_iRecoilCooldown, g_esRecoilSpecial[type][iSpecType - 1].g_iRecoilCooldown, g_esRecoilAbility[type].g_iRecoilCooldown, 1);
+		g_esRecoilCache[tank].g_iRecoilEffect = iGetSubSettingValue(apply, bHuman, g_esRecoilTeammate[tank][iSpecType - 1].g_iRecoilEffect, g_esRecoilPlayer[tank].g_iRecoilEffect, g_esRecoilSpecial[type][iSpecType - 1].g_iRecoilEffect, g_esRecoilAbility[type].g_iRecoilEffect, 1);
+		g_esRecoilCache[tank].g_iRecoilHit = iGetSubSettingValue(apply, bHuman, g_esRecoilTeammate[tank][iSpecType - 1].g_iRecoilHit, g_esRecoilPlayer[tank].g_iRecoilHit, g_esRecoilSpecial[type][iSpecType - 1].g_iRecoilHit, g_esRecoilAbility[type].g_iRecoilHit, 1);
+		g_esRecoilCache[tank].g_iRecoilHitMode = iGetSubSettingValue(apply, bHuman, g_esRecoilTeammate[tank][iSpecType - 1].g_iRecoilHitMode, g_esRecoilPlayer[tank].g_iRecoilHitMode, g_esRecoilSpecial[type][iSpecType - 1].g_iRecoilHitMode, g_esRecoilAbility[type].g_iRecoilHitMode, 1);
+		g_esRecoilCache[tank].g_iRecoilMessage = iGetSubSettingValue(apply, bHuman, g_esRecoilTeammate[tank][iSpecType - 1].g_iRecoilMessage, g_esRecoilPlayer[tank].g_iRecoilMessage, g_esRecoilSpecial[type][iSpecType - 1].g_iRecoilMessage, g_esRecoilAbility[type].g_iRecoilMessage, 1);
+		g_esRecoilCache[tank].g_iRecoilRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esRecoilTeammate[tank][iSpecType - 1].g_iRecoilRangeCooldown, g_esRecoilPlayer[tank].g_iRecoilRangeCooldown, g_esRecoilSpecial[type][iSpecType - 1].g_iRecoilRangeCooldown, g_esRecoilAbility[type].g_iRecoilRangeCooldown, 1);
+		g_esRecoilCache[tank].g_iRecoilSight = iGetSubSettingValue(apply, bHuman, g_esRecoilTeammate[tank][iSpecType - 1].g_iRecoilSight, g_esRecoilPlayer[tank].g_iRecoilSight, g_esRecoilSpecial[type][iSpecType - 1].g_iRecoilSight, g_esRecoilAbility[type].g_iRecoilSight, 1);
+		g_esRecoilCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esRecoilTeammate[tank][iSpecType - 1].g_flOpenAreasOnly, g_esRecoilPlayer[tank].g_flOpenAreasOnly, g_esRecoilSpecial[type][iSpecType - 1].g_flOpenAreasOnly, g_esRecoilAbility[type].g_flOpenAreasOnly, 1);
+		g_esRecoilCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esRecoilTeammate[tank][iSpecType - 1].g_iRequiresHumans, g_esRecoilPlayer[tank].g_iRequiresHumans, g_esRecoilSpecial[type][iSpecType - 1].g_iRequiresHumans, g_esRecoilAbility[type].g_iRequiresHumans, 1);
 	}
 	else
 	{

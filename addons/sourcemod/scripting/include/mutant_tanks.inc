@@ -255,8 +255,10 @@ forward void MT_OnConfigsLoad(int mode);
  * @param mode			1 = Load general settings, 2 = 1 + load type settings, 3 = Load admin settings
  * @param special		True if reading a special infected setting, false otherwise.
  * @param specsection		The special section the config parser is currently on.
+ * @param specName		Special Infected name.
+ * @param specType		Special Infected type.
  **/
-forward void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection);
+forward void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, const char[] specName, int specType);
 
 /**
  * Called when the Tank is passed on to another player or bot.
@@ -3073,20 +3075,26 @@ stock void vGetEntityMidOrigin(int entity, float origin[3])
 	origin[2] += (flMins[2] + flMaxes[2]) * 0.5;
 }
 
-stock void vGetKeyValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, char[] buffer, int size, const char[] value)
+stock void vGetKeyValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, char[] buffer, int size, const char[] value, const char[] specName = "", int specType = -1)
 {
+	static char sSettings[4][128];
+	vGetSpecialSettingNames(sSettings, sizeof sSettings[], setting1, setting2, setting3, setting4, specName, specType);
 	if (value[0] != '\0' && (StrEqual(subsection, sub1, false) || StrEqual(subsection, sub2, false) || StrEqual(subsection, sub3, false) || StrEqual(subsection, sub4, false)))
 	{
-		if (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false))
+		if (StrEqual(key, sSettings[0], false) || StrEqual(key, sSettings[1], false) || StrEqual(key, sSettings[2], false) || StrEqual(key, sSettings[3], false)
+			|| StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false))
 		{
 			strcopy(buffer, size, value);
 		}
 	}
 }
 
-stock void vGetKeyValueEx(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, char[] buffer, int size, const char[] value)
+stock void vGetKeyValueEx(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, char[] buffer, int size, const char[] value, const char[] specName = "", int specType = -1)
 {
-	if (value[0] != '\0' && (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
+	static char sSettings[4][128];
+	vGetSpecialSettingNames(sSettings, sizeof sSettings[], setting1, setting2, setting3, setting4, specName, specType);
+	if (value[0] != '\0' && (StrEqual(key, sSettings[0], false) || StrEqual(key, sSettings[1], false) || StrEqual(key, sSettings[2], false) || StrEqual(key, sSettings[3], false)
+		|| StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
 	{
 		strcopy(buffer, size, value);
 	}
@@ -3112,6 +3120,29 @@ stock void vGetMatchingFilename(const char[] directory, const char[] filename, c
 	}
 }
 
+stock void vGetSpecialSettingNames(char[][] buffers, int maxStrings, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, const char[] specName, int specType)
+{
+	if (specType >= 0)
+	{
+		FormatEx(buffers[0], maxStrings, "%s%s", specName, setting1);
+		FormatEx(buffers[1], maxStrings, "%s %s", specName, setting2);
+		FormatEx(buffers[2], maxStrings, "%s_%s", specName, setting3);
+	}
+	else
+	{
+		FormatEx(buffers[0], maxStrings, "%s", setting1);
+		FormatEx(buffers[1], maxStrings, "%s", setting2);
+		FormatEx(buffers[2], maxStrings, "%s", setting3);
+	}
+
+	switch (specType)
+	{
+		case -1: FormatEx(buffers[3], maxStrings, "%s", setting4);
+		case 1, 2, 4, 5: FormatEx(buffers[3], maxStrings, "%c%s", specName[0], setting4);
+		case 0, 3: FormatEx(buffers[3], maxStrings, "%c%c%s", specName[0], specName[1], setting4);
+	}
+}
+
 stock void vGetSettingValue(bool apply, bool human, char[] buffer, int size = 0, const char[] playerVal = "", const char[] typeVal = "")
 {
 	switch (apply)
@@ -3121,9 +3152,12 @@ stock void vGetSettingValue(bool apply, bool human, char[] buffer, int size = 0,
 	}
 }
 
-stock void vGetStringValue(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, int pos, char[] buffer1, int size1, char[] buffer2, int size2, char[] buffer3, int size3, char[] buffer4, int size4, const char[] value)
+stock void vGetStringValue(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, int pos, char[] buffer1, int size1, char[] buffer2, int size2, char[] buffer3, int size3, char[] buffer4, int size4, const char[] value, const char[] specName = "", int specType = -1)
 {
-	if (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false))
+	static char sSettings[4][128];
+	vGetSpecialSettingNames(sSettings, sizeof sSettings[], setting1, setting2, setting3, setting4, specName, specType);
+	if (StrEqual(key, sSettings[0], false) || StrEqual(key, sSettings[1], false) || StrEqual(key, sSettings[2], false) || StrEqual(key, sSettings[3], false)
+		|| StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false))
 	{
 		switch (pos)
 		{
@@ -3177,9 +3211,12 @@ stock float flGetAngle(float angles1[3], float angles2[3])
 	return ArcCosine(GetVectorDotProduct(angles1, angles2) / (GetVectorLength(angles1) * GetVectorLength(angles2)));
 }
 
-stock float flGetClampedValue(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, float curVal, const char[] value, float min, float max, float check = -1.0)
+stock float flGetClampedValue(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, float curVal, const char[] value, float min, float max, const char[] specName = "", int specType = -1, float check = -1.0)
 {
-	if (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false))
+	static char sSettings[4][128];
+	vGetSpecialSettingNames(sSettings, sizeof sSettings[], setting1, setting2, setting3, setting4, specName, specType);
+	if (StrEqual(key, sSettings[0], false) || StrEqual(key, sSettings[1], false) || StrEqual(key, sSettings[2], false) || StrEqual(key, sSettings[3], false)
+		|| StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false))
 	{
 		float flDefault = (check == -1.0) ? curVal : -1.0;
 		return (value[0] != '\0' && (check == -1.0 || StringToFloat(value) >= check)) ? flClamp(StringToFloat(value), min, max) : flDefault;
@@ -3225,8 +3262,10 @@ stock float flGetGroundUnits(int entity)
 	return 0.0;
 }
 
-stock float flGetKeyValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, float curVal, const char[] value, float min, float max)
+stock float flGetKeyValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, float curVal, const char[] value, float min, float max, const char[] specName = "", int specType = -1)
 {
+	static char sSettings[4][128];
+	vGetSpecialSettingNames(sSettings, sizeof sSettings[], setting1, setting2, setting3, setting4, specName, specType);
 	if (FindCharInString(subsection, ',') != -1)
 	{
 		char sSet[16][16];
@@ -3234,14 +3273,16 @@ stock float flGetKeyValue(const char[] subsection, const char[] sub1, const char
 		for (int iPos = 0; iPos < (sizeof sSet); iPos++)
 		{
 			if (sSet[iPos][0] != '\0' && value[0] != '\0' && (StrEqual(sSet[iPos], "all", false) || StrEqual(sSet[iPos], sub1, false) || StrEqual(sSet[iPos], sub2, false) || StrEqual(sSet[iPos], sub3, false)
-				|| StrEqual(sSet[iPos], sub4, false)) && (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
+				|| StrEqual(sSet[iPos], sub4, false)) && (StrEqual(key, sSettings[0], false) || StrEqual(key, sSettings[1], false) || StrEqual(key, sSettings[2], false) || StrEqual(key, sSettings[3], false)
+				|| StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
 			{
 				return flGetKeywordValue(key, curVal, value, min, max);
 			}
 		}
 	}
 	else if (value[0] != '\0' && (StrEqual(subsection, "all", false) || StrEqual(subsection, sub1, false) || StrEqual(subsection, sub2, false) || StrEqual(subsection, sub3, false)
-		|| StrEqual(subsection, sub4, false)) && (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
+		|| StrEqual(subsection, sub4, false)) && (StrEqual(key, sSettings[0], false) || StrEqual(key, sSettings[1], false) || StrEqual(key, sSettings[2], false) || StrEqual(key, sSettings[3], false)
+		|| StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
 	{
 		return flGetKeywordValue(key, curVal, value, min, max);
 	}
@@ -3249,9 +3290,12 @@ stock float flGetKeyValue(const char[] subsection, const char[] sub1, const char
 	return curVal;
 }
 
-stock float flGetKeyValueEx(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, float curVal, const char[] value, float min, float max)
+stock float flGetKeyValueEx(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, float curVal, const char[] value, float min, float max, const char[] specName = "", int specType = -1)
 {
-	if (value[0] != '\0' && (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
+	static char sSettings[4][128];
+	vGetSpecialSettingNames(sSettings, sizeof sSettings[], setting1, setting2, setting3, setting4, specName, specType);
+	if (value[0] != '\0' && (StrEqual(key, sSettings[0], false) || StrEqual(key, sSettings[1], false) || StrEqual(key, sSettings[2], false) || StrEqual(key, sSettings[3], false)
+		|| StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
 	{
 		return flGetKeywordValue(key, curVal, value, min, max);
 	}
@@ -3424,11 +3468,14 @@ stock float flGetTempHealth(int survivor, float decayRate)
 	return (flTempHealth < 0.0) ? 0.0 : flTempHealth;
 }
 
-stock int iGetAdminFlagsValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, const char[] value)
+stock int iGetAdminFlagsValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, const char[] value, const char[] specName = "", int specType = -1)
 {
+	static char sSettings[4][128];
+	vGetSpecialSettingNames(sSettings, sizeof sSettings[], setting1, setting2, setting3, setting4, specName, specType);
 	if (StrEqual(subsection, sub1, false) || StrEqual(subsection, sub2, false) || StrEqual(subsection, sub3, false) || StrEqual(subsection, sub4, false))
 	{
-		if (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false))
+		if (StrEqual(key, sSettings[0], false) || StrEqual(key, sSettings[1], false) || StrEqual(key, sSettings[2], false) || StrEqual(key, sSettings[3], false)
+			|| StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false))
 		{
 			return ReadFlagString(value);
 		}
@@ -3450,9 +3497,12 @@ stock int iGetBotSurvivor()
 	return -1;
 }
 
-stock int iGetClampedValue(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, int curVal, const char[] value, int min, int max, int check = -1)
+stock int iGetClampedValue(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, int curVal, const char[] value, int min, int max, const char[] specName = "", int specType = -1, int check = -1)
 {
-	if (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false))
+	static char sSettings[4][128];
+	vGetSpecialSettingNames(sSettings, sizeof sSettings[], setting1, setting2, setting3, setting4, specName, specType);
+	if (StrEqual(key, sSettings[0], false) || StrEqual(key, sSettings[1], false) || StrEqual(key, sSettings[2], false) || StrEqual(key, sSettings[3], false)
+		|| StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false))
 	{
 		int iDefault = (check == -1) ? curVal : -1;
 		return (value[0] != '\0' && (check == -1 || StringToInt(value) >= check)) ? iClamp(StringToInt(value), min, max) : iDefault;
@@ -3553,7 +3603,7 @@ stock int iGetInfectedType(int client)
 	}
 	else if (bIsTank(client, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		return bIsSecondGame() ? 8 : 5;
+		return 8;
 	}
 
 	return 0;
@@ -3565,7 +3615,7 @@ stock int iGetInfectedVictim(int special, int type)
 	{
 		case 1: return GetEntPropEnt(special, Prop_Send, "m_tongueVictim");
 		case 3: return GetEntPropEnt(special, Prop_Send, "m_pounceVictim");
-		case 5: return bIsSecondGame() ? GetEntPropEnt(special, Prop_Send, "m_jockeyVictim") : -1;
+		case 5: return GetEntPropEnt(special, Prop_Send, "m_jockeyVictim");
 		case 6:
 		{
 			int iVictim = GetEntPropEnt(special, Prop_Send, "m_carryVictim");
@@ -3576,8 +3626,10 @@ stock int iGetInfectedVictim(int special, int type)
 	return -1;
 }
 
-stock int iGetKeyValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, int curVal, const char[] value, int min, int max)
+stock int iGetKeyValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, int curVal, const char[] value, int min, int max, const char[] specName = "", int specType = -1)
 {
+	static char sSettings[4][128];
+	vGetSpecialSettingNames(sSettings, sizeof sSettings[], setting1, setting2, setting3, setting4, specName, specType);
 	if (FindCharInString(subsection, ',') != -1)
 	{
 		char sSet[16][16];
@@ -3585,14 +3637,16 @@ stock int iGetKeyValue(const char[] subsection, const char[] sub1, const char[] 
 		for (int iPos = 0; iPos < (sizeof sSet); iPos++)
 		{
 			if (sSet[iPos][0] != '\0' && value[0] != '\0' && (StrEqual(sSet[iPos], "all", false) || StrEqual(sSet[iPos], sub1, false) || StrEqual(sSet[iPos], sub2, false) || StrEqual(sSet[iPos], sub3, false)
-				|| StrEqual(sSet[iPos], sub4, false)) && (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
+				|| StrEqual(sSet[iPos], sub4, false)) && (StrEqual(key, sSettings[0], false) || StrEqual(key, sSettings[1], false) || StrEqual(key, sSettings[2], false) || StrEqual(key, sSettings[3], false)
+				|| StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
 			{
 				return iGetKeywordValue(key, curVal, value, min, max);
 			}
 		}
 	}
 	else if (value[0] != '\0' && (StrEqual(subsection, "all", false) || StrEqual(subsection, sub1, false) || StrEqual(subsection, sub2, false) || StrEqual(subsection, sub3, false)
-		|| StrEqual(subsection, sub4, false)) && (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
+		|| StrEqual(subsection, sub4, false)) && (StrEqual(key, sSettings[0], false) || StrEqual(key, sSettings[1], false) || StrEqual(key, sSettings[2], false) || StrEqual(key, sSettings[3], false)
+		|| StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
 	{
 		return iGetKeywordValue(key, curVal, value, min, max);
 	}
@@ -3600,9 +3654,12 @@ stock int iGetKeyValue(const char[] subsection, const char[] sub1, const char[] 
 	return curVal;
 }
 
-stock int iGetKeyValueEx(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, int curVal, const char[] value, int min, int max)
+stock int iGetKeyValueEx(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, int curVal, const char[] value, int min, int max, const char[] specName = "", int specType = -1)
 {
-	if (value[0] != '\0' && (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
+	static char sSettings[4][128];
+	vGetSpecialSettingNames(sSettings, sizeof sSettings[], setting1, setting2, setting3, setting4, specName, specType);
+	if (value[0] != '\0' && (StrEqual(key, sSettings[0], false) || StrEqual(key, sSettings[1], false) || StrEqual(key, sSettings[2], false) || StrEqual(key, sSettings[3], false)
+		|| StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
 	{
 		return iGetKeywordValue(key, curVal, value, min, max);
 	}

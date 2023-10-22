@@ -87,6 +87,7 @@ enum struct esAbsorbPlayer
 	int g_iHumanDuration;
 	int g_iHumanMode;
 	int g_iImmunityFlags;
+	int g_iInfectedType;
 	int g_iRequiresHumans;
 	int g_iTankType;
 }
@@ -118,7 +119,7 @@ enum struct esAbsorbTeammate
 	int g_iRequiresHumans;
 }
 
-esAbsorbTeammate g_esAbsorbTeammate[MAXPLAYERS + 1];
+esAbsorbTeammate g_esAbsorbTeammate[MAXPLAYERS + 1][6];
 
 enum struct esAbsorbAbility
 {
@@ -175,7 +176,7 @@ enum struct esAbsorbSpecial
 	int g_iRequiresHumans;
 }
 
-esAbsorbSpecial g_esAbsorbSpecial[MT_MAXTYPES + 1];
+esAbsorbSpecial g_esAbsorbSpecial[MT_MAXTYPES + 1][6];
 
 enum struct esAbsorbCache
 {
@@ -609,26 +610,29 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbsorbAbility[iIndex].g_flAbsorbHittableDivisor = 20.0;
 				g_esAbsorbAbility[iIndex].g_flAbsorbMeleeDivisor = 200.0;
 
-				g_esAbsorbSpecial[iIndex].g_flCloseAreasOnly = -1.0;
-				g_esAbsorbSpecial[iIndex].g_iComboAbility = -1;
-				g_esAbsorbSpecial[iIndex].g_iHumanAbility = -1;
-				g_esAbsorbSpecial[iIndex].g_iHumanAmmo = -1;
-				g_esAbsorbSpecial[iIndex].g_iHumanCooldown = -1;
-				g_esAbsorbSpecial[iIndex].g_iHumanDuration = -1;
-				g_esAbsorbSpecial[iIndex].g_iHumanMode = -1;
-				g_esAbsorbSpecial[iIndex].g_flOpenAreasOnly = -1.0;
-				g_esAbsorbSpecial[iIndex].g_iRequiresHumans = -1;
-				g_esAbsorbSpecial[iIndex].g_iAbsorbAbility = -1;
-				g_esAbsorbSpecial[iIndex].g_iAbsorbMessage = -1;
-				g_esAbsorbSpecial[iIndex].g_flAbsorbBulletDivisor = -1.0;
-				g_esAbsorbSpecial[iIndex].g_flAbsorbChance = -1.0;
-				g_esAbsorbSpecial[iIndex].g_flAbsorbConvertPercentage = -1.0;
-				g_esAbsorbSpecial[iIndex].g_iAbsorbCooldown = -1;
-				g_esAbsorbSpecial[iIndex].g_iAbsorbDuration = -1;
-				g_esAbsorbSpecial[iIndex].g_flAbsorbExplosiveDivisor = -1.0;
-				g_esAbsorbSpecial[iIndex].g_flAbsorbFireDivisor = -1.0;
-				g_esAbsorbSpecial[iIndex].g_flAbsorbHittableDivisor = -1.0;
-				g_esAbsorbSpecial[iIndex].g_flAbsorbMeleeDivisor = -1.0;
+				for (int iSpecType = 0; iSpecType < 6; iSpecType++)
+				{
+					g_esAbsorbSpecial[iIndex][iSpecType].g_flCloseAreasOnly = -1.0;
+					g_esAbsorbSpecial[iIndex][iSpecType].g_iComboAbility = -1;
+					g_esAbsorbSpecial[iIndex][iSpecType].g_iHumanAbility = -1;
+					g_esAbsorbSpecial[iIndex][iSpecType].g_iHumanAmmo = -1;
+					g_esAbsorbSpecial[iIndex][iSpecType].g_iHumanCooldown = -1;
+					g_esAbsorbSpecial[iIndex][iSpecType].g_iHumanDuration = -1;
+					g_esAbsorbSpecial[iIndex][iSpecType].g_iHumanMode = -1;
+					g_esAbsorbSpecial[iIndex][iSpecType].g_flOpenAreasOnly = -1.0;
+					g_esAbsorbSpecial[iIndex][iSpecType].g_iRequiresHumans = -1;
+					g_esAbsorbSpecial[iIndex][iSpecType].g_iAbsorbAbility = -1;
+					g_esAbsorbSpecial[iIndex][iSpecType].g_iAbsorbMessage = -1;
+					g_esAbsorbSpecial[iIndex][iSpecType].g_flAbsorbBulletDivisor = -1.0;
+					g_esAbsorbSpecial[iIndex][iSpecType].g_flAbsorbChance = -1.0;
+					g_esAbsorbSpecial[iIndex][iSpecType].g_flAbsorbConvertPercentage = -1.0;
+					g_esAbsorbSpecial[iIndex][iSpecType].g_iAbsorbCooldown = -1;
+					g_esAbsorbSpecial[iIndex][iSpecType].g_iAbsorbDuration = -1;
+					g_esAbsorbSpecial[iIndex][iSpecType].g_flAbsorbExplosiveDivisor = -1.0;
+					g_esAbsorbSpecial[iIndex][iSpecType].g_flAbsorbFireDivisor = -1.0;
+					g_esAbsorbSpecial[iIndex][iSpecType].g_flAbsorbHittableDivisor = -1.0;
+					g_esAbsorbSpecial[iIndex][iSpecType].g_flAbsorbMeleeDivisor = -1.0;
+				}
 			}
 		}
 		case 3:
@@ -658,61 +662,64 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbsorbPlayer[iPlayer].g_flAbsorbHittableDivisor = -1.0;
 				g_esAbsorbPlayer[iPlayer].g_flAbsorbMeleeDivisor = -1.0;
 
-				g_esAbsorbTeammate[iPlayer].g_flCloseAreasOnly = -1.0;
-				g_esAbsorbTeammate[iPlayer].g_iComboAbility = -1;
-				g_esAbsorbTeammate[iPlayer].g_iHumanAbility = -1;
-				g_esAbsorbTeammate[iPlayer].g_iHumanAmmo = -1;
-				g_esAbsorbTeammate[iPlayer].g_iHumanCooldown = -1;
-				g_esAbsorbTeammate[iPlayer].g_iHumanDuration = -1;
-				g_esAbsorbTeammate[iPlayer].g_iHumanMode = -1;
-				g_esAbsorbTeammate[iPlayer].g_flOpenAreasOnly = -1.0;
-				g_esAbsorbTeammate[iPlayer].g_iRequiresHumans = -1;
-				g_esAbsorbTeammate[iPlayer].g_iAbsorbAbility = -1;
-				g_esAbsorbTeammate[iPlayer].g_iAbsorbMessage = -1;
-				g_esAbsorbTeammate[iPlayer].g_flAbsorbBulletDivisor = -1.0;
-				g_esAbsorbTeammate[iPlayer].g_flAbsorbChance = -1.0;
-				g_esAbsorbTeammate[iPlayer].g_flAbsorbConvertPercentage = -1.0;
-				g_esAbsorbTeammate[iPlayer].g_iAbsorbCooldown = -1;
-				g_esAbsorbTeammate[iPlayer].g_iAbsorbDuration = -1;
-				g_esAbsorbTeammate[iPlayer].g_flAbsorbExplosiveDivisor = -1.0;
-				g_esAbsorbTeammate[iPlayer].g_flAbsorbFireDivisor = -1.0;
-				g_esAbsorbTeammate[iPlayer].g_flAbsorbHittableDivisor = -1.0;
-				g_esAbsorbTeammate[iPlayer].g_flAbsorbMeleeDivisor = -1.0;
+				for (int iSpecType = 0; iSpecType < 6; iSpecType++)
+				{
+					g_esAbsorbTeammate[iPlayer][iSpecType].g_flCloseAreasOnly = -1.0;
+					g_esAbsorbTeammate[iPlayer][iSpecType].g_iComboAbility = -1;
+					g_esAbsorbTeammate[iPlayer][iSpecType].g_iHumanAbility = -1;
+					g_esAbsorbTeammate[iPlayer][iSpecType].g_iHumanAmmo = -1;
+					g_esAbsorbTeammate[iPlayer][iSpecType].g_iHumanCooldown = -1;
+					g_esAbsorbTeammate[iPlayer][iSpecType].g_iHumanDuration = -1;
+					g_esAbsorbTeammate[iPlayer][iSpecType].g_iHumanMode = -1;
+					g_esAbsorbTeammate[iPlayer][iSpecType].g_flOpenAreasOnly = -1.0;
+					g_esAbsorbTeammate[iPlayer][iSpecType].g_iRequiresHumans = -1;
+					g_esAbsorbTeammate[iPlayer][iSpecType].g_iAbsorbAbility = -1;
+					g_esAbsorbTeammate[iPlayer][iSpecType].g_iAbsorbMessage = -1;
+					g_esAbsorbTeammate[iPlayer][iSpecType].g_flAbsorbBulletDivisor = -1.0;
+					g_esAbsorbTeammate[iPlayer][iSpecType].g_flAbsorbChance = -1.0;
+					g_esAbsorbTeammate[iPlayer][iSpecType].g_flAbsorbConvertPercentage = -1.0;
+					g_esAbsorbTeammate[iPlayer][iSpecType].g_iAbsorbCooldown = -1;
+					g_esAbsorbTeammate[iPlayer][iSpecType].g_iAbsorbDuration = -1;
+					g_esAbsorbTeammate[iPlayer][iSpecType].g_flAbsorbExplosiveDivisor = -1.0;
+					g_esAbsorbTeammate[iPlayer][iSpecType].g_flAbsorbFireDivisor = -1.0;
+					g_esAbsorbTeammate[iPlayer][iSpecType].g_flAbsorbHittableDivisor = -1.0;
+					g_esAbsorbTeammate[iPlayer][iSpecType].g_flAbsorbMeleeDivisor = -1.0;
+				}
 			}
 		}
 	}
 }
 
 #if defined MT_ABILITIES_MAIN
-void vAbsorbConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
+void vAbsorbConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, const char[] specName, int specType)
 #else
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, const char[] specName, int specType)
 #endif
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esAbsorbTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esAbsorbTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
-			g_esAbsorbTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esAbsorbTeammate[admin].g_iComboAbility, value, -1, 1);
-			g_esAbsorbTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbsorbTeammate[admin].g_iHumanAbility, value, -1, 2);
-			g_esAbsorbTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbsorbTeammate[admin].g_iHumanAmmo, value, -1, 99999);
-			g_esAbsorbTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbsorbTeammate[admin].g_iHumanCooldown, value, -1, 99999);
-			g_esAbsorbTeammate[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esAbsorbTeammate[admin].g_iHumanDuration, value, -1, 99999);
-			g_esAbsorbTeammate[admin].g_iHumanMode = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esAbsorbTeammate[admin].g_iHumanMode, value, -1, 1);
-			g_esAbsorbTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbsorbTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
-			g_esAbsorbTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbsorbTeammate[admin].g_iRequiresHumans, value, -1, 32);
-			g_esAbsorbTeammate[admin].g_iAbsorbAbility = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbsorbTeammate[admin].g_iAbsorbAbility, value, -1, 1);
-			g_esAbsorbTeammate[admin].g_iAbsorbMessage = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbsorbTeammate[admin].g_iAbsorbMessage, value, -1, 1);
-			g_esAbsorbTeammate[admin].g_flAbsorbBulletDivisor = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbsorbBulletDivisor", "Absorb Bullet Divisor", "Absorb_Bullet_Divisor", "bullet", g_esAbsorbTeammate[admin].g_flAbsorbBulletDivisor, value, -1.0, 99999.0);
-			g_esAbsorbTeammate[admin].g_flAbsorbChance = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbsorbChance", "Absorb Chance", "Absorb_Chance", "chance", g_esAbsorbTeammate[admin].g_flAbsorbChance, value, -1.0, 100.0);
-			g_esAbsorbTeammate[admin].g_flAbsorbConvertPercentage = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbsorbConvertPercentage", "Absorb Convert Percentage", "Absorb_Convert_Percentage", "convertpercent", g_esAbsorbTeammate[admin].g_flAbsorbConvertPercentage, value, -1.0, 1.0);
-			g_esAbsorbTeammate[admin].g_iAbsorbCooldown = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbsorbCooldown", "Absorb Cooldown", "Absorb_Cooldown", "cooldown", g_esAbsorbTeammate[admin].g_iAbsorbCooldown, value, -1, 99999);
-			g_esAbsorbTeammate[admin].g_iAbsorbDuration = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbsorbDuration", "Absorb Duration", "Absorb_Duration", "duration", g_esAbsorbTeammate[admin].g_iAbsorbDuration, value, -1, 99999);
-			g_esAbsorbTeammate[admin].g_flAbsorbExplosiveDivisor = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbsorbExplosiveDivisor", "Absorb Explosive Divisor", "Absorb_Explosive_Divisor", "explosive", g_esAbsorbTeammate[admin].g_flAbsorbExplosiveDivisor, value, -1.0, 99999.0);
-			g_esAbsorbTeammate[admin].g_flAbsorbFireDivisor = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbsorbFireDivisor", "Absorb Fire Divisor", "Absorb_Fire_Divisor", "fire", g_esAbsorbTeammate[admin].g_flAbsorbFireDivisor, value, -1.0, 99999.0);
-			g_esAbsorbTeammate[admin].g_flAbsorbHittableDivisor = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbsorbHittableDivisor", "Absorb Hittable Divisor", "Absorb_Hittable_Divisor", "hittable", g_esAbsorbTeammate[admin].g_flAbsorbHittableDivisor, value, -1.0, 99999.0);
-			g_esAbsorbTeammate[admin].g_flAbsorbMeleeDivisor = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbsorbMeleeDivisor", "Absorb Melee Divisor", "Absorb_Melee_Divisor", "melee", g_esAbsorbTeammate[admin].g_flAbsorbMeleeDivisor, value, -1.0, 99999.0);
+			g_esAbsorbTeammate[admin][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esAbsorbTeammate[admin][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esAbsorbTeammate[admin][specType].g_iComboAbility = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esAbsorbTeammate[admin][specType].g_iComboAbility, value, -1, 1, specName, specType);
+			g_esAbsorbTeammate[admin][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbsorbTeammate[admin][specType].g_iHumanAbility, value, -1, 2, specName, specType);
+			g_esAbsorbTeammate[admin][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbsorbTeammate[admin][specType].g_iHumanAmmo, value, -1, 99999, specName, specType);
+			g_esAbsorbTeammate[admin][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbsorbTeammate[admin][specType].g_iHumanCooldown, value, -1, 99999, specName, specType);
+			g_esAbsorbTeammate[admin][specType].g_iHumanDuration = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esAbsorbTeammate[admin][specType].g_iHumanDuration, value, -1, 99999, specName, specType);
+			g_esAbsorbTeammate[admin][specType].g_iHumanMode = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esAbsorbTeammate[admin][specType].g_iHumanMode, value, -1, 1, specName, specType);
+			g_esAbsorbTeammate[admin][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbsorbTeammate[admin][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esAbsorbTeammate[admin][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbsorbTeammate[admin][specType].g_iRequiresHumans, value, -1, 32, specName, specType);
+			g_esAbsorbTeammate[admin][specType].g_iAbsorbAbility = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbsorbTeammate[admin][specType].g_iAbsorbAbility, value, -1, 1, specName, specType);
+			g_esAbsorbTeammate[admin][specType].g_iAbsorbMessage = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbsorbTeammate[admin][specType].g_iAbsorbMessage, value, -1, 1, specName, specType);
+			g_esAbsorbTeammate[admin][specType].g_flAbsorbBulletDivisor = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbsorbBulletDivisor", "Absorb Bullet Divisor", "Absorb_Bullet_Divisor", "bullet", g_esAbsorbTeammate[admin][specType].g_flAbsorbBulletDivisor, value, -1.0, 99999.0, specName, specType);
+			g_esAbsorbTeammate[admin][specType].g_flAbsorbChance = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbsorbChance", "Absorb Chance", "Absorb_Chance", "chance", g_esAbsorbTeammate[admin][specType].g_flAbsorbChance, value, -1.0, 100.0, specName, specType);
+			g_esAbsorbTeammate[admin][specType].g_flAbsorbConvertPercentage = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbsorbConvertPercentage", "Absorb Convert Percentage", "Absorb_Convert_Percentage", "convertpercent", g_esAbsorbTeammate[admin][specType].g_flAbsorbConvertPercentage, value, -1.0, 1.0, specName, specType);
+			g_esAbsorbTeammate[admin][specType].g_iAbsorbCooldown = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbsorbCooldown", "Absorb Cooldown", "Absorb_Cooldown", "cooldown", g_esAbsorbTeammate[admin][specType].g_iAbsorbCooldown, value, -1, 99999, specName, specType);
+			g_esAbsorbTeammate[admin][specType].g_iAbsorbDuration = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbsorbDuration", "Absorb Duration", "Absorb_Duration", "duration", g_esAbsorbTeammate[admin][specType].g_iAbsorbDuration, value, -1, 99999, specName, specType);
+			g_esAbsorbTeammate[admin][specType].g_flAbsorbExplosiveDivisor = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbsorbExplosiveDivisor", "Absorb Explosive Divisor", "Absorb_Explosive_Divisor", "explosive", g_esAbsorbTeammate[admin][specType].g_flAbsorbExplosiveDivisor, value, -1.0, 99999.0, specName, specType);
+			g_esAbsorbTeammate[admin][specType].g_flAbsorbFireDivisor = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbsorbFireDivisor", "Absorb Fire Divisor", "Absorb_Fire_Divisor", "fire", g_esAbsorbTeammate[admin][specType].g_flAbsorbFireDivisor, value, -1.0, 99999.0, specName, specType);
+			g_esAbsorbTeammate[admin][specType].g_flAbsorbHittableDivisor = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbsorbHittableDivisor", "Absorb Hittable Divisor", "Absorb_Hittable_Divisor", "hittable", g_esAbsorbTeammate[admin][specType].g_flAbsorbHittableDivisor, value, -1.0, 99999.0, specName, specType);
+			g_esAbsorbTeammate[admin][specType].g_flAbsorbMeleeDivisor = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbsorbMeleeDivisor", "Absorb Melee Divisor", "Absorb_Melee_Divisor", "melee", g_esAbsorbTeammate[admin][specType].g_flAbsorbMeleeDivisor, value, -1.0, 99999.0, specName, specType);
 		}
 		else
 		{
@@ -745,26 +752,26 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esAbsorbSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esAbsorbSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
-			g_esAbsorbSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esAbsorbSpecial[type].g_iComboAbility, value, -1, 1);
-			g_esAbsorbSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbsorbSpecial[type].g_iHumanAbility, value, -1, 2);
-			g_esAbsorbSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbsorbSpecial[type].g_iHumanAmmo, value, -1, 99999);
-			g_esAbsorbSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbsorbSpecial[type].g_iHumanCooldown, value, -1, 99999);
-			g_esAbsorbSpecial[type].g_iHumanDuration = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esAbsorbSpecial[type].g_iHumanDuration, value, -1, 99999);
-			g_esAbsorbSpecial[type].g_iHumanMode = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esAbsorbSpecial[type].g_iHumanMode, value, -1, 1);
-			g_esAbsorbSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbsorbSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
-			g_esAbsorbSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbsorbSpecial[type].g_iRequiresHumans, value, -1, 32);
-			g_esAbsorbSpecial[type].g_iAbsorbAbility = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbsorbSpecial[type].g_iAbsorbAbility, value, -1, 1);
-			g_esAbsorbSpecial[type].g_iAbsorbMessage = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbsorbSpecial[type].g_iAbsorbMessage, value, -1, 1);
-			g_esAbsorbSpecial[type].g_flAbsorbBulletDivisor = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbsorbBulletDivisor", "Absorb Bullet Divisor", "Absorb_Bullet_Divisor", "bullet", g_esAbsorbSpecial[type].g_flAbsorbBulletDivisor, value, -1.0, 99999.0);
-			g_esAbsorbSpecial[type].g_flAbsorbChance = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbsorbChance", "Absorb Chance", "Absorb_Chance", "chance", g_esAbsorbSpecial[type].g_flAbsorbChance, value, -1.0, 100.0);
-			g_esAbsorbSpecial[type].g_flAbsorbConvertPercentage = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbsorbConvertPercentage", "Absorb Convert Percentage", "Absorb_Convert_Percentage", "convertpercent", g_esAbsorbSpecial[type].g_flAbsorbConvertPercentage, value, -1.0, 1.0);
-			g_esAbsorbSpecial[type].g_iAbsorbCooldown = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbsorbCooldown", "Absorb Cooldown", "Absorb_Cooldown", "cooldown", g_esAbsorbSpecial[type].g_iAbsorbCooldown, value, -1, 99999);
-			g_esAbsorbSpecial[type].g_iAbsorbDuration = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbsorbDuration", "Absorb Duration", "Absorb_Duration", "duration", g_esAbsorbSpecial[type].g_iAbsorbDuration, value, -1, 99999);
-			g_esAbsorbSpecial[type].g_flAbsorbExplosiveDivisor = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbsorbExplosiveDivisor", "Absorb Explosive Divisor", "Absorb_Explosive_Divisor", "explosive", g_esAbsorbSpecial[type].g_flAbsorbExplosiveDivisor, value, -1.0, 99999.0);
-			g_esAbsorbSpecial[type].g_flAbsorbFireDivisor = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbsorbFireDivisor", "Absorb Fire Divisor", "Absorb_Fire_Divisor", "fire", g_esAbsorbSpecial[type].g_flAbsorbFireDivisor, value, -1.0, 99999.0);
-			g_esAbsorbSpecial[type].g_flAbsorbHittableDivisor = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbsorbHittableDivisor", "Absorb Hittable Divisor", "Absorb_Hittable_Divisor", "hittable", g_esAbsorbSpecial[type].g_flAbsorbHittableDivisor, value, -1.0, 99999.0);
-			g_esAbsorbSpecial[type].g_flAbsorbMeleeDivisor = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbsorbMeleeDivisor", "Absorb Melee Divisor", "Absorb_Melee_Divisor", "melee", g_esAbsorbSpecial[type].g_flAbsorbMeleeDivisor, value, -1.0, 99999.0);
+			g_esAbsorbSpecial[type][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esAbsorbSpecial[type][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esAbsorbSpecial[type][specType].g_iComboAbility = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esAbsorbSpecial[type][specType].g_iComboAbility, value, -1, 1, specName, specType);
+			g_esAbsorbSpecial[type][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbsorbSpecial[type][specType].g_iHumanAbility, value, -1, 2, specName, specType);
+			g_esAbsorbSpecial[type][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbsorbSpecial[type][specType].g_iHumanAmmo, value, -1, 99999, specName, specType);
+			g_esAbsorbSpecial[type][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbsorbSpecial[type][specType].g_iHumanCooldown, value, -1, 99999, specName, specType);
+			g_esAbsorbSpecial[type][specType].g_iHumanDuration = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esAbsorbSpecial[type][specType].g_iHumanDuration, value, -1, 99999, specName, specType);
+			g_esAbsorbSpecial[type][specType].g_iHumanMode = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esAbsorbSpecial[type][specType].g_iHumanMode, value, -1, 1, specName, specType);
+			g_esAbsorbSpecial[type][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbsorbSpecial[type][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esAbsorbSpecial[type][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbsorbSpecial[type][specType].g_iRequiresHumans, value, -1, 32, specName, specType);
+			g_esAbsorbSpecial[type][specType].g_iAbsorbAbility = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbsorbSpecial[type][specType].g_iAbsorbAbility, value, -1, 1, specName, specType);
+			g_esAbsorbSpecial[type][specType].g_iAbsorbMessage = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbsorbSpecial[type][specType].g_iAbsorbMessage, value, -1, 1, specName, specType);
+			g_esAbsorbSpecial[type][specType].g_flAbsorbBulletDivisor = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbsorbBulletDivisor", "Absorb Bullet Divisor", "Absorb_Bullet_Divisor", "bullet", g_esAbsorbSpecial[type][specType].g_flAbsorbBulletDivisor, value, -1.0, 99999.0, specName, specType);
+			g_esAbsorbSpecial[type][specType].g_flAbsorbChance = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbsorbChance", "Absorb Chance", "Absorb_Chance", "chance", g_esAbsorbSpecial[type][specType].g_flAbsorbChance, value, -1.0, 100.0, specName, specType);
+			g_esAbsorbSpecial[type][specType].g_flAbsorbConvertPercentage = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbsorbConvertPercentage", "Absorb Convert Percentage", "Absorb_Convert_Percentage", "convertpercent", g_esAbsorbSpecial[type][specType].g_flAbsorbConvertPercentage, value, -1.0, 1.0, specName, specType);
+			g_esAbsorbSpecial[type][specType].g_iAbsorbCooldown = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbsorbCooldown", "Absorb Cooldown", "Absorb_Cooldown", "cooldown", g_esAbsorbSpecial[type][specType].g_iAbsorbCooldown, value, -1, 99999, specName, specType);
+			g_esAbsorbSpecial[type][specType].g_iAbsorbDuration = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbsorbDuration", "Absorb Duration", "Absorb_Duration", "duration", g_esAbsorbSpecial[type][specType].g_iAbsorbDuration, value, -1, 99999, specName, specType);
+			g_esAbsorbSpecial[type][specType].g_flAbsorbExplosiveDivisor = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbsorbExplosiveDivisor", "Absorb Explosive Divisor", "Absorb_Explosive_Divisor", "explosive", g_esAbsorbSpecial[type][specType].g_flAbsorbExplosiveDivisor, value, -1.0, 99999.0, specName, specType);
+			g_esAbsorbSpecial[type][specType].g_flAbsorbFireDivisor = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbsorbFireDivisor", "Absorb Fire Divisor", "Absorb_Fire_Divisor", "fire", g_esAbsorbSpecial[type][specType].g_flAbsorbFireDivisor, value, -1.0, 99999.0, specName, specType);
+			g_esAbsorbSpecial[type][specType].g_flAbsorbHittableDivisor = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbsorbHittableDivisor", "Absorb Hittable Divisor", "Absorb_Hittable_Divisor", "hittable", g_esAbsorbSpecial[type][specType].g_flAbsorbHittableDivisor, value, -1.0, 99999.0, specName, specType);
+			g_esAbsorbSpecial[type][specType].g_flAbsorbMeleeDivisor = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbsorbMeleeDivisor", "Absorb Melee Divisor", "Absorb_Melee_Divisor", "melee", g_esAbsorbSpecial[type][specType].g_flAbsorbMeleeDivisor, value, -1.0, 99999.0, specName, specType);
 		}
 		else
 		{
@@ -801,30 +808,32 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esAbsorbPlayer[tank].g_iInfectedType = iGetInfectedType(tank);
 	g_esAbsorbPlayer[tank].g_iTankType = apply ? type : 0;
+	int iSpecType = g_esAbsorbPlayer[tank].g_iInfectedType;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esAbsorbCache[tank].g_flAbsorbBulletDivisor = flGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_flAbsorbBulletDivisor, g_esAbsorbPlayer[tank].g_flAbsorbBulletDivisor, g_esAbsorbSpecial[type].g_flAbsorbBulletDivisor, g_esAbsorbAbility[type].g_flAbsorbBulletDivisor, 1);
-		g_esAbsorbCache[tank].g_flAbsorbChance = flGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_flAbsorbChance, g_esAbsorbPlayer[tank].g_flAbsorbChance, g_esAbsorbSpecial[type].g_flAbsorbChance, g_esAbsorbAbility[type].g_flAbsorbChance, 1);
-		g_esAbsorbCache[tank].g_flAbsorbConvertPercentage = flGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_flAbsorbConvertPercentage, g_esAbsorbPlayer[tank].g_flAbsorbConvertPercentage, g_esAbsorbSpecial[type].g_flAbsorbConvertPercentage, g_esAbsorbAbility[type].g_flAbsorbConvertPercentage, 1);
-		g_esAbsorbCache[tank].g_flAbsorbExplosiveDivisor = flGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_flAbsorbExplosiveDivisor, g_esAbsorbPlayer[tank].g_flAbsorbExplosiveDivisor, g_esAbsorbSpecial[type].g_flAbsorbExplosiveDivisor, g_esAbsorbAbility[type].g_flAbsorbExplosiveDivisor, 1);
-		g_esAbsorbCache[tank].g_flAbsorbFireDivisor = flGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_flAbsorbFireDivisor, g_esAbsorbPlayer[tank].g_flAbsorbFireDivisor, g_esAbsorbSpecial[type].g_flAbsorbFireDivisor, g_esAbsorbAbility[type].g_flAbsorbFireDivisor, 1);
-		g_esAbsorbCache[tank].g_flAbsorbHittableDivisor = flGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_flAbsorbHittableDivisor, g_esAbsorbPlayer[tank].g_flAbsorbHittableDivisor, g_esAbsorbSpecial[type].g_flAbsorbHittableDivisor, g_esAbsorbAbility[type].g_flAbsorbHittableDivisor, 1);
-		g_esAbsorbCache[tank].g_flAbsorbMeleeDivisor = flGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_flAbsorbMeleeDivisor, g_esAbsorbPlayer[tank].g_flAbsorbMeleeDivisor, g_esAbsorbSpecial[type].g_flAbsorbMeleeDivisor, g_esAbsorbAbility[type].g_flAbsorbMeleeDivisor, 1);
-		g_esAbsorbCache[tank].g_iAbsorbAbility = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iAbsorbAbility, g_esAbsorbPlayer[tank].g_iAbsorbAbility, g_esAbsorbSpecial[type].g_iAbsorbAbility, g_esAbsorbAbility[type].g_iAbsorbAbility, 1);
-		g_esAbsorbCache[tank].g_iAbsorbCooldown = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iAbsorbCooldown, g_esAbsorbPlayer[tank].g_iAbsorbCooldown, g_esAbsorbSpecial[type].g_iAbsorbCooldown, g_esAbsorbAbility[type].g_iAbsorbCooldown, 1);
-		g_esAbsorbCache[tank].g_iAbsorbDuration = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iAbsorbDuration, g_esAbsorbPlayer[tank].g_iAbsorbDuration, g_esAbsorbSpecial[type].g_iAbsorbDuration, g_esAbsorbAbility[type].g_iAbsorbDuration, 1);
-		g_esAbsorbCache[tank].g_iAbsorbMessage = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iAbsorbMessage, g_esAbsorbPlayer[tank].g_iAbsorbMessage, g_esAbsorbSpecial[type].g_iAbsorbMessage, g_esAbsorbAbility[type].g_iAbsorbMessage, 1);
-		g_esAbsorbCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_flCloseAreasOnly, g_esAbsorbPlayer[tank].g_flCloseAreasOnly, g_esAbsorbSpecial[type].g_flCloseAreasOnly, g_esAbsorbAbility[type].g_flCloseAreasOnly, 1);
-		g_esAbsorbCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iComboAbility, g_esAbsorbPlayer[tank].g_iComboAbility, g_esAbsorbSpecial[type].g_iComboAbility, g_esAbsorbAbility[type].g_iComboAbility, 1);
-		g_esAbsorbCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iHumanAbility, g_esAbsorbPlayer[tank].g_iHumanAbility, g_esAbsorbSpecial[type].g_iHumanAbility, g_esAbsorbAbility[type].g_iHumanAbility, 1);
-		g_esAbsorbCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iHumanAmmo, g_esAbsorbPlayer[tank].g_iHumanAmmo, g_esAbsorbSpecial[type].g_iHumanAmmo, g_esAbsorbAbility[type].g_iHumanAmmo, 1);
-		g_esAbsorbCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iHumanCooldown, g_esAbsorbPlayer[tank].g_iHumanCooldown, g_esAbsorbSpecial[type].g_iHumanCooldown, g_esAbsorbAbility[type].g_iHumanCooldown, 1);
-		g_esAbsorbCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iHumanDuration, g_esAbsorbPlayer[tank].g_iHumanDuration, g_esAbsorbSpecial[type].g_iHumanDuration, g_esAbsorbAbility[type].g_iHumanDuration, 1);
-		g_esAbsorbCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iHumanMode, g_esAbsorbPlayer[tank].g_iHumanMode, g_esAbsorbSpecial[type].g_iHumanMode, g_esAbsorbAbility[type].g_iHumanMode, 1);
-		g_esAbsorbCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_flOpenAreasOnly, g_esAbsorbPlayer[tank].g_flOpenAreasOnly, g_esAbsorbSpecial[type].g_flOpenAreasOnly, g_esAbsorbAbility[type].g_flOpenAreasOnly, 1);
-		g_esAbsorbCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iRequiresHumans, g_esAbsorbPlayer[tank].g_iRequiresHumans, g_esAbsorbSpecial[type].g_iRequiresHumans, g_esAbsorbAbility[type].g_iRequiresHumans, 1);
+		g_esAbsorbCache[tank].g_flAbsorbBulletDivisor = flGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank][iSpecType - 1].g_flAbsorbBulletDivisor, g_esAbsorbPlayer[tank].g_flAbsorbBulletDivisor, g_esAbsorbSpecial[type][iSpecType - 1].g_flAbsorbBulletDivisor, g_esAbsorbAbility[type].g_flAbsorbBulletDivisor, 1);
+		g_esAbsorbCache[tank].g_flAbsorbChance = flGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank][iSpecType - 1].g_flAbsorbChance, g_esAbsorbPlayer[tank].g_flAbsorbChance, g_esAbsorbSpecial[type][iSpecType - 1].g_flAbsorbChance, g_esAbsorbAbility[type].g_flAbsorbChance, 1);
+		g_esAbsorbCache[tank].g_flAbsorbConvertPercentage = flGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank][iSpecType - 1].g_flAbsorbConvertPercentage, g_esAbsorbPlayer[tank].g_flAbsorbConvertPercentage, g_esAbsorbSpecial[type][iSpecType - 1].g_flAbsorbConvertPercentage, g_esAbsorbAbility[type].g_flAbsorbConvertPercentage, 1);
+		g_esAbsorbCache[tank].g_flAbsorbExplosiveDivisor = flGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank][iSpecType - 1].g_flAbsorbExplosiveDivisor, g_esAbsorbPlayer[tank].g_flAbsorbExplosiveDivisor, g_esAbsorbSpecial[type][iSpecType - 1].g_flAbsorbExplosiveDivisor, g_esAbsorbAbility[type].g_flAbsorbExplosiveDivisor, 1);
+		g_esAbsorbCache[tank].g_flAbsorbFireDivisor = flGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank][iSpecType - 1].g_flAbsorbFireDivisor, g_esAbsorbPlayer[tank].g_flAbsorbFireDivisor, g_esAbsorbSpecial[type][iSpecType - 1].g_flAbsorbFireDivisor, g_esAbsorbAbility[type].g_flAbsorbFireDivisor, 1);
+		g_esAbsorbCache[tank].g_flAbsorbHittableDivisor = flGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank][iSpecType - 1].g_flAbsorbHittableDivisor, g_esAbsorbPlayer[tank].g_flAbsorbHittableDivisor, g_esAbsorbSpecial[type][iSpecType - 1].g_flAbsorbHittableDivisor, g_esAbsorbAbility[type].g_flAbsorbHittableDivisor, 1);
+		g_esAbsorbCache[tank].g_flAbsorbMeleeDivisor = flGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank][iSpecType - 1].g_flAbsorbMeleeDivisor, g_esAbsorbPlayer[tank].g_flAbsorbMeleeDivisor, g_esAbsorbSpecial[type][iSpecType - 1].g_flAbsorbMeleeDivisor, g_esAbsorbAbility[type].g_flAbsorbMeleeDivisor, 1);
+		g_esAbsorbCache[tank].g_iAbsorbAbility = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank][iSpecType - 1].g_iAbsorbAbility, g_esAbsorbPlayer[tank].g_iAbsorbAbility, g_esAbsorbSpecial[type][iSpecType - 1].g_iAbsorbAbility, g_esAbsorbAbility[type].g_iAbsorbAbility, 1);
+		g_esAbsorbCache[tank].g_iAbsorbCooldown = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank][iSpecType - 1].g_iAbsorbCooldown, g_esAbsorbPlayer[tank].g_iAbsorbCooldown, g_esAbsorbSpecial[type][iSpecType - 1].g_iAbsorbCooldown, g_esAbsorbAbility[type].g_iAbsorbCooldown, 1);
+		g_esAbsorbCache[tank].g_iAbsorbDuration = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank][iSpecType - 1].g_iAbsorbDuration, g_esAbsorbPlayer[tank].g_iAbsorbDuration, g_esAbsorbSpecial[type][iSpecType - 1].g_iAbsorbDuration, g_esAbsorbAbility[type].g_iAbsorbDuration, 1);
+		g_esAbsorbCache[tank].g_iAbsorbMessage = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank][iSpecType - 1].g_iAbsorbMessage, g_esAbsorbPlayer[tank].g_iAbsorbMessage, g_esAbsorbSpecial[type][iSpecType - 1].g_iAbsorbMessage, g_esAbsorbAbility[type].g_iAbsorbMessage, 1);
+		g_esAbsorbCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank][iSpecType - 1].g_flCloseAreasOnly, g_esAbsorbPlayer[tank].g_flCloseAreasOnly, g_esAbsorbSpecial[type][iSpecType - 1].g_flCloseAreasOnly, g_esAbsorbAbility[type].g_flCloseAreasOnly, 1);
+		g_esAbsorbCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank][iSpecType - 1].g_iComboAbility, g_esAbsorbPlayer[tank].g_iComboAbility, g_esAbsorbSpecial[type][iSpecType - 1].g_iComboAbility, g_esAbsorbAbility[type].g_iComboAbility, 1);
+		g_esAbsorbCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank][iSpecType - 1].g_iHumanAbility, g_esAbsorbPlayer[tank].g_iHumanAbility, g_esAbsorbSpecial[type][iSpecType - 1].g_iHumanAbility, g_esAbsorbAbility[type].g_iHumanAbility, 1);
+		g_esAbsorbCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank][iSpecType - 1].g_iHumanAmmo, g_esAbsorbPlayer[tank].g_iHumanAmmo, g_esAbsorbSpecial[type][iSpecType - 1].g_iHumanAmmo, g_esAbsorbAbility[type].g_iHumanAmmo, 1);
+		g_esAbsorbCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank][iSpecType - 1].g_iHumanCooldown, g_esAbsorbPlayer[tank].g_iHumanCooldown, g_esAbsorbSpecial[type][iSpecType - 1].g_iHumanCooldown, g_esAbsorbAbility[type].g_iHumanCooldown, 1);
+		g_esAbsorbCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank][iSpecType - 1].g_iHumanDuration, g_esAbsorbPlayer[tank].g_iHumanDuration, g_esAbsorbSpecial[type][iSpecType - 1].g_iHumanDuration, g_esAbsorbAbility[type].g_iHumanDuration, 1);
+		g_esAbsorbCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank][iSpecType - 1].g_iHumanMode, g_esAbsorbPlayer[tank].g_iHumanMode, g_esAbsorbSpecial[type][iSpecType - 1].g_iHumanMode, g_esAbsorbAbility[type].g_iHumanMode, 1);
+		g_esAbsorbCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank][iSpecType - 1].g_flOpenAreasOnly, g_esAbsorbPlayer[tank].g_flOpenAreasOnly, g_esAbsorbSpecial[type][iSpecType - 1].g_flOpenAreasOnly, g_esAbsorbAbility[type].g_flOpenAreasOnly, 1);
+		g_esAbsorbCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank][iSpecType - 1].g_iRequiresHumans, g_esAbsorbPlayer[tank].g_iRequiresHumans, g_esAbsorbSpecial[type][iSpecType - 1].g_iRequiresHumans, g_esAbsorbAbility[type].g_iRequiresHumans, 1);
 	}
 	else
 	{

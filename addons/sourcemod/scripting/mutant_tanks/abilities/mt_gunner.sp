@@ -180,6 +180,7 @@ enum struct esGunnerPlayer
 	int g_iHumanCooldown;
 	int g_iHumanMode;
 	int g_iImmunityFlags;
+	int g_iInfectedType;
 	int g_iRequiresHumans;
 	int g_iSpecialEnemy;
 	int g_iSurvivorEnemy;
@@ -217,7 +218,7 @@ enum struct esGunnerTeammate
 	int g_iRequiresHumans;
 }
 
-esGunnerTeammate g_esGunnerTeammate[MAXPLAYERS + 1];
+esGunnerTeammate g_esGunnerTeammate[MAXPLAYERS + 1][6];
 
 enum struct esGunnerAbility
 {
@@ -282,7 +283,7 @@ enum struct esGunnerSpecial
 	int g_iRequiresHumans;
 }
 
-esGunnerSpecial g_esGunnerSpecial[MT_MAXTYPES + 1];
+esGunnerSpecial g_esGunnerSpecial[MT_MAXTYPES + 1][6];
 
 enum struct esGunnerCache
 {
@@ -336,14 +337,14 @@ void vGunnerMapStart()
 public void OnMapStart()
 #endif
 {
-	for (int iPos = 0; iPos < sizeof g_sWeaponSounds; iPos++)
+	for (int iPos = 0; iPos < (sizeof g_sWeaponSounds); iPos++)
 	{
 		if (!g_bSecondGame && 6 <= iPos <= sizeof g_sWeaponModels)
 		{
 			continue;
 		}
 
-		if (iPos < sizeof g_sWeaponModels)
+		if (iPos < (sizeof g_sWeaponModels))
 		{
 			PrecacheModel(g_sWeaponModels[iPos], true);
 		}
@@ -675,30 +676,33 @@ public void MT_OnConfigsLoad(int mode)
 				g_esGunnerAbility[iIndex].g_flGunnerReactionTime = 1.0;
 				g_esGunnerAbility[iIndex].g_iGunnerTargetType = 0;
 
-				g_esGunnerSpecial[iIndex].g_flCloseAreasOnly = -1.0;
-				g_esGunnerSpecial[iIndex].g_iComboAbility = -1;
-				g_esGunnerSpecial[iIndex].g_iHumanAbility = -1;
-				g_esGunnerSpecial[iIndex].g_iHumanAmmo = -1;
-				g_esGunnerSpecial[iIndex].g_iHumanCooldown = -1;
-				g_esGunnerSpecial[iIndex].g_iHumanMode = -1;
-				g_esGunnerSpecial[iIndex].g_flOpenAreasOnly = -1.0;
-				g_esGunnerSpecial[iIndex].g_iRequiresHumans = -1;
-				g_esGunnerSpecial[iIndex].g_iGunnerAbility = -1;
-				g_esGunnerSpecial[iIndex].g_iGunnerMessage = -1;
-				g_esGunnerSpecial[iIndex].g_flGunnerAccuracy = -1.0;
-				g_esGunnerSpecial[iIndex].g_iGunnerBullets = -1;
-				g_esGunnerSpecial[iIndex].g_flGunnerChance = -1.0;
-				g_esGunnerSpecial[iIndex].g_iGunnerClipSize = -1;
-				g_esGunnerSpecial[iIndex].g_iGunnerCooldown = -1;
-				g_esGunnerSpecial[iIndex].g_flGunnerDamage = -1.0;
-				g_esGunnerSpecial[iIndex].g_flGunnerDuration = -1.0;
-				g_esGunnerSpecial[iIndex].g_iGunnerGlow = -1;
-				g_esGunnerSpecial[iIndex].g_iGunnerGunType = -1;
-				g_esGunnerSpecial[iIndex].g_flGunnerInterval = -1.0;
-				g_esGunnerSpecial[iIndex].g_flGunnerLoadTime = -1.0;
-				g_esGunnerSpecial[iIndex].g_flGunnerRange = -1.0;
-				g_esGunnerSpecial[iIndex].g_flGunnerReactionTime = -1.0;
-				g_esGunnerSpecial[iIndex].g_iGunnerTargetType = -1;
+				for (int iSpecType = 0; iSpecType < 6; iSpecType++)
+				{
+					g_esGunnerSpecial[iIndex][iSpecType].g_flCloseAreasOnly = -1.0;
+					g_esGunnerSpecial[iIndex][iSpecType].g_iComboAbility = -1;
+					g_esGunnerSpecial[iIndex][iSpecType].g_iHumanAbility = -1;
+					g_esGunnerSpecial[iIndex][iSpecType].g_iHumanAmmo = -1;
+					g_esGunnerSpecial[iIndex][iSpecType].g_iHumanCooldown = -1;
+					g_esGunnerSpecial[iIndex][iSpecType].g_iHumanMode = -1;
+					g_esGunnerSpecial[iIndex][iSpecType].g_flOpenAreasOnly = -1.0;
+					g_esGunnerSpecial[iIndex][iSpecType].g_iRequiresHumans = -1;
+					g_esGunnerSpecial[iIndex][iSpecType].g_iGunnerAbility = -1;
+					g_esGunnerSpecial[iIndex][iSpecType].g_iGunnerMessage = -1;
+					g_esGunnerSpecial[iIndex][iSpecType].g_flGunnerAccuracy = -1.0;
+					g_esGunnerSpecial[iIndex][iSpecType].g_iGunnerBullets = -1;
+					g_esGunnerSpecial[iIndex][iSpecType].g_flGunnerChance = -1.0;
+					g_esGunnerSpecial[iIndex][iSpecType].g_iGunnerClipSize = -1;
+					g_esGunnerSpecial[iIndex][iSpecType].g_iGunnerCooldown = -1;
+					g_esGunnerSpecial[iIndex][iSpecType].g_flGunnerDamage = -1.0;
+					g_esGunnerSpecial[iIndex][iSpecType].g_flGunnerDuration = -1.0;
+					g_esGunnerSpecial[iIndex][iSpecType].g_iGunnerGlow = -1;
+					g_esGunnerSpecial[iIndex][iSpecType].g_iGunnerGunType = -1;
+					g_esGunnerSpecial[iIndex][iSpecType].g_flGunnerInterval = -1.0;
+					g_esGunnerSpecial[iIndex][iSpecType].g_flGunnerLoadTime = -1.0;
+					g_esGunnerSpecial[iIndex][iSpecType].g_flGunnerRange = -1.0;
+					g_esGunnerSpecial[iIndex][iSpecType].g_flGunnerReactionTime = -1.0;
+					g_esGunnerSpecial[iIndex][iSpecType].g_iGunnerTargetType = -1;
+				}
 			}
 		}
 		case 3:
@@ -732,69 +736,72 @@ public void MT_OnConfigsLoad(int mode)
 				g_esGunnerPlayer[iPlayer].g_flGunnerReactionTime = -1.0;
 				g_esGunnerPlayer[iPlayer].g_iGunnerTargetType = -1;
 
-				g_esGunnerTeammate[iPlayer].g_flCloseAreasOnly = -1.0;
-				g_esGunnerTeammate[iPlayer].g_iComboAbility = -1;
-				g_esGunnerTeammate[iPlayer].g_iHumanAbility = -1;
-				g_esGunnerTeammate[iPlayer].g_iHumanAmmo = -1;
-				g_esGunnerTeammate[iPlayer].g_iHumanCooldown = -1;
-				g_esGunnerTeammate[iPlayer].g_iHumanMode = -1;
-				g_esGunnerTeammate[iPlayer].g_flOpenAreasOnly = -1.0;
-				g_esGunnerTeammate[iPlayer].g_iRequiresHumans = -1;
-				g_esGunnerTeammate[iPlayer].g_iGunnerAbility = -1;
-				g_esGunnerTeammate[iPlayer].g_iGunnerMessage = -1;
-				g_esGunnerTeammate[iPlayer].g_flGunnerAccuracy = -1.0;
-				g_esGunnerTeammate[iPlayer].g_iGunnerBullets = -1;
-				g_esGunnerTeammate[iPlayer].g_flGunnerChance = -1.0;
-				g_esGunnerTeammate[iPlayer].g_iGunnerClipSize = -1;
-				g_esGunnerTeammate[iPlayer].g_iGunnerCooldown = -1;
-				g_esGunnerTeammate[iPlayer].g_flGunnerDamage = -1.0;
-				g_esGunnerTeammate[iPlayer].g_flGunnerDuration = -1.0;
-				g_esGunnerTeammate[iPlayer].g_iGunnerGlow = -1;
-				g_esGunnerTeammate[iPlayer].g_iGunnerGunType = -1;
-				g_esGunnerTeammate[iPlayer].g_flGunnerInterval = -1.0;
-				g_esGunnerTeammate[iPlayer].g_flGunnerLoadTime = -1.0;
-				g_esGunnerTeammate[iPlayer].g_flGunnerRange = -1.0;
-				g_esGunnerTeammate[iPlayer].g_flGunnerReactionTime = -1.0;
-				g_esGunnerTeammate[iPlayer].g_iGunnerTargetType = -1;
+				for (int iSpecType = 0; iSpecType < 6; iSpecType++)
+				{
+					g_esGunnerTeammate[iPlayer][iSpecType].g_flCloseAreasOnly = -1.0;
+					g_esGunnerTeammate[iPlayer][iSpecType].g_iComboAbility = -1;
+					g_esGunnerTeammate[iPlayer][iSpecType].g_iHumanAbility = -1;
+					g_esGunnerTeammate[iPlayer][iSpecType].g_iHumanAmmo = -1;
+					g_esGunnerTeammate[iPlayer][iSpecType].g_iHumanCooldown = -1;
+					g_esGunnerTeammate[iPlayer][iSpecType].g_iHumanMode = -1;
+					g_esGunnerTeammate[iPlayer][iSpecType].g_flOpenAreasOnly = -1.0;
+					g_esGunnerTeammate[iPlayer][iSpecType].g_iRequiresHumans = -1;
+					g_esGunnerTeammate[iPlayer][iSpecType].g_iGunnerAbility = -1;
+					g_esGunnerTeammate[iPlayer][iSpecType].g_iGunnerMessage = -1;
+					g_esGunnerTeammate[iPlayer][iSpecType].g_flGunnerAccuracy = -1.0;
+					g_esGunnerTeammate[iPlayer][iSpecType].g_iGunnerBullets = -1;
+					g_esGunnerTeammate[iPlayer][iSpecType].g_flGunnerChance = -1.0;
+					g_esGunnerTeammate[iPlayer][iSpecType].g_iGunnerClipSize = -1;
+					g_esGunnerTeammate[iPlayer][iSpecType].g_iGunnerCooldown = -1;
+					g_esGunnerTeammate[iPlayer][iSpecType].g_flGunnerDamage = -1.0;
+					g_esGunnerTeammate[iPlayer][iSpecType].g_flGunnerDuration = -1.0;
+					g_esGunnerTeammate[iPlayer][iSpecType].g_iGunnerGlow = -1;
+					g_esGunnerTeammate[iPlayer][iSpecType].g_iGunnerGunType = -1;
+					g_esGunnerTeammate[iPlayer][iSpecType].g_flGunnerInterval = -1.0;
+					g_esGunnerTeammate[iPlayer][iSpecType].g_flGunnerLoadTime = -1.0;
+					g_esGunnerTeammate[iPlayer][iSpecType].g_flGunnerRange = -1.0;
+					g_esGunnerTeammate[iPlayer][iSpecType].g_flGunnerReactionTime = -1.0;
+					g_esGunnerTeammate[iPlayer][iSpecType].g_iGunnerTargetType = -1;
+				}
 			}
 		}
 	}
 }
 
 #if defined MT_ABILITIES_MAIN
-void vGunnerConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
+void vGunnerConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, const char[] specName, int specType)
 #else
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, const char[] specName, int specType)
 #endif
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esGunnerTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esGunnerTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
-			g_esGunnerTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esGunnerTeammate[admin].g_iComboAbility, value, -1, 1);
-			g_esGunnerTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esGunnerTeammate[admin].g_iHumanAbility, value, -1, 2);
-			g_esGunnerTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esGunnerTeammate[admin].g_iHumanAmmo, value, -1, 99999);
-			g_esGunnerTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esGunnerTeammate[admin].g_iHumanCooldown, value, -1, 99999);
-			g_esGunnerTeammate[admin].g_iHumanMode = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGunnerTeammate[admin].g_iHumanMode, value, -1, 1);
-			g_esGunnerTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esGunnerTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
-			g_esGunnerTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGunnerTeammate[admin].g_iRequiresHumans, value, -1, 32);
-			g_esGunnerTeammate[admin].g_iGunnerAbility = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esGunnerTeammate[admin].g_iGunnerAbility, value, -1, 1);
-			g_esGunnerTeammate[admin].g_iGunnerMessage = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esGunnerTeammate[admin].g_iGunnerMessage, value, -1, 1);
-			g_esGunnerTeammate[admin].g_flGunnerAccuracy = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerAccuracy", "Gunner Accuracy", "Gunner_Accuracy", "accuracy", g_esGunnerTeammate[admin].g_flGunnerAccuracy, value, -1.0, 5.0);
-			g_esGunnerTeammate[admin].g_iGunnerBullets = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerBullets", "Gunner Bullets", "Gunner_Bullets", "bullets", g_esGunnerTeammate[admin].g_iGunnerBullets, value, -1, 99999);
-			g_esGunnerTeammate[admin].g_flGunnerChance = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerChance", "Gunner Chance", "Gunner_Chance", "chance", g_esGunnerTeammate[admin].g_flGunnerChance, value, -1.0, 100.0);
-			g_esGunnerTeammate[admin].g_iGunnerClipSize = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerClipSize", "Gunner Clip Size", "Gunner_Clip_Size", "clipsize", g_esGunnerTeammate[admin].g_iGunnerClipSize, value, -1, 99999);
-			g_esGunnerTeammate[admin].g_iGunnerCooldown = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerCooldown", "Gunner Cooldown", "Gunner_Cooldown", "cooldown", g_esGunnerTeammate[admin].g_iGunnerCooldown, value, -1, 99999);
-			g_esGunnerTeammate[admin].g_flGunnerDamage = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerDamage", "Gunner Damage", "Gunner_Damage", "damage", g_esGunnerTeammate[admin].g_flGunnerDamage, value, -1.0, 99999.0);
-			g_esGunnerTeammate[admin].g_flGunnerDuration = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerDuration", "Gunner Duration", "Gunner_Duration", "duration", g_esGunnerTeammate[admin].g_flGunnerDuration, value, -1.0, 99999.0);
-			g_esGunnerTeammate[admin].g_iGunnerGlow = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerGlow", "Gunner Glow", "Gunner_Glow", "glow", g_esGunnerTeammate[admin].g_iGunnerGlow, value, -1, 1);
-			g_esGunnerTeammate[admin].g_iGunnerGunType = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerGunType", "Gunner Gun Type", "Gunner_Gun_Type", "guntype", g_esGunnerTeammate[admin].g_iGunnerGunType, value, -1, (g_bSecondGame ? 18 : 6));
-			g_esGunnerTeammate[admin].g_flGunnerInterval = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerInterval", "Gunner Interval", "Gunner_Interval", "interval", g_esGunnerTeammate[admin].g_flGunnerInterval, value, -1.0, 99999.0);
-			g_esGunnerTeammate[admin].g_flGunnerLoadTime = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerLoadTime", "Gunner Load Time", "Gunner_Load_Time", "loadtime", g_esGunnerTeammate[admin].g_flGunnerLoadTime, value, -1.0, 99999.0);
-			g_esGunnerTeammate[admin].g_flGunnerRange = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerRange", "Gunner Range", "Gunner_Range", "range", g_esGunnerTeammate[admin].g_flGunnerRange, value, -1.0, 99999.0);
-			g_esGunnerTeammate[admin].g_flGunnerReactionTime = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerReactionTime", "Gunner Reaction Time", "Gunner_Reaction_Time", "reactiontime", g_esGunnerTeammate[admin].g_flGunnerReactionTime, value, -1.0, 99999.0);
-			g_esGunnerTeammate[admin].g_iGunnerTargetType = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerTargetType", "Gunner Target Type", "Gunner_Target_Type", "targettype", g_esGunnerTeammate[admin].g_iGunnerTargetType, value, -1, 31);
+			g_esGunnerTeammate[admin][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esGunnerTeammate[admin][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esGunnerTeammate[admin][specType].g_iComboAbility = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esGunnerTeammate[admin][specType].g_iComboAbility, value, -1, 1, specName, specType);
+			g_esGunnerTeammate[admin][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esGunnerTeammate[admin][specType].g_iHumanAbility, value, -1, 2, specName, specType);
+			g_esGunnerTeammate[admin][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esGunnerTeammate[admin][specType].g_iHumanAmmo, value, -1, 99999, specName, specType);
+			g_esGunnerTeammate[admin][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esGunnerTeammate[admin][specType].g_iHumanCooldown, value, -1, 99999, specName, specType);
+			g_esGunnerTeammate[admin][specType].g_iHumanMode = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGunnerTeammate[admin][specType].g_iHumanMode, value, -1, 1, specName, specType);
+			g_esGunnerTeammate[admin][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esGunnerTeammate[admin][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esGunnerTeammate[admin][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGunnerTeammate[admin][specType].g_iRequiresHumans, value, -1, 32, specName, specType);
+			g_esGunnerTeammate[admin][specType].g_iGunnerAbility = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esGunnerTeammate[admin][specType].g_iGunnerAbility, value, -1, 1, specName, specType);
+			g_esGunnerTeammate[admin][specType].g_iGunnerMessage = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esGunnerTeammate[admin][specType].g_iGunnerMessage, value, -1, 1, specName, specType);
+			g_esGunnerTeammate[admin][specType].g_flGunnerAccuracy = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerAccuracy", "Gunner Accuracy", "Gunner_Accuracy", "accuracy", g_esGunnerTeammate[admin][specType].g_flGunnerAccuracy, value, -1.0, 5.0, specName, specType);
+			g_esGunnerTeammate[admin][specType].g_iGunnerBullets = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerBullets", "Gunner Bullets", "Gunner_Bullets", "bullets", g_esGunnerTeammate[admin][specType].g_iGunnerBullets, value, -1, 99999, specName, specType);
+			g_esGunnerTeammate[admin][specType].g_flGunnerChance = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerChance", "Gunner Chance", "Gunner_Chance", "chance", g_esGunnerTeammate[admin][specType].g_flGunnerChance, value, -1.0, 100.0, specName, specType);
+			g_esGunnerTeammate[admin][specType].g_iGunnerClipSize = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerClipSize", "Gunner Clip Size", "Gunner_Clip_Size", "clipsize", g_esGunnerTeammate[admin][specType].g_iGunnerClipSize, value, -1, 99999, specName, specType);
+			g_esGunnerTeammate[admin][specType].g_iGunnerCooldown = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerCooldown", "Gunner Cooldown", "Gunner_Cooldown", "cooldown", g_esGunnerTeammate[admin][specType].g_iGunnerCooldown, value, -1, 99999, specName, specType);
+			g_esGunnerTeammate[admin][specType].g_flGunnerDamage = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerDamage", "Gunner Damage", "Gunner_Damage", "damage", g_esGunnerTeammate[admin][specType].g_flGunnerDamage, value, -1.0, 99999.0, specName, specType);
+			g_esGunnerTeammate[admin][specType].g_flGunnerDuration = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerDuration", "Gunner Duration", "Gunner_Duration", "duration", g_esGunnerTeammate[admin][specType].g_flGunnerDuration, value, -1.0, 99999.0, specName, specType);
+			g_esGunnerTeammate[admin][specType].g_iGunnerGlow = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerGlow", "Gunner Glow", "Gunner_Glow", "glow", g_esGunnerTeammate[admin][specType].g_iGunnerGlow, value, -1, 1, specName, specType);
+			g_esGunnerTeammate[admin][specType].g_iGunnerGunType = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerGunType", "Gunner Gun Type", "Gunner_Gun_Type", "guntype", g_esGunnerTeammate[admin][specType].g_iGunnerGunType, value, -1, (g_bSecondGame ? 18 : 6), specName, specType);
+			g_esGunnerTeammate[admin][specType].g_flGunnerInterval = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerInterval", "Gunner Interval", "Gunner_Interval", "interval", g_esGunnerTeammate[admin][specType].g_flGunnerInterval, value, -1.0, 99999.0, specName, specType);
+			g_esGunnerTeammate[admin][specType].g_flGunnerLoadTime = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerLoadTime", "Gunner Load Time", "Gunner_Load_Time", "loadtime", g_esGunnerTeammate[admin][specType].g_flGunnerLoadTime, value, -1.0, 99999.0, specName, specType);
+			g_esGunnerTeammate[admin][specType].g_flGunnerRange = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerRange", "Gunner Range", "Gunner_Range", "range", g_esGunnerTeammate[admin][specType].g_flGunnerRange, value, -1.0, 99999.0, specName, specType);
+			g_esGunnerTeammate[admin][specType].g_flGunnerReactionTime = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerReactionTime", "Gunner Reaction Time", "Gunner_Reaction_Time", "reactiontime", g_esGunnerTeammate[admin][specType].g_flGunnerReactionTime, value, -1.0, 99999.0, specName, specType);
+			g_esGunnerTeammate[admin][specType].g_iGunnerTargetType = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerTargetType", "Gunner Target Type", "Gunner_Target_Type", "targettype", g_esGunnerTeammate[admin][specType].g_iGunnerTargetType, value, -1, 31, specName, specType);
 		}
 		else
 		{
@@ -831,30 +838,30 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esGunnerSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esGunnerSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
-			g_esGunnerSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esGunnerSpecial[type].g_iComboAbility, value, -1, 1);
-			g_esGunnerSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esGunnerSpecial[type].g_iHumanAbility, value, -1, 2);
-			g_esGunnerSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esGunnerSpecial[type].g_iHumanAmmo, value, -1, 99999);
-			g_esGunnerSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esGunnerSpecial[type].g_iHumanCooldown, value, -1, 99999);
-			g_esGunnerSpecial[type].g_iHumanMode = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGunnerSpecial[type].g_iHumanMode, value, -1, 1);
-			g_esGunnerSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esGunnerSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
-			g_esGunnerSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGunnerSpecial[type].g_iRequiresHumans, value, -1, 32);
-			g_esGunnerSpecial[type].g_iGunnerAbility = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esGunnerSpecial[type].g_iGunnerAbility, value, -1, 1);
-			g_esGunnerSpecial[type].g_iGunnerMessage = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esGunnerSpecial[type].g_iGunnerMessage, value, -1, 1);
-			g_esGunnerSpecial[type].g_flGunnerAccuracy = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerAccuracy", "Gunner Accuracy", "Gunner_Accuracy", "accuracy", g_esGunnerSpecial[type].g_flGunnerAccuracy, value, -1.0, 5.0);
-			g_esGunnerSpecial[type].g_iGunnerBullets = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerBullets", "Gunner Bullets", "Gunner_Bullets", "bullets", g_esGunnerSpecial[type].g_iGunnerBullets, value, -1, 99999);
-			g_esGunnerSpecial[type].g_flGunnerChance = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerChance", "Gunner Chance", "Gunner_Chance", "chance", g_esGunnerSpecial[type].g_flGunnerChance, value, -1.0, 100.0);
-			g_esGunnerSpecial[type].g_iGunnerClipSize = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerClipSize", "Gunner Clip Size", "Gunner_Clip_Size", "clipsize", g_esGunnerSpecial[type].g_iGunnerClipSize, value, -1, 99999);
-			g_esGunnerSpecial[type].g_iGunnerCooldown = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerCooldown", "Gunner Cooldown", "Gunner_Cooldown", "cooldown", g_esGunnerSpecial[type].g_iGunnerCooldown, value, -1, 99999);
-			g_esGunnerSpecial[type].g_flGunnerDamage = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerDamage", "Gunner Damage", "Gunner_Damage", "damage", g_esGunnerSpecial[type].g_flGunnerDamage, value, -1.0, 99999.0);
-			g_esGunnerSpecial[type].g_flGunnerDuration = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerDuration", "Gunner Duration", "Gunner_Duration", "duration", g_esGunnerSpecial[type].g_flGunnerDuration, value, -1.0, 99999.0);
-			g_esGunnerSpecial[type].g_iGunnerGlow = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerGlow", "Gunner Glow", "Gunner_Glow", "glow", g_esGunnerSpecial[type].g_iGunnerGlow, value, -1, 1);
-			g_esGunnerSpecial[type].g_iGunnerGunType = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerGunType", "Gunner Gun Type", "Gunner_Gun_Type", "guntype", g_esGunnerSpecial[type].g_iGunnerGunType, value, -1, (g_bSecondGame ? 18 : 6));
-			g_esGunnerSpecial[type].g_flGunnerInterval = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerInterval", "Gunner Interval", "Gunner_Interval", "interval", g_esGunnerSpecial[type].g_flGunnerInterval, value, -1.0, 99999.0);
-			g_esGunnerSpecial[type].g_flGunnerLoadTime = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerLoadTime", "Gunner Load Time", "Gunner_Load_Time", "loadtime", g_esGunnerSpecial[type].g_flGunnerLoadTime, value, -1.0, 99999.0);
-			g_esGunnerSpecial[type].g_flGunnerRange = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerRange", "Gunner Range", "Gunner_Range", "range", g_esGunnerSpecial[type].g_flGunnerRange, value, -1.0, 99999.0);
-			g_esGunnerSpecial[type].g_flGunnerReactionTime = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerReactionTime", "Gunner Reaction Time", "Gunner_Reaction_Time", "reactiontime", g_esGunnerSpecial[type].g_flGunnerReactionTime, value, -1.0, 99999.0);
-			g_esGunnerSpecial[type].g_iGunnerTargetType = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerTargetType", "Gunner Target Type", "Gunner_Target_Type", "targettype", g_esGunnerSpecial[type].g_iGunnerTargetType, value, -1, 31);
+			g_esGunnerSpecial[type][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esGunnerSpecial[type][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esGunnerSpecial[type][specType].g_iComboAbility = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esGunnerSpecial[type][specType].g_iComboAbility, value, -1, 1, specName, specType);
+			g_esGunnerSpecial[type][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esGunnerSpecial[type][specType].g_iHumanAbility, value, -1, 2, specName, specType);
+			g_esGunnerSpecial[type][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esGunnerSpecial[type][specType].g_iHumanAmmo, value, -1, 99999, specName, specType);
+			g_esGunnerSpecial[type][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esGunnerSpecial[type][specType].g_iHumanCooldown, value, -1, 99999, specName, specType);
+			g_esGunnerSpecial[type][specType].g_iHumanMode = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGunnerSpecial[type][specType].g_iHumanMode, value, -1, 1, specName, specType);
+			g_esGunnerSpecial[type][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esGunnerSpecial[type][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esGunnerSpecial[type][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGunnerSpecial[type][specType].g_iRequiresHumans, value, -1, 32, specName, specType);
+			g_esGunnerSpecial[type][specType].g_iGunnerAbility = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esGunnerSpecial[type][specType].g_iGunnerAbility, value, -1, 1, specName, specType);
+			g_esGunnerSpecial[type][specType].g_iGunnerMessage = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esGunnerSpecial[type][specType].g_iGunnerMessage, value, -1, 1, specName, specType);
+			g_esGunnerSpecial[type][specType].g_flGunnerAccuracy = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerAccuracy", "Gunner Accuracy", "Gunner_Accuracy", "accuracy", g_esGunnerSpecial[type][specType].g_flGunnerAccuracy, value, -1.0, 5.0, specName, specType);
+			g_esGunnerSpecial[type][specType].g_iGunnerBullets = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerBullets", "Gunner Bullets", "Gunner_Bullets", "bullets", g_esGunnerSpecial[type][specType].g_iGunnerBullets, value, -1, 99999, specName, specType);
+			g_esGunnerSpecial[type][specType].g_flGunnerChance = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerChance", "Gunner Chance", "Gunner_Chance", "chance", g_esGunnerSpecial[type][specType].g_flGunnerChance, value, -1.0, 100.0, specName, specType);
+			g_esGunnerSpecial[type][specType].g_iGunnerClipSize = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerClipSize", "Gunner Clip Size", "Gunner_Clip_Size", "clipsize", g_esGunnerSpecial[type][specType].g_iGunnerClipSize, value, -1, 99999, specName, specType);
+			g_esGunnerSpecial[type][specType].g_iGunnerCooldown = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerCooldown", "Gunner Cooldown", "Gunner_Cooldown", "cooldown", g_esGunnerSpecial[type][specType].g_iGunnerCooldown, value, -1, 99999, specName, specType);
+			g_esGunnerSpecial[type][specType].g_flGunnerDamage = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerDamage", "Gunner Damage", "Gunner_Damage", "damage", g_esGunnerSpecial[type][specType].g_flGunnerDamage, value, -1.0, 99999.0, specName, specType);
+			g_esGunnerSpecial[type][specType].g_flGunnerDuration = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerDuration", "Gunner Duration", "Gunner_Duration", "duration", g_esGunnerSpecial[type][specType].g_flGunnerDuration, value, -1.0, 99999.0, specName, specType);
+			g_esGunnerSpecial[type][specType].g_iGunnerGlow = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerGlow", "Gunner Glow", "Gunner_Glow", "glow", g_esGunnerSpecial[type][specType].g_iGunnerGlow, value, -1, 1, specName, specType);
+			g_esGunnerSpecial[type][specType].g_iGunnerGunType = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerGunType", "Gunner Gun Type", "Gunner_Gun_Type", "guntype", g_esGunnerSpecial[type][specType].g_iGunnerGunType, value, -1, (g_bSecondGame ? 18 : 6), specName, specType);
+			g_esGunnerSpecial[type][specType].g_flGunnerInterval = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerInterval", "Gunner Interval", "Gunner_Interval", "interval", g_esGunnerSpecial[type][specType].g_flGunnerInterval, value, -1.0, 99999.0, specName, specType);
+			g_esGunnerSpecial[type][specType].g_flGunnerLoadTime = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerLoadTime", "Gunner Load Time", "Gunner_Load_Time", "loadtime", g_esGunnerSpecial[type][specType].g_flGunnerLoadTime, value, -1.0, 99999.0, specName, specType);
+			g_esGunnerSpecial[type][specType].g_flGunnerRange = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerRange", "Gunner Range", "Gunner_Range", "range", g_esGunnerSpecial[type][specType].g_flGunnerRange, value, -1.0, 99999.0, specName, specType);
+			g_esGunnerSpecial[type][specType].g_flGunnerReactionTime = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerReactionTime", "Gunner Reaction Time", "Gunner_Reaction_Time", "reactiontime", g_esGunnerSpecial[type][specType].g_flGunnerReactionTime, value, -1.0, 99999.0, specName, specType);
+			g_esGunnerSpecial[type][specType].g_iGunnerTargetType = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerTargetType", "Gunner Target Type", "Gunner_Target_Type", "targettype", g_esGunnerSpecial[type][specType].g_iGunnerTargetType, value, -1, 31, specName, specType);
 		}
 		else
 		{
@@ -895,34 +902,36 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esGunnerPlayer[tank].g_iInfectedType = iGetInfectedType(tank);
 	g_esGunnerPlayer[tank].g_iTankType = apply ? type : 0;
+	int iSpecType = g_esGunnerPlayer[tank].g_iInfectedType;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esGunnerCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_flCloseAreasOnly, g_esGunnerPlayer[tank].g_flCloseAreasOnly, g_esGunnerSpecial[type].g_flCloseAreasOnly, g_esGunnerAbility[type].g_flCloseAreasOnly, 1);
-		g_esGunnerCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iComboAbility, g_esGunnerPlayer[tank].g_iComboAbility, g_esGunnerSpecial[type].g_iComboAbility, g_esGunnerAbility[type].g_iComboAbility, 1);
-		g_esGunnerCache[tank].g_flGunnerAccuracy = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_flGunnerAccuracy, g_esGunnerPlayer[tank].g_flGunnerAccuracy, g_esGunnerSpecial[type].g_flGunnerAccuracy, g_esGunnerAbility[type].g_flGunnerAccuracy, 1);
-		g_esGunnerCache[tank].g_flGunnerChance = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_flGunnerChance, g_esGunnerPlayer[tank].g_flGunnerChance, g_esGunnerSpecial[type].g_flGunnerChance, g_esGunnerAbility[type].g_flGunnerChance, 1);
-		g_esGunnerCache[tank].g_flGunnerDamage = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_flGunnerDamage, g_esGunnerPlayer[tank].g_flGunnerDamage, g_esGunnerSpecial[type].g_flGunnerDamage, g_esGunnerAbility[type].g_flGunnerDamage, 1);
-		g_esGunnerCache[tank].g_flGunnerDuration = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_flGunnerDuration, g_esGunnerPlayer[tank].g_flGunnerDuration, g_esGunnerSpecial[type].g_flGunnerDuration, g_esGunnerAbility[type].g_flGunnerDuration, 1);
-		g_esGunnerCache[tank].g_flGunnerInterval = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_flGunnerInterval, g_esGunnerPlayer[tank].g_flGunnerInterval, g_esGunnerSpecial[type].g_flGunnerInterval, g_esGunnerAbility[type].g_flGunnerInterval, 1);
-		g_esGunnerCache[tank].g_flGunnerLoadTime = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_flGunnerLoadTime, g_esGunnerPlayer[tank].g_flGunnerLoadTime, g_esGunnerSpecial[type].g_flGunnerLoadTime, g_esGunnerAbility[type].g_flGunnerLoadTime, 1);
-		g_esGunnerCache[tank].g_flGunnerRange = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_flGunnerRange, g_esGunnerPlayer[tank].g_flGunnerRange, g_esGunnerSpecial[type].g_flGunnerRange, g_esGunnerAbility[type].g_flGunnerRange, 1);
-		g_esGunnerCache[tank].g_flGunnerReactionTime = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_flGunnerReactionTime, g_esGunnerPlayer[tank].g_flGunnerReactionTime, g_esGunnerSpecial[type].g_flGunnerReactionTime, g_esGunnerAbility[type].g_flGunnerReactionTime, 1);
-		g_esGunnerCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iHumanAbility, g_esGunnerPlayer[tank].g_iHumanAbility, g_esGunnerSpecial[type].g_iHumanAbility, g_esGunnerAbility[type].g_iHumanAbility, 1);
-		g_esGunnerCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iHumanAmmo, g_esGunnerPlayer[tank].g_iHumanAmmo, g_esGunnerSpecial[type].g_iHumanAmmo, g_esGunnerAbility[type].g_iHumanAmmo, 1);
-		g_esGunnerCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iHumanCooldown, g_esGunnerPlayer[tank].g_iHumanCooldown, g_esGunnerSpecial[type].g_iHumanCooldown, g_esGunnerAbility[type].g_iHumanCooldown, 1);
-		g_esGunnerCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iHumanMode, g_esGunnerPlayer[tank].g_iHumanMode, g_esGunnerSpecial[type].g_iHumanMode, g_esGunnerAbility[type].g_iHumanMode, 1);
-		g_esGunnerCache[tank].g_iGunnerAbility = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iGunnerAbility, g_esGunnerPlayer[tank].g_iGunnerAbility, g_esGunnerSpecial[type].g_iGunnerAbility, g_esGunnerAbility[type].g_iGunnerAbility, 1);
-		g_esGunnerCache[tank].g_iGunnerBullets = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iGunnerBullets, g_esGunnerPlayer[tank].g_iGunnerBullets, g_esGunnerSpecial[type].g_iGunnerBullets, g_esGunnerAbility[type].g_iGunnerBullets, 1);
-		g_esGunnerCache[tank].g_iGunnerClipSize = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iGunnerClipSize, g_esGunnerPlayer[tank].g_iGunnerClipSize, g_esGunnerSpecial[type].g_iGunnerClipSize, g_esGunnerAbility[type].g_iGunnerClipSize, 1);
-		g_esGunnerCache[tank].g_iGunnerCooldown = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iGunnerCooldown, g_esGunnerPlayer[tank].g_iGunnerCooldown, g_esGunnerSpecial[type].g_iGunnerCooldown, g_esGunnerAbility[type].g_iGunnerCooldown, 1);
-		g_esGunnerCache[tank].g_iGunnerGlow = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iGunnerGlow, g_esGunnerPlayer[tank].g_iGunnerGlow, g_esGunnerSpecial[type].g_iGunnerGlow, g_esGunnerAbility[type].g_iGunnerGlow, 1);
-		g_esGunnerCache[tank].g_iGunnerGunType = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iGunnerGunType, g_esGunnerPlayer[tank].g_iGunnerGunType, g_esGunnerSpecial[type].g_iGunnerGunType, g_esGunnerAbility[type].g_iGunnerGunType, 1);
-		g_esGunnerCache[tank].g_iGunnerMessage = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iGunnerMessage, g_esGunnerPlayer[tank].g_iGunnerMessage, g_esGunnerSpecial[type].g_iGunnerMessage, g_esGunnerAbility[type].g_iGunnerMessage, 1);
-		g_esGunnerCache[tank].g_iGunnerTargetType = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iGunnerTargetType, g_esGunnerPlayer[tank].g_iGunnerTargetType, g_esGunnerSpecial[type].g_iGunnerTargetType, g_esGunnerAbility[type].g_iGunnerTargetType, 1);
-		g_esGunnerCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_flOpenAreasOnly, g_esGunnerPlayer[tank].g_flOpenAreasOnly, g_esGunnerSpecial[type].g_flOpenAreasOnly, g_esGunnerAbility[type].g_flOpenAreasOnly, 1);
-		g_esGunnerCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iRequiresHumans, g_esGunnerPlayer[tank].g_iRequiresHumans, g_esGunnerSpecial[type].g_iRequiresHumans, g_esGunnerAbility[type].g_iRequiresHumans, 1);
+		g_esGunnerCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank][iSpecType - 1].g_flCloseAreasOnly, g_esGunnerPlayer[tank].g_flCloseAreasOnly, g_esGunnerSpecial[type][iSpecType - 1].g_flCloseAreasOnly, g_esGunnerAbility[type].g_flCloseAreasOnly, 1);
+		g_esGunnerCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank][iSpecType - 1].g_iComboAbility, g_esGunnerPlayer[tank].g_iComboAbility, g_esGunnerSpecial[type][iSpecType - 1].g_iComboAbility, g_esGunnerAbility[type].g_iComboAbility, 1);
+		g_esGunnerCache[tank].g_flGunnerAccuracy = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank][iSpecType - 1].g_flGunnerAccuracy, g_esGunnerPlayer[tank].g_flGunnerAccuracy, g_esGunnerSpecial[type][iSpecType - 1].g_flGunnerAccuracy, g_esGunnerAbility[type].g_flGunnerAccuracy, 1);
+		g_esGunnerCache[tank].g_flGunnerChance = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank][iSpecType - 1].g_flGunnerChance, g_esGunnerPlayer[tank].g_flGunnerChance, g_esGunnerSpecial[type][iSpecType - 1].g_flGunnerChance, g_esGunnerAbility[type].g_flGunnerChance, 1);
+		g_esGunnerCache[tank].g_flGunnerDamage = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank][iSpecType - 1].g_flGunnerDamage, g_esGunnerPlayer[tank].g_flGunnerDamage, g_esGunnerSpecial[type][iSpecType - 1].g_flGunnerDamage, g_esGunnerAbility[type].g_flGunnerDamage, 1);
+		g_esGunnerCache[tank].g_flGunnerDuration = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank][iSpecType - 1].g_flGunnerDuration, g_esGunnerPlayer[tank].g_flGunnerDuration, g_esGunnerSpecial[type][iSpecType - 1].g_flGunnerDuration, g_esGunnerAbility[type].g_flGunnerDuration, 1);
+		g_esGunnerCache[tank].g_flGunnerInterval = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank][iSpecType - 1].g_flGunnerInterval, g_esGunnerPlayer[tank].g_flGunnerInterval, g_esGunnerSpecial[type][iSpecType - 1].g_flGunnerInterval, g_esGunnerAbility[type].g_flGunnerInterval, 1);
+		g_esGunnerCache[tank].g_flGunnerLoadTime = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank][iSpecType - 1].g_flGunnerLoadTime, g_esGunnerPlayer[tank].g_flGunnerLoadTime, g_esGunnerSpecial[type][iSpecType - 1].g_flGunnerLoadTime, g_esGunnerAbility[type].g_flGunnerLoadTime, 1);
+		g_esGunnerCache[tank].g_flGunnerRange = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank][iSpecType - 1].g_flGunnerRange, g_esGunnerPlayer[tank].g_flGunnerRange, g_esGunnerSpecial[type][iSpecType - 1].g_flGunnerRange, g_esGunnerAbility[type].g_flGunnerRange, 1);
+		g_esGunnerCache[tank].g_flGunnerReactionTime = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank][iSpecType - 1].g_flGunnerReactionTime, g_esGunnerPlayer[tank].g_flGunnerReactionTime, g_esGunnerSpecial[type][iSpecType - 1].g_flGunnerReactionTime, g_esGunnerAbility[type].g_flGunnerReactionTime, 1);
+		g_esGunnerCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank][iSpecType - 1].g_iHumanAbility, g_esGunnerPlayer[tank].g_iHumanAbility, g_esGunnerSpecial[type][iSpecType - 1].g_iHumanAbility, g_esGunnerAbility[type].g_iHumanAbility, 1);
+		g_esGunnerCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank][iSpecType - 1].g_iHumanAmmo, g_esGunnerPlayer[tank].g_iHumanAmmo, g_esGunnerSpecial[type][iSpecType - 1].g_iHumanAmmo, g_esGunnerAbility[type].g_iHumanAmmo, 1);
+		g_esGunnerCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank][iSpecType - 1].g_iHumanCooldown, g_esGunnerPlayer[tank].g_iHumanCooldown, g_esGunnerSpecial[type][iSpecType - 1].g_iHumanCooldown, g_esGunnerAbility[type].g_iHumanCooldown, 1);
+		g_esGunnerCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank][iSpecType - 1].g_iHumanMode, g_esGunnerPlayer[tank].g_iHumanMode, g_esGunnerSpecial[type][iSpecType - 1].g_iHumanMode, g_esGunnerAbility[type].g_iHumanMode, 1);
+		g_esGunnerCache[tank].g_iGunnerAbility = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank][iSpecType - 1].g_iGunnerAbility, g_esGunnerPlayer[tank].g_iGunnerAbility, g_esGunnerSpecial[type][iSpecType - 1].g_iGunnerAbility, g_esGunnerAbility[type].g_iGunnerAbility, 1);
+		g_esGunnerCache[tank].g_iGunnerBullets = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank][iSpecType - 1].g_iGunnerBullets, g_esGunnerPlayer[tank].g_iGunnerBullets, g_esGunnerSpecial[type][iSpecType - 1].g_iGunnerBullets, g_esGunnerAbility[type].g_iGunnerBullets, 1);
+		g_esGunnerCache[tank].g_iGunnerClipSize = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank][iSpecType - 1].g_iGunnerClipSize, g_esGunnerPlayer[tank].g_iGunnerClipSize, g_esGunnerSpecial[type][iSpecType - 1].g_iGunnerClipSize, g_esGunnerAbility[type].g_iGunnerClipSize, 1);
+		g_esGunnerCache[tank].g_iGunnerCooldown = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank][iSpecType - 1].g_iGunnerCooldown, g_esGunnerPlayer[tank].g_iGunnerCooldown, g_esGunnerSpecial[type][iSpecType - 1].g_iGunnerCooldown, g_esGunnerAbility[type].g_iGunnerCooldown, 1);
+		g_esGunnerCache[tank].g_iGunnerGlow = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank][iSpecType - 1].g_iGunnerGlow, g_esGunnerPlayer[tank].g_iGunnerGlow, g_esGunnerSpecial[type][iSpecType - 1].g_iGunnerGlow, g_esGunnerAbility[type].g_iGunnerGlow, 1);
+		g_esGunnerCache[tank].g_iGunnerGunType = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank][iSpecType - 1].g_iGunnerGunType, g_esGunnerPlayer[tank].g_iGunnerGunType, g_esGunnerSpecial[type][iSpecType - 1].g_iGunnerGunType, g_esGunnerAbility[type].g_iGunnerGunType, 1);
+		g_esGunnerCache[tank].g_iGunnerMessage = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank][iSpecType - 1].g_iGunnerMessage, g_esGunnerPlayer[tank].g_iGunnerMessage, g_esGunnerSpecial[type][iSpecType - 1].g_iGunnerMessage, g_esGunnerAbility[type].g_iGunnerMessage, 1);
+		g_esGunnerCache[tank].g_iGunnerTargetType = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank][iSpecType - 1].g_iGunnerTargetType, g_esGunnerPlayer[tank].g_iGunnerTargetType, g_esGunnerSpecial[type][iSpecType - 1].g_iGunnerTargetType, g_esGunnerAbility[type].g_iGunnerTargetType, 1);
+		g_esGunnerCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank][iSpecType - 1].g_flOpenAreasOnly, g_esGunnerPlayer[tank].g_flOpenAreasOnly, g_esGunnerSpecial[type][iSpecType - 1].g_flOpenAreasOnly, g_esGunnerAbility[type].g_flOpenAreasOnly, 1);
+		g_esGunnerCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank][iSpecType - 1].g_iRequiresHumans, g_esGunnerPlayer[tank].g_iRequiresHumans, g_esGunnerSpecial[type][iSpecType - 1].g_iRequiresHumans, g_esGunnerAbility[type].g_iRequiresHumans, 1);
 	}
 	else
 	{
