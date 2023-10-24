@@ -33,15 +33,18 @@
 ### Changes
 
 #### Core Plugin
+- The health reward now allows recipients to heal any survivor with their own fires.
+- The speed boost reward now allows recipients to throw sticky grenades that slow down special infected and mitigate their abilities. (Thanks to `BHaType` for the code!)
 - The damage boost reward now gives recipients laser sights. (Thanks to `Dragokas` for the code!)
 - The attack boost reward now lets recipients shoot rapidly with pistols. (Thanks to `epzminion` for the code!)
-- The health reward now allows recipients to heal any survivor with their own fires.
+- The ammo reward now lets recipients throw cluster bombs. (Thanks to `BHaType` for the code!)
 - The godmode reward now prevents recipients from being nudged by teammates. (Thanks to `Lux` for the code!)
 - Added code from the [`[L4D & L4D2] Late Model Precacher`](https://forums.alliedmods.net/showthread.php?t=337273) plugin.
 - Added code that uses the [`[TF2 & L4D & L4D2] Actions`](https://forums.alliedmods.net/showthread.php?t=336374) extension to track idle Infected. (Thanks to `BHaType` for helping with the code!)
 
 #### Game Data
 - Added detour setups and signatures for the following functions:
+	- `CPipeBombProjectile::Detonate`
 	- `CPistol::GetRateOfFire`
 	- `CTankClaw::TrySwing`
 	- `CTerrorGun::GetRateOfFire`
@@ -52,16 +55,19 @@
 	- `CTerrorPlayer::RemoveUpgrade`
 
 #### Settings
+- The `Attack Interval` setting now properly modifies the cooldown and frequency of Mutant Infected claw swings. (Thanks to `epzminion` for helping!)
 - Added missing `Special Name` setting under the `Tank #->General->Special` and `STEAM_ID->General->Special` sections.
 - Added the following settings under the `Plugin Settings->Rewards`, `Tank #->Rewards`, and `STEAM_ID->Rewards` sections:
 	- `Blaze Health Reward`
+	- `Cluster Bombs Reward`
 	- `Rapid Pistol Reward`
+	- `Sticky Grenades Reward`
 - All special infected settings can now be overridden for each type of special infected.
 	- Specify the special infected's name in front of a setting to determine which special infected to apply the setting for.
 	- Example: `Smoker Base Health`
 
 #### Natives & Forwards
-- The `MT_OnConfigsLoaded` forward now has two more parameters.
+- The `MT_OnConfigsLoaded` forward now has one more parameter.
 
 #### Abilities
 - Mutant Infected will now reserve their abilities for engaging with survivors for a more tactical approach. [Requires `Actions`.]

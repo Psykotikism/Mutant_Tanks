@@ -93,7 +93,7 @@ enum struct esVampireTeammate
 	int g_iVampireMessage;
 }
 
-esVampireTeammate g_esVampireTeammate[MAXPLAYERS + 1][6];
+esVampireTeammate g_esVampireTeammate[MAXPLAYERS + 1][7];
 
 enum struct esVampireAbility
 {
@@ -129,7 +129,7 @@ enum struct esVampireSpecial
 	int g_iVampireMessage;
 }
 
-esVampireSpecial g_esVampireSpecial[MT_MAXTYPES + 1][6];
+esVampireSpecial g_esVampireSpecial[MT_MAXTYPES + 1][7];
 
 enum struct esVampireCache
 {
@@ -401,7 +401,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esVampireAbility[iIndex].g_flVampireChance = 33.3;
 				g_esVampireAbility[iIndex].g_flVampireHealthMultiplier = 1.0;
 
-				for (int iSpecType = 0; iSpecType < 6; iSpecType++)
+				for (int iSpecType = 0; iSpecType < (sizeof g_sSpecialNames); iSpecType++)
 				{
 					g_esVampireSpecial[iIndex][iSpecType].g_flCloseAreasOnly = -1.0;
 					g_esVampireSpecial[iIndex][iSpecType].g_iHumanAbility = -1;
@@ -433,7 +433,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esVampirePlayer[iPlayer].g_flVampireChance = -1.0;
 				g_esVampirePlayer[iPlayer].g_flVampireHealthMultiplier = -1.0;
 
-				for (int iSpecType = 0; iSpecType < 6; iSpecType++)
+				for (int iSpecType = 0; iSpecType < (sizeof g_sSpecialNames); iSpecType++)
 				{
 					g_esVampireTeammate[iPlayer][iSpecType].g_flCloseAreasOnly = -1.0;
 					g_esVampireTeammate[iPlayer][iSpecType].g_iHumanAbility = -1;
@@ -452,25 +452,25 @@ public void MT_OnConfigsLoad(int mode)
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vVampireConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, const char[] specName, int specType)
+void vVampireConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, int specType)
 #else
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, const char[] specName, int specType)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, int specType)
 #endif
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esVampireTeammate[admin][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esVampireTeammate[admin][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specName, specType);
-			g_esVampireTeammate[admin][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esVampireTeammate[admin][specType].g_iHumanAbility, value, -1, 1, specName, specType);
-			g_esVampireTeammate[admin][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esVampireTeammate[admin][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specName, specType);
-			g_esVampireTeammate[admin][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esVampireTeammate[admin][specType].g_iRequiresHumans, value, -1, 32, specName, specType);
-			g_esVampireTeammate[admin][specType].g_iVampireAbility = iGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esVampireTeammate[admin][specType].g_iVampireAbility, value, -1, 1, specName, specType);
-			g_esVampireTeammate[admin][specType].g_iVampireEffect = iGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esVampireTeammate[admin][specType].g_iVampireEffect, value, -1, 1, specName, specType);
-			g_esVampireTeammate[admin][specType].g_iVampireHealth = iGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "VampireHealth", "Vampire Health", "Vampire_Health", "health", g_esVampireTeammate[admin][specType].g_iVampireHealth, value, -1, MT_MAXHEALTH, specName, specType);
-			g_esVampireTeammate[admin][specType].g_iVampireMessage = iGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esVampireTeammate[admin][specType].g_iVampireMessage, value, -1, 1, specName, specType);
-			g_esVampireTeammate[admin][specType].g_flVampireChance = flGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "VampireChance", "Vampire Chance", "Vampire_Chance", "chance", g_esVampireTeammate[admin][specType].g_flVampireChance, value, -1.0, 100.0, specName, specType);
-			g_esVampireTeammate[admin][specType].g_flVampireHealthMultiplier = flGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "VampireHealthMultiplier", "Vampire Health Multiplier", "Vampire_Health_Multiplier", "hpmulti", g_esVampireTeammate[admin][specType].g_flVampireHealthMultiplier, value, -1.0, 99999.0, specName, specType);
+			g_esVampireTeammate[admin][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esVampireTeammate[admin][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specType);
+			g_esVampireTeammate[admin][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esVampireTeammate[admin][specType].g_iHumanAbility, value, -1, 1, specType);
+			g_esVampireTeammate[admin][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esVampireTeammate[admin][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specType);
+			g_esVampireTeammate[admin][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esVampireTeammate[admin][specType].g_iRequiresHumans, value, -1, 32, specType);
+			g_esVampireTeammate[admin][specType].g_iVampireAbility = iGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esVampireTeammate[admin][specType].g_iVampireAbility, value, -1, 1, specType);
+			g_esVampireTeammate[admin][specType].g_iVampireEffect = iGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esVampireTeammate[admin][specType].g_iVampireEffect, value, -1, 1, specType);
+			g_esVampireTeammate[admin][specType].g_iVampireHealth = iGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "VampireHealth", "Vampire Health", "Vampire_Health", "health", g_esVampireTeammate[admin][specType].g_iVampireHealth, value, -1, MT_MAXHEALTH, specType);
+			g_esVampireTeammate[admin][specType].g_iVampireMessage = iGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esVampireTeammate[admin][specType].g_iVampireMessage, value, -1, 1, specType);
+			g_esVampireTeammate[admin][specType].g_flVampireChance = flGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "VampireChance", "Vampire Chance", "Vampire_Chance", "chance", g_esVampireTeammate[admin][specType].g_flVampireChance, value, -1.0, 100.0, specType);
+			g_esVampireTeammate[admin][specType].g_flVampireHealthMultiplier = flGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "VampireHealthMultiplier", "Vampire Health Multiplier", "Vampire_Health_Multiplier", "hpmulti", g_esVampireTeammate[admin][specType].g_flVampireHealthMultiplier, value, -1.0, 99999.0, specType);
 		}
 		else
 		{
@@ -493,16 +493,16 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esVampireSpecial[type][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esVampireSpecial[type][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specName, specType);
-			g_esVampireSpecial[type][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esVampireSpecial[type][specType].g_iHumanAbility, value, -1, 1, specName, specType);
-			g_esVampireSpecial[type][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esVampireSpecial[type][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specName, specType);
-			g_esVampireSpecial[type][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esVampireSpecial[type][specType].g_iRequiresHumans, value, -1, 32, specName, specType);
-			g_esVampireSpecial[type][specType].g_iVampireAbility = iGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esVampireSpecial[type][specType].g_iVampireAbility, value, -1, 1, specName, specType);
-			g_esVampireSpecial[type][specType].g_iVampireEffect = iGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esVampireSpecial[type][specType].g_iVampireEffect, value, -1, 1, specName, specType);
-			g_esVampireSpecial[type][specType].g_iVampireHealth = iGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "VampireHealth", "Vampire Health", "Vampire_Health", "health", g_esVampireSpecial[type][specType].g_iVampireHealth, value, -1, MT_MAXHEALTH, specName, specType);
-			g_esVampireSpecial[type][specType].g_iVampireMessage = iGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esVampireSpecial[type][specType].g_iVampireMessage, value, -1, 1, specName, specType);
-			g_esVampireSpecial[type][specType].g_flVampireChance = flGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "VampireChance", "Vampire Chance", "Vampire_Chance", "chance", g_esVampireSpecial[type][specType].g_flVampireChance, value, -1.0, 100.0, specName, specType);
-			g_esVampireSpecial[type][specType].g_flVampireHealthMultiplier = flGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "VampireHealthMultiplier", "Vampire Health Multiplier", "Vampire_Health_Multiplier", "hpmulti", g_esVampireSpecial[type][specType].g_flVampireHealthMultiplier, value, -1.0, 99999.0, specName, specType);
+			g_esVampireSpecial[type][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esVampireSpecial[type][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specType);
+			g_esVampireSpecial[type][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esVampireSpecial[type][specType].g_iHumanAbility, value, -1, 1, specType);
+			g_esVampireSpecial[type][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esVampireSpecial[type][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specType);
+			g_esVampireSpecial[type][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esVampireSpecial[type][specType].g_iRequiresHumans, value, -1, 32, specType);
+			g_esVampireSpecial[type][specType].g_iVampireAbility = iGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esVampireSpecial[type][specType].g_iVampireAbility, value, -1, 1, specType);
+			g_esVampireSpecial[type][specType].g_iVampireEffect = iGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esVampireSpecial[type][specType].g_iVampireEffect, value, -1, 1, specType);
+			g_esVampireSpecial[type][specType].g_iVampireHealth = iGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "VampireHealth", "Vampire Health", "Vampire_Health", "health", g_esVampireSpecial[type][specType].g_iVampireHealth, value, -1, MT_MAXHEALTH, specType);
+			g_esVampireSpecial[type][specType].g_iVampireMessage = iGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esVampireSpecial[type][specType].g_iVampireMessage, value, -1, 1, specType);
+			g_esVampireSpecial[type][specType].g_flVampireChance = flGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "VampireChance", "Vampire Chance", "Vampire_Chance", "chance", g_esVampireSpecial[type][specType].g_flVampireChance, value, -1.0, 100.0, specType);
+			g_esVampireSpecial[type][specType].g_flVampireHealthMultiplier = flGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "VampireHealthMultiplier", "Vampire Health Multiplier", "Vampire_Health_Multiplier", "hpmulti", g_esVampireSpecial[type][specType].g_flVampireHealthMultiplier, value, -1.0, 99999.0, specType);
 		}
 		else
 		{
@@ -535,16 +535,16 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esVampireCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esVampireTeammate[tank][iSpecType - 1].g_flCloseAreasOnly, g_esVampirePlayer[tank].g_flCloseAreasOnly, g_esVampireSpecial[type][iSpecType - 1].g_flCloseAreasOnly, g_esVampireAbility[type].g_flCloseAreasOnly, 1);
-		g_esVampireCache[tank].g_flVampireChance = flGetSubSettingValue(apply, bHuman, g_esVampireTeammate[tank][iSpecType - 1].g_flVampireChance, g_esVampirePlayer[tank].g_flVampireChance, g_esVampireSpecial[type][iSpecType - 1].g_flVampireChance, g_esVampireAbility[type].g_flVampireChance, 1);
-		g_esVampireCache[tank].g_flVampireHealthMultiplier = flGetSubSettingValue(apply, bHuman, g_esVampireTeammate[tank][iSpecType - 1].g_flVampireHealthMultiplier, g_esVampirePlayer[tank].g_flVampireHealthMultiplier, g_esVampireSpecial[type][iSpecType - 1].g_flVampireHealthMultiplier, g_esVampireAbility[type].g_flVampireHealthMultiplier, 1);
-		g_esVampireCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esVampireTeammate[tank][iSpecType - 1].g_iHumanAbility, g_esVampirePlayer[tank].g_iHumanAbility, g_esVampireSpecial[type][iSpecType - 1].g_iHumanAbility, g_esVampireAbility[type].g_iHumanAbility, 1);
-		g_esVampireCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esVampireTeammate[tank][iSpecType - 1].g_flOpenAreasOnly, g_esVampirePlayer[tank].g_flOpenAreasOnly, g_esVampireSpecial[type][iSpecType - 1].g_flOpenAreasOnly, g_esVampireAbility[type].g_flOpenAreasOnly, 1);
-		g_esVampireCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esVampireTeammate[tank][iSpecType - 1].g_iRequiresHumans, g_esVampirePlayer[tank].g_iRequiresHumans, g_esVampireSpecial[type][iSpecType - 1].g_iRequiresHumans, g_esVampireAbility[type].g_iRequiresHumans, 1);
-		g_esVampireCache[tank].g_iVampireAbility = iGetSubSettingValue(apply, bHuman, g_esVampireTeammate[tank][iSpecType - 1].g_iVampireAbility, g_esVampirePlayer[tank].g_iVampireAbility, g_esVampireSpecial[type][iSpecType - 1].g_iVampireAbility, g_esVampireAbility[type].g_iVampireAbility, 1);
-		g_esVampireCache[tank].g_iVampireEffect = iGetSubSettingValue(apply, bHuman, g_esVampireTeammate[tank][iSpecType - 1].g_iVampireEffect, g_esVampirePlayer[tank].g_iVampireEffect, g_esVampireSpecial[type][iSpecType - 1].g_iVampireEffect, g_esVampireAbility[type].g_iVampireEffect, 1);
-		g_esVampireCache[tank].g_iVampireHealth = iGetSubSettingValue(apply, bHuman, g_esVampireTeammate[tank][iSpecType - 1].g_iVampireHealth, g_esVampirePlayer[tank].g_iVampireHealth, g_esVampireSpecial[type][iSpecType - 1].g_iVampireHealth, g_esVampireAbility[type].g_iVampireHealth, 1);
-		g_esVampireCache[tank].g_iVampireMessage = iGetSubSettingValue(apply, bHuman, g_esVampireTeammate[tank][iSpecType - 1].g_iVampireMessage, g_esVampirePlayer[tank].g_iVampireMessage, g_esVampireSpecial[type][iSpecType - 1].g_iVampireMessage, g_esVampireAbility[type].g_iVampireMessage, 1);
+		g_esVampireCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esVampireTeammate[tank][0].g_flCloseAreasOnly, g_esVampireTeammate[tank][iSpecType].g_flCloseAreasOnly, g_esVampirePlayer[tank].g_flCloseAreasOnly, g_esVampireSpecial[type][0].g_flCloseAreasOnly, g_esVampireSpecial[type][iSpecType].g_flCloseAreasOnly, g_esVampireAbility[type].g_flCloseAreasOnly, 1);
+		g_esVampireCache[tank].g_flVampireChance = flGetSubSettingValue(apply, bHuman, g_esVampireTeammate[tank][0].g_flVampireChance, g_esVampireTeammate[tank][iSpecType].g_flVampireChance, g_esVampirePlayer[tank].g_flVampireChance, g_esVampireSpecial[type][0].g_flVampireChance, g_esVampireSpecial[type][iSpecType].g_flVampireChance, g_esVampireAbility[type].g_flVampireChance, 1);
+		g_esVampireCache[tank].g_flVampireHealthMultiplier = flGetSubSettingValue(apply, bHuman, g_esVampireTeammate[tank][0].g_flVampireHealthMultiplier, g_esVampireTeammate[tank][iSpecType].g_flVampireHealthMultiplier, g_esVampirePlayer[tank].g_flVampireHealthMultiplier, g_esVampireSpecial[type][0].g_flVampireHealthMultiplier, g_esVampireSpecial[type][iSpecType].g_flVampireHealthMultiplier, g_esVampireAbility[type].g_flVampireHealthMultiplier, 1);
+		g_esVampireCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esVampireTeammate[tank][0].g_iHumanAbility, g_esVampireTeammate[tank][iSpecType].g_iHumanAbility, g_esVampirePlayer[tank].g_iHumanAbility, g_esVampireSpecial[type][0].g_iHumanAbility, g_esVampireSpecial[type][iSpecType].g_iHumanAbility, g_esVampireAbility[type].g_iHumanAbility, 1);
+		g_esVampireCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esVampireTeammate[tank][0].g_flOpenAreasOnly, g_esVampireTeammate[tank][iSpecType].g_flOpenAreasOnly, g_esVampirePlayer[tank].g_flOpenAreasOnly, g_esVampireSpecial[type][0].g_flOpenAreasOnly, g_esVampireSpecial[type][iSpecType].g_flOpenAreasOnly, g_esVampireAbility[type].g_flOpenAreasOnly, 1);
+		g_esVampireCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esVampireTeammate[tank][0].g_iRequiresHumans, g_esVampireTeammate[tank][iSpecType].g_iRequiresHumans, g_esVampirePlayer[tank].g_iRequiresHumans, g_esVampireSpecial[type][0].g_iRequiresHumans, g_esVampireSpecial[type][iSpecType].g_iRequiresHumans, g_esVampireAbility[type].g_iRequiresHumans, 1);
+		g_esVampireCache[tank].g_iVampireAbility = iGetSubSettingValue(apply, bHuman, g_esVampireTeammate[tank][0].g_iVampireAbility, g_esVampireTeammate[tank][iSpecType].g_iVampireAbility, g_esVampirePlayer[tank].g_iVampireAbility, g_esVampireSpecial[type][0].g_iVampireAbility, g_esVampireSpecial[type][iSpecType].g_iVampireAbility, g_esVampireAbility[type].g_iVampireAbility, 1);
+		g_esVampireCache[tank].g_iVampireEffect = iGetSubSettingValue(apply, bHuman, g_esVampireTeammate[tank][0].g_iVampireEffect, g_esVampireTeammate[tank][iSpecType].g_iVampireEffect, g_esVampirePlayer[tank].g_iVampireEffect, g_esVampireSpecial[type][0].g_iVampireEffect, g_esVampireSpecial[type][iSpecType].g_iVampireEffect, g_esVampireAbility[type].g_iVampireEffect, 1);
+		g_esVampireCache[tank].g_iVampireHealth = iGetSubSettingValue(apply, bHuman, g_esVampireTeammate[tank][0].g_iVampireHealth, g_esVampireTeammate[tank][iSpecType].g_iVampireHealth, g_esVampirePlayer[tank].g_iVampireHealth, g_esVampireSpecial[type][0].g_iVampireHealth, g_esVampireSpecial[type][iSpecType].g_iVampireHealth, g_esVampireAbility[type].g_iVampireHealth, 1);
+		g_esVampireCache[tank].g_iVampireMessage = iGetSubSettingValue(apply, bHuman, g_esVampireTeammate[tank][0].g_iVampireMessage, g_esVampireTeammate[tank][iSpecType].g_iVampireMessage, g_esVampirePlayer[tank].g_iVampireMessage, g_esVampireSpecial[type][0].g_iVampireMessage, g_esVampireSpecial[type][iSpecType].g_iVampireMessage, g_esVampireAbility[type].g_iVampireMessage, 1);
 	}
 	else
 	{

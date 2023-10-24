@@ -679,6 +679,8 @@
 			// - Jump higher (Disables the death fall camera for recipients.)
 			// - Receive the adrenaline effect for the duration of the reward. (Only available in Left 4 Dead 2.)
 			// - Bunny hop consistently
+			// - Burst open doors
+			// - Throw sticky grenades that slow down special infected and mitigate their abilities.
 			// 4: Damage boost reward (temporary)
 			// - Laser sight
 			// - Inextinguishable fire
@@ -722,6 +724,7 @@
 			// - Extra clip and magazine size
 			// - Receive one of the special ammo (incendiary or explosive). (Only available in Left 4 Dead 2.)
 			// - Slowly regenerate back to full capacity.
+			// - Throw multiple pipe bombs at once (cluster bombs).
 			// 32: Item reward
 			// - Receive up to five items.
 			// 64: God mode reward (temporary)
@@ -786,6 +789,8 @@
 			// - Jump higher (Disables the death fall camera for recipients.)
 			// - Receive the adrenaline effect for the duration of the reward. (Only available in Left 4 Dead 2.)
 			// - Bunny hop consistently
+			// - Burst open doors
+			// - Throw sticky grenades that slow down special infected and mitigate their abilities.
 			// 4: Damage boost reward (temporary)
 			// - Laser sight
 			// - Inextinguishable fire
@@ -829,6 +834,7 @@
 			// - Extra clip and magazine size
 			// - Receive one of the special ammo (incendiary or explosive). (Only available in Left 4 Dead 2.)
 			// - Slowly regenerate back to full capacity.
+			// - Throw multiple pipe bombs at once (cluster bombs).
 			// 32: Item reward
 			// - Receive up to five items.
 			// 64: God mode reward (temporary)
@@ -1187,6 +1193,24 @@
 			// 3rd number = Give clean kills to teammates.
 			// 4th number = Give clean kills to assistant killers.
 			"Clean Kills Reward"			"1,1,1,1"
+
+			// Allow survivors to throw cluster bombs (multiple pipe bombs) as a reward.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 4
+			// Character limit for each value: 6
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 5 (Highest)
+			// --
+			// 1st number = Number of clustered pipe bombs to give to killers.
+			// 2nd number = Number of clustered pipe bombs to give to assistants.
+			// 3rd number = Number of clustered pipe bombs to give to teammates.
+			// 4th number = Number of clustered pipe bombs to give to assistant killers.
+			"Cluster Bombs Reward"			"3,3,3,3"
 
 			// The damage boost to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -1795,6 +1819,24 @@
 			// 4th number = Stack rewards for assistant killers.
 			"Stack Rewards"				"0,0,0,0"
 
+			// Give sticky grenades as a reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 4
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Give sticky grenades to killers.
+			// 2nd number = Give sticky grenades to assistants.
+			// 3rd number = Give sticky grenades to teammates.
+			// 4th number = Give sticky grenades to assistant killers.
+			"Sticky Grenades Reward"		"1,1,1,1"
+
 			// Give thorns as a reward to survivors.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
@@ -2046,6 +2088,7 @@
 				"Bunny Hop Reward"			"1,1,1,1"
 				"Burst Doors Reward"			"1,1,1,1"
 				"Clean Kills Reward"			"1,1,1,1"
+				"Cluster Bombs Reward"			"3,3,3,3"
 				"Damage Boost Reward"			"1.25,1.25,1.25,1.25"
 				"Damage Resistance Reward"		"0.5,0.5,0.5,0.5"
 				"Fall Voiceline Reward"			"PlayerLaugh,PlayerLaugh,PlayerLaugh,PlayerLaugh"
@@ -2078,6 +2121,7 @@
 				"Speed Boost Reward"			"1.25,1.25,1.25,1.25"
 				"Stack Limits"				"0,0,0,0,0,0,0,0"
 				"Stack Rewards"				"0,0,0,0"
+				"Sticky Grenades Reward"		"1,1,1,1"
 				"Thorns Reward"				"1,1,1,1"
 				"Useful Rewards"			"15,15,15,15"
 				"Body Color Visual"			"-1;-1;-1;-1,-1;-1;-1;-1,-1;-1;-1;-1,-1;-1;-1;-1"
@@ -3514,6 +3558,8 @@
 			// - Jump higher (Disables the death fall camera for recipients.)
 			// - Receive the adrenaline effect for the duration of the reward. (Only available in Left 4 Dead 2.)
 			// - Bunny hop consistently
+			// - Burst open doors
+			// - Throw sticky grenades that slow down special infected and mitigate their abilities.
 			// 4: Damage boost reward (temporary)
 			// - Laser sight
 			// - Inextinguishable fire
@@ -3557,6 +3603,7 @@
 			// - Extra clip and magazine size
 			// - Receive one of the special ammo (incendiary or explosive). (Only available in Left 4 Dead 2.)
 			// - Slowly regenerate back to full capacity.
+			// - Throw multiple pipe bombs at once (cluster bombs).
 			// 32: Item reward
 			// - Receive up to five items.
 			// 64: God mode reward (temporary)
@@ -3621,6 +3668,8 @@
 			// - Jump higher (Disables the death fall camera for recipients.)
 			// - Receive the adrenaline effect for the duration of the reward. (Only available in Left 4 Dead 2.)
 			// - Bunny hop consistently
+			// - Burst open doors
+			// - Throw sticky grenades that slow down special infected and mitigate their abilities.
 			// 4: Damage boost reward (temporary)
 			// - Laser sight
 			// - Inextinguishable fire
@@ -3664,6 +3713,7 @@
 			// - Extra clip and magazine size
 			// - Receive one of the special ammo (incendiary or explosive). (Only available in Left 4 Dead 2.)
 			// - Slowly regenerate back to full capacity.
+			// - Throw multiple pipe bombs at once (cluster bombs).
 			// 32: Item reward
 			// - Receive up to five items.
 			// 64: God mode reward (temporary)
@@ -4022,6 +4072,24 @@
 			// 3rd number = Give clean kills to teammates.
 			// 4th number = Give clean kills to assistant killers.
 			"Clean Kills Reward"			"0,0,0,0"
+
+			// Allow survivors to throw cluster bombs (multiple pipe bombs) as a reward.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 4
+			// Character limit for each value: 6
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 5 (Highest)
+			// --
+			// 1st number = Number of clustered pipe bombs to give to killers.
+			// 2nd number = Number of clustered pipe bombs to give to assistants.
+			// 3rd number = Number of clustered pipe bombs to give to teammates.
+			// 4th number = Number of clustered pipe bombs to give to assistant killers.
+			"Cluster Bombs Reward"			"0,0,0,0"
 
 			// The damage boost to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -4630,6 +4698,24 @@
 			// 4th number = Stack rewards for assistant killers.
 			"Stack Rewards"				"0,0,0,0"
 
+			// Give sticky grenades as a reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 4
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Give sticky grenades to killers.
+			// 2nd number = Give sticky grenades to assistants.
+			// 3rd number = Give sticky grenades to teammates.
+			// 4th number = Give sticky grenades to assistant killers.
+			"Sticky Grenades Reward"		"0,0,0,0"
+
 			// Give thorns as a reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
@@ -4881,6 +4967,7 @@
 				"Bunny Hop Reward"			"0,0,0,0"
 				"Burst Doors Reward"			"0,0,0,0"
 				"Clean Kills Reward"			"0,0,0,0"
+				"Cluster Bombs Reward"			"0,0,0,0"
 				"Damage Boost Reward"			"0.0,0.0,0.0,0.0"
 				"Damage Resistance Reward"		"0.0,0.0,0.0,0.0"
 				"Fall Voiceline Reward"			""
@@ -4913,6 +5000,7 @@
 				"Speed Boost Reward"			"0.0,0.0,0.0,0.0"
 				"Stack Limits"				"0,0,0,0,0,0,0,0"
 				"Stack Rewards"				"0,0,0,0"
+				"Sticky Grenades Reward"		"0,0,0,0"
 				"Thorns Reward"				"0,0,0,0"
 				"Useful Rewards"			"0,0,0,0"
 				"Body Color Visual"			""

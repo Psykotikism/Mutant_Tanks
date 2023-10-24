@@ -109,7 +109,7 @@ enum struct esPanicTeammate
 	int g_iRequiresHumans;
 }
 
-esPanicTeammate g_esPanicTeammate[MAXPLAYERS + 1][6];
+esPanicTeammate g_esPanicTeammate[MAXPLAYERS + 1][7];
 
 enum struct esPanicAbility
 {
@@ -155,7 +155,7 @@ enum struct esPanicSpecial
 	int g_iRequiresHumans;
 }
 
-esPanicSpecial g_esPanicSpecial[MT_MAXTYPES + 1][6];
+esPanicSpecial g_esPanicSpecial[MT_MAXTYPES + 1][7];
 
 enum struct esPanicCache
 {
@@ -476,7 +476,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esPanicAbility[iIndex].g_iPanicDuration = 0;
 				g_esPanicAbility[iIndex].g_flPanicInterval = 5.0;
 
-				for (int iSpecType = 0; iSpecType < 6; iSpecType++)
+				for (int iSpecType = 0; iSpecType < (sizeof g_sSpecialNames); iSpecType++)
 				{
 					g_esPanicSpecial[iIndex][iSpecType].g_flCloseAreasOnly = -1.0;
 					g_esPanicSpecial[iIndex][iSpecType].g_iComboAbility = -1;
@@ -517,7 +517,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esPanicPlayer[iPlayer].g_iPanicDuration = -1;
 				g_esPanicPlayer[iPlayer].g_flPanicInterval = -1.0;
 
-				for (int iSpecType = 0; iSpecType < 6; iSpecType++)
+				for (int iSpecType = 0; iSpecType < (sizeof g_sSpecialNames); iSpecType++)
 				{
 					g_esPanicTeammate[iPlayer][iSpecType].g_flCloseAreasOnly = -1.0;
 					g_esPanicTeammate[iPlayer][iSpecType].g_iComboAbility = -1;
@@ -541,30 +541,30 @@ public void MT_OnConfigsLoad(int mode)
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vPanicConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, const char[] specName, int specType)
+void vPanicConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, int specType)
 #else
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, const char[] specName, int specType)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, int specType)
 #endif
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esPanicTeammate[admin][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esPanicTeammate[admin][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specName, specType);
-			g_esPanicTeammate[admin][specType].g_iComboAbility = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esPanicTeammate[admin][specType].g_iComboAbility, value, -1, 1, specName, specType);
-			g_esPanicTeammate[admin][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPanicTeammate[admin][specType].g_iHumanAbility, value, -1, 2, specName, specType);
-			g_esPanicTeammate[admin][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPanicTeammate[admin][specType].g_iHumanAmmo, value, -1, 99999, specName, specType);
-			g_esPanicTeammate[admin][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPanicTeammate[admin][specType].g_iHumanCooldown, value, -1, 99999, specName, specType);
-			g_esPanicTeammate[admin][specType].g_iHumanDuration = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esPanicTeammate[admin][specType].g_iHumanDuration, value, -1, 99999, specName, specType);
-			g_esPanicTeammate[admin][specType].g_iHumanMode = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esPanicTeammate[admin][specType].g_iHumanMode, value, -1, 1, specName, specType);
-			g_esPanicTeammate[admin][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPanicTeammate[admin][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specName, specType);
-			g_esPanicTeammate[admin][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPanicTeammate[admin][specType].g_iRequiresHumans, value, -1, 32, specName, specType);
-			g_esPanicTeammate[admin][specType].g_iPanicAbility = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPanicTeammate[admin][specType].g_iPanicAbility, value, -1, 3, specName, specType);
-			g_esPanicTeammate[admin][specType].g_iPanicMessage = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPanicTeammate[admin][specType].g_iPanicMessage, value, -1, 1, specName, specType);
-			g_esPanicTeammate[admin][specType].g_flPanicChance = flGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "PanicChance", "Panic Chance", "Panic_Chance", "chance", g_esPanicTeammate[admin][specType].g_flPanicChance, value, -1.0, 100.0, specName, specType);
-			g_esPanicTeammate[admin][specType].g_iPanicCooldown = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "PanicCooldown", "Panic Cooldown", "Panic_Cooldown", "cooldown", g_esPanicTeammate[admin][specType].g_iPanicCooldown, value, -1, 99999, specName, specType);
-			g_esPanicTeammate[admin][specType].g_iPanicDuration = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "PanicDuration", "Panic Duration", "Panic_Duration", "duration", g_esPanicTeammate[admin][specType].g_iPanicDuration, value, -1, 99999, specName, specType);
-			g_esPanicTeammate[admin][specType].g_flPanicInterval = flGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "PanicInterval", "Panic Interval", "Panic_Interval", "interval", g_esPanicTeammate[admin][specType].g_flPanicInterval, value, -1.0, 99999.0, specName, specType);
+			g_esPanicTeammate[admin][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esPanicTeammate[admin][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specType);
+			g_esPanicTeammate[admin][specType].g_iComboAbility = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esPanicTeammate[admin][specType].g_iComboAbility, value, -1, 1, specType);
+			g_esPanicTeammate[admin][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPanicTeammate[admin][specType].g_iHumanAbility, value, -1, 2, specType);
+			g_esPanicTeammate[admin][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPanicTeammate[admin][specType].g_iHumanAmmo, value, -1, 99999, specType);
+			g_esPanicTeammate[admin][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPanicTeammate[admin][specType].g_iHumanCooldown, value, -1, 99999, specType);
+			g_esPanicTeammate[admin][specType].g_iHumanDuration = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esPanicTeammate[admin][specType].g_iHumanDuration, value, -1, 99999, specType);
+			g_esPanicTeammate[admin][specType].g_iHumanMode = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esPanicTeammate[admin][specType].g_iHumanMode, value, -1, 1, specType);
+			g_esPanicTeammate[admin][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPanicTeammate[admin][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specType);
+			g_esPanicTeammate[admin][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPanicTeammate[admin][specType].g_iRequiresHumans, value, -1, 32, specType);
+			g_esPanicTeammate[admin][specType].g_iPanicAbility = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPanicTeammate[admin][specType].g_iPanicAbility, value, -1, 3, specType);
+			g_esPanicTeammate[admin][specType].g_iPanicMessage = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPanicTeammate[admin][specType].g_iPanicMessage, value, -1, 1, specType);
+			g_esPanicTeammate[admin][specType].g_flPanicChance = flGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "PanicChance", "Panic Chance", "Panic_Chance", "chance", g_esPanicTeammate[admin][specType].g_flPanicChance, value, -1.0, 100.0, specType);
+			g_esPanicTeammate[admin][specType].g_iPanicCooldown = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "PanicCooldown", "Panic Cooldown", "Panic_Cooldown", "cooldown", g_esPanicTeammate[admin][specType].g_iPanicCooldown, value, -1, 99999, specType);
+			g_esPanicTeammate[admin][specType].g_iPanicDuration = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "PanicDuration", "Panic Duration", "Panic_Duration", "duration", g_esPanicTeammate[admin][specType].g_iPanicDuration, value, -1, 99999, specType);
+			g_esPanicTeammate[admin][specType].g_flPanicInterval = flGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "PanicInterval", "Panic Interval", "Panic_Interval", "interval", g_esPanicTeammate[admin][specType].g_flPanicInterval, value, -1.0, 99999.0, specType);
 		}
 		else
 		{
@@ -591,21 +591,21 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esPanicSpecial[type][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esPanicSpecial[type][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specName, specType);
-			g_esPanicSpecial[type][specType].g_iComboAbility = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esPanicSpecial[type][specType].g_iComboAbility, value, -1, 1, specName, specType);
-			g_esPanicSpecial[type][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPanicSpecial[type][specType].g_iHumanAbility, value, -1, 2, specName, specType);
-			g_esPanicSpecial[type][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPanicSpecial[type][specType].g_iHumanAmmo, value, -1, 99999, specName, specType);
-			g_esPanicSpecial[type][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPanicSpecial[type][specType].g_iHumanCooldown, value, -1, 99999, specName, specType);
-			g_esPanicSpecial[type][specType].g_iHumanDuration = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esPanicSpecial[type][specType].g_iHumanDuration, value, -1, 99999, specName, specType);
-			g_esPanicSpecial[type][specType].g_iHumanMode = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esPanicSpecial[type][specType].g_iHumanMode, value, -1, 1, specName, specType);
-			g_esPanicSpecial[type][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPanicSpecial[type][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specName, specType);
-			g_esPanicSpecial[type][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPanicSpecial[type][specType].g_iRequiresHumans, value, -1, 32, specName, specType);
-			g_esPanicSpecial[type][specType].g_iPanicAbility = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPanicSpecial[type][specType].g_iPanicAbility, value, -1, 3, specName, specType);
-			g_esPanicSpecial[type][specType].g_iPanicMessage = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPanicSpecial[type][specType].g_iPanicMessage, value, -1, 1, specName, specType);
-			g_esPanicSpecial[type][specType].g_flPanicChance = flGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "PanicChance", "Panic Chance", "Panic_Chance", "chance", g_esPanicSpecial[type][specType].g_flPanicChance, value, -1.0, 100.0, specName, specType);
-			g_esPanicSpecial[type][specType].g_iPanicCooldown = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "PanicCooldown", "Panic Cooldown", "Panic_Cooldown", "cooldown", g_esPanicSpecial[type][specType].g_iPanicCooldown, value, -1, 99999, specName, specType);
-			g_esPanicSpecial[type][specType].g_iPanicDuration = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "PanicDuration", "Panic Duration", "Panic_Duration", "duration", g_esPanicSpecial[type][specType].g_iPanicDuration, value, -1, 99999, specName, specType);
-			g_esPanicSpecial[type][specType].g_flPanicInterval = flGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "PanicInterval", "Panic Interval", "Panic_Interval", "interval", g_esPanicSpecial[type][specType].g_flPanicInterval, value, -1.0, 99999.0, specName, specType);
+			g_esPanicSpecial[type][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esPanicSpecial[type][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specType);
+			g_esPanicSpecial[type][specType].g_iComboAbility = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esPanicSpecial[type][specType].g_iComboAbility, value, -1, 1, specType);
+			g_esPanicSpecial[type][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPanicSpecial[type][specType].g_iHumanAbility, value, -1, 2, specType);
+			g_esPanicSpecial[type][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPanicSpecial[type][specType].g_iHumanAmmo, value, -1, 99999, specType);
+			g_esPanicSpecial[type][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPanicSpecial[type][specType].g_iHumanCooldown, value, -1, 99999, specType);
+			g_esPanicSpecial[type][specType].g_iHumanDuration = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esPanicSpecial[type][specType].g_iHumanDuration, value, -1, 99999, specType);
+			g_esPanicSpecial[type][specType].g_iHumanMode = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esPanicSpecial[type][specType].g_iHumanMode, value, -1, 1, specType);
+			g_esPanicSpecial[type][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPanicSpecial[type][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specType);
+			g_esPanicSpecial[type][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPanicSpecial[type][specType].g_iRequiresHumans, value, -1, 32, specType);
+			g_esPanicSpecial[type][specType].g_iPanicAbility = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPanicSpecial[type][specType].g_iPanicAbility, value, -1, 3, specType);
+			g_esPanicSpecial[type][specType].g_iPanicMessage = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPanicSpecial[type][specType].g_iPanicMessage, value, -1, 1, specType);
+			g_esPanicSpecial[type][specType].g_flPanicChance = flGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "PanicChance", "Panic Chance", "Panic_Chance", "chance", g_esPanicSpecial[type][specType].g_flPanicChance, value, -1.0, 100.0, specType);
+			g_esPanicSpecial[type][specType].g_iPanicCooldown = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "PanicCooldown", "Panic Cooldown", "Panic_Cooldown", "cooldown", g_esPanicSpecial[type][specType].g_iPanicCooldown, value, -1, 99999, specType);
+			g_esPanicSpecial[type][specType].g_iPanicDuration = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "PanicDuration", "Panic Duration", "Panic_Duration", "duration", g_esPanicSpecial[type][specType].g_iPanicDuration, value, -1, 99999, specType);
+			g_esPanicSpecial[type][specType].g_flPanicInterval = flGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "PanicInterval", "Panic Interval", "Panic_Interval", "interval", g_esPanicSpecial[type][specType].g_flPanicInterval, value, -1.0, 99999.0, specType);
 		}
 		else
 		{
@@ -642,21 +642,21 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esPanicCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esPanicTeammate[tank][iSpecType - 1].g_flCloseAreasOnly, g_esPanicPlayer[tank].g_flCloseAreasOnly, g_esPanicSpecial[type][iSpecType - 1].g_flCloseAreasOnly, g_esPanicAbility[type].g_flCloseAreasOnly, 1);
-		g_esPanicCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esPanicTeammate[tank][iSpecType - 1].g_iComboAbility, g_esPanicPlayer[tank].g_iComboAbility, g_esPanicSpecial[type][iSpecType - 1].g_iComboAbility, g_esPanicAbility[type].g_iComboAbility, 1);
-		g_esPanicCache[tank].g_flPanicChance = flGetSubSettingValue(apply, bHuman, g_esPanicTeammate[tank][iSpecType - 1].g_flPanicChance, g_esPanicPlayer[tank].g_flPanicChance, g_esPanicSpecial[type][iSpecType - 1].g_flPanicChance, g_esPanicAbility[type].g_flPanicChance, 1);
-		g_esPanicCache[tank].g_flPanicInterval = flGetSubSettingValue(apply, bHuman, g_esPanicTeammate[tank][iSpecType - 1].g_flPanicInterval, g_esPanicPlayer[tank].g_flPanicInterval, g_esPanicSpecial[type][iSpecType - 1].g_flPanicInterval, g_esPanicAbility[type].g_flPanicInterval, 1);
-		g_esPanicCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esPanicTeammate[tank][iSpecType - 1].g_iHumanAbility, g_esPanicPlayer[tank].g_iHumanAbility, g_esPanicSpecial[type][iSpecType - 1].g_iHumanAbility, g_esPanicAbility[type].g_iHumanAbility, 1);
-		g_esPanicCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esPanicTeammate[tank][iSpecType - 1].g_iHumanAmmo, g_esPanicPlayer[tank].g_iHumanAmmo, g_esPanicSpecial[type][iSpecType - 1].g_iHumanAmmo, g_esPanicAbility[type].g_iHumanAmmo, 1);
-		g_esPanicCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esPanicTeammate[tank][iSpecType - 1].g_iHumanCooldown, g_esPanicPlayer[tank].g_iHumanCooldown, g_esPanicSpecial[type][iSpecType - 1].g_iHumanCooldown, g_esPanicAbility[type].g_iHumanCooldown, 1);
-		g_esPanicCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esPanicTeammate[tank][iSpecType - 1].g_iHumanDuration, g_esPanicPlayer[tank].g_iHumanDuration, g_esPanicSpecial[type][iSpecType - 1].g_iHumanDuration, g_esPanicAbility[type].g_iHumanDuration, 1);
-		g_esPanicCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esPanicTeammate[tank][iSpecType - 1].g_iHumanMode, g_esPanicPlayer[tank].g_iHumanMode, g_esPanicSpecial[type][iSpecType - 1].g_iHumanMode, g_esPanicAbility[type].g_iHumanMode, 1);
-		g_esPanicCache[tank].g_iPanicAbility = iGetSubSettingValue(apply, bHuman, g_esPanicTeammate[tank][iSpecType - 1].g_iPanicAbility, g_esPanicPlayer[tank].g_iPanicAbility, g_esPanicSpecial[type][iSpecType - 1].g_iPanicAbility, g_esPanicAbility[type].g_iPanicAbility, 1);
-		g_esPanicCache[tank].g_iPanicCooldown = iGetSubSettingValue(apply, bHuman, g_esPanicTeammate[tank][iSpecType - 1].g_iPanicCooldown, g_esPanicPlayer[tank].g_iPanicCooldown, g_esPanicSpecial[type][iSpecType - 1].g_iPanicCooldown, g_esPanicAbility[type].g_iPanicCooldown, 1);
-		g_esPanicCache[tank].g_iPanicDuration = iGetSubSettingValue(apply, bHuman, g_esPanicTeammate[tank][iSpecType - 1].g_iPanicDuration, g_esPanicPlayer[tank].g_iPanicDuration, g_esPanicSpecial[type][iSpecType - 1].g_iPanicDuration, g_esPanicAbility[type].g_iPanicDuration, 1);
-		g_esPanicCache[tank].g_iPanicMessage = iGetSubSettingValue(apply, bHuman, g_esPanicTeammate[tank][iSpecType - 1].g_iPanicMessage, g_esPanicPlayer[tank].g_iPanicMessage, g_esPanicSpecial[type][iSpecType - 1].g_iPanicMessage, g_esPanicAbility[type].g_iPanicMessage, 1);
-		g_esPanicCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esPanicTeammate[tank][iSpecType - 1].g_flOpenAreasOnly, g_esPanicPlayer[tank].g_flOpenAreasOnly, g_esPanicSpecial[type][iSpecType - 1].g_flOpenAreasOnly, g_esPanicAbility[type].g_flOpenAreasOnly, 1);
-		g_esPanicCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esPanicTeammate[tank][iSpecType - 1].g_iRequiresHumans, g_esPanicPlayer[tank].g_iRequiresHumans, g_esPanicSpecial[type][iSpecType - 1].g_iRequiresHumans, g_esPanicAbility[type].g_iRequiresHumans, 1);
+		g_esPanicCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esPanicTeammate[tank][0].g_flCloseAreasOnly, g_esPanicTeammate[tank][iSpecType].g_flCloseAreasOnly, g_esPanicPlayer[tank].g_flCloseAreasOnly, g_esPanicSpecial[type][0].g_flCloseAreasOnly, g_esPanicSpecial[type][iSpecType].g_flCloseAreasOnly, g_esPanicAbility[type].g_flCloseAreasOnly, 1);
+		g_esPanicCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esPanicTeammate[tank][0].g_iComboAbility, g_esPanicTeammate[tank][iSpecType].g_iComboAbility, g_esPanicPlayer[tank].g_iComboAbility, g_esPanicSpecial[type][0].g_iComboAbility, g_esPanicSpecial[type][iSpecType].g_iComboAbility, g_esPanicAbility[type].g_iComboAbility, 1);
+		g_esPanicCache[tank].g_flPanicChance = flGetSubSettingValue(apply, bHuman, g_esPanicTeammate[tank][0].g_flPanicChance, g_esPanicTeammate[tank][iSpecType].g_flPanicChance, g_esPanicPlayer[tank].g_flPanicChance, g_esPanicSpecial[type][0].g_flPanicChance, g_esPanicSpecial[type][iSpecType].g_flPanicChance, g_esPanicAbility[type].g_flPanicChance, 1);
+		g_esPanicCache[tank].g_flPanicInterval = flGetSubSettingValue(apply, bHuman, g_esPanicTeammate[tank][0].g_flPanicInterval, g_esPanicTeammate[tank][iSpecType].g_flPanicInterval, g_esPanicPlayer[tank].g_flPanicInterval, g_esPanicSpecial[type][0].g_flPanicInterval, g_esPanicSpecial[type][iSpecType].g_flPanicInterval, g_esPanicAbility[type].g_flPanicInterval, 1);
+		g_esPanicCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esPanicTeammate[tank][0].g_iHumanAbility, g_esPanicTeammate[tank][iSpecType].g_iHumanAbility, g_esPanicPlayer[tank].g_iHumanAbility, g_esPanicSpecial[type][0].g_iHumanAbility, g_esPanicSpecial[type][iSpecType].g_iHumanAbility, g_esPanicAbility[type].g_iHumanAbility, 1);
+		g_esPanicCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esPanicTeammate[tank][0].g_iHumanAmmo, g_esPanicTeammate[tank][iSpecType].g_iHumanAmmo, g_esPanicPlayer[tank].g_iHumanAmmo, g_esPanicSpecial[type][0].g_iHumanAmmo, g_esPanicSpecial[type][iSpecType].g_iHumanAmmo, g_esPanicAbility[type].g_iHumanAmmo, 1);
+		g_esPanicCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esPanicTeammate[tank][0].g_iHumanCooldown, g_esPanicTeammate[tank][iSpecType].g_iHumanCooldown, g_esPanicPlayer[tank].g_iHumanCooldown, g_esPanicSpecial[type][0].g_iHumanCooldown, g_esPanicSpecial[type][iSpecType].g_iHumanCooldown, g_esPanicAbility[type].g_iHumanCooldown, 1);
+		g_esPanicCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esPanicTeammate[tank][0].g_iHumanDuration, g_esPanicTeammate[tank][iSpecType].g_iHumanDuration, g_esPanicPlayer[tank].g_iHumanDuration, g_esPanicSpecial[type][0].g_iHumanDuration, g_esPanicSpecial[type][iSpecType].g_iHumanDuration, g_esPanicAbility[type].g_iHumanDuration, 1);
+		g_esPanicCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esPanicTeammate[tank][0].g_iHumanMode, g_esPanicTeammate[tank][iSpecType].g_iHumanMode, g_esPanicPlayer[tank].g_iHumanMode, g_esPanicSpecial[type][0].g_iHumanMode, g_esPanicSpecial[type][iSpecType].g_iHumanMode, g_esPanicAbility[type].g_iHumanMode, 1);
+		g_esPanicCache[tank].g_iPanicAbility = iGetSubSettingValue(apply, bHuman, g_esPanicTeammate[tank][0].g_iPanicAbility, g_esPanicTeammate[tank][iSpecType].g_iPanicAbility, g_esPanicPlayer[tank].g_iPanicAbility, g_esPanicSpecial[type][0].g_iPanicAbility, g_esPanicSpecial[type][iSpecType].g_iPanicAbility, g_esPanicAbility[type].g_iPanicAbility, 1);
+		g_esPanicCache[tank].g_iPanicCooldown = iGetSubSettingValue(apply, bHuman, g_esPanicTeammate[tank][0].g_iPanicCooldown, g_esPanicTeammate[tank][iSpecType].g_iPanicCooldown, g_esPanicPlayer[tank].g_iPanicCooldown, g_esPanicSpecial[type][0].g_iPanicCooldown, g_esPanicSpecial[type][iSpecType].g_iPanicCooldown, g_esPanicAbility[type].g_iPanicCooldown, 1);
+		g_esPanicCache[tank].g_iPanicDuration = iGetSubSettingValue(apply, bHuman, g_esPanicTeammate[tank][0].g_iPanicDuration, g_esPanicTeammate[tank][iSpecType].g_iPanicDuration, g_esPanicPlayer[tank].g_iPanicDuration, g_esPanicSpecial[type][0].g_iPanicDuration, g_esPanicSpecial[type][iSpecType].g_iPanicDuration, g_esPanicAbility[type].g_iPanicDuration, 1);
+		g_esPanicCache[tank].g_iPanicMessage = iGetSubSettingValue(apply, bHuman, g_esPanicTeammate[tank][0].g_iPanicMessage, g_esPanicTeammate[tank][iSpecType].g_iPanicMessage, g_esPanicPlayer[tank].g_iPanicMessage, g_esPanicSpecial[type][0].g_iPanicMessage, g_esPanicSpecial[type][iSpecType].g_iPanicMessage, g_esPanicAbility[type].g_iPanicMessage, 1);
+		g_esPanicCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esPanicTeammate[tank][0].g_flOpenAreasOnly, g_esPanicTeammate[tank][iSpecType].g_flOpenAreasOnly, g_esPanicPlayer[tank].g_flOpenAreasOnly, g_esPanicSpecial[type][0].g_flOpenAreasOnly, g_esPanicSpecial[type][iSpecType].g_flOpenAreasOnly, g_esPanicAbility[type].g_flOpenAreasOnly, 1);
+		g_esPanicCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esPanicTeammate[tank][0].g_iRequiresHumans, g_esPanicTeammate[tank][iSpecType].g_iRequiresHumans, g_esPanicPlayer[tank].g_iRequiresHumans, g_esPanicSpecial[type][0].g_iRequiresHumans, g_esPanicSpecial[type][iSpecType].g_iRequiresHumans, g_esPanicAbility[type].g_iRequiresHumans, 1);
 	}
 	else
 	{

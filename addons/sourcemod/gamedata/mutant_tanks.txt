@@ -187,6 +187,19 @@
 			}
 
 			/**
+			 * CPipeBombProjectile::Detonate()
+			 *
+			 * Note: Detouring as a post-hook for tracking when sticky grenades detonate.
+			 **/
+			"MTDetour_CPipeBombProjectile::Detonate"
+			{
+				"signature"	"CPipeBombProjectile::Detonate"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+			}
+
+			/**
 			 * CPistol::GetRateOfFire()
 			 *
 			 * Note: Detouring as a pre-hook for changing pistol fire rate per player.
@@ -2581,7 +2594,7 @@
 			/**
 			 * CPipeBombProjectile::Create(Vector const&, QAngle const&, Vector const&, Vector const&, CBaseCombatCharacter *, float)
 			 *
-			 * Note: Used for detouring the function.
+			 * Note: Used for detouring/calling the function.
 			 *
 			 * How to find on Windows:
 			 * 1. Search for the "Pipe bomb projectile spawned at %f %f %f, velocity %f %f %f\n" string.
@@ -2594,6 +2607,25 @@
 				"mac"		"@_ZN19CPipeBombProjectile6CreateERK6VectorRK6QAngleS2_S2_P20CBaseCombatCharacterf"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x53\x8B\x2A\x2A\x2A\x56\x57\x50\x51\x53\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\xD9\x2A\x2A\x83\x2A\x2A\xDD\x2A\x2A\x2A\x8B\x2A\xD9\x2A\x2A\xDD\x2A\x2A\x2A\xD9\x2A\xDD\x2A\x2A\x2A\xD9\x2A\x2A\xDD\x2A\x2A\x2A\xD9\x2A\x2A\xDD\x2A\x2A\x2A\xD9\x2A\xDD\x2A\x2A\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B"
 						/* ? ? ? ? ? ? ? ? 53 8B ? ? ? 56 57 50 51 53 68 ? ? ? ? E8 ? ? ? ? 8B ? ? ? D9 ? ? 83 ? ? DD ? ? ? 8B ? D9 ? ? DD ? ? ? D9 ? DD ? ? ? D9 ? ? DD ? ? ? D9 ? ? DD ? ? ? D9 ? DD ? ? 68 ? ? ? ? E8 ? ? ? ? 8B */
+			}
+
+			/**
+			 * CPipeBombProjectile::Detonate()
+			 *
+			 * How to find on Windows:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2. In IDA Pro, go to the ".rdata" section of the Windows binary.
+			 * 3. Search for "CPipeBombProjectile::`vftable'" to jump to the "CPipeBombProjectile" vtable.
+			 * 4. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 5. Look for the target function in the Windows binary.
+			 **/
+			"CPipeBombProjectile::Detonate"
+			{
+				"library"	"server"
+				"linux"		"@_ZN19CPipeBombProjectile8DetonateEv"
+				"mac"		"@_ZN19CPipeBombProjectile8DetonateEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x55\x56\x8B\x2A\x8B\x86\x2A\x2A\x2A\x2A\xC1\x2A\x2A\xA8\x2A\x57\x74\x2A\xE8\x2A\x2A\x2A\x2A\x8B\xBE"
+						/* ? ? ? ? ? ? 53 55 56 8B ? 8B 86 ? ? ? ? C1 ? ? A8 ? 57 74 ? E8 ? ? ? ? 8B BE */
 			}
 
 			/**
@@ -5877,7 +5909,7 @@
 			/**
 			 * CPipeBombProjectile::Create(Vector const&, QAngle const&, Vector const&, Vector const&, CBaseCombatCharacter *, float)
 			 *
-			 * Note: Used for detouring the function.
+			 * Note: Used for detouring/calling the function.
 			 *
 			 * How to find on Windows:
 			 * 1. Search for the "Pipe bomb projectile spawned at %f %f %f, velocity %f %f %f\n" string.
@@ -5890,6 +5922,25 @@
 				"mac"		"@_ZN19CPipeBombProjectile6CreateERK6VectorRK6QAngleS2_S2_P20CBaseCombatCharacterf"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x53\x8B\x2A\x2A\x56\x57\x50\x51\x53\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x2A\xD9\x2A\x2A\x83\x2A\x2A\xDD\x2A\x2A\x2A\x8B\x2A\xD9\x2A\x2A\xDD\x2A\x2A\x2A\xD9\x2A\xDD\x2A\x2A\x2A\xD9\x2A\x2A\xDD\x2A\x2A\x2A\xD9\x2A\x2A\xDD\x2A\x2A\x2A\xD9\x2A\xDD\x2A\x2A\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B"
 						/* ? ? ? ? ? ? 8B ? ? 53 8B ? ? 56 57 50 51 53 68 ? ? ? ? E8 ? ? ? ? 8B ? ? D9 ? ? 83 ? ? DD ? ? ? 8B ? D9 ? ? DD ? ? ? D9 ? DD ? ? ? D9 ? ? DD ? ? ? D9 ? ? DD ? ? ? D9 ? DD ? ? 68 ? ? ? ? E8 ? ? ? ? 8B */
+			}
+
+			/**
+			 * CPipeBombProjectile::Detonate()
+			 *
+			 * How to find on Windows:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2. In IDA Pro, go to the ".rdata" section of the Windows binary.
+			 * 3. Search for "CPipeBombProjectile::`vftable'" to jump to the "CPipeBombProjectile" vtable.
+			 * 4. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 5. Look for the target function in the Windows binary.
+			 **/
+			"CPipeBombProjectile::Detonate"
+			{
+				"library"	"server"
+				"linux"		"@_ZN19CPipeBombProjectile8DetonateEv"
+				"mac"		"@_ZN19CPipeBombProjectile8DetonateEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x53\x56\x8B\x2A\x8B\x86\x2A\x2A\x2A\x2A\xC1\x2A\x2A\x57\xA8\x2A\x74\x2A\xE8\x2A\x2A\x2A\x2A\x8B\xBE"
+						/* ? ? ? ? ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 53 56 8B ? 8B 86 ? ? ? ? C1 ? ? 57 A8 ? 74 ? E8 ? ? ? ? 8B BE */
 			}
 
 			/**

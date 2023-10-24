@@ -94,7 +94,7 @@ enum struct esXiphosTeammate
 	int g_iXiphosMessage;
 }
 
-esXiphosTeammate g_esXiphosTeammate[MAXPLAYERS + 1][6];
+esXiphosTeammate g_esXiphosTeammate[MAXPLAYERS + 1][7];
 
 enum struct esXiphosAbility
 {
@@ -128,7 +128,7 @@ enum struct esXiphosSpecial
 	int g_iXiphosMessage;
 }
 
-esXiphosSpecial g_esXiphosSpecial[MT_MAXTYPES + 1][6];
+esXiphosSpecial g_esXiphosSpecial[MT_MAXTYPES + 1][7];
 
 enum struct esXiphosCache
 {
@@ -405,7 +405,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esXiphosAbility[iIndex].g_flXiphosChance = 33.3;
 				g_esXiphosAbility[iIndex].g_iXiphosMaxHealth = 100;
 
-				for (int iSpecType = 0; iSpecType < 6; iSpecType++)
+				for (int iSpecType = 0; iSpecType < (sizeof g_sSpecialNames); iSpecType++)
 				{
 					g_esXiphosSpecial[iIndex][iSpecType].g_flCloseAreasOnly = -1.0;
 					g_esXiphosSpecial[iIndex][iSpecType].g_iHumanAbility = -1;
@@ -435,7 +435,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esXiphosPlayer[iPlayer].g_flXiphosChance = -1.0;
 				g_esXiphosPlayer[iPlayer].g_iXiphosMaxHealth = -1;
 
-				for (int iSpecType = 0; iSpecType < 6; iSpecType++)
+				for (int iSpecType = 0; iSpecType < (sizeof g_sSpecialNames); iSpecType++)
 				{
 					g_esXiphosTeammate[iPlayer][iSpecType].g_flCloseAreasOnly = -1.0;
 					g_esXiphosTeammate[iPlayer][iSpecType].g_iHumanAbility = -1;
@@ -453,24 +453,24 @@ public void MT_OnConfigsLoad(int mode)
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vXiphosConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, const char[] specName, int specType)
+void vXiphosConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, int specType)
 #else
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, const char[] specName, int specType)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, int specType)
 #endif
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esXiphosTeammate[admin][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esXiphosTeammate[admin][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specName, specType);
-			g_esXiphosTeammate[admin][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esXiphosTeammate[admin][specType].g_iHumanAbility, value, -1, 1, specName, specType);
-			g_esXiphosTeammate[admin][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esXiphosTeammate[admin][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specName, specType);
-			g_esXiphosTeammate[admin][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esXiphosTeammate[admin][specType].g_iRequiresHumans, value, -1, 32, specName, specType);
-			g_esXiphosTeammate[admin][specType].g_iXiphosAbility = iGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esXiphosTeammate[admin][specType].g_iXiphosAbility, value, -1, 1, specName, specType);
-			g_esXiphosTeammate[admin][specType].g_iXiphosEffect = iGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esXiphosTeammate[admin][specType].g_iXiphosEffect, value, -1, 1, specName, specType);
-			g_esXiphosTeammate[admin][specType].g_iXiphosMessage = iGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esXiphosTeammate[admin][specType].g_iXiphosMessage, value, -1, 3, specName, specType);
-			g_esXiphosTeammate[admin][specType].g_flXiphosChance = flGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "XiphosChance", "Xiphos Chance", "Xiphos_Chance", "chance", g_esXiphosTeammate[admin][specType].g_flXiphosChance, value, -1.0, 100.0, specName, specType);
-			g_esXiphosTeammate[admin][specType].g_iXiphosMaxHealth = iGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "XiphosMaxHealth", "Xiphos Max Health", "Xiphos_Max_Health", "maxhealth", g_esXiphosTeammate[admin][specType].g_iXiphosMaxHealth, value, -1, MT_MAXHEALTH, specName, specType);
+			g_esXiphosTeammate[admin][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esXiphosTeammate[admin][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specType);
+			g_esXiphosTeammate[admin][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esXiphosTeammate[admin][specType].g_iHumanAbility, value, -1, 1, specType);
+			g_esXiphosTeammate[admin][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esXiphosTeammate[admin][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specType);
+			g_esXiphosTeammate[admin][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esXiphosTeammate[admin][specType].g_iRequiresHumans, value, -1, 32, specType);
+			g_esXiphosTeammate[admin][specType].g_iXiphosAbility = iGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esXiphosTeammate[admin][specType].g_iXiphosAbility, value, -1, 1, specType);
+			g_esXiphosTeammate[admin][specType].g_iXiphosEffect = iGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esXiphosTeammate[admin][specType].g_iXiphosEffect, value, -1, 1, specType);
+			g_esXiphosTeammate[admin][specType].g_iXiphosMessage = iGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esXiphosTeammate[admin][specType].g_iXiphosMessage, value, -1, 3, specType);
+			g_esXiphosTeammate[admin][specType].g_flXiphosChance = flGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "XiphosChance", "Xiphos Chance", "Xiphos_Chance", "chance", g_esXiphosTeammate[admin][specType].g_flXiphosChance, value, -1.0, 100.0, specType);
+			g_esXiphosTeammate[admin][specType].g_iXiphosMaxHealth = iGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "XiphosMaxHealth", "Xiphos Max Health", "Xiphos_Max_Health", "maxhealth", g_esXiphosTeammate[admin][specType].g_iXiphosMaxHealth, value, -1, MT_MAXHEALTH, specType);
 		}
 		else
 		{
@@ -492,15 +492,15 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esXiphosSpecial[type][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esXiphosSpecial[type][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specName, specType);
-			g_esXiphosSpecial[type][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esXiphosSpecial[type][specType].g_iHumanAbility, value, -1, 1, specName, specType);
-			g_esXiphosSpecial[type][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esXiphosSpecial[type][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specName, specType);
-			g_esXiphosSpecial[type][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esXiphosSpecial[type][specType].g_iRequiresHumans, value, -1, 32, specName, specType);
-			g_esXiphosSpecial[type][specType].g_iXiphosAbility = iGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esXiphosSpecial[type][specType].g_iXiphosAbility, value, -1, 1, specName, specType);
-			g_esXiphosSpecial[type][specType].g_iXiphosEffect = iGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esXiphosSpecial[type][specType].g_iXiphosEffect, value, -1, 1, specName, specType);
-			g_esXiphosSpecial[type][specType].g_iXiphosMessage = iGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esXiphosSpecial[type][specType].g_iXiphosMessage, value, -1, 3, specName, specType);
-			g_esXiphosSpecial[type][specType].g_flXiphosChance = flGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "XiphosChance", "Xiphos Chance", "Xiphos_Chance", "chance", g_esXiphosSpecial[type][specType].g_flXiphosChance, value, -1.0, 100.0, specName, specType);
-			g_esXiphosSpecial[type][specType].g_iXiphosMaxHealth = iGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "XiphosMaxHealth", "Xiphos Max Health", "Xiphos_Max_Health", "maxhealth", g_esXiphosSpecial[type][specType].g_iXiphosMaxHealth, value, -1, MT_MAXHEALTH, specName, specType);
+			g_esXiphosSpecial[type][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esXiphosSpecial[type][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specType);
+			g_esXiphosSpecial[type][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esXiphosSpecial[type][specType].g_iHumanAbility, value, -1, 1, specType);
+			g_esXiphosSpecial[type][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esXiphosSpecial[type][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specType);
+			g_esXiphosSpecial[type][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esXiphosSpecial[type][specType].g_iRequiresHumans, value, -1, 32, specType);
+			g_esXiphosSpecial[type][specType].g_iXiphosAbility = iGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esXiphosSpecial[type][specType].g_iXiphosAbility, value, -1, 1, specType);
+			g_esXiphosSpecial[type][specType].g_iXiphosEffect = iGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esXiphosSpecial[type][specType].g_iXiphosEffect, value, -1, 1, specType);
+			g_esXiphosSpecial[type][specType].g_iXiphosMessage = iGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esXiphosSpecial[type][specType].g_iXiphosMessage, value, -1, 3, specType);
+			g_esXiphosSpecial[type][specType].g_flXiphosChance = flGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "XiphosChance", "Xiphos Chance", "Xiphos_Chance", "chance", g_esXiphosSpecial[type][specType].g_flXiphosChance, value, -1.0, 100.0, specType);
+			g_esXiphosSpecial[type][specType].g_iXiphosMaxHealth = iGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "XiphosMaxHealth", "Xiphos Max Health", "Xiphos_Max_Health", "maxhealth", g_esXiphosSpecial[type][specType].g_iXiphosMaxHealth, value, -1, MT_MAXHEALTH, specType);
 		}
 		else
 		{
@@ -532,15 +532,15 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esXiphosCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esXiphosTeammate[tank][iSpecType - 1].g_flCloseAreasOnly, g_esXiphosPlayer[tank].g_flCloseAreasOnly, g_esXiphosSpecial[type][iSpecType - 1].g_flCloseAreasOnly, g_esXiphosAbility[type].g_flCloseAreasOnly, 1);
-		g_esXiphosCache[tank].g_flXiphosChance = flGetSubSettingValue(apply, bHuman, g_esXiphosTeammate[tank][iSpecType - 1].g_flXiphosChance, g_esXiphosPlayer[tank].g_flXiphosChance, g_esXiphosSpecial[type][iSpecType - 1].g_flXiphosChance, g_esXiphosAbility[type].g_flXiphosChance, 1);
-		g_esXiphosCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esXiphosTeammate[tank][iSpecType - 1].g_iHumanAbility, g_esXiphosPlayer[tank].g_iHumanAbility, g_esXiphosSpecial[type][iSpecType - 1].g_iHumanAbility, g_esXiphosAbility[type].g_iHumanAbility, 1);
-		g_esXiphosCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esXiphosTeammate[tank][iSpecType - 1].g_flOpenAreasOnly, g_esXiphosPlayer[tank].g_flOpenAreasOnly, g_esXiphosSpecial[type][iSpecType - 1].g_flOpenAreasOnly, g_esXiphosAbility[type].g_flOpenAreasOnly, 1);
-		g_esXiphosCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esXiphosTeammate[tank][iSpecType - 1].g_iRequiresHumans, g_esXiphosPlayer[tank].g_iRequiresHumans, g_esXiphosSpecial[type][iSpecType - 1].g_iRequiresHumans, g_esXiphosAbility[type].g_iRequiresHumans, 1);
-		g_esXiphosCache[tank].g_iXiphosAbility = iGetSubSettingValue(apply, bHuman, g_esXiphosTeammate[tank][iSpecType - 1].g_iXiphosAbility, g_esXiphosPlayer[tank].g_iXiphosAbility, g_esXiphosSpecial[type][iSpecType - 1].g_iXiphosAbility, g_esXiphosAbility[type].g_iXiphosAbility, 1);
-		g_esXiphosCache[tank].g_iXiphosEffect = iGetSubSettingValue(apply, bHuman, g_esXiphosTeammate[tank][iSpecType - 1].g_iXiphosEffect, g_esXiphosPlayer[tank].g_iXiphosEffect, g_esXiphosSpecial[type][iSpecType - 1].g_iXiphosEffect, g_esXiphosAbility[type].g_iXiphosEffect, 1);
-		g_esXiphosCache[tank].g_iXiphosMaxHealth = iGetSubSettingValue(apply, bHuman, g_esXiphosTeammate[tank][iSpecType - 1].g_iXiphosMaxHealth, g_esXiphosPlayer[tank].g_iXiphosMaxHealth, g_esXiphosSpecial[type][iSpecType - 1].g_iXiphosMaxHealth, g_esXiphosAbility[type].g_iXiphosMaxHealth, 1);
-		g_esXiphosCache[tank].g_iXiphosMessage = iGetSubSettingValue(apply, bHuman, g_esXiphosTeammate[tank][iSpecType - 1].g_iXiphosMessage, g_esXiphosPlayer[tank].g_iXiphosMessage, g_esXiphosSpecial[type][iSpecType - 1].g_iXiphosMessage, g_esXiphosAbility[type].g_iXiphosMessage, 1);
+		g_esXiphosCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esXiphosTeammate[tank][0].g_flCloseAreasOnly, g_esXiphosTeammate[tank][iSpecType].g_flCloseAreasOnly, g_esXiphosPlayer[tank].g_flCloseAreasOnly, g_esXiphosSpecial[type][0].g_flCloseAreasOnly, g_esXiphosSpecial[type][iSpecType].g_flCloseAreasOnly, g_esXiphosAbility[type].g_flCloseAreasOnly, 1);
+		g_esXiphosCache[tank].g_flXiphosChance = flGetSubSettingValue(apply, bHuman, g_esXiphosTeammate[tank][0].g_flXiphosChance, g_esXiphosTeammate[tank][iSpecType].g_flXiphosChance, g_esXiphosPlayer[tank].g_flXiphosChance, g_esXiphosSpecial[type][0].g_flXiphosChance, g_esXiphosSpecial[type][iSpecType].g_flXiphosChance, g_esXiphosAbility[type].g_flXiphosChance, 1);
+		g_esXiphosCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esXiphosTeammate[tank][0].g_iHumanAbility, g_esXiphosTeammate[tank][iSpecType].g_iHumanAbility, g_esXiphosPlayer[tank].g_iHumanAbility, g_esXiphosSpecial[type][0].g_iHumanAbility, g_esXiphosSpecial[type][iSpecType].g_iHumanAbility, g_esXiphosAbility[type].g_iHumanAbility, 1);
+		g_esXiphosCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esXiphosTeammate[tank][0].g_flOpenAreasOnly, g_esXiphosTeammate[tank][iSpecType].g_flOpenAreasOnly, g_esXiphosPlayer[tank].g_flOpenAreasOnly, g_esXiphosSpecial[type][0].g_flOpenAreasOnly, g_esXiphosSpecial[type][iSpecType].g_flOpenAreasOnly, g_esXiphosAbility[type].g_flOpenAreasOnly, 1);
+		g_esXiphosCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esXiphosTeammate[tank][0].g_iRequiresHumans, g_esXiphosTeammate[tank][iSpecType].g_iRequiresHumans, g_esXiphosPlayer[tank].g_iRequiresHumans, g_esXiphosSpecial[type][0].g_iRequiresHumans, g_esXiphosSpecial[type][iSpecType].g_iRequiresHumans, g_esXiphosAbility[type].g_iRequiresHumans, 1);
+		g_esXiphosCache[tank].g_iXiphosAbility = iGetSubSettingValue(apply, bHuman, g_esXiphosTeammate[tank][0].g_iXiphosAbility, g_esXiphosTeammate[tank][iSpecType].g_iXiphosAbility, g_esXiphosPlayer[tank].g_iXiphosAbility, g_esXiphosSpecial[type][0].g_iXiphosAbility, g_esXiphosSpecial[type][iSpecType].g_iXiphosAbility, g_esXiphosAbility[type].g_iXiphosAbility, 1);
+		g_esXiphosCache[tank].g_iXiphosEffect = iGetSubSettingValue(apply, bHuman, g_esXiphosTeammate[tank][0].g_iXiphosEffect, g_esXiphosTeammate[tank][iSpecType].g_iXiphosEffect, g_esXiphosPlayer[tank].g_iXiphosEffect, g_esXiphosSpecial[type][0].g_iXiphosEffect, g_esXiphosSpecial[type][iSpecType].g_iXiphosEffect, g_esXiphosAbility[type].g_iXiphosEffect, 1);
+		g_esXiphosCache[tank].g_iXiphosMaxHealth = iGetSubSettingValue(apply, bHuman, g_esXiphosTeammate[tank][0].g_iXiphosMaxHealth, g_esXiphosTeammate[tank][iSpecType].g_iXiphosMaxHealth, g_esXiphosPlayer[tank].g_iXiphosMaxHealth, g_esXiphosSpecial[type][0].g_iXiphosMaxHealth, g_esXiphosSpecial[type][iSpecType].g_iXiphosMaxHealth, g_esXiphosAbility[type].g_iXiphosMaxHealth, 1);
+		g_esXiphosCache[tank].g_iXiphosMessage = iGetSubSettingValue(apply, bHuman, g_esXiphosTeammate[tank][0].g_iXiphosMessage, g_esXiphosTeammate[tank][iSpecType].g_iXiphosMessage, g_esXiphosPlayer[tank].g_iXiphosMessage, g_esXiphosSpecial[type][0].g_iXiphosMessage, g_esXiphosSpecial[type][iSpecType].g_iXiphosMessage, g_esXiphosAbility[type].g_iXiphosMessage, 1);
 	}
 	else
 	{
