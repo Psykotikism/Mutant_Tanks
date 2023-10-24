@@ -103,7 +103,7 @@ enum struct esUndeadTeammate
 	int g_iUndeadMessage;
 }
 
-esUndeadTeammate g_esUndeadTeammate[MAXPLAYERS + 1][6];
+esUndeadTeammate g_esUndeadTeammate[MAXPLAYERS + 1][7];
 
 enum struct esUndeadAbility
 {
@@ -143,7 +143,7 @@ enum struct esUndeadSpecial
 	int g_iUndeadMessage;
 }
 
-esUndeadSpecial g_esUndeadSpecial[MT_MAXTYPES + 1][6];
+esUndeadSpecial g_esUndeadSpecial[MT_MAXTYPES + 1][7];
 
 enum struct esUndeadCache
 {
@@ -511,7 +511,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esUndeadAbility[iIndex].g_flUndeadChance = 33.3;
 				g_esUndeadAbility[iIndex].g_iUndeadCooldown = 0;
 
-				for (int iSpecType = 0; iSpecType < 6; iSpecType++)
+				for (int iSpecType = 0; iSpecType < (sizeof g_sSpecialNames); iSpecType++)
 				{
 					g_esUndeadSpecial[iIndex][iSpecType].g_flCloseAreasOnly = -1.0;
 					g_esUndeadSpecial[iIndex][iSpecType].g_iComboAbility = -1;
@@ -546,7 +546,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esUndeadPlayer[iPlayer].g_flUndeadChance = -1.0;
 				g_esUndeadPlayer[iPlayer].g_iUndeadCooldown = -1;
 
-				for (int iSpecType = 0; iSpecType < 6; iSpecType++)
+				for (int iSpecType = 0; iSpecType < (sizeof g_sSpecialNames); iSpecType++)
 				{
 					g_esUndeadTeammate[iPlayer][iSpecType].g_flCloseAreasOnly = -1.0;
 					g_esUndeadTeammate[iPlayer][iSpecType].g_iComboAbility = -1;
@@ -567,27 +567,27 @@ public void MT_OnConfigsLoad(int mode)
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vUndeadConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, const char[] specName, int specType)
+void vUndeadConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, int specType)
 #else
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, const char[] specName, int specType)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, int specType)
 #endif
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esUndeadTeammate[admin][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esUndeadTeammate[admin][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specName, specType);
-			g_esUndeadTeammate[admin][specType].g_iComboAbility = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esUndeadTeammate[admin][specType].g_iComboAbility, value, -1, 1, specName, specType);
-			g_esUndeadTeammate[admin][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esUndeadTeammate[admin][specType].g_iHumanAbility, value, -1, 2, specName, specType);
-			g_esUndeadTeammate[admin][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esUndeadTeammate[admin][specType].g_iHumanAmmo, value, -1, 99999, specName, specType);
-			g_esUndeadTeammate[admin][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esUndeadTeammate[admin][specType].g_iHumanCooldown, value, -1, 99999, specName, specType);
-			g_esUndeadTeammate[admin][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esUndeadTeammate[admin][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specName, specType);
-			g_esUndeadTeammate[admin][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esUndeadTeammate[admin][specType].g_iRequiresHumans, value, -1, 32, specName, specType);
-			g_esUndeadTeammate[admin][specType].g_iUndeadAbility = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esUndeadTeammate[admin][specType].g_iUndeadAbility, value, -1, 1, specName, specType);
-			g_esUndeadTeammate[admin][specType].g_iUndeadMessage = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esUndeadTeammate[admin][specType].g_iUndeadMessage, value, -1, 1, specName, specType);
-			g_esUndeadTeammate[admin][specType].g_iUndeadAmount = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "UndeadAmount", "Undead Amount", "Undead_Amount", "amount", g_esUndeadTeammate[admin][specType].g_iUndeadAmount, value, -1, 99999, specName, specType);
-			g_esUndeadTeammate[admin][specType].g_flUndeadChance = flGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "UndeadChance", "Undead Chance", "Undead_Chance", "chance", g_esUndeadTeammate[admin][specType].g_flUndeadChance, value, -1.0, 100.0, specName, specType);
-			g_esUndeadTeammate[admin][specType].g_iUndeadCooldown = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "UndeadCooldown", "Undead Cooldown", "Undead_Cooldown", "cooldown", g_esUndeadTeammate[admin][specType].g_iUndeadCooldown, value, -1, 99999, specName, specType);
+			g_esUndeadTeammate[admin][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esUndeadTeammate[admin][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specType);
+			g_esUndeadTeammate[admin][specType].g_iComboAbility = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esUndeadTeammate[admin][specType].g_iComboAbility, value, -1, 1, specType);
+			g_esUndeadTeammate[admin][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esUndeadTeammate[admin][specType].g_iHumanAbility, value, -1, 2, specType);
+			g_esUndeadTeammate[admin][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esUndeadTeammate[admin][specType].g_iHumanAmmo, value, -1, 99999, specType);
+			g_esUndeadTeammate[admin][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esUndeadTeammate[admin][specType].g_iHumanCooldown, value, -1, 99999, specType);
+			g_esUndeadTeammate[admin][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esUndeadTeammate[admin][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specType);
+			g_esUndeadTeammate[admin][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esUndeadTeammate[admin][specType].g_iRequiresHumans, value, -1, 32, specType);
+			g_esUndeadTeammate[admin][specType].g_iUndeadAbility = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esUndeadTeammate[admin][specType].g_iUndeadAbility, value, -1, 1, specType);
+			g_esUndeadTeammate[admin][specType].g_iUndeadMessage = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esUndeadTeammate[admin][specType].g_iUndeadMessage, value, -1, 1, specType);
+			g_esUndeadTeammate[admin][specType].g_iUndeadAmount = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "UndeadAmount", "Undead Amount", "Undead_Amount", "amount", g_esUndeadTeammate[admin][specType].g_iUndeadAmount, value, -1, 99999, specType);
+			g_esUndeadTeammate[admin][specType].g_flUndeadChance = flGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "UndeadChance", "Undead Chance", "Undead_Chance", "chance", g_esUndeadTeammate[admin][specType].g_flUndeadChance, value, -1.0, 100.0, specType);
+			g_esUndeadTeammate[admin][specType].g_iUndeadCooldown = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "UndeadCooldown", "Undead Cooldown", "Undead_Cooldown", "cooldown", g_esUndeadTeammate[admin][specType].g_iUndeadCooldown, value, -1, 99999, specType);
 		}
 		else
 		{
@@ -611,18 +611,18 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esUndeadSpecial[type][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esUndeadSpecial[type][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specName, specType);
-			g_esUndeadSpecial[type][specType].g_iComboAbility = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esUndeadSpecial[type][specType].g_iComboAbility, value, -1, 1, specName, specType);
-			g_esUndeadSpecial[type][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esUndeadSpecial[type][specType].g_iHumanAbility, value, -1, 2, specName, specType);
-			g_esUndeadSpecial[type][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esUndeadSpecial[type][specType].g_iHumanAmmo, value, -1, 99999, specName, specType);
-			g_esUndeadSpecial[type][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esUndeadSpecial[type][specType].g_iHumanCooldown, value, -1, 99999, specName, specType);
-			g_esUndeadSpecial[type][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esUndeadSpecial[type][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specName, specType);
-			g_esUndeadSpecial[type][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esUndeadSpecial[type][specType].g_iRequiresHumans, value, -1, 32, specName, specType);
-			g_esUndeadSpecial[type][specType].g_iUndeadAbility = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esUndeadSpecial[type][specType].g_iUndeadAbility, value, -1, 1, specName, specType);
-			g_esUndeadSpecial[type][specType].g_iUndeadMessage = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esUndeadSpecial[type][specType].g_iUndeadMessage, value, -1, 1, specName, specType);
-			g_esUndeadSpecial[type][specType].g_iUndeadAmount = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "UndeadAmount", "Undead Amount", "Undead_Amount", "amount", g_esUndeadSpecial[type][specType].g_iUndeadAmount, value, -1, 99999, specName, specType);
-			g_esUndeadSpecial[type][specType].g_flUndeadChance = flGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "UndeadChance", "Undead Chance", "Undead_Chance", "chance", g_esUndeadSpecial[type][specType].g_flUndeadChance, value, -1.0, 100.0, specName, specType);
-			g_esUndeadSpecial[type][specType].g_iUndeadCooldown = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "UndeadCooldown", "Undead Cooldown", "Undead_Cooldown", "cooldown", g_esUndeadSpecial[type][specType].g_iUndeadCooldown, value, -1, 99999, specName, specType);
+			g_esUndeadSpecial[type][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esUndeadSpecial[type][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specType);
+			g_esUndeadSpecial[type][specType].g_iComboAbility = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esUndeadSpecial[type][specType].g_iComboAbility, value, -1, 1, specType);
+			g_esUndeadSpecial[type][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esUndeadSpecial[type][specType].g_iHumanAbility, value, -1, 2, specType);
+			g_esUndeadSpecial[type][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esUndeadSpecial[type][specType].g_iHumanAmmo, value, -1, 99999, specType);
+			g_esUndeadSpecial[type][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esUndeadSpecial[type][specType].g_iHumanCooldown, value, -1, 99999, specType);
+			g_esUndeadSpecial[type][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esUndeadSpecial[type][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specType);
+			g_esUndeadSpecial[type][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esUndeadSpecial[type][specType].g_iRequiresHumans, value, -1, 32, specType);
+			g_esUndeadSpecial[type][specType].g_iUndeadAbility = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esUndeadSpecial[type][specType].g_iUndeadAbility, value, -1, 1, specType);
+			g_esUndeadSpecial[type][specType].g_iUndeadMessage = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esUndeadSpecial[type][specType].g_iUndeadMessage, value, -1, 1, specType);
+			g_esUndeadSpecial[type][specType].g_iUndeadAmount = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "UndeadAmount", "Undead Amount", "Undead_Amount", "amount", g_esUndeadSpecial[type][specType].g_iUndeadAmount, value, -1, 99999, specType);
+			g_esUndeadSpecial[type][specType].g_flUndeadChance = flGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "UndeadChance", "Undead Chance", "Undead_Chance", "chance", g_esUndeadSpecial[type][specType].g_flUndeadChance, value, -1.0, 100.0, specType);
+			g_esUndeadSpecial[type][specType].g_iUndeadCooldown = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "UndeadCooldown", "Undead Cooldown", "Undead_Cooldown", "cooldown", g_esUndeadSpecial[type][specType].g_iUndeadCooldown, value, -1, 99999, specType);
 		}
 		else
 		{
@@ -656,18 +656,18 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esUndeadCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank][iSpecType - 1].g_flCloseAreasOnly, g_esUndeadPlayer[tank].g_flCloseAreasOnly, g_esUndeadSpecial[type][iSpecType - 1].g_flCloseAreasOnly, g_esUndeadAbility[type].g_flCloseAreasOnly, 1);
-		g_esUndeadCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank][iSpecType - 1].g_iComboAbility, g_esUndeadPlayer[tank].g_iComboAbility, g_esUndeadSpecial[type][iSpecType - 1].g_iComboAbility, g_esUndeadAbility[type].g_iComboAbility, 1);
-		g_esUndeadCache[tank].g_flUndeadChance = flGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank][iSpecType - 1].g_flUndeadChance, g_esUndeadPlayer[tank].g_flUndeadChance, g_esUndeadSpecial[type][iSpecType - 1].g_flUndeadChance, g_esUndeadAbility[type].g_flUndeadChance, 1);
-		g_esUndeadCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank][iSpecType - 1].g_iHumanAbility, g_esUndeadPlayer[tank].g_iHumanAbility, g_esUndeadSpecial[type][iSpecType - 1].g_iHumanAbility, g_esUndeadAbility[type].g_iHumanAbility, 1);
-		g_esUndeadCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank][iSpecType - 1].g_iHumanAmmo, g_esUndeadPlayer[tank].g_iHumanAmmo, g_esUndeadSpecial[type][iSpecType - 1].g_iHumanAmmo, g_esUndeadAbility[type].g_iHumanAmmo, 1);
-		g_esUndeadCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank][iSpecType - 1].g_iHumanCooldown, g_esUndeadPlayer[tank].g_iHumanCooldown, g_esUndeadSpecial[type][iSpecType - 1].g_iHumanCooldown, g_esUndeadAbility[type].g_iHumanCooldown, 1);
-		g_esUndeadCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank][iSpecType - 1].g_flOpenAreasOnly, g_esUndeadPlayer[tank].g_flOpenAreasOnly, g_esUndeadSpecial[type][iSpecType - 1].g_flOpenAreasOnly, g_esUndeadAbility[type].g_flOpenAreasOnly, 1);
-		g_esUndeadCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank][iSpecType - 1].g_iRequiresHumans, g_esUndeadPlayer[tank].g_iRequiresHumans, g_esUndeadSpecial[type][iSpecType - 1].g_iRequiresHumans, g_esUndeadAbility[type].g_iRequiresHumans, 1);
-		g_esUndeadCache[tank].g_iUndeadAbility = iGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank][iSpecType - 1].g_iUndeadAbility, g_esUndeadPlayer[tank].g_iUndeadAbility, g_esUndeadSpecial[type][iSpecType - 1].g_iUndeadAbility, g_esUndeadAbility[type].g_iUndeadAbility, 1);
-		g_esUndeadCache[tank].g_iUndeadAmount = iGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank][iSpecType - 1].g_iUndeadAmount, g_esUndeadPlayer[tank].g_iUndeadAmount, g_esUndeadSpecial[type][iSpecType - 1].g_iUndeadAmount, g_esUndeadAbility[type].g_iUndeadAmount, 1);
-		g_esUndeadCache[tank].g_iUndeadCooldown = iGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank][iSpecType - 1].g_iUndeadCooldown, g_esUndeadPlayer[tank].g_iUndeadCooldown, g_esUndeadSpecial[type][iSpecType - 1].g_iUndeadCooldown, g_esUndeadAbility[type].g_iUndeadCooldown, 1);
-		g_esUndeadCache[tank].g_iUndeadMessage = iGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank][iSpecType - 1].g_iUndeadMessage, g_esUndeadPlayer[tank].g_iUndeadMessage, g_esUndeadSpecial[type][iSpecType - 1].g_iUndeadMessage, g_esUndeadAbility[type].g_iUndeadMessage, 1);
+		g_esUndeadCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank][0].g_flCloseAreasOnly, g_esUndeadTeammate[tank][iSpecType].g_flCloseAreasOnly, g_esUndeadPlayer[tank].g_flCloseAreasOnly, g_esUndeadSpecial[type][0].g_flCloseAreasOnly, g_esUndeadSpecial[type][iSpecType].g_flCloseAreasOnly, g_esUndeadAbility[type].g_flCloseAreasOnly, 1);
+		g_esUndeadCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank][0].g_iComboAbility, g_esUndeadTeammate[tank][iSpecType].g_iComboAbility, g_esUndeadPlayer[tank].g_iComboAbility, g_esUndeadSpecial[type][0].g_iComboAbility, g_esUndeadSpecial[type][iSpecType].g_iComboAbility, g_esUndeadAbility[type].g_iComboAbility, 1);
+		g_esUndeadCache[tank].g_flUndeadChance = flGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank][0].g_flUndeadChance, g_esUndeadTeammate[tank][iSpecType].g_flUndeadChance, g_esUndeadPlayer[tank].g_flUndeadChance, g_esUndeadSpecial[type][0].g_flUndeadChance, g_esUndeadSpecial[type][iSpecType].g_flUndeadChance, g_esUndeadAbility[type].g_flUndeadChance, 1);
+		g_esUndeadCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank][0].g_iHumanAbility, g_esUndeadTeammate[tank][iSpecType].g_iHumanAbility, g_esUndeadPlayer[tank].g_iHumanAbility, g_esUndeadSpecial[type][0].g_iHumanAbility, g_esUndeadSpecial[type][iSpecType].g_iHumanAbility, g_esUndeadAbility[type].g_iHumanAbility, 1);
+		g_esUndeadCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank][0].g_iHumanAmmo, g_esUndeadTeammate[tank][iSpecType].g_iHumanAmmo, g_esUndeadPlayer[tank].g_iHumanAmmo, g_esUndeadSpecial[type][0].g_iHumanAmmo, g_esUndeadSpecial[type][iSpecType].g_iHumanAmmo, g_esUndeadAbility[type].g_iHumanAmmo, 1);
+		g_esUndeadCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank][0].g_iHumanCooldown, g_esUndeadTeammate[tank][iSpecType].g_iHumanCooldown, g_esUndeadPlayer[tank].g_iHumanCooldown, g_esUndeadSpecial[type][0].g_iHumanCooldown, g_esUndeadSpecial[type][iSpecType].g_iHumanCooldown, g_esUndeadAbility[type].g_iHumanCooldown, 1);
+		g_esUndeadCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank][0].g_flOpenAreasOnly, g_esUndeadTeammate[tank][iSpecType].g_flOpenAreasOnly, g_esUndeadPlayer[tank].g_flOpenAreasOnly, g_esUndeadSpecial[type][0].g_flOpenAreasOnly, g_esUndeadSpecial[type][iSpecType].g_flOpenAreasOnly, g_esUndeadAbility[type].g_flOpenAreasOnly, 1);
+		g_esUndeadCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank][0].g_iRequiresHumans, g_esUndeadTeammate[tank][iSpecType].g_iRequiresHumans, g_esUndeadPlayer[tank].g_iRequiresHumans, g_esUndeadSpecial[type][0].g_iRequiresHumans, g_esUndeadSpecial[type][iSpecType].g_iRequiresHumans, g_esUndeadAbility[type].g_iRequiresHumans, 1);
+		g_esUndeadCache[tank].g_iUndeadAbility = iGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank][0].g_iUndeadAbility, g_esUndeadTeammate[tank][iSpecType].g_iUndeadAbility, g_esUndeadPlayer[tank].g_iUndeadAbility, g_esUndeadSpecial[type][0].g_iUndeadAbility, g_esUndeadSpecial[type][iSpecType].g_iUndeadAbility, g_esUndeadAbility[type].g_iUndeadAbility, 1);
+		g_esUndeadCache[tank].g_iUndeadAmount = iGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank][0].g_iUndeadAmount, g_esUndeadTeammate[tank][iSpecType].g_iUndeadAmount, g_esUndeadPlayer[tank].g_iUndeadAmount, g_esUndeadSpecial[type][0].g_iUndeadAmount, g_esUndeadSpecial[type][iSpecType].g_iUndeadAmount, g_esUndeadAbility[type].g_iUndeadAmount, 1);
+		g_esUndeadCache[tank].g_iUndeadCooldown = iGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank][0].g_iUndeadCooldown, g_esUndeadTeammate[tank][iSpecType].g_iUndeadCooldown, g_esUndeadPlayer[tank].g_iUndeadCooldown, g_esUndeadSpecial[type][0].g_iUndeadCooldown, g_esUndeadSpecial[type][iSpecType].g_iUndeadCooldown, g_esUndeadAbility[type].g_iUndeadCooldown, 1);
+		g_esUndeadCache[tank].g_iUndeadMessage = iGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank][0].g_iUndeadMessage, g_esUndeadTeammate[tank][iSpecType].g_iUndeadMessage, g_esUndeadPlayer[tank].g_iUndeadMessage, g_esUndeadSpecial[type][0].g_iUndeadMessage, g_esUndeadSpecial[type][iSpecType].g_iUndeadMessage, g_esUndeadAbility[type].g_iUndeadMessage, 1);
 	}
 	else
 	{

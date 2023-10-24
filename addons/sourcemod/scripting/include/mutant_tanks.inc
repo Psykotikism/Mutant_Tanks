@@ -171,6 +171,18 @@ public void __pl_mutanttanks_SetNTVOptional()
 #define ENT_ENTRY_MASK (NUM_ENT_ENTRIES - 1)
 #define INVALID_EHANDLE_INDEX 0xFFFFFFFF
 
+// Special Infected Names
+char g_sSpecialNames[][] =
+{
+	"Special",
+	"Smoker",
+	"Boomer",
+	"Hunter",
+	"Spitter",
+	"Jockey",
+	"Charger"
+};
+
 // Forwards
 /**
  * Called every second to trigger a Mutant Tank's ability.
@@ -255,10 +267,9 @@ forward void MT_OnConfigsLoad(int mode);
  * @param mode			1 = Load general settings, 2 = 1 + load type settings, 3 = Load admin settings
  * @param special		True if reading a special infected setting, false otherwise.
  * @param specsection		The special section the config parser is currently on.
- * @param specName		Special Infected name.
  * @param specType		Special Infected type.
  **/
-forward void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, const char[] specName, int specType);
+forward void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, int specType);
 
 /**
  * Called when the Tank is passed on to another player or bot.
@@ -3075,10 +3086,10 @@ stock void vGetEntityMidOrigin(int entity, float origin[3])
 	origin[2] += (flMins[2] + flMaxes[2]) * 0.5;
 }
 
-stock void vGetKeyValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, char[] buffer, int size, const char[] value, const char[] specName = "", int specType = -1)
+stock void vGetKeyValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, char[] buffer, int size, const char[] value, int specType = -1)
 {
 	static char sSettings[4][128];
-	vGetSpecialSettingNames(sSettings, sizeof sSettings[], setting1, setting2, setting3, setting4, specName, specType);
+	vGetSpecialSettingNames(sSettings, sizeof sSettings[], setting1, setting2, setting3, setting4, specType);
 	if (value[0] != '\0' && (StrEqual(subsection, sub1, false) || StrEqual(subsection, sub2, false) || StrEqual(subsection, sub3, false) || StrEqual(subsection, sub4, false)))
 	{
 		if (StrEqual(key, sSettings[0], false) || StrEqual(key, sSettings[1], false) || StrEqual(key, sSettings[2], false) || StrEqual(key, sSettings[3], false)
@@ -3089,10 +3100,10 @@ stock void vGetKeyValue(const char[] subsection, const char[] sub1, const char[]
 	}
 }
 
-stock void vGetKeyValueEx(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, char[] buffer, int size, const char[] value, const char[] specName = "", int specType = -1)
+stock void vGetKeyValueEx(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, char[] buffer, int size, const char[] value, int specType = -1)
 {
 	static char sSettings[4][128];
-	vGetSpecialSettingNames(sSettings, sizeof sSettings[], setting1, setting2, setting3, setting4, specName, specType);
+	vGetSpecialSettingNames(sSettings, sizeof sSettings[], setting1, setting2, setting3, setting4, specType);
 	if (value[0] != '\0' && (StrEqual(key, sSettings[0], false) || StrEqual(key, sSettings[1], false) || StrEqual(key, sSettings[2], false) || StrEqual(key, sSettings[3], false)
 		|| StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
 	{
@@ -3120,13 +3131,13 @@ stock void vGetMatchingFilename(const char[] directory, const char[] filename, c
 	}
 }
 
-stock void vGetSpecialSettingNames(char[][] buffers, int maxStrings, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, const char[] specName, int specType)
+stock void vGetSpecialSettingNames(char[][] buffers, int maxStrings, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, int specType)
 {
 	if (specType >= 0)
 	{
-		FormatEx(buffers[0], maxStrings, "%s%s", specName, setting1);
-		FormatEx(buffers[1], maxStrings, "%s %s", specName, setting2);
-		FormatEx(buffers[2], maxStrings, "%s_%s", specName, setting3);
+		FormatEx(buffers[0], maxStrings, "%s%s", g_sSpecialNames[specType], setting1);
+		FormatEx(buffers[1], maxStrings, "%s %s", g_sSpecialNames[specType], setting2);
+		FormatEx(buffers[2], maxStrings, "%s_%s", g_sSpecialNames[specType], setting3);
 	}
 	else
 	{
@@ -3138,12 +3149,12 @@ stock void vGetSpecialSettingNames(char[][] buffers, int maxStrings, const char[
 	switch (specType)
 	{
 		case -1: FormatEx(buffers[3], maxStrings, "%s", setting4);
-		case 1, 2, 4, 5: FormatEx(buffers[3], maxStrings, "%c%s", specName[0], setting4);
-		case 0, 3: FormatEx(buffers[3], maxStrings, "%c%c%s", specName[0], specName[1], setting4);
+		case 1, 2, 4, 5: FormatEx(buffers[3], maxStrings, "%c%s", g_sSpecialNames[specType][0], setting4);
+		case 0, 3: FormatEx(buffers[3], maxStrings, "%c%c%s", g_sSpecialNames[specType][0], g_sSpecialNames[specType][1], setting4);
 	}
 }
 
-stock void vGetSettingValue(bool apply, bool human, char[] buffer, int size = 0, const char[] playerVal = "", const char[] typeVal = "")
+stock void vGetSettingValue(bool apply, bool human, char[] buffer, int size, const char[] playerVal, const char[] typeVal)
 {
 	switch (apply)
 	{
@@ -3152,10 +3163,10 @@ stock void vGetSettingValue(bool apply, bool human, char[] buffer, int size = 0,
 	}
 }
 
-stock void vGetStringValue(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, int pos, char[] buffer1, int size1, char[] buffer2, int size2, char[] buffer3, int size3, char[] buffer4, int size4, const char[] value, const char[] specName = "", int specType = -1)
+stock void vGetStringValue(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, int pos, char[] buffer1, int size1, char[] buffer2, int size2, char[] buffer3, int size3, char[] buffer4, int size4, const char[] value, int specType = -1)
 {
 	static char sSettings[4][128];
-	vGetSpecialSettingNames(sSettings, sizeof sSettings[], setting1, setting2, setting3, setting4, specName, specType);
+	vGetSpecialSettingNames(sSettings, sizeof sSettings[], setting1, setting2, setting3, setting4, specType);
 	if (StrEqual(key, sSettings[0], false) || StrEqual(key, sSettings[1], false) || StrEqual(key, sSettings[2], false) || StrEqual(key, sSettings[3], false)
 		|| StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false))
 	{
@@ -3169,15 +3180,17 @@ stock void vGetStringValue(const char[] key, const char[] setting1, const char[]
 	}
 }
 
-stock void vGetSubSettingValue(bool apply, bool human, char[] buffer, int size = 0, const char[] teamVal = "", const char[] playerVal = "", const char[] specVal = "", const char[] typeVal = "")
+stock void vGetSubSettingValue(bool apply, bool human, char[] buffer, int size, const char[] teamVal, const char[] teamValMain, const char[] playerVal, const char[] specVal, const char[] specValMain, const char[] typeVal)
 {
 	switch (apply)
 	{
 		case true:
 		{
-			char sPlayerVal[PLATFORM_MAX_PATH], sTypeVal[PLATFORM_MAX_PATH];
-			strcopy(sPlayerVal, sizeof sPlayerVal, ((teamVal[0] != '\0') ? teamVal : playerVal));
-			strcopy(sTypeVal, sizeof sTypeVal, ((specVal[0] != '\0') ? specVal : typeVal));
+			char sTeamVal[PLATFORM_MAX_PATH], sPlayerVal[PLATFORM_MAX_PATH], sSpecVal[PLATFORM_MAX_PATH], sTypeVal[PLATFORM_MAX_PATH];
+			strcopy(sTeamVal, sizeof sTeamVal, ((teamVal[0] != '\0') ? teamVal : teamValMain));
+			strcopy(sPlayerVal, sizeof sPlayerVal, ((sTeamVal[0] != '\0') ? sTeamVal : playerVal));
+			strcopy(sSpecVal, sizeof sSpecVal, ((specVal[0] != '\0') ? specVal : specValMain));
+			strcopy(sTypeVal, sizeof sTypeVal, ((sSpecVal[0] != '\0') ? sSpecVal : typeVal));
 			FormatEx(buffer, size, "%s", ((human && sPlayerVal[0] != '\0') ? sPlayerVal : sTypeVal));
 		}
 		case false: buffer[0] = '\0';
@@ -3211,10 +3224,10 @@ stock float flGetAngle(float angles1[3], float angles2[3])
 	return ArcCosine(GetVectorDotProduct(angles1, angles2) / (GetVectorLength(angles1) * GetVectorLength(angles2)));
 }
 
-stock float flGetClampedValue(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, float curVal, const char[] value, float min, float max, const char[] specName = "", int specType = -1, float check = -1.0)
+stock float flGetClampedValue(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, float curVal, const char[] value, float min, float max, int specType = -1, float check = -1.0)
 {
 	static char sSettings[4][128];
-	vGetSpecialSettingNames(sSettings, sizeof sSettings[], setting1, setting2, setting3, setting4, specName, specType);
+	vGetSpecialSettingNames(sSettings, sizeof sSettings[], setting1, setting2, setting3, setting4, specType);
 	if (StrEqual(key, sSettings[0], false) || StrEqual(key, sSettings[1], false) || StrEqual(key, sSettings[2], false) || StrEqual(key, sSettings[3], false)
 		|| StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false))
 	{
@@ -3262,10 +3275,10 @@ stock float flGetGroundUnits(int entity)
 	return 0.0;
 }
 
-stock float flGetKeyValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, float curVal, const char[] value, float min, float max, const char[] specName = "", int specType = -1)
+stock float flGetKeyValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, float curVal, const char[] value, float min, float max, int specType = -1)
 {
 	static char sSettings[4][128];
-	vGetSpecialSettingNames(sSettings, sizeof sSettings[], setting1, setting2, setting3, setting4, specName, specType);
+	vGetSpecialSettingNames(sSettings, sizeof sSettings[], setting1, setting2, setting3, setting4, specType);
 	if (FindCharInString(subsection, ',') != -1)
 	{
 		char sSet[16][16];
@@ -3290,10 +3303,10 @@ stock float flGetKeyValue(const char[] subsection, const char[] sub1, const char
 	return curVal;
 }
 
-stock float flGetKeyValueEx(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, float curVal, const char[] value, float min, float max, const char[] specName = "", int specType = -1)
+stock float flGetKeyValueEx(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, float curVal, const char[] value, float min, float max, int specType = -1)
 {
 	static char sSettings[4][128];
-	vGetSpecialSettingNames(sSettings, sizeof sSettings[], setting1, setting2, setting3, setting4, specName, specType);
+	vGetSpecialSettingNames(sSettings, sizeof sSettings[], setting1, setting2, setting3, setting4, specType);
 	if (value[0] != '\0' && (StrEqual(key, sSettings[0], false) || StrEqual(key, sSettings[1], false) || StrEqual(key, sSettings[2], false) || StrEqual(key, sSettings[3], false)
 		|| StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
 	{
@@ -3429,7 +3442,7 @@ stock float flGetSettingValue(bool apply, bool human, float playerVal, float typ
 	return (overrideLevel == 1) ? -1.0 : 0.0;
 }
 
-stock float flGetSubSettingValue(bool apply, bool human, float teamVal, float playerVal, float specVal, float typeVal, int overrideLevel = 0, float overrideVal = 0.0)
+stock float flGetSubSettingValue(bool apply, bool human, float teamVal, float teamValMain, float playerVal, float specVal, float specValMain, float typeVal, int overrideLevel = 0, float overrideVal = 0.0)
 {
 	if (apply)
 	{
@@ -3439,20 +3452,26 @@ stock float flGetSubSettingValue(bool apply, bool human, float teamVal, float pl
 		{
 			case 0:
 			{
-				flPlayerVal = (teamVal > overrideVal) ? teamVal : playerVal;
-				flTypeVal = (specVal > overrideVal) ? specVal : typeVal;
+				flPlayerVal = (teamVal > overrideVal) ? teamVal : teamValMain;
+				flPlayerVal = (flPlayerVal > overrideVal) ? flPlayerVal : playerVal;
+				flTypeVal = (specVal > overrideVal) ? specVal : specValMain;
+				flTypeVal = (flTypeVal > overrideVal) ? flTypeVal : typeVal;
 				return (human && flPlayerVal > overrideVal) ? flPlayerVal : flTypeVal;
 			}
 			case 1:
 			{
-				flPlayerVal = (teamVal >= overrideVal) ? teamVal : playerVal;
-				flTypeVal = (specVal >= overrideVal) ? specVal : typeVal;
+				flPlayerVal = (teamVal >= overrideVal) ? teamVal : teamValMain;
+				flPlayerVal = (flPlayerVal >= overrideVal) ? flPlayerVal : playerVal;
+				flTypeVal = (specVal >= overrideVal) ? specVal : specValMain;
+				flTypeVal = (flTypeVal >= overrideVal) ? flTypeVal : typeVal;
 				return (human && flPlayerVal >= overrideVal) ? flPlayerVal : flTypeVal;
 			}
 			case 2:
 			{
-				flPlayerVal = (teamVal != overrideVal) ? teamVal : playerVal;
-				flTypeVal = (specVal != overrideVal) ? specVal : typeVal;
+				flPlayerVal = (teamVal != overrideVal) ? teamVal : teamValMain;
+				flPlayerVal = (flPlayerVal != overrideVal) ? flPlayerVal : playerVal;
+				flTypeVal = (specVal != overrideVal) ? specVal : specValMain;
+				flTypeVal = (flTypeVal != overrideVal) ? flTypeVal : typeVal;
 				return (human && flPlayerVal != overrideVal) ? flPlayerVal : flTypeVal;
 			}
 		}
@@ -3468,10 +3487,10 @@ stock float flGetTempHealth(int survivor, float decayRate)
 	return (flTempHealth < 0.0) ? 0.0 : flTempHealth;
 }
 
-stock int iGetAdminFlagsValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, const char[] value, const char[] specName = "", int specType = -1)
+stock int iGetAdminFlagsValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, const char[] value, int specType = -1)
 {
 	static char sSettings[4][128];
-	vGetSpecialSettingNames(sSettings, sizeof sSettings[], setting1, setting2, setting3, setting4, specName, specType);
+	vGetSpecialSettingNames(sSettings, sizeof sSettings[], setting1, setting2, setting3, setting4, specType);
 	if (StrEqual(subsection, sub1, false) || StrEqual(subsection, sub2, false) || StrEqual(subsection, sub3, false) || StrEqual(subsection, sub4, false))
 	{
 		if (StrEqual(key, sSettings[0], false) || StrEqual(key, sSettings[1], false) || StrEqual(key, sSettings[2], false) || StrEqual(key, sSettings[3], false)
@@ -3497,10 +3516,10 @@ stock int iGetBotSurvivor()
 	return -1;
 }
 
-stock int iGetClampedValue(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, int curVal, const char[] value, int min, int max, const char[] specName = "", int specType = -1, int check = -1)
+stock int iGetClampedValue(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, int curVal, const char[] value, int min, int max, int specType = -1, int check = -1)
 {
 	static char sSettings[4][128];
-	vGetSpecialSettingNames(sSettings, sizeof sSettings[], setting1, setting2, setting3, setting4, specName, specType);
+	vGetSpecialSettingNames(sSettings, sizeof sSettings[], setting1, setting2, setting3, setting4, specType);
 	if (StrEqual(key, sSettings[0], false) || StrEqual(key, sSettings[1], false) || StrEqual(key, sSettings[2], false) || StrEqual(key, sSettings[3], false)
 		|| StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false))
 	{
@@ -3626,10 +3645,10 @@ stock int iGetInfectedVictim(int special, int type)
 	return -1;
 }
 
-stock int iGetKeyValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, int curVal, const char[] value, int min, int max, const char[] specName = "", int specType = -1)
+stock int iGetKeyValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, int curVal, const char[] value, int min, int max, int specType = -1)
 {
 	static char sSettings[4][128];
-	vGetSpecialSettingNames(sSettings, sizeof sSettings[], setting1, setting2, setting3, setting4, specName, specType);
+	vGetSpecialSettingNames(sSettings, sizeof sSettings[], setting1, setting2, setting3, setting4, specType);
 	if (FindCharInString(subsection, ',') != -1)
 	{
 		char sSet[16][16];
@@ -3654,10 +3673,10 @@ stock int iGetKeyValue(const char[] subsection, const char[] sub1, const char[] 
 	return curVal;
 }
 
-stock int iGetKeyValueEx(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, int curVal, const char[] value, int min, int max, const char[] specName = "", int specType = -1)
+stock int iGetKeyValueEx(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, int curVal, const char[] value, int min, int max, int specType = -1)
 {
 	static char sSettings[4][128];
-	vGetSpecialSettingNames(sSettings, sizeof sSettings[], setting1, setting2, setting3, setting4, specName, specType);
+	vGetSpecialSettingNames(sSettings, sizeof sSettings[], setting1, setting2, setting3, setting4, specType);
 	if (value[0] != '\0' && (StrEqual(key, sSettings[0], false) || StrEqual(key, sSettings[1], false) || StrEqual(key, sSettings[2], false) || StrEqual(key, sSettings[3], false)
 		|| StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
 	{
@@ -4110,7 +4129,7 @@ stock int iGetSettingValue(bool apply, bool human, int playerVal, int typeVal, i
 	return (overrideLevel == 1) ? -1 : 0;
 }
 
-stock int iGetSubSettingValue(bool apply, bool human, int teamVal, int playerVal, int specVal, int typeVal, int overrideLevel = 0, int overrideVal = 0)
+stock int iGetSubSettingValue(bool apply, bool human, int teamVal, int teamValMain, int playerVal, int specVal, int specValMain, int typeVal, int overrideLevel = 0, int overrideVal = 0)
 {
 	if (apply)
 	{
@@ -4120,20 +4139,26 @@ stock int iGetSubSettingValue(bool apply, bool human, int teamVal, int playerVal
 		{
 			case 0:
 			{
-				iPlayerVal = (teamVal > overrideVal) ? teamVal : playerVal;
-				iTypeVal = (specVal > overrideVal) ? specVal : typeVal;
+				iPlayerVal = (teamVal > overrideVal) ? teamVal : teamValMain;
+				iPlayerVal = (iPlayerVal > overrideVal) ? iPlayerVal : playerVal;
+				iTypeVal = (specVal > overrideVal) ? specVal : specValMain;
+				iTypeVal = (iTypeVal > overrideVal) ? iTypeVal : typeVal;
 				return (human && iPlayerVal > overrideVal) ? iPlayerVal : iTypeVal;
 			}
 			case 1:
 			{
-				iPlayerVal = (teamVal >= overrideVal) ? teamVal : playerVal;
+				iPlayerVal = (teamVal >= overrideVal) ? teamVal : teamValMain;
+				iPlayerVal = (iPlayerVal >= overrideVal) ? iPlayerVal : playerVal;
+				iTypeVal = (specVal >= overrideVal) ? specVal : specValMain;
 				iTypeVal = (specVal >= overrideVal) ? specVal : typeVal;
 				return (human && iPlayerVal >= overrideVal) ? iPlayerVal : iTypeVal;
 			}
 			case 2:
 			{
-				iPlayerVal = (teamVal != overrideVal) ? teamVal : playerVal;
-				iTypeVal = (specVal != overrideVal) ? specVal : typeVal;
+				iPlayerVal = (teamVal != overrideVal) ? teamVal : teamValMain;
+				iPlayerVal = (iPlayerVal != overrideVal) ? iPlayerVal : playerVal;
+				iTypeVal = (specVal != overrideVal) ? specVal : specValMain;
+				iTypeVal = (iTypeVal != overrideVal) ? iTypeVal : typeVal;
 				return (human && iPlayerVal != overrideVal) ? iPlayerVal : iTypeVal;
 			}
 		}
