@@ -56,7 +56,9 @@
 
 #### Settings
 - The `Attack Interval` setting now properly modifies the cooldown and frequency of Mutant Infected claw swings. (Thanks to `epzminion` for helping!)
-- Added missing `Special Name` setting under the `Tank #->General->Special` and `STEAM_ID->General->Special` sections.
+- Added the following missing settings under the `Tank #->General->Special` and `STEAM_ID->General->Special` sections:
+	- `Special Enabled`
+	- `Special Name`
 - Added the following settings under the `Plugin Settings->Rewards`, `Tank #->Rewards`, and `STEAM_ID->Rewards` sections:
 	- `Blaze Health Reward`
 	- `Cluster Bombs Reward`

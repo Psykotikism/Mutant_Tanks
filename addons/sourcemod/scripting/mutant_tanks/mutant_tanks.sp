@@ -942,6 +942,7 @@ enum struct esGeneral
 	int g_iTeammateLimit;
 	int g_iThornsReward[4];
 	int g_iThrowRock;
+	int g_iTotalTypes[2];
 	int g_iTypeCounter[2];
 	int g_iUsefulRewards[4];
 	int g_iVerticalPunchOffset;
@@ -1083,6 +1084,7 @@ enum struct esSpecific
 	int g_iSpawnEnabled;
 	int g_iSpawnMode;
 	int g_iSpecialAmmoReward[4];
+	int g_iSpecialEnabled;
 	int g_iSpecialModel;
 	int g_iSpecialTypes;
 	int g_iStackLimits[8];
@@ -1702,6 +1704,9 @@ esTeammate g_esTeammate[MAXPLAYERS + 1][7];
 
 enum struct esTank
 {
+	bool g_bDuplicate[2];
+	bool g_bRecorded[2];
+
 	char g_sBodyColorVisual[64];
 	char g_sBodyColorVisual2[64];
 	char g_sBodyColorVisual3[64];
@@ -2089,6 +2094,7 @@ enum struct esSpecial
 	int g_iSpawnEnabled;
 	int g_iSpawnType;
 	int g_iSpecialAmmoReward[4];
+	int g_iSpecialEnabled;
 	int g_iSpecialModel;
 	int g_iSpecialNote;
 	int g_iSpecialTypes;
@@ -2295,6 +2301,7 @@ enum struct esCache
 	int g_iSpawnEnabled;
 	int g_iSpawnType;
 	int g_iSpecialAmmoReward[4];
+	int g_iSpecialEnabled;
 	int g_iSpecialModel;
 	int g_iSpecialNote;
 	int g_iSpecialTypes;
@@ -8038,7 +8045,7 @@ void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 						g_esPlayer[iVictim].g_iTankType = iType;
 					}
 
-					vResetTank(iVictim, g_esCache[iVictim].g_iDeathRevert);
+					vResetTank(iVictim, !!g_esCache[iVictim].g_iDeathRevert);
 					CreateTimer(1.0, tTimerResetType, iVictimId, TIMER_FLAG_NO_MAPCHANGE);
 				}
 
@@ -13332,7 +13339,7 @@ void vRegularSpawn(int specType = 0)
 	}
 }
 
-void vRemoveTankProps(int tank, int mode = 1)
+void vRemoveTankProps(int tank, bool revert = true)
 {
 	if (bIsValidEntRef(g_esPlayer[tank].g_iBlur))
 	{
@@ -13443,16 +13450,16 @@ void vRemoveTankProps(int tank, int mode = 1)
 	g_esPlayer[tank].g_iFlashlight = INVALID_ENT_REFERENCE;
 	vRemovePlayerGlow(tank);
 
-	if (mode == 1)
+	if (revert)
 	{
 		SetEntityRenderMode(tank, RENDER_NORMAL);
 		SetEntityRenderColor(tank, 255, 255, 255, 255);
 	}
 }
 
-void vResetTank(int tank, int mode = 1)
+void vResetTank(int tank, bool revert = true)
 {
-	vRemoveTankProps(tank, mode);
+	vRemoveTankProps(tank, revert);
 	vResetTankSpeed(tank);
 	vSpawnModes(tank, false);
 }
@@ -14324,7 +14331,7 @@ void vSetupTankControl(int oldTank, int newTank)
 {
 	vSetTankColor(newTank, g_esPlayer[oldTank].g_iTankType);
 	vCopyTankStats(oldTank, newTank);
-	vResetTank(oldTank, 0);
+	vResetTank(oldTank, false);
 	vResetTank2(oldTank, false);
 	vCacheSettings(oldTank);
 	CreateTimer(0.25, tTimerControlTank, GetClientUserId(newTank), TIMER_FLAG_NO_MAPCHANGE);
@@ -14746,10 +14753,11 @@ void vCacheSettings(int tank)
 		g_esCache[tank].g_iRockEffects = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank][0].g_iRockEffects, g_esTeammate[tank][iSpecType].g_iRockEffects, g_esPlayer[tank].g_iRockEffects, g_esSpecial[iType][0].g_iRockEffects, g_esSpecial[iType][iSpecType].g_iRockEffects, g_esTank[iType].g_iRockEffects, 1);
 		g_esCache[tank].g_iRockModel = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank][0].g_iRockModel, g_esTeammate[tank][iSpecType].g_iRockModel, g_esPlayer[tank].g_iRockModel, g_esSpecial[iType][0].g_iRockModel, g_esSpecial[iType][iSpecType].g_iRockModel, g_esTank[iType].g_iRockModel, 1);
 		g_esCache[tank].g_iSpawnType = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank][0].g_iSpawnType, g_esTeammate[tank][iSpecType].g_iSpawnType, g_esPlayer[tank].g_iSpawnType, g_esSpecial[iType][0].g_iSpawnType, g_esSpecial[iType][iSpecType].g_iSpawnType, g_esTank[iType].g_iSpawnType, 1);
-		g_esCache[tank].g_iSpecialTypes = iGetSettingValue(bAccess, true, g_esSpecial[iType][iSpecType].g_iSpecialTypes, g_esSpecific[iSpecType].g_iSpecialTypes, 1);
+		g_esCache[tank].g_iSpecialEnabled = iGetSubSettingValue(bAccess, true, g_esSpecial[iType][0].g_iSpecialEnabled, g_esSpecial[iType][iSpecType].g_iSpecialEnabled, g_esSpecial[iType][iSpecType].g_iSpecialEnabled, g_esSpecific[0].g_iSpecialEnabled, g_esSpecific[iSpecType].g_iSpecialEnabled, g_esSpecific[iSpecType].g_iSpecialEnabled, 1);
 		g_esCache[tank].g_iSpecialModel = iGetSubSettingValue(bAccess, true, g_esSpecial[iType][0].g_iSpecialModel, g_esSpecial[iType][iSpecType].g_iSpecialModel, g_esTank[iType].g_iTankModel, g_esSpecific[0].g_iSpecialModel, g_esSpecific[iSpecType].g_iSpecialModel, g_esGeneral.g_iTankModel, 1);
 		g_esCache[tank].g_iSpecialModel = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank][0].g_iSpecialModel, g_esTeammate[tank][iSpecType].g_iSpecialModel, g_esPlayer[tank].g_iTankModel, g_esCache[tank].g_iSpecialModel, g_esCache[tank].g_iSpecialModel, g_esCache[tank].g_iSpecialModel, 1);
 		g_esCache[tank].g_iSpecialNote = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank][0].g_iSpecialNote, g_esTeammate[tank][iSpecType].g_iSpecialNote, g_esPlayer[tank].g_iTankNote, g_esSpecial[iType][0].g_iSpecialNote, g_esSpecial[iType][iSpecType].g_iSpecialNote, g_esTank[iType].g_iTankNote, 1);
+		g_esCache[tank].g_iSpecialTypes = iGetSubSettingValue(bAccess, true, g_esSpecial[iType][0].g_iSpecialTypes, g_esSpecial[iType][iSpecType].g_iSpecialTypes, g_esSpecial[iType][iSpecType].g_iSpecialTypes, g_esSpecific[0].g_iSpecialTypes, g_esSpecific[iSpecType].g_iSpecialTypes, g_esSpecific[iSpecType].g_iSpecialTypes, 1);
 		g_esCache[tank].g_iVocalizeArrival = iGetSubSettingValue(bAccess, true, g_esSpecial[iType][0].g_iVocalizeArrival, g_esSpecial[iType][iSpecType].g_iVocalizeArrival, g_esTank[iType].g_iVocalizeArrival, g_esSpecific[0].g_iVocalizeArrival, g_esSpecific[iSpecType].g_iVocalizeArrival, g_esGeneral.g_iVocalizeArrival, 1);
 		g_esCache[tank].g_iVocalizeArrival = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank][0].g_iVocalizeArrival, g_esTeammate[tank][iSpecType].g_iVocalizeArrival, g_esPlayer[tank].g_iVocalizeArrival, g_esCache[tank].g_iVocalizeArrival, g_esCache[tank].g_iVocalizeArrival, g_esCache[tank].g_iVocalizeArrival, 1);
 		g_esCache[tank].g_iVocalizeDeath = iGetSubSettingValue(bAccess, true, g_esSpecial[iType][0].g_iVocalizeDeath, g_esSpecial[iType][iSpecType].g_iVocalizeDeath, g_esTank[iType].g_iVocalizeDeath, g_esSpecific[0].g_iVocalizeDeath, g_esSpecific[iSpecType].g_iVocalizeDeath, g_esGeneral.g_iVocalizeDeath, 1);
@@ -15531,6 +15539,8 @@ void vReadSpecialSettings(int type, int mode, const char[] subsection, const cha
 	{
 		g_esSpecial[iIndex][specType].g_iSpecialTypes = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "SpecialTypes", "Special Types", "Special_Types", "spectypes", g_esSpecial[iIndex][specType].g_iSpecialTypes, value, -1, 63);
 		g_esSpecial[iIndex][specType].g_iSpecialTypes = iGetSpecialTypes(g_esSpecial[iIndex][specType].g_iSpecialTypes, specsection);
+		g_esSpecial[iIndex][specType].g_iSpecialEnabled = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "SpecialEnabled", "Special Enabled", "Special_Enabled", "specenabled", g_esSpecial[iIndex][specType].g_iSpecialEnabled, value, -1, 1);
+		g_esSpecial[iIndex][specType].g_iSpecialEnabled = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "Enabled", "Enabled", "Enabled", "enabled", g_esSpecial[iIndex][specType].g_iSpecialEnabled, value, -1, 1, specType);
 		g_esSpecial[iIndex][specType].g_iGameType = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "GameType", "Game Type", "Game_Type", "game", g_esSpecial[iIndex][specType].g_iGameType, value, -1, 2, specType);
 		g_esSpecial[iIndex][specType].g_flSpecialChance = flGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "SpecialChance", "Special Chance", "Special_Chance", "chance", g_esSpecial[iIndex][specType].g_flSpecialChance, value, -1.0, 100.0);
 		g_esSpecial[iIndex][specType].g_flSpecialChance = flGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "Chance", "Chance", "Chance", "chance", g_esSpecial[iIndex][specType].g_flSpecialChance, value, -1.0, 100.0, specType);
@@ -15828,6 +15838,8 @@ void vReadSpecificSettings(int specType, int mode, const char[] section, const c
 	{
 		g_esSpecific[specType].g_iSpecialTypes = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "SpecialTypes", "Special Types", "Special_Types", "spectypes", g_esSpecific[specType].g_iSpecialTypes, value, -1, 63);
 		g_esSpecific[specType].g_iSpecialTypes = iGetSpecialTypes(g_esSpecific[specType].g_iSpecialTypes, specsection);
+		g_esSpecific[specType].g_iSpecialEnabled = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "SpecialEnabled", "Special Enabled", "Special_Enabled", "specenabled", g_esSpecific[specType].g_iSpecialEnabled, value, -1, 1);
+		g_esSpecific[specType].g_iSpecialEnabled = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "Enabled", "Enabled", "Enabled", "enabled", g_esSpecific[specType].g_iSpecialEnabled, value, -1, 1, specType);
 		g_esSpecific[specType].g_iDeathRevert = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "DeathRevert", "Death Revert", "Death_Revert", "revert", g_esSpecific[specType].g_iDeathRevert, value, -1, 1, specType);
 		g_esSpecific[specType].g_iFinalesOnly = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "FinalesOnly", "Finales Only", "Finales_Only", "finale", g_esSpecific[specType].g_iFinalesOnly, value, -1, 4, specType);
 		g_esSpecific[specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esSpecific[specType].g_iRequiresHumans, value, -1, 32, specType);
@@ -18623,6 +18635,8 @@ void SMCParseStart_Main(SMCParser smc)
 
 	if (g_esGeneral.g_iConfigMode == 1)
 	{
+		g_esGeneral.g_iTotalTypes[0] = 0;
+		g_esGeneral.g_iTotalTypes[1] = 0;
 		g_esGeneral.g_iTypeCounter[0] = 0;
 		g_esGeneral.g_iTypeCounter[1] = 0;
 		g_esGeneral.g_iPluginEnabled = 0;
@@ -18838,6 +18852,7 @@ void SMCParseStart_Main(SMCParser smc)
 			g_esSpecific[iSpecType].g_iDeathRevert = -1;
 			g_esSpecific[iSpecType].g_iFinalesOnly = -1;
 			g_esSpecific[iSpecType].g_iSpecialTypes = -1;
+			g_esSpecific[iSpecType].g_iSpecialEnabled = -1;
 			g_esSpecific[iSpecType].g_iSpecialModel = -1;
 			g_esSpecific[iSpecType].g_flBurnDuration = -1.0;
 			g_esSpecific[iSpecType].g_flBurntSkin = -2.0;
@@ -18951,6 +18966,12 @@ void SMCParseStart_Main(SMCParser smc)
 
 		for (int iIndex = 0; iIndex <= MT_MAXTYPES; iIndex++)
 		{
+			g_esTank[iIndex].g_bDuplicate[0] = false;
+			g_esTank[iIndex].g_bDuplicate[1] = false;
+			g_esTank[iIndex].g_bRecorded[0] = false;
+			g_esTank[iIndex].g_bRecorded[1] = false;
+			g_esTank[iIndex].g_iRealType[0] = 0;
+			g_esTank[iIndex].g_iRealType[1] = 0;
 			g_esTank[iIndex].g_iAbilityCount = -1;
 			g_esTank[iIndex].g_sGlowColor = "255,255,255";
 			g_esTank[iIndex].g_sSkinColor = "255,255,255,255";
@@ -19200,6 +19221,7 @@ void SMCParseStart_Main(SMCParser smc)
 				g_esSpecial[iIndex][iSpecType].g_sSkinColor[0] = '\0';
 				g_esSpecial[iIndex][iSpecType].g_sRockColor[0] = '\0';
 				g_esSpecial[iIndex][iSpecType].g_iSpecialTypes = -1;
+				g_esSpecial[iIndex][iSpecType].g_iSpecialEnabled = -1;
 				g_esSpecial[iIndex][iSpecType].g_iGameType = -1;
 				g_esSpecial[iIndex][iSpecType].g_flSpecialChance = -1.0;
 				g_esSpecial[iIndex][iSpecType].g_iSpecialNote = -1;
@@ -19824,32 +19846,44 @@ SMCResult SMCNewSection_Main(SMCParser smc, const char[] name, bool opt_quotes)
 
 			strcopy(g_esGeneral.g_sCurrentSection, sizeof esGeneral::g_sCurrentSection, name);
 
-			if (g_esGeneral.g_iConfigMode == 1 && (!strncmp(name, "Tank", 4, false) || name[0] == '#'))
+			if (g_esGeneral.g_iConfigMode < 3 && (!strncmp(name, "Tank", 4, false) || name[0] == '#'))
 			{
 				int iStartPos = iGetConfigSectionNumber(g_esGeneral.g_sCurrentSection, sizeof esGeneral::g_sCurrentSection), iIndex = StringToInt(g_esGeneral.g_sCurrentSection[iStartPos]);
-				for (int iType = 1; iType <= g_esGeneral.g_iTypeCounter[0]; iType++)
+				for (int iType = g_esGeneral.g_iTypeCounter[0]; iType <= g_esGeneral.g_iTotalTypes[0]; iType++)
 				{
-					if (g_esTank[iType].g_iRealType[0] == iIndex)
+					if (iType <= 0 || g_esTank[iType].g_iRealType[0] != iIndex)
 					{
-						vLogMessage(MT_LOG_SERVER, _, "%s A duplicate entry was found for \"%s\".", MT_TAG, g_esGeneral.g_sCurrentSection);
+						continue;
 					}
+
+					g_esTank[iIndex].g_bDuplicate[0] = true;
+
+					vLogMessage(MT_LOG_SERVER, _, "%s A duplicate entry was found for \"%s\".", MT_TAG, g_esGeneral.g_sCurrentSection);
 				}
 
-				if (iIndex > MT_MAXTYPES || g_esGeneral.g_iTypeCounter[0] > MT_MAXTYPES)
+				if (iIndex > MT_MAXTYPES || g_esGeneral.g_iTotalTypes[0] > MT_MAXTYPES)
 				{
 					vLogMessage(MT_LOG_SERVER, _, "%s An entry (%s) was found that exceeds the limit (%i).", MT_TAG, g_esGeneral.g_sCurrentSection, MT_MAXTYPES);
 				}
 
-				g_esGeneral.g_iTypeCounter[0]++;
-
-				if (g_esGeneral.g_iTypeCounter[0] <= MT_MAXTYPES)
+				if (!g_esTank[iIndex].g_bRecorded[0])
 				{
-					g_esTank[g_esGeneral.g_iTypeCounter[0]].g_iRealType[0] = iIndex;
-				}
+					if (!g_esTank[iIndex].g_bDuplicate[0])
+					{
+						g_esTank[iIndex].g_bRecorded[0] = true;
+						g_esGeneral.g_iTypeCounter[0]++;
 
-				if (iIndex <= MT_MAXTYPES)
-				{
-					g_esTank[iIndex].g_iRecordedType[0] = g_esGeneral.g_iTypeCounter[0];
+						if (g_esGeneral.g_iTypeCounter[0] <= MT_MAXTYPES)
+						{
+							g_esTank[g_esGeneral.g_iTypeCounter[0]].g_iRealType[0] = iIndex;
+						}
+					}
+
+					if (iIndex <= MT_MAXTYPES)
+					{
+						g_esTank[iIndex].g_iRecordedType[0] = g_esGeneral.g_iTypeCounter[0];
+						g_esGeneral.g_iTotalTypes[0] = g_esGeneral.g_iTypeCounter[0];
+					}
 				}
 			}
 		}
@@ -19870,32 +19904,44 @@ SMCResult SMCNewSection_Main(SMCParser smc, const char[] name, bool opt_quotes)
 
 		strcopy(g_esGeneral.g_sCurrentSubSection, sizeof esGeneral::g_sCurrentSubSection, name);
 
-		if (g_esGeneral.g_iConfigMode == 1 && (!strncmp(name, "Tank", 4, false) || name[0] == '#'))
+		if (!strncmp(name, "Tank", 4, false) || name[0] == '#')
 		{
 			int iStartPos = iGetConfigSectionNumber(g_esGeneral.g_sCurrentSubSection, sizeof esGeneral::g_sCurrentSubSection), iIndex = StringToInt(g_esGeneral.g_sCurrentSubSection[iStartPos]);
-			for (int iType = 1; iType <= g_esGeneral.g_iTypeCounter[1]; iType++)
+			for (int iType = g_esGeneral.g_iTypeCounter[1]; iType <= g_esGeneral.g_iTotalTypes[1]; iType++)
 			{
-				if (g_esTank[iType].g_iRealType[1] == iIndex)
+				if (iType <= 0 || g_esTank[iType].g_iRealType[1] != iIndex)
 				{
-					vLogMessage(MT_LOG_SERVER, _, "%s A duplicate entry was found for \"%s\".", MT_TAG, g_esGeneral.g_sCurrentSubSection);
+					continue;
 				}
+
+				g_esTank[iIndex].g_bDuplicate[1] = true;
+
+				vLogMessage(MT_LOG_SERVER, _, "%s A duplicate entry was found for \"%s\".", MT_TAG, g_esGeneral.g_sCurrentSubSection);
 			}
 
-			if (iIndex > MT_MAXTYPES || g_esGeneral.g_iTypeCounter[1] > MT_MAXTYPES)
+			if (iIndex > MT_MAXTYPES || g_esGeneral.g_iTotalTypes[1] > MT_MAXTYPES)
 			{
 				vLogMessage(MT_LOG_SERVER, _, "%s An entry (%s) was found that exceeds the limit (%i).", MT_TAG, g_esGeneral.g_sCurrentSubSection, MT_MAXTYPES);
 			}
 
-			g_esGeneral.g_iTypeCounter[1]++;
-
-			if (g_esGeneral.g_iTypeCounter[1] <= MT_MAXTYPES)
+			if (!g_esTank[iIndex].g_bRecorded[1])
 			{
-				g_esTank[g_esGeneral.g_iTypeCounter[1]].g_iRealType[1] = iIndex;
-			}
+				if (!g_esTank[iIndex].g_bDuplicate[1])
+				{
+					g_esTank[iIndex].g_bRecorded[1] = true;
+					g_esGeneral.g_iTypeCounter[1]++;
 
-			if (iIndex <= MT_MAXTYPES)
-			{
-				g_esTank[iIndex].g_iRecordedType[1] = g_esGeneral.g_iTypeCounter[1];
+					if (g_esGeneral.g_iTypeCounter[1] <= MT_MAXTYPES)
+					{
+						g_esTank[g_esGeneral.g_iTypeCounter[1]].g_iRealType[1] = iIndex;
+					}
+				}
+
+				if (iIndex <= MT_MAXTYPES)
+				{
+					g_esTank[iIndex].g_iRecordedType[1] = g_esGeneral.g_iTypeCounter[1];
+					g_esGeneral.g_iTotalTypes[1] = g_esGeneral.g_iTypeCounter[1];
+				}
 			}
 		}
 	}
@@ -23147,7 +23193,7 @@ MRESReturn mreReplaceTankPost(DHookParam hParams)
 	vSetTankColor(iNewTank, iType);
 	vCopyTankStats(iOldTank, iNewTank);
 	vTankSpawn(iNewTank, -1, 8);
-	vResetTank(iOldTank, 0);
+	vResetTank(iOldTank, false);
 	vResetTank2(iOldTank);
 	vCacheSettings(iOldTank);
 
@@ -25302,7 +25348,7 @@ bool bHasCoreAdminAccess(int admin, int type = 0)
 bool bIsBoomerEnabled(int type)
 {
 	int iTypes = iGetSubSettingValue(true, true, g_esSpecial[type][0].g_iSpecialTypes, g_esSpecial[type][2].g_iSpecialTypes, g_esSpecial[type][2].g_iSpecialTypes, g_esSpecific[0].g_iSpecialTypes, g_esSpecific[2].g_iSpecialTypes, g_esSpecific[2].g_iSpecialTypes, 1);
-	return iTypes > 0 && (iTypes & MT_SPECINF_BOOMER);
+	return (iTypes > 0 && (iTypes & MT_SPECINF_BOOMER)) || iGetSubSettingValue(true, true, g_esSpecial[type][0].g_iSpecialEnabled, g_esSpecial[type][2].g_iSpecialEnabled, g_esSpecial[type][2].g_iSpecialEnabled, g_esSpecific[0].g_iSpecialEnabled, g_esSpecific[2].g_iSpecialEnabled, g_esSpecific[2].g_iSpecialEnabled, 1) > 0;
 }
 
 bool bIsBossLimited(int type)
@@ -25331,7 +25377,7 @@ bool bIsBossLimited(int type)
 bool bIsChargerEnabled(int type)
 {
 	int iTypes = iGetSubSettingValue(true, true, g_esSpecial[type][0].g_iSpecialTypes, g_esSpecial[type][6].g_iSpecialTypes, g_esSpecial[type][6].g_iSpecialTypes, g_esSpecific[0].g_iSpecialTypes, g_esSpecific[6].g_iSpecialTypes, g_esSpecific[6].g_iSpecialTypes, 1);
-	return iTypes > 0 && (iTypes & MT_SPECINF_CHARGER);
+	return (iTypes > 0 && (iTypes & MT_SPECINF_CHARGER)) || iGetSubSettingValue(true, true, g_esSpecial[type][0].g_iSpecialEnabled, g_esSpecial[type][6].g_iSpecialEnabled, g_esSpecial[type][6].g_iSpecialEnabled, g_esSpecific[0].g_iSpecialEnabled, g_esSpecific[6].g_iSpecialEnabled, g_esSpecific[6].g_iSpecialEnabled, 1) > 0;
 }
 
 bool bIsCompetitiveMode()
@@ -25596,19 +25642,19 @@ bool bIsHumanSupported(int tank, int specType = 0)
 bool bIsHunterEnabled(int type)
 {
 	int iTypes = iGetSubSettingValue(true, true, g_esSpecial[type][0].g_iSpecialTypes, g_esSpecial[type][3].g_iSpecialTypes, g_esSpecial[type][3].g_iSpecialTypes, g_esSpecific[0].g_iSpecialTypes, g_esSpecific[3].g_iSpecialTypes, g_esSpecific[3].g_iSpecialTypes, 1);
-	return iTypes > 0 && (iTypes & MT_SPECINF_HUNTER);
+	return (iTypes > 0 && (iTypes & MT_SPECINF_HUNTER)) || iGetSubSettingValue(true, true, g_esSpecial[type][0].g_iSpecialEnabled, g_esSpecial[type][3].g_iSpecialEnabled, g_esSpecial[type][3].g_iSpecialEnabled, g_esSpecific[0].g_iSpecialEnabled, g_esSpecific[3].g_iSpecialEnabled, g_esSpecific[3].g_iSpecialEnabled, 1) > 0;
 }
 
 bool bIsInfectedEnabled(int special)
 {
 	switch (g_esPlayer[special].g_iInfectedType)
 	{
-		case 1: return !!(g_esCache[special].g_iSpecialTypes & MT_SPECINF_SMOKER);
-		case 2: return !!(g_esCache[special].g_iSpecialTypes & MT_SPECINF_BOOMER);
-		case 3: return !!(g_esCache[special].g_iSpecialTypes & MT_SPECINF_HUNTER);
-		case 4: return !!(g_esCache[special].g_iSpecialTypes & MT_SPECINF_SPITTER);
-		case 5: return !!(g_esCache[special].g_iSpecialTypes & MT_SPECINF_JOCKEY);
-		case 6: return !!(g_esCache[special].g_iSpecialTypes & MT_SPECINF_CHARGER);
+		case 1: return !!(g_esCache[special].g_iSpecialTypes & MT_SPECINF_SMOKER) || (g_esCache[special].g_iSpecialEnabled > 0);
+		case 2: return !!(g_esCache[special].g_iSpecialTypes & MT_SPECINF_BOOMER) || (g_esCache[special].g_iSpecialEnabled > 0);
+		case 3: return !!(g_esCache[special].g_iSpecialTypes & MT_SPECINF_HUNTER) || (g_esCache[special].g_iSpecialEnabled > 0);
+		case 4: return !!(g_esCache[special].g_iSpecialTypes & MT_SPECINF_SPITTER) || (g_esCache[special].g_iSpecialEnabled > 0);
+		case 5: return !!(g_esCache[special].g_iSpecialTypes & MT_SPECINF_JOCKEY) || (g_esCache[special].g_iSpecialEnabled > 0);
+		case 6: return !!(g_esCache[special].g_iSpecialTypes & MT_SPECINF_CHARGER) || (g_esCache[special].g_iSpecialEnabled > 0);
 		case 8: return (g_esCache[special].g_iTankEnabled > 0);
 	}
 
@@ -25700,7 +25746,7 @@ bool bIsInfectedSupported(int special, int flags = MT_CHECK_INDEX|MT_CHECK_INGAM
 bool bIsJockeyEnabled(int type)
 {
 	int iTypes = iGetSubSettingValue(true, true, g_esSpecial[type][0].g_iSpecialTypes, g_esSpecial[type][5].g_iSpecialTypes, g_esSpecial[type][5].g_iSpecialTypes, g_esSpecific[0].g_iSpecialTypes, g_esSpecific[5].g_iSpecialTypes, g_esSpecific[5].g_iSpecialTypes, 1);
-	return iTypes > 0 && (iTypes & MT_SPECINF_JOCKEY);
+	return (iTypes > 0 && (iTypes & MT_SPECINF_JOCKEY)) || iGetSubSettingValue(true, true, g_esSpecial[type][0].g_iSpecialEnabled, g_esSpecial[type][5].g_iSpecialEnabled, g_esSpecial[type][5].g_iSpecialEnabled, g_esSpecific[0].g_iSpecialEnabled, g_esSpecific[5].g_iSpecialEnabled, g_esSpecific[5].g_iSpecialEnabled, 1) > 0;
 }
 
 bool bIsMapConfigFound(char[] buffer, int size)
@@ -25780,13 +25826,13 @@ bool bIsScavengeMode()
 bool bIsSmokerEnabled(int type)
 {
 	int iTypes = iGetSubSettingValue(true, true, g_esSpecial[type][0].g_iSpecialTypes, g_esSpecial[type][1].g_iSpecialTypes, g_esSpecial[type][1].g_iSpecialTypes, g_esSpecific[0].g_iSpecialTypes, g_esSpecific[1].g_iSpecialTypes, g_esSpecific[1].g_iSpecialTypes, 1);
-	return iTypes > 0 && (iTypes & MT_SPECINF_SMOKER);
+	return (iTypes > 0 && (iTypes & MT_SPECINF_SMOKER)) || iGetSubSettingValue(true, true, g_esSpecial[type][0].g_iSpecialEnabled, g_esSpecial[type][1].g_iSpecialEnabled, g_esSpecial[type][1].g_iSpecialEnabled, g_esSpecific[0].g_iSpecialEnabled, g_esSpecific[1].g_iSpecialEnabled, g_esSpecific[1].g_iSpecialEnabled, 1) > 0;
 }
 
 bool bIsSpitterEnabled(int type)
 {
 	int iTypes = iGetSubSettingValue(true, true, g_esSpecial[type][0].g_iSpecialTypes, g_esSpecial[type][4].g_iSpecialTypes, g_esSpecial[type][4].g_iSpecialTypes, g_esSpecific[0].g_iSpecialTypes, g_esSpecific[4].g_iSpecialTypes, g_esSpecific[4].g_iSpecialTypes, 1);
-	return iTypes > 0 && (iTypes & MT_SPECINF_SPITTER);
+	return (iTypes > 0 && (iTypes & MT_SPECINF_SPITTER)) || iGetSubSettingValue(true, true, g_esSpecial[type][0].g_iSpecialEnabled, g_esSpecial[type][4].g_iSpecialEnabled, g_esSpecial[type][4].g_iSpecialEnabled, g_esSpecific[0].g_iSpecialEnabled, g_esSpecific[4].g_iSpecialEnabled, g_esSpecific[4].g_iSpecialEnabled, 1) > 0;
 }
 
 bool bIsSpawnEnabled(int type, int specType)
@@ -26074,7 +26120,6 @@ int iChooseType(int exclude, int tank = 0, int min = -1, int max = -1)
 {
 	bool bCondition = false, bTank = bIsTank(tank);
 	int iSpecType = g_esPlayer[tank].g_iInfectedType, iMin = iGetMinType(iSpecType, bTank), iMax = iGetMaxType(iSpecType, bTank);
-
 	iMin = (min >= 0) ? min : iMin;
 	iMax = (max >= 0) ? max : iMax;
 	if (iMax < iMin || (bIsSurvivalMode() && g_esGeneral.g_iSurvivalBlock != 2))
@@ -26094,9 +26139,12 @@ int iChooseType(int exclude, int tank = 0, int min = -1, int max = -1)
 
 		iType = g_esTank[iIndex].g_iRecordedType[0];
 		flChance = flGetTypeChance(tank, iType, iSpecType);
-		flClose = flGetSettingValue(true, true, g_esSpecial[iType][0].g_flCloseAreasOnly, g_esSpecial[iType][iSpecType].g_flCloseAreasOnly);
-		flOpen = flGetSettingValue(true, true, g_esSpecial[iType][0].g_flOpenAreasOnly, g_esSpecial[iType][iSpecType].g_flOpenAreasOnly);
-		iTypeLimit = iGetSettingValue(true, true, g_esSpecial[iType][0].g_iTypeLimit, g_esSpecial[iType][iSpecType].g_iTypeLimit);
+		if (iSpecType > 0 && iSpecType != 8)
+		{
+			flClose = flGetSettingValue(true, true, g_esSpecial[iType][0].g_flCloseAreasOnly, g_esSpecial[iType][iSpecType].g_flCloseAreasOnly, 1);
+			flOpen = flGetSettingValue(true, true, g_esSpecial[iType][0].g_flOpenAreasOnly, g_esSpecial[iType][iSpecType].g_flOpenAreasOnly, 1);
+			iTypeLimit = iGetSettingValue(true, true, g_esSpecial[iType][0].g_iTypeLimit, g_esSpecial[iType][iSpecType].g_iTypeLimit, 1);
+		}
 
 		switch (exclude)
 		{
@@ -26104,13 +26152,13 @@ int iChooseType(int exclude, int tank = 0, int min = -1, int max = -1)
 			{
 				switch (iSpecType)
 				{
-					case 1: bCondition = !bIsRightGame(iType, iSpecType) || (bIsSmoker(tank) && !bIsSmokerEnabled(iType)) || !bHasCoreAdminAccess(tank, iType) || !bIsSpawnEnabled(iType, iSpecType) || !bIsTypeAvailable(iType, tank) || bAreHumansRequired(iType, iSpecType) || !bCanTypeSpawn(iType, iSpecType) || bIsAreaNarrow(tank, flOpen) || bIsAreaWide(tank, flClose) || flChance <= 0.0 || (g_esGeneral.g_iSpawnLimit > 0 && iCount >= g_esGeneral.g_iSpawnLimit) || 0 < iTypeLimit <= iGetTypeCount(tank, iType) || bIsBossLimited(iType) || (g_esPlayer[tank].g_iTankType == iType);
-					case 2: bCondition = !bIsRightGame(iType, iSpecType) || (bIsBoomer(tank) && !bIsBoomerEnabled(iType)) || !bHasCoreAdminAccess(tank, iType) || !bIsSpawnEnabled(iType, iSpecType) || !bIsTypeAvailable(iType, tank) || bAreHumansRequired(iType, iSpecType) || !bCanTypeSpawn(iType, iSpecType) || bIsAreaNarrow(tank, flOpen) || bIsAreaWide(tank, flClose) || flChance <= 0.0 || (g_esGeneral.g_iSpawnLimit > 0 && iCount >= g_esGeneral.g_iSpawnLimit) || 0 < iTypeLimit <= iGetTypeCount(tank, iType) || bIsBossLimited(iType) || (g_esPlayer[tank].g_iTankType == iType);
-					case 3: bCondition = !bIsRightGame(iType, iSpecType) || (bIsHunter(tank) && !bIsHunterEnabled(iType)) || !bHasCoreAdminAccess(tank, iType) || !bIsSpawnEnabled(iType, iSpecType) || !bIsTypeAvailable(iType, tank) || bAreHumansRequired(iType, iSpecType) || !bCanTypeSpawn(iType, iSpecType) || bIsAreaNarrow(tank, flOpen) || bIsAreaWide(tank, flClose) || flChance <= 0.0 || (g_esGeneral.g_iSpawnLimit > 0 && iCount >= g_esGeneral.g_iSpawnLimit) || 0 < iTypeLimit <= iGetTypeCount(tank, iType) || bIsBossLimited(iType) || (g_esPlayer[tank].g_iTankType == iType);
-					case 4: bCondition = !bIsRightGame(iType, iSpecType) || (bIsSpitter(tank) && !bIsSpitterEnabled(iType)) || !bHasCoreAdminAccess(tank, iType) || !bIsSpawnEnabled(iType, iSpecType) || !bIsTypeAvailable(iType, tank) || bAreHumansRequired(iType, iSpecType) || !bCanTypeSpawn(iType, iSpecType) || bIsAreaNarrow(tank, flOpen) || bIsAreaWide(tank, flClose) || flChance <= 0.0 || (g_esGeneral.g_iSpawnLimit > 0 && iCount >= g_esGeneral.g_iSpawnLimit) || 0 < iTypeLimit <= iGetTypeCount(tank, iType) || bIsBossLimited(iType) || (g_esPlayer[tank].g_iTankType == iType);
-					case 5: bCondition = !bIsRightGame(iType, iSpecType) || (bIsJockey(tank) && !bIsJockeyEnabled(iType)) || !bHasCoreAdminAccess(tank, iType) || !bIsSpawnEnabled(iType, iSpecType) || !bIsTypeAvailable(iType, tank) || bAreHumansRequired(iType, iSpecType) || !bCanTypeSpawn(iType, iSpecType) || bIsAreaNarrow(tank, flOpen) || bIsAreaWide(tank, flClose) || flChance <= 0.0 || (g_esGeneral.g_iSpawnLimit > 0 && iCount >= g_esGeneral.g_iSpawnLimit) || 0 < iTypeLimit <= iGetTypeCount(tank, iType) || bIsBossLimited(iType) || (g_esPlayer[tank].g_iTankType == iType);
-					case 6: bCondition = !bIsRightGame(iType, iSpecType) || (bIsCharger(tank) && !bIsChargerEnabled(iType)) || !bHasCoreAdminAccess(tank, iType) || !bIsSpawnEnabled(iType, iSpecType) || !bIsTypeAvailable(iType, tank) || bAreHumansRequired(iType, iSpecType) || !bCanTypeSpawn(iType, iSpecType) || bIsAreaNarrow(tank, flOpen) || bIsAreaWide(tank, flClose) || flChance <= 0.0 || (g_esGeneral.g_iSpawnLimit > 0 && iCount >= g_esGeneral.g_iSpawnLimit) || 0 < iTypeLimit <= iGetTypeCount(tank, iType) || bIsBossLimited(iType) || (g_esPlayer[tank].g_iTankType == iType);
-					case 8: bCondition = !bIsRightGame(iType, iSpecType) || (bTank && !bIsTankEnabled(iType)) || !bHasCoreAdminAccess(tank, iType) || !bIsSpawnEnabled(iType, iSpecType) || !bIsTypeAvailable(iType, tank) || bAreHumansRequired(iType, iSpecType) || !bCanTypeSpawn(iType, iSpecType) || bIsAreaNarrow(tank, g_esTank[iType].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esTank[iType].g_flCloseAreasOnly) || flChance <= 0.0 || (g_esGeneral.g_iSpawnLimit > 0 && iCount >= g_esGeneral.g_iSpawnLimit) || 0 < g_esTank[iType].g_iTypeLimit <= iGetTypeCount(tank, iType) || bIsBossLimited(iType) || (g_esPlayer[tank].g_iTankType == iType);
+					case 1: bCondition = !bIsRightGame(iType, iSpecType) || (bIsSmoker(tank) && !bIsSmokerEnabled(iType)) || !bHasCoreAdminAccess(tank, iType) || !bIsSpawnEnabled(iType, iSpecType) || !bIsTypeAvailable(iType, tank) || bAreHumansRequired(iType, iSpecType) || !bCanTypeSpawn(iType, iSpecType) || bIsAreaNarrow(tank, flOpen) || bIsAreaWide(tank, flClose) || flChance <= 0.0 || (g_esGeneral.g_iSpawnLimit > 0 && iCount >= g_esGeneral.g_iSpawnLimit) || (0 < iTypeLimit <= iGetTypeCount(tank, iType)) || bIsBossLimited(iType) || (g_esPlayer[tank].g_iTankType == iType);
+					case 2: bCondition = !bIsRightGame(iType, iSpecType) || (bIsBoomer(tank) && !bIsBoomerEnabled(iType)) || !bHasCoreAdminAccess(tank, iType) || !bIsSpawnEnabled(iType, iSpecType) || !bIsTypeAvailable(iType, tank) || bAreHumansRequired(iType, iSpecType) || !bCanTypeSpawn(iType, iSpecType) || bIsAreaNarrow(tank, flOpen) || bIsAreaWide(tank, flClose) || flChance <= 0.0 || (g_esGeneral.g_iSpawnLimit > 0 && iCount >= g_esGeneral.g_iSpawnLimit) || (0 < iTypeLimit <= iGetTypeCount(tank, iType)) || bIsBossLimited(iType) || (g_esPlayer[tank].g_iTankType == iType);
+					case 3: bCondition = !bIsRightGame(iType, iSpecType) || (bIsHunter(tank) && !bIsHunterEnabled(iType)) || !bHasCoreAdminAccess(tank, iType) || !bIsSpawnEnabled(iType, iSpecType) || !bIsTypeAvailable(iType, tank) || bAreHumansRequired(iType, iSpecType) || !bCanTypeSpawn(iType, iSpecType) || bIsAreaNarrow(tank, flOpen) || bIsAreaWide(tank, flClose) || flChance <= 0.0 || (g_esGeneral.g_iSpawnLimit > 0 && iCount >= g_esGeneral.g_iSpawnLimit) || (0 < iTypeLimit <= iGetTypeCount(tank, iType)) || bIsBossLimited(iType) || (g_esPlayer[tank].g_iTankType == iType);
+					case 4: bCondition = !bIsRightGame(iType, iSpecType) || (bIsSpitter(tank) && !bIsSpitterEnabled(iType)) || !bHasCoreAdminAccess(tank, iType) || !bIsSpawnEnabled(iType, iSpecType) || !bIsTypeAvailable(iType, tank) || bAreHumansRequired(iType, iSpecType) || !bCanTypeSpawn(iType, iSpecType) || bIsAreaNarrow(tank, flOpen) || bIsAreaWide(tank, flClose) || flChance <= 0.0 || (g_esGeneral.g_iSpawnLimit > 0 && iCount >= g_esGeneral.g_iSpawnLimit) || (0 < iTypeLimit <= iGetTypeCount(tank, iType)) || bIsBossLimited(iType) || (g_esPlayer[tank].g_iTankType == iType);
+					case 5: bCondition = !bIsRightGame(iType, iSpecType) || (bIsJockey(tank) && !bIsJockeyEnabled(iType)) || !bHasCoreAdminAccess(tank, iType) || !bIsSpawnEnabled(iType, iSpecType) || !bIsTypeAvailable(iType, tank) || bAreHumansRequired(iType, iSpecType) || !bCanTypeSpawn(iType, iSpecType) || bIsAreaNarrow(tank, flOpen) || bIsAreaWide(tank, flClose) || flChance <= 0.0 || (g_esGeneral.g_iSpawnLimit > 0 && iCount >= g_esGeneral.g_iSpawnLimit) || (0 < iTypeLimit <= iGetTypeCount(tank, iType)) || bIsBossLimited(iType) || (g_esPlayer[tank].g_iTankType == iType);
+					case 6: bCondition = !bIsRightGame(iType, iSpecType) || (bIsCharger(tank) && !bIsChargerEnabled(iType)) || !bHasCoreAdminAccess(tank, iType) || !bIsSpawnEnabled(iType, iSpecType) || !bIsTypeAvailable(iType, tank) || bAreHumansRequired(iType, iSpecType) || !bCanTypeSpawn(iType, iSpecType) || bIsAreaNarrow(tank, flOpen) || bIsAreaWide(tank, flClose) || flChance <= 0.0 || (g_esGeneral.g_iSpawnLimit > 0 && iCount >= g_esGeneral.g_iSpawnLimit) || (0 < iTypeLimit <= iGetTypeCount(tank, iType)) || bIsBossLimited(iType) || (g_esPlayer[tank].g_iTankType == iType);
+					case 8: bCondition = !bIsRightGame(iType, iSpecType) || (bTank && !bIsTankEnabled(iType)) || !bHasCoreAdminAccess(tank, iType) || !bIsSpawnEnabled(iType, iSpecType) || !bIsTypeAvailable(iType, tank) || bAreHumansRequired(iType, iSpecType) || !bCanTypeSpawn(iType, iSpecType) || bIsAreaNarrow(tank, g_esTank[iType].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esTank[iType].g_flCloseAreasOnly) || flChance <= 0.0 || (g_esGeneral.g_iSpawnLimit > 0 && iCount >= g_esGeneral.g_iSpawnLimit) || (0 < g_esTank[iType].g_iTypeLimit <= iGetTypeCount(tank, iType)) || bIsBossLimited(iType) || (g_esPlayer[tank].g_iTankType == iType);
 				}
 			}
 			case 2:
@@ -26571,11 +26619,7 @@ int[] iGetSpecialSections(const char[] specsection)
 	if (bCheck)
 	{
 		iTypeCount++;
-
-		if (specsection[iPos] == '!' || specsection[iPos] == '/')
-		{
-			iTypes[iTypeCount] = 0;
-		}
+		iTypes[iTypeCount] = (specsection[iPos] == '!' || specsection[iPos] == '/') ? 0 : 1;
 	}
 
 	iPos = StrContains(specsection, MT_CONFIG_SECTION_BOOMER, false);
@@ -26584,11 +26628,7 @@ int[] iGetSpecialSections(const char[] specsection)
 	if (bCheck)
 	{
 		iTypeCount++;
-
-		if (specsection[iPos] == '!' || specsection[iPos] == '/')
-		{
-			iTypes[iTypeCount] = 0;
-		}
+		iTypes[iTypeCount] = (specsection[iPos] == '!' || specsection[iPos] == '/') ? 0 : 2;
 	}
 
 	iPos = StrContains(specsection, MT_CONFIG_SECTION_HUNTER, false);
@@ -26597,11 +26637,7 @@ int[] iGetSpecialSections(const char[] specsection)
 	if (bCheck)
 	{
 		iTypeCount++;
-
-		if (specsection[iPos] == '!' || specsection[iPos] == '/')
-		{
-			iTypes[iTypeCount] = 0;
-		}
+		iTypes[iTypeCount] = (specsection[iPos] == '!' || specsection[iPos] == '/') ? 0 : 3;
 	}
 
 	iPos = StrContains(specsection, MT_CONFIG_SECTION_SPITTER, false);
@@ -26610,11 +26646,7 @@ int[] iGetSpecialSections(const char[] specsection)
 	if (bCheck)
 	{
 		iTypeCount++;
-
-		if (specsection[iPos] == '!' || specsection[iPos] == '/')
-		{
-			iTypes[iTypeCount] = 0;
-		}
+		iTypes[iTypeCount] = (specsection[iPos] == '!' || specsection[iPos] == '/') ? 0 : 4;
 	}
 
 	iPos = StrContains(specsection, MT_CONFIG_SECTION_JOCKEY, false);
@@ -26623,11 +26655,7 @@ int[] iGetSpecialSections(const char[] specsection)
 	if (bCheck)
 	{
 		iTypeCount++;
-
-		if (specsection[iPos] == '!' || specsection[iPos] == '/')
-		{
-			iTypes[iTypeCount] = 0;
-		}
+		iTypes[iTypeCount] = (specsection[iPos] == '!' || specsection[iPos] == '/') ? 0 : 5;
 	}
 
 	iPos = StrContains(specsection, MT_CONFIG_SECTION_CHARGER, false);
@@ -26636,11 +26664,7 @@ int[] iGetSpecialSections(const char[] specsection)
 	if (bCheck)
 	{
 		iTypeCount++;
-
-		if (specsection[iPos] == '!' || specsection[iPos] == '/')
-		{
-			iTypes[iTypeCount] = 0;
-		}
+		iTypes[iTypeCount] = (specsection[iPos] == '!' || specsection[iPos] == '/') ? 0 : 6;
 	}
 
 	return iTypes;

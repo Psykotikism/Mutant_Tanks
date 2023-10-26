@@ -410,6 +410,17 @@
 				// 32: Enable Chargers. (Only available in Left 4 Dead 2.)
 				"Special Types"				"-1"
 
+				// Enable all Mutant Special Infected.
+				// Note: This setting determines full availability. Even if other spawn settings are enabled while this is disabled, all Mutant Tanks will stay disabled.
+				// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
+				// --
+				// -1/"ignore"/"exclude"/"filter"/"remove": Let the setting with the same name from each Mutant Tank's "General" section decide.
+				// 0/"disabled"/"false"/"off"/"no": OFF
+				// 1/"enabled"/"true"/"on"/"yes": ON
+				// --
+				// Alternatives: "Smoker Enabled"/"Boomer Enabled"/"Hunter Enabled"/"Spitter Enabled"/"Jockey Enabled"/"Charger Enabled"
+				"Special Enabled"			"-1"
+
 				// The model used by all Mutant Special Infected.
 				// Note: This setting only works for the Smoker, Boomer, and Hunter.
 				// Note: This setting can be used for standard Special Infected.
@@ -430,6 +441,7 @@
 				"Finales Only"				"0"
 				"Requires Humans"			"0"
 				"Special Types"				"-1"
+				"Special Enabled"			"-1"
 				"Special Model"				"0"
 				"Burn Duration"				"0.0"
 				"Burnt Skin"				"-1.0"
@@ -3280,7 +3292,7 @@
 				// Not Empty: Special Infected's custom name
 				// --
 				// Alternatives: "Smoker Name"/"Boomer Name"/"Hunter Name"/"Spitter Name"/"Jockey Name"/"Charger Name"
-				"Special Name"				"Special #1"
+				"Special Name"				"Special"
 
 				// Enable Mutant Special Infected types.
 				// Note: This setting determines full availability. Even if other spawn settings are enabled while this is disabled, the Mutant Special Infected type will stay disabled.
@@ -3300,6 +3312,17 @@
 				// 16: Enable Jockeys. (Only available in Left 4 Dead 2.)
 				// 32: Enable Chargers. (Only available in Left 4 Dead 2.)
 				"Special Types"				"-1"
+
+				// Enable the Mutant Special Infected.
+				// Note: This setting determines full availability. Even if other spawn settings are enabled while this is disabled, the Mutant Tank will stay disabled.
+				// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+				// --
+				// -1/"ignore"/"exclude"/"filter"/"remove": Let the setting with the same name from the "Plugin Settings/General" section decide.
+				// 0/"disabled"/"false"/"off"/"no": OFF
+				// 1/"enabled"/"true"/"on"/"yes": ON
+				// --
+				// Alternatives: "Smoker Enabled"/"Boomer Enabled"/"Hunter Enabled"/"Spitter Enabled"/"Jockey Enabled"/"Charger Enabled"
+				"Special Enabled"			"-1"
 
 				// The Mutant Special Infected has this many chances out of 100.0% to spawn.
 				// Note: Clones, respawned Mutant Special Infected, randomized Special Infected, and Mutant Special Infected spawned through the Mutant Special Infected menu are not affected.
@@ -3346,9 +3369,10 @@
 				"Special Model"				"0"
 
 				// Example
-				"Special Name"				"Special #1"
+				"Special Name"				"Special"
 				"Game Type"				"0"
 				"Special Types"				"-1"
+				"Special Enabled"			"-1"
 				"Special Chance"			"100.0"
 				"Special Note"				"0"
 				"Spawn Enabled"				"1"
