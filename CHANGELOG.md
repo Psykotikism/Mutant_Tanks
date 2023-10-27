@@ -15,6 +15,7 @@
 	- `Rock Damage`
 - Fixed the issue with Tanks being assigned the wrong Mutant types. (Thanks to `thewintersoldier97` for reporting!)
 - Fixed the issue with no Mutant types being chosen when the `Tank Chance`/`Special Chance` setting is less than `100.0%`. (Thanks to `SpannerV2` for reporting!)
+- Fixed the issue with some Mutant types not showing up due to the `Check Abilities` setting. (Thanks to `SpannerV2` for reporting!)
 
 #### Abilities
 - Fixed all the `Ability Sight` settings not working.
