@@ -3133,7 +3133,7 @@ stock void vGetMatchingFilename(const char[] directory, const char[] filename, c
 
 stock void vGetSpecialSettingNames(char[][] buffers, int maxStrings, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, int specType)
 {
-	if (specType >= 0)
+	if (specType > 0)
 	{
 		FormatEx(buffers[0], maxStrings, "%s%s", g_sSpecialNames[specType], setting1);
 		FormatEx(buffers[1], maxStrings, "%s %s", g_sSpecialNames[specType], setting2);
@@ -3148,9 +3148,9 @@ stock void vGetSpecialSettingNames(char[][] buffers, int maxStrings, const char[
 
 	switch (specType)
 	{
-		case -1: FormatEx(buffers[3], maxStrings, "%s", setting4);
-		case 1, 2, 4, 5: FormatEx(buffers[3], maxStrings, "%c%s", g_sSpecialNames[specType][0], setting4);
-		case 0, 3: FormatEx(buffers[3], maxStrings, "%c%c%s", g_sSpecialNames[specType][0], g_sSpecialNames[specType][1], setting4);
+		case -1, 0: FormatEx(buffers[3], maxStrings, "%s", setting4);
+		case 2, 3, 5, 6: FormatEx(buffers[3], maxStrings, "%c%s", g_sSpecialNames[specType][0], setting4);
+		case 1, 4: FormatEx(buffers[3], maxStrings, "%c%c%s", g_sSpecialNames[specType][0], g_sSpecialNames[specType][1], setting4);
 	}
 }
 
@@ -4150,7 +4150,7 @@ stock int iGetSubSettingValue(bool apply, bool human, int teamVal, int teamValMa
 				iPlayerVal = (teamVal >= overrideVal) ? teamVal : teamValMain;
 				iPlayerVal = (iPlayerVal >= overrideVal) ? iPlayerVal : playerVal;
 				iTypeVal = (specVal >= overrideVal) ? specVal : specValMain;
-				iTypeVal = (specVal >= overrideVal) ? specVal : typeVal;
+				iTypeVal = (iTypeVal >= overrideVal) ? iTypeVal : typeVal;
 				return (human && iPlayerVal >= overrideVal) ? iPlayerVal : iTypeVal;
 			}
 			case 2:

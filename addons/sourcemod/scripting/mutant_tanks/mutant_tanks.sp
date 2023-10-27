@@ -12701,55 +12701,55 @@ void vChooseArrivalType(int tank, const char[] oldname, const char[] name, int m
 				char sPhrase[64], sSteamIDFinal[64], sNote[64];
 				FormatEx(sSteamIDFinal, sizeof sSteamIDFinal, "%s", (TranslationPhraseExists(g_esPlayer[tank].g_sSteamID32) ? g_esPlayer[tank].g_sSteamID32 : g_esPlayer[tank].g_sSteam3ID));
 				int iType = g_esTank[g_esPlayer[tank].g_iTankType].g_iRealType[0];
-				if (bIsSmoker(tank) && (g_esCache[tank].g_iSpecialNote == 1 || (g_esCache[tank].g_iSpecialNote < 0 && g_esCache[tank].g_iTankNote == 1)))
+				if (bIsSmoker(tank) && g_esCache[tank].g_iSpecialNote == 1)
 				{
 					FormatEx(sPhrase, sizeof sPhrase, "Smoker #%i", iType);
-					FormatEx(sNote, sizeof sNote, "%s", ((bIsSmoker(tank, MT_CHECK_FAKECLIENT) && g_esTeammate[tank][specType].g_iSpecialNote == 1 && sSteamIDFinal[0] != '\0') ? sSteamIDFinal : sPhrase));
+					FormatEx(sNote, sizeof sNote, "%s", ((bIsValidClient(tank, MT_CHECK_FAKECLIENT) && g_esTeammate[tank][specType].g_iSpecialNote == 1 && sSteamIDFinal[0] != '\0') ? sSteamIDFinal : sPhrase));
 
 					bool bExists = TranslationPhraseExists(sNote);
 					MT_PrintToChatAll("%s %t", MT_TAG3, (bExists ? sNote : "NoNoteSmoker"));
 					vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, (bExists ? sNote : "NoNoteSmoker"), LANG_SERVER);
 				}
-				else if (bIsBoomer(tank) && (g_esCache[tank].g_iSpecialNote == 1 || (g_esCache[tank].g_iSpecialNote < 0 && g_esCache[tank].g_iTankNote == 1)))
+				else if (bIsBoomer(tank) && g_esCache[tank].g_iSpecialNote == 1)
 				{
 					FormatEx(sPhrase, sizeof sPhrase, "Boomer #%i", iType);
-					FormatEx(sNote, sizeof sNote, "%s", ((bIsBoomer(tank, MT_CHECK_FAKECLIENT) && g_esTeammate[tank][specType].g_iSpecialNote == 1 && sSteamIDFinal[0] != '\0') ? sSteamIDFinal : sPhrase));
+					FormatEx(sNote, sizeof sNote, "%s", ((bIsValidClient(tank, MT_CHECK_FAKECLIENT) && g_esTeammate[tank][specType].g_iSpecialNote == 1 && sSteamIDFinal[0] != '\0') ? sSteamIDFinal : sPhrase));
 
 					bool bExists = TranslationPhraseExists(sNote);
 					MT_PrintToChatAll("%s %t", MT_TAG3, (bExists ? sNote : "NoNoteBoomer"));
 					vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, (bExists ? sNote : "NoNoteBoomer"), LANG_SERVER);
 				}
-				else if (bIsHunter(tank) && (g_esCache[tank].g_iSpecialNote == 1 || (g_esCache[tank].g_iSpecialNote < 0 && g_esCache[tank].g_iTankNote == 1)))
+				else if (bIsHunter(tank) && g_esCache[tank].g_iSpecialNote == 1)
 				{
 					FormatEx(sPhrase, sizeof sPhrase, "Hunter #%i", iType);
-					FormatEx(sNote, sizeof sNote, "%s", ((bIsHunter(tank, MT_CHECK_FAKECLIENT) && g_esTeammate[tank][specType].g_iSpecialNote == 1 && sSteamIDFinal[0] != '\0') ? sSteamIDFinal : sPhrase));
+					FormatEx(sNote, sizeof sNote, "%s", ((bIsValidClient(tank, MT_CHECK_FAKECLIENT) && g_esTeammate[tank][specType].g_iSpecialNote == 1 && sSteamIDFinal[0] != '\0') ? sSteamIDFinal : sPhrase));
 
 					bool bExists = TranslationPhraseExists(sNote);
 					MT_PrintToChatAll("%s %t", MT_TAG3, (bExists ? sNote : "NoNoteHunter"));
 					vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, (bExists ? sNote : "NoNoteHunter"), LANG_SERVER);
 				}
-				else if (bIsSpitter(tank) && (g_esCache[tank].g_iSpecialNote == 1 || (g_esCache[tank].g_iSpecialNote < 0 && g_esCache[tank].g_iTankNote == 1)))
+				else if (bIsSpitter(tank) && g_esCache[tank].g_iSpecialNote == 1)
 				{
 					FormatEx(sPhrase, sizeof sPhrase, "Spitter #%i", iType);
-					FormatEx(sNote, sizeof sNote, "%s", ((bIsSpitter(tank, MT_CHECK_FAKECLIENT) && g_esTeammate[tank][specType].g_iSpecialNote == 1 && sSteamIDFinal[0] != '\0') ? sSteamIDFinal : sPhrase));
+					FormatEx(sNote, sizeof sNote, "%s", ((bIsValidClient(tank, MT_CHECK_FAKECLIENT) && g_esTeammate[tank][specType].g_iSpecialNote == 1 && sSteamIDFinal[0] != '\0') ? sSteamIDFinal : sPhrase));
 
 					bool bExists = TranslationPhraseExists(sNote);
 					MT_PrintToChatAll("%s %t", MT_TAG3, (bExists ? sNote : "NoNoteSpitter"));
 					vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, (bExists ? sNote : "NoNoteSpitter"), LANG_SERVER);
 				}
-				else if (bIsJockey(tank) && (g_esCache[tank].g_iSpecialNote == 1 || (g_esCache[tank].g_iSpecialNote < 0 && g_esCache[tank].g_iTankNote == 1)))
+				else if (bIsJockey(tank) && g_esCache[tank].g_iSpecialNote == 1)
 				{
 					FormatEx(sPhrase, sizeof sPhrase, "Jockey #%i", iType);
-					FormatEx(sNote, sizeof sNote, "%s", ((bIsJockey(tank, MT_CHECK_FAKECLIENT) && g_esTeammate[tank][specType].g_iSpecialNote == 1 && sSteamIDFinal[0] != '\0') ? sSteamIDFinal : sPhrase));
+					FormatEx(sNote, sizeof sNote, "%s", ((bIsValidClient(tank, MT_CHECK_FAKECLIENT) && g_esTeammate[tank][specType].g_iSpecialNote == 1 && sSteamIDFinal[0] != '\0') ? sSteamIDFinal : sPhrase));
 
 					bool bExists = TranslationPhraseExists(sNote);
 					MT_PrintToChatAll("%s %t", MT_TAG3, (bExists ? sNote : "NoNoteJockey"));
 					vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, (bExists ? sNote : "NoNoteJockey"), LANG_SERVER);
 				}
-				else if (bIsCharger(tank) && (g_esCache[tank].g_iSpecialNote == 1 || (g_esCache[tank].g_iSpecialNote < 0 && g_esCache[tank].g_iTankNote == 1)))
+				else if (bIsCharger(tank) && g_esCache[tank].g_iSpecialNote == 1)
 				{
 					FormatEx(sPhrase, sizeof sPhrase, "Charger #%i", iType);
-					FormatEx(sNote, sizeof sNote, "%s", ((bIsCharger(tank, MT_CHECK_FAKECLIENT) && g_esTeammate[tank][specType].g_iSpecialNote == 1 && sSteamIDFinal[0] != '\0') ? sSteamIDFinal : sPhrase));
+					FormatEx(sNote, sizeof sNote, "%s", ((bIsValidClient(tank, MT_CHECK_FAKECLIENT) && g_esTeammate[tank][specType].g_iSpecialNote == 1 && sSteamIDFinal[0] != '\0') ? sSteamIDFinal : sPhrase));
 
 					bool bExists = TranslationPhraseExists(sNote);
 					MT_PrintToChatAll("%s %t", MT_TAG3, (bExists ? sNote : "NoNoteCharger"));
@@ -12758,7 +12758,7 @@ void vChooseArrivalType(int tank, const char[] oldname, const char[] name, int m
 				else if (bIsTank(tank) && g_esCache[tank].g_iTankNote == 1)
 				{
 					FormatEx(sPhrase, sizeof sPhrase, "Tank #%i", iType);
-					FormatEx(sNote, sizeof sNote, "%s", ((bIsTank(tank, MT_CHECK_FAKECLIENT) && (g_esPlayer[tank].g_iTankNote == 1) && sSteamIDFinal[0] != '\0') ? sSteamIDFinal : sPhrase));
+					FormatEx(sNote, sizeof sNote, "%s", ((bIsValidClient(tank, MT_CHECK_FAKECLIENT) && (g_esPlayer[tank].g_iTankNote == 1) && sSteamIDFinal[0] != '\0') ? sSteamIDFinal : sPhrase));
 
 					bool bExists = TranslationPhraseExists(sNote);
 					MT_PrintToChatAll("%s %t", MT_TAG3, (bExists ? sNote : "NoNote"));
@@ -15534,22 +15534,22 @@ void vReadAdminSettings(int admin, int type, const char[] key, const char[] valu
 
 void vReadSpecialSettings(int type, int mode, const char[] subsection, const char[] specsection, const char[] key, const char[] value, int specType)
 {
-	int iIndex = g_esTank[type].g_iRecordedType[0];
+	int iIndex = g_esTank[type].g_iRecordedType[0], iSpecType = iGetSpecialType(key);
 	if (0 <= iIndex <= MT_MAXTYPES)
 	{
 		g_esSpecial[iIndex][specType].g_iSpecialTypes = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "SpecialTypes", "Special Types", "Special_Types", "spectypes", g_esSpecial[iIndex][specType].g_iSpecialTypes, value, -1, 63);
 		g_esSpecial[iIndex][specType].g_iSpecialTypes = iGetSpecialTypes(g_esSpecial[iIndex][specType].g_iSpecialTypes, specsection);
 		g_esSpecial[iIndex][specType].g_iSpecialEnabled = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "SpecialEnabled", "Special Enabled", "Special_Enabled", "specenabled", g_esSpecial[iIndex][specType].g_iSpecialEnabled, value, -1, 1);
-		g_esSpecial[iIndex][specType].g_iSpecialEnabled = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "Enabled", "Enabled", "Enabled", "enabled", g_esSpecial[iIndex][specType].g_iSpecialEnabled, value, -1, 1, specType);
+		g_esSpecial[iIndex][iSpecType].g_iSpecialEnabled = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "Enabled", "Enabled", "Enabled", "enabled", g_esSpecial[iIndex][iSpecType].g_iSpecialEnabled, value, -1, 1, iSpecType);
 		g_esSpecial[iIndex][specType].g_iGameType = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "GameType", "Game Type", "Game_Type", "game", g_esSpecial[iIndex][specType].g_iGameType, value, -1, 2, specType);
 		g_esSpecial[iIndex][specType].g_flSpecialChance = flGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "SpecialChance", "Special Chance", "Special_Chance", "chance", g_esSpecial[iIndex][specType].g_flSpecialChance, value, -1.0, 100.0);
-		g_esSpecial[iIndex][specType].g_flSpecialChance = flGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "Chance", "Chance", "Chance", "chance", g_esSpecial[iIndex][specType].g_flSpecialChance, value, -1.0, 100.0, specType);
+		g_esSpecial[iIndex][iSpecType].g_flSpecialChance = flGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "Chance", "Chance", "Chance", "chance", g_esSpecial[iIndex][iSpecType].g_flSpecialChance, value, -1.0, 100.0, iSpecType);
 		g_esSpecial[iIndex][specType].g_iSpecialModel = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "SpecialModel", "Special Model", "Special_Model", "model", g_esSpecial[iIndex][specType].g_iSpecialModel, value, -1, 3);
-		g_esSpecial[iIndex][specType].g_iSpecialModel = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "Model", "Model", "Model", "model", g_esSpecial[iIndex][specType].g_iSpecialModel, value, -1, 3, specType);
+		g_esSpecial[iIndex][iSpecType].g_iSpecialModel = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "Model", "Model", "Model", "model", g_esSpecial[iIndex][iSpecType].g_iSpecialModel, value, -1, 3, iSpecType);
 		g_esSpecial[iIndex][specType].g_flBurnDuration = flGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "BurnDuration", "Burn Duration", "Burn_Duration", "burndur", g_esSpecial[iIndex][specType].g_flBurnDuration, value, -1.0, 99999.0, specType);
 		g_esSpecial[iIndex][specType].g_flBurntSkin = flGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "BurntSkin", "Burnt Skin", "Burnt_Skin", "burnt", g_esSpecial[iIndex][specType].g_flBurntSkin, value, -2.0, 1.0, specType);
 		g_esSpecial[iIndex][specType].g_iSpecialNote = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "SpecialNote", "Special Note", "Special_Note", "note", g_esSpecial[iIndex][specType].g_iSpecialNote, value, -1, 1);
-		g_esSpecial[iIndex][specType].g_iSpecialNote = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "Note", "Note", "Note", "note", g_esSpecial[iIndex][specType].g_iSpecialNote, value, -1, 1, specType);
+		g_esSpecial[iIndex][iSpecType].g_iSpecialNote = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "Note", "Note", "Note", "note", g_esSpecial[iIndex][iSpecType].g_iSpecialNote, value, -1, 1, iSpecType);
 		g_esSpecial[iIndex][specType].g_iSpawnEnabled = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "SpawnEnabled", "Spawn Enabled", "Spawn_Enabled", "spawn", g_esSpecial[iIndex][specType].g_iSpawnEnabled, value, -1, 1, specType);
 		g_esSpecial[iIndex][specType].g_iMenuEnabled = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "MenuEnabled", "Menu Enabled", "Menu_Enabled", "menu", g_esSpecial[iIndex][specType].g_iMenuEnabled, value, -1, 1, specType);
 		g_esSpecial[iIndex][specType].g_iDeathRevert = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "DeathRevert", "Death Revert", "Death_Revert", "revert", g_esSpecial[iIndex][specType].g_iDeathRevert, value, -1, 1, specType);
@@ -15602,7 +15602,7 @@ void vReadSpecialSettings(int type, int mode, const char[] subsection, const cha
 		g_esSpecial[iIndex][specType].g_flPinDamage = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PinDamage", "Pin Damage", "Pin_Damage", "pindmg", g_esSpecial[iIndex][specType].g_flPinDamage, value, -2.0, 99999.0, specType);
 		g_esSpecial[iIndex][specType].g_flRunSpeed = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_esSpecial[iIndex][specType].g_flRunSpeed, value, -1.0, 3.0, specType);
 		g_esSpecial[iIndex][specType].g_flSpecialInterval = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "SpecialInterval", "Special Interval", "Special_Interval", "specint", g_esSpecial[iIndex][specType].g_flSpecialInterval, value, -1.0, 99999.0);
-		g_esSpecial[iIndex][specType].g_flSpecialInterval = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "Interval", "Interval", "Interval", "int", g_esSpecial[iIndex][specType].g_flSpecialInterval, value, -1.0, 99999.0, specType);
+		g_esSpecial[iIndex][iSpecType].g_flSpecialInterval = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "Interval", "Interval", "Interval", "int", g_esSpecial[iIndex][iSpecType].g_flSpecialInterval, value, -1.0, 99999.0, iSpecType);
 		g_esSpecial[iIndex][specType].g_iThrowRock = iGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "ThrowRock", "Throw Rock", "Throw_Rock", "throwrock", g_esSpecial[iIndex][specType].g_iThrowRock, value, -1, 1, specType);
 		g_esSpecial[iIndex][specType].g_iBulletImmunity = iGetKeyValue(subsection, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE2, key, "BulletImmunity", "Bullet Immunity", "Bullet_Immunity", "bullet", g_esSpecial[iIndex][specType].g_iBulletImmunity, value, -1, 1, specType);
 		g_esSpecial[iIndex][specType].g_iExplosiveImmunity = iGetKeyValue(subsection, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE2, key, "ExplosiveImmunity", "Explosive Immunity", "Explosive_Immunity", "explosive", g_esSpecial[iIndex][specType].g_iExplosiveImmunity, value, -1, 1, specType);
@@ -15628,10 +15628,10 @@ void vReadSpecialSettings(int type, int mode, const char[] subsection, const cha
 					g_esSpecial[iIndex][specType].g_iSkinColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 				}
 			}
-			else
+			else if (StrContains(key, "Name", false) != -1)
 			{
 				vGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "SpecialName", "Special Name", "Special_Name", "name", g_esSpecial[iIndex][specType].g_sSpecialName, sizeof esSpecial::g_sSpecialName, value);
-				vGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "Name", "Name", "Name", "name", g_esSpecial[iIndex][specType].g_sSpecialName, sizeof esSpecial::g_sSpecialName, value, specType);
+				vGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "Name", "Name", "Name", "name", g_esSpecial[iIndex][iSpecType].g_sSpecialName, sizeof esSpecial::g_sSpecialName, value, iSpecType);
 			}
 		}
 		else if (StrEqual(subsection, MT_CONFIG_SECTION_REWARDS, false))
@@ -15834,17 +15834,18 @@ void vReadSpecialSettings(int type, int mode, const char[] subsection, const cha
 
 void vReadSpecificSettings(int specType, int mode, const char[] section, const char[] subsection, const char[] specsection, const char[] key, const char[] value)
 {
+	int iSpecType = iGetSpecialType(key);
 	if (StrEqual(section, MT_CONFIG_SECTION_SETTINGS, false) || StrEqual(section, MT_CONFIG_SECTION_SETTINGS2, false) || StrEqual(section, MT_CONFIG_SECTION_SETTINGS3, false) || StrEqual(section, MT_CONFIG_SECTION_SETTINGS4, false))
 	{
 		g_esSpecific[specType].g_iSpecialTypes = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "SpecialTypes", "Special Types", "Special_Types", "spectypes", g_esSpecific[specType].g_iSpecialTypes, value, -1, 63);
 		g_esSpecific[specType].g_iSpecialTypes = iGetSpecialTypes(g_esSpecific[specType].g_iSpecialTypes, specsection);
 		g_esSpecific[specType].g_iSpecialEnabled = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "SpecialEnabled", "Special Enabled", "Special_Enabled", "specenabled", g_esSpecific[specType].g_iSpecialEnabled, value, -1, 1);
-		g_esSpecific[specType].g_iSpecialEnabled = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "Enabled", "Enabled", "Enabled", "enabled", g_esSpecific[specType].g_iSpecialEnabled, value, -1, 1, specType);
+		g_esSpecific[iSpecType].g_iSpecialEnabled = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "Enabled", "Enabled", "Enabled", "enabled", g_esSpecific[iSpecType].g_iSpecialEnabled, value, -1, 1, iSpecType);
 		g_esSpecific[specType].g_iDeathRevert = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "DeathRevert", "Death Revert", "Death_Revert", "revert", g_esSpecific[specType].g_iDeathRevert, value, -1, 1, specType);
 		g_esSpecific[specType].g_iFinalesOnly = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "FinalesOnly", "Finales Only", "Finales_Only", "finale", g_esSpecific[specType].g_iFinalesOnly, value, -1, 4, specType);
 		g_esSpecific[specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esSpecific[specType].g_iRequiresHumans, value, -1, 32, specType);
 		g_esSpecific[specType].g_iSpecialModel = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "SpecialModel", "Special Model", "Special_Model", "model", g_esSpecific[specType].g_iSpecialModel, value, -1, 3);
-		g_esSpecific[specType].g_iSpecialModel = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "Model", "Model", "Model", "model", g_esSpecific[specType].g_iSpecialModel, value, -1, 3, specType);
+		g_esSpecific[iSpecType].g_iSpecialModel = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "Model", "Model", "Model", "model", g_esSpecific[iSpecType].g_iSpecialModel, value, -1, 3, iSpecType);
 		g_esSpecific[specType].g_flBurnDuration = flGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "BurnDuration", "Burn Duration", "Burn_Duration", "burndur", g_esSpecific[specType].g_flBurnDuration, value, -1.0, 99999.0, specType);
 		g_esSpecific[specType].g_flBurntSkin = flGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "BurntSkin", "Burnt Skin", "Burnt_Skin", "burnt", g_esSpecific[specType].g_flBurntSkin, value, -2.0, 1.0, specType);
 		g_esSpecific[specType].g_iSpawnEnabled = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "SpawnEnabled", "Spawn Enabled", "Spawn_Enabled", "spawn", g_esSpecific[specType].g_iSpawnEnabled, value, -1, 1, specType);
@@ -15875,7 +15876,7 @@ void vReadSpecificSettings(int specType, int mode, const char[] section, const c
 		g_esSpecific[specType].g_flPinDamage = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PinDamage", "Pin Damage", "Pin_Damage", "pindmg", g_esSpecific[specType].g_flPinDamage, value, -2.0, 99999.0, specType);
 		g_esSpecific[specType].g_flRunSpeed = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_esSpecific[specType].g_flRunSpeed, value, -1.0, 3.0, specType);
 		g_esSpecific[specType].g_flSpecialInterval = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "SpecialInterval", "Special Interval", "Special_Interval", "specint", g_esSpecific[specType].g_flSpecialInterval, value, -1.0, 99999.0);
-		g_esSpecific[specType].g_flSpecialInterval = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "Interval", "Interval", "Interval", "int", g_esSpecific[specType].g_flSpecialInterval, value, -1.0, 99999.0, specType);
+		g_esSpecific[iSpecType].g_flSpecialInterval = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "Interval", "Interval", "Interval", "int", g_esSpecific[iSpecType].g_flSpecialInterval, value, -1.0, 99999.0, iSpecType);
 		g_esSpecific[specType].g_iThrowRock = iGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "ThrowRock", "Throw Rock", "Throw_Rock", "throwrock", g_esSpecific[specType].g_iThrowRock, value, -1, 1, specType);
 		g_esSpecific[specType].g_iBulletImmunity = iGetKeyValue(subsection, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE2, key, "BulletImmunity", "Bullet Immunity", "Bullet_Immunity", "bullet", g_esSpecific[specType].g_iBulletImmunity, value, -1, 1, specType);
 		g_esSpecific[specType].g_iExplosiveImmunity = iGetKeyValue(subsection, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE2, key, "ExplosiveImmunity", "Explosive Immunity", "Explosive_Immunity", "explosive", g_esSpecific[specType].g_iExplosiveImmunity, value, -1, 1, specType);
@@ -16349,9 +16350,10 @@ void vReadTankSettings(int type, int mode, const char[] subsection, const char[]
 		{
 			g_esTank[iIndex].g_iAbilityCount = 0;
 		}
-		else if (g_esTank[iIndex].g_iAbilityCount != -1 && (bFoundSection(subsection, 0) || bFoundSection(subsection, 1) || bFoundSection(subsection, 2) || bFoundSection(subsection, 3))
-			&& ((StrContains(key, "enabled", false) != -1 || StrEqual(key, "aenabled", false) || (StrContains(key, " hit", false) != -1 && StrContains(key, "mode", false) == -1)
-			|| StrEqual(key, "hit", false) || StrContains(key, "break", false) != -1 || StrEqual(key, "rock", false)) && StringToInt(value) > 0))
+
+		if (g_esTank[iIndex].g_iAbilityCount != -1 && (bFoundSection(subsection, 0) || bFoundSection(subsection, 1) || bFoundSection(subsection, 2) || bFoundSection(subsection, 3))
+			&& (((!strncmp(key, "ability", 7, false) && StrContains(key, "enabled", false) != -1) || StrEqual(key, "aenabled", false) || (StrContains(key, " hit", false) != -1
+			&& StrContains(key, "mode", false) == -1) || StrEqual(key, "hit", false) || StrContains(key, "break", false) != -1 || StrEqual(key, "rock", false)) && StringToInt(value) > 0))
 		{
 			g_esTank[iIndex].g_iAbilityCount++;
 		}
@@ -16362,12 +16364,13 @@ void vReadTankSettings(int type, int mode, const char[] subsection, const char[]
 
 void vReadTeammateSettings(int special, int specType, int mode, const char[] subsection, const char[] specsection, const char[] key, const char[] value)
 {
+	int iSpecType = iGetSpecialType(key);
 	g_esTeammate[special][specType].g_iSpecialModel = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "SpecialModel", "Special Model", "Special_Model", "model", g_esTeammate[special][specType].g_iSpecialModel, value, -1, 3);
-	g_esTeammate[special][specType].g_iSpecialModel = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "Model", "Model", "Model", "model", g_esTeammate[special][specType].g_iSpecialModel, value, -1, 3, specType);
+	g_esTeammate[iSpecType][specType].g_iSpecialModel = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "Model", "Model", "Model", "model", g_esTeammate[special][iSpecType].g_iSpecialModel, value, -1, 3, iSpecType);
 	g_esTeammate[special][specType].g_flBurnDuration = flGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "BurnDuration", "Burn Duration", "Burn_Duration", "burndur", g_esTeammate[special][specType].g_flBurnDuration, value, -1.0, 99999.0, specType);
 	g_esTeammate[special][specType].g_flBurntSkin = flGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "BurntSkin", "Burnt Skin", "Burnt_Skin", "burnt", g_esTeammate[special][specType].g_flBurntSkin, value, -2.0, 1.0, specType);
 	g_esTeammate[special][specType].g_iSpecialNote = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "SpecialNote", "Special Note", "Special_Note", "note", g_esTeammate[special][specType].g_iSpecialNote, value, -1, 1);
-	g_esTeammate[special][specType].g_iSpecialNote = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "Note", "Note", "Note", "note", g_esTeammate[special][specType].g_iSpecialNote, value, -1, 1, specType);
+	g_esTeammate[iSpecType][specType].g_iSpecialNote = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "Note", "Note", "Note", "note", g_esTeammate[special][iSpecType].g_iSpecialNote, value, -1, 1, iSpecType);
 	g_esTeammate[special][specType].g_iDeathRevert = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "DeathRevert", "Death Revert", "Death_Revert", "revert", g_esTeammate[special][specType].g_iDeathRevert, value, -1, 1, specType);
 	g_esTeammate[special][specType].g_iAnnounceArrival = iGetKeyValue(subsection, MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE2, key, "AnnounceArrival", "Announce Arrival", "Announce_Arrival", "arrival", g_esTeammate[special][specType].g_iAnnounceArrival, value, -1, 31, specType);
 	g_esTeammate[special][specType].g_iAnnounceDeath = iGetKeyValue(subsection, MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE2, key, "AnnounceDeath", "Announce Death", "Announce_Death", "death", g_esTeammate[special][specType].g_iAnnounceDeath, value, -1, 2, specType);
@@ -16410,7 +16413,7 @@ void vReadTeammateSettings(int special, int specType, int mode, const char[] sub
 	g_esTeammate[special][specType].g_flPinDamage = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PinDamage", "Pin Damage", "Pin_Damage", "pindmg", g_esTeammate[special][specType].g_flPinDamage, value, -2.0, 99999.0, specType);
 	g_esTeammate[special][specType].g_flRunSpeed = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_esTeammate[special][specType].g_flRunSpeed, value, -1.0, 3.0, specType);
 	g_esTeammate[special][specType].g_flSpecialInterval = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "SpecialInterval", "Special Interval", "Special_Interval", "specint", g_esTeammate[special][specType].g_flSpecialInterval, value, -1.0, 99999.0);
-	g_esTeammate[special][specType].g_flSpecialInterval = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "Interval", "Interval", "Interval", "int", g_esTeammate[special][specType].g_flSpecialInterval, value, -1.0, 99999.0, specType);
+	g_esTeammate[special][iSpecType].g_flSpecialInterval = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "Interval", "Interval", "Interval", "int", g_esTeammate[special][iSpecType].g_flSpecialInterval, value, -1.0, 99999.0, iSpecType);
 	g_esTeammate[special][specType].g_iThrowRock = iGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "ThrowRock", "Throw Rock", "Throw_Rock", "throwrock", g_esTeammate[special][specType].g_iThrowRock, value, -1, 1, specType);
 	g_esTeammate[special][specType].g_iBulletImmunity = iGetKeyValue(subsection, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE2, key, "BulletImmunity", "Bullet Immunity", "Bullet_Immunity", "bullet", g_esTeammate[special][specType].g_iBulletImmunity, value, -1, 1, specType);
 	g_esTeammate[special][specType].g_iExplosiveImmunity = iGetKeyValue(subsection, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE2, key, "ExplosiveImmunity", "Explosive Immunity", "Explosive_Immunity", "explosive", g_esTeammate[special][specType].g_iExplosiveImmunity, value, -1, 1, specType);
@@ -16436,10 +16439,10 @@ void vReadTeammateSettings(int special, int specType, int mode, const char[] sub
 				g_esTeammate[special][specType].g_iSkinColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 			}
 		}
-		else
+		else if (StrContains(key, "Name", false) != -1)
 		{
 			vGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "SpecialName", "Special Name", "Special_Name", "name", g_esTeammate[special][specType].g_sSpecialName, sizeof esTeammate::g_sSpecialName, value);
-			vGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "Name", "Name", "Name", "name", g_esTeammate[special][specType].g_sSpecialName, sizeof esTeammate::g_sSpecialName, value, specType);
+			vGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "Name", "Name", "Name", "name", g_esTeammate[special][iSpecType].g_sSpecialName, sizeof esTeammate::g_sSpecialName, value, iSpecType);
 		}
 	}
 	else if (StrEqual(subsection, MT_CONFIG_SECTION_REWARDS, false))
@@ -19216,10 +19219,10 @@ void SMCParseStart_Main(SMCParser smc)
 
 			for (int iSpecType = 0; iSpecType < (sizeof g_sSpecialNames); iSpecType++)
 			{
-				strcopy(g_esSpecial[iIndex][iSpecType].g_sSpecialName, sizeof esSpecial::g_sSpecialName, g_sSpecialNames[iSpecType]);
 				g_esSpecial[iIndex][iSpecType].g_sGlowColor[0] = '\0';
 				g_esSpecial[iIndex][iSpecType].g_sSkinColor[0] = '\0';
 				g_esSpecial[iIndex][iSpecType].g_sRockColor[0] = '\0';
+				g_esSpecial[iIndex][iSpecType].g_sSpecialName[0] = '\0';
 				g_esSpecial[iIndex][iSpecType].g_iSpecialTypes = -1;
 				g_esSpecial[iIndex][iSpecType].g_iSpecialEnabled = -1;
 				g_esSpecial[iIndex][iSpecType].g_iGameType = -1;
@@ -20092,7 +20095,7 @@ void vLogCommand(int admin, int type, const char[] activity, any ...)
 
 void vLogMessage(int type, bool timestamp = true, const char[] message, any ...)
 {
-	if (type == -1 || (g_esGeneral.g_iLogMessages & type))
+	if (type <= -1 || (g_esGeneral.g_iLogMessages & type))
 	{
 		Action aResult = Plugin_Continue;
 		Call_StartForward(g_esGeneral.g_gfLogMessageForward);
@@ -26668,6 +26671,19 @@ int[] iGetSpecialSections(const char[] specsection)
 	}
 
 	return iTypes;
+}
+
+int iGetSpecialType(const char[] key)
+{
+	for (int iSpecType = 0; iSpecType < (sizeof g_sSpecialNames); iSpecType++)
+	{
+		if (StrContains(key, g_sSpecialNames[iSpecType], false) == 0)
+		{
+			return iSpecType;
+		}
+	}
+
+	return 0;
 }
 
 int iGetSpecialTypes(int setting, const char[] specsection)
