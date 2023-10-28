@@ -96,7 +96,6 @@ enum struct esAcidPlayer
 	int g_iHumanRangeCooldown;
 	int g_iHumanRockCooldown;
 	int g_iImmunityFlags;
-	int g_iInfectedType;
 	int g_iRangeCooldown;
 	int g_iRequiresHumans;
 	int g_iRockCooldown;
@@ -136,7 +135,7 @@ enum struct esAcidTeammate
 	int g_iRequiresHumans;
 }
 
-esAcidTeammate g_esAcidTeammate[MAXPLAYERS + 1][7];
+esAcidTeammate g_esAcidTeammate[MAXPLAYERS + 1];
 
 enum struct esAcidAbility
 {
@@ -204,7 +203,7 @@ enum struct esAcidSpecial
 	int g_iRequiresHumans;
 }
 
-esAcidSpecial g_esAcidSpecial[MT_MAXTYPES + 1][7];
+esAcidSpecial g_esAcidSpecial[MT_MAXTYPES + 1];
 
 enum struct esAcidCache
 {
@@ -714,35 +713,32 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAcidAbility[iIndex].g_iAcidRockCooldown = 0;
 				g_esAcidAbility[iIndex].g_iAcidSight = 0;
 
-				for (int iSpecType = 0; iSpecType < (sizeof g_sSpecialNames); iSpecType++)
-				{
-					g_esAcidSpecial[iIndex][iSpecType].g_flCloseAreasOnly = -1.0;
-					g_esAcidSpecial[iIndex][iSpecType].g_iComboAbility = -1;
-					g_esAcidSpecial[iIndex][iSpecType].g_iHumanAbility = -1;
-					g_esAcidSpecial[iIndex][iSpecType].g_iHumanAmmo = -1;
-					g_esAcidSpecial[iIndex][iSpecType].g_iHumanCooldown = -1;
-					g_esAcidSpecial[iIndex][iSpecType].g_iHumanRangeCooldown = -1;
-					g_esAcidSpecial[iIndex][iSpecType].g_iHumanRockCooldown = -1;
-					g_esAcidSpecial[iIndex][iSpecType].g_flOpenAreasOnly = -1.0;
-					g_esAcidSpecial[iIndex][iSpecType].g_iRequiresHumans = -1;
-					g_esAcidSpecial[iIndex][iSpecType].g_iAcidAbility = -1;
-					g_esAcidSpecial[iIndex][iSpecType].g_iAcidEffect = -1;
-					g_esAcidSpecial[iIndex][iSpecType].g_iAcidMessage = -1;
-					g_esAcidSpecial[iIndex][iSpecType].g_flAcidChance = -1.0;
-					g_esAcidSpecial[iIndex][iSpecType].g_iAcidCooldown = -1;
-					g_esAcidSpecial[iIndex][iSpecType].g_iAcidDeath = -1;
-					g_esAcidSpecial[iIndex][iSpecType].g_flAcidDeathChance = -1.0;
-					g_esAcidSpecial[iIndex][iSpecType].g_flAcidDeathRange = -1.0;
-					g_esAcidSpecial[iIndex][iSpecType].g_iAcidHit = -1;
-					g_esAcidSpecial[iIndex][iSpecType].g_iAcidHitMode = -1;
-					g_esAcidSpecial[iIndex][iSpecType].g_flAcidRange = -1.0;
-					g_esAcidSpecial[iIndex][iSpecType].g_flAcidRangeChance = -1.0;
-					g_esAcidSpecial[iIndex][iSpecType].g_iAcidRangeCooldown = -1;
-					g_esAcidSpecial[iIndex][iSpecType].g_iAcidRockBreak = -1;
-					g_esAcidSpecial[iIndex][iSpecType].g_flAcidRockChance = -1.0;
-					g_esAcidSpecial[iIndex][iSpecType].g_iAcidRockCooldown = -1;
-					g_esAcidSpecial[iIndex][iSpecType].g_iAcidSight = -1;
-				}
+				g_esAcidSpecial[iIndex].g_flCloseAreasOnly = -1.0;
+				g_esAcidSpecial[iIndex].g_iComboAbility = -1;
+				g_esAcidSpecial[iIndex].g_iHumanAbility = -1;
+				g_esAcidSpecial[iIndex].g_iHumanAmmo = -1;
+				g_esAcidSpecial[iIndex].g_iHumanCooldown = -1;
+				g_esAcidSpecial[iIndex].g_iHumanRangeCooldown = -1;
+				g_esAcidSpecial[iIndex].g_iHumanRockCooldown = -1;
+				g_esAcidSpecial[iIndex].g_flOpenAreasOnly = -1.0;
+				g_esAcidSpecial[iIndex].g_iRequiresHumans = -1;
+				g_esAcidSpecial[iIndex].g_iAcidAbility = -1;
+				g_esAcidSpecial[iIndex].g_iAcidEffect = -1;
+				g_esAcidSpecial[iIndex].g_iAcidMessage = -1;
+				g_esAcidSpecial[iIndex].g_flAcidChance = -1.0;
+				g_esAcidSpecial[iIndex].g_iAcidCooldown = -1;
+				g_esAcidSpecial[iIndex].g_iAcidDeath = -1;
+				g_esAcidSpecial[iIndex].g_flAcidDeathChance = -1.0;
+				g_esAcidSpecial[iIndex].g_flAcidDeathRange = -1.0;
+				g_esAcidSpecial[iIndex].g_iAcidHit = -1;
+				g_esAcidSpecial[iIndex].g_iAcidHitMode = -1;
+				g_esAcidSpecial[iIndex].g_flAcidRange = -1.0;
+				g_esAcidSpecial[iIndex].g_flAcidRangeChance = -1.0;
+				g_esAcidSpecial[iIndex].g_iAcidRangeCooldown = -1;
+				g_esAcidSpecial[iIndex].g_iAcidRockBreak = -1;
+				g_esAcidSpecial[iIndex].g_flAcidRockChance = -1.0;
+				g_esAcidSpecial[iIndex].g_iAcidRockCooldown = -1;
+				g_esAcidSpecial[iIndex].g_iAcidSight = -1;
 			}
 		}
 		case 3:
@@ -778,76 +774,73 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAcidPlayer[iPlayer].g_iAcidRockCooldown = -1;
 				g_esAcidPlayer[iPlayer].g_iAcidSight = -1;
 
-				for (int iSpecType = 0; iSpecType < (sizeof g_sSpecialNames); iSpecType++)
-				{
-					g_esAcidTeammate[iPlayer][iSpecType].g_flCloseAreasOnly = -1.0;
-					g_esAcidTeammate[iPlayer][iSpecType].g_iComboAbility = -1;
-					g_esAcidTeammate[iPlayer][iSpecType].g_iHumanAbility = -1;
-					g_esAcidTeammate[iPlayer][iSpecType].g_iHumanAmmo = -1;
-					g_esAcidTeammate[iPlayer][iSpecType].g_iHumanCooldown = -1;
-					g_esAcidTeammate[iPlayer][iSpecType].g_iHumanRangeCooldown = -1;
-					g_esAcidTeammate[iPlayer][iSpecType].g_iHumanRockCooldown = -1;
-					g_esAcidTeammate[iPlayer][iSpecType].g_flOpenAreasOnly = -1.0;
-					g_esAcidTeammate[iPlayer][iSpecType].g_iRequiresHumans = -1;
-					g_esAcidTeammate[iPlayer][iSpecType].g_iAcidAbility = -1;
-					g_esAcidTeammate[iPlayer][iSpecType].g_iAcidEffect = -1;
-					g_esAcidTeammate[iPlayer][iSpecType].g_iAcidMessage = -1;
-					g_esAcidTeammate[iPlayer][iSpecType].g_flAcidChance = -1.0;
-					g_esAcidTeammate[iPlayer][iSpecType].g_iAcidCooldown = -1;
-					g_esAcidTeammate[iPlayer][iSpecType].g_iAcidDeath = -1;
-					g_esAcidTeammate[iPlayer][iSpecType].g_flAcidDeathChance = -1.0;
-					g_esAcidTeammate[iPlayer][iSpecType].g_flAcidDeathRange = -1.0;
-					g_esAcidTeammate[iPlayer][iSpecType].g_iAcidHit = -1;
-					g_esAcidTeammate[iPlayer][iSpecType].g_iAcidHitMode = -1;
-					g_esAcidTeammate[iPlayer][iSpecType].g_flAcidRange = -1.0;
-					g_esAcidTeammate[iPlayer][iSpecType].g_flAcidRangeChance = -1.0;
-					g_esAcidTeammate[iPlayer][iSpecType].g_iAcidRangeCooldown = -1;
-					g_esAcidTeammate[iPlayer][iSpecType].g_iAcidRockBreak = -1;
-					g_esAcidTeammate[iPlayer][iSpecType].g_flAcidRockChance = -1.0;
-					g_esAcidTeammate[iPlayer][iSpecType].g_iAcidRockCooldown = -1;
-					g_esAcidTeammate[iPlayer][iSpecType].g_iAcidSight = -1;
-				}
+				g_esAcidTeammate[iPlayer].g_flCloseAreasOnly = -1.0;
+				g_esAcidTeammate[iPlayer].g_iComboAbility = -1;
+				g_esAcidTeammate[iPlayer].g_iHumanAbility = -1;
+				g_esAcidTeammate[iPlayer].g_iHumanAmmo = -1;
+				g_esAcidTeammate[iPlayer].g_iHumanCooldown = -1;
+				g_esAcidTeammate[iPlayer].g_iHumanRangeCooldown = -1;
+				g_esAcidTeammate[iPlayer].g_iHumanRockCooldown = -1;
+				g_esAcidTeammate[iPlayer].g_flOpenAreasOnly = -1.0;
+				g_esAcidTeammate[iPlayer].g_iRequiresHumans = -1;
+				g_esAcidTeammate[iPlayer].g_iAcidAbility = -1;
+				g_esAcidTeammate[iPlayer].g_iAcidEffect = -1;
+				g_esAcidTeammate[iPlayer].g_iAcidMessage = -1;
+				g_esAcidTeammate[iPlayer].g_flAcidChance = -1.0;
+				g_esAcidTeammate[iPlayer].g_iAcidCooldown = -1;
+				g_esAcidTeammate[iPlayer].g_iAcidDeath = -1;
+				g_esAcidTeammate[iPlayer].g_flAcidDeathChance = -1.0;
+				g_esAcidTeammate[iPlayer].g_flAcidDeathRange = -1.0;
+				g_esAcidTeammate[iPlayer].g_iAcidHit = -1;
+				g_esAcidTeammate[iPlayer].g_iAcidHitMode = -1;
+				g_esAcidTeammate[iPlayer].g_flAcidRange = -1.0;
+				g_esAcidTeammate[iPlayer].g_flAcidRangeChance = -1.0;
+				g_esAcidTeammate[iPlayer].g_iAcidRangeCooldown = -1;
+				g_esAcidTeammate[iPlayer].g_iAcidRockBreak = -1;
+				g_esAcidTeammate[iPlayer].g_flAcidRockChance = -1.0;
+				g_esAcidTeammate[iPlayer].g_iAcidRockCooldown = -1;
+				g_esAcidTeammate[iPlayer].g_iAcidSight = -1;
 			}
 		}
 	}
 }
 
 #if defined MT_ABILITIES_MAIN
-void vAcidConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, int specType)
+void vAcidConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #else
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, int specType)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #endif
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esAcidTeammate[admin][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esAcidTeammate[admin][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specType);
-			g_esAcidTeammate[admin][specType].g_iComboAbility = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esAcidTeammate[admin][specType].g_iComboAbility, value, -1, 1, specType);
-			g_esAcidTeammate[admin][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAcidTeammate[admin][specType].g_iHumanAbility, value, -1, 2, specType);
-			g_esAcidTeammate[admin][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAcidTeammate[admin][specType].g_iHumanAmmo, value, -1, 99999, specType);
-			g_esAcidTeammate[admin][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAcidTeammate[admin][specType].g_iHumanCooldown, value, -1, 99999, specType);
-			g_esAcidTeammate[admin][specType].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esAcidTeammate[admin][specType].g_iHumanRangeCooldown, value, -1, 99999, specType);
-			g_esAcidTeammate[admin][specType].g_iHumanRockCooldown = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "HumanRockCooldown", "Human Rock Cooldown", "Human_Rock_Cooldown", "hrockcooldown", g_esAcidTeammate[admin][specType].g_iHumanRockCooldown, value, -1, 99999, specType);
-			g_esAcidTeammate[admin][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAcidTeammate[admin][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specType);
-			g_esAcidTeammate[admin][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAcidTeammate[admin][specType].g_iRequiresHumans, value, -1, 32, specType);
-			g_esAcidTeammate[admin][specType].g_iAcidAbility = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAcidTeammate[admin][specType].g_iAcidAbility, value, -1, 1, specType);
-			g_esAcidTeammate[admin][specType].g_iAcidEffect = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAcidTeammate[admin][specType].g_iAcidEffect, value, -1, 7, specType);
-			g_esAcidTeammate[admin][specType].g_iAcidMessage = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAcidTeammate[admin][specType].g_iAcidMessage, value, -1, 7, specType);
-			g_esAcidTeammate[admin][specType].g_iAcidSight = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esAcidTeammate[admin][specType].g_iAcidSight, value, -1, 2, specType);
-			g_esAcidTeammate[admin][specType].g_flAcidChance = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidChance", "Acid Chance", "Acid_Chance", "chance", g_esAcidTeammate[admin][specType].g_flAcidChance, value, -1.0, 100.0, specType);
-			g_esAcidTeammate[admin][specType].g_iAcidCooldown = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidCooldown", "Acid Cooldown", "Acid_Cooldown", "cooldown", g_esAcidTeammate[admin][specType].g_iAcidCooldown, value, -1, 99999, specType);
-			g_esAcidTeammate[admin][specType].g_iAcidDeath = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidDeath", "Acid Death", "Acid_Death", "death", g_esAcidTeammate[admin][specType].g_iAcidDeath, value, -1, 1, specType);
-			g_esAcidTeammate[admin][specType].g_flAcidDeathChance = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidDeathChance", "Acid Death Chance", "Acid_Death_Chance", "deathchance", g_esAcidTeammate[admin][specType].g_flAcidDeathChance, value, -1.0, 100.0, specType);
-			g_esAcidTeammate[admin][specType].g_flAcidDeathRange = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidDeathRange", "Acid Death Range", "Acid_Death_Range", "deathrange", g_esAcidTeammate[admin][specType].g_flAcidDeathRange, value, -1.0, 99999.0, specType);
-			g_esAcidTeammate[admin][specType].g_iAcidHit = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidHit", "Acid Hit", "Acid_Hit", "hit", g_esAcidTeammate[admin][specType].g_iAcidHit, value, -1, 1, specType);
-			g_esAcidTeammate[admin][specType].g_iAcidHitMode = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidHitMode", "Acid Hit Mode", "Acid_Hit_Mode", "hitmode", g_esAcidTeammate[admin][specType].g_iAcidHitMode, value, -1, 2, specType);
-			g_esAcidTeammate[admin][specType].g_flAcidRange = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRange", "Acid Range", "Acid_Range", "range", g_esAcidTeammate[admin][specType].g_flAcidRange, value, -1.0, 99999.0, specType);
-			g_esAcidTeammate[admin][specType].g_flAcidRangeChance = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRangeChance", "Acid Range Chance", "Acid_Range_Chance", "rangechance", g_esAcidTeammate[admin][specType].g_flAcidRangeChance, value, -1.0, 100.0, specType);
-			g_esAcidTeammate[admin][specType].g_iAcidRangeCooldown = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRangeCooldown", "Acid Range Cooldown", "Acid_Range_Cooldown", "rangecooldown", g_esAcidTeammate[admin][specType].g_iAcidRangeCooldown, value, -1, 99999, specType);
-			g_esAcidTeammate[admin][specType].g_iAcidRockBreak = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRockBreak", "Acid Rock Break", "Acid_Rock_Break", "rock", g_esAcidTeammate[admin][specType].g_iAcidRockBreak, value, -1, 1, specType);
-			g_esAcidTeammate[admin][specType].g_flAcidRockChance = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRockChance", "Acid Rock Chance", "Acid_Rock_Chance", "rockchance", g_esAcidTeammate[admin][specType].g_flAcidRockChance, value, -1.0, 100.0, specType);
-			g_esAcidTeammate[admin][specType].g_iAcidRockCooldown = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRockCooldown", "Acid Rock Cooldown", "Acid_Rock_Cooldown", "rockcooldown", g_esAcidTeammate[admin][specType].g_iAcidRockCooldown, value, -1, 99999, specType);
+			g_esAcidTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esAcidTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esAcidTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esAcidTeammate[admin].g_iComboAbility, value, -1, 1);
+			g_esAcidTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAcidTeammate[admin].g_iHumanAbility, value, -1, 2);
+			g_esAcidTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAcidTeammate[admin].g_iHumanAmmo, value, -1, 99999);
+			g_esAcidTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAcidTeammate[admin].g_iHumanCooldown, value, -1, 99999);
+			g_esAcidTeammate[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esAcidTeammate[admin].g_iHumanRangeCooldown, value, -1, 99999);
+			g_esAcidTeammate[admin].g_iHumanRockCooldown = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "HumanRockCooldown", "Human Rock Cooldown", "Human_Rock_Cooldown", "hrockcooldown", g_esAcidTeammate[admin].g_iHumanRockCooldown, value, -1, 99999);
+			g_esAcidTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAcidTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esAcidTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAcidTeammate[admin].g_iRequiresHumans, value, -1, 32);
+			g_esAcidTeammate[admin].g_iAcidAbility = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAcidTeammate[admin].g_iAcidAbility, value, -1, 1);
+			g_esAcidTeammate[admin].g_iAcidEffect = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAcidTeammate[admin].g_iAcidEffect, value, -1, 7);
+			g_esAcidTeammate[admin].g_iAcidMessage = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAcidTeammate[admin].g_iAcidMessage, value, -1, 7);
+			g_esAcidTeammate[admin].g_iAcidSight = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esAcidTeammate[admin].g_iAcidSight, value, -1, 2);
+			g_esAcidTeammate[admin].g_flAcidChance = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidChance", "Acid Chance", "Acid_Chance", "chance", g_esAcidTeammate[admin].g_flAcidChance, value, -1.0, 100.0);
+			g_esAcidTeammate[admin].g_iAcidCooldown = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidCooldown", "Acid Cooldown", "Acid_Cooldown", "cooldown", g_esAcidTeammate[admin].g_iAcidCooldown, value, -1, 99999);
+			g_esAcidTeammate[admin].g_iAcidDeath = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidDeath", "Acid Death", "Acid_Death", "death", g_esAcidTeammate[admin].g_iAcidDeath, value, -1, 1);
+			g_esAcidTeammate[admin].g_flAcidDeathChance = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidDeathChance", "Acid Death Chance", "Acid_Death_Chance", "deathchance", g_esAcidTeammate[admin].g_flAcidDeathChance, value, -1.0, 100.0);
+			g_esAcidTeammate[admin].g_flAcidDeathRange = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidDeathRange", "Acid Death Range", "Acid_Death_Range", "deathrange", g_esAcidTeammate[admin].g_flAcidDeathRange, value, -1.0, 99999.0);
+			g_esAcidTeammate[admin].g_iAcidHit = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidHit", "Acid Hit", "Acid_Hit", "hit", g_esAcidTeammate[admin].g_iAcidHit, value, -1, 1);
+			g_esAcidTeammate[admin].g_iAcidHitMode = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidHitMode", "Acid Hit Mode", "Acid_Hit_Mode", "hitmode", g_esAcidTeammate[admin].g_iAcidHitMode, value, -1, 2);
+			g_esAcidTeammate[admin].g_flAcidRange = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRange", "Acid Range", "Acid_Range", "range", g_esAcidTeammate[admin].g_flAcidRange, value, -1.0, 99999.0);
+			g_esAcidTeammate[admin].g_flAcidRangeChance = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRangeChance", "Acid Range Chance", "Acid_Range_Chance", "rangechance", g_esAcidTeammate[admin].g_flAcidRangeChance, value, -1.0, 100.0);
+			g_esAcidTeammate[admin].g_iAcidRangeCooldown = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRangeCooldown", "Acid Range Cooldown", "Acid_Range_Cooldown", "rangecooldown", g_esAcidTeammate[admin].g_iAcidRangeCooldown, value, -1, 99999);
+			g_esAcidTeammate[admin].g_iAcidRockBreak = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRockBreak", "Acid Rock Break", "Acid_Rock_Break", "rock", g_esAcidTeammate[admin].g_iAcidRockBreak, value, -1, 1);
+			g_esAcidTeammate[admin].g_flAcidRockChance = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRockChance", "Acid Rock Chance", "Acid_Rock_Chance", "rockchance", g_esAcidTeammate[admin].g_flAcidRockChance, value, -1.0, 100.0);
+			g_esAcidTeammate[admin].g_iAcidRockCooldown = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRockCooldown", "Acid Rock Cooldown", "Acid_Rock_Cooldown", "rockcooldown", g_esAcidTeammate[admin].g_iAcidRockCooldown, value, -1, 99999);
 		}
 		else
 		{
@@ -886,32 +879,32 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esAcidSpecial[type][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esAcidSpecial[type][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specType);
-			g_esAcidSpecial[type][specType].g_iComboAbility = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esAcidSpecial[type][specType].g_iComboAbility, value, -1, 1, specType);
-			g_esAcidSpecial[type][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAcidSpecial[type][specType].g_iHumanAbility, value, -1, 2, specType);
-			g_esAcidSpecial[type][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAcidSpecial[type][specType].g_iHumanAmmo, value, -1, 99999, specType);
-			g_esAcidSpecial[type][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAcidSpecial[type][specType].g_iHumanCooldown, value, -1, 99999, specType);
-			g_esAcidSpecial[type][specType].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esAcidSpecial[type][specType].g_iHumanRangeCooldown, value, -1, 99999, specType);
-			g_esAcidSpecial[type][specType].g_iHumanRockCooldown = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "HumanRockCooldown", "Human Rock Cooldown", "Human_Rock_Cooldown", "hrockcooldown", g_esAcidSpecial[type][specType].g_iHumanRockCooldown, value, -1, 99999, specType);
-			g_esAcidSpecial[type][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAcidSpecial[type][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specType);
-			g_esAcidSpecial[type][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAcidSpecial[type][specType].g_iRequiresHumans, value, -1, 32, specType);
-			g_esAcidSpecial[type][specType].g_iAcidAbility = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAcidSpecial[type][specType].g_iAcidAbility, value, -1, 1, specType);
-			g_esAcidSpecial[type][specType].g_iAcidEffect = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAcidSpecial[type][specType].g_iAcidEffect, value, -1, 7, specType);
-			g_esAcidSpecial[type][specType].g_iAcidMessage = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAcidSpecial[type][specType].g_iAcidMessage, value, -1, 7, specType);
-			g_esAcidSpecial[type][specType].g_iAcidSight = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esAcidSpecial[type][specType].g_iAcidSight, value, -1, 2, specType);
-			g_esAcidSpecial[type][specType].g_flAcidChance = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidChance", "Acid Chance", "Acid_Chance", "chance", g_esAcidSpecial[type][specType].g_flAcidChance, value, -1.0, 100.0, specType);
-			g_esAcidSpecial[type][specType].g_iAcidCooldown = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidCooldown", "Acid Cooldown", "Acid_Cooldown", "cooldown", g_esAcidSpecial[type][specType].g_iAcidCooldown, value, -1, 99999, specType);
-			g_esAcidSpecial[type][specType].g_iAcidDeath = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidDeath", "Acid Death", "Acid_Death", "death", g_esAcidSpecial[type][specType].g_iAcidDeath, value, -1, 1, specType);
-			g_esAcidSpecial[type][specType].g_flAcidDeathChance = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidDeathChance", "Acid Death Chance", "Acid_Death_Chance", "deathchance", g_esAcidSpecial[type][specType].g_flAcidDeathChance, value, -1.0, 100.0, specType);
-			g_esAcidSpecial[type][specType].g_flAcidDeathRange = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidDeathRange", "Acid Death Range", "Acid_Death_Range", "deathrange", g_esAcidSpecial[type][specType].g_flAcidDeathRange, value, -1.0, 99999.0, specType);
-			g_esAcidSpecial[type][specType].g_iAcidHit = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidHit", "Acid Hit", "Acid_Hit", "hit", g_esAcidSpecial[type][specType].g_iAcidHit, value, -1, 1, specType);
-			g_esAcidSpecial[type][specType].g_iAcidHitMode = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidHitMode", "Acid Hit Mode", "Acid_Hit_Mode", "hitmode", g_esAcidSpecial[type][specType].g_iAcidHitMode, value, -1, 2, specType);
-			g_esAcidSpecial[type][specType].g_flAcidRange = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRange", "Acid Range", "Acid_Range", "range", g_esAcidSpecial[type][specType].g_flAcidRange, value, -1.0, 99999.0, specType);
-			g_esAcidSpecial[type][specType].g_flAcidRangeChance = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRangeChance", "Acid Range Chance", "Acid_Range_Chance", "rangechance", g_esAcidSpecial[type][specType].g_flAcidRangeChance, value, -1.0, 100.0, specType);
-			g_esAcidSpecial[type][specType].g_iAcidRangeCooldown = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRangeCooldown", "Acid Range Cooldown", "Acid_Range_Cooldown", "rangecooldown", g_esAcidSpecial[type][specType].g_iAcidRangeCooldown, value, -1, 99999, specType);
-			g_esAcidSpecial[type][specType].g_iAcidRockBreak = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRockBreak", "Acid Rock Break", "Acid_Rock_Break", "rock", g_esAcidSpecial[type][specType].g_iAcidRockBreak, value, -1, 1, specType);
-			g_esAcidSpecial[type][specType].g_flAcidRockChance = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRockChance", "Acid Rock Chance", "Acid_Rock_Chance", "rockchance", g_esAcidSpecial[type][specType].g_flAcidRockChance, value, -1.0, 100.0, specType);
-			g_esAcidSpecial[type][specType].g_iAcidRockCooldown = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRockCooldown", "Acid Rock Cooldown", "Acid_Rock_Cooldown", "rockcooldown", g_esAcidSpecial[type][specType].g_iAcidRockCooldown, value, -1, 99999, specType);
+			g_esAcidSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esAcidSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esAcidSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esAcidSpecial[type].g_iComboAbility, value, -1, 1);
+			g_esAcidSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAcidSpecial[type].g_iHumanAbility, value, -1, 2);
+			g_esAcidSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAcidSpecial[type].g_iHumanAmmo, value, -1, 99999);
+			g_esAcidSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAcidSpecial[type].g_iHumanCooldown, value, -1, 99999);
+			g_esAcidSpecial[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esAcidSpecial[type].g_iHumanRangeCooldown, value, -1, 99999);
+			g_esAcidSpecial[type].g_iHumanRockCooldown = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "HumanRockCooldown", "Human Rock Cooldown", "Human_Rock_Cooldown", "hrockcooldown", g_esAcidSpecial[type].g_iHumanRockCooldown, value, -1, 99999);
+			g_esAcidSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAcidSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esAcidSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAcidSpecial[type].g_iRequiresHumans, value, -1, 32);
+			g_esAcidSpecial[type].g_iAcidAbility = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAcidSpecial[type].g_iAcidAbility, value, -1, 1);
+			g_esAcidSpecial[type].g_iAcidEffect = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAcidSpecial[type].g_iAcidEffect, value, -1, 7);
+			g_esAcidSpecial[type].g_iAcidMessage = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAcidSpecial[type].g_iAcidMessage, value, -1, 7);
+			g_esAcidSpecial[type].g_iAcidSight = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esAcidSpecial[type].g_iAcidSight, value, -1, 2);
+			g_esAcidSpecial[type].g_flAcidChance = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidChance", "Acid Chance", "Acid_Chance", "chance", g_esAcidSpecial[type].g_flAcidChance, value, -1.0, 100.0);
+			g_esAcidSpecial[type].g_iAcidCooldown = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidCooldown", "Acid Cooldown", "Acid_Cooldown", "cooldown", g_esAcidSpecial[type].g_iAcidCooldown, value, -1, 99999);
+			g_esAcidSpecial[type].g_iAcidDeath = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidDeath", "Acid Death", "Acid_Death", "death", g_esAcidSpecial[type].g_iAcidDeath, value, -1, 1);
+			g_esAcidSpecial[type].g_flAcidDeathChance = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidDeathChance", "Acid Death Chance", "Acid_Death_Chance", "deathchance", g_esAcidSpecial[type].g_flAcidDeathChance, value, -1.0, 100.0);
+			g_esAcidSpecial[type].g_flAcidDeathRange = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidDeathRange", "Acid Death Range", "Acid_Death_Range", "deathrange", g_esAcidSpecial[type].g_flAcidDeathRange, value, -1.0, 99999.0);
+			g_esAcidSpecial[type].g_iAcidHit = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidHit", "Acid Hit", "Acid_Hit", "hit", g_esAcidSpecial[type].g_iAcidHit, value, -1, 1);
+			g_esAcidSpecial[type].g_iAcidHitMode = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidHitMode", "Acid Hit Mode", "Acid_Hit_Mode", "hitmode", g_esAcidSpecial[type].g_iAcidHitMode, value, -1, 2);
+			g_esAcidSpecial[type].g_flAcidRange = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRange", "Acid Range", "Acid_Range", "range", g_esAcidSpecial[type].g_flAcidRange, value, -1.0, 99999.0);
+			g_esAcidSpecial[type].g_flAcidRangeChance = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRangeChance", "Acid Range Chance", "Acid_Range_Chance", "rangechance", g_esAcidSpecial[type].g_flAcidRangeChance, value, -1.0, 100.0);
+			g_esAcidSpecial[type].g_iAcidRangeCooldown = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRangeCooldown", "Acid Range Cooldown", "Acid_Range_Cooldown", "rangecooldown", g_esAcidSpecial[type].g_iAcidRangeCooldown, value, -1, 99999);
+			g_esAcidSpecial[type].g_iAcidRockBreak = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRockBreak", "Acid Rock Break", "Acid_Rock_Break", "rock", g_esAcidSpecial[type].g_iAcidRockBreak, value, -1, 1);
+			g_esAcidSpecial[type].g_flAcidRockChance = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRockChance", "Acid Rock Chance", "Acid_Rock_Chance", "rockchance", g_esAcidSpecial[type].g_flAcidRockChance, value, -1.0, 100.0);
+			g_esAcidSpecial[type].g_iAcidRockCooldown = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRockCooldown", "Acid Rock Cooldown", "Acid_Rock_Cooldown", "rockcooldown", g_esAcidSpecial[type].g_iAcidRockCooldown, value, -1, 99999);
 		}
 		else
 		{
@@ -954,38 +947,36 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
-	g_esAcidPlayer[tank].g_iInfectedType = iGetInfectedType(tank);
 	g_esAcidPlayer[tank].g_iTankType = apply ? type : 0;
-	int iSpecType = g_esAcidPlayer[tank].g_iInfectedType;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esAcidCache[tank].g_flAcidChance = flGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank][0].g_flAcidChance, g_esAcidTeammate[tank][iSpecType].g_flAcidChance, g_esAcidPlayer[tank].g_flAcidChance, g_esAcidSpecial[type][0].g_flAcidChance, g_esAcidSpecial[type][iSpecType].g_flAcidChance, g_esAcidAbility[type].g_flAcidChance, 1);
-		g_esAcidCache[tank].g_flAcidDeathChance = flGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank][0].g_flAcidDeathChance, g_esAcidTeammate[tank][iSpecType].g_flAcidDeathChance, g_esAcidPlayer[tank].g_flAcidDeathChance, g_esAcidSpecial[type][0].g_flAcidDeathChance, g_esAcidSpecial[type][iSpecType].g_flAcidDeathChance, g_esAcidAbility[type].g_flAcidDeathChance, 1);
-		g_esAcidCache[tank].g_flAcidDeathRange = flGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank][0].g_flAcidDeathRange, g_esAcidTeammate[tank][iSpecType].g_flAcidDeathRange, g_esAcidPlayer[tank].g_flAcidDeathRange, g_esAcidSpecial[type][0].g_flAcidDeathRange, g_esAcidSpecial[type][iSpecType].g_flAcidDeathRange, g_esAcidAbility[type].g_flAcidDeathRange, 1);
-		g_esAcidCache[tank].g_flAcidRange = flGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank][0].g_flAcidRange, g_esAcidTeammate[tank][iSpecType].g_flAcidRange, g_esAcidPlayer[tank].g_flAcidRange, g_esAcidSpecial[type][0].g_flAcidRange, g_esAcidSpecial[type][iSpecType].g_flAcidRange, g_esAcidAbility[type].g_flAcidRange, 1);
-		g_esAcidCache[tank].g_flAcidRangeChance = flGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank][0].g_flAcidRangeChance, g_esAcidTeammate[tank][iSpecType].g_flAcidRangeChance, g_esAcidPlayer[tank].g_flAcidRangeChance, g_esAcidSpecial[type][0].g_flAcidRangeChance, g_esAcidSpecial[type][iSpecType].g_flAcidRangeChance, g_esAcidAbility[type].g_flAcidRangeChance, 1);
-		g_esAcidCache[tank].g_flAcidRockChance = flGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank][0].g_flAcidRockChance, g_esAcidTeammate[tank][iSpecType].g_flAcidRockChance, g_esAcidPlayer[tank].g_flAcidRockChance, g_esAcidSpecial[type][0].g_flAcidRockChance, g_esAcidSpecial[type][iSpecType].g_flAcidRockChance, g_esAcidAbility[type].g_flAcidRockChance, 1);
-		g_esAcidCache[tank].g_iAcidAbility = iGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank][0].g_iAcidAbility, g_esAcidTeammate[tank][iSpecType].g_iAcidAbility, g_esAcidPlayer[tank].g_iAcidAbility, g_esAcidSpecial[type][0].g_iAcidAbility, g_esAcidSpecial[type][iSpecType].g_iAcidAbility, g_esAcidAbility[type].g_iAcidAbility, 1);
-		g_esAcidCache[tank].g_iAcidCooldown = iGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank][0].g_iAcidCooldown, g_esAcidTeammate[tank][iSpecType].g_iAcidCooldown, g_esAcidPlayer[tank].g_iAcidCooldown, g_esAcidSpecial[type][0].g_iAcidCooldown, g_esAcidSpecial[type][iSpecType].g_iAcidCooldown, g_esAcidAbility[type].g_iAcidCooldown, 1);
-		g_esAcidCache[tank].g_iAcidDeath = iGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank][0].g_iAcidDeath, g_esAcidTeammate[tank][iSpecType].g_iAcidDeath, g_esAcidPlayer[tank].g_iAcidDeath, g_esAcidSpecial[type][0].g_iAcidDeath, g_esAcidSpecial[type][iSpecType].g_iAcidDeath, g_esAcidAbility[type].g_iAcidDeath, 1);
-		g_esAcidCache[tank].g_iAcidEffect = iGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank][0].g_iAcidEffect, g_esAcidTeammate[tank][iSpecType].g_iAcidEffect, g_esAcidPlayer[tank].g_iAcidEffect, g_esAcidSpecial[type][0].g_iAcidEffect, g_esAcidSpecial[type][iSpecType].g_iAcidEffect, g_esAcidAbility[type].g_iAcidEffect, 1);
-		g_esAcidCache[tank].g_iAcidHit = iGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank][0].g_iAcidHit, g_esAcidTeammate[tank][iSpecType].g_iAcidHit, g_esAcidPlayer[tank].g_iAcidHit, g_esAcidSpecial[type][0].g_iAcidHit, g_esAcidSpecial[type][iSpecType].g_iAcidHit, g_esAcidAbility[type].g_iAcidHit, 1);
-		g_esAcidCache[tank].g_iAcidHitMode = iGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank][0].g_iAcidHitMode, g_esAcidTeammate[tank][iSpecType].g_iAcidHitMode, g_esAcidPlayer[tank].g_iAcidHitMode, g_esAcidSpecial[type][0].g_iAcidHitMode, g_esAcidSpecial[type][iSpecType].g_iAcidHitMode, g_esAcidAbility[type].g_iAcidHitMode, 1);
-		g_esAcidCache[tank].g_iAcidMessage = iGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank][0].g_iAcidMessage, g_esAcidTeammate[tank][iSpecType].g_iAcidMessage, g_esAcidPlayer[tank].g_iAcidMessage, g_esAcidSpecial[type][0].g_iAcidMessage, g_esAcidSpecial[type][iSpecType].g_iAcidMessage, g_esAcidAbility[type].g_iAcidMessage, 1);
-		g_esAcidCache[tank].g_iAcidRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank][0].g_iAcidRangeCooldown, g_esAcidTeammate[tank][iSpecType].g_iAcidRangeCooldown, g_esAcidPlayer[tank].g_iAcidRangeCooldown, g_esAcidSpecial[type][0].g_iAcidRangeCooldown, g_esAcidSpecial[type][iSpecType].g_iAcidRangeCooldown, g_esAcidAbility[type].g_iAcidRangeCooldown, 1);
-		g_esAcidCache[tank].g_iAcidRockBreak = iGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank][0].g_iAcidRockBreak, g_esAcidTeammate[tank][iSpecType].g_iAcidRockBreak, g_esAcidPlayer[tank].g_iAcidRockBreak, g_esAcidSpecial[type][0].g_iAcidRockBreak, g_esAcidSpecial[type][iSpecType].g_iAcidRockBreak, g_esAcidAbility[type].g_iAcidRockBreak, 1);
-		g_esAcidCache[tank].g_iAcidRockCooldown = iGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank][0].g_iAcidRockCooldown, g_esAcidTeammate[tank][iSpecType].g_iAcidRockCooldown, g_esAcidPlayer[tank].g_iAcidRockCooldown, g_esAcidSpecial[type][0].g_iAcidRockCooldown, g_esAcidSpecial[type][iSpecType].g_iAcidRockCooldown, g_esAcidAbility[type].g_iAcidRockCooldown, 1);
-		g_esAcidCache[tank].g_iAcidSight = iGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank][0].g_iAcidSight, g_esAcidTeammate[tank][iSpecType].g_iAcidSight, g_esAcidPlayer[tank].g_iAcidSight, g_esAcidSpecial[type][0].g_iAcidSight, g_esAcidSpecial[type][iSpecType].g_iAcidSight, g_esAcidAbility[type].g_iAcidSight, 1);
-		g_esAcidCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank][0].g_flCloseAreasOnly, g_esAcidTeammate[tank][iSpecType].g_flCloseAreasOnly, g_esAcidPlayer[tank].g_flCloseAreasOnly, g_esAcidSpecial[type][0].g_flCloseAreasOnly, g_esAcidSpecial[type][iSpecType].g_flCloseAreasOnly, g_esAcidAbility[type].g_flCloseAreasOnly, 1);
-		g_esAcidCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank][0].g_iComboAbility, g_esAcidTeammate[tank][iSpecType].g_iComboAbility, g_esAcidPlayer[tank].g_iComboAbility, g_esAcidSpecial[type][0].g_iComboAbility, g_esAcidSpecial[type][iSpecType].g_iComboAbility, g_esAcidAbility[type].g_iComboAbility, 1);
-		g_esAcidCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank][0].g_iHumanAbility, g_esAcidTeammate[tank][iSpecType].g_iHumanAbility, g_esAcidPlayer[tank].g_iHumanAbility, g_esAcidSpecial[type][0].g_iHumanAbility, g_esAcidSpecial[type][iSpecType].g_iHumanAbility, g_esAcidAbility[type].g_iHumanAbility, 1);
-		g_esAcidCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank][0].g_iHumanAmmo, g_esAcidTeammate[tank][iSpecType].g_iHumanAmmo, g_esAcidPlayer[tank].g_iHumanAmmo, g_esAcidSpecial[type][0].g_iHumanAmmo, g_esAcidSpecial[type][iSpecType].g_iHumanAmmo, g_esAcidAbility[type].g_iHumanAmmo, 1);
-		g_esAcidCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank][0].g_iHumanCooldown, g_esAcidTeammate[tank][iSpecType].g_iHumanCooldown, g_esAcidPlayer[tank].g_iHumanCooldown, g_esAcidSpecial[type][0].g_iHumanCooldown, g_esAcidSpecial[type][iSpecType].g_iHumanCooldown, g_esAcidAbility[type].g_iHumanCooldown, 1);
-		g_esAcidCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank][0].g_iHumanRangeCooldown, g_esAcidTeammate[tank][iSpecType].g_iHumanRangeCooldown, g_esAcidPlayer[tank].g_iHumanRangeCooldown, g_esAcidSpecial[type][0].g_iHumanRangeCooldown, g_esAcidSpecial[type][iSpecType].g_iHumanRangeCooldown, g_esAcidAbility[type].g_iHumanRangeCooldown, 1);
-		g_esAcidCache[tank].g_iHumanRockCooldown = iGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank][0].g_iHumanRockCooldown, g_esAcidTeammate[tank][iSpecType].g_iHumanRockCooldown, g_esAcidPlayer[tank].g_iHumanRockCooldown, g_esAcidSpecial[type][0].g_iHumanRockCooldown, g_esAcidSpecial[type][iSpecType].g_iHumanRockCooldown, g_esAcidAbility[type].g_iHumanRockCooldown, 1);
-		g_esAcidCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank][0].g_flOpenAreasOnly, g_esAcidTeammate[tank][iSpecType].g_flOpenAreasOnly, g_esAcidPlayer[tank].g_flOpenAreasOnly, g_esAcidSpecial[type][0].g_flOpenAreasOnly, g_esAcidSpecial[type][iSpecType].g_flOpenAreasOnly, g_esAcidAbility[type].g_flOpenAreasOnly, 1);
-		g_esAcidCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank][0].g_iRequiresHumans, g_esAcidTeammate[tank][iSpecType].g_iRequiresHumans, g_esAcidPlayer[tank].g_iRequiresHumans, g_esAcidSpecial[type][0].g_iRequiresHumans, g_esAcidSpecial[type][iSpecType].g_iRequiresHumans, g_esAcidAbility[type].g_iRequiresHumans, 1);
+		g_esAcidCache[tank].g_flAcidChance = flGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank].g_flAcidChance, g_esAcidPlayer[tank].g_flAcidChance, g_esAcidSpecial[type].g_flAcidChance, g_esAcidAbility[type].g_flAcidChance, 1);
+		g_esAcidCache[tank].g_flAcidDeathChance = flGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank].g_flAcidDeathChance, g_esAcidPlayer[tank].g_flAcidDeathChance, g_esAcidSpecial[type].g_flAcidDeathChance, g_esAcidAbility[type].g_flAcidDeathChance, 1);
+		g_esAcidCache[tank].g_flAcidDeathRange = flGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank].g_flAcidDeathRange, g_esAcidPlayer[tank].g_flAcidDeathRange, g_esAcidSpecial[type].g_flAcidDeathRange, g_esAcidAbility[type].g_flAcidDeathRange, 1);
+		g_esAcidCache[tank].g_flAcidRange = flGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank].g_flAcidRange, g_esAcidPlayer[tank].g_flAcidRange, g_esAcidSpecial[type].g_flAcidRange, g_esAcidAbility[type].g_flAcidRange, 1);
+		g_esAcidCache[tank].g_flAcidRangeChance = flGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank].g_flAcidRangeChance, g_esAcidPlayer[tank].g_flAcidRangeChance, g_esAcidSpecial[type].g_flAcidRangeChance, g_esAcidAbility[type].g_flAcidRangeChance, 1);
+		g_esAcidCache[tank].g_flAcidRockChance = flGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank].g_flAcidRockChance, g_esAcidPlayer[tank].g_flAcidRockChance, g_esAcidSpecial[type].g_flAcidRockChance, g_esAcidAbility[type].g_flAcidRockChance, 1);
+		g_esAcidCache[tank].g_iAcidAbility = iGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank].g_iAcidAbility, g_esAcidPlayer[tank].g_iAcidAbility, g_esAcidSpecial[type].g_iAcidAbility, g_esAcidAbility[type].g_iAcidAbility, 1);
+		g_esAcidCache[tank].g_iAcidCooldown = iGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank].g_iAcidCooldown, g_esAcidPlayer[tank].g_iAcidCooldown, g_esAcidSpecial[type].g_iAcidCooldown, g_esAcidAbility[type].g_iAcidCooldown, 1);
+		g_esAcidCache[tank].g_iAcidDeath = iGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank].g_iAcidDeath, g_esAcidPlayer[tank].g_iAcidDeath, g_esAcidSpecial[type].g_iAcidDeath, g_esAcidAbility[type].g_iAcidDeath, 1);
+		g_esAcidCache[tank].g_iAcidEffect = iGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank].g_iAcidEffect, g_esAcidPlayer[tank].g_iAcidEffect, g_esAcidSpecial[type].g_iAcidEffect, g_esAcidAbility[type].g_iAcidEffect, 1);
+		g_esAcidCache[tank].g_iAcidHit = iGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank].g_iAcidHit, g_esAcidPlayer[tank].g_iAcidHit, g_esAcidSpecial[type].g_iAcidHit, g_esAcidAbility[type].g_iAcidHit, 1);
+		g_esAcidCache[tank].g_iAcidHitMode = iGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank].g_iAcidHitMode, g_esAcidPlayer[tank].g_iAcidHitMode, g_esAcidSpecial[type].g_iAcidHitMode, g_esAcidAbility[type].g_iAcidHitMode, 1);
+		g_esAcidCache[tank].g_iAcidMessage = iGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank].g_iAcidMessage, g_esAcidPlayer[tank].g_iAcidMessage, g_esAcidSpecial[type].g_iAcidMessage, g_esAcidAbility[type].g_iAcidMessage, 1);
+		g_esAcidCache[tank].g_iAcidRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank].g_iAcidRangeCooldown, g_esAcidPlayer[tank].g_iAcidRangeCooldown, g_esAcidSpecial[type].g_iAcidRangeCooldown, g_esAcidAbility[type].g_iAcidRangeCooldown, 1);
+		g_esAcidCache[tank].g_iAcidRockBreak = iGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank].g_iAcidRockBreak, g_esAcidPlayer[tank].g_iAcidRockBreak, g_esAcidSpecial[type].g_iAcidRockBreak, g_esAcidAbility[type].g_iAcidRockBreak, 1);
+		g_esAcidCache[tank].g_iAcidRockCooldown = iGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank].g_iAcidRockCooldown, g_esAcidPlayer[tank].g_iAcidRockCooldown, g_esAcidSpecial[type].g_iAcidRockCooldown, g_esAcidAbility[type].g_iAcidRockCooldown, 1);
+		g_esAcidCache[tank].g_iAcidSight = iGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank].g_iAcidSight, g_esAcidPlayer[tank].g_iAcidSight, g_esAcidSpecial[type].g_iAcidSight, g_esAcidAbility[type].g_iAcidSight, 1);
+		g_esAcidCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank].g_flCloseAreasOnly, g_esAcidPlayer[tank].g_flCloseAreasOnly, g_esAcidSpecial[type].g_flCloseAreasOnly, g_esAcidAbility[type].g_flCloseAreasOnly, 1);
+		g_esAcidCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank].g_iComboAbility, g_esAcidPlayer[tank].g_iComboAbility, g_esAcidSpecial[type].g_iComboAbility, g_esAcidAbility[type].g_iComboAbility, 1);
+		g_esAcidCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank].g_iHumanAbility, g_esAcidPlayer[tank].g_iHumanAbility, g_esAcidSpecial[type].g_iHumanAbility, g_esAcidAbility[type].g_iHumanAbility, 1);
+		g_esAcidCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank].g_iHumanAmmo, g_esAcidPlayer[tank].g_iHumanAmmo, g_esAcidSpecial[type].g_iHumanAmmo, g_esAcidAbility[type].g_iHumanAmmo, 1);
+		g_esAcidCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank].g_iHumanCooldown, g_esAcidPlayer[tank].g_iHumanCooldown, g_esAcidSpecial[type].g_iHumanCooldown, g_esAcidAbility[type].g_iHumanCooldown, 1);
+		g_esAcidCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank].g_iHumanRangeCooldown, g_esAcidPlayer[tank].g_iHumanRangeCooldown, g_esAcidSpecial[type].g_iHumanRangeCooldown, g_esAcidAbility[type].g_iHumanRangeCooldown, 1);
+		g_esAcidCache[tank].g_iHumanRockCooldown = iGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank].g_iHumanRockCooldown, g_esAcidPlayer[tank].g_iHumanRockCooldown, g_esAcidSpecial[type].g_iHumanRockCooldown, g_esAcidAbility[type].g_iHumanRockCooldown, 1);
+		g_esAcidCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank].g_flOpenAreasOnly, g_esAcidPlayer[tank].g_flOpenAreasOnly, g_esAcidSpecial[type].g_flOpenAreasOnly, g_esAcidAbility[type].g_flOpenAreasOnly, 1);
+		g_esAcidCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esAcidTeammate[tank].g_iRequiresHumans, g_esAcidPlayer[tank].g_iRequiresHumans, g_esAcidSpecial[type].g_iRequiresHumans, g_esAcidAbility[type].g_iRequiresHumans, 1);
 	}
 	else
 	{

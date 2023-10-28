@@ -81,7 +81,6 @@ enum struct esWhirlPlayer
 	int g_iHumanCooldown;
 	int g_iHumanRangeCooldown;
 	int g_iImmunityFlags;
-	int g_iInfectedType;
 	int g_iOwner;
 	int g_iRangeCooldown;
 	int g_iRequiresHumans;
@@ -127,7 +126,7 @@ enum struct esWhirlTeammate
 	int g_iWhirlSight;
 }
 
-esWhirlTeammate g_esWhirlTeammate[MAXPLAYERS + 1][7];
+esWhirlTeammate g_esWhirlTeammate[MAXPLAYERS + 1];
 
 enum struct esWhirlAbility
 {
@@ -187,7 +186,7 @@ enum struct esWhirlSpecial
 	int g_iWhirlSight;
 }
 
-esWhirlSpecial g_esWhirlSpecial[MT_MAXTYPES + 1][7];
+esWhirlSpecial g_esWhirlSpecial[MT_MAXTYPES + 1];
 
 enum struct esWhirlCache
 {
@@ -606,31 +605,28 @@ public void MT_OnConfigsLoad(int mode)
 				g_esWhirlAbility[iIndex].g_iWhirlSight = 0;
 				g_esWhirlAbility[iIndex].g_flWhirlSpeed = 500.0;
 
-				for (int iSpecType = 0; iSpecType < (sizeof g_sSpecialNames); iSpecType++)
-				{
-					g_esWhirlSpecial[iIndex][iSpecType].g_flCloseAreasOnly = -1.0;
-					g_esWhirlSpecial[iIndex][iSpecType].g_iComboAbility = -1;
-					g_esWhirlSpecial[iIndex][iSpecType].g_iHumanAbility = -1;
-					g_esWhirlSpecial[iIndex][iSpecType].g_iHumanAmmo = -1;
-					g_esWhirlSpecial[iIndex][iSpecType].g_iHumanCooldown = -1;
-					g_esWhirlSpecial[iIndex][iSpecType].g_iHumanRangeCooldown = -1;
-					g_esWhirlSpecial[iIndex][iSpecType].g_flOpenAreasOnly = -1.0;
-					g_esWhirlSpecial[iIndex][iSpecType].g_iRequiresHumans = -1;
-					g_esWhirlSpecial[iIndex][iSpecType].g_iWhirlAbility = -1;
-					g_esWhirlSpecial[iIndex][iSpecType].g_iWhirlEffect = -1;
-					g_esWhirlSpecial[iIndex][iSpecType].g_iWhirlMessage = -1;
-					g_esWhirlSpecial[iIndex][iSpecType].g_iWhirlAxis = -1;
-					g_esWhirlSpecial[iIndex][iSpecType].g_flWhirlChance = -1.0;
-					g_esWhirlSpecial[iIndex][iSpecType].g_iWhirlCooldown = -1;
-					g_esWhirlSpecial[iIndex][iSpecType].g_iWhirlDuration = -1;
-					g_esWhirlSpecial[iIndex][iSpecType].g_iWhirlHit = -1;
-					g_esWhirlSpecial[iIndex][iSpecType].g_iWhirlHitMode = -1;
-					g_esWhirlSpecial[iIndex][iSpecType].g_flWhirlRange = -1.0;
-					g_esWhirlSpecial[iIndex][iSpecType].g_flWhirlRangeChance = -1.0;
-					g_esWhirlSpecial[iIndex][iSpecType].g_iWhirlRangeCooldown = -1;
-					g_esWhirlSpecial[iIndex][iSpecType].g_iWhirlSight = -1;
-					g_esWhirlSpecial[iIndex][iSpecType].g_flWhirlSpeed = -1.0;
-				}
+				g_esWhirlSpecial[iIndex].g_flCloseAreasOnly = -1.0;
+				g_esWhirlSpecial[iIndex].g_iComboAbility = -1;
+				g_esWhirlSpecial[iIndex].g_iHumanAbility = -1;
+				g_esWhirlSpecial[iIndex].g_iHumanAmmo = -1;
+				g_esWhirlSpecial[iIndex].g_iHumanCooldown = -1;
+				g_esWhirlSpecial[iIndex].g_iHumanRangeCooldown = -1;
+				g_esWhirlSpecial[iIndex].g_flOpenAreasOnly = -1.0;
+				g_esWhirlSpecial[iIndex].g_iRequiresHumans = -1;
+				g_esWhirlSpecial[iIndex].g_iWhirlAbility = -1;
+				g_esWhirlSpecial[iIndex].g_iWhirlEffect = -1;
+				g_esWhirlSpecial[iIndex].g_iWhirlMessage = -1;
+				g_esWhirlSpecial[iIndex].g_iWhirlAxis = -1;
+				g_esWhirlSpecial[iIndex].g_flWhirlChance = -1.0;
+				g_esWhirlSpecial[iIndex].g_iWhirlCooldown = -1;
+				g_esWhirlSpecial[iIndex].g_iWhirlDuration = -1;
+				g_esWhirlSpecial[iIndex].g_iWhirlHit = -1;
+				g_esWhirlSpecial[iIndex].g_iWhirlHitMode = -1;
+				g_esWhirlSpecial[iIndex].g_flWhirlRange = -1.0;
+				g_esWhirlSpecial[iIndex].g_flWhirlRangeChance = -1.0;
+				g_esWhirlSpecial[iIndex].g_iWhirlRangeCooldown = -1;
+				g_esWhirlSpecial[iIndex].g_iWhirlSight = -1;
+				g_esWhirlSpecial[iIndex].g_flWhirlSpeed = -1.0;
 			}
 		}
 		case 3:
@@ -662,68 +658,65 @@ public void MT_OnConfigsLoad(int mode)
 				g_esWhirlPlayer[iPlayer].g_iWhirlSight = -1;
 				g_esWhirlPlayer[iPlayer].g_flWhirlSpeed = -1.0;
 
-				for (int iSpecType = 0; iSpecType < (sizeof g_sSpecialNames); iSpecType++)
-				{
-					g_esWhirlTeammate[iPlayer][iSpecType].g_flCloseAreasOnly = -1.0;
-					g_esWhirlTeammate[iPlayer][iSpecType].g_iComboAbility = -1;
-					g_esWhirlTeammate[iPlayer][iSpecType].g_iHumanAbility = -1;
-					g_esWhirlTeammate[iPlayer][iSpecType].g_iHumanAmmo = -1;
-					g_esWhirlTeammate[iPlayer][iSpecType].g_iHumanCooldown = -1;
-					g_esWhirlTeammate[iPlayer][iSpecType].g_iHumanRangeCooldown = -1;
-					g_esWhirlTeammate[iPlayer][iSpecType].g_flOpenAreasOnly = -1.0;
-					g_esWhirlTeammate[iPlayer][iSpecType].g_iRequiresHumans = -1;
-					g_esWhirlTeammate[iPlayer][iSpecType].g_iWhirlAbility = -1;
-					g_esWhirlTeammate[iPlayer][iSpecType].g_iWhirlEffect = -1;
-					g_esWhirlTeammate[iPlayer][iSpecType].g_iWhirlMessage = -1;
-					g_esWhirlTeammate[iPlayer][iSpecType].g_iWhirlAxis = -1;
-					g_esWhirlTeammate[iPlayer][iSpecType].g_flWhirlChance = -1.0;
-					g_esWhirlTeammate[iPlayer][iSpecType].g_iWhirlCooldown = -1;
-					g_esWhirlTeammate[iPlayer][iSpecType].g_iWhirlDuration = -1;
-					g_esWhirlTeammate[iPlayer][iSpecType].g_iWhirlHit = -1;
-					g_esWhirlTeammate[iPlayer][iSpecType].g_iWhirlHitMode = -1;
-					g_esWhirlTeammate[iPlayer][iSpecType].g_flWhirlRange = -1.0;
-					g_esWhirlTeammate[iPlayer][iSpecType].g_flWhirlRangeChance = -1.0;
-					g_esWhirlTeammate[iPlayer][iSpecType].g_iWhirlRangeCooldown = -1;
-					g_esWhirlTeammate[iPlayer][iSpecType].g_iWhirlSight = -1;
-					g_esWhirlTeammate[iPlayer][iSpecType].g_flWhirlSpeed = -1.0;
-				}
+				g_esWhirlTeammate[iPlayer].g_flCloseAreasOnly = -1.0;
+				g_esWhirlTeammate[iPlayer].g_iComboAbility = -1;
+				g_esWhirlTeammate[iPlayer].g_iHumanAbility = -1;
+				g_esWhirlTeammate[iPlayer].g_iHumanAmmo = -1;
+				g_esWhirlTeammate[iPlayer].g_iHumanCooldown = -1;
+				g_esWhirlTeammate[iPlayer].g_iHumanRangeCooldown = -1;
+				g_esWhirlTeammate[iPlayer].g_flOpenAreasOnly = -1.0;
+				g_esWhirlTeammate[iPlayer].g_iRequiresHumans = -1;
+				g_esWhirlTeammate[iPlayer].g_iWhirlAbility = -1;
+				g_esWhirlTeammate[iPlayer].g_iWhirlEffect = -1;
+				g_esWhirlTeammate[iPlayer].g_iWhirlMessage = -1;
+				g_esWhirlTeammate[iPlayer].g_iWhirlAxis = -1;
+				g_esWhirlTeammate[iPlayer].g_flWhirlChance = -1.0;
+				g_esWhirlTeammate[iPlayer].g_iWhirlCooldown = -1;
+				g_esWhirlTeammate[iPlayer].g_iWhirlDuration = -1;
+				g_esWhirlTeammate[iPlayer].g_iWhirlHit = -1;
+				g_esWhirlTeammate[iPlayer].g_iWhirlHitMode = -1;
+				g_esWhirlTeammate[iPlayer].g_flWhirlRange = -1.0;
+				g_esWhirlTeammate[iPlayer].g_flWhirlRangeChance = -1.0;
+				g_esWhirlTeammate[iPlayer].g_iWhirlRangeCooldown = -1;
+				g_esWhirlTeammate[iPlayer].g_iWhirlSight = -1;
+				g_esWhirlTeammate[iPlayer].g_flWhirlSpeed = -1.0;
 			}
 		}
 	}
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vWhirlConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, int specType)
+void vWhirlConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #else
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, int specType)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #endif
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esWhirlTeammate[admin][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esWhirlTeammate[admin][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specType);
-			g_esWhirlTeammate[admin][specType].g_iComboAbility = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esWhirlTeammate[admin][specType].g_iComboAbility, value, -1, 1, specType);
-			g_esWhirlTeammate[admin][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esWhirlTeammate[admin][specType].g_iHumanAbility, value, -1, 2, specType);
-			g_esWhirlTeammate[admin][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esWhirlTeammate[admin][specType].g_iHumanAmmo, value, -1, 99999, specType);
-			g_esWhirlTeammate[admin][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esWhirlTeammate[admin][specType].g_iHumanCooldown, value, -1, 99999, specType);
-			g_esWhirlTeammate[admin][specType].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esWhirlTeammate[admin][specType].g_iHumanRangeCooldown, value, -1, 99999, specType);
-			g_esWhirlTeammate[admin][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esWhirlTeammate[admin][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specType);
-			g_esWhirlTeammate[admin][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esWhirlTeammate[admin][specType].g_iRequiresHumans, value, -1, 32, specType);
-			g_esWhirlTeammate[admin][specType].g_iWhirlAbility = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esWhirlTeammate[admin][specType].g_iWhirlAbility, value, -1, 1, specType);
-			g_esWhirlTeammate[admin][specType].g_iWhirlEffect = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esWhirlTeammate[admin][specType].g_iWhirlEffect, value, -1, 7, specType);
-			g_esWhirlTeammate[admin][specType].g_iWhirlMessage = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esWhirlTeammate[admin][specType].g_iWhirlMessage, value, -1, 3, specType);
-			g_esWhirlTeammate[admin][specType].g_iWhirlSight = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esWhirlTeammate[admin][specType].g_iWhirlSight, value, -1, 2, specType);
-			g_esWhirlTeammate[admin][specType].g_iWhirlAxis = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlAxis", "Whirl Axis", "Whirl_Axis", "axis", g_esWhirlTeammate[admin][specType].g_iWhirlAxis, value, -1, 7, specType);
-			g_esWhirlTeammate[admin][specType].g_flWhirlChance = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlChance", "Whirl Chance", "Whirl_Chance", "chance", g_esWhirlTeammate[admin][specType].g_flWhirlChance, value, -1.0, 100.0, specType);
-			g_esWhirlTeammate[admin][specType].g_iWhirlCooldown = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlCooldown", "Whirl Cooldown", "Whirl_Cooldown", "cooldown", g_esWhirlTeammate[admin][specType].g_iWhirlCooldown, value, -1, 99999, specType);
-			g_esWhirlTeammate[admin][specType].g_iWhirlDuration = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlDuration", "Whirl Duration", "Whirl_Duration", "duration", g_esWhirlTeammate[admin][specType].g_iWhirlDuration, value, -1, 99999, specType);
-			g_esWhirlTeammate[admin][specType].g_iWhirlHit = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlHit", "Whirl Hit", "Whirl_Hit", "hit", g_esWhirlTeammate[admin][specType].g_iWhirlHit, value, -1, 1, specType);
-			g_esWhirlTeammate[admin][specType].g_iWhirlHitMode = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlHitMode", "Whirl Hit Mode", "Whirl_Hit_Mode", "hitmode", g_esWhirlTeammate[admin][specType].g_iWhirlHitMode, value, -1, 2, specType);
-			g_esWhirlTeammate[admin][specType].g_flWhirlRange = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlRange", "Whirl Range", "Whirl_Range", "range", g_esWhirlTeammate[admin][specType].g_flWhirlRange, value, -1.0, 99999.0, specType);
-			g_esWhirlTeammate[admin][specType].g_flWhirlRangeChance = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlRangeChance", "Whirl Range Chance", "Whirl_Range_Chance", "rangechance", g_esWhirlTeammate[admin][specType].g_flWhirlRangeChance, value, -1.0, 100.0, specType);
-			g_esWhirlTeammate[admin][specType].g_iWhirlRangeCooldown = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlRangeCooldown", "Whirl Range Cooldown", "Whirl_Range_Cooldown", "rangecooldown", g_esWhirlTeammate[admin][specType].g_iWhirlRangeCooldown, value, -1, 99999, specType);
-			g_esWhirlTeammate[admin][specType].g_flWhirlSpeed = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlSpeed", "Whirl Speed", "Whirl_Speed", "speed", g_esWhirlTeammate[admin][specType].g_flWhirlSpeed, value, -1.0, 99999.0, specType);
+			g_esWhirlTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esWhirlTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esWhirlTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esWhirlTeammate[admin].g_iComboAbility, value, -1, 1);
+			g_esWhirlTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esWhirlTeammate[admin].g_iHumanAbility, value, -1, 2);
+			g_esWhirlTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esWhirlTeammate[admin].g_iHumanAmmo, value, -1, 99999);
+			g_esWhirlTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esWhirlTeammate[admin].g_iHumanCooldown, value, -1, 99999);
+			g_esWhirlTeammate[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esWhirlTeammate[admin].g_iHumanRangeCooldown, value, -1, 99999);
+			g_esWhirlTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esWhirlTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esWhirlTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esWhirlTeammate[admin].g_iRequiresHumans, value, -1, 32);
+			g_esWhirlTeammate[admin].g_iWhirlAbility = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esWhirlTeammate[admin].g_iWhirlAbility, value, -1, 1);
+			g_esWhirlTeammate[admin].g_iWhirlEffect = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esWhirlTeammate[admin].g_iWhirlEffect, value, -1, 7);
+			g_esWhirlTeammate[admin].g_iWhirlMessage = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esWhirlTeammate[admin].g_iWhirlMessage, value, -1, 3);
+			g_esWhirlTeammate[admin].g_iWhirlSight = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esWhirlTeammate[admin].g_iWhirlSight, value, -1, 2);
+			g_esWhirlTeammate[admin].g_iWhirlAxis = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlAxis", "Whirl Axis", "Whirl_Axis", "axis", g_esWhirlTeammate[admin].g_iWhirlAxis, value, -1, 7);
+			g_esWhirlTeammate[admin].g_flWhirlChance = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlChance", "Whirl Chance", "Whirl_Chance", "chance", g_esWhirlTeammate[admin].g_flWhirlChance, value, -1.0, 100.0);
+			g_esWhirlTeammate[admin].g_iWhirlCooldown = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlCooldown", "Whirl Cooldown", "Whirl_Cooldown", "cooldown", g_esWhirlTeammate[admin].g_iWhirlCooldown, value, -1, 99999);
+			g_esWhirlTeammate[admin].g_iWhirlDuration = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlDuration", "Whirl Duration", "Whirl_Duration", "duration", g_esWhirlTeammate[admin].g_iWhirlDuration, value, -1, 99999);
+			g_esWhirlTeammate[admin].g_iWhirlHit = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlHit", "Whirl Hit", "Whirl_Hit", "hit", g_esWhirlTeammate[admin].g_iWhirlHit, value, -1, 1);
+			g_esWhirlTeammate[admin].g_iWhirlHitMode = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlHitMode", "Whirl Hit Mode", "Whirl_Hit_Mode", "hitmode", g_esWhirlTeammate[admin].g_iWhirlHitMode, value, -1, 2);
+			g_esWhirlTeammate[admin].g_flWhirlRange = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlRange", "Whirl Range", "Whirl_Range", "range", g_esWhirlTeammate[admin].g_flWhirlRange, value, -1.0, 99999.0);
+			g_esWhirlTeammate[admin].g_flWhirlRangeChance = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlRangeChance", "Whirl Range Chance", "Whirl_Range_Chance", "rangechance", g_esWhirlTeammate[admin].g_flWhirlRangeChance, value, -1.0, 100.0);
+			g_esWhirlTeammate[admin].g_iWhirlRangeCooldown = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlRangeCooldown", "Whirl Range Cooldown", "Whirl_Range_Cooldown", "rangecooldown", g_esWhirlTeammate[admin].g_iWhirlRangeCooldown, value, -1, 99999);
+			g_esWhirlTeammate[admin].g_flWhirlSpeed = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlSpeed", "Whirl Speed", "Whirl_Speed", "speed", g_esWhirlTeammate[admin].g_flWhirlSpeed, value, -1.0, 99999.0);
 		}
 		else
 		{
@@ -758,28 +751,28 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esWhirlSpecial[type][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esWhirlSpecial[type][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specType);
-			g_esWhirlSpecial[type][specType].g_iComboAbility = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esWhirlSpecial[type][specType].g_iComboAbility, value, -1, 1, specType);
-			g_esWhirlSpecial[type][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esWhirlSpecial[type][specType].g_iHumanAbility, value, -1, 2, specType);
-			g_esWhirlSpecial[type][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esWhirlSpecial[type][specType].g_iHumanAmmo, value, -1, 99999, specType);
-			g_esWhirlSpecial[type][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esWhirlSpecial[type][specType].g_iHumanCooldown, value, -1, 99999, specType);
-			g_esWhirlSpecial[type][specType].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esWhirlSpecial[type][specType].g_iHumanRangeCooldown, value, -1, 99999, specType);
-			g_esWhirlSpecial[type][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esWhirlSpecial[type][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specType);
-			g_esWhirlSpecial[type][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esWhirlSpecial[type][specType].g_iRequiresHumans, value, -1, 32, specType);
-			g_esWhirlSpecial[type][specType].g_iWhirlAbility = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esWhirlSpecial[type][specType].g_iWhirlAbility, value, -1, 1, specType);
-			g_esWhirlSpecial[type][specType].g_iWhirlEffect = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esWhirlSpecial[type][specType].g_iWhirlEffect, value, -1, 7, specType);
-			g_esWhirlSpecial[type][specType].g_iWhirlMessage = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esWhirlSpecial[type][specType].g_iWhirlMessage, value, -1, 3, specType);
-			g_esWhirlSpecial[type][specType].g_iWhirlSight = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esWhirlSpecial[type][specType].g_iWhirlSight, value, -1, 2, specType);
-			g_esWhirlSpecial[type][specType].g_iWhirlAxis = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlAxis", "Whirl Axis", "Whirl_Axis", "axis", g_esWhirlSpecial[type][specType].g_iWhirlAxis, value, -1, 7, specType);
-			g_esWhirlSpecial[type][specType].g_flWhirlChance = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlChance", "Whirl Chance", "Whirl_Chance", "chance", g_esWhirlSpecial[type][specType].g_flWhirlChance, value, -1.0, 100.0, specType);
-			g_esWhirlSpecial[type][specType].g_iWhirlCooldown = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlCooldown", "Whirl Cooldown", "Whirl_Cooldown", "cooldown", g_esWhirlSpecial[type][specType].g_iWhirlCooldown, value, -1, 99999, specType);
-			g_esWhirlSpecial[type][specType].g_iWhirlDuration = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlDuration", "Whirl Duration", "Whirl_Duration", "duration", g_esWhirlSpecial[type][specType].g_iWhirlDuration, value, -1, 99999, specType);
-			g_esWhirlSpecial[type][specType].g_iWhirlHit = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlHit", "Whirl Hit", "Whirl_Hit", "hit", g_esWhirlSpecial[type][specType].g_iWhirlHit, value, -1, 1, specType);
-			g_esWhirlSpecial[type][specType].g_iWhirlHitMode = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlHitMode", "Whirl Hit Mode", "Whirl_Hit_Mode", "hitmode", g_esWhirlSpecial[type][specType].g_iWhirlHitMode, value, -1, 2, specType);
-			g_esWhirlSpecial[type][specType].g_flWhirlRange = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlRange", "Whirl Range", "Whirl_Range", "range", g_esWhirlSpecial[type][specType].g_flWhirlRange, value, -1.0, 99999.0, specType);
-			g_esWhirlSpecial[type][specType].g_flWhirlRangeChance = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlRangeChance", "Whirl Range Chance", "Whirl_Range_Chance", "rangechance", g_esWhirlSpecial[type][specType].g_flWhirlRangeChance, value, -1.0, 100.0, specType);
-			g_esWhirlSpecial[type][specType].g_iWhirlRangeCooldown = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlRangeCooldown", "Whirl Range Cooldown", "Whirl_Range_Cooldown", "rangecooldown", g_esWhirlSpecial[type][specType].g_iWhirlRangeCooldown, value, -1, 99999, specType);
-			g_esWhirlSpecial[type][specType].g_flWhirlSpeed = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlSpeed", "Whirl Speed", "Whirl_Speed", "speed", g_esWhirlSpecial[type][specType].g_flWhirlSpeed, value, -1.0, 99999.0, specType);
+			g_esWhirlSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esWhirlSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esWhirlSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esWhirlSpecial[type].g_iComboAbility, value, -1, 1);
+			g_esWhirlSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esWhirlSpecial[type].g_iHumanAbility, value, -1, 2);
+			g_esWhirlSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esWhirlSpecial[type].g_iHumanAmmo, value, -1, 99999);
+			g_esWhirlSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esWhirlSpecial[type].g_iHumanCooldown, value, -1, 99999);
+			g_esWhirlSpecial[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esWhirlSpecial[type].g_iHumanRangeCooldown, value, -1, 99999);
+			g_esWhirlSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esWhirlSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esWhirlSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esWhirlSpecial[type].g_iRequiresHumans, value, -1, 32);
+			g_esWhirlSpecial[type].g_iWhirlAbility = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esWhirlSpecial[type].g_iWhirlAbility, value, -1, 1);
+			g_esWhirlSpecial[type].g_iWhirlEffect = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esWhirlSpecial[type].g_iWhirlEffect, value, -1, 7);
+			g_esWhirlSpecial[type].g_iWhirlMessage = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esWhirlSpecial[type].g_iWhirlMessage, value, -1, 3);
+			g_esWhirlSpecial[type].g_iWhirlSight = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esWhirlSpecial[type].g_iWhirlSight, value, -1, 2);
+			g_esWhirlSpecial[type].g_iWhirlAxis = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlAxis", "Whirl Axis", "Whirl_Axis", "axis", g_esWhirlSpecial[type].g_iWhirlAxis, value, -1, 7);
+			g_esWhirlSpecial[type].g_flWhirlChance = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlChance", "Whirl Chance", "Whirl_Chance", "chance", g_esWhirlSpecial[type].g_flWhirlChance, value, -1.0, 100.0);
+			g_esWhirlSpecial[type].g_iWhirlCooldown = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlCooldown", "Whirl Cooldown", "Whirl_Cooldown", "cooldown", g_esWhirlSpecial[type].g_iWhirlCooldown, value, -1, 99999);
+			g_esWhirlSpecial[type].g_iWhirlDuration = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlDuration", "Whirl Duration", "Whirl_Duration", "duration", g_esWhirlSpecial[type].g_iWhirlDuration, value, -1, 99999);
+			g_esWhirlSpecial[type].g_iWhirlHit = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlHit", "Whirl Hit", "Whirl_Hit", "hit", g_esWhirlSpecial[type].g_iWhirlHit, value, -1, 1);
+			g_esWhirlSpecial[type].g_iWhirlHitMode = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlHitMode", "Whirl Hit Mode", "Whirl_Hit_Mode", "hitmode", g_esWhirlSpecial[type].g_iWhirlHitMode, value, -1, 2);
+			g_esWhirlSpecial[type].g_flWhirlRange = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlRange", "Whirl Range", "Whirl_Range", "range", g_esWhirlSpecial[type].g_flWhirlRange, value, -1.0, 99999.0);
+			g_esWhirlSpecial[type].g_flWhirlRangeChance = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlRangeChance", "Whirl Range Chance", "Whirl_Range_Chance", "rangechance", g_esWhirlSpecial[type].g_flWhirlRangeChance, value, -1.0, 100.0);
+			g_esWhirlSpecial[type].g_iWhirlRangeCooldown = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlRangeCooldown", "Whirl Range Cooldown", "Whirl_Range_Cooldown", "rangecooldown", g_esWhirlSpecial[type].g_iWhirlRangeCooldown, value, -1, 99999);
+			g_esWhirlSpecial[type].g_flWhirlSpeed = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlSpeed", "Whirl Speed", "Whirl_Speed", "speed", g_esWhirlSpecial[type].g_flWhirlSpeed, value, -1.0, 99999.0);
 		}
 		else
 		{
@@ -818,34 +811,32 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
-	g_esWhirlPlayer[tank].g_iInfectedType = iGetInfectedType(tank);
 	g_esWhirlPlayer[tank].g_iTankType = apply ? type : 0;
-	int iSpecType = g_esWhirlPlayer[tank].g_iInfectedType;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esWhirlCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank][0].g_flCloseAreasOnly, g_esWhirlTeammate[tank][iSpecType].g_flCloseAreasOnly, g_esWhirlPlayer[tank].g_flCloseAreasOnly, g_esWhirlSpecial[type][0].g_flCloseAreasOnly, g_esWhirlSpecial[type][iSpecType].g_flCloseAreasOnly, g_esWhirlAbility[type].g_flCloseAreasOnly, 1);
-		g_esWhirlCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank][0].g_iComboAbility, g_esWhirlTeammate[tank][iSpecType].g_iComboAbility, g_esWhirlPlayer[tank].g_iComboAbility, g_esWhirlSpecial[type][0].g_iComboAbility, g_esWhirlSpecial[type][iSpecType].g_iComboAbility, g_esWhirlAbility[type].g_iComboAbility, 1);
-		g_esWhirlCache[tank].g_flWhirlChance = flGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank][0].g_flWhirlChance, g_esWhirlTeammate[tank][iSpecType].g_flWhirlChance, g_esWhirlPlayer[tank].g_flWhirlChance, g_esWhirlSpecial[type][0].g_flWhirlChance, g_esWhirlSpecial[type][iSpecType].g_flWhirlChance, g_esWhirlAbility[type].g_flWhirlChance, 1);
-		g_esWhirlCache[tank].g_flWhirlRange = flGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank][0].g_flWhirlRange, g_esWhirlTeammate[tank][iSpecType].g_flWhirlRange, g_esWhirlPlayer[tank].g_flWhirlRange, g_esWhirlSpecial[type][0].g_flWhirlRange, g_esWhirlSpecial[type][iSpecType].g_flWhirlRange, g_esWhirlAbility[type].g_flWhirlRange, 1);
-		g_esWhirlCache[tank].g_flWhirlRangeChance = flGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank][0].g_flWhirlRangeChance, g_esWhirlTeammate[tank][iSpecType].g_flWhirlRangeChance, g_esWhirlPlayer[tank].g_flWhirlRangeChance, g_esWhirlSpecial[type][0].g_flWhirlRangeChance, g_esWhirlSpecial[type][iSpecType].g_flWhirlRangeChance, g_esWhirlAbility[type].g_flWhirlRangeChance, 1);
-		g_esWhirlCache[tank].g_flWhirlSpeed = flGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank][0].g_flWhirlSpeed, g_esWhirlTeammate[tank][iSpecType].g_flWhirlSpeed, g_esWhirlPlayer[tank].g_flWhirlSpeed, g_esWhirlSpecial[type][0].g_flWhirlSpeed, g_esWhirlSpecial[type][iSpecType].g_flWhirlSpeed, g_esWhirlAbility[type].g_flWhirlSpeed, 1);
-		g_esWhirlCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank][0].g_iHumanAbility, g_esWhirlTeammate[tank][iSpecType].g_iHumanAbility, g_esWhirlPlayer[tank].g_iHumanAbility, g_esWhirlSpecial[type][0].g_iHumanAbility, g_esWhirlSpecial[type][iSpecType].g_iHumanAbility, g_esWhirlAbility[type].g_iHumanAbility, 1);
-		g_esWhirlCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank][0].g_iHumanAmmo, g_esWhirlTeammate[tank][iSpecType].g_iHumanAmmo, g_esWhirlPlayer[tank].g_iHumanAmmo, g_esWhirlSpecial[type][0].g_iHumanAmmo, g_esWhirlSpecial[type][iSpecType].g_iHumanAmmo, g_esWhirlAbility[type].g_iHumanAmmo, 1);
-		g_esWhirlCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank][0].g_iHumanCooldown, g_esWhirlTeammate[tank][iSpecType].g_iHumanCooldown, g_esWhirlPlayer[tank].g_iHumanCooldown, g_esWhirlSpecial[type][0].g_iHumanCooldown, g_esWhirlSpecial[type][iSpecType].g_iHumanCooldown, g_esWhirlAbility[type].g_iHumanCooldown, 1);
-		g_esWhirlCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank][0].g_iHumanRangeCooldown, g_esWhirlTeammate[tank][iSpecType].g_iHumanRangeCooldown, g_esWhirlPlayer[tank].g_iHumanRangeCooldown, g_esWhirlSpecial[type][0].g_iHumanRangeCooldown, g_esWhirlSpecial[type][iSpecType].g_iHumanRangeCooldown, g_esWhirlAbility[type].g_iHumanRangeCooldown, 1);
-		g_esWhirlCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank][0].g_flOpenAreasOnly, g_esWhirlTeammate[tank][iSpecType].g_flOpenAreasOnly, g_esWhirlPlayer[tank].g_flOpenAreasOnly, g_esWhirlSpecial[type][0].g_flOpenAreasOnly, g_esWhirlSpecial[type][iSpecType].g_flOpenAreasOnly, g_esWhirlAbility[type].g_flOpenAreasOnly, 1);
-		g_esWhirlCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank][0].g_iRequiresHumans, g_esWhirlTeammate[tank][iSpecType].g_iRequiresHumans, g_esWhirlPlayer[tank].g_iRequiresHumans, g_esWhirlSpecial[type][0].g_iRequiresHumans, g_esWhirlSpecial[type][iSpecType].g_iRequiresHumans, g_esWhirlAbility[type].g_iRequiresHumans, 1);
-		g_esWhirlCache[tank].g_iWhirlAbility = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank][0].g_iWhirlAbility, g_esWhirlTeammate[tank][iSpecType].g_iWhirlAbility, g_esWhirlPlayer[tank].g_iWhirlAbility, g_esWhirlSpecial[type][0].g_iWhirlAbility, g_esWhirlSpecial[type][iSpecType].g_iWhirlAbility, g_esWhirlAbility[type].g_iWhirlAbility, 1);
-		g_esWhirlCache[tank].g_iWhirlAxis = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank][0].g_iWhirlAxis, g_esWhirlTeammate[tank][iSpecType].g_iWhirlAxis, g_esWhirlPlayer[tank].g_iWhirlAxis, g_esWhirlSpecial[type][0].g_iWhirlAxis, g_esWhirlSpecial[type][iSpecType].g_iWhirlAxis, g_esWhirlAbility[type].g_iWhirlAxis, 1);
-		g_esWhirlCache[tank].g_iWhirlCooldown = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank][0].g_iWhirlCooldown, g_esWhirlTeammate[tank][iSpecType].g_iWhirlCooldown, g_esWhirlPlayer[tank].g_iWhirlCooldown, g_esWhirlSpecial[type][0].g_iWhirlCooldown, g_esWhirlSpecial[type][iSpecType].g_iWhirlCooldown, g_esWhirlAbility[type].g_iWhirlCooldown, 1);
-		g_esWhirlCache[tank].g_iWhirlDuration = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank][0].g_iWhirlDuration, g_esWhirlTeammate[tank][iSpecType].g_iWhirlDuration, g_esWhirlPlayer[tank].g_iWhirlDuration, g_esWhirlSpecial[type][0].g_iWhirlDuration, g_esWhirlSpecial[type][iSpecType].g_iWhirlDuration, g_esWhirlAbility[type].g_iWhirlDuration, 1);
-		g_esWhirlCache[tank].g_iWhirlEffect = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank][0].g_iWhirlEffect, g_esWhirlTeammate[tank][iSpecType].g_iWhirlEffect, g_esWhirlPlayer[tank].g_iWhirlEffect, g_esWhirlSpecial[type][0].g_iWhirlEffect, g_esWhirlSpecial[type][iSpecType].g_iWhirlEffect, g_esWhirlAbility[type].g_iWhirlEffect, 1);
-		g_esWhirlCache[tank].g_iWhirlHit = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank][0].g_iWhirlHit, g_esWhirlTeammate[tank][iSpecType].g_iWhirlHit, g_esWhirlPlayer[tank].g_iWhirlHit, g_esWhirlSpecial[type][0].g_iWhirlHit, g_esWhirlSpecial[type][iSpecType].g_iWhirlHit, g_esWhirlAbility[type].g_iWhirlHit, 1);
-		g_esWhirlCache[tank].g_iWhirlHitMode = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank][0].g_iWhirlHitMode, g_esWhirlTeammate[tank][iSpecType].g_iWhirlHitMode, g_esWhirlPlayer[tank].g_iWhirlHitMode, g_esWhirlSpecial[type][0].g_iWhirlHitMode, g_esWhirlSpecial[type][iSpecType].g_iWhirlHitMode, g_esWhirlAbility[type].g_iWhirlHitMode, 1);
-		g_esWhirlCache[tank].g_iWhirlMessage = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank][0].g_iWhirlMessage, g_esWhirlTeammate[tank][iSpecType].g_iWhirlMessage, g_esWhirlPlayer[tank].g_iWhirlMessage, g_esWhirlSpecial[type][0].g_iWhirlMessage, g_esWhirlSpecial[type][iSpecType].g_iWhirlMessage, g_esWhirlAbility[type].g_iWhirlMessage, 1);
-		g_esWhirlCache[tank].g_iWhirlRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank][0].g_iWhirlRangeCooldown, g_esWhirlTeammate[tank][iSpecType].g_iWhirlRangeCooldown, g_esWhirlPlayer[tank].g_iWhirlRangeCooldown, g_esWhirlSpecial[type][0].g_iWhirlRangeCooldown, g_esWhirlSpecial[type][iSpecType].g_iWhirlRangeCooldown, g_esWhirlAbility[type].g_iWhirlRangeCooldown, 1);
-		g_esWhirlCache[tank].g_iWhirlSight = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank][0].g_iWhirlSight, g_esWhirlTeammate[tank][iSpecType].g_iWhirlSight, g_esWhirlPlayer[tank].g_iWhirlSight, g_esWhirlSpecial[type][0].g_iWhirlSight, g_esWhirlSpecial[type][iSpecType].g_iWhirlSight, g_esWhirlAbility[type].g_iWhirlSight, 1);
+		g_esWhirlCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_flCloseAreasOnly, g_esWhirlPlayer[tank].g_flCloseAreasOnly, g_esWhirlSpecial[type].g_flCloseAreasOnly, g_esWhirlAbility[type].g_flCloseAreasOnly, 1);
+		g_esWhirlCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iComboAbility, g_esWhirlPlayer[tank].g_iComboAbility, g_esWhirlSpecial[type].g_iComboAbility, g_esWhirlAbility[type].g_iComboAbility, 1);
+		g_esWhirlCache[tank].g_flWhirlChance = flGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_flWhirlChance, g_esWhirlPlayer[tank].g_flWhirlChance, g_esWhirlSpecial[type].g_flWhirlChance, g_esWhirlAbility[type].g_flWhirlChance, 1);
+		g_esWhirlCache[tank].g_flWhirlRange = flGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_flWhirlRange, g_esWhirlPlayer[tank].g_flWhirlRange, g_esWhirlSpecial[type].g_flWhirlRange, g_esWhirlAbility[type].g_flWhirlRange, 1);
+		g_esWhirlCache[tank].g_flWhirlRangeChance = flGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_flWhirlRangeChance, g_esWhirlPlayer[tank].g_flWhirlRangeChance, g_esWhirlSpecial[type].g_flWhirlRangeChance, g_esWhirlAbility[type].g_flWhirlRangeChance, 1);
+		g_esWhirlCache[tank].g_flWhirlSpeed = flGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_flWhirlSpeed, g_esWhirlPlayer[tank].g_flWhirlSpeed, g_esWhirlSpecial[type].g_flWhirlSpeed, g_esWhirlAbility[type].g_flWhirlSpeed, 1);
+		g_esWhirlCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iHumanAbility, g_esWhirlPlayer[tank].g_iHumanAbility, g_esWhirlSpecial[type].g_iHumanAbility, g_esWhirlAbility[type].g_iHumanAbility, 1);
+		g_esWhirlCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iHumanAmmo, g_esWhirlPlayer[tank].g_iHumanAmmo, g_esWhirlSpecial[type].g_iHumanAmmo, g_esWhirlAbility[type].g_iHumanAmmo, 1);
+		g_esWhirlCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iHumanCooldown, g_esWhirlPlayer[tank].g_iHumanCooldown, g_esWhirlSpecial[type].g_iHumanCooldown, g_esWhirlAbility[type].g_iHumanCooldown, 1);
+		g_esWhirlCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iHumanRangeCooldown, g_esWhirlPlayer[tank].g_iHumanRangeCooldown, g_esWhirlSpecial[type].g_iHumanRangeCooldown, g_esWhirlAbility[type].g_iHumanRangeCooldown, 1);
+		g_esWhirlCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_flOpenAreasOnly, g_esWhirlPlayer[tank].g_flOpenAreasOnly, g_esWhirlSpecial[type].g_flOpenAreasOnly, g_esWhirlAbility[type].g_flOpenAreasOnly, 1);
+		g_esWhirlCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iRequiresHumans, g_esWhirlPlayer[tank].g_iRequiresHumans, g_esWhirlSpecial[type].g_iRequiresHumans, g_esWhirlAbility[type].g_iRequiresHumans, 1);
+		g_esWhirlCache[tank].g_iWhirlAbility = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iWhirlAbility, g_esWhirlPlayer[tank].g_iWhirlAbility, g_esWhirlSpecial[type].g_iWhirlAbility, g_esWhirlAbility[type].g_iWhirlAbility, 1);
+		g_esWhirlCache[tank].g_iWhirlAxis = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iWhirlAxis, g_esWhirlPlayer[tank].g_iWhirlAxis, g_esWhirlSpecial[type].g_iWhirlAxis, g_esWhirlAbility[type].g_iWhirlAxis, 1);
+		g_esWhirlCache[tank].g_iWhirlCooldown = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iWhirlCooldown, g_esWhirlPlayer[tank].g_iWhirlCooldown, g_esWhirlSpecial[type].g_iWhirlCooldown, g_esWhirlAbility[type].g_iWhirlCooldown, 1);
+		g_esWhirlCache[tank].g_iWhirlDuration = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iWhirlDuration, g_esWhirlPlayer[tank].g_iWhirlDuration, g_esWhirlSpecial[type].g_iWhirlDuration, g_esWhirlAbility[type].g_iWhirlDuration, 1);
+		g_esWhirlCache[tank].g_iWhirlEffect = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iWhirlEffect, g_esWhirlPlayer[tank].g_iWhirlEffect, g_esWhirlSpecial[type].g_iWhirlEffect, g_esWhirlAbility[type].g_iWhirlEffect, 1);
+		g_esWhirlCache[tank].g_iWhirlHit = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iWhirlHit, g_esWhirlPlayer[tank].g_iWhirlHit, g_esWhirlSpecial[type].g_iWhirlHit, g_esWhirlAbility[type].g_iWhirlHit, 1);
+		g_esWhirlCache[tank].g_iWhirlHitMode = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iWhirlHitMode, g_esWhirlPlayer[tank].g_iWhirlHitMode, g_esWhirlSpecial[type].g_iWhirlHitMode, g_esWhirlAbility[type].g_iWhirlHitMode, 1);
+		g_esWhirlCache[tank].g_iWhirlMessage = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iWhirlMessage, g_esWhirlPlayer[tank].g_iWhirlMessage, g_esWhirlSpecial[type].g_iWhirlMessage, g_esWhirlAbility[type].g_iWhirlMessage, 1);
+		g_esWhirlCache[tank].g_iWhirlRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iWhirlRangeCooldown, g_esWhirlPlayer[tank].g_iWhirlRangeCooldown, g_esWhirlSpecial[type].g_iWhirlRangeCooldown, g_esWhirlAbility[type].g_iWhirlRangeCooldown, 1);
+		g_esWhirlCache[tank].g_iWhirlSight = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iWhirlSight, g_esWhirlPlayer[tank].g_iWhirlSight, g_esWhirlSpecial[type].g_iWhirlSight, g_esWhirlAbility[type].g_iWhirlSight, 1);
 	}
 	else
 	{

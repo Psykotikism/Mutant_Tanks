@@ -81,7 +81,6 @@ enum struct esNullifyPlayer
 	int g_iHumanCooldown;
 	int g_iHumanRangeCooldown;
 	int g_iImmunityFlags;
-	int g_iInfectedType;
 	int g_iNullifyAbility;
 	int g_iNullifyCooldown;
 	int g_iNullifyEffect;
@@ -123,7 +122,7 @@ enum struct esNullifyTeammate
 	int g_iRequiresHumans;
 }
 
-esNullifyTeammate g_esNullifyTeammate[MAXPLAYERS + 1][7];
+esNullifyTeammate g_esNullifyTeammate[MAXPLAYERS + 1];
 
 enum struct esNullifyAbility
 {
@@ -179,7 +178,7 @@ enum struct esNullifySpecial
 	int g_iRequiresHumans;
 }
 
-esNullifySpecial g_esNullifySpecial[MT_MAXTYPES + 1][7];
+esNullifySpecial g_esNullifySpecial[MT_MAXTYPES + 1];
 
 enum struct esNullifyCache
 {
@@ -609,29 +608,26 @@ public void MT_OnConfigsLoad(int mode)
 				g_esNullifyAbility[iIndex].g_iNullifyRangeCooldown = 0;
 				g_esNullifyAbility[iIndex].g_iNullifySight = 0;
 
-				for (int iSpecType = 0; iSpecType < (sizeof g_sSpecialNames); iSpecType++)
-				{
-					g_esNullifySpecial[iIndex][iSpecType].g_flCloseAreasOnly = -1.0;
-					g_esNullifySpecial[iIndex][iSpecType].g_iComboAbility = -1;
-					g_esNullifySpecial[iIndex][iSpecType].g_iHumanAbility = -1;
-					g_esNullifySpecial[iIndex][iSpecType].g_iHumanAmmo = -1;
-					g_esNullifySpecial[iIndex][iSpecType].g_iHumanCooldown = -1;
-					g_esNullifySpecial[iIndex][iSpecType].g_iHumanRangeCooldown = -1;
-					g_esNullifySpecial[iIndex][iSpecType].g_flOpenAreasOnly = -1.0;
-					g_esNullifySpecial[iIndex][iSpecType].g_iRequiresHumans = -1;
-					g_esNullifySpecial[iIndex][iSpecType].g_iNullifyAbility = -1;
-					g_esNullifySpecial[iIndex][iSpecType].g_iNullifyEffect = -1;
-					g_esNullifySpecial[iIndex][iSpecType].g_iNullifyMessage = -1;
-					g_esNullifySpecial[iIndex][iSpecType].g_flNullifyChance = -1.0;
-					g_esNullifySpecial[iIndex][iSpecType].g_iNullifyCooldown = -1;
-					g_esNullifySpecial[iIndex][iSpecType].g_flNullifyDuration = -1.0;
-					g_esNullifySpecial[iIndex][iSpecType].g_iNullifyHit = -1;
-					g_esNullifySpecial[iIndex][iSpecType].g_iNullifyHitMode = -1;
-					g_esNullifySpecial[iIndex][iSpecType].g_flNullifyRange = -1.0;
-					g_esNullifySpecial[iIndex][iSpecType].g_flNullifyRangeChance = -1.0;
-					g_esNullifySpecial[iIndex][iSpecType].g_iNullifyRangeCooldown = -1;
-					g_esNullifySpecial[iIndex][iSpecType].g_iNullifySight = -1;
-				}
+				g_esNullifySpecial[iIndex].g_flCloseAreasOnly = -1.0;
+				g_esNullifySpecial[iIndex].g_iComboAbility = -1;
+				g_esNullifySpecial[iIndex].g_iHumanAbility = -1;
+				g_esNullifySpecial[iIndex].g_iHumanAmmo = -1;
+				g_esNullifySpecial[iIndex].g_iHumanCooldown = -1;
+				g_esNullifySpecial[iIndex].g_iHumanRangeCooldown = -1;
+				g_esNullifySpecial[iIndex].g_flOpenAreasOnly = -1.0;
+				g_esNullifySpecial[iIndex].g_iRequiresHumans = -1;
+				g_esNullifySpecial[iIndex].g_iNullifyAbility = -1;
+				g_esNullifySpecial[iIndex].g_iNullifyEffect = -1;
+				g_esNullifySpecial[iIndex].g_iNullifyMessage = -1;
+				g_esNullifySpecial[iIndex].g_flNullifyChance = -1.0;
+				g_esNullifySpecial[iIndex].g_iNullifyCooldown = -1;
+				g_esNullifySpecial[iIndex].g_flNullifyDuration = -1.0;
+				g_esNullifySpecial[iIndex].g_iNullifyHit = -1;
+				g_esNullifySpecial[iIndex].g_iNullifyHitMode = -1;
+				g_esNullifySpecial[iIndex].g_flNullifyRange = -1.0;
+				g_esNullifySpecial[iIndex].g_flNullifyRangeChance = -1.0;
+				g_esNullifySpecial[iIndex].g_iNullifyRangeCooldown = -1;
+				g_esNullifySpecial[iIndex].g_iNullifySight = -1;
 			}
 		}
 		case 3:
@@ -661,64 +657,61 @@ public void MT_OnConfigsLoad(int mode)
 				g_esNullifyPlayer[iPlayer].g_iNullifyRangeCooldown = -1;
 				g_esNullifyPlayer[iPlayer].g_iNullifySight = -1;
 
-				for (int iSpecType = 0; iSpecType < (sizeof g_sSpecialNames); iSpecType++)
-				{
-					g_esNullifyTeammate[iPlayer][iSpecType].g_flCloseAreasOnly = -1.0;
-					g_esNullifyTeammate[iPlayer][iSpecType].g_iComboAbility = -1;
-					g_esNullifyTeammate[iPlayer][iSpecType].g_iHumanAbility = -1;
-					g_esNullifyTeammate[iPlayer][iSpecType].g_iHumanAmmo = -1;
-					g_esNullifyTeammate[iPlayer][iSpecType].g_iHumanCooldown = -1;
-					g_esNullifyTeammate[iPlayer][iSpecType].g_iHumanRangeCooldown = -1;
-					g_esNullifyTeammate[iPlayer][iSpecType].g_flOpenAreasOnly = -1.0;
-					g_esNullifyTeammate[iPlayer][iSpecType].g_iRequiresHumans = -1;
-					g_esNullifyTeammate[iPlayer][iSpecType].g_iNullifyAbility = -1;
-					g_esNullifyTeammate[iPlayer][iSpecType].g_iNullifyEffect = -1;
-					g_esNullifyTeammate[iPlayer][iSpecType].g_iNullifyMessage = -1;
-					g_esNullifyTeammate[iPlayer][iSpecType].g_flNullifyChance = -1.0;
-					g_esNullifyTeammate[iPlayer][iSpecType].g_iNullifyCooldown = -1;
-					g_esNullifyTeammate[iPlayer][iSpecType].g_flNullifyDuration = -1.0;
-					g_esNullifyTeammate[iPlayer][iSpecType].g_iNullifyHit = -1;
-					g_esNullifyTeammate[iPlayer][iSpecType].g_iNullifyHitMode = -1;
-					g_esNullifyTeammate[iPlayer][iSpecType].g_flNullifyRange = -1.0;
-					g_esNullifyTeammate[iPlayer][iSpecType].g_flNullifyRangeChance = -1.0;
-					g_esNullifyTeammate[iPlayer][iSpecType].g_iNullifyRangeCooldown = -1;
-					g_esNullifyTeammate[iPlayer][iSpecType].g_iNullifySight = -1;
-				}
+				g_esNullifyTeammate[iPlayer].g_flCloseAreasOnly = -1.0;
+				g_esNullifyTeammate[iPlayer].g_iComboAbility = -1;
+				g_esNullifyTeammate[iPlayer].g_iHumanAbility = -1;
+				g_esNullifyTeammate[iPlayer].g_iHumanAmmo = -1;
+				g_esNullifyTeammate[iPlayer].g_iHumanCooldown = -1;
+				g_esNullifyTeammate[iPlayer].g_iHumanRangeCooldown = -1;
+				g_esNullifyTeammate[iPlayer].g_flOpenAreasOnly = -1.0;
+				g_esNullifyTeammate[iPlayer].g_iRequiresHumans = -1;
+				g_esNullifyTeammate[iPlayer].g_iNullifyAbility = -1;
+				g_esNullifyTeammate[iPlayer].g_iNullifyEffect = -1;
+				g_esNullifyTeammate[iPlayer].g_iNullifyMessage = -1;
+				g_esNullifyTeammate[iPlayer].g_flNullifyChance = -1.0;
+				g_esNullifyTeammate[iPlayer].g_iNullifyCooldown = -1;
+				g_esNullifyTeammate[iPlayer].g_flNullifyDuration = -1.0;
+				g_esNullifyTeammate[iPlayer].g_iNullifyHit = -1;
+				g_esNullifyTeammate[iPlayer].g_iNullifyHitMode = -1;
+				g_esNullifyTeammate[iPlayer].g_flNullifyRange = -1.0;
+				g_esNullifyTeammate[iPlayer].g_flNullifyRangeChance = -1.0;
+				g_esNullifyTeammate[iPlayer].g_iNullifyRangeCooldown = -1;
+				g_esNullifyTeammate[iPlayer].g_iNullifySight = -1;
 			}
 		}
 	}
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vNullifyConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, int specType)
+void vNullifyConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #else
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, int specType)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #endif
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esNullifyTeammate[admin][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esNullifyTeammate[admin][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specType);
-			g_esNullifyTeammate[admin][specType].g_iComboAbility = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esNullifyTeammate[admin][specType].g_iComboAbility, value, -1, 1, specType);
-			g_esNullifyTeammate[admin][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esNullifyTeammate[admin][specType].g_iHumanAbility, value, -1, 2, specType);
-			g_esNullifyTeammate[admin][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esNullifyTeammate[admin][specType].g_iHumanAmmo, value, -1, 99999, specType);
-			g_esNullifyTeammate[admin][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esNullifyTeammate[admin][specType].g_iHumanCooldown, value, -1, 99999, specType);
-			g_esNullifyTeammate[admin][specType].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esNullifyTeammate[admin][specType].g_iHumanRangeCooldown, value, -1, 99999, specType);
-			g_esNullifyTeammate[admin][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esNullifyTeammate[admin][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specType);
-			g_esNullifyTeammate[admin][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esNullifyTeammate[admin][specType].g_iRequiresHumans, value, -1, 32, specType);
-			g_esNullifyTeammate[admin][specType].g_iNullifyAbility = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esNullifyTeammate[admin][specType].g_iNullifyAbility, value, -1, 1, specType);
-			g_esNullifyTeammate[admin][specType].g_iNullifyEffect = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esNullifyTeammate[admin][specType].g_iNullifyEffect, value, -1, 7, specType);
-			g_esNullifyTeammate[admin][specType].g_iNullifyMessage = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esNullifyTeammate[admin][specType].g_iNullifyMessage, value, -1, 3, specType);
-			g_esNullifyTeammate[admin][specType].g_iNullifySight = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esNullifyTeammate[admin][specType].g_iNullifySight, value, -1, 2, specType);
-			g_esNullifyTeammate[admin][specType].g_flNullifyChance = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyChance", "Nullify Chance", "Nullify_Chance", "chance", g_esNullifyTeammate[admin][specType].g_flNullifyChance, value, -1.0, 100.0, specType);
-			g_esNullifyTeammate[admin][specType].g_iNullifyCooldown = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyCooldown", "Nullify Cooldown", "Nullify_Cooldown", "cooldown", g_esNullifyTeammate[admin][specType].g_iNullifyCooldown, value, -1, 99999, specType);
-			g_esNullifyTeammate[admin][specType].g_flNullifyDuration = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyDuration", "Nullify Duration", "Nullify_Duration", "duration", g_esNullifyTeammate[admin][specType].g_flNullifyDuration, value, -1.0, 99999.0, specType);
-			g_esNullifyTeammate[admin][specType].g_iNullifyHit = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyHit", "Nullify Hit", "Nullify_Hit", "hit", g_esNullifyTeammate[admin][specType].g_iNullifyHit, value, -1, 1, specType);
-			g_esNullifyTeammate[admin][specType].g_iNullifyHitMode = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyHitMode", "Nullify Hit Mode", "Nullify_Hit_Mode", "hitmode", g_esNullifyTeammate[admin][specType].g_iNullifyHitMode, value, -1, 2, specType);
-			g_esNullifyTeammate[admin][specType].g_flNullifyRange = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyRange", "Nullify Range", "Nullify_Range", "range", g_esNullifyTeammate[admin][specType].g_flNullifyRange, value, -1.0, 99999.0, specType);
-			g_esNullifyTeammate[admin][specType].g_flNullifyRangeChance = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyRangeChance", "Nullify Range Chance", "Nullify_Range_Chance", "rangechance", g_esNullifyTeammate[admin][specType].g_flNullifyRangeChance, value, -1.0, 100.0, specType);
-			g_esNullifyTeammate[admin][specType].g_iNullifyRangeCooldown = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyRangeCooldown", "Nullify Range Cooldown", "Nullify_Range_Cooldown", "rangecooldown", g_esNullifyTeammate[admin][specType].g_iNullifyRangeCooldown, value, -1, 99999, specType);
+			g_esNullifyTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esNullifyTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esNullifyTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esNullifyTeammate[admin].g_iComboAbility, value, -1, 1);
+			g_esNullifyTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esNullifyTeammate[admin].g_iHumanAbility, value, -1, 2);
+			g_esNullifyTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esNullifyTeammate[admin].g_iHumanAmmo, value, -1, 99999);
+			g_esNullifyTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esNullifyTeammate[admin].g_iHumanCooldown, value, -1, 99999);
+			g_esNullifyTeammate[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esNullifyTeammate[admin].g_iHumanRangeCooldown, value, -1, 99999);
+			g_esNullifyTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esNullifyTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esNullifyTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esNullifyTeammate[admin].g_iRequiresHumans, value, -1, 32);
+			g_esNullifyTeammate[admin].g_iNullifyAbility = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esNullifyTeammate[admin].g_iNullifyAbility, value, -1, 1);
+			g_esNullifyTeammate[admin].g_iNullifyEffect = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esNullifyTeammate[admin].g_iNullifyEffect, value, -1, 7);
+			g_esNullifyTeammate[admin].g_iNullifyMessage = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esNullifyTeammate[admin].g_iNullifyMessage, value, -1, 3);
+			g_esNullifyTeammate[admin].g_iNullifySight = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esNullifyTeammate[admin].g_iNullifySight, value, -1, 2);
+			g_esNullifyTeammate[admin].g_flNullifyChance = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyChance", "Nullify Chance", "Nullify_Chance", "chance", g_esNullifyTeammate[admin].g_flNullifyChance, value, -1.0, 100.0);
+			g_esNullifyTeammate[admin].g_iNullifyCooldown = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyCooldown", "Nullify Cooldown", "Nullify_Cooldown", "cooldown", g_esNullifyTeammate[admin].g_iNullifyCooldown, value, -1, 99999);
+			g_esNullifyTeammate[admin].g_flNullifyDuration = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyDuration", "Nullify Duration", "Nullify_Duration", "duration", g_esNullifyTeammate[admin].g_flNullifyDuration, value, -1.0, 99999.0);
+			g_esNullifyTeammate[admin].g_iNullifyHit = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyHit", "Nullify Hit", "Nullify_Hit", "hit", g_esNullifyTeammate[admin].g_iNullifyHit, value, -1, 1);
+			g_esNullifyTeammate[admin].g_iNullifyHitMode = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyHitMode", "Nullify Hit Mode", "Nullify_Hit_Mode", "hitmode", g_esNullifyTeammate[admin].g_iNullifyHitMode, value, -1, 2);
+			g_esNullifyTeammate[admin].g_flNullifyRange = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyRange", "Nullify Range", "Nullify_Range", "range", g_esNullifyTeammate[admin].g_flNullifyRange, value, -1.0, 99999.0);
+			g_esNullifyTeammate[admin].g_flNullifyRangeChance = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyRangeChance", "Nullify Range Chance", "Nullify_Range_Chance", "rangechance", g_esNullifyTeammate[admin].g_flNullifyRangeChance, value, -1.0, 100.0);
+			g_esNullifyTeammate[admin].g_iNullifyRangeCooldown = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyRangeCooldown", "Nullify Range Cooldown", "Nullify_Range_Cooldown", "rangecooldown", g_esNullifyTeammate[admin].g_iNullifyRangeCooldown, value, -1, 99999);
 		}
 		else
 		{
@@ -751,26 +744,26 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esNullifySpecial[type][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esNullifySpecial[type][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specType);
-			g_esNullifySpecial[type][specType].g_iComboAbility = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esNullifySpecial[type][specType].g_iComboAbility, value, -1, 1, specType);
-			g_esNullifySpecial[type][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esNullifySpecial[type][specType].g_iHumanAbility, value, -1, 2, specType);
-			g_esNullifySpecial[type][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esNullifySpecial[type][specType].g_iHumanAmmo, value, -1, 99999, specType);
-			g_esNullifySpecial[type][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esNullifySpecial[type][specType].g_iHumanCooldown, value, -1, 99999, specType);
-			g_esNullifySpecial[type][specType].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esNullifySpecial[type][specType].g_iHumanRangeCooldown, value, -1, 99999, specType);
-			g_esNullifySpecial[type][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esNullifySpecial[type][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specType);
-			g_esNullifySpecial[type][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esNullifySpecial[type][specType].g_iRequiresHumans, value, -1, 32, specType);
-			g_esNullifySpecial[type][specType].g_iNullifyAbility = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esNullifySpecial[type][specType].g_iNullifyAbility, value, -1, 1, specType);
-			g_esNullifySpecial[type][specType].g_iNullifyEffect = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esNullifySpecial[type][specType].g_iNullifyEffect, value, -1, 7, specType);
-			g_esNullifySpecial[type][specType].g_iNullifyMessage = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esNullifySpecial[type][specType].g_iNullifyMessage, value, -1, 3, specType);
-			g_esNullifySpecial[type][specType].g_iNullifySight = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esNullifySpecial[type][specType].g_iNullifySight, value, -1, 2, specType);
-			g_esNullifySpecial[type][specType].g_flNullifyChance = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyChance", "Nullify Chance", "Nullify_Chance", "chance", g_esNullifySpecial[type][specType].g_flNullifyChance, value, -1.0, 100.0, specType);
-			g_esNullifySpecial[type][specType].g_iNullifyCooldown = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyCooldown", "Nullify Cooldown", "Nullify_Cooldown", "cooldown", g_esNullifySpecial[type][specType].g_iNullifyCooldown, value, -1, 99999, specType);
-			g_esNullifySpecial[type][specType].g_flNullifyDuration = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyDuration", "Nullify Duration", "Nullify_Duration", "duration", g_esNullifySpecial[type][specType].g_flNullifyDuration, value, -1.0, 99999.0, specType);
-			g_esNullifySpecial[type][specType].g_iNullifyHit = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyHit", "Nullify Hit", "Nullify_Hit", "hit", g_esNullifySpecial[type][specType].g_iNullifyHit, value, -1, 1, specType);
-			g_esNullifySpecial[type][specType].g_iNullifyHitMode = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyHitMode", "Nullify Hit Mode", "Nullify_Hit_Mode", "hitmode", g_esNullifySpecial[type][specType].g_iNullifyHitMode, value, -1, 2, specType);
-			g_esNullifySpecial[type][specType].g_flNullifyRange = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyRange", "Nullify Range", "Nullify_Range", "range", g_esNullifySpecial[type][specType].g_flNullifyRange, value, -1.0, 99999.0, specType);
-			g_esNullifySpecial[type][specType].g_flNullifyRangeChance = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyRangeChance", "Nullify Range Chance", "Nullify_Range_Chance", "rangechance", g_esNullifySpecial[type][specType].g_flNullifyRangeChance, value, -1.0, 100.0, specType);
-			g_esNullifySpecial[type][specType].g_iNullifyRangeCooldown = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyRangeCooldown", "Nullify Range Cooldown", "Nullify_Range_Cooldown", "rangecooldown", g_esNullifySpecial[type][specType].g_iNullifyRangeCooldown, value, -1, 99999, specType);
+			g_esNullifySpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esNullifySpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esNullifySpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esNullifySpecial[type].g_iComboAbility, value, -1, 1);
+			g_esNullifySpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esNullifySpecial[type].g_iHumanAbility, value, -1, 2);
+			g_esNullifySpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esNullifySpecial[type].g_iHumanAmmo, value, -1, 99999);
+			g_esNullifySpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esNullifySpecial[type].g_iHumanCooldown, value, -1, 99999);
+			g_esNullifySpecial[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esNullifySpecial[type].g_iHumanRangeCooldown, value, -1, 99999);
+			g_esNullifySpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esNullifySpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esNullifySpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esNullifySpecial[type].g_iRequiresHumans, value, -1, 32);
+			g_esNullifySpecial[type].g_iNullifyAbility = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esNullifySpecial[type].g_iNullifyAbility, value, -1, 1);
+			g_esNullifySpecial[type].g_iNullifyEffect = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esNullifySpecial[type].g_iNullifyEffect, value, -1, 7);
+			g_esNullifySpecial[type].g_iNullifyMessage = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esNullifySpecial[type].g_iNullifyMessage, value, -1, 3);
+			g_esNullifySpecial[type].g_iNullifySight = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esNullifySpecial[type].g_iNullifySight, value, -1, 2);
+			g_esNullifySpecial[type].g_flNullifyChance = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyChance", "Nullify Chance", "Nullify_Chance", "chance", g_esNullifySpecial[type].g_flNullifyChance, value, -1.0, 100.0);
+			g_esNullifySpecial[type].g_iNullifyCooldown = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyCooldown", "Nullify Cooldown", "Nullify_Cooldown", "cooldown", g_esNullifySpecial[type].g_iNullifyCooldown, value, -1, 99999);
+			g_esNullifySpecial[type].g_flNullifyDuration = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyDuration", "Nullify Duration", "Nullify_Duration", "duration", g_esNullifySpecial[type].g_flNullifyDuration, value, -1.0, 99999.0);
+			g_esNullifySpecial[type].g_iNullifyHit = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyHit", "Nullify Hit", "Nullify_Hit", "hit", g_esNullifySpecial[type].g_iNullifyHit, value, -1, 1);
+			g_esNullifySpecial[type].g_iNullifyHitMode = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyHitMode", "Nullify Hit Mode", "Nullify_Hit_Mode", "hitmode", g_esNullifySpecial[type].g_iNullifyHitMode, value, -1, 2);
+			g_esNullifySpecial[type].g_flNullifyRange = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyRange", "Nullify Range", "Nullify_Range", "range", g_esNullifySpecial[type].g_flNullifyRange, value, -1.0, 99999.0);
+			g_esNullifySpecial[type].g_flNullifyRangeChance = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyRangeChance", "Nullify Range Chance", "Nullify_Range_Chance", "rangechance", g_esNullifySpecial[type].g_flNullifyRangeChance, value, -1.0, 100.0);
+			g_esNullifySpecial[type].g_iNullifyRangeCooldown = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyRangeCooldown", "Nullify Range Cooldown", "Nullify_Range_Cooldown", "rangecooldown", g_esNullifySpecial[type].g_iNullifyRangeCooldown, value, -1, 99999);
 		}
 		else
 		{
@@ -807,32 +800,30 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
-	g_esNullifyPlayer[tank].g_iInfectedType = iGetInfectedType(tank);
 	g_esNullifyPlayer[tank].g_iTankType = apply ? type : 0;
-	int iSpecType = g_esNullifyPlayer[tank].g_iInfectedType;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esNullifyCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank][0].g_flCloseAreasOnly, g_esNullifyTeammate[tank][iSpecType].g_flCloseAreasOnly, g_esNullifyPlayer[tank].g_flCloseAreasOnly, g_esNullifySpecial[type][0].g_flCloseAreasOnly, g_esNullifySpecial[type][iSpecType].g_flCloseAreasOnly, g_esNullifyAbility[type].g_flCloseAreasOnly, 1);
-		g_esNullifyCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank][0].g_iComboAbility, g_esNullifyTeammate[tank][iSpecType].g_iComboAbility, g_esNullifyPlayer[tank].g_iComboAbility, g_esNullifySpecial[type][0].g_iComboAbility, g_esNullifySpecial[type][iSpecType].g_iComboAbility, g_esNullifyAbility[type].g_iComboAbility, 1);
-		g_esNullifyCache[tank].g_flNullifyChance = flGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank][0].g_flNullifyChance, g_esNullifyTeammate[tank][iSpecType].g_flNullifyChance, g_esNullifyPlayer[tank].g_flNullifyChance, g_esNullifySpecial[type][0].g_flNullifyChance, g_esNullifySpecial[type][iSpecType].g_flNullifyChance, g_esNullifyAbility[type].g_flNullifyChance, 1);
-		g_esNullifyCache[tank].g_flNullifyDuration = flGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank][0].g_flNullifyDuration, g_esNullifyTeammate[tank][iSpecType].g_flNullifyDuration, g_esNullifyPlayer[tank].g_flNullifyDuration, g_esNullifySpecial[type][0].g_flNullifyDuration, g_esNullifySpecial[type][iSpecType].g_flNullifyDuration, g_esNullifyAbility[type].g_flNullifyDuration, 1);
-		g_esNullifyCache[tank].g_flNullifyRange = flGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank][0].g_flNullifyRange, g_esNullifyTeammate[tank][iSpecType].g_flNullifyRange, g_esNullifyPlayer[tank].g_flNullifyRange, g_esNullifySpecial[type][0].g_flNullifyRange, g_esNullifySpecial[type][iSpecType].g_flNullifyRange, g_esNullifyAbility[type].g_flNullifyRange, 1);
-		g_esNullifyCache[tank].g_flNullifyRangeChance = flGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank][0].g_flNullifyRangeChance, g_esNullifyTeammate[tank][iSpecType].g_flNullifyRangeChance, g_esNullifyPlayer[tank].g_flNullifyRangeChance, g_esNullifySpecial[type][0].g_flNullifyRangeChance, g_esNullifySpecial[type][iSpecType].g_flNullifyRangeChance, g_esNullifyAbility[type].g_flNullifyRangeChance, 1);
-		g_esNullifyCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank][0].g_iHumanAbility, g_esNullifyTeammate[tank][iSpecType].g_iHumanAbility, g_esNullifyPlayer[tank].g_iHumanAbility, g_esNullifySpecial[type][0].g_iHumanAbility, g_esNullifySpecial[type][iSpecType].g_iHumanAbility, g_esNullifyAbility[type].g_iHumanAbility, 1);
-		g_esNullifyCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank][0].g_iHumanAmmo, g_esNullifyTeammate[tank][iSpecType].g_iHumanAmmo, g_esNullifyPlayer[tank].g_iHumanAmmo, g_esNullifySpecial[type][0].g_iHumanAmmo, g_esNullifySpecial[type][iSpecType].g_iHumanAmmo, g_esNullifyAbility[type].g_iHumanAmmo, 1);
-		g_esNullifyCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank][0].g_iHumanCooldown, g_esNullifyTeammate[tank][iSpecType].g_iHumanCooldown, g_esNullifyPlayer[tank].g_iHumanCooldown, g_esNullifySpecial[type][0].g_iHumanCooldown, g_esNullifySpecial[type][iSpecType].g_iHumanCooldown, g_esNullifyAbility[type].g_iHumanCooldown, 1);
-		g_esNullifyCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank][0].g_iHumanRangeCooldown, g_esNullifyTeammate[tank][iSpecType].g_iHumanRangeCooldown, g_esNullifyPlayer[tank].g_iHumanRangeCooldown, g_esNullifySpecial[type][0].g_iHumanRangeCooldown, g_esNullifySpecial[type][iSpecType].g_iHumanRangeCooldown, g_esNullifyAbility[type].g_iHumanRangeCooldown, 1);
-		g_esNullifyCache[tank].g_iNullifyAbility = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank][0].g_iNullifyAbility, g_esNullifyTeammate[tank][iSpecType].g_iNullifyAbility, g_esNullifyPlayer[tank].g_iNullifyAbility, g_esNullifySpecial[type][0].g_iNullifyAbility, g_esNullifySpecial[type][iSpecType].g_iNullifyAbility, g_esNullifyAbility[type].g_iNullifyAbility, 1);
-		g_esNullifyCache[tank].g_iNullifyCooldown = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank][0].g_iNullifyCooldown, g_esNullifyTeammate[tank][iSpecType].g_iNullifyCooldown, g_esNullifyPlayer[tank].g_iNullifyCooldown, g_esNullifySpecial[type][0].g_iNullifyCooldown, g_esNullifySpecial[type][iSpecType].g_iNullifyCooldown, g_esNullifyAbility[type].g_iNullifyCooldown, 1);
-		g_esNullifyCache[tank].g_iNullifyEffect = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank][0].g_iNullifyEffect, g_esNullifyTeammate[tank][iSpecType].g_iNullifyEffect, g_esNullifyPlayer[tank].g_iNullifyEffect, g_esNullifySpecial[type][0].g_iNullifyEffect, g_esNullifySpecial[type][iSpecType].g_iNullifyEffect, g_esNullifyAbility[type].g_iNullifyEffect, 1);
-		g_esNullifyCache[tank].g_iNullifyHit = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank][0].g_iNullifyHit, g_esNullifyTeammate[tank][iSpecType].g_iNullifyHit, g_esNullifyPlayer[tank].g_iNullifyHit, g_esNullifySpecial[type][0].g_iNullifyHit, g_esNullifySpecial[type][iSpecType].g_iNullifyHit, g_esNullifyAbility[type].g_iNullifyHit, 1);
-		g_esNullifyCache[tank].g_iNullifyHitMode = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank][0].g_iNullifyHitMode, g_esNullifyTeammate[tank][iSpecType].g_iNullifyHitMode, g_esNullifyPlayer[tank].g_iNullifyHitMode, g_esNullifySpecial[type][0].g_iNullifyHitMode, g_esNullifySpecial[type][iSpecType].g_iNullifyHitMode, g_esNullifyAbility[type].g_iNullifyHitMode, 1);
-		g_esNullifyCache[tank].g_iNullifyMessage = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank][0].g_iNullifyMessage, g_esNullifyTeammate[tank][iSpecType].g_iNullifyMessage, g_esNullifyPlayer[tank].g_iNullifyMessage, g_esNullifySpecial[type][0].g_iNullifyMessage, g_esNullifySpecial[type][iSpecType].g_iNullifyMessage, g_esNullifyAbility[type].g_iNullifyMessage, 1);
-		g_esNullifyCache[tank].g_iNullifyRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank][0].g_iNullifyRangeCooldown, g_esNullifyTeammate[tank][iSpecType].g_iNullifyRangeCooldown, g_esNullifyPlayer[tank].g_iNullifyRangeCooldown, g_esNullifySpecial[type][0].g_iNullifyRangeCooldown, g_esNullifySpecial[type][iSpecType].g_iNullifyRangeCooldown, g_esNullifyAbility[type].g_iNullifyRangeCooldown, 1);
-		g_esNullifyCache[tank].g_iNullifySight = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank][0].g_iNullifySight, g_esNullifyTeammate[tank][iSpecType].g_iNullifySight, g_esNullifyPlayer[tank].g_iNullifySight, g_esNullifySpecial[type][0].g_iNullifySight, g_esNullifySpecial[type][iSpecType].g_iNullifySight, g_esNullifyAbility[type].g_iNullifySight, 1);
-		g_esNullifyCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank][0].g_flOpenAreasOnly, g_esNullifyTeammate[tank][iSpecType].g_flOpenAreasOnly, g_esNullifyPlayer[tank].g_flOpenAreasOnly, g_esNullifySpecial[type][0].g_flOpenAreasOnly, g_esNullifySpecial[type][iSpecType].g_flOpenAreasOnly, g_esNullifyAbility[type].g_flOpenAreasOnly, 1);
-		g_esNullifyCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank][0].g_iRequiresHumans, g_esNullifyTeammate[tank][iSpecType].g_iRequiresHumans, g_esNullifyPlayer[tank].g_iRequiresHumans, g_esNullifySpecial[type][0].g_iRequiresHumans, g_esNullifySpecial[type][iSpecType].g_iRequiresHumans, g_esNullifyAbility[type].g_iRequiresHumans, 1);
+		g_esNullifyCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_flCloseAreasOnly, g_esNullifyPlayer[tank].g_flCloseAreasOnly, g_esNullifySpecial[type].g_flCloseAreasOnly, g_esNullifyAbility[type].g_flCloseAreasOnly, 1);
+		g_esNullifyCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iComboAbility, g_esNullifyPlayer[tank].g_iComboAbility, g_esNullifySpecial[type].g_iComboAbility, g_esNullifyAbility[type].g_iComboAbility, 1);
+		g_esNullifyCache[tank].g_flNullifyChance = flGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_flNullifyChance, g_esNullifyPlayer[tank].g_flNullifyChance, g_esNullifySpecial[type].g_flNullifyChance, g_esNullifyAbility[type].g_flNullifyChance, 1);
+		g_esNullifyCache[tank].g_flNullifyDuration = flGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_flNullifyDuration, g_esNullifyPlayer[tank].g_flNullifyDuration, g_esNullifySpecial[type].g_flNullifyDuration, g_esNullifyAbility[type].g_flNullifyDuration, 1);
+		g_esNullifyCache[tank].g_flNullifyRange = flGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_flNullifyRange, g_esNullifyPlayer[tank].g_flNullifyRange, g_esNullifySpecial[type].g_flNullifyRange, g_esNullifyAbility[type].g_flNullifyRange, 1);
+		g_esNullifyCache[tank].g_flNullifyRangeChance = flGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_flNullifyRangeChance, g_esNullifyPlayer[tank].g_flNullifyRangeChance, g_esNullifySpecial[type].g_flNullifyRangeChance, g_esNullifyAbility[type].g_flNullifyRangeChance, 1);
+		g_esNullifyCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iHumanAbility, g_esNullifyPlayer[tank].g_iHumanAbility, g_esNullifySpecial[type].g_iHumanAbility, g_esNullifyAbility[type].g_iHumanAbility, 1);
+		g_esNullifyCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iHumanAmmo, g_esNullifyPlayer[tank].g_iHumanAmmo, g_esNullifySpecial[type].g_iHumanAmmo, g_esNullifyAbility[type].g_iHumanAmmo, 1);
+		g_esNullifyCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iHumanCooldown, g_esNullifyPlayer[tank].g_iHumanCooldown, g_esNullifySpecial[type].g_iHumanCooldown, g_esNullifyAbility[type].g_iHumanCooldown, 1);
+		g_esNullifyCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iHumanRangeCooldown, g_esNullifyPlayer[tank].g_iHumanRangeCooldown, g_esNullifySpecial[type].g_iHumanRangeCooldown, g_esNullifyAbility[type].g_iHumanRangeCooldown, 1);
+		g_esNullifyCache[tank].g_iNullifyAbility = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iNullifyAbility, g_esNullifyPlayer[tank].g_iNullifyAbility, g_esNullifySpecial[type].g_iNullifyAbility, g_esNullifyAbility[type].g_iNullifyAbility, 1);
+		g_esNullifyCache[tank].g_iNullifyCooldown = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iNullifyCooldown, g_esNullifyPlayer[tank].g_iNullifyCooldown, g_esNullifySpecial[type].g_iNullifyCooldown, g_esNullifyAbility[type].g_iNullifyCooldown, 1);
+		g_esNullifyCache[tank].g_iNullifyEffect = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iNullifyEffect, g_esNullifyPlayer[tank].g_iNullifyEffect, g_esNullifySpecial[type].g_iNullifyEffect, g_esNullifyAbility[type].g_iNullifyEffect, 1);
+		g_esNullifyCache[tank].g_iNullifyHit = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iNullifyHit, g_esNullifyPlayer[tank].g_iNullifyHit, g_esNullifySpecial[type].g_iNullifyHit, g_esNullifyAbility[type].g_iNullifyHit, 1);
+		g_esNullifyCache[tank].g_iNullifyHitMode = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iNullifyHitMode, g_esNullifyPlayer[tank].g_iNullifyHitMode, g_esNullifySpecial[type].g_iNullifyHitMode, g_esNullifyAbility[type].g_iNullifyHitMode, 1);
+		g_esNullifyCache[tank].g_iNullifyMessage = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iNullifyMessage, g_esNullifyPlayer[tank].g_iNullifyMessage, g_esNullifySpecial[type].g_iNullifyMessage, g_esNullifyAbility[type].g_iNullifyMessage, 1);
+		g_esNullifyCache[tank].g_iNullifyRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iNullifyRangeCooldown, g_esNullifyPlayer[tank].g_iNullifyRangeCooldown, g_esNullifySpecial[type].g_iNullifyRangeCooldown, g_esNullifyAbility[type].g_iNullifyRangeCooldown, 1);
+		g_esNullifyCache[tank].g_iNullifySight = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iNullifySight, g_esNullifyPlayer[tank].g_iNullifySight, g_esNullifySpecial[type].g_iNullifySight, g_esNullifyAbility[type].g_iNullifySight, 1);
+		g_esNullifyCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_flOpenAreasOnly, g_esNullifyPlayer[tank].g_flOpenAreasOnly, g_esNullifySpecial[type].g_flOpenAreasOnly, g_esNullifyAbility[type].g_flOpenAreasOnly, 1);
+		g_esNullifyCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iRequiresHumans, g_esNullifyPlayer[tank].g_iRequiresHumans, g_esNullifySpecial[type].g_iRequiresHumans, g_esNullifyAbility[type].g_iRequiresHumans, 1);
 	}
 	else
 	{

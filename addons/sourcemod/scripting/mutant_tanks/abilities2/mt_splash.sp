@@ -79,7 +79,6 @@ enum struct esSplashPlayer
 	int g_iHumanDuration;
 	int g_iHumanMode;
 	int g_iImmunityFlags;
-	int g_iInfectedType;
 	int g_iRequiresHumans;
 	int g_iSplashAbility;
 	int g_iSplashCooldown;
@@ -114,7 +113,7 @@ enum struct esSplashTeammate
 	int g_iSplashSight;
 }
 
-esSplashTeammate g_esSplashTeammate[MAXPLAYERS + 1][7];
+esSplashTeammate g_esSplashTeammate[MAXPLAYERS + 1];
 
 enum struct esSplashAbility
 {
@@ -167,7 +166,7 @@ enum struct esSplashSpecial
 	int g_iSplashSight;
 }
 
-esSplashSpecial g_esSplashSpecial[MT_MAXTYPES + 1][7];
+esSplashSpecial g_esSplashSpecial[MT_MAXTYPES + 1];
 
 enum struct esSplashCache
 {
@@ -495,27 +494,24 @@ public void MT_OnConfigsLoad(int mode)
 				g_esSplashAbility[iIndex].g_flSplashRange = 500.0;
 				g_esSplashAbility[iIndex].g_iSplashSight = 0;
 
-				for (int iSpecType = 0; iSpecType < (sizeof g_sSpecialNames); iSpecType++)
-				{
-					g_esSplashSpecial[iIndex][iSpecType].g_flCloseAreasOnly = -1.0;
-					g_esSplashSpecial[iIndex][iSpecType].g_iComboAbility = -1;
-					g_esSplashSpecial[iIndex][iSpecType].g_iHumanAbility = -1;
-					g_esSplashSpecial[iIndex][iSpecType].g_iHumanAmmo = -1;
-					g_esSplashSpecial[iIndex][iSpecType].g_iHumanCooldown = -1;
-					g_esSplashSpecial[iIndex][iSpecType].g_iHumanDuration = -1;
-					g_esSplashSpecial[iIndex][iSpecType].g_iHumanMode = -1;
-					g_esSplashSpecial[iIndex][iSpecType].g_flOpenAreasOnly = -1.0;
-					g_esSplashSpecial[iIndex][iSpecType].g_iRequiresHumans = -1;
-					g_esSplashSpecial[iIndex][iSpecType].g_iSplashAbility = -1;
-					g_esSplashSpecial[iIndex][iSpecType].g_iSplashMessage = -1;
-					g_esSplashSpecial[iIndex][iSpecType].g_flSplashChance = -1.0;
-					g_esSplashSpecial[iIndex][iSpecType].g_iSplashCooldown = -1;
-					g_esSplashSpecial[iIndex][iSpecType].g_flSplashDamage = -1.0;
-					g_esSplashSpecial[iIndex][iSpecType].g_iSplashDuration = -1;
-					g_esSplashSpecial[iIndex][iSpecType].g_flSplashInterval = -1.0;
-					g_esSplashSpecial[iIndex][iSpecType].g_flSplashRange = -1.0;
-					g_esSplashSpecial[iIndex][iSpecType].g_iSplashSight = -1;
-				}
+				g_esSplashSpecial[iIndex].g_flCloseAreasOnly = -1.0;
+				g_esSplashSpecial[iIndex].g_iComboAbility = -1;
+				g_esSplashSpecial[iIndex].g_iHumanAbility = -1;
+				g_esSplashSpecial[iIndex].g_iHumanAmmo = -1;
+				g_esSplashSpecial[iIndex].g_iHumanCooldown = -1;
+				g_esSplashSpecial[iIndex].g_iHumanDuration = -1;
+				g_esSplashSpecial[iIndex].g_iHumanMode = -1;
+				g_esSplashSpecial[iIndex].g_flOpenAreasOnly = -1.0;
+				g_esSplashSpecial[iIndex].g_iRequiresHumans = -1;
+				g_esSplashSpecial[iIndex].g_iSplashAbility = -1;
+				g_esSplashSpecial[iIndex].g_iSplashMessage = -1;
+				g_esSplashSpecial[iIndex].g_flSplashChance = -1.0;
+				g_esSplashSpecial[iIndex].g_iSplashCooldown = -1;
+				g_esSplashSpecial[iIndex].g_flSplashDamage = -1.0;
+				g_esSplashSpecial[iIndex].g_iSplashDuration = -1;
+				g_esSplashSpecial[iIndex].g_flSplashInterval = -1.0;
+				g_esSplashSpecial[iIndex].g_flSplashRange = -1.0;
+				g_esSplashSpecial[iIndex].g_iSplashSight = -1;
 			}
 		}
 		case 3:
@@ -543,60 +539,57 @@ public void MT_OnConfigsLoad(int mode)
 				g_esSplashPlayer[iPlayer].g_flSplashRange = -1.0;
 				g_esSplashPlayer[iPlayer].g_iSplashSight = -1;
 
-				for (int iSpecType = 0; iSpecType < (sizeof g_sSpecialNames); iSpecType++)
-				{
-					g_esSplashTeammate[iPlayer][iSpecType].g_flCloseAreasOnly = -1.0;
-					g_esSplashTeammate[iPlayer][iSpecType].g_iComboAbility = -1;
-					g_esSplashTeammate[iPlayer][iSpecType].g_iHumanAbility = -1;
-					g_esSplashTeammate[iPlayer][iSpecType].g_iHumanAmmo = -1;
-					g_esSplashTeammate[iPlayer][iSpecType].g_iHumanCooldown = -1;
-					g_esSplashTeammate[iPlayer][iSpecType].g_iHumanDuration = -1;
-					g_esSplashTeammate[iPlayer][iSpecType].g_iHumanMode = -1;
-					g_esSplashTeammate[iPlayer][iSpecType].g_flOpenAreasOnly = -1.0;
-					g_esSplashTeammate[iPlayer][iSpecType].g_iRequiresHumans = -1;
-					g_esSplashTeammate[iPlayer][iSpecType].g_iSplashAbility = -1;
-					g_esSplashTeammate[iPlayer][iSpecType].g_iSplashMessage = -1;
-					g_esSplashTeammate[iPlayer][iSpecType].g_flSplashChance = -1.0;
-					g_esSplashTeammate[iPlayer][iSpecType].g_iSplashCooldown = -1;
-					g_esSplashTeammate[iPlayer][iSpecType].g_flSplashDamage = -1.0;
-					g_esSplashTeammate[iPlayer][iSpecType].g_iSplashDuration = -1;
-					g_esSplashTeammate[iPlayer][iSpecType].g_flSplashInterval = -1.0;
-					g_esSplashTeammate[iPlayer][iSpecType].g_flSplashRange = -1.0;
-					g_esSplashTeammate[iPlayer][iSpecType].g_iSplashSight = -1;
-				}
+				g_esSplashTeammate[iPlayer].g_flCloseAreasOnly = -1.0;
+				g_esSplashTeammate[iPlayer].g_iComboAbility = -1;
+				g_esSplashTeammate[iPlayer].g_iHumanAbility = -1;
+				g_esSplashTeammate[iPlayer].g_iHumanAmmo = -1;
+				g_esSplashTeammate[iPlayer].g_iHumanCooldown = -1;
+				g_esSplashTeammate[iPlayer].g_iHumanDuration = -1;
+				g_esSplashTeammate[iPlayer].g_iHumanMode = -1;
+				g_esSplashTeammate[iPlayer].g_flOpenAreasOnly = -1.0;
+				g_esSplashTeammate[iPlayer].g_iRequiresHumans = -1;
+				g_esSplashTeammate[iPlayer].g_iSplashAbility = -1;
+				g_esSplashTeammate[iPlayer].g_iSplashMessage = -1;
+				g_esSplashTeammate[iPlayer].g_flSplashChance = -1.0;
+				g_esSplashTeammate[iPlayer].g_iSplashCooldown = -1;
+				g_esSplashTeammate[iPlayer].g_flSplashDamage = -1.0;
+				g_esSplashTeammate[iPlayer].g_iSplashDuration = -1;
+				g_esSplashTeammate[iPlayer].g_flSplashInterval = -1.0;
+				g_esSplashTeammate[iPlayer].g_flSplashRange = -1.0;
+				g_esSplashTeammate[iPlayer].g_iSplashSight = -1;
 			}
 		}
 	}
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vSplashConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, int specType)
+void vSplashConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #else
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, int specType)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #endif
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esSplashTeammate[admin][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esSplashTeammate[admin][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specType);
-			g_esSplashTeammate[admin][specType].g_iComboAbility = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esSplashTeammate[admin][specType].g_iComboAbility, value, -1, 1, specType);
-			g_esSplashTeammate[admin][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esSplashTeammate[admin][specType].g_iHumanAbility, value, -1, 2, specType);
-			g_esSplashTeammate[admin][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esSplashTeammate[admin][specType].g_iHumanAmmo, value, -1, 99999, specType);
-			g_esSplashTeammate[admin][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esSplashTeammate[admin][specType].g_iHumanCooldown, value, -1, 99999, specType);
-			g_esSplashTeammate[admin][specType].g_iHumanDuration = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esSplashTeammate[admin][specType].g_iHumanDuration, value, -1, 99999, specType);
-			g_esSplashTeammate[admin][specType].g_iHumanMode = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esSplashTeammate[admin][specType].g_iHumanMode, value, -1, 1, specType);
-			g_esSplashTeammate[admin][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esSplashTeammate[admin][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specType);
-			g_esSplashTeammate[admin][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esSplashTeammate[admin][specType].g_iRequiresHumans, value, -1, 32, specType);
-			g_esSplashTeammate[admin][specType].g_iSplashAbility = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSplashTeammate[admin][specType].g_iSplashAbility, value, -1, 1, specType);
-			g_esSplashTeammate[admin][specType].g_iSplashMessage = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSplashTeammate[admin][specType].g_iSplashMessage, value, -1, 1, specType);
-			g_esSplashTeammate[admin][specType].g_iSplashSight = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esSplashTeammate[admin][specType].g_iSplashSight, value, -1, 2, specType);
-			g_esSplashTeammate[admin][specType].g_flSplashChance = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashChance", "Splash Chance", "Splash_Chance", "chance", g_esSplashTeammate[admin][specType].g_flSplashChance, value, -1.0, 100.0, specType);
-			g_esSplashTeammate[admin][specType].g_iSplashCooldown = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashCooldown", "Splash Cooldown", "Splash_Cooldown", "cooldown", g_esSplashTeammate[admin][specType].g_iSplashCooldown, value, -1, 99999, specType);
-			g_esSplashTeammate[admin][specType].g_flSplashDamage = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashDamage", "Splash Damage", "Splash_Damage", "damage", g_esSplashTeammate[admin][specType].g_flSplashDamage, value, -1.0, 99999.0, specType);
-			g_esSplashTeammate[admin][specType].g_iSplashDuration = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashDuration", "Splash Duration", "Splash_Duration", "duration", g_esSplashTeammate[admin][specType].g_iSplashDuration, value, -1, 99999, specType);
-			g_esSplashTeammate[admin][specType].g_flSplashInterval = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashInterval", "Splash Interval", "Splash_Interval", "interval", g_esSplashTeammate[admin][specType].g_flSplashInterval, value, -1.0, 99999.0, specType);
-			g_esSplashTeammate[admin][specType].g_flSplashRange = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashRange", "Splash Range", "Splash_Range", "range", g_esSplashTeammate[admin][specType].g_flSplashRange, value, -1.0, 99999.0, specType);
+			g_esSplashTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esSplashTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esSplashTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esSplashTeammate[admin].g_iComboAbility, value, -1, 1);
+			g_esSplashTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esSplashTeammate[admin].g_iHumanAbility, value, -1, 2);
+			g_esSplashTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esSplashTeammate[admin].g_iHumanAmmo, value, -1, 99999);
+			g_esSplashTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esSplashTeammate[admin].g_iHumanCooldown, value, -1, 99999);
+			g_esSplashTeammate[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esSplashTeammate[admin].g_iHumanDuration, value, -1, 99999);
+			g_esSplashTeammate[admin].g_iHumanMode = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esSplashTeammate[admin].g_iHumanMode, value, -1, 1);
+			g_esSplashTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esSplashTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esSplashTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esSplashTeammate[admin].g_iRequiresHumans, value, -1, 32);
+			g_esSplashTeammate[admin].g_iSplashAbility = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSplashTeammate[admin].g_iSplashAbility, value, -1, 1);
+			g_esSplashTeammate[admin].g_iSplashMessage = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSplashTeammate[admin].g_iSplashMessage, value, -1, 1);
+			g_esSplashTeammate[admin].g_iSplashSight = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esSplashTeammate[admin].g_iSplashSight, value, -1, 2);
+			g_esSplashTeammate[admin].g_flSplashChance = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashChance", "Splash Chance", "Splash_Chance", "chance", g_esSplashTeammate[admin].g_flSplashChance, value, -1.0, 100.0);
+			g_esSplashTeammate[admin].g_iSplashCooldown = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashCooldown", "Splash Cooldown", "Splash_Cooldown", "cooldown", g_esSplashTeammate[admin].g_iSplashCooldown, value, -1, 99999);
+			g_esSplashTeammate[admin].g_flSplashDamage = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashDamage", "Splash Damage", "Splash_Damage", "damage", g_esSplashTeammate[admin].g_flSplashDamage, value, -1.0, 99999.0);
+			g_esSplashTeammate[admin].g_iSplashDuration = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashDuration", "Splash Duration", "Splash_Duration", "duration", g_esSplashTeammate[admin].g_iSplashDuration, value, -1, 99999);
+			g_esSplashTeammate[admin].g_flSplashInterval = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashInterval", "Splash Interval", "Splash_Interval", "interval", g_esSplashTeammate[admin].g_flSplashInterval, value, -1.0, 99999.0);
+			g_esSplashTeammate[admin].g_flSplashRange = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashRange", "Splash Range", "Splash_Range", "range", g_esSplashTeammate[admin].g_flSplashRange, value, -1.0, 99999.0);
 		}
 		else
 		{
@@ -627,24 +620,24 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esSplashSpecial[type][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esSplashSpecial[type][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specType);
-			g_esSplashSpecial[type][specType].g_iComboAbility = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esSplashSpecial[type][specType].g_iComboAbility, value, -1, 1, specType);
-			g_esSplashSpecial[type][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esSplashSpecial[type][specType].g_iHumanAbility, value, -1, 2, specType);
-			g_esSplashSpecial[type][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esSplashSpecial[type][specType].g_iHumanAmmo, value, -1, 99999, specType);
-			g_esSplashSpecial[type][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esSplashSpecial[type][specType].g_iHumanCooldown, value, -1, 99999, specType);
-			g_esSplashSpecial[type][specType].g_iHumanDuration = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esSplashSpecial[type][specType].g_iHumanDuration, value, -1, 99999, specType);
-			g_esSplashSpecial[type][specType].g_iHumanMode = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esSplashSpecial[type][specType].g_iHumanMode, value, -1, 1, specType);
-			g_esSplashSpecial[type][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esSplashSpecial[type][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specType);
-			g_esSplashSpecial[type][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esSplashSpecial[type][specType].g_iRequiresHumans, value, -1, 32, specType);
-			g_esSplashSpecial[type][specType].g_iSplashAbility = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSplashSpecial[type][specType].g_iSplashAbility, value, -1, 1, specType);
-			g_esSplashSpecial[type][specType].g_iSplashMessage = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSplashSpecial[type][specType].g_iSplashMessage, value, -1, 1, specType);
-			g_esSplashSpecial[type][specType].g_iSplashSight = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esSplashSpecial[type][specType].g_iSplashSight, value, -1, 2, specType);
-			g_esSplashSpecial[type][specType].g_flSplashChance = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashChance", "Splash Chance", "Splash_Chance", "chance", g_esSplashSpecial[type][specType].g_flSplashChance, value, -1.0, 100.0, specType);
-			g_esSplashSpecial[type][specType].g_iSplashCooldown = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashCooldown", "Splash Cooldown", "Splash_Cooldown", "cooldown", g_esSplashSpecial[type][specType].g_iSplashCooldown, value, -1, 99999, specType);
-			g_esSplashSpecial[type][specType].g_flSplashDamage = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashDamage", "Splash Damage", "Splash_Damage", "damage", g_esSplashSpecial[type][specType].g_flSplashDamage, value, -1.0, 99999.0, specType);
-			g_esSplashSpecial[type][specType].g_iSplashDuration = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashDuration", "Splash Duration", "Splash_Duration", "duration", g_esSplashSpecial[type][specType].g_iSplashDuration, value, -1, 99999, specType);
-			g_esSplashSpecial[type][specType].g_flSplashInterval = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashInterval", "Splash Interval", "Splash_Interval", "interval", g_esSplashSpecial[type][specType].g_flSplashInterval, value, -1.0, 99999.0, specType);
-			g_esSplashSpecial[type][specType].g_flSplashRange = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashRange", "Splash Range", "Splash_Range", "range", g_esSplashSpecial[type][specType].g_flSplashRange, value, -1.0, 99999.0, specType);
+			g_esSplashSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esSplashSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esSplashSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esSplashSpecial[type].g_iComboAbility, value, -1, 1);
+			g_esSplashSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esSplashSpecial[type].g_iHumanAbility, value, -1, 2);
+			g_esSplashSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esSplashSpecial[type].g_iHumanAmmo, value, -1, 99999);
+			g_esSplashSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esSplashSpecial[type].g_iHumanCooldown, value, -1, 99999);
+			g_esSplashSpecial[type].g_iHumanDuration = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esSplashSpecial[type].g_iHumanDuration, value, -1, 99999);
+			g_esSplashSpecial[type].g_iHumanMode = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esSplashSpecial[type].g_iHumanMode, value, -1, 1);
+			g_esSplashSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esSplashSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esSplashSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esSplashSpecial[type].g_iRequiresHumans, value, -1, 32);
+			g_esSplashSpecial[type].g_iSplashAbility = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSplashSpecial[type].g_iSplashAbility, value, -1, 1);
+			g_esSplashSpecial[type].g_iSplashMessage = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSplashSpecial[type].g_iSplashMessage, value, -1, 1);
+			g_esSplashSpecial[type].g_iSplashSight = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esSplashSpecial[type].g_iSplashSight, value, -1, 2);
+			g_esSplashSpecial[type].g_flSplashChance = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashChance", "Splash Chance", "Splash_Chance", "chance", g_esSplashSpecial[type].g_flSplashChance, value, -1.0, 100.0);
+			g_esSplashSpecial[type].g_iSplashCooldown = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashCooldown", "Splash Cooldown", "Splash_Cooldown", "cooldown", g_esSplashSpecial[type].g_iSplashCooldown, value, -1, 99999);
+			g_esSplashSpecial[type].g_flSplashDamage = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashDamage", "Splash Damage", "Splash_Damage", "damage", g_esSplashSpecial[type].g_flSplashDamage, value, -1.0, 99999.0);
+			g_esSplashSpecial[type].g_iSplashDuration = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashDuration", "Splash Duration", "Splash_Duration", "duration", g_esSplashSpecial[type].g_iSplashDuration, value, -1, 99999);
+			g_esSplashSpecial[type].g_flSplashInterval = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashInterval", "Splash Interval", "Splash_Interval", "interval", g_esSplashSpecial[type].g_flSplashInterval, value, -1.0, 99999.0);
+			g_esSplashSpecial[type].g_flSplashRange = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashRange", "Splash Range", "Splash_Range", "range", g_esSplashSpecial[type].g_flSplashRange, value, -1.0, 99999.0);
 		}
 		else
 		{
@@ -679,30 +672,28 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
-	g_esSplashPlayer[tank].g_iInfectedType = iGetInfectedType(tank);
 	g_esSplashPlayer[tank].g_iTankType = apply ? type : 0;
-	int iSpecType = g_esSplashPlayer[tank].g_iInfectedType;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esSplashCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank][0].g_flCloseAreasOnly, g_esSplashTeammate[tank][iSpecType].g_flCloseAreasOnly, g_esSplashPlayer[tank].g_flCloseAreasOnly, g_esSplashSpecial[type][0].g_flCloseAreasOnly, g_esSplashSpecial[type][iSpecType].g_flCloseAreasOnly, g_esSplashAbility[type].g_flCloseAreasOnly, 1);
-		g_esSplashCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank][0].g_iComboAbility, g_esSplashTeammate[tank][iSpecType].g_iComboAbility, g_esSplashPlayer[tank].g_iComboAbility, g_esSplashSpecial[type][0].g_iComboAbility, g_esSplashSpecial[type][iSpecType].g_iComboAbility, g_esSplashAbility[type].g_iComboAbility, 1);
-		g_esSplashCache[tank].g_flSplashChance = flGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank][0].g_flSplashChance, g_esSplashTeammate[tank][iSpecType].g_flSplashChance, g_esSplashPlayer[tank].g_flSplashChance, g_esSplashSpecial[type][0].g_flSplashChance, g_esSplashSpecial[type][iSpecType].g_flSplashChance, g_esSplashAbility[type].g_flSplashChance, 1);
-		g_esSplashCache[tank].g_flSplashDamage = flGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank][0].g_flSplashDamage, g_esSplashTeammate[tank][iSpecType].g_flSplashDamage, g_esSplashPlayer[tank].g_flSplashDamage, g_esSplashSpecial[type][0].g_flSplashDamage, g_esSplashSpecial[type][iSpecType].g_flSplashDamage, g_esSplashAbility[type].g_flSplashDamage, 1);
-		g_esSplashCache[tank].g_flSplashInterval = flGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank][0].g_flSplashInterval, g_esSplashTeammate[tank][iSpecType].g_flSplashInterval, g_esSplashPlayer[tank].g_flSplashInterval, g_esSplashSpecial[type][0].g_flSplashInterval, g_esSplashSpecial[type][iSpecType].g_flSplashInterval, g_esSplashAbility[type].g_flSplashInterval, 1);
-		g_esSplashCache[tank].g_flSplashRange = flGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank][0].g_flSplashRange, g_esSplashTeammate[tank][iSpecType].g_flSplashRange, g_esSplashPlayer[tank].g_flSplashRange, g_esSplashSpecial[type][0].g_flSplashRange, g_esSplashSpecial[type][iSpecType].g_flSplashRange, g_esSplashAbility[type].g_flSplashRange, 1);
-		g_esSplashCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank][0].g_iHumanAbility, g_esSplashTeammate[tank][iSpecType].g_iHumanAbility, g_esSplashPlayer[tank].g_iHumanAbility, g_esSplashSpecial[type][0].g_iHumanAbility, g_esSplashSpecial[type][iSpecType].g_iHumanAbility, g_esSplashAbility[type].g_iHumanAbility, 1);
-		g_esSplashCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank][0].g_iHumanAmmo, g_esSplashTeammate[tank][iSpecType].g_iHumanAmmo, g_esSplashPlayer[tank].g_iHumanAmmo, g_esSplashSpecial[type][0].g_iHumanAmmo, g_esSplashSpecial[type][iSpecType].g_iHumanAmmo, g_esSplashAbility[type].g_iHumanAmmo, 1);
-		g_esSplashCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank][0].g_iHumanCooldown, g_esSplashTeammate[tank][iSpecType].g_iHumanCooldown, g_esSplashPlayer[tank].g_iHumanCooldown, g_esSplashSpecial[type][0].g_iHumanCooldown, g_esSplashSpecial[type][iSpecType].g_iHumanCooldown, g_esSplashAbility[type].g_iHumanCooldown, 1);
-		g_esSplashCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank][0].g_iHumanDuration, g_esSplashTeammate[tank][iSpecType].g_iHumanDuration, g_esSplashPlayer[tank].g_iHumanDuration, g_esSplashSpecial[type][0].g_iHumanDuration, g_esSplashSpecial[type][iSpecType].g_iHumanDuration, g_esSplashAbility[type].g_iHumanDuration, 1);
-		g_esSplashCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank][0].g_iHumanMode, g_esSplashTeammate[tank][iSpecType].g_iHumanMode, g_esSplashPlayer[tank].g_iHumanMode, g_esSplashSpecial[type][0].g_iHumanMode, g_esSplashSpecial[type][iSpecType].g_iHumanMode, g_esSplashAbility[type].g_iHumanMode, 1);
-		g_esSplashCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank][0].g_flOpenAreasOnly, g_esSplashTeammate[tank][iSpecType].g_flOpenAreasOnly, g_esSplashPlayer[tank].g_flOpenAreasOnly, g_esSplashSpecial[type][0].g_flOpenAreasOnly, g_esSplashSpecial[type][iSpecType].g_flOpenAreasOnly, g_esSplashAbility[type].g_flOpenAreasOnly, 1);
-		g_esSplashCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank][0].g_iRequiresHumans, g_esSplashTeammate[tank][iSpecType].g_iRequiresHumans, g_esSplashPlayer[tank].g_iRequiresHumans, g_esSplashSpecial[type][0].g_iRequiresHumans, g_esSplashSpecial[type][iSpecType].g_iRequiresHumans, g_esSplashAbility[type].g_iRequiresHumans, 1);
-		g_esSplashCache[tank].g_iSplashAbility = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank][0].g_iSplashAbility, g_esSplashTeammate[tank][iSpecType].g_iSplashAbility, g_esSplashPlayer[tank].g_iSplashAbility, g_esSplashSpecial[type][0].g_iSplashAbility, g_esSplashSpecial[type][iSpecType].g_iSplashAbility, g_esSplashAbility[type].g_iSplashAbility, 1);
-		g_esSplashCache[tank].g_iSplashCooldown = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank][0].g_iSplashCooldown, g_esSplashTeammate[tank][iSpecType].g_iSplashCooldown, g_esSplashPlayer[tank].g_iSplashCooldown, g_esSplashSpecial[type][0].g_iSplashCooldown, g_esSplashSpecial[type][iSpecType].g_iSplashCooldown, g_esSplashAbility[type].g_iSplashCooldown, 1);
-		g_esSplashCache[tank].g_iSplashDuration = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank][0].g_iSplashDuration, g_esSplashTeammate[tank][iSpecType].g_iSplashDuration, g_esSplashPlayer[tank].g_iSplashDuration, g_esSplashSpecial[type][0].g_iSplashDuration, g_esSplashSpecial[type][iSpecType].g_iSplashDuration, g_esSplashAbility[type].g_iSplashDuration, 1);
-		g_esSplashCache[tank].g_iSplashMessage = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank][0].g_iSplashMessage, g_esSplashTeammate[tank][iSpecType].g_iSplashMessage, g_esSplashPlayer[tank].g_iSplashMessage, g_esSplashSpecial[type][0].g_iSplashMessage, g_esSplashSpecial[type][iSpecType].g_iSplashMessage, g_esSplashAbility[type].g_iSplashMessage, 1);
-		g_esSplashCache[tank].g_iSplashSight = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank][0].g_iSplashSight, g_esSplashTeammate[tank][iSpecType].g_iSplashSight, g_esSplashPlayer[tank].g_iSplashSight, g_esSplashSpecial[type][0].g_iSplashSight, g_esSplashSpecial[type][iSpecType].g_iSplashSight, g_esSplashAbility[type].g_iSplashSight, 1);
+		g_esSplashCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_flCloseAreasOnly, g_esSplashPlayer[tank].g_flCloseAreasOnly, g_esSplashSpecial[type].g_flCloseAreasOnly, g_esSplashAbility[type].g_flCloseAreasOnly, 1);
+		g_esSplashCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_iComboAbility, g_esSplashPlayer[tank].g_iComboAbility, g_esSplashSpecial[type].g_iComboAbility, g_esSplashAbility[type].g_iComboAbility, 1);
+		g_esSplashCache[tank].g_flSplashChance = flGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_flSplashChance, g_esSplashPlayer[tank].g_flSplashChance, g_esSplashSpecial[type].g_flSplashChance, g_esSplashAbility[type].g_flSplashChance, 1);
+		g_esSplashCache[tank].g_flSplashDamage = flGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_flSplashDamage, g_esSplashPlayer[tank].g_flSplashDamage, g_esSplashSpecial[type].g_flSplashDamage, g_esSplashAbility[type].g_flSplashDamage, 1);
+		g_esSplashCache[tank].g_flSplashInterval = flGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_flSplashInterval, g_esSplashPlayer[tank].g_flSplashInterval, g_esSplashSpecial[type].g_flSplashInterval, g_esSplashAbility[type].g_flSplashInterval, 1);
+		g_esSplashCache[tank].g_flSplashRange = flGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_flSplashRange, g_esSplashPlayer[tank].g_flSplashRange, g_esSplashSpecial[type].g_flSplashRange, g_esSplashAbility[type].g_flSplashRange, 1);
+		g_esSplashCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_iHumanAbility, g_esSplashPlayer[tank].g_iHumanAbility, g_esSplashSpecial[type].g_iHumanAbility, g_esSplashAbility[type].g_iHumanAbility, 1);
+		g_esSplashCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_iHumanAmmo, g_esSplashPlayer[tank].g_iHumanAmmo, g_esSplashSpecial[type].g_iHumanAmmo, g_esSplashAbility[type].g_iHumanAmmo, 1);
+		g_esSplashCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_iHumanCooldown, g_esSplashPlayer[tank].g_iHumanCooldown, g_esSplashSpecial[type].g_iHumanCooldown, g_esSplashAbility[type].g_iHumanCooldown, 1);
+		g_esSplashCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_iHumanDuration, g_esSplashPlayer[tank].g_iHumanDuration, g_esSplashSpecial[type].g_iHumanDuration, g_esSplashAbility[type].g_iHumanDuration, 1);
+		g_esSplashCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_iHumanMode, g_esSplashPlayer[tank].g_iHumanMode, g_esSplashSpecial[type].g_iHumanMode, g_esSplashAbility[type].g_iHumanMode, 1);
+		g_esSplashCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_flOpenAreasOnly, g_esSplashPlayer[tank].g_flOpenAreasOnly, g_esSplashSpecial[type].g_flOpenAreasOnly, g_esSplashAbility[type].g_flOpenAreasOnly, 1);
+		g_esSplashCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_iRequiresHumans, g_esSplashPlayer[tank].g_iRequiresHumans, g_esSplashSpecial[type].g_iRequiresHumans, g_esSplashAbility[type].g_iRequiresHumans, 1);
+		g_esSplashCache[tank].g_iSplashAbility = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_iSplashAbility, g_esSplashPlayer[tank].g_iSplashAbility, g_esSplashSpecial[type].g_iSplashAbility, g_esSplashAbility[type].g_iSplashAbility, 1);
+		g_esSplashCache[tank].g_iSplashCooldown = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_iSplashCooldown, g_esSplashPlayer[tank].g_iSplashCooldown, g_esSplashSpecial[type].g_iSplashCooldown, g_esSplashAbility[type].g_iSplashCooldown, 1);
+		g_esSplashCache[tank].g_iSplashDuration = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_iSplashDuration, g_esSplashPlayer[tank].g_iSplashDuration, g_esSplashSpecial[type].g_iSplashDuration, g_esSplashAbility[type].g_iSplashDuration, 1);
+		g_esSplashCache[tank].g_iSplashMessage = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_iSplashMessage, g_esSplashPlayer[tank].g_iSplashMessage, g_esSplashSpecial[type].g_iSplashMessage, g_esSplashAbility[type].g_iSplashMessage, 1);
+		g_esSplashCache[tank].g_iSplashSight = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_iSplashSight, g_esSplashPlayer[tank].g_iSplashSight, g_esSplashSpecial[type].g_iSplashSight, g_esSplashAbility[type].g_iSplashSight, 1);
 	}
 	else
 	{

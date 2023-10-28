@@ -82,7 +82,6 @@ enum struct esMeteorPlayer
 	int g_iHumanDuration;
 	int g_iHumanMode;
 	int g_iImmunityFlags;
-	int g_iInfectedType;
 	int g_iMeteorAbility;
 	int g_iMeteorCooldown;
 	int g_iMeteorDuration;
@@ -118,7 +117,7 @@ enum struct esMeteorTeammate
 	int g_iRequiresHumans;
 }
 
-esMeteorTeammate g_esMeteorTeammate[MAXPLAYERS + 1][7];
+esMeteorTeammate g_esMeteorTeammate[MAXPLAYERS + 1];
 
 enum struct esMeteorAbility
 {
@@ -173,7 +172,7 @@ enum struct esMeteorSpecial
 	int g_iRequiresHumans;
 }
 
-esMeteorSpecial g_esMeteorSpecial[MT_MAXTYPES + 1][7];
+esMeteorSpecial g_esMeteorSpecial[MT_MAXTYPES + 1];
 
 enum struct esMeteorCache
 {
@@ -566,29 +565,26 @@ public void MT_OnConfigsLoad(int mode)
 				g_esMeteorAbility[iIndex].g_flMeteorRadius[0] = -180.0;
 				g_esMeteorAbility[iIndex].g_flMeteorRadius[1] = 180.0;
 
-				for (int iSpecType = 0; iSpecType < (sizeof g_sSpecialNames); iSpecType++)
-				{
-					g_esMeteorSpecial[iIndex][iSpecType].g_flCloseAreasOnly = -1.0;
-					g_esMeteorSpecial[iIndex][iSpecType].g_iComboAbility = -1;
-					g_esMeteorSpecial[iIndex][iSpecType].g_iHumanAbility = -1;
-					g_esMeteorSpecial[iIndex][iSpecType].g_iHumanAmmo = -1;
-					g_esMeteorSpecial[iIndex][iSpecType].g_iHumanCooldown = -1;
-					g_esMeteorSpecial[iIndex][iSpecType].g_iHumanDuration = -1;
-					g_esMeteorSpecial[iIndex][iSpecType].g_iHumanMode = -1;
-					g_esMeteorSpecial[iIndex][iSpecType].g_flOpenAreasOnly = -1.0;
-					g_esMeteorSpecial[iIndex][iSpecType].g_iRequiresHumans = -1;
-					g_esMeteorSpecial[iIndex][iSpecType].g_iMeteorAbility = -1;
-					g_esMeteorSpecial[iIndex][iSpecType].g_iMeteorMessage = -1;
-					g_esMeteorSpecial[iIndex][iSpecType].g_flMeteorChance = -1.0;
-					g_esMeteorSpecial[iIndex][iSpecType].g_iMeteorCooldown = -1;
-					g_esMeteorSpecial[iIndex][iSpecType].g_flMeteorDamage = -1.0;
-					g_esMeteorSpecial[iIndex][iSpecType].g_iMeteorDuration = -1;
-					g_esMeteorSpecial[iIndex][iSpecType].g_flMeteorInterval = -1.6;
-					g_esMeteorSpecial[iIndex][iSpecType].g_flMeteorLifetime = -1.0;
-					g_esMeteorSpecial[iIndex][iSpecType].g_iMeteorMode = -1;
-					g_esMeteorSpecial[iIndex][iSpecType].g_flMeteorRadius[0] = 1.0;
-					g_esMeteorSpecial[iIndex][iSpecType].g_flMeteorRadius[1] = -1.0;
-				}
+				g_esMeteorSpecial[iIndex].g_flCloseAreasOnly = -1.0;
+				g_esMeteorSpecial[iIndex].g_iComboAbility = -1;
+				g_esMeteorSpecial[iIndex].g_iHumanAbility = -1;
+				g_esMeteorSpecial[iIndex].g_iHumanAmmo = -1;
+				g_esMeteorSpecial[iIndex].g_iHumanCooldown = -1;
+				g_esMeteorSpecial[iIndex].g_iHumanDuration = -1;
+				g_esMeteorSpecial[iIndex].g_iHumanMode = -1;
+				g_esMeteorSpecial[iIndex].g_flOpenAreasOnly = -1.0;
+				g_esMeteorSpecial[iIndex].g_iRequiresHumans = -1;
+				g_esMeteorSpecial[iIndex].g_iMeteorAbility = -1;
+				g_esMeteorSpecial[iIndex].g_iMeteorMessage = -1;
+				g_esMeteorSpecial[iIndex].g_flMeteorChance = -1.0;
+				g_esMeteorSpecial[iIndex].g_iMeteorCooldown = -1;
+				g_esMeteorSpecial[iIndex].g_flMeteorDamage = -1.0;
+				g_esMeteorSpecial[iIndex].g_iMeteorDuration = -1;
+				g_esMeteorSpecial[iIndex].g_flMeteorInterval = -1.6;
+				g_esMeteorSpecial[iIndex].g_flMeteorLifetime = -1.0;
+				g_esMeteorSpecial[iIndex].g_iMeteorMode = -1;
+				g_esMeteorSpecial[iIndex].g_flMeteorRadius[0] = 1.0;
+				g_esMeteorSpecial[iIndex].g_flMeteorRadius[1] = -1.0;
 			}
 		}
 		case 3:
@@ -618,62 +614,59 @@ public void MT_OnConfigsLoad(int mode)
 				g_esMeteorPlayer[iPlayer].g_flMeteorRadius[0] = 1.0;
 				g_esMeteorPlayer[iPlayer].g_flMeteorRadius[1] = -1.0;
 
-				for (int iSpecType = 0; iSpecType < (sizeof g_sSpecialNames); iSpecType++)
-				{
-					g_esMeteorTeammate[iPlayer][iSpecType].g_flCloseAreasOnly = -1.0;
-					g_esMeteorTeammate[iPlayer][iSpecType].g_iComboAbility = -1;
-					g_esMeteorTeammate[iPlayer][iSpecType].g_iHumanAbility = -1;
-					g_esMeteorTeammate[iPlayer][iSpecType].g_iHumanAmmo = -1;
-					g_esMeteorTeammate[iPlayer][iSpecType].g_iHumanCooldown = -1;
-					g_esMeteorTeammate[iPlayer][iSpecType].g_iHumanDuration = -1;
-					g_esMeteorTeammate[iPlayer][iSpecType].g_iHumanMode = -1;
-					g_esMeteorTeammate[iPlayer][iSpecType].g_flOpenAreasOnly = -1.0;
-					g_esMeteorTeammate[iPlayer][iSpecType].g_iRequiresHumans = -1;
-					g_esMeteorTeammate[iPlayer][iSpecType].g_iMeteorAbility = -1;
-					g_esMeteorTeammate[iPlayer][iSpecType].g_iMeteorMessage = -1;
-					g_esMeteorTeammate[iPlayer][iSpecType].g_flMeteorChance = -1.0;
-					g_esMeteorTeammate[iPlayer][iSpecType].g_iMeteorCooldown = -1;
-					g_esMeteorTeammate[iPlayer][iSpecType].g_flMeteorDamage = -1.0;
-					g_esMeteorTeammate[iPlayer][iSpecType].g_iMeteorDuration = -1;
-					g_esMeteorTeammate[iPlayer][iSpecType].g_flMeteorInterval = -1.0;
-					g_esMeteorTeammate[iPlayer][iSpecType].g_flMeteorLifetime = -1.0;
-					g_esMeteorTeammate[iPlayer][iSpecType].g_iMeteorMode = -1;
-					g_esMeteorTeammate[iPlayer][iSpecType].g_flMeteorRadius[0] = 1.0;
-					g_esMeteorTeammate[iPlayer][iSpecType].g_flMeteorRadius[1] = -1.0;
-				}
+				g_esMeteorTeammate[iPlayer].g_flCloseAreasOnly = -1.0;
+				g_esMeteorTeammate[iPlayer].g_iComboAbility = -1;
+				g_esMeteorTeammate[iPlayer].g_iHumanAbility = -1;
+				g_esMeteorTeammate[iPlayer].g_iHumanAmmo = -1;
+				g_esMeteorTeammate[iPlayer].g_iHumanCooldown = -1;
+				g_esMeteorTeammate[iPlayer].g_iHumanDuration = -1;
+				g_esMeteorTeammate[iPlayer].g_iHumanMode = -1;
+				g_esMeteorTeammate[iPlayer].g_flOpenAreasOnly = -1.0;
+				g_esMeteorTeammate[iPlayer].g_iRequiresHumans = -1;
+				g_esMeteorTeammate[iPlayer].g_iMeteorAbility = -1;
+				g_esMeteorTeammate[iPlayer].g_iMeteorMessage = -1;
+				g_esMeteorTeammate[iPlayer].g_flMeteorChance = -1.0;
+				g_esMeteorTeammate[iPlayer].g_iMeteorCooldown = -1;
+				g_esMeteorTeammate[iPlayer].g_flMeteorDamage = -1.0;
+				g_esMeteorTeammate[iPlayer].g_iMeteorDuration = -1;
+				g_esMeteorTeammate[iPlayer].g_flMeteorInterval = -1.0;
+				g_esMeteorTeammate[iPlayer].g_flMeteorLifetime = -1.0;
+				g_esMeteorTeammate[iPlayer].g_iMeteorMode = -1;
+				g_esMeteorTeammate[iPlayer].g_flMeteorRadius[0] = 1.0;
+				g_esMeteorTeammate[iPlayer].g_flMeteorRadius[1] = -1.0;
 			}
 		}
 	}
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vMeteorConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, int specType)
+void vMeteorConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #else
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, int specType)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #endif
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esMeteorTeammate[admin][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esMeteorTeammate[admin][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specType);
-			g_esMeteorTeammate[admin][specType].g_iComboAbility = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esMeteorTeammate[admin][specType].g_iComboAbility, value, -1, 1, specType);
-			g_esMeteorTeammate[admin][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esMeteorTeammate[admin][specType].g_iHumanAbility, value, -1, 2, specType);
-			g_esMeteorTeammate[admin][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esMeteorTeammate[admin][specType].g_iHumanAmmo, value, -1, 99999, specType);
-			g_esMeteorTeammate[admin][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esMeteorTeammate[admin][specType].g_iHumanCooldown, value, -1, 99999, specType);
-			g_esMeteorTeammate[admin][specType].g_iHumanDuration = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esMeteorTeammate[admin][specType].g_iHumanDuration, value, -1, 99999, specType);
-			g_esMeteorTeammate[admin][specType].g_iHumanMode = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esMeteorTeammate[admin][specType].g_iHumanMode, value, -1, 1, specType);
-			g_esMeteorTeammate[admin][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esMeteorTeammate[admin][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specType);
-			g_esMeteorTeammate[admin][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esMeteorTeammate[admin][specType].g_iRequiresHumans, value, -1, 32, specType);
-			g_esMeteorTeammate[admin][specType].g_iMeteorAbility = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esMeteorTeammate[admin][specType].g_iMeteorAbility, value, -1, 1, specType);
-			g_esMeteorTeammate[admin][specType].g_iMeteorMessage = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esMeteorTeammate[admin][specType].g_iMeteorMessage, value, -1, 1, specType);
-			g_esMeteorTeammate[admin][specType].g_flMeteorChance = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorChance", "Meteor Chance", "Meteor_Chance", "chance", g_esMeteorTeammate[admin][specType].g_flMeteorChance, value, -1.0, 100.0, specType);
-			g_esMeteorTeammate[admin][specType].g_iMeteorCooldown = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorCooldown", "Meteor Cooldown", "Meteor_Cooldown", "cooldown", g_esMeteorTeammate[admin][specType].g_iMeteorCooldown, value, -1, 99999, specType);
-			g_esMeteorTeammate[admin][specType].g_flMeteorDamage = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorDamage", "Meteor Damage", "Meteor_Damage", "damage", g_esMeteorTeammate[admin][specType].g_flMeteorDamage, value, -1.0, 99999.0, specType);
-			g_esMeteorTeammate[admin][specType].g_iMeteorDuration = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorDuration", "Meteor Duration", "Meteor_Duration", "duration", g_esMeteorTeammate[admin][specType].g_iMeteorDuration, value, -1, 99999, specType);
-			g_esMeteorTeammate[admin][specType].g_flMeteorInterval = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorInterval", "Meteor Interval", "Meteor_Interval", "interval", g_esMeteorTeammate[admin][specType].g_flMeteorInterval, value, -1.0, 1.0, specType);
-			g_esMeteorTeammate[admin][specType].g_flMeteorLifetime = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorLifetime", "Meteor Lifetime", "Meteor_Lifetime", "lifetime", g_esMeteorTeammate[admin][specType].g_flMeteorLifetime, value, -1.0, 99999.0, specType);
-			g_esMeteorTeammate[admin][specType].g_iMeteorMode = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorMode", "Meteor Mode", "Meteor_Mode", "mode", g_esMeteorTeammate[admin][specType].g_iMeteorMode, value, -1, 1, specType);
+			g_esMeteorTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esMeteorTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esMeteorTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esMeteorTeammate[admin].g_iComboAbility, value, -1, 1);
+			g_esMeteorTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esMeteorTeammate[admin].g_iHumanAbility, value, -1, 2);
+			g_esMeteorTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esMeteorTeammate[admin].g_iHumanAmmo, value, -1, 99999);
+			g_esMeteorTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esMeteorTeammate[admin].g_iHumanCooldown, value, -1, 99999);
+			g_esMeteorTeammate[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esMeteorTeammate[admin].g_iHumanDuration, value, -1, 99999);
+			g_esMeteorTeammate[admin].g_iHumanMode = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esMeteorTeammate[admin].g_iHumanMode, value, -1, 1);
+			g_esMeteorTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esMeteorTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esMeteorTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esMeteorTeammate[admin].g_iRequiresHumans, value, -1, 32);
+			g_esMeteorTeammate[admin].g_iMeteorAbility = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esMeteorTeammate[admin].g_iMeteorAbility, value, -1, 1);
+			g_esMeteorTeammate[admin].g_iMeteorMessage = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esMeteorTeammate[admin].g_iMeteorMessage, value, -1, 1);
+			g_esMeteorTeammate[admin].g_flMeteorChance = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorChance", "Meteor Chance", "Meteor_Chance", "chance", g_esMeteorTeammate[admin].g_flMeteorChance, value, -1.0, 100.0);
+			g_esMeteorTeammate[admin].g_iMeteorCooldown = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorCooldown", "Meteor Cooldown", "Meteor_Cooldown", "cooldown", g_esMeteorTeammate[admin].g_iMeteorCooldown, value, -1, 99999);
+			g_esMeteorTeammate[admin].g_flMeteorDamage = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorDamage", "Meteor Damage", "Meteor_Damage", "damage", g_esMeteorTeammate[admin].g_flMeteorDamage, value, -1.0, 99999.0);
+			g_esMeteorTeammate[admin].g_iMeteorDuration = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorDuration", "Meteor Duration", "Meteor_Duration", "duration", g_esMeteorTeammate[admin].g_iMeteorDuration, value, -1, 99999);
+			g_esMeteorTeammate[admin].g_flMeteorInterval = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorInterval", "Meteor Interval", "Meteor_Interval", "interval", g_esMeteorTeammate[admin].g_flMeteorInterval, value, -1.0, 1.0);
+			g_esMeteorTeammate[admin].g_flMeteorLifetime = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorLifetime", "Meteor Lifetime", "Meteor_Lifetime", "lifetime", g_esMeteorTeammate[admin].g_flMeteorLifetime, value, -1.0, 99999.0);
+			g_esMeteorTeammate[admin].g_iMeteorMode = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorMode", "Meteor Mode", "Meteor_Mode", "mode", g_esMeteorTeammate[admin].g_iMeteorMode, value, -1, 1);
 		}
 		else
 		{
@@ -710,8 +703,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 				if (special && specsection[0] != '\0')
 				{
-					g_esMeteorTeammate[admin][specType].g_flMeteorRadius[0] = (sSet[0][0] != '\0') ? flClamp(StringToFloat(sSet[0]), -200.0, 1.0) : g_esMeteorTeammate[admin][specType].g_flMeteorRadius[0];
-					g_esMeteorTeammate[admin][specType].g_flMeteorRadius[1] = (sSet[1][0] != '\0') ? flClamp(StringToFloat(sSet[1]), -1.0, 200.0) : g_esMeteorTeammate[admin][specType].g_flMeteorRadius[1];
+					g_esMeteorTeammate[admin].g_flMeteorRadius[0] = (sSet[0][0] != '\0') ? flClamp(StringToFloat(sSet[0]), -200.0, 1.0) : g_esMeteorTeammate[admin].g_flMeteorRadius[0];
+					g_esMeteorTeammate[admin].g_flMeteorRadius[1] = (sSet[1][0] != '\0') ? flClamp(StringToFloat(sSet[1]), -1.0, 200.0) : g_esMeteorTeammate[admin].g_flMeteorRadius[1];
 				}
 				else
 				{
@@ -726,24 +719,24 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esMeteorSpecial[type][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esMeteorSpecial[type][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specType);
-			g_esMeteorSpecial[type][specType].g_iComboAbility = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esMeteorSpecial[type][specType].g_iComboAbility, value, -1, 1, specType);
-			g_esMeteorSpecial[type][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esMeteorSpecial[type][specType].g_iHumanAbility, value, -1, 2, specType);
-			g_esMeteorSpecial[type][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esMeteorSpecial[type][specType].g_iHumanAmmo, value, -1, 99999, specType);
-			g_esMeteorSpecial[type][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esMeteorSpecial[type][specType].g_iHumanCooldown, value, -1, 99999, specType);
-			g_esMeteorSpecial[type][specType].g_iHumanDuration = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esMeteorSpecial[type][specType].g_iHumanDuration, value, -1, 99999, specType);
-			g_esMeteorSpecial[type][specType].g_iHumanMode = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esMeteorSpecial[type][specType].g_iHumanMode, value, -1, 1, specType);
-			g_esMeteorSpecial[type][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esMeteorSpecial[type][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specType);
-			g_esMeteorSpecial[type][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esMeteorSpecial[type][specType].g_iRequiresHumans, value, -1, 32, specType);
-			g_esMeteorSpecial[type][specType].g_iMeteorAbility = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esMeteorSpecial[type][specType].g_iMeteorAbility, value, -1, 1, specType);
-			g_esMeteorSpecial[type][specType].g_iMeteorMessage = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esMeteorSpecial[type][specType].g_iMeteorMessage, value, -1, 1, specType);
-			g_esMeteorSpecial[type][specType].g_flMeteorChance = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorChance", "Meteor Chance", "Meteor_Chance", "chance", g_esMeteorSpecial[type][specType].g_flMeteorChance, value, -1.0, 100.0, specType);
-			g_esMeteorSpecial[type][specType].g_iMeteorCooldown = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorCooldown", "Meteor Cooldown", "Meteor_Cooldown", "cooldown", g_esMeteorSpecial[type][specType].g_iMeteorCooldown, value, -1, 99999, specType);
-			g_esMeteorSpecial[type][specType].g_flMeteorDamage = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorDamage", "Meteor Damage", "Meteor_Damage", "damage", g_esMeteorSpecial[type][specType].g_flMeteorDamage, value, -1.0, 99999.0, specType);
-			g_esMeteorSpecial[type][specType].g_iMeteorDuration = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorDuration", "Meteor Duration", "Meteor_Duration", "duration", g_esMeteorSpecial[type][specType].g_iMeteorDuration, value, -1, 99999, specType);
-			g_esMeteorSpecial[type][specType].g_flMeteorInterval = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorInterval", "Meteor Interval", "Meteor_Interval", "interval", g_esMeteorSpecial[type][specType].g_flMeteorInterval, value, -1.0, 1.0, specType);
-			g_esMeteorSpecial[type][specType].g_flMeteorLifetime = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorLifetime", "Meteor Lifetime", "Meteor_Lifetime", "lifetime", g_esMeteorSpecial[type][specType].g_flMeteorLifetime, value, -1.0, 99999.0, specType);
-			g_esMeteorSpecial[type][specType].g_iMeteorMode = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorMode", "Meteor Mode", "Meteor_Mode", "mode", g_esMeteorSpecial[type][specType].g_iMeteorMode, value, -1, 1, specType);
+			g_esMeteorSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esMeteorSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esMeteorSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esMeteorSpecial[type].g_iComboAbility, value, -1, 1);
+			g_esMeteorSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esMeteorSpecial[type].g_iHumanAbility, value, -1, 2);
+			g_esMeteorSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esMeteorSpecial[type].g_iHumanAmmo, value, -1, 99999);
+			g_esMeteorSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esMeteorSpecial[type].g_iHumanCooldown, value, -1, 99999);
+			g_esMeteorSpecial[type].g_iHumanDuration = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esMeteorSpecial[type].g_iHumanDuration, value, -1, 99999);
+			g_esMeteorSpecial[type].g_iHumanMode = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esMeteorSpecial[type].g_iHumanMode, value, -1, 1);
+			g_esMeteorSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esMeteorSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esMeteorSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esMeteorSpecial[type].g_iRequiresHumans, value, -1, 32);
+			g_esMeteorSpecial[type].g_iMeteorAbility = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esMeteorSpecial[type].g_iMeteorAbility, value, -1, 1);
+			g_esMeteorSpecial[type].g_iMeteorMessage = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esMeteorSpecial[type].g_iMeteorMessage, value, -1, 1);
+			g_esMeteorSpecial[type].g_flMeteorChance = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorChance", "Meteor Chance", "Meteor_Chance", "chance", g_esMeteorSpecial[type].g_flMeteorChance, value, -1.0, 100.0);
+			g_esMeteorSpecial[type].g_iMeteorCooldown = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorCooldown", "Meteor Cooldown", "Meteor_Cooldown", "cooldown", g_esMeteorSpecial[type].g_iMeteorCooldown, value, -1, 99999);
+			g_esMeteorSpecial[type].g_flMeteorDamage = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorDamage", "Meteor Damage", "Meteor_Damage", "damage", g_esMeteorSpecial[type].g_flMeteorDamage, value, -1.0, 99999.0);
+			g_esMeteorSpecial[type].g_iMeteorDuration = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorDuration", "Meteor Duration", "Meteor_Duration", "duration", g_esMeteorSpecial[type].g_iMeteorDuration, value, -1, 99999);
+			g_esMeteorSpecial[type].g_flMeteorInterval = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorInterval", "Meteor Interval", "Meteor_Interval", "interval", g_esMeteorSpecial[type].g_flMeteorInterval, value, -1.0, 1.0);
+			g_esMeteorSpecial[type].g_flMeteorLifetime = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorLifetime", "Meteor Lifetime", "Meteor_Lifetime", "lifetime", g_esMeteorSpecial[type].g_flMeteorLifetime, value, -1.0, 99999.0);
+			g_esMeteorSpecial[type].g_iMeteorMode = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorMode", "Meteor Mode", "Meteor_Mode", "mode", g_esMeteorSpecial[type].g_iMeteorMode, value, -1, 1);
 		}
 		else
 		{
@@ -780,8 +773,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 				if (special && specsection[0] != '\0')
 				{
-					g_esMeteorSpecial[type][specType].g_flMeteorRadius[0] = (sSet[0][0] != '\0') ? flClamp(StringToFloat(sSet[0]), -200.0, 1.0) : g_esMeteorSpecial[type][specType].g_flMeteorRadius[0];
-					g_esMeteorSpecial[type][specType].g_flMeteorRadius[1] = (sSet[1][0] != '\0') ? flClamp(StringToFloat(sSet[1]), -1.0, 200.0) : g_esMeteorSpecial[type][specType].g_flMeteorRadius[1];
+					g_esMeteorSpecial[type].g_flMeteorRadius[0] = (sSet[0][0] != '\0') ? flClamp(StringToFloat(sSet[0]), -200.0, 1.0) : g_esMeteorSpecial[type].g_flMeteorRadius[0];
+					g_esMeteorSpecial[type].g_flMeteorRadius[1] = (sSet[1][0] != '\0') ? flClamp(StringToFloat(sSet[1]), -1.0, 200.0) : g_esMeteorSpecial[type].g_flMeteorRadius[1];
 				}
 				else
 				{
@@ -800,32 +793,30 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
-	g_esMeteorPlayer[tank].g_iInfectedType = iGetInfectedType(tank);
 	g_esMeteorPlayer[tank].g_iTankType = apply ? type : 0;
-	int iSpecType = g_esMeteorPlayer[tank].g_iInfectedType;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esMeteorCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esMeteorTeammate[tank][0].g_flCloseAreasOnly, g_esMeteorTeammate[tank][iSpecType].g_flCloseAreasOnly, g_esMeteorPlayer[tank].g_flCloseAreasOnly, g_esMeteorSpecial[type][0].g_flCloseAreasOnly, g_esMeteorSpecial[type][iSpecType].g_flCloseAreasOnly, g_esMeteorAbility[type].g_flCloseAreasOnly, 1);
-		g_esMeteorCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esMeteorTeammate[tank][0].g_iComboAbility, g_esMeteorTeammate[tank][iSpecType].g_iComboAbility, g_esMeteorPlayer[tank].g_iComboAbility, g_esMeteorSpecial[type][0].g_iComboAbility, g_esMeteorSpecial[type][iSpecType].g_iComboAbility, g_esMeteorAbility[type].g_iComboAbility, 1);
-		g_esMeteorCache[tank].g_flMeteorChance = flGetSubSettingValue(apply, bHuman, g_esMeteorTeammate[tank][0].g_flMeteorChance, g_esMeteorTeammate[tank][iSpecType].g_flMeteorChance, g_esMeteorPlayer[tank].g_flMeteorChance, g_esMeteorSpecial[type][0].g_flMeteorChance, g_esMeteorSpecial[type][iSpecType].g_flMeteorChance, g_esMeteorAbility[type].g_flMeteorChance, 1);
-		g_esMeteorCache[tank].g_flMeteorDamage = flGetSubSettingValue(apply, bHuman, g_esMeteorTeammate[tank][0].g_flMeteorDamage, g_esMeteorTeammate[tank][iSpecType].g_flMeteorDamage, g_esMeteorPlayer[tank].g_flMeteorDamage, g_esMeteorSpecial[type][0].g_flMeteorDamage, g_esMeteorSpecial[type][iSpecType].g_flMeteorDamage, g_esMeteorAbility[type].g_flMeteorDamage, 1);
-		g_esMeteorCache[tank].g_flMeteorInterval = flGetSubSettingValue(apply, bHuman, g_esMeteorTeammate[tank][0].g_flMeteorInterval, g_esMeteorTeammate[tank][iSpecType].g_flMeteorInterval, g_esMeteorPlayer[tank].g_flMeteorInterval, g_esMeteorSpecial[type][0].g_flMeteorInterval, g_esMeteorSpecial[type][iSpecType].g_flMeteorInterval, g_esMeteorAbility[type].g_flMeteorInterval, 1);
-		g_esMeteorCache[tank].g_flMeteorLifetime = flGetSubSettingValue(apply, bHuman, g_esMeteorTeammate[tank][0].g_flMeteorLifetime, g_esMeteorTeammate[tank][iSpecType].g_flMeteorLifetime, g_esMeteorPlayer[tank].g_flMeteorLifetime, g_esMeteorSpecial[type][0].g_flMeteorLifetime, g_esMeteorSpecial[type][iSpecType].g_flMeteorLifetime, g_esMeteorAbility[type].g_flMeteorLifetime, 1);
-		g_esMeteorCache[tank].g_flMeteorRadius[0] = flGetSubSettingValue(apply, bHuman, g_esMeteorTeammate[tank][0].g_flMeteorRadius[0], g_esMeteorTeammate[tank][iSpecType].g_flMeteorRadius[0], g_esMeteorPlayer[tank].g_flMeteorRadius[0], g_esMeteorSpecial[type][0].g_flMeteorRadius[0], g_esMeteorSpecial[type][iSpecType].g_flMeteorRadius[0], g_esMeteorAbility[type].g_flMeteorRadius[0], 2, 1.0);
-		g_esMeteorCache[tank].g_flMeteorRadius[1] = flGetSubSettingValue(apply, bHuman, g_esMeteorTeammate[tank][0].g_flMeteorRadius[1], g_esMeteorTeammate[tank][iSpecType].g_flMeteorRadius[1], g_esMeteorPlayer[tank].g_flMeteorRadius[1], g_esMeteorSpecial[type][0].g_flMeteorRadius[1], g_esMeteorSpecial[type][iSpecType].g_flMeteorRadius[1], g_esMeteorAbility[type].g_flMeteorRadius[1], 2, -1.0);
-		g_esMeteorCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esMeteorTeammate[tank][0].g_iHumanAbility, g_esMeteorTeammate[tank][iSpecType].g_iHumanAbility, g_esMeteorPlayer[tank].g_iHumanAbility, g_esMeteorSpecial[type][0].g_iHumanAbility, g_esMeteorSpecial[type][iSpecType].g_iHumanAbility, g_esMeteorAbility[type].g_iHumanAbility, 1);
-		g_esMeteorCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esMeteorTeammate[tank][0].g_iHumanAmmo, g_esMeteorTeammate[tank][iSpecType].g_iHumanAmmo, g_esMeteorPlayer[tank].g_iHumanAmmo, g_esMeteorSpecial[type][0].g_iHumanAmmo, g_esMeteorSpecial[type][iSpecType].g_iHumanAmmo, g_esMeteorAbility[type].g_iHumanAmmo, 1);
-		g_esMeteorCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esMeteorTeammate[tank][0].g_iHumanCooldown, g_esMeteorTeammate[tank][iSpecType].g_iHumanCooldown, g_esMeteorPlayer[tank].g_iHumanCooldown, g_esMeteorSpecial[type][0].g_iHumanCooldown, g_esMeteorSpecial[type][iSpecType].g_iHumanCooldown, g_esMeteorAbility[type].g_iHumanCooldown, 1);
-		g_esMeteorCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esMeteorTeammate[tank][0].g_iHumanDuration, g_esMeteorTeammate[tank][iSpecType].g_iHumanDuration, g_esMeteorPlayer[tank].g_iHumanDuration, g_esMeteorSpecial[type][0].g_iHumanDuration, g_esMeteorSpecial[type][iSpecType].g_iHumanDuration, g_esMeteorAbility[type].g_iHumanDuration, 1);
-		g_esMeteorCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esMeteorTeammate[tank][0].g_iHumanMode, g_esMeteorTeammate[tank][iSpecType].g_iHumanMode, g_esMeteorPlayer[tank].g_iHumanMode, g_esMeteorSpecial[type][0].g_iHumanMode, g_esMeteorSpecial[type][iSpecType].g_iHumanMode, g_esMeteorAbility[type].g_iHumanMode, 1);
-		g_esMeteorCache[tank].g_iMeteorAbility = iGetSubSettingValue(apply, bHuman, g_esMeteorTeammate[tank][0].g_iMeteorAbility, g_esMeteorTeammate[tank][iSpecType].g_iMeteorAbility, g_esMeteorPlayer[tank].g_iMeteorAbility, g_esMeteorSpecial[type][0].g_iMeteorAbility, g_esMeteorSpecial[type][iSpecType].g_iMeteorAbility, g_esMeteorAbility[type].g_iMeteorAbility, 1);
-		g_esMeteorCache[tank].g_iMeteorCooldown = iGetSubSettingValue(apply, bHuman, g_esMeteorTeammate[tank][0].g_iMeteorCooldown, g_esMeteorTeammate[tank][iSpecType].g_iMeteorCooldown, g_esMeteorPlayer[tank].g_iMeteorCooldown, g_esMeteorSpecial[type][0].g_iMeteorCooldown, g_esMeteorSpecial[type][iSpecType].g_iMeteorCooldown, g_esMeteorAbility[type].g_iMeteorCooldown, 1);
-		g_esMeteorCache[tank].g_iMeteorDuration = iGetSubSettingValue(apply, bHuman, g_esMeteorTeammate[tank][0].g_iMeteorDuration, g_esMeteorTeammate[tank][iSpecType].g_iMeteorDuration, g_esMeteorPlayer[tank].g_iMeteorDuration, g_esMeteorSpecial[type][0].g_iMeteorDuration, g_esMeteorSpecial[type][iSpecType].g_iMeteorDuration, g_esMeteorAbility[type].g_iMeteorDuration, 1);
-		g_esMeteorCache[tank].g_iMeteorMessage = iGetSubSettingValue(apply, bHuman, g_esMeteorTeammate[tank][0].g_iMeteorMessage, g_esMeteorTeammate[tank][iSpecType].g_iMeteorMessage, g_esMeteorPlayer[tank].g_iMeteorMessage, g_esMeteorSpecial[type][0].g_iMeteorMessage, g_esMeteorSpecial[type][iSpecType].g_iMeteorMessage, g_esMeteorAbility[type].g_iMeteorMessage, 1);
-		g_esMeteorCache[tank].g_iMeteorMode = iGetSubSettingValue(apply, bHuman, g_esMeteorTeammate[tank][0].g_iMeteorMode, g_esMeteorTeammate[tank][iSpecType].g_iMeteorMode, g_esMeteorPlayer[tank].g_iMeteorMode, g_esMeteorSpecial[type][0].g_iMeteorMode, g_esMeteorSpecial[type][iSpecType].g_iMeteorMode, g_esMeteorAbility[type].g_iMeteorMode, 1);
-		g_esMeteorCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esMeteorTeammate[tank][0].g_flOpenAreasOnly, g_esMeteorTeammate[tank][iSpecType].g_flOpenAreasOnly, g_esMeteorPlayer[tank].g_flOpenAreasOnly, g_esMeteorSpecial[type][0].g_flOpenAreasOnly, g_esMeteorSpecial[type][iSpecType].g_flOpenAreasOnly, g_esMeteorAbility[type].g_flOpenAreasOnly, 1);
-		g_esMeteorCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esMeteorTeammate[tank][0].g_iRequiresHumans, g_esMeteorTeammate[tank][iSpecType].g_iRequiresHumans, g_esMeteorPlayer[tank].g_iRequiresHumans, g_esMeteorSpecial[type][0].g_iRequiresHumans, g_esMeteorSpecial[type][iSpecType].g_iRequiresHumans, g_esMeteorAbility[type].g_iRequiresHumans, 1);
+		g_esMeteorCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esMeteorTeammate[tank].g_flCloseAreasOnly, g_esMeteorPlayer[tank].g_flCloseAreasOnly, g_esMeteorSpecial[type].g_flCloseAreasOnly, g_esMeteorAbility[type].g_flCloseAreasOnly, 1);
+		g_esMeteorCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esMeteorTeammate[tank].g_iComboAbility, g_esMeteorPlayer[tank].g_iComboAbility, g_esMeteorSpecial[type].g_iComboAbility, g_esMeteorAbility[type].g_iComboAbility, 1);
+		g_esMeteorCache[tank].g_flMeteorChance = flGetSubSettingValue(apply, bHuman, g_esMeteorTeammate[tank].g_flMeteorChance, g_esMeteorPlayer[tank].g_flMeteorChance, g_esMeteorSpecial[type].g_flMeteorChance, g_esMeteorAbility[type].g_flMeteorChance, 1);
+		g_esMeteorCache[tank].g_flMeteorDamage = flGetSubSettingValue(apply, bHuman, g_esMeteorTeammate[tank].g_flMeteorDamage, g_esMeteorPlayer[tank].g_flMeteorDamage, g_esMeteorSpecial[type].g_flMeteorDamage, g_esMeteorAbility[type].g_flMeteorDamage, 1);
+		g_esMeteorCache[tank].g_flMeteorInterval = flGetSubSettingValue(apply, bHuman, g_esMeteorTeammate[tank].g_flMeteorInterval, g_esMeteorPlayer[tank].g_flMeteorInterval, g_esMeteorSpecial[type].g_flMeteorInterval, g_esMeteorAbility[type].g_flMeteorInterval, 1);
+		g_esMeteorCache[tank].g_flMeteorLifetime = flGetSubSettingValue(apply, bHuman, g_esMeteorTeammate[tank].g_flMeteorLifetime, g_esMeteorPlayer[tank].g_flMeteorLifetime, g_esMeteorSpecial[type].g_flMeteorLifetime, g_esMeteorAbility[type].g_flMeteorLifetime, 1);
+		g_esMeteorCache[tank].g_flMeteorRadius[0] = flGetSubSettingValue(apply, bHuman, g_esMeteorTeammate[tank].g_flMeteorRadius[0], g_esMeteorPlayer[tank].g_flMeteorRadius[0], g_esMeteorSpecial[type].g_flMeteorRadius[0], g_esMeteorAbility[type].g_flMeteorRadius[0], 2, 1.0);
+		g_esMeteorCache[tank].g_flMeteorRadius[1] = flGetSubSettingValue(apply, bHuman, g_esMeteorTeammate[tank].g_flMeteorRadius[1], g_esMeteorPlayer[tank].g_flMeteorRadius[1], g_esMeteorSpecial[type].g_flMeteorRadius[1], g_esMeteorAbility[type].g_flMeteorRadius[1], 2, -1.0);
+		g_esMeteorCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esMeteorTeammate[tank].g_iHumanAbility, g_esMeteorPlayer[tank].g_iHumanAbility, g_esMeteorSpecial[type].g_iHumanAbility, g_esMeteorAbility[type].g_iHumanAbility, 1);
+		g_esMeteorCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esMeteorTeammate[tank].g_iHumanAmmo, g_esMeteorPlayer[tank].g_iHumanAmmo, g_esMeteorSpecial[type].g_iHumanAmmo, g_esMeteorAbility[type].g_iHumanAmmo, 1);
+		g_esMeteorCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esMeteorTeammate[tank].g_iHumanCooldown, g_esMeteorPlayer[tank].g_iHumanCooldown, g_esMeteorSpecial[type].g_iHumanCooldown, g_esMeteorAbility[type].g_iHumanCooldown, 1);
+		g_esMeteorCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esMeteorTeammate[tank].g_iHumanDuration, g_esMeteorPlayer[tank].g_iHumanDuration, g_esMeteorSpecial[type].g_iHumanDuration, g_esMeteorAbility[type].g_iHumanDuration, 1);
+		g_esMeteorCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esMeteorTeammate[tank].g_iHumanMode, g_esMeteorPlayer[tank].g_iHumanMode, g_esMeteorSpecial[type].g_iHumanMode, g_esMeteorAbility[type].g_iHumanMode, 1);
+		g_esMeteorCache[tank].g_iMeteorAbility = iGetSubSettingValue(apply, bHuman, g_esMeteorTeammate[tank].g_iMeteorAbility, g_esMeteorPlayer[tank].g_iMeteorAbility, g_esMeteorSpecial[type].g_iMeteorAbility, g_esMeteorAbility[type].g_iMeteorAbility, 1);
+		g_esMeteorCache[tank].g_iMeteorCooldown = iGetSubSettingValue(apply, bHuman, g_esMeteorTeammate[tank].g_iMeteorCooldown, g_esMeteorPlayer[tank].g_iMeteorCooldown, g_esMeteorSpecial[type].g_iMeteorCooldown, g_esMeteorAbility[type].g_iMeteorCooldown, 1);
+		g_esMeteorCache[tank].g_iMeteorDuration = iGetSubSettingValue(apply, bHuman, g_esMeteorTeammate[tank].g_iMeteorDuration, g_esMeteorPlayer[tank].g_iMeteorDuration, g_esMeteorSpecial[type].g_iMeteorDuration, g_esMeteorAbility[type].g_iMeteorDuration, 1);
+		g_esMeteorCache[tank].g_iMeteorMessage = iGetSubSettingValue(apply, bHuman, g_esMeteorTeammate[tank].g_iMeteorMessage, g_esMeteorPlayer[tank].g_iMeteorMessage, g_esMeteorSpecial[type].g_iMeteorMessage, g_esMeteorAbility[type].g_iMeteorMessage, 1);
+		g_esMeteorCache[tank].g_iMeteorMode = iGetSubSettingValue(apply, bHuman, g_esMeteorTeammate[tank].g_iMeteorMode, g_esMeteorPlayer[tank].g_iMeteorMode, g_esMeteorSpecial[type].g_iMeteorMode, g_esMeteorAbility[type].g_iMeteorMode, 1);
+		g_esMeteorCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esMeteorTeammate[tank].g_flOpenAreasOnly, g_esMeteorPlayer[tank].g_flOpenAreasOnly, g_esMeteorSpecial[type].g_flOpenAreasOnly, g_esMeteorAbility[type].g_flOpenAreasOnly, 1);
+		g_esMeteorCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esMeteorTeammate[tank].g_iRequiresHumans, g_esMeteorPlayer[tank].g_iRequiresHumans, g_esMeteorSpecial[type].g_iRequiresHumans, g_esMeteorAbility[type].g_iRequiresHumans, 1);
 	}
 	else
 	{

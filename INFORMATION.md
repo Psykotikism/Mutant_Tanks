@@ -410,16 +410,71 @@
 				// 32: Enable Chargers. (Only available in Left 4 Dead 2.)
 				"Special Types"				"-1"
 
-				// Enable all Mutant Special Infected.
-				// Note: This setting determines full availability. Even if other spawn settings are enabled while this is disabled, all Mutant Tanks will stay disabled.
-				// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
+				// Name of the Mutant Boomer.
+				// Note: This name is only used for renaming the Mutant Boomer in the server and checking which translation phrase to use.
+				// Note: For displaying this name in chat messages and other forms of text, use the translation file.
+				// Note: This setting can be overridden for specific players.
 				// --
-				// -1/"ignore"/"exclude"/"filter"/"remove": Let the setting with the same name from each Mutant Tank's "General" section decide.
-				// 0/"disabled"/"false"/"off"/"no": OFF
-				// 1/"enabled"/"true"/"on"/"yes": ON
+				// Character limit: 32
 				// --
-				// Alternatives: "Smoker Enabled"/"Boomer Enabled"/"Hunter Enabled"/"Spitter Enabled"/"Jockey Enabled"/"Charger Enabled"
-				"Special Enabled"			"-1"
+				// Empty: "Boomer"
+				// Not Empty: Boomer's custom name
+				"Boomer Name"				"Boomer #1"
+
+				// Name of the Mutant Charger.
+				// Note: This name is only used for renaming the Mutant Charger in the server and checking which translation phrase to use.
+				// Note: For displaying this name in chat messages and other forms of text, use the translation file.
+				// Note: This setting can be overridden for specific players.
+				// --
+				// Character limit: 32
+				// --
+				// Empty: "Charger"
+				// Not Empty: Charger's custom name
+				"Charger Name"				"Charger #1"
+
+				// Name of the Mutant Hunter.
+				// Note: This name is only used for renaming the Mutant Hunter in the server and checking which translation phrase to use.
+				// Note: For displaying this name in chat messages and other forms of text, use the translation file.
+				// Note: This setting can be overridden for specific players.
+				// --
+				// Character limit: 32
+				// --
+				// Empty: "Hunter"
+				// Not Empty: Hunter's custom name
+				"Hunter Name"				"Hunter #1"
+
+				// Name of the Mutant Jockey.
+				// Note: This name is only used for renaming the Mutant Jockey in the server and checking which translation phrase to use.
+				// Note: For displaying this name in chat messages and other forms of text, use the translation file.
+				// Note: This setting can be overridden for specific players.
+				// --
+				// Character limit: 32
+				// --
+				// Empty: "Jockey"
+				// Not Empty: Jockey's custom name
+				"Jockey Name"				"Jockey #1"
+
+				// Name of the Mutant Smoker.
+				// Note: This name is only used for renaming the Mutant Smoker in the server and checking which translation phrase to use.
+				// Note: For displaying this name in chat messages and other forms of text, use the translation file.
+				// Note: This setting can be overridden for specific players.
+				// --
+				// Character limit: 32
+				// --
+				// Empty: "Smoker"
+				// Not Empty: Smoker's custom name
+				"Smoker Name"				"Smoker #1"
+
+				// Name of the Mutant Spitter.
+				// Note: This name is only used for renaming the Mutant Spitter in the server and checking which translation phrase to use.
+				// Note: For displaying this name in chat messages and other forms of text, use the translation file.
+				// Note: This setting can be overridden for specific players.
+				// --
+				// Character limit: 32
+				// --
+				// Empty: "Spitter"
+				// Not Empty: Spitter's custom name
+				"Spitter Name"				"Spitter #1"
 
 				// The model used by all Mutant Special Infected.
 				// Note: This setting only works for the Smoker, Boomer, and Hunter.
@@ -441,7 +496,12 @@
 				"Finales Only"				"0"
 				"Requires Humans"			"0"
 				"Special Types"				"-1"
-				"Special Enabled"			"-1"
+				"Boomer Name"				"Boomer #1"
+				"Charger Name"				"Charger #1"
+				"Hunter Name"				"Hunter #1"
+				"Jockey Name"				"Jockey #1"
+				"Smoker Name"				"Smoker #1"
+				"Spitter Name"				"Spitter #1"
 				"Special Model"				"0"
 				"Burn Duration"				"0.0"
 				"Burnt Skin"				"-1.0"
@@ -3281,19 +3341,6 @@
 			{
 				// Note: Override any of the settings in the "General" section for each special infected here.
 
-				// Name of the Mutant Special Infected.
-				// Note: This name is only used for renaming the Mutant Special Infected in the server and checking which translation phrase to use.
-				// Note: For displaying this name in chat messages and other forms of text, use the translation file.
-				// Note: This setting can be overridden for specific players.
-				// --
-				// Character limit: 32
-				// --
-				// Empty: "Special Infected"/"Smoker"/"Boomer"/"Hunter"/"Spitter"/"Jockey"/"Charger"
-				// Not Empty: Special Infected's custom name
-				// --
-				// Alternatives: "Smoker Name"/"Boomer Name"/"Hunter Name"/"Spitter Name"/"Jockey Name"/"Charger Name"
-				"Special Name"				"Special"
-
 				// Enable Mutant Special Infected types.
 				// Note: This setting determines full availability. Even if other spawn settings are enabled while this is disabled, the Mutant Special Infected type will stay disabled.
 				// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
@@ -3312,17 +3359,6 @@
 				// 16: Enable Jockeys. (Only available in Left 4 Dead 2.)
 				// 32: Enable Chargers. (Only available in Left 4 Dead 2.)
 				"Special Types"				"-1"
-
-				// Enable the Mutant Special Infected.
-				// Note: This setting determines full availability. Even if other spawn settings are enabled while this is disabled, the Mutant Tank will stay disabled.
-				// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
-				// --
-				// -1/"ignore"/"exclude"/"filter"/"remove": Let the setting with the same name from the "Plugin Settings/General" section decide.
-				// 0/"disabled"/"false"/"off"/"no": OFF
-				// 1/"enabled"/"true"/"on"/"yes": ON
-				// --
-				// Alternatives: "Smoker Enabled"/"Boomer Enabled"/"Hunter Enabled"/"Spitter Enabled"/"Jockey Enabled"/"Charger Enabled"
-				"Special Enabled"			"-1"
 
 				// The Mutant Special Infected has this many chances out of 100.0% to spawn.
 				// Note: Clones, respawned Mutant Special Infected, randomized Special Infected, and Mutant Special Infected spawned through the Mutant Special Infected menu are not affected.
@@ -3349,8 +3385,6 @@
 				// -1/"ignore"/"exclude"/"filter"/"remove": Let the setting with the same name from each player-controlled Mutant Special Infected's "General" section decide.
 				// 0/"disabled"/"false"/"off"/"no": OFF
 				// 1/"enabled"/"true"/"on"/"yes": ON
-				// --
-				// Alternatives: "Smoker Note"/"Boomer Note"/"Hunter Note"/"Spitter Note"/"Jockey Note"/"Charger Note"
 				"Special Note"				"0"
 
 				// The model used by the Mutant Special Infected.
@@ -3369,10 +3403,8 @@
 				"Special Model"				"0"
 
 				// Example
-				"Special Name"				"Special"
 				"Game Type"				"0"
 				"Special Types"				"-1"
-				"Special Enabled"			"-1"
 				"Special Chance"			"100.0"
 				"Special Note"				"0"
 				"Spawn Enabled"				"1"
