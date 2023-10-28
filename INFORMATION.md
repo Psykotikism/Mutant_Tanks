@@ -410,72 +410,6 @@
 				// 32: Enable Chargers. (Only available in Left 4 Dead 2.)
 				"Special Types"				"-1"
 
-				// Name of the Mutant Boomer.
-				// Note: This name is only used for renaming the Mutant Boomer in the server and checking which translation phrase to use.
-				// Note: For displaying this name in chat messages and other forms of text, use the translation file.
-				// Note: This setting can be overridden for specific players.
-				// --
-				// Character limit: 32
-				// --
-				// Empty: "Boomer"
-				// Not Empty: Boomer's custom name
-				"Boomer Name"				"Boomer #1"
-
-				// Name of the Mutant Charger.
-				// Note: This name is only used for renaming the Mutant Charger in the server and checking which translation phrase to use.
-				// Note: For displaying this name in chat messages and other forms of text, use the translation file.
-				// Note: This setting can be overridden for specific players.
-				// --
-				// Character limit: 32
-				// --
-				// Empty: "Charger"
-				// Not Empty: Charger's custom name
-				"Charger Name"				"Charger #1"
-
-				// Name of the Mutant Hunter.
-				// Note: This name is only used for renaming the Mutant Hunter in the server and checking which translation phrase to use.
-				// Note: For displaying this name in chat messages and other forms of text, use the translation file.
-				// Note: This setting can be overridden for specific players.
-				// --
-				// Character limit: 32
-				// --
-				// Empty: "Hunter"
-				// Not Empty: Hunter's custom name
-				"Hunter Name"				"Hunter #1"
-
-				// Name of the Mutant Jockey.
-				// Note: This name is only used for renaming the Mutant Jockey in the server and checking which translation phrase to use.
-				// Note: For displaying this name in chat messages and other forms of text, use the translation file.
-				// Note: This setting can be overridden for specific players.
-				// --
-				// Character limit: 32
-				// --
-				// Empty: "Jockey"
-				// Not Empty: Jockey's custom name
-				"Jockey Name"				"Jockey #1"
-
-				// Name of the Mutant Smoker.
-				// Note: This name is only used for renaming the Mutant Smoker in the server and checking which translation phrase to use.
-				// Note: For displaying this name in chat messages and other forms of text, use the translation file.
-				// Note: This setting can be overridden for specific players.
-				// --
-				// Character limit: 32
-				// --
-				// Empty: "Smoker"
-				// Not Empty: Smoker's custom name
-				"Smoker Name"				"Smoker #1"
-
-				// Name of the Mutant Spitter.
-				// Note: This name is only used for renaming the Mutant Spitter in the server and checking which translation phrase to use.
-				// Note: For displaying this name in chat messages and other forms of text, use the translation file.
-				// Note: This setting can be overridden for specific players.
-				// --
-				// Character limit: 32
-				// --
-				// Empty: "Spitter"
-				// Not Empty: Spitter's custom name
-				"Spitter Name"				"Spitter #1"
-
 				// The model used by all Mutant Special Infected.
 				// Note: This setting only works for the Smoker, Boomer, and Hunter.
 				// Note: This setting can be used for standard Special Infected.
@@ -496,12 +430,6 @@
 				"Finales Only"				"0"
 				"Requires Humans"			"0"
 				"Special Types"				"-1"
-				"Boomer Name"				"Boomer #1"
-				"Charger Name"				"Charger #1"
-				"Hunter Name"				"Hunter #1"
-				"Jockey Name"				"Jockey #1"
-				"Smoker Name"				"Smoker #1"
-				"Spitter Name"				"Spitter #1"
 				"Special Model"				"0"
 				"Burn Duration"				"0.0"
 				"Burnt Skin"				"-1.0"
@@ -3360,6 +3288,72 @@
 				// 32: Enable Chargers. (Only available in Left 4 Dead 2.)
 				"Special Types"				"-1"
 
+				// Name of the Mutant Boomer.
+				// Note: This name is only used for renaming the Mutant Boomer in the server and checking which translation phrase to use.
+				// Note: For displaying this name in chat messages and other forms of text, use the translation file.
+				// Note: This setting can be overridden for specific players.
+				// --
+				// Character limit: 32
+				// --
+				// Empty: "Boomer"
+				// Not Empty: Boomer's custom name
+				"Boomer Name"				"Boomer #1"
+
+				// Name of the Mutant Charger.
+				// Note: This name is only used for renaming the Mutant Charger in the server and checking which translation phrase to use.
+				// Note: For displaying this name in chat messages and other forms of text, use the translation file.
+				// Note: This setting can be overridden for specific players.
+				// --
+				// Character limit: 32
+				// --
+				// Empty: "Charger"
+				// Not Empty: Charger's custom name
+				"Charger Name"				"Charger #1"
+
+				// Name of the Mutant Hunter.
+				// Note: This name is only used for renaming the Mutant Hunter in the server and checking which translation phrase to use.
+				// Note: For displaying this name in chat messages and other forms of text, use the translation file.
+				// Note: This setting can be overridden for specific players.
+				// --
+				// Character limit: 32
+				// --
+				// Empty: "Hunter"
+				// Not Empty: Hunter's custom name
+				"Hunter Name"				"Hunter #1"
+
+				// Name of the Mutant Jockey.
+				// Note: This name is only used for renaming the Mutant Jockey in the server and checking which translation phrase to use.
+				// Note: For displaying this name in chat messages and other forms of text, use the translation file.
+				// Note: This setting can be overridden for specific players.
+				// --
+				// Character limit: 32
+				// --
+				// Empty: "Jockey"
+				// Not Empty: Jockey's custom name
+				"Jockey Name"				"Jockey #1"
+
+				// Name of the Mutant Smoker.
+				// Note: This name is only used for renaming the Mutant Smoker in the server and checking which translation phrase to use.
+				// Note: For displaying this name in chat messages and other forms of text, use the translation file.
+				// Note: This setting can be overridden for specific players.
+				// --
+				// Character limit: 32
+				// --
+				// Empty: "Smoker"
+				// Not Empty: Smoker's custom name
+				"Smoker Name"				"Smoker #1"
+
+				// Name of the Mutant Spitter.
+				// Note: This name is only used for renaming the Mutant Spitter in the server and checking which translation phrase to use.
+				// Note: For displaying this name in chat messages and other forms of text, use the translation file.
+				// Note: This setting can be overridden for specific players.
+				// --
+				// Character limit: 32
+				// --
+				// Empty: "Spitter"
+				// Not Empty: Spitter's custom name
+				"Spitter Name"				"Spitter #1"
+
 				// The Mutant Special Infected has this many chances out of 100.0% to spawn.
 				// Note: Clones, respawned Mutant Special Infected, randomized Special Infected, and Mutant Special Infected spawned through the Mutant Special Infected menu are not affected.
 				// Note: If each enabled Mutant Special Infected has less than 100% chance of spawning, then every enabled Mutant Special Infected that has a 1% or higher chance of spawning will have an equal chance to spawn.
@@ -3405,6 +3399,12 @@
 				// Example
 				"Game Type"				"0"
 				"Special Types"				"-1"
+				"Boomer Name"				"Boomer #1"
+				"Charger Name"				"Charger #1"
+				"Hunter Name"				"Hunter #1"
+				"Jockey Name"				"Jockey #1"
+				"Smoker Name"				"Smoker #1"
+				"Spitter Name"				"Spitter #1"
 				"Special Chance"			"100.0"
 				"Special Note"				"0"
 				"Spawn Enabled"				"1"
