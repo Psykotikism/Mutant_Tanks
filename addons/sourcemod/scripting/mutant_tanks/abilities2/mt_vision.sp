@@ -78,7 +78,6 @@ enum struct esVisionPlayer
 	int g_iHumanCooldown;
 	int g_iHumanRangeCooldown;
 	int g_iImmunityFlags;
-	int g_iInfectedType;
 	int g_iOwner;
 	int g_iRangeCooldown;
 	int g_iRequiresHumans;
@@ -123,7 +122,7 @@ enum struct esVisionTeammate
 	int g_iVisionSight;
 }
 
-esVisionTeammate g_esVisionTeammate[MAXPLAYERS + 1][7];
+esVisionTeammate g_esVisionTeammate[MAXPLAYERS + 1];
 
 enum struct esVisionAbility
 {
@@ -181,7 +180,7 @@ enum struct esVisionSpecial
 	int g_iVisionSight;
 }
 
-esVisionSpecial g_esVisionSpecial[MT_MAXTYPES + 1][7];
+esVisionSpecial g_esVisionSpecial[MT_MAXTYPES + 1];
 
 enum struct esVisionCache
 {
@@ -596,30 +595,27 @@ public void MT_OnConfigsLoad(int mode)
 				g_esVisionAbility[iIndex].g_iVisionRangeCooldown = 0;
 				g_esVisionAbility[iIndex].g_iVisionSight = 0;
 
-				for (int iSpecType = 0; iSpecType < (sizeof g_sSpecialNames); iSpecType++)
-				{
-					g_esVisionSpecial[iIndex][iSpecType].g_flCloseAreasOnly = -1.0;
-					g_esVisionSpecial[iIndex][iSpecType].g_iComboAbility = -1;
-					g_esVisionSpecial[iIndex][iSpecType].g_iHumanAbility = -1;
-					g_esVisionSpecial[iIndex][iSpecType].g_iHumanAmmo = -1;
-					g_esVisionSpecial[iIndex][iSpecType].g_iHumanCooldown = -1;
-					g_esVisionSpecial[iIndex][iSpecType].g_iHumanRangeCooldown = -1;
-					g_esVisionSpecial[iIndex][iSpecType].g_flOpenAreasOnly = -1.0;
-					g_esVisionSpecial[iIndex][iSpecType].g_iRequiresHumans = -1;
-					g_esVisionSpecial[iIndex][iSpecType].g_iVisionAbility = -1;
-					g_esVisionSpecial[iIndex][iSpecType].g_iVisionEffect = -1;
-					g_esVisionSpecial[iIndex][iSpecType].g_iVisionMessage = -1;
-					g_esVisionSpecial[iIndex][iSpecType].g_flVisionChance = -1.0;
-					g_esVisionSpecial[iIndex][iSpecType].g_iVisionCooldown = -1;
-					g_esVisionSpecial[iIndex][iSpecType].g_iVisionDuration = -1;
-					g_esVisionSpecial[iIndex][iSpecType].g_iVisionFOV = -1;
-					g_esVisionSpecial[iIndex][iSpecType].g_iVisionHit = -1;
-					g_esVisionSpecial[iIndex][iSpecType].g_iVisionHitMode = -1;
-					g_esVisionSpecial[iIndex][iSpecType].g_flVisionRange = -1.0;
-					g_esVisionSpecial[iIndex][iSpecType].g_flVisionRangeChance = -1.0;
-					g_esVisionSpecial[iIndex][iSpecType].g_iVisionRangeCooldown = -1;
-					g_esVisionSpecial[iIndex][iSpecType].g_iVisionSight = -1;
-				}
+				g_esVisionSpecial[iIndex].g_flCloseAreasOnly = -1.0;
+				g_esVisionSpecial[iIndex].g_iComboAbility = -1;
+				g_esVisionSpecial[iIndex].g_iHumanAbility = -1;
+				g_esVisionSpecial[iIndex].g_iHumanAmmo = -1;
+				g_esVisionSpecial[iIndex].g_iHumanCooldown = -1;
+				g_esVisionSpecial[iIndex].g_iHumanRangeCooldown = -1;
+				g_esVisionSpecial[iIndex].g_flOpenAreasOnly = -1.0;
+				g_esVisionSpecial[iIndex].g_iRequiresHumans = -1;
+				g_esVisionSpecial[iIndex].g_iVisionAbility = -1;
+				g_esVisionSpecial[iIndex].g_iVisionEffect = -1;
+				g_esVisionSpecial[iIndex].g_iVisionMessage = -1;
+				g_esVisionSpecial[iIndex].g_flVisionChance = -1.0;
+				g_esVisionSpecial[iIndex].g_iVisionCooldown = -1;
+				g_esVisionSpecial[iIndex].g_iVisionDuration = -1;
+				g_esVisionSpecial[iIndex].g_iVisionFOV = -1;
+				g_esVisionSpecial[iIndex].g_iVisionHit = -1;
+				g_esVisionSpecial[iIndex].g_iVisionHitMode = -1;
+				g_esVisionSpecial[iIndex].g_flVisionRange = -1.0;
+				g_esVisionSpecial[iIndex].g_flVisionRangeChance = -1.0;
+				g_esVisionSpecial[iIndex].g_iVisionRangeCooldown = -1;
+				g_esVisionSpecial[iIndex].g_iVisionSight = -1;
 			}
 		}
 		case 3:
@@ -650,66 +646,63 @@ public void MT_OnConfigsLoad(int mode)
 				g_esVisionPlayer[iPlayer].g_iVisionRangeCooldown = -1;
 				g_esVisionPlayer[iPlayer].g_iVisionSight = -1;
 
-				for (int iSpecType = 0; iSpecType < (sizeof g_sSpecialNames); iSpecType++)
-				{
-					g_esVisionTeammate[iPlayer][iSpecType].g_flCloseAreasOnly = -1.0;
-					g_esVisionTeammate[iPlayer][iSpecType].g_iComboAbility = -1;
-					g_esVisionTeammate[iPlayer][iSpecType].g_iHumanAbility = -1;
-					g_esVisionTeammate[iPlayer][iSpecType].g_iHumanAmmo = -1;
-					g_esVisionTeammate[iPlayer][iSpecType].g_iHumanCooldown = -1;
-					g_esVisionTeammate[iPlayer][iSpecType].g_iHumanRangeCooldown = -1;
-					g_esVisionTeammate[iPlayer][iSpecType].g_flOpenAreasOnly = -1.0;
-					g_esVisionTeammate[iPlayer][iSpecType].g_iRequiresHumans = -1;
-					g_esVisionTeammate[iPlayer][iSpecType].g_iVisionAbility = -1;
-					g_esVisionTeammate[iPlayer][iSpecType].g_iVisionEffect = -1;
-					g_esVisionTeammate[iPlayer][iSpecType].g_iVisionMessage = -1;
-					g_esVisionTeammate[iPlayer][iSpecType].g_flVisionChance = -1.0;
-					g_esVisionTeammate[iPlayer][iSpecType].g_iVisionCooldown = -1;
-					g_esVisionTeammate[iPlayer][iSpecType].g_iVisionDuration = -1;
-					g_esVisionTeammate[iPlayer][iSpecType].g_iVisionFOV = -1;
-					g_esVisionTeammate[iPlayer][iSpecType].g_iVisionHit = -1;
-					g_esVisionTeammate[iPlayer][iSpecType].g_iVisionHitMode = -1;
-					g_esVisionTeammate[iPlayer][iSpecType].g_flVisionRange = -1.0;
-					g_esVisionTeammate[iPlayer][iSpecType].g_flVisionRangeChance = -1.0;
-					g_esVisionTeammate[iPlayer][iSpecType].g_iVisionRangeCooldown = -1;
-					g_esVisionTeammate[iPlayer][iSpecType].g_iVisionSight = -1;
-				}
+				g_esVisionTeammate[iPlayer].g_flCloseAreasOnly = -1.0;
+				g_esVisionTeammate[iPlayer].g_iComboAbility = -1;
+				g_esVisionTeammate[iPlayer].g_iHumanAbility = -1;
+				g_esVisionTeammate[iPlayer].g_iHumanAmmo = -1;
+				g_esVisionTeammate[iPlayer].g_iHumanCooldown = -1;
+				g_esVisionTeammate[iPlayer].g_iHumanRangeCooldown = -1;
+				g_esVisionTeammate[iPlayer].g_flOpenAreasOnly = -1.0;
+				g_esVisionTeammate[iPlayer].g_iRequiresHumans = -1;
+				g_esVisionTeammate[iPlayer].g_iVisionAbility = -1;
+				g_esVisionTeammate[iPlayer].g_iVisionEffect = -1;
+				g_esVisionTeammate[iPlayer].g_iVisionMessage = -1;
+				g_esVisionTeammate[iPlayer].g_flVisionChance = -1.0;
+				g_esVisionTeammate[iPlayer].g_iVisionCooldown = -1;
+				g_esVisionTeammate[iPlayer].g_iVisionDuration = -1;
+				g_esVisionTeammate[iPlayer].g_iVisionFOV = -1;
+				g_esVisionTeammate[iPlayer].g_iVisionHit = -1;
+				g_esVisionTeammate[iPlayer].g_iVisionHitMode = -1;
+				g_esVisionTeammate[iPlayer].g_flVisionRange = -1.0;
+				g_esVisionTeammate[iPlayer].g_flVisionRangeChance = -1.0;
+				g_esVisionTeammate[iPlayer].g_iVisionRangeCooldown = -1;
+				g_esVisionTeammate[iPlayer].g_iVisionSight = -1;
 			}
 		}
 	}
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vVisionConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, int specType)
+void vVisionConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #else
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, int specType)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #endif
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esVisionTeammate[admin][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esVisionTeammate[admin][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specType);
-			g_esVisionTeammate[admin][specType].g_iComboAbility = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esVisionTeammate[admin][specType].g_iComboAbility, value, -1, 1, specType);
-			g_esVisionTeammate[admin][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esVisionTeammate[admin][specType].g_iHumanAbility, value, -1, 2, specType);
-			g_esVisionTeammate[admin][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esVisionTeammate[admin][specType].g_iHumanAmmo, value, -1, 99999, specType);
-			g_esVisionTeammate[admin][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esVisionTeammate[admin][specType].g_iHumanCooldown, value, -1, 99999, specType);
-			g_esVisionTeammate[admin][specType].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esVisionTeammate[admin][specType].g_iHumanRangeCooldown, value, -1, 99999, specType);
-			g_esVisionTeammate[admin][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esVisionTeammate[admin][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specType);
-			g_esVisionTeammate[admin][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esVisionTeammate[admin][specType].g_iRequiresHumans, value, -1, 32, specType);
-			g_esVisionTeammate[admin][specType].g_iVisionAbility = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esVisionTeammate[admin][specType].g_iVisionAbility, value, -1, 1, specType);
-			g_esVisionTeammate[admin][specType].g_iVisionEffect = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esVisionTeammate[admin][specType].g_iVisionEffect, value, -1, 7, specType);
-			g_esVisionTeammate[admin][specType].g_iVisionMessage = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esVisionTeammate[admin][specType].g_iVisionMessage, value, -1, 3, specType);
-			g_esVisionTeammate[admin][specType].g_iVisionSight = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esVisionTeammate[admin][specType].g_iVisionSight, value, -1, 2, specType);
-			g_esVisionTeammate[admin][specType].g_flVisionChance = flGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionChance", "Vision Chance", "Vision_Chance", "chance", g_esVisionTeammate[admin][specType].g_flVisionChance, value, -1.0, 100.0, specType);
-			g_esVisionTeammate[admin][specType].g_iVisionCooldown = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionCooldown", "Vision Cooldown", "Vision_Cooldown", "cooldown", g_esVisionTeammate[admin][specType].g_iVisionCooldown, value, -1, 99999, specType);
-			g_esVisionTeammate[admin][specType].g_iVisionDuration = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionDuration", "Vision Duration", "Vision_Duration", "duration", g_esVisionTeammate[admin][specType].g_iVisionDuration, value, -1, 99999, specType);
-			g_esVisionTeammate[admin][specType].g_iVisionFOV = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionFOV", "Vision FOV", "Vision_FOV", "fov", g_esVisionTeammate[admin][specType].g_iVisionFOV, value, -1, 160, specType);
-			g_esVisionTeammate[admin][specType].g_iVisionHit = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionHit", "Vision Hit", "Vision_Hit", "hit", g_esVisionTeammate[admin][specType].g_iVisionHit, value, -1, 1, specType);
-			g_esVisionTeammate[admin][specType].g_iVisionHitMode = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionHitMode", "Vision Hit Mode", "Vision_Hit_Mode", "hitmode", g_esVisionTeammate[admin][specType].g_iVisionHitMode, value, -1, 2, specType);
-			g_esVisionTeammate[admin][specType].g_flVisionRange = flGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionRange", "Vision Range", "Vision_Range", "range", g_esVisionTeammate[admin][specType].g_flVisionRange, value, -1.0, 99999.0, specType);
-			g_esVisionTeammate[admin][specType].g_flVisionRangeChance = flGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionRangeChance", "Vision Range Chance", "Vision_Range_Chance", "rangechance", g_esVisionTeammate[admin][specType].g_flVisionRangeChance, value, -1.0, 100.0, specType);
-			g_esVisionTeammate[admin][specType].g_iVisionRangeCooldown = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionRangeCooldown", "Vision Range Cooldown", "Vision_Range_Cooldown", "rangecooldown", g_esVisionTeammate[admin][specType].g_iVisionRangeCooldown, value, -1, 99999, specType);
+			g_esVisionTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esVisionTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esVisionTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esVisionTeammate[admin].g_iComboAbility, value, -1, 1);
+			g_esVisionTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esVisionTeammate[admin].g_iHumanAbility, value, -1, 2);
+			g_esVisionTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esVisionTeammate[admin].g_iHumanAmmo, value, -1, 99999);
+			g_esVisionTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esVisionTeammate[admin].g_iHumanCooldown, value, -1, 99999);
+			g_esVisionTeammate[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esVisionTeammate[admin].g_iHumanRangeCooldown, value, -1, 99999);
+			g_esVisionTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esVisionTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esVisionTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esVisionTeammate[admin].g_iRequiresHumans, value, -1, 32);
+			g_esVisionTeammate[admin].g_iVisionAbility = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esVisionTeammate[admin].g_iVisionAbility, value, -1, 1);
+			g_esVisionTeammate[admin].g_iVisionEffect = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esVisionTeammate[admin].g_iVisionEffect, value, -1, 7);
+			g_esVisionTeammate[admin].g_iVisionMessage = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esVisionTeammate[admin].g_iVisionMessage, value, -1, 3);
+			g_esVisionTeammate[admin].g_iVisionSight = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esVisionTeammate[admin].g_iVisionSight, value, -1, 2);
+			g_esVisionTeammate[admin].g_flVisionChance = flGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionChance", "Vision Chance", "Vision_Chance", "chance", g_esVisionTeammate[admin].g_flVisionChance, value, -1.0, 100.0);
+			g_esVisionTeammate[admin].g_iVisionCooldown = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionCooldown", "Vision Cooldown", "Vision_Cooldown", "cooldown", g_esVisionTeammate[admin].g_iVisionCooldown, value, -1, 99999);
+			g_esVisionTeammate[admin].g_iVisionDuration = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionDuration", "Vision Duration", "Vision_Duration", "duration", g_esVisionTeammate[admin].g_iVisionDuration, value, -1, 99999);
+			g_esVisionTeammate[admin].g_iVisionFOV = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionFOV", "Vision FOV", "Vision_FOV", "fov", g_esVisionTeammate[admin].g_iVisionFOV, value, -1, 160);
+			g_esVisionTeammate[admin].g_iVisionHit = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionHit", "Vision Hit", "Vision_Hit", "hit", g_esVisionTeammate[admin].g_iVisionHit, value, -1, 1);
+			g_esVisionTeammate[admin].g_iVisionHitMode = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionHitMode", "Vision Hit Mode", "Vision_Hit_Mode", "hitmode", g_esVisionTeammate[admin].g_iVisionHitMode, value, -1, 2);
+			g_esVisionTeammate[admin].g_flVisionRange = flGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionRange", "Vision Range", "Vision_Range", "range", g_esVisionTeammate[admin].g_flVisionRange, value, -1.0, 99999.0);
+			g_esVisionTeammate[admin].g_flVisionRangeChance = flGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionRangeChance", "Vision Range Chance", "Vision_Range_Chance", "rangechance", g_esVisionTeammate[admin].g_flVisionRangeChance, value, -1.0, 100.0);
+			g_esVisionTeammate[admin].g_iVisionRangeCooldown = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionRangeCooldown", "Vision Range Cooldown", "Vision_Range_Cooldown", "rangecooldown", g_esVisionTeammate[admin].g_iVisionRangeCooldown, value, -1, 99999);
 		}
 		else
 		{
@@ -743,27 +736,27 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esVisionSpecial[type][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esVisionSpecial[type][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specType);
-			g_esVisionSpecial[type][specType].g_iComboAbility = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esVisionSpecial[type][specType].g_iComboAbility, value, -1, 1, specType);
-			g_esVisionSpecial[type][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esVisionSpecial[type][specType].g_iHumanAbility, value, -1, 2, specType);
-			g_esVisionSpecial[type][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esVisionSpecial[type][specType].g_iHumanAmmo, value, -1, 99999, specType);
-			g_esVisionSpecial[type][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esVisionSpecial[type][specType].g_iHumanCooldown, value, -1, 99999, specType);
-			g_esVisionSpecial[type][specType].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esVisionSpecial[type][specType].g_iHumanRangeCooldown, value, -1, 99999, specType);
-			g_esVisionSpecial[type][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esVisionSpecial[type][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specType);
-			g_esVisionSpecial[type][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esVisionSpecial[type][specType].g_iRequiresHumans, value, -1, 32, specType);
-			g_esVisionSpecial[type][specType].g_iVisionAbility = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esVisionSpecial[type][specType].g_iVisionAbility, value, -1, 1, specType);
-			g_esVisionSpecial[type][specType].g_iVisionEffect = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esVisionSpecial[type][specType].g_iVisionEffect, value, -1, 7, specType);
-			g_esVisionSpecial[type][specType].g_iVisionMessage = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esVisionSpecial[type][specType].g_iVisionMessage, value, -1, 3, specType);
-			g_esVisionSpecial[type][specType].g_iVisionSight = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esVisionSpecial[type][specType].g_iVisionSight, value, -1, 2, specType);
-			g_esVisionSpecial[type][specType].g_flVisionChance = flGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionChance", "Vision Chance", "Vision_Chance", "chance", g_esVisionSpecial[type][specType].g_flVisionChance, value, -1.0, 100.0, specType);
-			g_esVisionSpecial[type][specType].g_iVisionCooldown = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionCooldown", "Vision Cooldown", "Vision_Cooldown", "cooldown", g_esVisionSpecial[type][specType].g_iVisionCooldown, value, -1, 99999, specType);
-			g_esVisionSpecial[type][specType].g_iVisionDuration = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionDuration", "Vision Duration", "Vision_Duration", "duration", g_esVisionSpecial[type][specType].g_iVisionDuration, value, -1, 99999, specType);
-			g_esVisionSpecial[type][specType].g_iVisionFOV = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionFOV", "Vision FOV", "Vision_FOV", "fov", g_esVisionSpecial[type][specType].g_iVisionFOV, value, -1, 160, specType);
-			g_esVisionSpecial[type][specType].g_iVisionHit = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionHit", "Vision Hit", "Vision_Hit", "hit", g_esVisionSpecial[type][specType].g_iVisionHit, value, -1, 1, specType);
-			g_esVisionSpecial[type][specType].g_iVisionHitMode = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionHitMode", "Vision Hit Mode", "Vision_Hit_Mode", "hitmode", g_esVisionSpecial[type][specType].g_iVisionHitMode, value, -1, 2, specType);
-			g_esVisionSpecial[type][specType].g_flVisionRange = flGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionRange", "Vision Range", "Vision_Range", "range", g_esVisionSpecial[type][specType].g_flVisionRange, value, -1.0, 99999.0, specType);
-			g_esVisionSpecial[type][specType].g_flVisionRangeChance = flGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionRangeChance", "Vision Range Chance", "Vision_Range_Chance", "rangechance", g_esVisionSpecial[type][specType].g_flVisionRangeChance, value, -1.0, 100.0, specType);
-			g_esVisionSpecial[type][specType].g_iVisionRangeCooldown = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionRangeCooldown", "Vision Range Cooldown", "Vision_Range_Cooldown", "rangecooldown", g_esVisionSpecial[type][specType].g_iVisionRangeCooldown, value, -1, 99999, specType);
+			g_esVisionSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esVisionSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esVisionSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esVisionSpecial[type].g_iComboAbility, value, -1, 1);
+			g_esVisionSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esVisionSpecial[type].g_iHumanAbility, value, -1, 2);
+			g_esVisionSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esVisionSpecial[type].g_iHumanAmmo, value, -1, 99999);
+			g_esVisionSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esVisionSpecial[type].g_iHumanCooldown, value, -1, 99999);
+			g_esVisionSpecial[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esVisionSpecial[type].g_iHumanRangeCooldown, value, -1, 99999);
+			g_esVisionSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esVisionSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esVisionSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esVisionSpecial[type].g_iRequiresHumans, value, -1, 32);
+			g_esVisionSpecial[type].g_iVisionAbility = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esVisionSpecial[type].g_iVisionAbility, value, -1, 1);
+			g_esVisionSpecial[type].g_iVisionEffect = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esVisionSpecial[type].g_iVisionEffect, value, -1, 7);
+			g_esVisionSpecial[type].g_iVisionMessage = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esVisionSpecial[type].g_iVisionMessage, value, -1, 3);
+			g_esVisionSpecial[type].g_iVisionSight = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esVisionSpecial[type].g_iVisionSight, value, -1, 2);
+			g_esVisionSpecial[type].g_flVisionChance = flGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionChance", "Vision Chance", "Vision_Chance", "chance", g_esVisionSpecial[type].g_flVisionChance, value, -1.0, 100.0);
+			g_esVisionSpecial[type].g_iVisionCooldown = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionCooldown", "Vision Cooldown", "Vision_Cooldown", "cooldown", g_esVisionSpecial[type].g_iVisionCooldown, value, -1, 99999);
+			g_esVisionSpecial[type].g_iVisionDuration = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionDuration", "Vision Duration", "Vision_Duration", "duration", g_esVisionSpecial[type].g_iVisionDuration, value, -1, 99999);
+			g_esVisionSpecial[type].g_iVisionFOV = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionFOV", "Vision FOV", "Vision_FOV", "fov", g_esVisionSpecial[type].g_iVisionFOV, value, -1, 160);
+			g_esVisionSpecial[type].g_iVisionHit = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionHit", "Vision Hit", "Vision_Hit", "hit", g_esVisionSpecial[type].g_iVisionHit, value, -1, 1);
+			g_esVisionSpecial[type].g_iVisionHitMode = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionHitMode", "Vision Hit Mode", "Vision_Hit_Mode", "hitmode", g_esVisionSpecial[type].g_iVisionHitMode, value, -1, 2);
+			g_esVisionSpecial[type].g_flVisionRange = flGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionRange", "Vision Range", "Vision_Range", "range", g_esVisionSpecial[type].g_flVisionRange, value, -1.0, 99999.0);
+			g_esVisionSpecial[type].g_flVisionRangeChance = flGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionRangeChance", "Vision Range Chance", "Vision_Range_Chance", "rangechance", g_esVisionSpecial[type].g_flVisionRangeChance, value, -1.0, 100.0);
+			g_esVisionSpecial[type].g_iVisionRangeCooldown = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionRangeCooldown", "Vision Range Cooldown", "Vision_Range_Cooldown", "rangecooldown", g_esVisionSpecial[type].g_iVisionRangeCooldown, value, -1, 99999);
 		}
 		else
 		{
@@ -801,33 +794,31 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
-	g_esVisionPlayer[tank].g_iInfectedType = iGetInfectedType(tank);
 	g_esVisionPlayer[tank].g_iTankType = apply ? type : 0;
-	int iSpecType = g_esVisionPlayer[tank].g_iInfectedType;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esVisionCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank][0].g_flCloseAreasOnly, g_esVisionTeammate[tank][iSpecType].g_flCloseAreasOnly, g_esVisionPlayer[tank].g_flCloseAreasOnly, g_esVisionSpecial[type][0].g_flCloseAreasOnly, g_esVisionSpecial[type][iSpecType].g_flCloseAreasOnly, g_esVisionAbility[type].g_flCloseAreasOnly, 1);
-		g_esVisionCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank][0].g_iComboAbility, g_esVisionTeammate[tank][iSpecType].g_iComboAbility, g_esVisionPlayer[tank].g_iComboAbility, g_esVisionSpecial[type][0].g_iComboAbility, g_esVisionSpecial[type][iSpecType].g_iComboAbility, g_esVisionAbility[type].g_iComboAbility, 1);
-		g_esVisionCache[tank].g_flVisionChance = flGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank][0].g_flVisionChance, g_esVisionTeammate[tank][iSpecType].g_flVisionChance, g_esVisionPlayer[tank].g_flVisionChance, g_esVisionSpecial[type][0].g_flVisionChance, g_esVisionSpecial[type][iSpecType].g_flVisionChance, g_esVisionAbility[type].g_flVisionChance, 1);
-		g_esVisionCache[tank].g_flVisionRange = flGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank][0].g_flVisionRange, g_esVisionTeammate[tank][iSpecType].g_flVisionRange, g_esVisionPlayer[tank].g_flVisionRange, g_esVisionSpecial[type][0].g_flVisionRange, g_esVisionSpecial[type][iSpecType].g_flVisionRange, g_esVisionAbility[type].g_flVisionRange, 1);
-		g_esVisionCache[tank].g_flVisionRangeChance = flGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank][0].g_flVisionRangeChance, g_esVisionTeammate[tank][iSpecType].g_flVisionRangeChance, g_esVisionPlayer[tank].g_flVisionRangeChance, g_esVisionSpecial[type][0].g_flVisionRangeChance, g_esVisionSpecial[type][iSpecType].g_flVisionRangeChance, g_esVisionAbility[type].g_flVisionRangeChance, 1);
-		g_esVisionCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank][0].g_iHumanAbility, g_esVisionTeammate[tank][iSpecType].g_iHumanAbility, g_esVisionPlayer[tank].g_iHumanAbility, g_esVisionSpecial[type][0].g_iHumanAbility, g_esVisionSpecial[type][iSpecType].g_iHumanAbility, g_esVisionAbility[type].g_iHumanAbility, 1);
-		g_esVisionCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank][0].g_iHumanAmmo, g_esVisionTeammate[tank][iSpecType].g_iHumanAmmo, g_esVisionPlayer[tank].g_iHumanAmmo, g_esVisionSpecial[type][0].g_iHumanAmmo, g_esVisionSpecial[type][iSpecType].g_iHumanAmmo, g_esVisionAbility[type].g_iHumanAmmo, 1);
-		g_esVisionCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank][0].g_iHumanCooldown, g_esVisionTeammate[tank][iSpecType].g_iHumanCooldown, g_esVisionPlayer[tank].g_iHumanCooldown, g_esVisionSpecial[type][0].g_iHumanCooldown, g_esVisionSpecial[type][iSpecType].g_iHumanCooldown, g_esVisionAbility[type].g_iHumanCooldown, 1);
-		g_esVisionCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank][0].g_iHumanRangeCooldown, g_esVisionTeammate[tank][iSpecType].g_iHumanRangeCooldown, g_esVisionPlayer[tank].g_iHumanRangeCooldown, g_esVisionSpecial[type][0].g_iHumanRangeCooldown, g_esVisionSpecial[type][iSpecType].g_iHumanRangeCooldown, g_esVisionAbility[type].g_iHumanRangeCooldown, 1);
-		g_esVisionCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank][0].g_flOpenAreasOnly, g_esVisionTeammate[tank][iSpecType].g_flOpenAreasOnly, g_esVisionPlayer[tank].g_flOpenAreasOnly, g_esVisionSpecial[type][0].g_flOpenAreasOnly, g_esVisionSpecial[type][iSpecType].g_flOpenAreasOnly, g_esVisionAbility[type].g_flOpenAreasOnly, 1);
-		g_esVisionCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank][0].g_iRequiresHumans, g_esVisionTeammate[tank][iSpecType].g_iRequiresHumans, g_esVisionPlayer[tank].g_iRequiresHumans, g_esVisionSpecial[type][0].g_iRequiresHumans, g_esVisionSpecial[type][iSpecType].g_iRequiresHumans, g_esVisionAbility[type].g_iRequiresHumans, 1);
-		g_esVisionCache[tank].g_iVisionAbility = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank][0].g_iVisionAbility, g_esVisionTeammate[tank][iSpecType].g_iVisionAbility, g_esVisionPlayer[tank].g_iVisionAbility, g_esVisionSpecial[type][0].g_iVisionAbility, g_esVisionSpecial[type][iSpecType].g_iVisionAbility, g_esVisionAbility[type].g_iVisionAbility, 1);
-		g_esVisionCache[tank].g_iVisionDuration = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank][0].g_iVisionDuration, g_esVisionTeammate[tank][iSpecType].g_iVisionDuration, g_esVisionPlayer[tank].g_iVisionDuration, g_esVisionSpecial[type][0].g_iVisionDuration, g_esVisionSpecial[type][iSpecType].g_iVisionDuration, g_esVisionAbility[type].g_iVisionDuration, 1);
-		g_esVisionCache[tank].g_iVisionCooldown = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank][0].g_iVisionCooldown, g_esVisionTeammate[tank][iSpecType].g_iVisionCooldown, g_esVisionPlayer[tank].g_iVisionCooldown, g_esVisionSpecial[type][0].g_iVisionCooldown, g_esVisionSpecial[type][iSpecType].g_iVisionCooldown, g_esVisionAbility[type].g_iVisionCooldown, 1);
-		g_esVisionCache[tank].g_iVisionEffect = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank][0].g_iVisionEffect, g_esVisionTeammate[tank][iSpecType].g_iVisionEffect, g_esVisionPlayer[tank].g_iVisionEffect, g_esVisionSpecial[type][0].g_iVisionEffect, g_esVisionSpecial[type][iSpecType].g_iVisionEffect, g_esVisionAbility[type].g_iVisionEffect, 1);
-		g_esVisionCache[tank].g_iVisionFOV = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank][0].g_iVisionFOV, g_esVisionTeammate[tank][iSpecType].g_iVisionFOV, g_esVisionPlayer[tank].g_iVisionFOV, g_esVisionSpecial[type][0].g_iVisionFOV, g_esVisionSpecial[type][iSpecType].g_iVisionFOV, g_esVisionAbility[type].g_iVisionFOV, 1);
-		g_esVisionCache[tank].g_iVisionHit = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank][0].g_iVisionHit, g_esVisionTeammate[tank][iSpecType].g_iVisionHit, g_esVisionPlayer[tank].g_iVisionHit, g_esVisionSpecial[type][0].g_iVisionHit, g_esVisionSpecial[type][iSpecType].g_iVisionHit, g_esVisionAbility[type].g_iVisionHit, 1);
-		g_esVisionCache[tank].g_iVisionHitMode = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank][0].g_iVisionHitMode, g_esVisionTeammate[tank][iSpecType].g_iVisionHitMode, g_esVisionPlayer[tank].g_iVisionHitMode, g_esVisionSpecial[type][0].g_iVisionHitMode, g_esVisionSpecial[type][iSpecType].g_iVisionHitMode, g_esVisionAbility[type].g_iVisionHitMode, 1);
-		g_esVisionCache[tank].g_iVisionMessage = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank][0].g_iVisionMessage, g_esVisionTeammate[tank][iSpecType].g_iVisionMessage, g_esVisionPlayer[tank].g_iVisionMessage, g_esVisionSpecial[type][0].g_iVisionMessage, g_esVisionSpecial[type][iSpecType].g_iVisionMessage, g_esVisionAbility[type].g_iVisionMessage, 1);
-		g_esVisionCache[tank].g_iVisionRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank][0].g_iVisionRangeCooldown, g_esVisionTeammate[tank][iSpecType].g_iVisionRangeCooldown, g_esVisionPlayer[tank].g_iVisionRangeCooldown, g_esVisionSpecial[type][0].g_iVisionRangeCooldown, g_esVisionSpecial[type][iSpecType].g_iVisionRangeCooldown, g_esVisionAbility[type].g_iVisionRangeCooldown, 1);
-		g_esVisionCache[tank].g_iVisionSight = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank][0].g_iVisionSight, g_esVisionTeammate[tank][iSpecType].g_iVisionSight, g_esVisionPlayer[tank].g_iVisionSight, g_esVisionSpecial[type][0].g_iVisionSight, g_esVisionSpecial[type][iSpecType].g_iVisionSight, g_esVisionAbility[type].g_iVisionSight, 1);
+		g_esVisionCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_flCloseAreasOnly, g_esVisionPlayer[tank].g_flCloseAreasOnly, g_esVisionSpecial[type].g_flCloseAreasOnly, g_esVisionAbility[type].g_flCloseAreasOnly, 1);
+		g_esVisionCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iComboAbility, g_esVisionPlayer[tank].g_iComboAbility, g_esVisionSpecial[type].g_iComboAbility, g_esVisionAbility[type].g_iComboAbility, 1);
+		g_esVisionCache[tank].g_flVisionChance = flGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_flVisionChance, g_esVisionPlayer[tank].g_flVisionChance, g_esVisionSpecial[type].g_flVisionChance, g_esVisionAbility[type].g_flVisionChance, 1);
+		g_esVisionCache[tank].g_flVisionRange = flGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_flVisionRange, g_esVisionPlayer[tank].g_flVisionRange, g_esVisionSpecial[type].g_flVisionRange, g_esVisionAbility[type].g_flVisionRange, 1);
+		g_esVisionCache[tank].g_flVisionRangeChance = flGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_flVisionRangeChance, g_esVisionPlayer[tank].g_flVisionRangeChance, g_esVisionSpecial[type].g_flVisionRangeChance, g_esVisionAbility[type].g_flVisionRangeChance, 1);
+		g_esVisionCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iHumanAbility, g_esVisionPlayer[tank].g_iHumanAbility, g_esVisionSpecial[type].g_iHumanAbility, g_esVisionAbility[type].g_iHumanAbility, 1);
+		g_esVisionCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iHumanAmmo, g_esVisionPlayer[tank].g_iHumanAmmo, g_esVisionSpecial[type].g_iHumanAmmo, g_esVisionAbility[type].g_iHumanAmmo, 1);
+		g_esVisionCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iHumanCooldown, g_esVisionPlayer[tank].g_iHumanCooldown, g_esVisionSpecial[type].g_iHumanCooldown, g_esVisionAbility[type].g_iHumanCooldown, 1);
+		g_esVisionCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iHumanRangeCooldown, g_esVisionPlayer[tank].g_iHumanRangeCooldown, g_esVisionSpecial[type].g_iHumanRangeCooldown, g_esVisionAbility[type].g_iHumanRangeCooldown, 1);
+		g_esVisionCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_flOpenAreasOnly, g_esVisionPlayer[tank].g_flOpenAreasOnly, g_esVisionSpecial[type].g_flOpenAreasOnly, g_esVisionAbility[type].g_flOpenAreasOnly, 1);
+		g_esVisionCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iRequiresHumans, g_esVisionPlayer[tank].g_iRequiresHumans, g_esVisionSpecial[type].g_iRequiresHumans, g_esVisionAbility[type].g_iRequiresHumans, 1);
+		g_esVisionCache[tank].g_iVisionAbility = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iVisionAbility, g_esVisionPlayer[tank].g_iVisionAbility, g_esVisionSpecial[type].g_iVisionAbility, g_esVisionAbility[type].g_iVisionAbility, 1);
+		g_esVisionCache[tank].g_iVisionDuration = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iVisionDuration, g_esVisionPlayer[tank].g_iVisionDuration, g_esVisionSpecial[type].g_iVisionDuration, g_esVisionAbility[type].g_iVisionDuration, 1);
+		g_esVisionCache[tank].g_iVisionCooldown = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iVisionCooldown, g_esVisionPlayer[tank].g_iVisionCooldown, g_esVisionSpecial[type].g_iVisionCooldown, g_esVisionAbility[type].g_iVisionCooldown, 1);
+		g_esVisionCache[tank].g_iVisionEffect = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iVisionEffect, g_esVisionPlayer[tank].g_iVisionEffect, g_esVisionSpecial[type].g_iVisionEffect, g_esVisionAbility[type].g_iVisionEffect, 1);
+		g_esVisionCache[tank].g_iVisionFOV = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iVisionFOV, g_esVisionPlayer[tank].g_iVisionFOV, g_esVisionSpecial[type].g_iVisionFOV, g_esVisionAbility[type].g_iVisionFOV, 1);
+		g_esVisionCache[tank].g_iVisionHit = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iVisionHit, g_esVisionPlayer[tank].g_iVisionHit, g_esVisionSpecial[type].g_iVisionHit, g_esVisionAbility[type].g_iVisionHit, 1);
+		g_esVisionCache[tank].g_iVisionHitMode = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iVisionHitMode, g_esVisionPlayer[tank].g_iVisionHitMode, g_esVisionSpecial[type].g_iVisionHitMode, g_esVisionAbility[type].g_iVisionHitMode, 1);
+		g_esVisionCache[tank].g_iVisionMessage = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iVisionMessage, g_esVisionPlayer[tank].g_iVisionMessage, g_esVisionSpecial[type].g_iVisionMessage, g_esVisionAbility[type].g_iVisionMessage, 1);
+		g_esVisionCache[tank].g_iVisionRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iVisionRangeCooldown, g_esVisionPlayer[tank].g_iVisionRangeCooldown, g_esVisionSpecial[type].g_iVisionRangeCooldown, g_esVisionAbility[type].g_iVisionRangeCooldown, 1);
+		g_esVisionCache[tank].g_iVisionSight = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iVisionSight, g_esVisionPlayer[tank].g_iVisionSight, g_esVisionSpecial[type].g_iVisionSight, g_esVisionAbility[type].g_iVisionSight, 1);
 	}
 	else
 	{

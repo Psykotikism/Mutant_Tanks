@@ -88,7 +88,6 @@ enum struct esEnforcePlayer
 	int g_iHumanCooldown;
 	int g_iHumanRangeCooldown;
 	int g_iImmunityFlags;
-	int g_iInfectedType;
 	int g_iOwner;
 	int g_iRangeCooldown;
 	int g_iRequiresHumans;
@@ -124,7 +123,7 @@ enum struct esEnforceTeammate
 	int g_iRequiresHumans;
 }
 
-esEnforceTeammate g_esEnforceTeammate[MAXPLAYERS + 1][7];
+esEnforceTeammate g_esEnforceTeammate[MAXPLAYERS + 1];
 
 enum struct esEnforceAbility
 {
@@ -182,7 +181,7 @@ enum struct esEnforceSpecial
 	int g_iRequiresHumans;
 }
 
-esEnforceSpecial g_esEnforceSpecial[MT_MAXTYPES + 1][7];
+esEnforceSpecial g_esEnforceSpecial[MT_MAXTYPES + 1];
 
 enum struct esEnforceCache
 {
@@ -622,30 +621,27 @@ public void MT_OnConfigsLoad(int mode)
 				g_esEnforceAbility[iIndex].g_iEnforceSight = 0;
 				g_esEnforceAbility[iIndex].g_iEnforceWeaponSlots = 0;
 
-				for (int iSpecType = 0; iSpecType < (sizeof g_sSpecialNames); iSpecType++)
-				{
-					g_esEnforceSpecial[iIndex][iSpecType].g_flCloseAreasOnly = -1.0;
-					g_esEnforceSpecial[iIndex][iSpecType].g_iComboAbility = -1;
-					g_esEnforceSpecial[iIndex][iSpecType].g_iHumanAbility = -1;
-					g_esEnforceSpecial[iIndex][iSpecType].g_iHumanAmmo = -1;
-					g_esEnforceSpecial[iIndex][iSpecType].g_iHumanCooldown = -1;
-					g_esEnforceSpecial[iIndex][iSpecType].g_iHumanRangeCooldown = -1;
-					g_esEnforceSpecial[iIndex][iSpecType].g_flOpenAreasOnly = -1.0;
-					g_esEnforceSpecial[iIndex][iSpecType].g_iRequiresHumans = -1;
-					g_esEnforceSpecial[iIndex][iSpecType].g_iEnforceAbility = -1;
-					g_esEnforceSpecial[iIndex][iSpecType].g_iEnforceEffect = -1;
-					g_esEnforceSpecial[iIndex][iSpecType].g_iEnforceMessage = -1;
-					g_esEnforceSpecial[iIndex][iSpecType].g_flEnforceChance = -1.0;
-					g_esEnforceSpecial[iIndex][iSpecType].g_iEnforceCooldown = -1;
-					g_esEnforceSpecial[iIndex][iSpecType].g_flEnforceDuration = -1.0;
-					g_esEnforceSpecial[iIndex][iSpecType].g_iEnforceHit = -1;
-					g_esEnforceSpecial[iIndex][iSpecType].g_iEnforceHitMode = -1;
-					g_esEnforceSpecial[iIndex][iSpecType].g_flEnforceRange = -1.0;
-					g_esEnforceSpecial[iIndex][iSpecType].g_flEnforceRangeChance = -1.0;
-					g_esEnforceSpecial[iIndex][iSpecType].g_iEnforceRangeCooldown = -1;
-					g_esEnforceSpecial[iIndex][iSpecType].g_iEnforceSight = -1;
-					g_esEnforceSpecial[iIndex][iSpecType].g_iEnforceWeaponSlots = -1;
-				}
+				g_esEnforceSpecial[iIndex].g_flCloseAreasOnly = -1.0;
+				g_esEnforceSpecial[iIndex].g_iComboAbility = -1;
+				g_esEnforceSpecial[iIndex].g_iHumanAbility = -1;
+				g_esEnforceSpecial[iIndex].g_iHumanAmmo = -1;
+				g_esEnforceSpecial[iIndex].g_iHumanCooldown = -1;
+				g_esEnforceSpecial[iIndex].g_iHumanRangeCooldown = -1;
+				g_esEnforceSpecial[iIndex].g_flOpenAreasOnly = -1.0;
+				g_esEnforceSpecial[iIndex].g_iRequiresHumans = -1;
+				g_esEnforceSpecial[iIndex].g_iEnforceAbility = -1;
+				g_esEnforceSpecial[iIndex].g_iEnforceEffect = -1;
+				g_esEnforceSpecial[iIndex].g_iEnforceMessage = -1;
+				g_esEnforceSpecial[iIndex].g_flEnforceChance = -1.0;
+				g_esEnforceSpecial[iIndex].g_iEnforceCooldown = -1;
+				g_esEnforceSpecial[iIndex].g_flEnforceDuration = -1.0;
+				g_esEnforceSpecial[iIndex].g_iEnforceHit = -1;
+				g_esEnforceSpecial[iIndex].g_iEnforceHitMode = -1;
+				g_esEnforceSpecial[iIndex].g_flEnforceRange = -1.0;
+				g_esEnforceSpecial[iIndex].g_flEnforceRangeChance = -1.0;
+				g_esEnforceSpecial[iIndex].g_iEnforceRangeCooldown = -1;
+				g_esEnforceSpecial[iIndex].g_iEnforceSight = -1;
+				g_esEnforceSpecial[iIndex].g_iEnforceWeaponSlots = -1;
 			}
 		}
 		case 3:
@@ -676,66 +672,63 @@ public void MT_OnConfigsLoad(int mode)
 				g_esEnforcePlayer[iPlayer].g_iEnforceSight = -1;
 				g_esEnforcePlayer[iPlayer].g_iEnforceWeaponSlots = -1;
 
-				for (int iSpecType = 0; iSpecType < (sizeof g_sSpecialNames); iSpecType++)
-				{
-					g_esEnforceTeammate[iPlayer][iSpecType].g_flCloseAreasOnly = -1.0;
-					g_esEnforceTeammate[iPlayer][iSpecType].g_iComboAbility = -1;
-					g_esEnforceTeammate[iPlayer][iSpecType].g_iHumanAbility = -1;
-					g_esEnforceTeammate[iPlayer][iSpecType].g_iHumanAmmo = -1;
-					g_esEnforceTeammate[iPlayer][iSpecType].g_iHumanCooldown = -1;
-					g_esEnforceTeammate[iPlayer][iSpecType].g_iHumanRangeCooldown = -1;
-					g_esEnforceTeammate[iPlayer][iSpecType].g_flOpenAreasOnly = -1.0;
-					g_esEnforceTeammate[iPlayer][iSpecType].g_iRequiresHumans = -1;
-					g_esEnforceTeammate[iPlayer][iSpecType].g_iEnforceAbility = -1;
-					g_esEnforceTeammate[iPlayer][iSpecType].g_iEnforceEffect = -1;
-					g_esEnforceTeammate[iPlayer][iSpecType].g_iEnforceMessage = -1;
-					g_esEnforceTeammate[iPlayer][iSpecType].g_flEnforceChance = -1.0;
-					g_esEnforceTeammate[iPlayer][iSpecType].g_iEnforceCooldown = -1;
-					g_esEnforceTeammate[iPlayer][iSpecType].g_flEnforceDuration = -1.0;
-					g_esEnforceTeammate[iPlayer][iSpecType].g_iEnforceHit = -1;
-					g_esEnforceTeammate[iPlayer][iSpecType].g_iEnforceHitMode = -1;
-					g_esEnforceTeammate[iPlayer][iSpecType].g_flEnforceRange = -1.0;
-					g_esEnforceTeammate[iPlayer][iSpecType].g_flEnforceRangeChance = -1.0;
-					g_esEnforceTeammate[iPlayer][iSpecType].g_iEnforceRangeCooldown = -1;
-					g_esEnforceTeammate[iPlayer][iSpecType].g_iEnforceSight = -1;
-					g_esEnforceTeammate[iPlayer][iSpecType].g_iEnforceWeaponSlots = -1;
-				}
+				g_esEnforceTeammate[iPlayer].g_flCloseAreasOnly = -1.0;
+				g_esEnforceTeammate[iPlayer].g_iComboAbility = -1;
+				g_esEnforceTeammate[iPlayer].g_iHumanAbility = -1;
+				g_esEnforceTeammate[iPlayer].g_iHumanAmmo = -1;
+				g_esEnforceTeammate[iPlayer].g_iHumanCooldown = -1;
+				g_esEnforceTeammate[iPlayer].g_iHumanRangeCooldown = -1;
+				g_esEnforceTeammate[iPlayer].g_flOpenAreasOnly = -1.0;
+				g_esEnforceTeammate[iPlayer].g_iRequiresHumans = -1;
+				g_esEnforceTeammate[iPlayer].g_iEnforceAbility = -1;
+				g_esEnforceTeammate[iPlayer].g_iEnforceEffect = -1;
+				g_esEnforceTeammate[iPlayer].g_iEnforceMessage = -1;
+				g_esEnforceTeammate[iPlayer].g_flEnforceChance = -1.0;
+				g_esEnforceTeammate[iPlayer].g_iEnforceCooldown = -1;
+				g_esEnforceTeammate[iPlayer].g_flEnforceDuration = -1.0;
+				g_esEnforceTeammate[iPlayer].g_iEnforceHit = -1;
+				g_esEnforceTeammate[iPlayer].g_iEnforceHitMode = -1;
+				g_esEnforceTeammate[iPlayer].g_flEnforceRange = -1.0;
+				g_esEnforceTeammate[iPlayer].g_flEnforceRangeChance = -1.0;
+				g_esEnforceTeammate[iPlayer].g_iEnforceRangeCooldown = -1;
+				g_esEnforceTeammate[iPlayer].g_iEnforceSight = -1;
+				g_esEnforceTeammate[iPlayer].g_iEnforceWeaponSlots = -1;
 			}
 		}
 	}
 }
 
 #if defined MT_ABILITIES_MAIN
-void vEnforceConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, int specType)
+void vEnforceConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #else
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, int specType)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #endif
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esEnforceTeammate[admin][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esEnforceTeammate[admin][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specType);
-			g_esEnforceTeammate[admin][specType].g_iComboAbility = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esEnforceTeammate[admin][specType].g_iComboAbility, value, -1, 1, specType);
-			g_esEnforceTeammate[admin][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esEnforceTeammate[admin][specType].g_iHumanAbility, value, -1, 2, specType);
-			g_esEnforceTeammate[admin][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esEnforceTeammate[admin][specType].g_iHumanAmmo, value, -1, 99999, specType);
-			g_esEnforceTeammate[admin][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esEnforceTeammate[admin][specType].g_iHumanCooldown, value, -1, 99999, specType);
-			g_esEnforceTeammate[admin][specType].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esEnforceTeammate[admin][specType].g_iHumanRangeCooldown, value, -1, 99999, specType);
-			g_esEnforceTeammate[admin][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esEnforceTeammate[admin][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specType);
-			g_esEnforceTeammate[admin][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esEnforceTeammate[admin][specType].g_iRequiresHumans, value, -1, 32, specType);
-			g_esEnforceTeammate[admin][specType].g_iEnforceAbility = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esEnforceTeammate[admin][specType].g_iEnforceAbility, value, -1, 1, specType);
-			g_esEnforceTeammate[admin][specType].g_iEnforceEffect = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esEnforceTeammate[admin][specType].g_iEnforceEffect, value, -1, 7, specType);
-			g_esEnforceTeammate[admin][specType].g_iEnforceMessage = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esEnforceTeammate[admin][specType].g_iEnforceMessage, value, -1, 3, specType);
-			g_esEnforceTeammate[admin][specType].g_iEnforceSight = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esEnforceTeammate[admin][specType].g_iEnforceSight, value, -1, 2, specType);
-			g_esEnforceTeammate[admin][specType].g_flEnforceChance = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceChance", "Enforce Chance", "Enforce_Chance", "chance", g_esEnforceTeammate[admin][specType].g_flEnforceChance, value, -1.0, 100.0, specType);
-			g_esEnforceTeammate[admin][specType].g_iEnforceCooldown = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceCooldown", "Enforce Cooldown", "Enforce_Cooldown", "cooldown", g_esEnforceTeammate[admin][specType].g_iEnforceCooldown, value, -1, 99999, specType);
-			g_esEnforceTeammate[admin][specType].g_flEnforceDuration = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceDuration", "Enforce Duration", "Enforce_Duration", "duration", g_esEnforceTeammate[admin][specType].g_flEnforceDuration, value, -1.0, 99999.0, specType);
-			g_esEnforceTeammate[admin][specType].g_iEnforceHit = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceHit", "Enforce Hit", "Enforce_Hit", "hit", g_esEnforceTeammate[admin][specType].g_iEnforceHit, value, -1, 1, specType);
-			g_esEnforceTeammate[admin][specType].g_iEnforceHitMode = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceHitMode", "Enforce Hit Mode", "Enforce_Hit_Mode", "hitmode", g_esEnforceTeammate[admin][specType].g_iEnforceHitMode, value, -1, 2, specType);
-			g_esEnforceTeammate[admin][specType].g_flEnforceRange = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceRange", "Enforce Range", "Enforce_Range", "range", g_esEnforceTeammate[admin][specType].g_flEnforceRange, value, -1.0, 99999.0, specType);
-			g_esEnforceTeammate[admin][specType].g_flEnforceRangeChance = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceRangeChance", "Enforce Range Chance", "Enforce_Range_Chance", "rangechance", g_esEnforceTeammate[admin][specType].g_flEnforceRangeChance, value, -1.0, 100.0, specType);
-			g_esEnforceTeammate[admin][specType].g_iEnforceRangeCooldown = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceRangeCooldown", "Enforce Range Cooldown", "Enforce_Range_Cooldown", "rangecooldown", g_esEnforceTeammate[admin][specType].g_iEnforceRangeCooldown, value, -1, 99999, specType);
-			g_esEnforceTeammate[admin][specType].g_iEnforceWeaponSlots = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceWeaponSlots", "Enforce Weapon Slots", "Enforce_Weapon_Slots", "slots", g_esEnforceTeammate[admin][specType].g_iEnforceWeaponSlots, value, -1, 31, specType);
+			g_esEnforceTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esEnforceTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esEnforceTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esEnforceTeammate[admin].g_iComboAbility, value, -1, 1);
+			g_esEnforceTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esEnforceTeammate[admin].g_iHumanAbility, value, -1, 2);
+			g_esEnforceTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esEnforceTeammate[admin].g_iHumanAmmo, value, -1, 99999);
+			g_esEnforceTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esEnforceTeammate[admin].g_iHumanCooldown, value, -1, 99999);
+			g_esEnforceTeammate[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esEnforceTeammate[admin].g_iHumanRangeCooldown, value, -1, 99999);
+			g_esEnforceTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esEnforceTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esEnforceTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esEnforceTeammate[admin].g_iRequiresHumans, value, -1, 32);
+			g_esEnforceTeammate[admin].g_iEnforceAbility = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esEnforceTeammate[admin].g_iEnforceAbility, value, -1, 1);
+			g_esEnforceTeammate[admin].g_iEnforceEffect = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esEnforceTeammate[admin].g_iEnforceEffect, value, -1, 7);
+			g_esEnforceTeammate[admin].g_iEnforceMessage = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esEnforceTeammate[admin].g_iEnforceMessage, value, -1, 3);
+			g_esEnforceTeammate[admin].g_iEnforceSight = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esEnforceTeammate[admin].g_iEnforceSight, value, -1, 2);
+			g_esEnforceTeammate[admin].g_flEnforceChance = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceChance", "Enforce Chance", "Enforce_Chance", "chance", g_esEnforceTeammate[admin].g_flEnforceChance, value, -1.0, 100.0);
+			g_esEnforceTeammate[admin].g_iEnforceCooldown = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceCooldown", "Enforce Cooldown", "Enforce_Cooldown", "cooldown", g_esEnforceTeammate[admin].g_iEnforceCooldown, value, -1, 99999);
+			g_esEnforceTeammate[admin].g_flEnforceDuration = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceDuration", "Enforce Duration", "Enforce_Duration", "duration", g_esEnforceTeammate[admin].g_flEnforceDuration, value, -1.0, 99999.0);
+			g_esEnforceTeammate[admin].g_iEnforceHit = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceHit", "Enforce Hit", "Enforce_Hit", "hit", g_esEnforceTeammate[admin].g_iEnforceHit, value, -1, 1);
+			g_esEnforceTeammate[admin].g_iEnforceHitMode = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceHitMode", "Enforce Hit Mode", "Enforce_Hit_Mode", "hitmode", g_esEnforceTeammate[admin].g_iEnforceHitMode, value, -1, 2);
+			g_esEnforceTeammate[admin].g_flEnforceRange = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceRange", "Enforce Range", "Enforce_Range", "range", g_esEnforceTeammate[admin].g_flEnforceRange, value, -1.0, 99999.0);
+			g_esEnforceTeammate[admin].g_flEnforceRangeChance = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceRangeChance", "Enforce Range Chance", "Enforce_Range_Chance", "rangechance", g_esEnforceTeammate[admin].g_flEnforceRangeChance, value, -1.0, 100.0);
+			g_esEnforceTeammate[admin].g_iEnforceRangeCooldown = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceRangeCooldown", "Enforce Range Cooldown", "Enforce_Range_Cooldown", "rangecooldown", g_esEnforceTeammate[admin].g_iEnforceRangeCooldown, value, -1, 99999);
+			g_esEnforceTeammate[admin].g_iEnforceWeaponSlots = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceWeaponSlots", "Enforce Weapon Slots", "Enforce_Weapon_Slots", "slots", g_esEnforceTeammate[admin].g_iEnforceWeaponSlots, value, -1, 31);
 		}
 		else
 		{
@@ -769,27 +762,27 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esEnforceSpecial[type][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esEnforceSpecial[type][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specType);
-			g_esEnforceSpecial[type][specType].g_iComboAbility = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esEnforceSpecial[type][specType].g_iComboAbility, value, -1, 1, specType);
-			g_esEnforceSpecial[type][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esEnforceSpecial[type][specType].g_iHumanAbility, value, -1, 2, specType);
-			g_esEnforceSpecial[type][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esEnforceSpecial[type][specType].g_iHumanAmmo, value, -1, 99999, specType);
-			g_esEnforceSpecial[type][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esEnforceSpecial[type][specType].g_iHumanCooldown, value, -1, 99999, specType);
-			g_esEnforceSpecial[type][specType].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esEnforceSpecial[type][specType].g_iHumanRangeCooldown, value, -1, 99999, specType);
-			g_esEnforceSpecial[type][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esEnforceSpecial[type][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specType);
-			g_esEnforceSpecial[type][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esEnforceSpecial[type][specType].g_iRequiresHumans, value, -1, 32, specType);
-			g_esEnforceSpecial[type][specType].g_iEnforceAbility = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esEnforceSpecial[type][specType].g_iEnforceAbility, value, -1, 1, specType);
-			g_esEnforceSpecial[type][specType].g_iEnforceEffect = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esEnforceSpecial[type][specType].g_iEnforceEffect, value, -1, 7, specType);
-			g_esEnforceSpecial[type][specType].g_iEnforceMessage = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esEnforceSpecial[type][specType].g_iEnforceMessage, value, -1, 3, specType);
-			g_esEnforceSpecial[type][specType].g_iEnforceSight = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esEnforceSpecial[type][specType].g_iEnforceSight, value, -1, 2, specType);
-			g_esEnforceSpecial[type][specType].g_flEnforceChance = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceChance", "Enforce Chance", "Enforce_Chance", "chance", g_esEnforceSpecial[type][specType].g_flEnforceChance, value, -1.0, 100.0, specType);
-			g_esEnforceSpecial[type][specType].g_iEnforceCooldown = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceCooldown", "Enforce Cooldown", "Enforce_Cooldown", "cooldown", g_esEnforceSpecial[type][specType].g_iEnforceCooldown, value, -1, 99999, specType);
-			g_esEnforceSpecial[type][specType].g_flEnforceDuration = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceDuration", "Enforce Duration", "Enforce_Duration", "duration", g_esEnforceSpecial[type][specType].g_flEnforceDuration, value, -1.0, 99999.0, specType);
-			g_esEnforceSpecial[type][specType].g_iEnforceHit = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceHit", "Enforce Hit", "Enforce_Hit", "hit", g_esEnforceSpecial[type][specType].g_iEnforceHit, value, -1, 1, specType);
-			g_esEnforceSpecial[type][specType].g_iEnforceHitMode = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceHitMode", "Enforce Hit Mode", "Enforce_Hit_Mode", "hitmode", g_esEnforceSpecial[type][specType].g_iEnforceHitMode, value, -1, 2, specType);
-			g_esEnforceSpecial[type][specType].g_flEnforceRange = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceRange", "Enforce Range", "Enforce_Range", "range", g_esEnforceSpecial[type][specType].g_flEnforceRange, value, -1.0, 99999.0, specType);
-			g_esEnforceSpecial[type][specType].g_flEnforceRangeChance = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceRangeChance", "Enforce Range Chance", "Enforce_Range_Chance", "rangechance", g_esEnforceSpecial[type][specType].g_flEnforceRangeChance, value, -1.0, 100.0, specType);
-			g_esEnforceSpecial[type][specType].g_iEnforceRangeCooldown = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceRangeCooldown", "Enforce Range Cooldown", "Enforce_Range_Cooldown", "rangecooldown", g_esEnforceSpecial[type][specType].g_iEnforceRangeCooldown, value, -1, 99999, specType);
-			g_esEnforceSpecial[type][specType].g_iEnforceWeaponSlots = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceWeaponSlots", "Enforce Weapon Slots", "Enforce_Weapon_Slots", "slots", g_esEnforceSpecial[type][specType].g_iEnforceWeaponSlots, value, -1, 31, specType);
+			g_esEnforceSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esEnforceSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esEnforceSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esEnforceSpecial[type].g_iComboAbility, value, -1, 1);
+			g_esEnforceSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esEnforceSpecial[type].g_iHumanAbility, value, -1, 2);
+			g_esEnforceSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esEnforceSpecial[type].g_iHumanAmmo, value, -1, 99999);
+			g_esEnforceSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esEnforceSpecial[type].g_iHumanCooldown, value, -1, 99999);
+			g_esEnforceSpecial[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esEnforceSpecial[type].g_iHumanRangeCooldown, value, -1, 99999);
+			g_esEnforceSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esEnforceSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esEnforceSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esEnforceSpecial[type].g_iRequiresHumans, value, -1, 32);
+			g_esEnforceSpecial[type].g_iEnforceAbility = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esEnforceSpecial[type].g_iEnforceAbility, value, -1, 1);
+			g_esEnforceSpecial[type].g_iEnforceEffect = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esEnforceSpecial[type].g_iEnforceEffect, value, -1, 7);
+			g_esEnforceSpecial[type].g_iEnforceMessage = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esEnforceSpecial[type].g_iEnforceMessage, value, -1, 3);
+			g_esEnforceSpecial[type].g_iEnforceSight = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esEnforceSpecial[type].g_iEnforceSight, value, -1, 2);
+			g_esEnforceSpecial[type].g_flEnforceChance = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceChance", "Enforce Chance", "Enforce_Chance", "chance", g_esEnforceSpecial[type].g_flEnforceChance, value, -1.0, 100.0);
+			g_esEnforceSpecial[type].g_iEnforceCooldown = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceCooldown", "Enforce Cooldown", "Enforce_Cooldown", "cooldown", g_esEnforceSpecial[type].g_iEnforceCooldown, value, -1, 99999);
+			g_esEnforceSpecial[type].g_flEnforceDuration = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceDuration", "Enforce Duration", "Enforce_Duration", "duration", g_esEnforceSpecial[type].g_flEnforceDuration, value, -1.0, 99999.0);
+			g_esEnforceSpecial[type].g_iEnforceHit = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceHit", "Enforce Hit", "Enforce_Hit", "hit", g_esEnforceSpecial[type].g_iEnforceHit, value, -1, 1);
+			g_esEnforceSpecial[type].g_iEnforceHitMode = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceHitMode", "Enforce Hit Mode", "Enforce_Hit_Mode", "hitmode", g_esEnforceSpecial[type].g_iEnforceHitMode, value, -1, 2);
+			g_esEnforceSpecial[type].g_flEnforceRange = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceRange", "Enforce Range", "Enforce_Range", "range", g_esEnforceSpecial[type].g_flEnforceRange, value, -1.0, 99999.0);
+			g_esEnforceSpecial[type].g_flEnforceRangeChance = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceRangeChance", "Enforce Range Chance", "Enforce_Range_Chance", "rangechance", g_esEnforceSpecial[type].g_flEnforceRangeChance, value, -1.0, 100.0);
+			g_esEnforceSpecial[type].g_iEnforceRangeCooldown = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceRangeCooldown", "Enforce Range Cooldown", "Enforce_Range_Cooldown", "rangecooldown", g_esEnforceSpecial[type].g_iEnforceRangeCooldown, value, -1, 99999);
+			g_esEnforceSpecial[type].g_iEnforceWeaponSlots = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceWeaponSlots", "Enforce Weapon Slots", "Enforce_Weapon_Slots", "slots", g_esEnforceSpecial[type].g_iEnforceWeaponSlots, value, -1, 31);
 		}
 		else
 		{
@@ -827,33 +820,31 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
-	g_esEnforcePlayer[tank].g_iInfectedType = iGetInfectedType(tank);
 	g_esEnforcePlayer[tank].g_iTankType = apply ? type : 0;
-	int iSpecType = g_esEnforcePlayer[tank].g_iInfectedType;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esEnforceCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank][0].g_flCloseAreasOnly, g_esEnforceTeammate[tank][iSpecType].g_flCloseAreasOnly, g_esEnforcePlayer[tank].g_flCloseAreasOnly, g_esEnforceSpecial[type][0].g_flCloseAreasOnly, g_esEnforceSpecial[type][iSpecType].g_flCloseAreasOnly, g_esEnforceAbility[type].g_flCloseAreasOnly, 1);
-		g_esEnforceCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank][0].g_iComboAbility, g_esEnforceTeammate[tank][iSpecType].g_iComboAbility, g_esEnforcePlayer[tank].g_iComboAbility, g_esEnforceSpecial[type][0].g_iComboAbility, g_esEnforceSpecial[type][iSpecType].g_iComboAbility, g_esEnforceAbility[type].g_iComboAbility, 1);
-		g_esEnforceCache[tank].g_flEnforceChance = flGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank][0].g_flEnforceChance, g_esEnforceTeammate[tank][iSpecType].g_flEnforceChance, g_esEnforcePlayer[tank].g_flEnforceChance, g_esEnforceSpecial[type][0].g_flEnforceChance, g_esEnforceSpecial[type][iSpecType].g_flEnforceChance, g_esEnforceAbility[type].g_flEnforceChance, 1);
-		g_esEnforceCache[tank].g_flEnforceDuration = flGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank][0].g_flEnforceDuration, g_esEnforceTeammate[tank][iSpecType].g_flEnforceDuration, g_esEnforcePlayer[tank].g_flEnforceDuration, g_esEnforceSpecial[type][0].g_flEnforceDuration, g_esEnforceSpecial[type][iSpecType].g_flEnforceDuration, g_esEnforceAbility[type].g_flEnforceDuration, 1);
-		g_esEnforceCache[tank].g_flEnforceRange = flGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank][0].g_flEnforceRange, g_esEnforceTeammate[tank][iSpecType].g_flEnforceRange, g_esEnforcePlayer[tank].g_flEnforceRange, g_esEnforceSpecial[type][0].g_flEnforceRange, g_esEnforceSpecial[type][iSpecType].g_flEnforceRange, g_esEnforceAbility[type].g_flEnforceRange, 1);
-		g_esEnforceCache[tank].g_flEnforceRangeChance = flGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank][0].g_flEnforceRangeChance, g_esEnforceTeammate[tank][iSpecType].g_flEnforceRangeChance, g_esEnforcePlayer[tank].g_flEnforceRangeChance, g_esEnforceSpecial[type][0].g_flEnforceRangeChance, g_esEnforceSpecial[type][iSpecType].g_flEnforceRangeChance, g_esEnforceAbility[type].g_flEnforceRangeChance, 1);
-		g_esEnforceCache[tank].g_iEnforceAbility = iGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank][0].g_iEnforceAbility, g_esEnforceTeammate[tank][iSpecType].g_iEnforceAbility, g_esEnforcePlayer[tank].g_iEnforceAbility, g_esEnforceSpecial[type][0].g_iEnforceAbility, g_esEnforceSpecial[type][iSpecType].g_iEnforceAbility, g_esEnforceAbility[type].g_iEnforceAbility, 1);
-		g_esEnforceCache[tank].g_iEnforceCooldown = iGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank][0].g_iEnforceCooldown, g_esEnforceTeammate[tank][iSpecType].g_iEnforceCooldown, g_esEnforcePlayer[tank].g_iEnforceCooldown, g_esEnforceSpecial[type][0].g_iEnforceCooldown, g_esEnforceSpecial[type][iSpecType].g_iEnforceCooldown, g_esEnforceAbility[type].g_iEnforceCooldown, 1);
-		g_esEnforceCache[tank].g_iEnforceEffect = iGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank][0].g_iEnforceEffect, g_esEnforceTeammate[tank][iSpecType].g_iEnforceEffect, g_esEnforcePlayer[tank].g_iEnforceEffect, g_esEnforceSpecial[type][0].g_iEnforceEffect, g_esEnforceSpecial[type][iSpecType].g_iEnforceEffect, g_esEnforceAbility[type].g_iEnforceEffect, 1);
-		g_esEnforceCache[tank].g_iEnforceHit = iGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank][0].g_iEnforceHit, g_esEnforceTeammate[tank][iSpecType].g_iEnforceHit, g_esEnforcePlayer[tank].g_iEnforceHit, g_esEnforceSpecial[type][0].g_iEnforceHit, g_esEnforceSpecial[type][iSpecType].g_iEnforceHit, g_esEnforceAbility[type].g_iEnforceHit, 1);
-		g_esEnforceCache[tank].g_iEnforceHitMode = iGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank][0].g_iEnforceHitMode, g_esEnforceTeammate[tank][iSpecType].g_iEnforceHitMode, g_esEnforcePlayer[tank].g_iEnforceHitMode, g_esEnforceSpecial[type][0].g_iEnforceHitMode, g_esEnforceSpecial[type][iSpecType].g_iEnforceHitMode, g_esEnforceAbility[type].g_iEnforceHitMode, 1);
-		g_esEnforceCache[tank].g_iEnforceMessage = iGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank][0].g_iEnforceMessage, g_esEnforceTeammate[tank][iSpecType].g_iEnforceMessage, g_esEnforcePlayer[tank].g_iEnforceMessage, g_esEnforceSpecial[type][0].g_iEnforceMessage, g_esEnforceSpecial[type][iSpecType].g_iEnforceMessage, g_esEnforceAbility[type].g_iEnforceMessage, 1);
-		g_esEnforceCache[tank].g_iEnforceRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank][0].g_iEnforceRangeCooldown, g_esEnforceTeammate[tank][iSpecType].g_iEnforceRangeCooldown, g_esEnforcePlayer[tank].g_iEnforceRangeCooldown, g_esEnforceSpecial[type][0].g_iEnforceRangeCooldown, g_esEnforceSpecial[type][iSpecType].g_iEnforceRangeCooldown, g_esEnforceAbility[type].g_iEnforceRangeCooldown, 1);
-		g_esEnforceCache[tank].g_iEnforceSight = iGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank][0].g_iEnforceSight, g_esEnforceTeammate[tank][iSpecType].g_iEnforceSight, g_esEnforcePlayer[tank].g_iEnforceSight, g_esEnforceSpecial[type][0].g_iEnforceSight, g_esEnforceSpecial[type][iSpecType].g_iEnforceSight, g_esEnforceAbility[type].g_iEnforceSight, 1);
-		g_esEnforceCache[tank].g_iEnforceWeaponSlots = iGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank][0].g_iEnforceWeaponSlots, g_esEnforceTeammate[tank][iSpecType].g_iEnforceWeaponSlots, g_esEnforcePlayer[tank].g_iEnforceWeaponSlots, g_esEnforceSpecial[type][0].g_iEnforceWeaponSlots, g_esEnforceSpecial[type][iSpecType].g_iEnforceWeaponSlots, g_esEnforceAbility[type].g_iEnforceWeaponSlots, 1);
-		g_esEnforceCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank][0].g_iHumanAbility, g_esEnforceTeammate[tank][iSpecType].g_iHumanAbility, g_esEnforcePlayer[tank].g_iHumanAbility, g_esEnforceSpecial[type][0].g_iHumanAbility, g_esEnforceSpecial[type][iSpecType].g_iHumanAbility, g_esEnforceAbility[type].g_iHumanAbility, 1);
-		g_esEnforceCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank][0].g_iHumanAmmo, g_esEnforceTeammate[tank][iSpecType].g_iHumanAmmo, g_esEnforcePlayer[tank].g_iHumanAmmo, g_esEnforceSpecial[type][0].g_iHumanAmmo, g_esEnforceSpecial[type][iSpecType].g_iHumanAmmo, g_esEnforceAbility[type].g_iHumanAmmo, 1);
-		g_esEnforceCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank][0].g_iHumanCooldown, g_esEnforceTeammate[tank][iSpecType].g_iHumanCooldown, g_esEnforcePlayer[tank].g_iHumanCooldown, g_esEnforceSpecial[type][0].g_iHumanCooldown, g_esEnforceSpecial[type][iSpecType].g_iHumanCooldown, g_esEnforceAbility[type].g_iHumanCooldown, 1);
-		g_esEnforceCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank][0].g_iHumanRangeCooldown, g_esEnforceTeammate[tank][iSpecType].g_iHumanRangeCooldown, g_esEnforcePlayer[tank].g_iHumanRangeCooldown, g_esEnforceSpecial[type][0].g_iHumanRangeCooldown, g_esEnforceSpecial[type][iSpecType].g_iHumanRangeCooldown, g_esEnforceAbility[type].g_iHumanRangeCooldown, 1);
-		g_esEnforceCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank][0].g_flOpenAreasOnly, g_esEnforceTeammate[tank][iSpecType].g_flOpenAreasOnly, g_esEnforcePlayer[tank].g_flOpenAreasOnly, g_esEnforceSpecial[type][0].g_flOpenAreasOnly, g_esEnforceSpecial[type][iSpecType].g_flOpenAreasOnly, g_esEnforceAbility[type].g_flOpenAreasOnly, 1);
-		g_esEnforceCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank][0].g_iRequiresHumans, g_esEnforceTeammate[tank][iSpecType].g_iRequiresHumans, g_esEnforcePlayer[tank].g_iRequiresHumans, g_esEnforceSpecial[type][0].g_iRequiresHumans, g_esEnforceSpecial[type][iSpecType].g_iRequiresHumans, g_esEnforceAbility[type].g_iRequiresHumans, 1);
+		g_esEnforceCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank].g_flCloseAreasOnly, g_esEnforcePlayer[tank].g_flCloseAreasOnly, g_esEnforceSpecial[type].g_flCloseAreasOnly, g_esEnforceAbility[type].g_flCloseAreasOnly, 1);
+		g_esEnforceCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank].g_iComboAbility, g_esEnforcePlayer[tank].g_iComboAbility, g_esEnforceSpecial[type].g_iComboAbility, g_esEnforceAbility[type].g_iComboAbility, 1);
+		g_esEnforceCache[tank].g_flEnforceChance = flGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank].g_flEnforceChance, g_esEnforcePlayer[tank].g_flEnforceChance, g_esEnforceSpecial[type].g_flEnforceChance, g_esEnforceAbility[type].g_flEnforceChance, 1);
+		g_esEnforceCache[tank].g_flEnforceDuration = flGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank].g_flEnforceDuration, g_esEnforcePlayer[tank].g_flEnforceDuration, g_esEnforceSpecial[type].g_flEnforceDuration, g_esEnforceAbility[type].g_flEnforceDuration, 1);
+		g_esEnforceCache[tank].g_flEnforceRange = flGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank].g_flEnforceRange, g_esEnforcePlayer[tank].g_flEnforceRange, g_esEnforceSpecial[type].g_flEnforceRange, g_esEnforceAbility[type].g_flEnforceRange, 1);
+		g_esEnforceCache[tank].g_flEnforceRangeChance = flGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank].g_flEnforceRangeChance, g_esEnforcePlayer[tank].g_flEnforceRangeChance, g_esEnforceSpecial[type].g_flEnforceRangeChance, g_esEnforceAbility[type].g_flEnforceRangeChance, 1);
+		g_esEnforceCache[tank].g_iEnforceAbility = iGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank].g_iEnforceAbility, g_esEnforcePlayer[tank].g_iEnforceAbility, g_esEnforceSpecial[type].g_iEnforceAbility, g_esEnforceAbility[type].g_iEnforceAbility, 1);
+		g_esEnforceCache[tank].g_iEnforceCooldown = iGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank].g_iEnforceCooldown, g_esEnforcePlayer[tank].g_iEnforceCooldown, g_esEnforceSpecial[type].g_iEnforceCooldown, g_esEnforceAbility[type].g_iEnforceCooldown, 1);
+		g_esEnforceCache[tank].g_iEnforceEffect = iGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank].g_iEnforceEffect, g_esEnforcePlayer[tank].g_iEnforceEffect, g_esEnforceSpecial[type].g_iEnforceEffect, g_esEnforceAbility[type].g_iEnforceEffect, 1);
+		g_esEnforceCache[tank].g_iEnforceHit = iGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank].g_iEnforceHit, g_esEnforcePlayer[tank].g_iEnforceHit, g_esEnforceSpecial[type].g_iEnforceHit, g_esEnforceAbility[type].g_iEnforceHit, 1);
+		g_esEnforceCache[tank].g_iEnforceHitMode = iGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank].g_iEnforceHitMode, g_esEnforcePlayer[tank].g_iEnforceHitMode, g_esEnforceSpecial[type].g_iEnforceHitMode, g_esEnforceAbility[type].g_iEnforceHitMode, 1);
+		g_esEnforceCache[tank].g_iEnforceMessage = iGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank].g_iEnforceMessage, g_esEnforcePlayer[tank].g_iEnforceMessage, g_esEnforceSpecial[type].g_iEnforceMessage, g_esEnforceAbility[type].g_iEnforceMessage, 1);
+		g_esEnforceCache[tank].g_iEnforceRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank].g_iEnforceRangeCooldown, g_esEnforcePlayer[tank].g_iEnforceRangeCooldown, g_esEnforceSpecial[type].g_iEnforceRangeCooldown, g_esEnforceAbility[type].g_iEnforceRangeCooldown, 1);
+		g_esEnforceCache[tank].g_iEnforceSight = iGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank].g_iEnforceSight, g_esEnforcePlayer[tank].g_iEnforceSight, g_esEnforceSpecial[type].g_iEnforceSight, g_esEnforceAbility[type].g_iEnforceSight, 1);
+		g_esEnforceCache[tank].g_iEnforceWeaponSlots = iGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank].g_iEnforceWeaponSlots, g_esEnforcePlayer[tank].g_iEnforceWeaponSlots, g_esEnforceSpecial[type].g_iEnforceWeaponSlots, g_esEnforceAbility[type].g_iEnforceWeaponSlots, 1);
+		g_esEnforceCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank].g_iHumanAbility, g_esEnforcePlayer[tank].g_iHumanAbility, g_esEnforceSpecial[type].g_iHumanAbility, g_esEnforceAbility[type].g_iHumanAbility, 1);
+		g_esEnforceCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank].g_iHumanAmmo, g_esEnforcePlayer[tank].g_iHumanAmmo, g_esEnforceSpecial[type].g_iHumanAmmo, g_esEnforceAbility[type].g_iHumanAmmo, 1);
+		g_esEnforceCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank].g_iHumanCooldown, g_esEnforcePlayer[tank].g_iHumanCooldown, g_esEnforceSpecial[type].g_iHumanCooldown, g_esEnforceAbility[type].g_iHumanCooldown, 1);
+		g_esEnforceCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank].g_iHumanRangeCooldown, g_esEnforcePlayer[tank].g_iHumanRangeCooldown, g_esEnforceSpecial[type].g_iHumanRangeCooldown, g_esEnforceAbility[type].g_iHumanRangeCooldown, 1);
+		g_esEnforceCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank].g_flOpenAreasOnly, g_esEnforcePlayer[tank].g_flOpenAreasOnly, g_esEnforceSpecial[type].g_flOpenAreasOnly, g_esEnforceAbility[type].g_flOpenAreasOnly, 1);
+		g_esEnforceCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esEnforceTeammate[tank].g_iRequiresHumans, g_esEnforcePlayer[tank].g_iRequiresHumans, g_esEnforceSpecial[type].g_iRequiresHumans, g_esEnforceAbility[type].g_iRequiresHumans, 1);
 	}
 	else
 	{

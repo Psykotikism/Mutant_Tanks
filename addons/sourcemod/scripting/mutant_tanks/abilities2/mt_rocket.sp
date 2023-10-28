@@ -86,7 +86,6 @@ enum struct esRocketPlayer
 	int g_iHumanCooldown;
 	int g_iHumanRangeCooldown;
 	int g_iImmunityFlags;
-	int g_iInfectedType;
 	int g_iOwner;
 	int g_iRangeCooldown;
 	int g_iRequiresHumans;
@@ -133,7 +132,7 @@ enum struct esRocketTeammate
 	int g_iRocketSight;
 }
 
-esRocketTeammate g_esRocketTeammate[MAXPLAYERS + 1][7];
+esRocketTeammate g_esRocketTeammate[MAXPLAYERS + 1];
 
 enum struct esRocketAbility
 {
@@ -195,7 +194,7 @@ enum struct esRocketSpecial
 	int g_iRocketSight;
 }
 
-esRocketSpecial g_esRocketSpecial[MT_MAXTYPES + 1][7];
+esRocketSpecial g_esRocketSpecial[MT_MAXTYPES + 1];
 
 enum struct esRocketCache
 {
@@ -650,32 +649,29 @@ public void MT_OnConfigsLoad(int mode)
 				g_esRocketAbility[iIndex].g_iRocketRangeCooldown = 0;
 				g_esRocketAbility[iIndex].g_iRocketSight = 0;
 
-				for (int iSpecType = 0; iSpecType < (sizeof g_sSpecialNames); iSpecType++)
-				{
-					g_esRocketSpecial[iIndex][iSpecType].g_flCloseAreasOnly = -1.0;
-					g_esRocketSpecial[iIndex][iSpecType].g_iComboAbility = -1;
-					g_esRocketSpecial[iIndex][iSpecType].g_iHumanAbility = -1;
-					g_esRocketSpecial[iIndex][iSpecType].g_iHumanAmmo = -1;
-					g_esRocketSpecial[iIndex][iSpecType].g_iHumanCooldown = -1;
-					g_esRocketSpecial[iIndex][iSpecType].g_iHumanRangeCooldown = -1;
-					g_esRocketSpecial[iIndex][iSpecType].g_flOpenAreasOnly = -1.0;
-					g_esRocketSpecial[iIndex][iSpecType].g_iRequiresHumans = -1;
-					g_esRocketSpecial[iIndex][iSpecType].g_iRocketAbility = -1;
-					g_esRocketSpecial[iIndex][iSpecType].g_iRocketEffect = -1;
-					g_esRocketSpecial[iIndex][iSpecType].g_iRocketMessage = -1;
-					g_esRocketSpecial[iIndex][iSpecType].g_iRocketBody = -1;
-					g_esRocketSpecial[iIndex][iSpecType].g_flRocketChance = -1.0;
-					g_esRocketSpecial[iIndex][iSpecType].g_iRocketCooldown = -1;
-					g_esRocketSpecial[iIndex][iSpecType].g_flRocketCountdown = 0.0;
-					g_esRocketSpecial[iIndex][iSpecType].g_flRocketDelay = -1.0;
-					g_esRocketSpecial[iIndex][iSpecType].g_iRocketHit = -1;
-					g_esRocketSpecial[iIndex][iSpecType].g_iRocketHitMode = -1;
-					g_esRocketSpecial[iIndex][iSpecType].g_iRocketMode = -1;
-					g_esRocketSpecial[iIndex][iSpecType].g_flRocketRange = -1.0;
-					g_esRocketSpecial[iIndex][iSpecType].g_flRocketRangeChance = -1.0;
-					g_esRocketSpecial[iIndex][iSpecType].g_iRocketRangeCooldown = -1;
-					g_esRocketSpecial[iIndex][iSpecType].g_iRocketSight = -1;
-				}
+				g_esRocketSpecial[iIndex].g_flCloseAreasOnly = -1.0;
+				g_esRocketSpecial[iIndex].g_iComboAbility = -1;
+				g_esRocketSpecial[iIndex].g_iHumanAbility = -1;
+				g_esRocketSpecial[iIndex].g_iHumanAmmo = -1;
+				g_esRocketSpecial[iIndex].g_iHumanCooldown = -1;
+				g_esRocketSpecial[iIndex].g_iHumanRangeCooldown = -1;
+				g_esRocketSpecial[iIndex].g_flOpenAreasOnly = -1.0;
+				g_esRocketSpecial[iIndex].g_iRequiresHumans = -1;
+				g_esRocketSpecial[iIndex].g_iRocketAbility = -1;
+				g_esRocketSpecial[iIndex].g_iRocketEffect = -1;
+				g_esRocketSpecial[iIndex].g_iRocketMessage = -1;
+				g_esRocketSpecial[iIndex].g_iRocketBody = -1;
+				g_esRocketSpecial[iIndex].g_flRocketChance = -1.0;
+				g_esRocketSpecial[iIndex].g_iRocketCooldown = -1;
+				g_esRocketSpecial[iIndex].g_flRocketCountdown = 0.0;
+				g_esRocketSpecial[iIndex].g_flRocketDelay = -1.0;
+				g_esRocketSpecial[iIndex].g_iRocketHit = -1;
+				g_esRocketSpecial[iIndex].g_iRocketHitMode = -1;
+				g_esRocketSpecial[iIndex].g_iRocketMode = -1;
+				g_esRocketSpecial[iIndex].g_flRocketRange = -1.0;
+				g_esRocketSpecial[iIndex].g_flRocketRangeChance = -1.0;
+				g_esRocketSpecial[iIndex].g_iRocketRangeCooldown = -1;
+				g_esRocketSpecial[iIndex].g_iRocketSight = -1;
 			}
 		}
 		case 3:
@@ -708,70 +704,67 @@ public void MT_OnConfigsLoad(int mode)
 				g_esRocketPlayer[iPlayer].g_iRocketRangeCooldown = -1;
 				g_esRocketPlayer[iPlayer].g_iRocketSight = -1;
 
-				for (int iSpecType = 0; iSpecType < (sizeof g_sSpecialNames); iSpecType++)
-				{
-					g_esRocketTeammate[iPlayer][iSpecType].g_flCloseAreasOnly = -1.0;
-					g_esRocketTeammate[iPlayer][iSpecType].g_iComboAbility = -1;
-					g_esRocketTeammate[iPlayer][iSpecType].g_iHumanAbility = -1;
-					g_esRocketTeammate[iPlayer][iSpecType].g_iHumanAmmo = -1;
-					g_esRocketTeammate[iPlayer][iSpecType].g_iHumanCooldown = -1;
-					g_esRocketTeammate[iPlayer][iSpecType].g_iHumanRangeCooldown = -1;
-					g_esRocketTeammate[iPlayer][iSpecType].g_flOpenAreasOnly = -1.0;
-					g_esRocketTeammate[iPlayer][iSpecType].g_iRequiresHumans = -1;
-					g_esRocketTeammate[iPlayer][iSpecType].g_iRocketAbility = -1;
-					g_esRocketTeammate[iPlayer][iSpecType].g_iRocketEffect = -1;
-					g_esRocketTeammate[iPlayer][iSpecType].g_iRocketMessage = -1;
-					g_esRocketTeammate[iPlayer][iSpecType].g_iRocketBody = -1;
-					g_esRocketTeammate[iPlayer][iSpecType].g_flRocketChance = -1.0;
-					g_esRocketTeammate[iPlayer][iSpecType].g_iRocketCooldown = -1;
-					g_esRocketTeammate[iPlayer][iSpecType].g_flRocketCountdown = 0.0;
-					g_esRocketTeammate[iPlayer][iSpecType].g_flRocketDelay = -1.0;
-					g_esRocketTeammate[iPlayer][iSpecType].g_iRocketHit = -1;
-					g_esRocketTeammate[iPlayer][iSpecType].g_iRocketHitMode = -1;
-					g_esRocketTeammate[iPlayer][iSpecType].g_iRocketMode = -1;
-					g_esRocketTeammate[iPlayer][iSpecType].g_flRocketRange = -1.0;
-					g_esRocketTeammate[iPlayer][iSpecType].g_flRocketRangeChance = -1.0;
-					g_esRocketTeammate[iPlayer][iSpecType].g_iRocketRangeCooldown = -1;
-					g_esRocketTeammate[iPlayer][iSpecType].g_iRocketSight = -1;
-				}
+				g_esRocketTeammate[iPlayer].g_flCloseAreasOnly = -1.0;
+				g_esRocketTeammate[iPlayer].g_iComboAbility = -1;
+				g_esRocketTeammate[iPlayer].g_iHumanAbility = -1;
+				g_esRocketTeammate[iPlayer].g_iHumanAmmo = -1;
+				g_esRocketTeammate[iPlayer].g_iHumanCooldown = -1;
+				g_esRocketTeammate[iPlayer].g_iHumanRangeCooldown = -1;
+				g_esRocketTeammate[iPlayer].g_flOpenAreasOnly = -1.0;
+				g_esRocketTeammate[iPlayer].g_iRequiresHumans = -1;
+				g_esRocketTeammate[iPlayer].g_iRocketAbility = -1;
+				g_esRocketTeammate[iPlayer].g_iRocketEffect = -1;
+				g_esRocketTeammate[iPlayer].g_iRocketMessage = -1;
+				g_esRocketTeammate[iPlayer].g_iRocketBody = -1;
+				g_esRocketTeammate[iPlayer].g_flRocketChance = -1.0;
+				g_esRocketTeammate[iPlayer].g_iRocketCooldown = -1;
+				g_esRocketTeammate[iPlayer].g_flRocketCountdown = 0.0;
+				g_esRocketTeammate[iPlayer].g_flRocketDelay = -1.0;
+				g_esRocketTeammate[iPlayer].g_iRocketHit = -1;
+				g_esRocketTeammate[iPlayer].g_iRocketHitMode = -1;
+				g_esRocketTeammate[iPlayer].g_iRocketMode = -1;
+				g_esRocketTeammate[iPlayer].g_flRocketRange = -1.0;
+				g_esRocketTeammate[iPlayer].g_flRocketRangeChance = -1.0;
+				g_esRocketTeammate[iPlayer].g_iRocketRangeCooldown = -1;
+				g_esRocketTeammate[iPlayer].g_iRocketSight = -1;
 			}
 		}
 	}
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vRocketConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, int specType)
+void vRocketConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #else
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, int specType)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #endif
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esRocketTeammate[admin][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esRocketTeammate[admin][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specType);
-			g_esRocketTeammate[admin][specType].g_iComboAbility = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRocketTeammate[admin][specType].g_iComboAbility, value, -1, 1, specType);
-			g_esRocketTeammate[admin][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRocketTeammate[admin][specType].g_iHumanAbility, value, -1, 2, specType);
-			g_esRocketTeammate[admin][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRocketTeammate[admin][specType].g_iHumanAmmo, value, -1, 99999, specType);
-			g_esRocketTeammate[admin][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRocketTeammate[admin][specType].g_iHumanCooldown, value, -1, 99999, specType);
-			g_esRocketTeammate[admin][specType].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esRocketTeammate[admin][specType].g_iHumanRangeCooldown, value, -1, 99999, specType);
-			g_esRocketTeammate[admin][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRocketTeammate[admin][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specType);
-			g_esRocketTeammate[admin][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRocketTeammate[admin][specType].g_iRequiresHumans, value, -1, 32, specType);
-			g_esRocketTeammate[admin][specType].g_iRocketAbility = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRocketTeammate[admin][specType].g_iRocketAbility, value, -1, 1, specType);
-			g_esRocketTeammate[admin][specType].g_iRocketEffect = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRocketTeammate[admin][specType].g_iRocketEffect, value, -1, 7, specType);
-			g_esRocketTeammate[admin][specType].g_iRocketMessage = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRocketTeammate[admin][specType].g_iRocketMessage, value, -1, 3, specType);
-			g_esRocketTeammate[admin][specType].g_iRocketSight = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRocketTeammate[admin][specType].g_iRocketSight, value, -1, 2, specType);
-			g_esRocketTeammate[admin][specType].g_iRocketBody = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketBody", "Rocket Body", "Rocket_Body", "body", g_esRocketTeammate[admin][specType].g_iRocketBody, value, -1, 1, specType);
-			g_esRocketTeammate[admin][specType].g_flRocketChance = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketChance", "Rocket Chance", "Rocket_Chance", "chance", g_esRocketTeammate[admin][specType].g_flRocketChance, value, -1.0, 100.0, specType);
-			g_esRocketTeammate[admin][specType].g_iRocketCooldown = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketCooldown", "Rocket Cooldown", "Rocket_Cooldown", "cooldown", g_esRocketTeammate[admin][specType].g_iRocketCooldown, value, -1, 99999, specType);
-			g_esRocketTeammate[admin][specType].g_flRocketCountdown = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketCountdown", "Rocket Countdown", "Rocket_Countdown", "countdown", g_esRocketTeammate[admin][specType].g_flRocketCountdown, value, -1.0, 99999.0, specType);
-			g_esRocketTeammate[admin][specType].g_flRocketDelay = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketDelay", "Rocket Delay", "Rocket_Delay", "delay", g_esRocketTeammate[admin][specType].g_flRocketDelay, value, -1.0, 99999.0, specType);
-			g_esRocketTeammate[admin][specType].g_iRocketHit = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketHit", "Rocket Hit", "Rocket_Hit", "hit", g_esRocketTeammate[admin][specType].g_iRocketHit, value, -1, 1, specType);
-			g_esRocketTeammate[admin][specType].g_iRocketHitMode = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketHitMode", "Rocket Hit Mode", "Rocket_Hit_Mode", "hitmode", g_esRocketTeammate[admin][specType].g_iRocketHitMode, value, -1, 2, specType);
-			g_esRocketTeammate[admin][specType].g_iRocketMode = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketMode", "Rocket Mode", "Rocket_Mode", "mode", g_esRocketTeammate[admin][specType].g_iRocketMode, value, -1, 3, specType);
-			g_esRocketTeammate[admin][specType].g_flRocketRange = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketRange", "Rocket Range", "Rocket_Range", "range", g_esRocketTeammate[admin][specType].g_flRocketRange, value, -1.0, 99999.0, specType);
-			g_esRocketTeammate[admin][specType].g_flRocketRangeChance = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketRangeChance", "Rocket Range Chance", "Rocket_Range_Chance", "rangechance", g_esRocketTeammate[admin][specType].g_flRocketRangeChance, value, -1.0, 100.0, specType);
-			g_esRocketTeammate[admin][specType].g_iRocketRangeCooldown = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketRangeCooldown", "Rocket Range Cooldown", "Rocket_Range_Cooldown", "rangecooldown", g_esRocketTeammate[admin][specType].g_iRocketRangeCooldown, value, -1, 99999, specType);
+			g_esRocketTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esRocketTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esRocketTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRocketTeammate[admin].g_iComboAbility, value, -1, 1);
+			g_esRocketTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRocketTeammate[admin].g_iHumanAbility, value, -1, 2);
+			g_esRocketTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRocketTeammate[admin].g_iHumanAmmo, value, -1, 99999);
+			g_esRocketTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRocketTeammate[admin].g_iHumanCooldown, value, -1, 99999);
+			g_esRocketTeammate[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esRocketTeammate[admin].g_iHumanRangeCooldown, value, -1, 99999);
+			g_esRocketTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRocketTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esRocketTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRocketTeammate[admin].g_iRequiresHumans, value, -1, 32);
+			g_esRocketTeammate[admin].g_iRocketAbility = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRocketTeammate[admin].g_iRocketAbility, value, -1, 1);
+			g_esRocketTeammate[admin].g_iRocketEffect = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRocketTeammate[admin].g_iRocketEffect, value, -1, 7);
+			g_esRocketTeammate[admin].g_iRocketMessage = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRocketTeammate[admin].g_iRocketMessage, value, -1, 3);
+			g_esRocketTeammate[admin].g_iRocketSight = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRocketTeammate[admin].g_iRocketSight, value, -1, 2);
+			g_esRocketTeammate[admin].g_iRocketBody = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketBody", "Rocket Body", "Rocket_Body", "body", g_esRocketTeammate[admin].g_iRocketBody, value, -1, 1);
+			g_esRocketTeammate[admin].g_flRocketChance = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketChance", "Rocket Chance", "Rocket_Chance", "chance", g_esRocketTeammate[admin].g_flRocketChance, value, -1.0, 100.0);
+			g_esRocketTeammate[admin].g_iRocketCooldown = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketCooldown", "Rocket Cooldown", "Rocket_Cooldown", "cooldown", g_esRocketTeammate[admin].g_iRocketCooldown, value, -1, 99999);
+			g_esRocketTeammate[admin].g_flRocketCountdown = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketCountdown", "Rocket Countdown", "Rocket_Countdown", "countdown", g_esRocketTeammate[admin].g_flRocketCountdown, value, -1.0, 99999.0);
+			g_esRocketTeammate[admin].g_flRocketDelay = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketDelay", "Rocket Delay", "Rocket_Delay", "delay", g_esRocketTeammate[admin].g_flRocketDelay, value, -1.0, 99999.0);
+			g_esRocketTeammate[admin].g_iRocketHit = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketHit", "Rocket Hit", "Rocket_Hit", "hit", g_esRocketTeammate[admin].g_iRocketHit, value, -1, 1);
+			g_esRocketTeammate[admin].g_iRocketHitMode = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketHitMode", "Rocket Hit Mode", "Rocket_Hit_Mode", "hitmode", g_esRocketTeammate[admin].g_iRocketHitMode, value, -1, 2);
+			g_esRocketTeammate[admin].g_iRocketMode = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketMode", "Rocket Mode", "Rocket_Mode", "mode", g_esRocketTeammate[admin].g_iRocketMode, value, -1, 3);
+			g_esRocketTeammate[admin].g_flRocketRange = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketRange", "Rocket Range", "Rocket_Range", "range", g_esRocketTeammate[admin].g_flRocketRange, value, -1.0, 99999.0);
+			g_esRocketTeammate[admin].g_flRocketRangeChance = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketRangeChance", "Rocket Range Chance", "Rocket_Range_Chance", "rangechance", g_esRocketTeammate[admin].g_flRocketRangeChance, value, -1.0, 100.0);
+			g_esRocketTeammate[admin].g_iRocketRangeCooldown = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketRangeCooldown", "Rocket Range Cooldown", "Rocket_Range_Cooldown", "rangecooldown", g_esRocketTeammate[admin].g_iRocketRangeCooldown, value, -1, 99999);
 		}
 		else
 		{
@@ -807,29 +800,29 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esRocketSpecial[type][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esRocketSpecial[type][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specType);
-			g_esRocketSpecial[type][specType].g_iComboAbility = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRocketSpecial[type][specType].g_iComboAbility, value, -1, 1, specType);
-			g_esRocketSpecial[type][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRocketSpecial[type][specType].g_iHumanAbility, value, -1, 2, specType);
-			g_esRocketSpecial[type][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRocketSpecial[type][specType].g_iHumanAmmo, value, -1, 99999, specType);
-			g_esRocketSpecial[type][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRocketSpecial[type][specType].g_iHumanCooldown, value, -1, 99999, specType);
-			g_esRocketSpecial[type][specType].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esRocketSpecial[type][specType].g_iHumanRangeCooldown, value, -1, 99999, specType);
-			g_esRocketSpecial[type][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRocketSpecial[type][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specType);
-			g_esRocketSpecial[type][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRocketSpecial[type][specType].g_iRequiresHumans, value, -1, 32, specType);
-			g_esRocketSpecial[type][specType].g_iRocketAbility = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRocketSpecial[type][specType].g_iRocketAbility, value, -1, 1, specType);
-			g_esRocketSpecial[type][specType].g_iRocketEffect = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRocketSpecial[type][specType].g_iRocketEffect, value, -1, 7, specType);
-			g_esRocketSpecial[type][specType].g_iRocketMessage = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRocketSpecial[type][specType].g_iRocketMessage, value, -1, 3, specType);
-			g_esRocketSpecial[type][specType].g_iRocketSight = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRocketSpecial[type][specType].g_iRocketSight, value, -1, 2, specType);
-			g_esRocketSpecial[type][specType].g_iRocketBody = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketBody", "Rocket Body", "Rocket_Body", "body", g_esRocketSpecial[type][specType].g_iRocketBody, value, -1, 1, specType);
-			g_esRocketSpecial[type][specType].g_flRocketChance = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketChance", "Rocket Chance", "Rocket_Chance", "chance", g_esRocketSpecial[type][specType].g_flRocketChance, value, -1.0, 100.0, specType);
-			g_esRocketSpecial[type][specType].g_iRocketCooldown = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketCooldown", "Rocket Cooldown", "Rocket_Cooldown", "cooldown", g_esRocketSpecial[type][specType].g_iRocketCooldown, value, -1, 99999, specType);
-			g_esRocketSpecial[type][specType].g_flRocketCountdown = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketCountdown", "Rocket Countdown", "Rocket_Countdown", "countdown", g_esRocketSpecial[type][specType].g_flRocketCountdown, value, -1.0, 99999.0, specType);
-			g_esRocketSpecial[type][specType].g_flRocketDelay = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketDelay", "Rocket Delay", "Rocket_Delay", "delay", g_esRocketSpecial[type][specType].g_flRocketDelay, value, -1.0, 99999.0, specType);
-			g_esRocketSpecial[type][specType].g_iRocketHit = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketHit", "Rocket Hit", "Rocket_Hit", "hit", g_esRocketSpecial[type][specType].g_iRocketHit, value, -1, 1, specType);
-			g_esRocketSpecial[type][specType].g_iRocketHitMode = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketHitMode", "Rocket Hit Mode", "Rocket_Hit_Mode", "hitmode", g_esRocketSpecial[type][specType].g_iRocketHitMode, value, -1, 2, specType);
-			g_esRocketSpecial[type][specType].g_iRocketMode = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketMode", "Rocket Mode", "Rocket_Mode", "mode", g_esRocketSpecial[type][specType].g_iRocketMode, value, -1, 3, specType);
-			g_esRocketSpecial[type][specType].g_flRocketRange = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketRange", "Rocket Range", "Rocket_Range", "range", g_esRocketSpecial[type][specType].g_flRocketRange, value, -1.0, 99999.0, specType);
-			g_esRocketSpecial[type][specType].g_flRocketRangeChance = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketRangeChance", "Rocket Range Chance", "Rocket_Range_Chance", "rangechance", g_esRocketSpecial[type][specType].g_flRocketRangeChance, value, -1.0, 100.0, specType);
-			g_esRocketSpecial[type][specType].g_iRocketRangeCooldown = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketRangeCooldown", "Rocket Range Cooldown", "Rocket_Range_Cooldown", "rangecooldown", g_esRocketSpecial[type][specType].g_iRocketRangeCooldown, value, -1, 99999, specType);
+			g_esRocketSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esRocketSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esRocketSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRocketSpecial[type].g_iComboAbility, value, -1, 1);
+			g_esRocketSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRocketSpecial[type].g_iHumanAbility, value, -1, 2);
+			g_esRocketSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRocketSpecial[type].g_iHumanAmmo, value, -1, 99999);
+			g_esRocketSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRocketSpecial[type].g_iHumanCooldown, value, -1, 99999);
+			g_esRocketSpecial[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esRocketSpecial[type].g_iHumanRangeCooldown, value, -1, 99999);
+			g_esRocketSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRocketSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esRocketSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRocketSpecial[type].g_iRequiresHumans, value, -1, 32);
+			g_esRocketSpecial[type].g_iRocketAbility = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRocketSpecial[type].g_iRocketAbility, value, -1, 1);
+			g_esRocketSpecial[type].g_iRocketEffect = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRocketSpecial[type].g_iRocketEffect, value, -1, 7);
+			g_esRocketSpecial[type].g_iRocketMessage = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRocketSpecial[type].g_iRocketMessage, value, -1, 3);
+			g_esRocketSpecial[type].g_iRocketSight = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRocketSpecial[type].g_iRocketSight, value, -1, 2);
+			g_esRocketSpecial[type].g_iRocketBody = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketBody", "Rocket Body", "Rocket_Body", "body", g_esRocketSpecial[type].g_iRocketBody, value, -1, 1);
+			g_esRocketSpecial[type].g_flRocketChance = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketChance", "Rocket Chance", "Rocket_Chance", "chance", g_esRocketSpecial[type].g_flRocketChance, value, -1.0, 100.0);
+			g_esRocketSpecial[type].g_iRocketCooldown = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketCooldown", "Rocket Cooldown", "Rocket_Cooldown", "cooldown", g_esRocketSpecial[type].g_iRocketCooldown, value, -1, 99999);
+			g_esRocketSpecial[type].g_flRocketCountdown = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketCountdown", "Rocket Countdown", "Rocket_Countdown", "countdown", g_esRocketSpecial[type].g_flRocketCountdown, value, -1.0, 99999.0);
+			g_esRocketSpecial[type].g_flRocketDelay = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketDelay", "Rocket Delay", "Rocket_Delay", "delay", g_esRocketSpecial[type].g_flRocketDelay, value, -1.0, 99999.0);
+			g_esRocketSpecial[type].g_iRocketHit = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketHit", "Rocket Hit", "Rocket_Hit", "hit", g_esRocketSpecial[type].g_iRocketHit, value, -1, 1);
+			g_esRocketSpecial[type].g_iRocketHitMode = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketHitMode", "Rocket Hit Mode", "Rocket_Hit_Mode", "hitmode", g_esRocketSpecial[type].g_iRocketHitMode, value, -1, 2);
+			g_esRocketSpecial[type].g_iRocketMode = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketMode", "Rocket Mode", "Rocket_Mode", "mode", g_esRocketSpecial[type].g_iRocketMode, value, -1, 3);
+			g_esRocketSpecial[type].g_flRocketRange = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketRange", "Rocket Range", "Rocket_Range", "range", g_esRocketSpecial[type].g_flRocketRange, value, -1.0, 99999.0);
+			g_esRocketSpecial[type].g_flRocketRangeChance = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketRangeChance", "Rocket Range Chance", "Rocket_Range_Chance", "rangechance", g_esRocketSpecial[type].g_flRocketRangeChance, value, -1.0, 100.0);
+			g_esRocketSpecial[type].g_iRocketRangeCooldown = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketRangeCooldown", "Rocket Range Cooldown", "Rocket_Range_Cooldown", "rangecooldown", g_esRocketSpecial[type].g_iRocketRangeCooldown, value, -1, 99999);
 		}
 		else
 		{
@@ -869,35 +862,33 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
-	g_esRocketPlayer[tank].g_iInfectedType = iGetInfectedType(tank);
 	g_esRocketPlayer[tank].g_iTankType = apply ? type : 0;
-	int iSpecType = g_esRocketPlayer[tank].g_iInfectedType;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esRocketCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank][0].g_flCloseAreasOnly, g_esRocketTeammate[tank][iSpecType].g_flCloseAreasOnly, g_esRocketPlayer[tank].g_flCloseAreasOnly, g_esRocketSpecial[type][0].g_flCloseAreasOnly, g_esRocketSpecial[type][iSpecType].g_flCloseAreasOnly, g_esRocketAbility[type].g_flCloseAreasOnly, 1);
-		g_esRocketCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank][0].g_iComboAbility, g_esRocketTeammate[tank][iSpecType].g_iComboAbility, g_esRocketPlayer[tank].g_iComboAbility, g_esRocketSpecial[type][0].g_iComboAbility, g_esRocketSpecial[type][iSpecType].g_iComboAbility, g_esRocketAbility[type].g_iComboAbility, 1);
-		g_esRocketCache[tank].g_flRocketChance = flGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank][0].g_flRocketChance, g_esRocketTeammate[tank][iSpecType].g_flRocketChance, g_esRocketPlayer[tank].g_flRocketChance, g_esRocketSpecial[type][0].g_flRocketChance, g_esRocketSpecial[type][iSpecType].g_flRocketChance, g_esRocketAbility[type].g_flRocketChance, 1);
-		g_esRocketCache[tank].g_flRocketCountdown = flGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank][0].g_flRocketCountdown, g_esRocketTeammate[tank][iSpecType].g_flRocketCountdown, g_esRocketPlayer[tank].g_flRocketCountdown, g_esRocketSpecial[type][0].g_flRocketCountdown, g_esRocketSpecial[type][iSpecType].g_flRocketCountdown, g_esRocketAbility[type].g_flRocketCountdown, 1);
-		g_esRocketCache[tank].g_flRocketDelay = flGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank][0].g_flRocketDelay, g_esRocketTeammate[tank][iSpecType].g_flRocketDelay, g_esRocketPlayer[tank].g_flRocketDelay, g_esRocketSpecial[type][0].g_flRocketDelay, g_esRocketSpecial[type][iSpecType].g_flRocketDelay, g_esRocketAbility[type].g_flRocketDelay, 1);
-		g_esRocketCache[tank].g_flRocketRange = flGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank][0].g_flRocketRange, g_esRocketTeammate[tank][iSpecType].g_flRocketRange, g_esRocketPlayer[tank].g_flRocketRange, g_esRocketSpecial[type][0].g_flRocketRange, g_esRocketSpecial[type][iSpecType].g_flRocketRange, g_esRocketAbility[type].g_flRocketRange, 1);
-		g_esRocketCache[tank].g_flRocketRangeChance = flGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank][0].g_flRocketRangeChance, g_esRocketTeammate[tank][iSpecType].g_flRocketRangeChance, g_esRocketPlayer[tank].g_flRocketRangeChance, g_esRocketSpecial[type][0].g_flRocketRangeChance, g_esRocketSpecial[type][iSpecType].g_flRocketRangeChance, g_esRocketAbility[type].g_flRocketRangeChance, 1);
-		g_esRocketCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank][0].g_iHumanAbility, g_esRocketTeammate[tank][iSpecType].g_iHumanAbility, g_esRocketPlayer[tank].g_iHumanAbility, g_esRocketSpecial[type][0].g_iHumanAbility, g_esRocketSpecial[type][iSpecType].g_iHumanAbility, g_esRocketAbility[type].g_iHumanAbility, 1);
-		g_esRocketCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank][0].g_iHumanAmmo, g_esRocketTeammate[tank][iSpecType].g_iHumanAmmo, g_esRocketPlayer[tank].g_iHumanAmmo, g_esRocketSpecial[type][0].g_iHumanAmmo, g_esRocketSpecial[type][iSpecType].g_iHumanAmmo, g_esRocketAbility[type].g_iHumanAmmo, 1);
-		g_esRocketCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank][0].g_iHumanCooldown, g_esRocketTeammate[tank][iSpecType].g_iHumanCooldown, g_esRocketPlayer[tank].g_iHumanCooldown, g_esRocketSpecial[type][0].g_iHumanCooldown, g_esRocketSpecial[type][iSpecType].g_iHumanCooldown, g_esRocketAbility[type].g_iHumanCooldown, 1);
-		g_esRocketCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank][0].g_iHumanRangeCooldown, g_esRocketTeammate[tank][iSpecType].g_iHumanRangeCooldown, g_esRocketPlayer[tank].g_iHumanRangeCooldown, g_esRocketSpecial[type][0].g_iHumanRangeCooldown, g_esRocketSpecial[type][iSpecType].g_iHumanRangeCooldown, g_esRocketAbility[type].g_iHumanRangeCooldown, 1);
-		g_esRocketCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank][0].g_flOpenAreasOnly, g_esRocketTeammate[tank][iSpecType].g_flOpenAreasOnly, g_esRocketPlayer[tank].g_flOpenAreasOnly, g_esRocketSpecial[type][0].g_flOpenAreasOnly, g_esRocketSpecial[type][iSpecType].g_flOpenAreasOnly, g_esRocketAbility[type].g_flOpenAreasOnly, 1);
-		g_esRocketCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank][0].g_iRequiresHumans, g_esRocketTeammate[tank][iSpecType].g_iRequiresHumans, g_esRocketPlayer[tank].g_iRequiresHumans, g_esRocketSpecial[type][0].g_iRequiresHumans, g_esRocketSpecial[type][iSpecType].g_iRequiresHumans, g_esRocketAbility[type].g_iRequiresHumans, 1);
-		g_esRocketCache[tank].g_iRocketAbility = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank][0].g_iRocketAbility, g_esRocketTeammate[tank][iSpecType].g_iRocketAbility, g_esRocketPlayer[tank].g_iRocketAbility, g_esRocketSpecial[type][0].g_iRocketAbility, g_esRocketSpecial[type][iSpecType].g_iRocketAbility, g_esRocketAbility[type].g_iRocketAbility, 1);
-		g_esRocketCache[tank].g_iRocketBody = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank][0].g_iRocketBody, g_esRocketTeammate[tank][iSpecType].g_iRocketBody, g_esRocketPlayer[tank].g_iRocketBody, g_esRocketSpecial[type][0].g_iRocketBody, g_esRocketSpecial[type][iSpecType].g_iRocketBody, g_esRocketAbility[type].g_iRocketBody, 1);
-		g_esRocketCache[tank].g_iRocketCooldown = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank][0].g_iRocketCooldown, g_esRocketTeammate[tank][iSpecType].g_iRocketCooldown, g_esRocketPlayer[tank].g_iRocketCooldown, g_esRocketSpecial[type][0].g_iRocketCooldown, g_esRocketSpecial[type][iSpecType].g_iRocketCooldown, g_esRocketAbility[type].g_iRocketCooldown, 1);
-		g_esRocketCache[tank].g_iRocketEffect = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank][0].g_iRocketEffect, g_esRocketTeammate[tank][iSpecType].g_iRocketEffect, g_esRocketPlayer[tank].g_iRocketEffect, g_esRocketSpecial[type][0].g_iRocketEffect, g_esRocketSpecial[type][iSpecType].g_iRocketEffect, g_esRocketAbility[type].g_iRocketEffect, 1);
-		g_esRocketCache[tank].g_iRocketHit = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank][0].g_iRocketHit, g_esRocketTeammate[tank][iSpecType].g_iRocketHit, g_esRocketPlayer[tank].g_iRocketHit, g_esRocketSpecial[type][0].g_iRocketHit, g_esRocketSpecial[type][iSpecType].g_iRocketHit, g_esRocketAbility[type].g_iRocketHit, 1);
-		g_esRocketCache[tank].g_iRocketHitMode = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank][0].g_iRocketHitMode, g_esRocketTeammate[tank][iSpecType].g_iRocketHitMode, g_esRocketPlayer[tank].g_iRocketHitMode, g_esRocketSpecial[type][0].g_iRocketHitMode, g_esRocketSpecial[type][iSpecType].g_iRocketHitMode, g_esRocketAbility[type].g_iRocketHitMode, 1);
-		g_esRocketCache[tank].g_iRocketMessage = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank][0].g_iRocketMessage, g_esRocketTeammate[tank][iSpecType].g_iRocketMessage, g_esRocketPlayer[tank].g_iRocketMessage, g_esRocketSpecial[type][0].g_iRocketMessage, g_esRocketSpecial[type][iSpecType].g_iRocketMessage, g_esRocketAbility[type].g_iRocketMessage, 1);
-		g_esRocketCache[tank].g_iRocketMode = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank][0].g_iRocketMode, g_esRocketTeammate[tank][iSpecType].g_iRocketMode, g_esRocketPlayer[tank].g_iRocketMode, g_esRocketSpecial[type][0].g_iRocketMode, g_esRocketSpecial[type][iSpecType].g_iRocketMode, g_esRocketAbility[type].g_iRocketMode, 1);
-		g_esRocketCache[tank].g_iRocketRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank][0].g_iRocketRangeCooldown, g_esRocketTeammate[tank][iSpecType].g_iRocketRangeCooldown, g_esRocketPlayer[tank].g_iRocketRangeCooldown, g_esRocketSpecial[type][0].g_iRocketRangeCooldown, g_esRocketSpecial[type][iSpecType].g_iRocketRangeCooldown, g_esRocketAbility[type].g_iRocketRangeCooldown, 1);
-		g_esRocketCache[tank].g_iRocketSight = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank][0].g_iRocketSight, g_esRocketTeammate[tank][iSpecType].g_iRocketSight, g_esRocketPlayer[tank].g_iRocketSight, g_esRocketSpecial[type][0].g_iRocketSight, g_esRocketSpecial[type][iSpecType].g_iRocketSight, g_esRocketAbility[type].g_iRocketSight, 1);
+		g_esRocketCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_flCloseAreasOnly, g_esRocketPlayer[tank].g_flCloseAreasOnly, g_esRocketSpecial[type].g_flCloseAreasOnly, g_esRocketAbility[type].g_flCloseAreasOnly, 1);
+		g_esRocketCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iComboAbility, g_esRocketPlayer[tank].g_iComboAbility, g_esRocketSpecial[type].g_iComboAbility, g_esRocketAbility[type].g_iComboAbility, 1);
+		g_esRocketCache[tank].g_flRocketChance = flGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_flRocketChance, g_esRocketPlayer[tank].g_flRocketChance, g_esRocketSpecial[type].g_flRocketChance, g_esRocketAbility[type].g_flRocketChance, 1);
+		g_esRocketCache[tank].g_flRocketCountdown = flGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_flRocketCountdown, g_esRocketPlayer[tank].g_flRocketCountdown, g_esRocketSpecial[type].g_flRocketCountdown, g_esRocketAbility[type].g_flRocketCountdown, 1);
+		g_esRocketCache[tank].g_flRocketDelay = flGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_flRocketDelay, g_esRocketPlayer[tank].g_flRocketDelay, g_esRocketSpecial[type].g_flRocketDelay, g_esRocketAbility[type].g_flRocketDelay, 1);
+		g_esRocketCache[tank].g_flRocketRange = flGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_flRocketRange, g_esRocketPlayer[tank].g_flRocketRange, g_esRocketSpecial[type].g_flRocketRange, g_esRocketAbility[type].g_flRocketRange, 1);
+		g_esRocketCache[tank].g_flRocketRangeChance = flGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_flRocketRangeChance, g_esRocketPlayer[tank].g_flRocketRangeChance, g_esRocketSpecial[type].g_flRocketRangeChance, g_esRocketAbility[type].g_flRocketRangeChance, 1);
+		g_esRocketCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iHumanAbility, g_esRocketPlayer[tank].g_iHumanAbility, g_esRocketSpecial[type].g_iHumanAbility, g_esRocketAbility[type].g_iHumanAbility, 1);
+		g_esRocketCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iHumanAmmo, g_esRocketPlayer[tank].g_iHumanAmmo, g_esRocketSpecial[type].g_iHumanAmmo, g_esRocketAbility[type].g_iHumanAmmo, 1);
+		g_esRocketCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iHumanCooldown, g_esRocketPlayer[tank].g_iHumanCooldown, g_esRocketSpecial[type].g_iHumanCooldown, g_esRocketAbility[type].g_iHumanCooldown, 1);
+		g_esRocketCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iHumanRangeCooldown, g_esRocketPlayer[tank].g_iHumanRangeCooldown, g_esRocketSpecial[type].g_iHumanRangeCooldown, g_esRocketAbility[type].g_iHumanRangeCooldown, 1);
+		g_esRocketCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_flOpenAreasOnly, g_esRocketPlayer[tank].g_flOpenAreasOnly, g_esRocketSpecial[type].g_flOpenAreasOnly, g_esRocketAbility[type].g_flOpenAreasOnly, 1);
+		g_esRocketCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iRequiresHumans, g_esRocketPlayer[tank].g_iRequiresHumans, g_esRocketSpecial[type].g_iRequiresHumans, g_esRocketAbility[type].g_iRequiresHumans, 1);
+		g_esRocketCache[tank].g_iRocketAbility = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iRocketAbility, g_esRocketPlayer[tank].g_iRocketAbility, g_esRocketSpecial[type].g_iRocketAbility, g_esRocketAbility[type].g_iRocketAbility, 1);
+		g_esRocketCache[tank].g_iRocketBody = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iRocketBody, g_esRocketPlayer[tank].g_iRocketBody, g_esRocketSpecial[type].g_iRocketBody, g_esRocketAbility[type].g_iRocketBody, 1);
+		g_esRocketCache[tank].g_iRocketCooldown = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iRocketCooldown, g_esRocketPlayer[tank].g_iRocketCooldown, g_esRocketSpecial[type].g_iRocketCooldown, g_esRocketAbility[type].g_iRocketCooldown, 1);
+		g_esRocketCache[tank].g_iRocketEffect = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iRocketEffect, g_esRocketPlayer[tank].g_iRocketEffect, g_esRocketSpecial[type].g_iRocketEffect, g_esRocketAbility[type].g_iRocketEffect, 1);
+		g_esRocketCache[tank].g_iRocketHit = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iRocketHit, g_esRocketPlayer[tank].g_iRocketHit, g_esRocketSpecial[type].g_iRocketHit, g_esRocketAbility[type].g_iRocketHit, 1);
+		g_esRocketCache[tank].g_iRocketHitMode = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iRocketHitMode, g_esRocketPlayer[tank].g_iRocketHitMode, g_esRocketSpecial[type].g_iRocketHitMode, g_esRocketAbility[type].g_iRocketHitMode, 1);
+		g_esRocketCache[tank].g_iRocketMessage = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iRocketMessage, g_esRocketPlayer[tank].g_iRocketMessage, g_esRocketSpecial[type].g_iRocketMessage, g_esRocketAbility[type].g_iRocketMessage, 1);
+		g_esRocketCache[tank].g_iRocketMode = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iRocketMode, g_esRocketPlayer[tank].g_iRocketMode, g_esRocketSpecial[type].g_iRocketMode, g_esRocketAbility[type].g_iRocketMode, 1);
+		g_esRocketCache[tank].g_iRocketRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iRocketRangeCooldown, g_esRocketPlayer[tank].g_iRocketRangeCooldown, g_esRocketSpecial[type].g_iRocketRangeCooldown, g_esRocketAbility[type].g_iRocketRangeCooldown, 1);
+		g_esRocketCache[tank].g_iRocketSight = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iRocketSight, g_esRocketPlayer[tank].g_iRocketSight, g_esRocketSpecial[type].g_iRocketSight, g_esRocketAbility[type].g_iRocketSight, 1);
 	}
 	else
 	{

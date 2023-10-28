@@ -88,7 +88,6 @@ enum struct esDrugPlayer
 	int g_iHumanCooldown;
 	int g_iHumanRangeCooldown;
 	int g_iImmunityFlags;
-	int g_iInfectedType;
 	int g_iOwner;
 	int g_iRangeCooldown;
 	int g_iRequiresHumans;
@@ -123,7 +122,7 @@ enum struct esDrugTeammate
 	int g_iRequiresHumans;
 }
 
-esDrugTeammate g_esDrugTeammate[MAXPLAYERS + 1][7];
+esDrugTeammate g_esDrugTeammate[MAXPLAYERS + 1];
 
 enum struct esDrugAbility
 {
@@ -181,7 +180,7 @@ enum struct esDrugSpecial
 	int g_iRequiresHumans;
 }
 
-esDrugSpecial g_esDrugSpecial[MT_MAXTYPES + 1][7];
+esDrugSpecial g_esDrugSpecial[MT_MAXTYPES + 1];
 
 enum struct esDrugCache
 {
@@ -627,30 +626,27 @@ public void MT_OnConfigsLoad(int mode)
 				g_esDrugAbility[iIndex].g_iDrugRangeCooldown = 0;
 				g_esDrugAbility[iIndex].g_iDrugSight = 0;
 
-				for (int iSpecType = 0; iSpecType < (sizeof g_sSpecialNames); iSpecType++)
-				{
-					g_esDrugSpecial[iIndex][iSpecType].g_flCloseAreasOnly = -1.0;
-					g_esDrugSpecial[iIndex][iSpecType].g_iComboAbility = -1;
-					g_esDrugSpecial[iIndex][iSpecType].g_iHumanAbility = -1;
-					g_esDrugSpecial[iIndex][iSpecType].g_iHumanAmmo = -1;
-					g_esDrugSpecial[iIndex][iSpecType].g_iHumanCooldown = -1;
-					g_esDrugSpecial[iIndex][iSpecType].g_iHumanRangeCooldown = -1;
-					g_esDrugSpecial[iIndex][iSpecType].g_flOpenAreasOnly = -1.0;
-					g_esDrugSpecial[iIndex][iSpecType].g_iRequiresHumans = -1;
-					g_esDrugSpecial[iIndex][iSpecType].g_iDrugAbility = -1;
-					g_esDrugSpecial[iIndex][iSpecType].g_iDrugEffect = -1;
-					g_esDrugSpecial[iIndex][iSpecType].g_iDrugMessage = -1;
-					g_esDrugSpecial[iIndex][iSpecType].g_flDrugChance = -1.0;
-					g_esDrugSpecial[iIndex][iSpecType].g_iDrugCooldown = -1;
-					g_esDrugSpecial[iIndex][iSpecType].g_iDrugDuration = -1;
-					g_esDrugSpecial[iIndex][iSpecType].g_iDrugHit = -1;
-					g_esDrugSpecial[iIndex][iSpecType].g_iDrugHitMode = -1;
-					g_esDrugSpecial[iIndex][iSpecType].g_flDrugInterval = -1.0;
-					g_esDrugSpecial[iIndex][iSpecType].g_flDrugRange = -1.0;
-					g_esDrugSpecial[iIndex][iSpecType].g_flDrugRangeChance = -1.0;
-					g_esDrugSpecial[iIndex][iSpecType].g_iDrugRangeCooldown = -1;
-					g_esDrugSpecial[iIndex][iSpecType].g_iDrugSight = -1;
-				}
+				g_esDrugSpecial[iIndex].g_flCloseAreasOnly = -1.0;
+				g_esDrugSpecial[iIndex].g_iComboAbility = -1;
+				g_esDrugSpecial[iIndex].g_iHumanAbility = -1;
+				g_esDrugSpecial[iIndex].g_iHumanAmmo = -1;
+				g_esDrugSpecial[iIndex].g_iHumanCooldown = -1;
+				g_esDrugSpecial[iIndex].g_iHumanRangeCooldown = -1;
+				g_esDrugSpecial[iIndex].g_flOpenAreasOnly = -1.0;
+				g_esDrugSpecial[iIndex].g_iRequiresHumans = -1;
+				g_esDrugSpecial[iIndex].g_iDrugAbility = -1;
+				g_esDrugSpecial[iIndex].g_iDrugEffect = -1;
+				g_esDrugSpecial[iIndex].g_iDrugMessage = -1;
+				g_esDrugSpecial[iIndex].g_flDrugChance = -1.0;
+				g_esDrugSpecial[iIndex].g_iDrugCooldown = -1;
+				g_esDrugSpecial[iIndex].g_iDrugDuration = -1;
+				g_esDrugSpecial[iIndex].g_iDrugHit = -1;
+				g_esDrugSpecial[iIndex].g_iDrugHitMode = -1;
+				g_esDrugSpecial[iIndex].g_flDrugInterval = -1.0;
+				g_esDrugSpecial[iIndex].g_flDrugRange = -1.0;
+				g_esDrugSpecial[iIndex].g_flDrugRangeChance = -1.0;
+				g_esDrugSpecial[iIndex].g_iDrugRangeCooldown = -1;
+				g_esDrugSpecial[iIndex].g_iDrugSight = -1;
 			}
 		}
 		case 3:
@@ -681,66 +677,63 @@ public void MT_OnConfigsLoad(int mode)
 				g_esDrugPlayer[iPlayer].g_iDrugRangeCooldown = -1;
 				g_esDrugPlayer[iPlayer].g_iDrugSight = -1;
 
-				for (int iSpecType = 0; iSpecType < (sizeof g_sSpecialNames); iSpecType++)
-				{
-					g_esDrugTeammate[iPlayer][iSpecType].g_flCloseAreasOnly = -1.0;
-					g_esDrugTeammate[iPlayer][iSpecType].g_iComboAbility = -1;
-					g_esDrugTeammate[iPlayer][iSpecType].g_iHumanAbility = -1;
-					g_esDrugTeammate[iPlayer][iSpecType].g_iHumanAmmo = -1;
-					g_esDrugTeammate[iPlayer][iSpecType].g_iHumanCooldown = -1;
-					g_esDrugTeammate[iPlayer][iSpecType].g_iHumanRangeCooldown = -1;
-					g_esDrugTeammate[iPlayer][iSpecType].g_flOpenAreasOnly = -1.0;
-					g_esDrugTeammate[iPlayer][iSpecType].g_iRequiresHumans = -1;
-					g_esDrugTeammate[iPlayer][iSpecType].g_iDrugAbility = -1;
-					g_esDrugTeammate[iPlayer][iSpecType].g_iDrugEffect = -1;
-					g_esDrugTeammate[iPlayer][iSpecType].g_iDrugMessage = -1;
-					g_esDrugTeammate[iPlayer][iSpecType].g_flDrugChance = -1.0;
-					g_esDrugTeammate[iPlayer][iSpecType].g_iDrugCooldown = -1;
-					g_esDrugTeammate[iPlayer][iSpecType].g_iDrugDuration = -1;
-					g_esDrugTeammate[iPlayer][iSpecType].g_iDrugHit = -1;
-					g_esDrugTeammate[iPlayer][iSpecType].g_iDrugHitMode = -1;
-					g_esDrugTeammate[iPlayer][iSpecType].g_flDrugInterval = -1.0;
-					g_esDrugTeammate[iPlayer][iSpecType].g_flDrugRange = -1.0;
-					g_esDrugTeammate[iPlayer][iSpecType].g_flDrugRangeChance = -1.0;
-					g_esDrugTeammate[iPlayer][iSpecType].g_iDrugRangeCooldown = -1;
-					g_esDrugTeammate[iPlayer][iSpecType].g_iDrugSight = -1;
-				}
+				g_esDrugTeammate[iPlayer].g_flCloseAreasOnly = -1.0;
+				g_esDrugTeammate[iPlayer].g_iComboAbility = -1;
+				g_esDrugTeammate[iPlayer].g_iHumanAbility = -1;
+				g_esDrugTeammate[iPlayer].g_iHumanAmmo = -1;
+				g_esDrugTeammate[iPlayer].g_iHumanCooldown = -1;
+				g_esDrugTeammate[iPlayer].g_iHumanRangeCooldown = -1;
+				g_esDrugTeammate[iPlayer].g_flOpenAreasOnly = -1.0;
+				g_esDrugTeammate[iPlayer].g_iRequiresHumans = -1;
+				g_esDrugTeammate[iPlayer].g_iDrugAbility = -1;
+				g_esDrugTeammate[iPlayer].g_iDrugEffect = -1;
+				g_esDrugTeammate[iPlayer].g_iDrugMessage = -1;
+				g_esDrugTeammate[iPlayer].g_flDrugChance = -1.0;
+				g_esDrugTeammate[iPlayer].g_iDrugCooldown = -1;
+				g_esDrugTeammate[iPlayer].g_iDrugDuration = -1;
+				g_esDrugTeammate[iPlayer].g_iDrugHit = -1;
+				g_esDrugTeammate[iPlayer].g_iDrugHitMode = -1;
+				g_esDrugTeammate[iPlayer].g_flDrugInterval = -1.0;
+				g_esDrugTeammate[iPlayer].g_flDrugRange = -1.0;
+				g_esDrugTeammate[iPlayer].g_flDrugRangeChance = -1.0;
+				g_esDrugTeammate[iPlayer].g_iDrugRangeCooldown = -1;
+				g_esDrugTeammate[iPlayer].g_iDrugSight = -1;
 			}
 		}
 	}
 }
 
 #if defined MT_ABILITIES_MAIN
-void vDrugConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, int specType)
+void vDrugConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #else
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, int specType)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #endif
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esDrugTeammate[admin][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esDrugTeammate[admin][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specType);
-			g_esDrugTeammate[admin][specType].g_iComboAbility = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esDrugTeammate[admin][specType].g_iComboAbility, value, -1, 1, specType);
-			g_esDrugTeammate[admin][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esDrugTeammate[admin][specType].g_iHumanAbility, value, -1, 2, specType);
-			g_esDrugTeammate[admin][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esDrugTeammate[admin][specType].g_iHumanAmmo, value, -1, 99999, specType);
-			g_esDrugTeammate[admin][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esDrugTeammate[admin][specType].g_iHumanCooldown, value, -1, 99999, specType);
-			g_esDrugTeammate[admin][specType].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esDrugTeammate[admin][specType].g_iHumanRangeCooldown, value, -1, 99999, specType);
-			g_esDrugTeammate[admin][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esDrugTeammate[admin][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specType);
-			g_esDrugTeammate[admin][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esDrugTeammate[admin][specType].g_iRequiresHumans, value, -1, 32, specType);
-			g_esDrugTeammate[admin][specType].g_iDrugAbility = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esDrugTeammate[admin][specType].g_iDrugAbility, value, -1, 1, specType);
-			g_esDrugTeammate[admin][specType].g_iDrugEffect = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esDrugTeammate[admin][specType].g_iDrugEffect, value, -1, 7, specType);
-			g_esDrugTeammate[admin][specType].g_iDrugMessage = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esDrugTeammate[admin][specType].g_iDrugMessage, value, -1, 3, specType);
-			g_esDrugTeammate[admin][specType].g_iDrugSight = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esDrugTeammate[admin][specType].g_iDrugSight, value, -1, 2, specType);
-			g_esDrugTeammate[admin][specType].g_flDrugChance = flGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugChance", "Drug Chance", "Drug_Chance", "chance", g_esDrugTeammate[admin][specType].g_flDrugChance, value, -1.0, 100.0, specType);
-			g_esDrugTeammate[admin][specType].g_iDrugCooldown = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugCooldown", "Drug Cooldown", "Drug_Cooldown", "cooldown", g_esDrugTeammate[admin][specType].g_iDrugCooldown, value, -1, 99999, specType);
-			g_esDrugTeammate[admin][specType].g_iDrugDuration = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugDuration", "Drug Duration", "Drug_Duration", "duration", g_esDrugTeammate[admin][specType].g_iDrugDuration, value, -1, 99999, specType);
-			g_esDrugTeammate[admin][specType].g_iDrugHit = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugHit", "Drug Hit", "Drug_Hit", "hit", g_esDrugTeammate[admin][specType].g_iDrugHit, value, -1, 1, specType);
-			g_esDrugTeammate[admin][specType].g_iDrugHitMode = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugHitMode", "Drug Hit Mode", "Drug_Hit_Mode", "hitmode", g_esDrugTeammate[admin][specType].g_iDrugHitMode, value, -1, 2, specType);
-			g_esDrugTeammate[admin][specType].g_flDrugInterval = flGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugInterval", "Drug Interval", "Drug_Interval", "interval", g_esDrugTeammate[admin][specType].g_flDrugInterval, value, -1.0, 99999.0, specType);
-			g_esDrugTeammate[admin][specType].g_flDrugRange = flGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugRange", "Drug Range", "Drug_Range", "range", g_esDrugTeammate[admin][specType].g_flDrugRange, value, -1.0, 99999.0, specType);
-			g_esDrugTeammate[admin][specType].g_flDrugRangeChance = flGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugRangeChance", "Drug Range Chance", "Drug_Range_Chance", "rangechance", g_esDrugTeammate[admin][specType].g_flDrugRangeChance, value, -1.0, 100.0, specType);
-			g_esDrugTeammate[admin][specType].g_iDrugRangeCooldown = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugRangeCooldown", "Drug Range Cooldown", "Drug_Range_Cooldown", "rangecooldown", g_esDrugTeammate[admin][specType].g_iDrugRangeCooldown, value, -1, 99999, specType);
+			g_esDrugTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esDrugTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esDrugTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esDrugTeammate[admin].g_iComboAbility, value, -1, 1);
+			g_esDrugTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esDrugTeammate[admin].g_iHumanAbility, value, -1, 2);
+			g_esDrugTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esDrugTeammate[admin].g_iHumanAmmo, value, -1, 99999);
+			g_esDrugTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esDrugTeammate[admin].g_iHumanCooldown, value, -1, 99999);
+			g_esDrugTeammate[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esDrugTeammate[admin].g_iHumanRangeCooldown, value, -1, 99999);
+			g_esDrugTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esDrugTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esDrugTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esDrugTeammate[admin].g_iRequiresHumans, value, -1, 32);
+			g_esDrugTeammate[admin].g_iDrugAbility = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esDrugTeammate[admin].g_iDrugAbility, value, -1, 1);
+			g_esDrugTeammate[admin].g_iDrugEffect = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esDrugTeammate[admin].g_iDrugEffect, value, -1, 7);
+			g_esDrugTeammate[admin].g_iDrugMessage = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esDrugTeammate[admin].g_iDrugMessage, value, -1, 3);
+			g_esDrugTeammate[admin].g_iDrugSight = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esDrugTeammate[admin].g_iDrugSight, value, -1, 2);
+			g_esDrugTeammate[admin].g_flDrugChance = flGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugChance", "Drug Chance", "Drug_Chance", "chance", g_esDrugTeammate[admin].g_flDrugChance, value, -1.0, 100.0);
+			g_esDrugTeammate[admin].g_iDrugCooldown = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugCooldown", "Drug Cooldown", "Drug_Cooldown", "cooldown", g_esDrugTeammate[admin].g_iDrugCooldown, value, -1, 99999);
+			g_esDrugTeammate[admin].g_iDrugDuration = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugDuration", "Drug Duration", "Drug_Duration", "duration", g_esDrugTeammate[admin].g_iDrugDuration, value, -1, 99999);
+			g_esDrugTeammate[admin].g_iDrugHit = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugHit", "Drug Hit", "Drug_Hit", "hit", g_esDrugTeammate[admin].g_iDrugHit, value, -1, 1);
+			g_esDrugTeammate[admin].g_iDrugHitMode = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugHitMode", "Drug Hit Mode", "Drug_Hit_Mode", "hitmode", g_esDrugTeammate[admin].g_iDrugHitMode, value, -1, 2);
+			g_esDrugTeammate[admin].g_flDrugInterval = flGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugInterval", "Drug Interval", "Drug_Interval", "interval", g_esDrugTeammate[admin].g_flDrugInterval, value, -1.0, 99999.0);
+			g_esDrugTeammate[admin].g_flDrugRange = flGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugRange", "Drug Range", "Drug_Range", "range", g_esDrugTeammate[admin].g_flDrugRange, value, -1.0, 99999.0);
+			g_esDrugTeammate[admin].g_flDrugRangeChance = flGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugRangeChance", "Drug Range Chance", "Drug_Range_Chance", "rangechance", g_esDrugTeammate[admin].g_flDrugRangeChance, value, -1.0, 100.0);
+			g_esDrugTeammate[admin].g_iDrugRangeCooldown = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugRangeCooldown", "Drug Range Cooldown", "Drug_Range_Cooldown", "rangecooldown", g_esDrugTeammate[admin].g_iDrugRangeCooldown, value, -1, 99999);
 		}
 		else
 		{
@@ -774,27 +767,27 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esDrugSpecial[type][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esDrugSpecial[type][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specType);
-			g_esDrugSpecial[type][specType].g_iComboAbility = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esDrugSpecial[type][specType].g_iComboAbility, value, -1, 1, specType);
-			g_esDrugSpecial[type][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esDrugSpecial[type][specType].g_iHumanAbility, value, -1, 2, specType);
-			g_esDrugSpecial[type][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esDrugSpecial[type][specType].g_iHumanAmmo, value, -1, 99999, specType);
-			g_esDrugSpecial[type][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esDrugSpecial[type][specType].g_iHumanCooldown, value, -1, 99999, specType);
-			g_esDrugSpecial[type][specType].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esDrugSpecial[type][specType].g_iHumanRangeCooldown, value, -1, 99999, specType);
-			g_esDrugSpecial[type][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esDrugSpecial[type][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specType);
-			g_esDrugSpecial[type][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esDrugSpecial[type][specType].g_iRequiresHumans, value, -1, 32, specType);
-			g_esDrugSpecial[type][specType].g_iDrugAbility = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esDrugSpecial[type][specType].g_iDrugAbility, value, -1, 1, specType);
-			g_esDrugSpecial[type][specType].g_iDrugEffect = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esDrugSpecial[type][specType].g_iDrugEffect, value, -1, 7, specType);
-			g_esDrugSpecial[type][specType].g_iDrugMessage = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esDrugSpecial[type][specType].g_iDrugMessage, value, -1, 3, specType);
-			g_esDrugSpecial[type][specType].g_iDrugSight = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esDrugSpecial[type][specType].g_iDrugSight, value, -1, 2, specType);
-			g_esDrugSpecial[type][specType].g_flDrugChance = flGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugChance", "Drug Chance", "Drug_Chance", "chance", g_esDrugSpecial[type][specType].g_flDrugChance, value, -1.0, 100.0, specType);
-			g_esDrugSpecial[type][specType].g_iDrugCooldown = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugCooldown", "Drug Cooldown", "Drug_Cooldown", "cooldown", g_esDrugSpecial[type][specType].g_iDrugCooldown, value, -1, 99999, specType);
-			g_esDrugSpecial[type][specType].g_iDrugDuration = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugDuration", "Drug Duration", "Drug_Duration", "duration", g_esDrugSpecial[type][specType].g_iDrugDuration, value, -1, 99999, specType);
-			g_esDrugSpecial[type][specType].g_iDrugHit = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugHit", "Drug Hit", "Drug_Hit", "hit", g_esDrugSpecial[type][specType].g_iDrugHit, value, -1, 1, specType);
-			g_esDrugSpecial[type][specType].g_iDrugHitMode = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugHitMode", "Drug Hit Mode", "Drug_Hit_Mode", "hitmode", g_esDrugSpecial[type][specType].g_iDrugHitMode, value, -1, 2, specType);
-			g_esDrugSpecial[type][specType].g_flDrugInterval = flGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugInterval", "Drug Interval", "Drug_Interval", "interval", g_esDrugSpecial[type][specType].g_flDrugInterval, value, -1.0, 99999.0, specType);
-			g_esDrugSpecial[type][specType].g_flDrugRange = flGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugRange", "Drug Range", "Drug_Range", "range", g_esDrugSpecial[type][specType].g_flDrugRange, value, -1.0, 99999.0, specType);
-			g_esDrugSpecial[type][specType].g_flDrugRangeChance = flGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugRangeChance", "Drug Range Chance", "Drug_Range_Chance", "rangechance", g_esDrugSpecial[type][specType].g_flDrugRangeChance, value, -1.0, 100.0, specType);
-			g_esDrugSpecial[type][specType].g_iDrugRangeCooldown = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugRangeCooldown", "Drug Range Cooldown", "Drug_Range_Cooldown", "rangecooldown", g_esDrugSpecial[type][specType].g_iDrugRangeCooldown, value, -1, 99999, specType);
+			g_esDrugSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esDrugSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esDrugSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esDrugSpecial[type].g_iComboAbility, value, -1, 1);
+			g_esDrugSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esDrugSpecial[type].g_iHumanAbility, value, -1, 2);
+			g_esDrugSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esDrugSpecial[type].g_iHumanAmmo, value, -1, 99999);
+			g_esDrugSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esDrugSpecial[type].g_iHumanCooldown, value, -1, 99999);
+			g_esDrugSpecial[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esDrugSpecial[type].g_iHumanRangeCooldown, value, -1, 99999);
+			g_esDrugSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esDrugSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esDrugSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esDrugSpecial[type].g_iRequiresHumans, value, -1, 32);
+			g_esDrugSpecial[type].g_iDrugAbility = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esDrugSpecial[type].g_iDrugAbility, value, -1, 1);
+			g_esDrugSpecial[type].g_iDrugEffect = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esDrugSpecial[type].g_iDrugEffect, value, -1, 7);
+			g_esDrugSpecial[type].g_iDrugMessage = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esDrugSpecial[type].g_iDrugMessage, value, -1, 3);
+			g_esDrugSpecial[type].g_iDrugSight = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esDrugSpecial[type].g_iDrugSight, value, -1, 2);
+			g_esDrugSpecial[type].g_flDrugChance = flGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugChance", "Drug Chance", "Drug_Chance", "chance", g_esDrugSpecial[type].g_flDrugChance, value, -1.0, 100.0);
+			g_esDrugSpecial[type].g_iDrugCooldown = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugCooldown", "Drug Cooldown", "Drug_Cooldown", "cooldown", g_esDrugSpecial[type].g_iDrugCooldown, value, -1, 99999);
+			g_esDrugSpecial[type].g_iDrugDuration = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugDuration", "Drug Duration", "Drug_Duration", "duration", g_esDrugSpecial[type].g_iDrugDuration, value, -1, 99999);
+			g_esDrugSpecial[type].g_iDrugHit = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugHit", "Drug Hit", "Drug_Hit", "hit", g_esDrugSpecial[type].g_iDrugHit, value, -1, 1);
+			g_esDrugSpecial[type].g_iDrugHitMode = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugHitMode", "Drug Hit Mode", "Drug_Hit_Mode", "hitmode", g_esDrugSpecial[type].g_iDrugHitMode, value, -1, 2);
+			g_esDrugSpecial[type].g_flDrugInterval = flGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugInterval", "Drug Interval", "Drug_Interval", "interval", g_esDrugSpecial[type].g_flDrugInterval, value, -1.0, 99999.0);
+			g_esDrugSpecial[type].g_flDrugRange = flGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugRange", "Drug Range", "Drug_Range", "range", g_esDrugSpecial[type].g_flDrugRange, value, -1.0, 99999.0);
+			g_esDrugSpecial[type].g_flDrugRangeChance = flGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugRangeChance", "Drug Range Chance", "Drug_Range_Chance", "rangechance", g_esDrugSpecial[type].g_flDrugRangeChance, value, -1.0, 100.0);
+			g_esDrugSpecial[type].g_iDrugRangeCooldown = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugRangeCooldown", "Drug Range Cooldown", "Drug_Range_Cooldown", "rangecooldown", g_esDrugSpecial[type].g_iDrugRangeCooldown, value, -1, 99999);
 		}
 		else
 		{
@@ -832,33 +825,31 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
-	g_esDrugPlayer[tank].g_iInfectedType = iGetInfectedType(tank);
 	g_esDrugPlayer[tank].g_iTankType = apply ? type : 0;
-	int iSpecType = g_esDrugPlayer[tank].g_iInfectedType;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esDrugCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank][0].g_flCloseAreasOnly, g_esDrugTeammate[tank][iSpecType].g_flCloseAreasOnly, g_esDrugPlayer[tank].g_flCloseAreasOnly, g_esDrugSpecial[type][0].g_flCloseAreasOnly, g_esDrugSpecial[type][iSpecType].g_flCloseAreasOnly, g_esDrugAbility[type].g_flCloseAreasOnly, 1);
-		g_esDrugCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank][0].g_iComboAbility, g_esDrugTeammate[tank][iSpecType].g_iComboAbility, g_esDrugPlayer[tank].g_iComboAbility, g_esDrugSpecial[type][0].g_iComboAbility, g_esDrugSpecial[type][iSpecType].g_iComboAbility, g_esDrugAbility[type].g_iComboAbility, 1);
-		g_esDrugCache[tank].g_flDrugChance = flGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank][0].g_flDrugChance, g_esDrugTeammate[tank][iSpecType].g_flDrugChance, g_esDrugPlayer[tank].g_flDrugChance, g_esDrugSpecial[type][0].g_flDrugChance, g_esDrugSpecial[type][iSpecType].g_flDrugChance, g_esDrugAbility[type].g_flDrugChance, 1);
-		g_esDrugCache[tank].g_flDrugInterval = flGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank][0].g_flDrugInterval, g_esDrugTeammate[tank][iSpecType].g_flDrugInterval, g_esDrugPlayer[tank].g_flDrugInterval, g_esDrugSpecial[type][0].g_flDrugInterval, g_esDrugSpecial[type][iSpecType].g_flDrugInterval, g_esDrugAbility[type].g_flDrugInterval, 1);
-		g_esDrugCache[tank].g_flDrugRange = flGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank][0].g_flDrugRange, g_esDrugTeammate[tank][iSpecType].g_flDrugRange, g_esDrugPlayer[tank].g_flDrugRange, g_esDrugSpecial[type][0].g_flDrugRange, g_esDrugSpecial[type][iSpecType].g_flDrugRange, g_esDrugAbility[type].g_flDrugRange, 1);
-		g_esDrugCache[tank].g_flDrugRangeChance = flGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank][0].g_flDrugRangeChance, g_esDrugTeammate[tank][iSpecType].g_flDrugRangeChance, g_esDrugPlayer[tank].g_flDrugRangeChance, g_esDrugSpecial[type][0].g_flDrugRangeChance, g_esDrugSpecial[type][iSpecType].g_flDrugRangeChance, g_esDrugAbility[type].g_flDrugRangeChance, 1);
-		g_esDrugCache[tank].g_iDrugAbility = iGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank][0].g_iDrugAbility, g_esDrugTeammate[tank][iSpecType].g_iDrugAbility, g_esDrugPlayer[tank].g_iDrugAbility, g_esDrugSpecial[type][0].g_iDrugAbility, g_esDrugSpecial[type][iSpecType].g_iDrugAbility, g_esDrugAbility[type].g_iDrugAbility, 1);
-		g_esDrugCache[tank].g_iDrugCooldown = iGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank][0].g_iDrugCooldown, g_esDrugTeammate[tank][iSpecType].g_iDrugCooldown, g_esDrugPlayer[tank].g_iDrugCooldown, g_esDrugSpecial[type][0].g_iDrugCooldown, g_esDrugSpecial[type][iSpecType].g_iDrugCooldown, g_esDrugAbility[type].g_iDrugCooldown, 1);
-		g_esDrugCache[tank].g_iDrugDuration = iGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank][0].g_iDrugDuration, g_esDrugTeammate[tank][iSpecType].g_iDrugDuration, g_esDrugPlayer[tank].g_iDrugDuration, g_esDrugSpecial[type][0].g_iDrugDuration, g_esDrugSpecial[type][iSpecType].g_iDrugDuration, g_esDrugAbility[type].g_iDrugDuration, 1);
-		g_esDrugCache[tank].g_iDrugEffect = iGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank][0].g_iDrugEffect, g_esDrugTeammate[tank][iSpecType].g_iDrugEffect, g_esDrugPlayer[tank].g_iDrugEffect, g_esDrugSpecial[type][0].g_iDrugEffect, g_esDrugSpecial[type][iSpecType].g_iDrugEffect, g_esDrugAbility[type].g_iDrugEffect, 1);
-		g_esDrugCache[tank].g_iDrugHit = iGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank][0].g_iDrugHit, g_esDrugTeammate[tank][iSpecType].g_iDrugHit, g_esDrugPlayer[tank].g_iDrugHit, g_esDrugSpecial[type][0].g_iDrugHit, g_esDrugSpecial[type][iSpecType].g_iDrugHit, g_esDrugAbility[type].g_iDrugHit, 1);
-		g_esDrugCache[tank].g_iDrugHitMode = iGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank][0].g_iDrugHitMode, g_esDrugTeammate[tank][iSpecType].g_iDrugHitMode, g_esDrugPlayer[tank].g_iDrugHitMode, g_esDrugSpecial[type][0].g_iDrugHitMode, g_esDrugSpecial[type][iSpecType].g_iDrugHitMode, g_esDrugAbility[type].g_iDrugHitMode, 1);
-		g_esDrugCache[tank].g_iDrugMessage = iGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank][0].g_iDrugMessage, g_esDrugTeammate[tank][iSpecType].g_iDrugMessage, g_esDrugPlayer[tank].g_iDrugMessage, g_esDrugSpecial[type][0].g_iDrugMessage, g_esDrugSpecial[type][iSpecType].g_iDrugMessage, g_esDrugAbility[type].g_iDrugMessage, 1);
-		g_esDrugCache[tank].g_iDrugRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank][0].g_iDrugRangeCooldown, g_esDrugTeammate[tank][iSpecType].g_iDrugRangeCooldown, g_esDrugPlayer[tank].g_iDrugRangeCooldown, g_esDrugSpecial[type][0].g_iDrugRangeCooldown, g_esDrugSpecial[type][iSpecType].g_iDrugRangeCooldown, g_esDrugAbility[type].g_iDrugRangeCooldown, 1);
-		g_esDrugCache[tank].g_iDrugSight = iGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank][0].g_iDrugSight, g_esDrugTeammate[tank][iSpecType].g_iDrugSight, g_esDrugPlayer[tank].g_iDrugSight, g_esDrugSpecial[type][0].g_iDrugSight, g_esDrugSpecial[type][iSpecType].g_iDrugSight, g_esDrugAbility[type].g_iDrugSight, 1);
-		g_esDrugCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank][0].g_iHumanAbility, g_esDrugTeammate[tank][iSpecType].g_iHumanAbility, g_esDrugPlayer[tank].g_iHumanAbility, g_esDrugSpecial[type][0].g_iHumanAbility, g_esDrugSpecial[type][iSpecType].g_iHumanAbility, g_esDrugAbility[type].g_iHumanAbility, 1);
-		g_esDrugCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank][0].g_iHumanAmmo, g_esDrugTeammate[tank][iSpecType].g_iHumanAmmo, g_esDrugPlayer[tank].g_iHumanAmmo, g_esDrugSpecial[type][0].g_iHumanAmmo, g_esDrugSpecial[type][iSpecType].g_iHumanAmmo, g_esDrugAbility[type].g_iHumanAmmo, 1);
-		g_esDrugCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank][0].g_iHumanCooldown, g_esDrugTeammate[tank][iSpecType].g_iHumanCooldown, g_esDrugPlayer[tank].g_iHumanCooldown, g_esDrugSpecial[type][0].g_iHumanCooldown, g_esDrugSpecial[type][iSpecType].g_iHumanCooldown, g_esDrugAbility[type].g_iHumanCooldown, 1);
-		g_esDrugCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank][0].g_iHumanRangeCooldown, g_esDrugTeammate[tank][iSpecType].g_iHumanRangeCooldown, g_esDrugPlayer[tank].g_iHumanRangeCooldown, g_esDrugSpecial[type][0].g_iHumanRangeCooldown, g_esDrugSpecial[type][iSpecType].g_iHumanRangeCooldown, g_esDrugAbility[type].g_iHumanRangeCooldown, 1);
-		g_esDrugCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank][0].g_flOpenAreasOnly, g_esDrugTeammate[tank][iSpecType].g_flOpenAreasOnly, g_esDrugPlayer[tank].g_flOpenAreasOnly, g_esDrugSpecial[type][0].g_flOpenAreasOnly, g_esDrugSpecial[type][iSpecType].g_flOpenAreasOnly, g_esDrugAbility[type].g_flOpenAreasOnly, 1);
-		g_esDrugCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank][0].g_iRequiresHumans, g_esDrugTeammate[tank][iSpecType].g_iRequiresHumans, g_esDrugPlayer[tank].g_iRequiresHumans, g_esDrugSpecial[type][0].g_iRequiresHumans, g_esDrugSpecial[type][iSpecType].g_iRequiresHumans, g_esDrugAbility[type].g_iRequiresHumans, 1);
+		g_esDrugCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank].g_flCloseAreasOnly, g_esDrugPlayer[tank].g_flCloseAreasOnly, g_esDrugSpecial[type].g_flCloseAreasOnly, g_esDrugAbility[type].g_flCloseAreasOnly, 1);
+		g_esDrugCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank].g_iComboAbility, g_esDrugPlayer[tank].g_iComboAbility, g_esDrugSpecial[type].g_iComboAbility, g_esDrugAbility[type].g_iComboAbility, 1);
+		g_esDrugCache[tank].g_flDrugChance = flGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank].g_flDrugChance, g_esDrugPlayer[tank].g_flDrugChance, g_esDrugSpecial[type].g_flDrugChance, g_esDrugAbility[type].g_flDrugChance, 1);
+		g_esDrugCache[tank].g_flDrugInterval = flGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank].g_flDrugInterval, g_esDrugPlayer[tank].g_flDrugInterval, g_esDrugSpecial[type].g_flDrugInterval, g_esDrugAbility[type].g_flDrugInterval, 1);
+		g_esDrugCache[tank].g_flDrugRange = flGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank].g_flDrugRange, g_esDrugPlayer[tank].g_flDrugRange, g_esDrugSpecial[type].g_flDrugRange, g_esDrugAbility[type].g_flDrugRange, 1);
+		g_esDrugCache[tank].g_flDrugRangeChance = flGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank].g_flDrugRangeChance, g_esDrugPlayer[tank].g_flDrugRangeChance, g_esDrugSpecial[type].g_flDrugRangeChance, g_esDrugAbility[type].g_flDrugRangeChance, 1);
+		g_esDrugCache[tank].g_iDrugAbility = iGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank].g_iDrugAbility, g_esDrugPlayer[tank].g_iDrugAbility, g_esDrugSpecial[type].g_iDrugAbility, g_esDrugAbility[type].g_iDrugAbility, 1);
+		g_esDrugCache[tank].g_iDrugCooldown = iGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank].g_iDrugCooldown, g_esDrugPlayer[tank].g_iDrugCooldown, g_esDrugSpecial[type].g_iDrugCooldown, g_esDrugAbility[type].g_iDrugCooldown, 1);
+		g_esDrugCache[tank].g_iDrugDuration = iGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank].g_iDrugDuration, g_esDrugPlayer[tank].g_iDrugDuration, g_esDrugSpecial[type].g_iDrugDuration, g_esDrugAbility[type].g_iDrugDuration, 1);
+		g_esDrugCache[tank].g_iDrugEffect = iGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank].g_iDrugEffect, g_esDrugPlayer[tank].g_iDrugEffect, g_esDrugSpecial[type].g_iDrugEffect, g_esDrugAbility[type].g_iDrugEffect, 1);
+		g_esDrugCache[tank].g_iDrugHit = iGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank].g_iDrugHit, g_esDrugPlayer[tank].g_iDrugHit, g_esDrugSpecial[type].g_iDrugHit, g_esDrugAbility[type].g_iDrugHit, 1);
+		g_esDrugCache[tank].g_iDrugHitMode = iGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank].g_iDrugHitMode, g_esDrugPlayer[tank].g_iDrugHitMode, g_esDrugSpecial[type].g_iDrugHitMode, g_esDrugAbility[type].g_iDrugHitMode, 1);
+		g_esDrugCache[tank].g_iDrugMessage = iGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank].g_iDrugMessage, g_esDrugPlayer[tank].g_iDrugMessage, g_esDrugSpecial[type].g_iDrugMessage, g_esDrugAbility[type].g_iDrugMessage, 1);
+		g_esDrugCache[tank].g_iDrugRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank].g_iDrugRangeCooldown, g_esDrugPlayer[tank].g_iDrugRangeCooldown, g_esDrugSpecial[type].g_iDrugRangeCooldown, g_esDrugAbility[type].g_iDrugRangeCooldown, 1);
+		g_esDrugCache[tank].g_iDrugSight = iGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank].g_iDrugSight, g_esDrugPlayer[tank].g_iDrugSight, g_esDrugSpecial[type].g_iDrugSight, g_esDrugAbility[type].g_iDrugSight, 1);
+		g_esDrugCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank].g_iHumanAbility, g_esDrugPlayer[tank].g_iHumanAbility, g_esDrugSpecial[type].g_iHumanAbility, g_esDrugAbility[type].g_iHumanAbility, 1);
+		g_esDrugCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank].g_iHumanAmmo, g_esDrugPlayer[tank].g_iHumanAmmo, g_esDrugSpecial[type].g_iHumanAmmo, g_esDrugAbility[type].g_iHumanAmmo, 1);
+		g_esDrugCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank].g_iHumanCooldown, g_esDrugPlayer[tank].g_iHumanCooldown, g_esDrugSpecial[type].g_iHumanCooldown, g_esDrugAbility[type].g_iHumanCooldown, 1);
+		g_esDrugCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank].g_iHumanRangeCooldown, g_esDrugPlayer[tank].g_iHumanRangeCooldown, g_esDrugSpecial[type].g_iHumanRangeCooldown, g_esDrugAbility[type].g_iHumanRangeCooldown, 1);
+		g_esDrugCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank].g_flOpenAreasOnly, g_esDrugPlayer[tank].g_flOpenAreasOnly, g_esDrugSpecial[type].g_flOpenAreasOnly, g_esDrugAbility[type].g_flOpenAreasOnly, 1);
+		g_esDrugCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank].g_iRequiresHumans, g_esDrugPlayer[tank].g_iRequiresHumans, g_esDrugSpecial[type].g_iRequiresHumans, g_esDrugAbility[type].g_iRequiresHumans, 1);
 	}
 	else
 	{

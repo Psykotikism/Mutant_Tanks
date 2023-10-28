@@ -83,7 +83,6 @@ enum struct esNecroPlayer
 	int g_iHumanCooldown;
 	int g_iHumanDuration;
 	int g_iHumanMode;
-	int g_iInfectedType;
 	int g_iNecroAbility;
 	int g_iNecroCooldown;
 	int g_iNecroDuration;
@@ -116,7 +115,7 @@ enum struct esNecroTeammate
 	int g_iRequiresHumans;
 }
 
-esNecroTeammate g_esNecroTeammate[MAXPLAYERS + 1][7];
+esNecroTeammate g_esNecroTeammate[MAXPLAYERS + 1];
 
 enum struct esNecroAbility
 {
@@ -164,7 +163,7 @@ enum struct esNecroSpecial
 	int g_iRequiresHumans;
 }
 
-esNecroSpecial g_esNecroSpecial[MT_MAXTYPES + 1][7];
+esNecroSpecial g_esNecroSpecial[MT_MAXTYPES + 1];
 
 enum struct esNecroCache
 {
@@ -514,25 +513,22 @@ public void MT_OnConfigsLoad(int mode)
 				g_esNecroAbility[iIndex].g_flNecroRange = 500.0;
 				g_esNecroAbility[iIndex].g_iNecroSight = 0;
 
-				for (int iSpecType = 0; iSpecType < (sizeof g_sSpecialNames); iSpecType++)
-				{
-					g_esNecroSpecial[iIndex][iSpecType].g_flCloseAreasOnly = -1.0;
-					g_esNecroSpecial[iIndex][iSpecType].g_iComboAbility = -1;
-					g_esNecroSpecial[iIndex][iSpecType].g_iHumanAbility = -1;
-					g_esNecroSpecial[iIndex][iSpecType].g_iHumanAmmo = -1;
-					g_esNecroSpecial[iIndex][iSpecType].g_iHumanCooldown = -1;
-					g_esNecroSpecial[iIndex][iSpecType].g_iHumanDuration = -1;
-					g_esNecroSpecial[iIndex][iSpecType].g_iHumanMode = -1;
-					g_esNecroSpecial[iIndex][iSpecType].g_flOpenAreasOnly = -1.0;
-					g_esNecroSpecial[iIndex][iSpecType].g_iRequiresHumans = -1;
-					g_esNecroSpecial[iIndex][iSpecType].g_iNecroAbility = -1;
-					g_esNecroSpecial[iIndex][iSpecType].g_iNecroMessage = -1;
-					g_esNecroSpecial[iIndex][iSpecType].g_flNecroChance = -1.0;
-					g_esNecroSpecial[iIndex][iSpecType].g_iNecroCooldown = -1;
-					g_esNecroSpecial[iIndex][iSpecType].g_iNecroDuration = -1;
-					g_esNecroSpecial[iIndex][iSpecType].g_flNecroRange = -1.0;
-					g_esNecroSpecial[iIndex][iSpecType].g_iNecroSight = -1;
-				}
+				g_esNecroSpecial[iIndex].g_flCloseAreasOnly = -1.0;
+				g_esNecroSpecial[iIndex].g_iComboAbility = -1;
+				g_esNecroSpecial[iIndex].g_iHumanAbility = -1;
+				g_esNecroSpecial[iIndex].g_iHumanAmmo = -1;
+				g_esNecroSpecial[iIndex].g_iHumanCooldown = -1;
+				g_esNecroSpecial[iIndex].g_iHumanDuration = -1;
+				g_esNecroSpecial[iIndex].g_iHumanMode = -1;
+				g_esNecroSpecial[iIndex].g_flOpenAreasOnly = -1.0;
+				g_esNecroSpecial[iIndex].g_iRequiresHumans = -1;
+				g_esNecroSpecial[iIndex].g_iNecroAbility = -1;
+				g_esNecroSpecial[iIndex].g_iNecroMessage = -1;
+				g_esNecroSpecial[iIndex].g_flNecroChance = -1.0;
+				g_esNecroSpecial[iIndex].g_iNecroCooldown = -1;
+				g_esNecroSpecial[iIndex].g_iNecroDuration = -1;
+				g_esNecroSpecial[iIndex].g_flNecroRange = -1.0;
+				g_esNecroSpecial[iIndex].g_iNecroSight = -1;
 			}
 		}
 		case 3:
@@ -557,56 +553,53 @@ public void MT_OnConfigsLoad(int mode)
 				g_esNecroPlayer[iPlayer].g_flNecroRange = -1.0;
 				g_esNecroPlayer[iPlayer].g_iNecroSight = -1;
 
-				for (int iSpecType = 0; iSpecType < (sizeof g_sSpecialNames); iSpecType++)
-				{
-					g_esNecroTeammate[iPlayer][iSpecType].g_flCloseAreasOnly = -1.0;
-					g_esNecroTeammate[iPlayer][iSpecType].g_iComboAbility = -1;
-					g_esNecroTeammate[iPlayer][iSpecType].g_iHumanAbility = -1;
-					g_esNecroTeammate[iPlayer][iSpecType].g_iHumanAmmo = -1;
-					g_esNecroTeammate[iPlayer][iSpecType].g_iHumanCooldown = -1;
-					g_esNecroTeammate[iPlayer][iSpecType].g_iHumanDuration = -1;
-					g_esNecroTeammate[iPlayer][iSpecType].g_iHumanMode = -1;
-					g_esNecroTeammate[iPlayer][iSpecType].g_flOpenAreasOnly = -1.0;
-					g_esNecroTeammate[iPlayer][iSpecType].g_iRequiresHumans = -1;
-					g_esNecroTeammate[iPlayer][iSpecType].g_iNecroAbility = -1;
-					g_esNecroTeammate[iPlayer][iSpecType].g_iNecroMessage = -1;
-					g_esNecroTeammate[iPlayer][iSpecType].g_flNecroChance = -1.0;
-					g_esNecroTeammate[iPlayer][iSpecType].g_iNecroCooldown = -1;
-					g_esNecroTeammate[iPlayer][iSpecType].g_iNecroDuration = -1;
-					g_esNecroTeammate[iPlayer][iSpecType].g_flNecroRange = -1.0;
-					g_esNecroTeammate[iPlayer][iSpecType].g_iNecroSight = -1;
-				}
+				g_esNecroTeammate[iPlayer].g_flCloseAreasOnly = -1.0;
+				g_esNecroTeammate[iPlayer].g_iComboAbility = -1;
+				g_esNecroTeammate[iPlayer].g_iHumanAbility = -1;
+				g_esNecroTeammate[iPlayer].g_iHumanAmmo = -1;
+				g_esNecroTeammate[iPlayer].g_iHumanCooldown = -1;
+				g_esNecroTeammate[iPlayer].g_iHumanDuration = -1;
+				g_esNecroTeammate[iPlayer].g_iHumanMode = -1;
+				g_esNecroTeammate[iPlayer].g_flOpenAreasOnly = -1.0;
+				g_esNecroTeammate[iPlayer].g_iRequiresHumans = -1;
+				g_esNecroTeammate[iPlayer].g_iNecroAbility = -1;
+				g_esNecroTeammate[iPlayer].g_iNecroMessage = -1;
+				g_esNecroTeammate[iPlayer].g_flNecroChance = -1.0;
+				g_esNecroTeammate[iPlayer].g_iNecroCooldown = -1;
+				g_esNecroTeammate[iPlayer].g_iNecroDuration = -1;
+				g_esNecroTeammate[iPlayer].g_flNecroRange = -1.0;
+				g_esNecroTeammate[iPlayer].g_iNecroSight = -1;
 			}
 		}
 	}
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vNecroConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, int specType)
+void vNecroConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #else
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, int specType)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #endif
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esNecroTeammate[admin][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esNecroTeammate[admin][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specType);
-			g_esNecroTeammate[admin][specType].g_iComboAbility = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esNecroTeammate[admin][specType].g_iComboAbility, value, -1, 1, specType);
-			g_esNecroTeammate[admin][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esNecroTeammate[admin][specType].g_iHumanAbility, value, -1, 2, specType);
-			g_esNecroTeammate[admin][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esNecroTeammate[admin][specType].g_iHumanAmmo, value, -1, 99999, specType);
-			g_esNecroTeammate[admin][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esNecroTeammate[admin][specType].g_iHumanCooldown, value, -1, 99999, specType);
-			g_esNecroTeammate[admin][specType].g_iHumanDuration = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esNecroTeammate[admin][specType].g_iHumanDuration, value, -1, 99999, specType);
-			g_esNecroTeammate[admin][specType].g_iHumanMode = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esNecroTeammate[admin][specType].g_iHumanMode, value, -1, 1, specType);
-			g_esNecroTeammate[admin][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esNecroTeammate[admin][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specType);
-			g_esNecroTeammate[admin][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esNecroTeammate[admin][specType].g_iRequiresHumans, value, -1, 32, specType);
-			g_esNecroTeammate[admin][specType].g_iNecroAbility = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esNecroTeammate[admin][specType].g_iNecroAbility, value, -1, 1, specType);
-			g_esNecroTeammate[admin][specType].g_iNecroMessage = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esNecroTeammate[admin][specType].g_iNecroMessage, value, -1, 1, specType);
-			g_esNecroTeammate[admin][specType].g_iNecroSight = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esNecroTeammate[admin][specType].g_iNecroSight, value, -1, 2, specType);
-			g_esNecroTeammate[admin][specType].g_flNecroChance = flGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroChance", "Necro Chance", "Necro_Chance", "chance", g_esNecroTeammate[admin][specType].g_flNecroChance, value, -1.0, 100.0, specType);
-			g_esNecroTeammate[admin][specType].g_iNecroCooldown = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroCooldown", "Necro Cooldown", "Necro_Cooldown", "cooldown", g_esNecroTeammate[admin][specType].g_iNecroCooldown, value, -1, 99999, specType);
-			g_esNecroTeammate[admin][specType].g_iNecroDuration = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroDuration", "Necro Duration", "Necro_Duration", "duration", g_esNecroTeammate[admin][specType].g_iNecroDuration, value, -1, 99999, specType);
-			g_esNecroTeammate[admin][specType].g_flNecroRange = flGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroRange", "Necro Range", "Necro_Range", "range", g_esNecroTeammate[admin][specType].g_flNecroRange, value, -1.0, 99999.0, specType);
+			g_esNecroTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esNecroTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esNecroTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esNecroTeammate[admin].g_iComboAbility, value, -1, 1);
+			g_esNecroTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esNecroTeammate[admin].g_iHumanAbility, value, -1, 2);
+			g_esNecroTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esNecroTeammate[admin].g_iHumanAmmo, value, -1, 99999);
+			g_esNecroTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esNecroTeammate[admin].g_iHumanCooldown, value, -1, 99999);
+			g_esNecroTeammate[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esNecroTeammate[admin].g_iHumanDuration, value, -1, 99999);
+			g_esNecroTeammate[admin].g_iHumanMode = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esNecroTeammate[admin].g_iHumanMode, value, -1, 1);
+			g_esNecroTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esNecroTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esNecroTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esNecroTeammate[admin].g_iRequiresHumans, value, -1, 32);
+			g_esNecroTeammate[admin].g_iNecroAbility = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esNecroTeammate[admin].g_iNecroAbility, value, -1, 1);
+			g_esNecroTeammate[admin].g_iNecroMessage = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esNecroTeammate[admin].g_iNecroMessage, value, -1, 1);
+			g_esNecroTeammate[admin].g_iNecroSight = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esNecroTeammate[admin].g_iNecroSight, value, -1, 2);
+			g_esNecroTeammate[admin].g_flNecroChance = flGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroChance", "Necro Chance", "Necro_Chance", "chance", g_esNecroTeammate[admin].g_flNecroChance, value, -1.0, 100.0);
+			g_esNecroTeammate[admin].g_iNecroCooldown = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroCooldown", "Necro Cooldown", "Necro_Cooldown", "cooldown", g_esNecroTeammate[admin].g_iNecroCooldown, value, -1, 99999);
+			g_esNecroTeammate[admin].g_iNecroDuration = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroDuration", "Necro Duration", "Necro_Duration", "duration", g_esNecroTeammate[admin].g_iNecroDuration, value, -1, 99999);
+			g_esNecroTeammate[admin].g_flNecroRange = flGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroRange", "Necro Range", "Necro_Range", "range", g_esNecroTeammate[admin].g_flNecroRange, value, -1.0, 99999.0);
 		}
 		else
 		{
@@ -634,22 +627,22 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esNecroSpecial[type][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esNecroSpecial[type][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specType);
-			g_esNecroSpecial[type][specType].g_iComboAbility = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esNecroSpecial[type][specType].g_iComboAbility, value, -1, 1, specType);
-			g_esNecroSpecial[type][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esNecroSpecial[type][specType].g_iHumanAbility, value, -1, 2, specType);
-			g_esNecroSpecial[type][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esNecroSpecial[type][specType].g_iHumanAmmo, value, -1, 99999, specType);
-			g_esNecroSpecial[type][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esNecroSpecial[type][specType].g_iHumanCooldown, value, -1, 99999, specType);
-			g_esNecroSpecial[type][specType].g_iHumanDuration = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esNecroSpecial[type][specType].g_iHumanDuration, value, -1, 99999, specType);
-			g_esNecroSpecial[type][specType].g_iHumanMode = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esNecroSpecial[type][specType].g_iHumanMode, value, -1, 1, specType);
-			g_esNecroSpecial[type][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esNecroSpecial[type][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specType);
-			g_esNecroSpecial[type][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esNecroSpecial[type][specType].g_iRequiresHumans, value, -1, 32, specType);
-			g_esNecroSpecial[type][specType].g_iNecroAbility = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esNecroSpecial[type][specType].g_iNecroAbility, value, -1, 1, specType);
-			g_esNecroSpecial[type][specType].g_iNecroMessage = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esNecroSpecial[type][specType].g_iNecroMessage, value, -1, 1, specType);
-			g_esNecroSpecial[type][specType].g_iNecroSight = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esNecroSpecial[type][specType].g_iNecroSight, value, -1, 2, specType);
-			g_esNecroSpecial[type][specType].g_flNecroChance = flGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroChance", "Necro Chance", "Necro_Chance", "chance", g_esNecroSpecial[type][specType].g_flNecroChance, value, -1.0, 100.0, specType);
-			g_esNecroSpecial[type][specType].g_iNecroCooldown = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroCooldown", "Necro Cooldown", "Necro_Cooldown", "cooldown", g_esNecroSpecial[type][specType].g_iNecroCooldown, value, -1, 99999, specType);
-			g_esNecroSpecial[type][specType].g_iNecroDuration = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroDuration", "Necro Duration", "Necro_Duration", "duration", g_esNecroSpecial[type][specType].g_iNecroDuration, value, -1, 99999, specType);
-			g_esNecroSpecial[type][specType].g_flNecroRange = flGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroRange", "Necro Range", "Necro_Range", "range", g_esNecroSpecial[type][specType].g_flNecroRange, value, -1.0, 99999.0, specType);
+			g_esNecroSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esNecroSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esNecroSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esNecroSpecial[type].g_iComboAbility, value, -1, 1);
+			g_esNecroSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esNecroSpecial[type].g_iHumanAbility, value, -1, 2);
+			g_esNecroSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esNecroSpecial[type].g_iHumanAmmo, value, -1, 99999);
+			g_esNecroSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esNecroSpecial[type].g_iHumanCooldown, value, -1, 99999);
+			g_esNecroSpecial[type].g_iHumanDuration = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esNecroSpecial[type].g_iHumanDuration, value, -1, 99999);
+			g_esNecroSpecial[type].g_iHumanMode = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esNecroSpecial[type].g_iHumanMode, value, -1, 1);
+			g_esNecroSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esNecroSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esNecroSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esNecroSpecial[type].g_iRequiresHumans, value, -1, 32);
+			g_esNecroSpecial[type].g_iNecroAbility = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esNecroSpecial[type].g_iNecroAbility, value, -1, 1);
+			g_esNecroSpecial[type].g_iNecroMessage = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esNecroSpecial[type].g_iNecroMessage, value, -1, 1);
+			g_esNecroSpecial[type].g_iNecroSight = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esNecroSpecial[type].g_iNecroSight, value, -1, 2);
+			g_esNecroSpecial[type].g_flNecroChance = flGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroChance", "Necro Chance", "Necro_Chance", "chance", g_esNecroSpecial[type].g_flNecroChance, value, -1.0, 100.0);
+			g_esNecroSpecial[type].g_iNecroCooldown = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroCooldown", "Necro Cooldown", "Necro_Cooldown", "cooldown", g_esNecroSpecial[type].g_iNecroCooldown, value, -1, 99999);
+			g_esNecroSpecial[type].g_iNecroDuration = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroDuration", "Necro Duration", "Necro_Duration", "duration", g_esNecroSpecial[type].g_iNecroDuration, value, -1, 99999);
+			g_esNecroSpecial[type].g_flNecroRange = flGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroRange", "Necro Range", "Necro_Range", "range", g_esNecroSpecial[type].g_flNecroRange, value, -1.0, 99999.0);
 		}
 		else
 		{
@@ -681,28 +674,26 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
-	g_esNecroPlayer[tank].g_iInfectedType = iGetInfectedType(tank);
 	g_esNecroPlayer[tank].g_iTankType = apply ? type : 0;
-	int iSpecType = g_esNecroPlayer[tank].g_iInfectedType;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esNecroCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank][0].g_flCloseAreasOnly, g_esNecroTeammate[tank][iSpecType].g_flCloseAreasOnly, g_esNecroPlayer[tank].g_flCloseAreasOnly, g_esNecroSpecial[type][0].g_flCloseAreasOnly, g_esNecroSpecial[type][iSpecType].g_flCloseAreasOnly, g_esNecroAbility[type].g_flCloseAreasOnly, 1);
-		g_esNecroCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank][0].g_iComboAbility, g_esNecroTeammate[tank][iSpecType].g_iComboAbility, g_esNecroPlayer[tank].g_iComboAbility, g_esNecroSpecial[type][0].g_iComboAbility, g_esNecroSpecial[type][iSpecType].g_iComboAbility, g_esNecroAbility[type].g_iComboAbility, 1);
-		g_esNecroCache[tank].g_flNecroChance = flGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank][0].g_flNecroChance, g_esNecroTeammate[tank][iSpecType].g_flNecroChance, g_esNecroPlayer[tank].g_flNecroChance, g_esNecroSpecial[type][0].g_flNecroChance, g_esNecroSpecial[type][iSpecType].g_flNecroChance, g_esNecroAbility[type].g_flNecroChance, 1);
-		g_esNecroCache[tank].g_flNecroRange = flGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank][0].g_flNecroRange, g_esNecroTeammate[tank][iSpecType].g_flNecroRange, g_esNecroPlayer[tank].g_flNecroRange, g_esNecroSpecial[type][0].g_flNecroRange, g_esNecroSpecial[type][iSpecType].g_flNecroRange, g_esNecroAbility[type].g_flNecroRange, 1);
-		g_esNecroCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank][0].g_iHumanAbility, g_esNecroTeammate[tank][iSpecType].g_iHumanAbility, g_esNecroPlayer[tank].g_iHumanAbility, g_esNecroSpecial[type][0].g_iHumanAbility, g_esNecroSpecial[type][iSpecType].g_iHumanAbility, g_esNecroAbility[type].g_iHumanAbility, 1);
-		g_esNecroCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank][0].g_iHumanAmmo, g_esNecroTeammate[tank][iSpecType].g_iHumanAmmo, g_esNecroPlayer[tank].g_iHumanAmmo, g_esNecroSpecial[type][0].g_iHumanAmmo, g_esNecroSpecial[type][iSpecType].g_iHumanAmmo, g_esNecroAbility[type].g_iHumanAmmo, 1);
-		g_esNecroCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank][0].g_iHumanCooldown, g_esNecroTeammate[tank][iSpecType].g_iHumanCooldown, g_esNecroPlayer[tank].g_iHumanCooldown, g_esNecroSpecial[type][0].g_iHumanCooldown, g_esNecroSpecial[type][iSpecType].g_iHumanCooldown, g_esNecroAbility[type].g_iHumanCooldown, 1);
-		g_esNecroCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank][0].g_iHumanDuration, g_esNecroTeammate[tank][iSpecType].g_iHumanDuration, g_esNecroPlayer[tank].g_iHumanDuration, g_esNecroSpecial[type][0].g_iHumanDuration, g_esNecroSpecial[type][iSpecType].g_iHumanDuration, g_esNecroAbility[type].g_iHumanDuration, 1);
-		g_esNecroCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank][0].g_iHumanMode, g_esNecroTeammate[tank][iSpecType].g_iHumanMode, g_esNecroPlayer[tank].g_iHumanMode, g_esNecroSpecial[type][0].g_iHumanMode, g_esNecroSpecial[type][iSpecType].g_iHumanMode, g_esNecroAbility[type].g_iHumanMode, 1);
-		g_esNecroCache[tank].g_iNecroAbility = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank][0].g_iNecroAbility, g_esNecroTeammate[tank][iSpecType].g_iNecroAbility, g_esNecroPlayer[tank].g_iNecroAbility, g_esNecroSpecial[type][0].g_iNecroAbility, g_esNecroSpecial[type][iSpecType].g_iNecroAbility, g_esNecroAbility[type].g_iNecroAbility, 1);
-		g_esNecroCache[tank].g_iNecroCooldown = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank][0].g_iNecroCooldown, g_esNecroTeammate[tank][iSpecType].g_iNecroCooldown, g_esNecroPlayer[tank].g_iNecroCooldown, g_esNecroSpecial[type][0].g_iNecroCooldown, g_esNecroSpecial[type][iSpecType].g_iNecroCooldown, g_esNecroAbility[type].g_iNecroCooldown, 1);
-		g_esNecroCache[tank].g_iNecroDuration = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank][0].g_iNecroDuration, g_esNecroTeammate[tank][iSpecType].g_iNecroDuration, g_esNecroPlayer[tank].g_iNecroDuration, g_esNecroSpecial[type][0].g_iNecroDuration, g_esNecroSpecial[type][iSpecType].g_iNecroDuration, g_esNecroAbility[type].g_iNecroDuration, 1);
-		g_esNecroCache[tank].g_iNecroMessage = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank][0].g_iNecroMessage, g_esNecroTeammate[tank][iSpecType].g_iNecroMessage, g_esNecroPlayer[tank].g_iNecroMessage, g_esNecroSpecial[type][0].g_iNecroMessage, g_esNecroSpecial[type][iSpecType].g_iNecroMessage, g_esNecroAbility[type].g_iNecroMessage, 1);
-		g_esNecroCache[tank].g_iNecroSight = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank][0].g_iNecroSight, g_esNecroTeammate[tank][iSpecType].g_iNecroSight, g_esNecroPlayer[tank].g_iNecroSight, g_esNecroSpecial[type][0].g_iNecroSight, g_esNecroSpecial[type][iSpecType].g_iNecroSight, g_esNecroAbility[type].g_iNecroSight, 1);
-		g_esNecroCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank][0].g_flOpenAreasOnly, g_esNecroTeammate[tank][iSpecType].g_flOpenAreasOnly, g_esNecroPlayer[tank].g_flOpenAreasOnly, g_esNecroSpecial[type][0].g_flOpenAreasOnly, g_esNecroSpecial[type][iSpecType].g_flOpenAreasOnly, g_esNecroAbility[type].g_flOpenAreasOnly, 1);
-		g_esNecroCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank][0].g_iRequiresHumans, g_esNecroTeammate[tank][iSpecType].g_iRequiresHumans, g_esNecroPlayer[tank].g_iRequiresHumans, g_esNecroSpecial[type][0].g_iRequiresHumans, g_esNecroSpecial[type][iSpecType].g_iRequiresHumans, g_esNecroAbility[type].g_iRequiresHumans, 1);
+		g_esNecroCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_flCloseAreasOnly, g_esNecroPlayer[tank].g_flCloseAreasOnly, g_esNecroSpecial[type].g_flCloseAreasOnly, g_esNecroAbility[type].g_flCloseAreasOnly, 1);
+		g_esNecroCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_iComboAbility, g_esNecroPlayer[tank].g_iComboAbility, g_esNecroSpecial[type].g_iComboAbility, g_esNecroAbility[type].g_iComboAbility, 1);
+		g_esNecroCache[tank].g_flNecroChance = flGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_flNecroChance, g_esNecroPlayer[tank].g_flNecroChance, g_esNecroSpecial[type].g_flNecroChance, g_esNecroAbility[type].g_flNecroChance, 1);
+		g_esNecroCache[tank].g_flNecroRange = flGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_flNecroRange, g_esNecroPlayer[tank].g_flNecroRange, g_esNecroSpecial[type].g_flNecroRange, g_esNecroAbility[type].g_flNecroRange, 1);
+		g_esNecroCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_iHumanAbility, g_esNecroPlayer[tank].g_iHumanAbility, g_esNecroSpecial[type].g_iHumanAbility, g_esNecroAbility[type].g_iHumanAbility, 1);
+		g_esNecroCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_iHumanAmmo, g_esNecroPlayer[tank].g_iHumanAmmo, g_esNecroSpecial[type].g_iHumanAmmo, g_esNecroAbility[type].g_iHumanAmmo, 1);
+		g_esNecroCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_iHumanCooldown, g_esNecroPlayer[tank].g_iHumanCooldown, g_esNecroSpecial[type].g_iHumanCooldown, g_esNecroAbility[type].g_iHumanCooldown, 1);
+		g_esNecroCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_iHumanDuration, g_esNecroPlayer[tank].g_iHumanDuration, g_esNecroSpecial[type].g_iHumanDuration, g_esNecroAbility[type].g_iHumanDuration, 1);
+		g_esNecroCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_iHumanMode, g_esNecroPlayer[tank].g_iHumanMode, g_esNecroSpecial[type].g_iHumanMode, g_esNecroAbility[type].g_iHumanMode, 1);
+		g_esNecroCache[tank].g_iNecroAbility = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_iNecroAbility, g_esNecroPlayer[tank].g_iNecroAbility, g_esNecroSpecial[type].g_iNecroAbility, g_esNecroAbility[type].g_iNecroAbility, 1);
+		g_esNecroCache[tank].g_iNecroCooldown = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_iNecroCooldown, g_esNecroPlayer[tank].g_iNecroCooldown, g_esNecroSpecial[type].g_iNecroCooldown, g_esNecroAbility[type].g_iNecroCooldown, 1);
+		g_esNecroCache[tank].g_iNecroDuration = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_iNecroDuration, g_esNecroPlayer[tank].g_iNecroDuration, g_esNecroSpecial[type].g_iNecroDuration, g_esNecroAbility[type].g_iNecroDuration, 1);
+		g_esNecroCache[tank].g_iNecroMessage = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_iNecroMessage, g_esNecroPlayer[tank].g_iNecroMessage, g_esNecroSpecial[type].g_iNecroMessage, g_esNecroAbility[type].g_iNecroMessage, 1);
+		g_esNecroCache[tank].g_iNecroSight = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_iNecroSight, g_esNecroPlayer[tank].g_iNecroSight, g_esNecroSpecial[type].g_iNecroSight, g_esNecroAbility[type].g_iNecroSight, 1);
+		g_esNecroCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_flOpenAreasOnly, g_esNecroPlayer[tank].g_flOpenAreasOnly, g_esNecroSpecial[type].g_flOpenAreasOnly, g_esNecroAbility[type].g_flOpenAreasOnly, 1);
+		g_esNecroCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_iRequiresHumans, g_esNecroPlayer[tank].g_iRequiresHumans, g_esNecroSpecial[type].g_iRequiresHumans, g_esNecroAbility[type].g_iRequiresHumans, 1);
 	}
 	else
 	{

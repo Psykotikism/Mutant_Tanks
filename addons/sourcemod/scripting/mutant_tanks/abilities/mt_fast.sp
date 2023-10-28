@@ -79,7 +79,6 @@ enum struct esFastPlayer
 	int g_iHumanCooldown;
 	int g_iHumanDuration;
 	int g_iHumanMode;
-	int g_iInfectedType;
 	int g_iRequiresHumans;
 	int g_iTankType;
 }
@@ -106,7 +105,7 @@ enum struct esFastTeammate
 	int g_iRequiresHumans;
 }
 
-esFastTeammate g_esFastTeammate[MAXPLAYERS + 1][7];
+esFastTeammate g_esFastTeammate[MAXPLAYERS + 1];
 
 enum struct esFastAbility
 {
@@ -152,7 +151,7 @@ enum struct esFastSpecial
 	int g_iRequiresHumans;
 }
 
-esFastSpecial g_esFastSpecial[MT_MAXTYPES + 1][7];
+esFastSpecial g_esFastSpecial[MT_MAXTYPES + 1];
 
 enum struct esFastCache
 {
@@ -503,23 +502,20 @@ public void MT_OnConfigsLoad(int mode)
 				g_esFastAbility[iIndex].g_iFastDuration = 5;
 				g_esFastAbility[iIndex].g_flFastSpeed = 5.0;
 
-				for (int iSpecType = 0; iSpecType < (sizeof g_sSpecialNames); iSpecType++)
-				{
-					g_esFastSpecial[iIndex][iSpecType].g_iComboAbility = -1;
-					g_esFastSpecial[iIndex][iSpecType].g_iHumanAbility = -1;
-					g_esFastSpecial[iIndex][iSpecType].g_iHumanAmmo = -1;
-					g_esFastSpecial[iIndex][iSpecType].g_iHumanCooldown = -1;
-					g_esFastSpecial[iIndex][iSpecType].g_iHumanDuration = -1;
-					g_esFastSpecial[iIndex][iSpecType].g_iHumanMode = -1;
-					g_esFastSpecial[iIndex][iSpecType].g_flOpenAreasOnly = -1.0;
-					g_esFastSpecial[iIndex][iSpecType].g_iRequiresHumans = -1;
-					g_esFastSpecial[iIndex][iSpecType].g_iFastAbility = -1;
-					g_esFastSpecial[iIndex][iSpecType].g_iFastMessage = -1;
-					g_esFastSpecial[iIndex][iSpecType].g_flFastChance = -1.0;
-					g_esFastSpecial[iIndex][iSpecType].g_iFastCooldown = -1;
-					g_esFastSpecial[iIndex][iSpecType].g_iFastDuration = -1;
-					g_esFastSpecial[iIndex][iSpecType].g_flFastSpeed = -1.0;
-				}
+				g_esFastSpecial[iIndex].g_iComboAbility = -1;
+				g_esFastSpecial[iIndex].g_iHumanAbility = -1;
+				g_esFastSpecial[iIndex].g_iHumanAmmo = -1;
+				g_esFastSpecial[iIndex].g_iHumanCooldown = -1;
+				g_esFastSpecial[iIndex].g_iHumanDuration = -1;
+				g_esFastSpecial[iIndex].g_iHumanMode = -1;
+				g_esFastSpecial[iIndex].g_flOpenAreasOnly = -1.0;
+				g_esFastSpecial[iIndex].g_iRequiresHumans = -1;
+				g_esFastSpecial[iIndex].g_iFastAbility = -1;
+				g_esFastSpecial[iIndex].g_iFastMessage = -1;
+				g_esFastSpecial[iIndex].g_flFastChance = -1.0;
+				g_esFastSpecial[iIndex].g_iFastCooldown = -1;
+				g_esFastSpecial[iIndex].g_iFastDuration = -1;
+				g_esFastSpecial[iIndex].g_flFastSpeed = -1.0;
 			}
 		}
 		case 3:
@@ -543,54 +539,51 @@ public void MT_OnConfigsLoad(int mode)
 				g_esFastPlayer[iPlayer].g_iFastDuration = -1;
 				g_esFastPlayer[iPlayer].g_flFastSpeed = -1.0;
 
-				for (int iSpecType = 0; iSpecType < (sizeof g_sSpecialNames); iSpecType++)
-				{
-					g_esFastTeammate[iPlayer][iSpecType].g_flCloseAreasOnly = -1.0;
-					g_esFastTeammate[iPlayer][iSpecType].g_iComboAbility = -1;
-					g_esFastTeammate[iPlayer][iSpecType].g_iHumanAbility = -1;
-					g_esFastTeammate[iPlayer][iSpecType].g_iHumanAmmo = -1;
-					g_esFastTeammate[iPlayer][iSpecType].g_iHumanCooldown = -1;
-					g_esFastTeammate[iPlayer][iSpecType].g_iHumanDuration = -1;
-					g_esFastTeammate[iPlayer][iSpecType].g_iHumanMode = -1;
-					g_esFastTeammate[iPlayer][iSpecType].g_flOpenAreasOnly = -1.0;
-					g_esFastTeammate[iPlayer][iSpecType].g_iRequiresHumans = -1;
-					g_esFastTeammate[iPlayer][iSpecType].g_iFastAbility = -1;
-					g_esFastTeammate[iPlayer][iSpecType].g_iFastMessage = -1;
-					g_esFastTeammate[iPlayer][iSpecType].g_flFastChance = -1.0;
-					g_esFastTeammate[iPlayer][iSpecType].g_iFastCooldown = -1;
-					g_esFastTeammate[iPlayer][iSpecType].g_iFastDuration = -1;
-					g_esFastTeammate[iPlayer][iSpecType].g_flFastSpeed = -1.0;
-				}
+				g_esFastTeammate[iPlayer].g_flCloseAreasOnly = -1.0;
+				g_esFastTeammate[iPlayer].g_iComboAbility = -1;
+				g_esFastTeammate[iPlayer].g_iHumanAbility = -1;
+				g_esFastTeammate[iPlayer].g_iHumanAmmo = -1;
+				g_esFastTeammate[iPlayer].g_iHumanCooldown = -1;
+				g_esFastTeammate[iPlayer].g_iHumanDuration = -1;
+				g_esFastTeammate[iPlayer].g_iHumanMode = -1;
+				g_esFastTeammate[iPlayer].g_flOpenAreasOnly = -1.0;
+				g_esFastTeammate[iPlayer].g_iRequiresHumans = -1;
+				g_esFastTeammate[iPlayer].g_iFastAbility = -1;
+				g_esFastTeammate[iPlayer].g_iFastMessage = -1;
+				g_esFastTeammate[iPlayer].g_flFastChance = -1.0;
+				g_esFastTeammate[iPlayer].g_iFastCooldown = -1;
+				g_esFastTeammate[iPlayer].g_iFastDuration = -1;
+				g_esFastTeammate[iPlayer].g_flFastSpeed = -1.0;
 			}
 		}
 	}
 }
 
 #if defined MT_ABILITIES_MAIN
-void vFastConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, int specType)
+void vFastConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #else
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, int specType)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #endif
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esFastTeammate[admin][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esFastTeammate[admin][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specType);
-			g_esFastTeammate[admin][specType].g_iComboAbility = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFastTeammate[admin][specType].g_iComboAbility, value, -1, 1, specType);
-			g_esFastTeammate[admin][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFastTeammate[admin][specType].g_iHumanAbility, value, -1, 2, specType);
-			g_esFastTeammate[admin][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFastTeammate[admin][specType].g_iHumanAmmo, value, -1, 99999, specType);
-			g_esFastTeammate[admin][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFastTeammate[admin][specType].g_iHumanCooldown, value, -1, 99999, specType);
-			g_esFastTeammate[admin][specType].g_iHumanDuration = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esFastTeammate[admin][specType].g_iHumanDuration, value, -1, 99999, specType);
-			g_esFastTeammate[admin][specType].g_iHumanMode = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esFastTeammate[admin][specType].g_iHumanMode, value, -1, 1, specType);
-			g_esFastTeammate[admin][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFastTeammate[admin][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specType);
-			g_esFastTeammate[admin][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFastTeammate[admin][specType].g_iRequiresHumans, value, -1, 32, specType);
-			g_esFastTeammate[admin][specType].g_iFastAbility = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFastTeammate[admin][specType].g_iFastAbility, value, -1, 1, specType);
-			g_esFastTeammate[admin][specType].g_iFastMessage = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esFastTeammate[admin][specType].g_iFastMessage, value, -1, 1, specType);
-			g_esFastTeammate[admin][specType].g_flFastChance = flGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "FastChance", "Fast Chance", "Fast_Chance", "chance", g_esFastTeammate[admin][specType].g_flFastChance, value, -1.0, 100.0, specType);
-			g_esFastTeammate[admin][specType].g_iFastCooldown = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "FastCooldown", "Fast Cooldown", "Fast_Cooldown", "cooldown", g_esFastTeammate[admin][specType].g_iFastCooldown, value, -1, 99999, specType);
-			g_esFastTeammate[admin][specType].g_iFastDuration = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "FastDuration", "Fast Duration", "Fast_Duration", "duration", g_esFastTeammate[admin][specType].g_iFastDuration, value, -1, 99999, specType);
-			g_esFastTeammate[admin][specType].g_flFastSpeed = flGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "FastSpeed", "Fast Speed", "Fast_Speed", "speed", g_esFastTeammate[admin][specType].g_flFastSpeed, value, 3.0, 10.0, specType);
+			g_esFastTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esFastTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esFastTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFastTeammate[admin].g_iComboAbility, value, -1, 1);
+			g_esFastTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFastTeammate[admin].g_iHumanAbility, value, -1, 2);
+			g_esFastTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFastTeammate[admin].g_iHumanAmmo, value, -1, 99999);
+			g_esFastTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFastTeammate[admin].g_iHumanCooldown, value, -1, 99999);
+			g_esFastTeammate[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esFastTeammate[admin].g_iHumanDuration, value, -1, 99999);
+			g_esFastTeammate[admin].g_iHumanMode = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esFastTeammate[admin].g_iHumanMode, value, -1, 1);
+			g_esFastTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFastTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esFastTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFastTeammate[admin].g_iRequiresHumans, value, -1, 32);
+			g_esFastTeammate[admin].g_iFastAbility = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFastTeammate[admin].g_iFastAbility, value, -1, 1);
+			g_esFastTeammate[admin].g_iFastMessage = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esFastTeammate[admin].g_iFastMessage, value, -1, 1);
+			g_esFastTeammate[admin].g_flFastChance = flGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "FastChance", "Fast Chance", "Fast_Chance", "chance", g_esFastTeammate[admin].g_flFastChance, value, -1.0, 100.0);
+			g_esFastTeammate[admin].g_iFastCooldown = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "FastCooldown", "Fast Cooldown", "Fast_Cooldown", "cooldown", g_esFastTeammate[admin].g_iFastCooldown, value, -1, 99999);
+			g_esFastTeammate[admin].g_iFastDuration = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "FastDuration", "Fast Duration", "Fast_Duration", "duration", g_esFastTeammate[admin].g_iFastDuration, value, -1, 99999);
+			g_esFastTeammate[admin].g_flFastSpeed = flGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "FastSpeed", "Fast Speed", "Fast_Speed", "speed", g_esFastTeammate[admin].g_flFastSpeed, value, 3.0, 10.0);
 		}
 		else
 		{
@@ -617,21 +610,21 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esFastSpecial[type][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esFastSpecial[type][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specType);
-			g_esFastSpecial[type][specType].g_iComboAbility = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFastSpecial[type][specType].g_iComboAbility, value, -1, 1, specType);
-			g_esFastSpecial[type][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFastSpecial[type][specType].g_iHumanAbility, value, -1, 2, specType);
-			g_esFastSpecial[type][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFastSpecial[type][specType].g_iHumanAmmo, value, -1, 99999, specType);
-			g_esFastSpecial[type][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFastSpecial[type][specType].g_iHumanCooldown, value, -1, 99999, specType);
-			g_esFastSpecial[type][specType].g_iHumanDuration = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esFastSpecial[type][specType].g_iHumanDuration, value, -1, 99999, specType);
-			g_esFastSpecial[type][specType].g_iHumanMode = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esFastSpecial[type][specType].g_iHumanMode, value, -1, 1, specType);
-			g_esFastSpecial[type][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFastSpecial[type][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specType);
-			g_esFastSpecial[type][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFastSpecial[type][specType].g_iRequiresHumans, value, -1, 32, specType);
-			g_esFastSpecial[type][specType].g_iFastAbility = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFastSpecial[type][specType].g_iFastAbility, value, -1, 1, specType);
-			g_esFastSpecial[type][specType].g_iFastMessage = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esFastSpecial[type][specType].g_iFastMessage, value, -1, 1, specType);
-			g_esFastSpecial[type][specType].g_flFastChance = flGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "FastChance", "Fast Chance", "Fast_Chance", "chance", g_esFastSpecial[type][specType].g_flFastChance, value, -1.0, 100.0, specType);
-			g_esFastSpecial[type][specType].g_iFastCooldown = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "FastCooldown", "Fast Cooldown", "Fast_Cooldown", "cooldown", g_esFastSpecial[type][specType].g_iFastCooldown, value, -1, 99999, specType);
-			g_esFastSpecial[type][specType].g_iFastDuration = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "FastDuration", "Fast Duration", "Fast_Duration", "duration", g_esFastSpecial[type][specType].g_iFastDuration, value, -1, 99999, specType);
-			g_esFastSpecial[type][specType].g_flFastSpeed = flGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "FastSpeed", "Fast Speed", "Fast_Speed", "speed", g_esFastSpecial[type][specType].g_flFastSpeed, value, 3.0, 10.0, specType);
+			g_esFastSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esFastSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esFastSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFastSpecial[type].g_iComboAbility, value, -1, 1);
+			g_esFastSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFastSpecial[type].g_iHumanAbility, value, -1, 2);
+			g_esFastSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFastSpecial[type].g_iHumanAmmo, value, -1, 99999);
+			g_esFastSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFastSpecial[type].g_iHumanCooldown, value, -1, 99999);
+			g_esFastSpecial[type].g_iHumanDuration = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esFastSpecial[type].g_iHumanDuration, value, -1, 99999);
+			g_esFastSpecial[type].g_iHumanMode = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esFastSpecial[type].g_iHumanMode, value, -1, 1);
+			g_esFastSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFastSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esFastSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFastSpecial[type].g_iRequiresHumans, value, -1, 32);
+			g_esFastSpecial[type].g_iFastAbility = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFastSpecial[type].g_iFastAbility, value, -1, 1);
+			g_esFastSpecial[type].g_iFastMessage = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esFastSpecial[type].g_iFastMessage, value, -1, 1);
+			g_esFastSpecial[type].g_flFastChance = flGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "FastChance", "Fast Chance", "Fast_Chance", "chance", g_esFastSpecial[type].g_flFastChance, value, -1.0, 100.0);
+			g_esFastSpecial[type].g_iFastCooldown = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "FastCooldown", "Fast Cooldown", "Fast_Cooldown", "cooldown", g_esFastSpecial[type].g_iFastCooldown, value, -1, 99999);
+			g_esFastSpecial[type].g_iFastDuration = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "FastDuration", "Fast Duration", "Fast_Duration", "duration", g_esFastSpecial[type].g_iFastDuration, value, -1, 99999);
+			g_esFastSpecial[type].g_flFastSpeed = flGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "FastSpeed", "Fast Speed", "Fast_Speed", "speed", g_esFastSpecial[type].g_flFastSpeed, value, 3.0, 10.0);
 		}
 		else
 		{
@@ -662,27 +655,25 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
-	g_esFastPlayer[tank].g_iInfectedType = iGetInfectedType(tank);
 	g_esFastPlayer[tank].g_iTankType = apply ? type : 0;
-	int iSpecType = g_esFastPlayer[tank].g_iInfectedType;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esFastCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esFastTeammate[tank][0].g_flCloseAreasOnly, g_esFastTeammate[tank][iSpecType].g_flCloseAreasOnly, g_esFastPlayer[tank].g_flCloseAreasOnly, g_esFastSpecial[type][0].g_flCloseAreasOnly, g_esFastSpecial[type][iSpecType].g_flCloseAreasOnly, g_esFastAbility[type].g_flCloseAreasOnly, 1);
-		g_esFastCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esFastTeammate[tank][0].g_iComboAbility, g_esFastTeammate[tank][iSpecType].g_iComboAbility, g_esFastPlayer[tank].g_iComboAbility, g_esFastSpecial[type][0].g_iComboAbility, g_esFastSpecial[type][iSpecType].g_iComboAbility, g_esFastAbility[type].g_iComboAbility, 1);
-		g_esFastCache[tank].g_flFastChance = flGetSubSettingValue(apply, bHuman, g_esFastTeammate[tank][0].g_flFastChance, g_esFastTeammate[tank][iSpecType].g_flFastChance, g_esFastPlayer[tank].g_flFastChance, g_esFastSpecial[type][0].g_flFastChance, g_esFastSpecial[type][iSpecType].g_flFastChance, g_esFastAbility[type].g_flFastChance, 1);
-		g_esFastCache[tank].g_flFastSpeed = flGetSubSettingValue(apply, bHuman, g_esFastTeammate[tank][0].g_flFastSpeed, g_esFastTeammate[tank][iSpecType].g_flFastSpeed, g_esFastPlayer[tank].g_flFastSpeed, g_esFastSpecial[type][0].g_flFastSpeed, g_esFastSpecial[type][iSpecType].g_flFastSpeed, g_esFastAbility[type].g_flFastSpeed, 1);
-		g_esFastCache[tank].g_iFastAbility = iGetSubSettingValue(apply, bHuman, g_esFastTeammate[tank][0].g_iFastAbility, g_esFastTeammate[tank][iSpecType].g_iFastAbility, g_esFastPlayer[tank].g_iFastAbility, g_esFastSpecial[type][0].g_iFastAbility, g_esFastSpecial[type][iSpecType].g_iFastAbility, g_esFastAbility[type].g_iFastAbility, 1);
-		g_esFastCache[tank].g_iFastCooldown = iGetSubSettingValue(apply, bHuman, g_esFastTeammate[tank][0].g_iFastCooldown, g_esFastTeammate[tank][iSpecType].g_iFastCooldown, g_esFastPlayer[tank].g_iFastCooldown, g_esFastSpecial[type][0].g_iFastCooldown, g_esFastSpecial[type][iSpecType].g_iFastCooldown, g_esFastAbility[type].g_iFastCooldown, 1);
-		g_esFastCache[tank].g_iFastDuration = iGetSubSettingValue(apply, bHuman, g_esFastTeammate[tank][0].g_iFastDuration, g_esFastTeammate[tank][iSpecType].g_iFastDuration, g_esFastPlayer[tank].g_iFastDuration, g_esFastSpecial[type][0].g_iFastDuration, g_esFastSpecial[type][iSpecType].g_iFastDuration, g_esFastAbility[type].g_iFastDuration, 1);
-		g_esFastCache[tank].g_iFastMessage = iGetSubSettingValue(apply, bHuman, g_esFastTeammate[tank][0].g_iFastMessage, g_esFastTeammate[tank][iSpecType].g_iFastMessage, g_esFastPlayer[tank].g_iFastMessage, g_esFastSpecial[type][0].g_iFastMessage, g_esFastSpecial[type][iSpecType].g_iFastMessage, g_esFastAbility[type].g_iFastMessage, 1);
-		g_esFastCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esFastTeammate[tank][0].g_iHumanAbility, g_esFastTeammate[tank][iSpecType].g_iHumanAbility, g_esFastPlayer[tank].g_iHumanAbility, g_esFastSpecial[type][0].g_iHumanAbility, g_esFastSpecial[type][iSpecType].g_iHumanAbility, g_esFastAbility[type].g_iHumanAbility, 1);
-		g_esFastCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esFastTeammate[tank][0].g_iHumanAmmo, g_esFastTeammate[tank][iSpecType].g_iHumanAmmo, g_esFastPlayer[tank].g_iHumanAmmo, g_esFastSpecial[type][0].g_iHumanAmmo, g_esFastSpecial[type][iSpecType].g_iHumanAmmo, g_esFastAbility[type].g_iHumanAmmo, 1);
-		g_esFastCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esFastTeammate[tank][0].g_iHumanCooldown, g_esFastTeammate[tank][iSpecType].g_iHumanCooldown, g_esFastPlayer[tank].g_iHumanCooldown, g_esFastSpecial[type][0].g_iHumanCooldown, g_esFastSpecial[type][iSpecType].g_iHumanCooldown, g_esFastAbility[type].g_iHumanCooldown, 1);
-		g_esFastCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esFastTeammate[tank][0].g_iHumanDuration, g_esFastTeammate[tank][iSpecType].g_iHumanDuration, g_esFastPlayer[tank].g_iHumanDuration, g_esFastSpecial[type][0].g_iHumanDuration, g_esFastSpecial[type][iSpecType].g_iHumanDuration, g_esFastAbility[type].g_iHumanDuration, 1);
-		g_esFastCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esFastTeammate[tank][0].g_iHumanMode, g_esFastTeammate[tank][iSpecType].g_iHumanMode, g_esFastPlayer[tank].g_iHumanMode, g_esFastSpecial[type][0].g_iHumanMode, g_esFastSpecial[type][iSpecType].g_iHumanMode, g_esFastAbility[type].g_iHumanMode, 1);
-		g_esFastCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esFastTeammate[tank][0].g_flOpenAreasOnly, g_esFastTeammate[tank][iSpecType].g_flOpenAreasOnly, g_esFastPlayer[tank].g_flOpenAreasOnly, g_esFastSpecial[type][0].g_flOpenAreasOnly, g_esFastSpecial[type][iSpecType].g_flOpenAreasOnly, g_esFastAbility[type].g_flOpenAreasOnly, 1);
-		g_esFastCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esFastTeammate[tank][0].g_iRequiresHumans, g_esFastTeammate[tank][iSpecType].g_iRequiresHumans, g_esFastPlayer[tank].g_iRequiresHumans, g_esFastSpecial[type][0].g_iRequiresHumans, g_esFastSpecial[type][iSpecType].g_iRequiresHumans, g_esFastAbility[type].g_iRequiresHumans, 1);
+		g_esFastCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esFastTeammate[tank].g_flCloseAreasOnly, g_esFastPlayer[tank].g_flCloseAreasOnly, g_esFastSpecial[type].g_flCloseAreasOnly, g_esFastAbility[type].g_flCloseAreasOnly, 1);
+		g_esFastCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esFastTeammate[tank].g_iComboAbility, g_esFastPlayer[tank].g_iComboAbility, g_esFastSpecial[type].g_iComboAbility, g_esFastAbility[type].g_iComboAbility, 1);
+		g_esFastCache[tank].g_flFastChance = flGetSubSettingValue(apply, bHuman, g_esFastTeammate[tank].g_flFastChance, g_esFastPlayer[tank].g_flFastChance, g_esFastSpecial[type].g_flFastChance, g_esFastAbility[type].g_flFastChance, 1);
+		g_esFastCache[tank].g_flFastSpeed = flGetSubSettingValue(apply, bHuman, g_esFastTeammate[tank].g_flFastSpeed, g_esFastPlayer[tank].g_flFastSpeed, g_esFastSpecial[type].g_flFastSpeed, g_esFastAbility[type].g_flFastSpeed, 1);
+		g_esFastCache[tank].g_iFastAbility = iGetSubSettingValue(apply, bHuman, g_esFastTeammate[tank].g_iFastAbility, g_esFastPlayer[tank].g_iFastAbility, g_esFastSpecial[type].g_iFastAbility, g_esFastAbility[type].g_iFastAbility, 1);
+		g_esFastCache[tank].g_iFastCooldown = iGetSubSettingValue(apply, bHuman, g_esFastTeammate[tank].g_iFastCooldown, g_esFastPlayer[tank].g_iFastCooldown, g_esFastSpecial[type].g_iFastCooldown, g_esFastAbility[type].g_iFastCooldown, 1);
+		g_esFastCache[tank].g_iFastDuration = iGetSubSettingValue(apply, bHuman, g_esFastTeammate[tank].g_iFastDuration, g_esFastPlayer[tank].g_iFastDuration, g_esFastSpecial[type].g_iFastDuration, g_esFastAbility[type].g_iFastDuration, 1);
+		g_esFastCache[tank].g_iFastMessage = iGetSubSettingValue(apply, bHuman, g_esFastTeammate[tank].g_iFastMessage, g_esFastPlayer[tank].g_iFastMessage, g_esFastSpecial[type].g_iFastMessage, g_esFastAbility[type].g_iFastMessage, 1);
+		g_esFastCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esFastTeammate[tank].g_iHumanAbility, g_esFastPlayer[tank].g_iHumanAbility, g_esFastSpecial[type].g_iHumanAbility, g_esFastAbility[type].g_iHumanAbility, 1);
+		g_esFastCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esFastTeammate[tank].g_iHumanAmmo, g_esFastPlayer[tank].g_iHumanAmmo, g_esFastSpecial[type].g_iHumanAmmo, g_esFastAbility[type].g_iHumanAmmo, 1);
+		g_esFastCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esFastTeammate[tank].g_iHumanCooldown, g_esFastPlayer[tank].g_iHumanCooldown, g_esFastSpecial[type].g_iHumanCooldown, g_esFastAbility[type].g_iHumanCooldown, 1);
+		g_esFastCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esFastTeammate[tank].g_iHumanDuration, g_esFastPlayer[tank].g_iHumanDuration, g_esFastSpecial[type].g_iHumanDuration, g_esFastAbility[type].g_iHumanDuration, 1);
+		g_esFastCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esFastTeammate[tank].g_iHumanMode, g_esFastPlayer[tank].g_iHumanMode, g_esFastSpecial[type].g_iHumanMode, g_esFastAbility[type].g_iHumanMode, 1);
+		g_esFastCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esFastTeammate[tank].g_flOpenAreasOnly, g_esFastPlayer[tank].g_flOpenAreasOnly, g_esFastSpecial[type].g_flOpenAreasOnly, g_esFastAbility[type].g_flOpenAreasOnly, 1);
+		g_esFastCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esFastTeammate[tank].g_iRequiresHumans, g_esFastPlayer[tank].g_iRequiresHumans, g_esFastSpecial[type].g_iRequiresHumans, g_esFastAbility[type].g_iRequiresHumans, 1);
 	}
 	else
 	{

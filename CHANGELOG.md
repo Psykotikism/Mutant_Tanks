@@ -57,20 +57,11 @@
 
 #### Settings
 - The `Attack Interval` setting now properly modifies the cooldown and frequency of Mutant Infected claw swings. (Thanks to `epzminion` for helping!)
-- Added the following missing settings under the `Tank #->General->Special` and `STEAM_ID->General->Special` sections:
-	- `Special Enabled`
-	- `Special Name`
 - Added the following settings under the `Plugin Settings->Rewards`, `Tank #->Rewards`, and `STEAM_ID->Rewards` sections:
 	- `Blaze Health Reward`
 	- `Cluster Bombs Reward`
 	- `Rapid Pistol Reward`
 	- `Sticky Grenades Reward`
-- All special infected settings can now be overridden for each type of special infected.
-	- Specify the special infected's name in front of a setting to determine which special infected to apply the setting for.
-	- Example: `Smoker Base Health`
-
-#### Natives & Forwards
-- The `MT_OnConfigsLoaded` forward now has one more parameter.
 
 #### Abilities
 - Mutant Infected will now reserve their abilities for engaging with survivors for a more tactical approach. [Requires `Actions`.]
