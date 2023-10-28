@@ -1141,7 +1141,8 @@ enum struct esDeveloper
 	int g_iDevLifeLeech;
 	int g_iDevMeleeRange;
 	int g_iDevMidairDashes;
-	int g_iDevPanelLevel;
+	int g_iDevPanelPage;
+	int g_iDevPanelPages;
 	int g_iDevParticle;
 	int g_iDevReviveHealth;
 	int g_iDevRewardTypes;
@@ -1400,7 +1401,7 @@ enum struct esPlayer
 	int g_iHittableImmunity;
 	int g_iHollowpointAmmo;
 	int g_iHollowpointAmmoReward[4];
-	int g_iHudPanelLevel;
+	int g_iHudPanelPage;
 	int g_iHudPanelPages;
 	int g_iHumanMultiplierMode;
 	int g_iImmunityFlags;
@@ -2755,7 +2756,9 @@ public void OnGameFrame()
 	{
 		return;
 	}
-
+#if defined _actions_included
+	bool bDeveloper = false, bSpectator = false;
+#endif
 	bool bHuman = false;
 	char sHealthBar[51], sHumanTag[128], sSet[2][2], sTankName[33];
 	float flPercentage = 0.0;
@@ -2763,7 +2766,9 @@ public void OnGameFrame()
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 #if defined _actions_included
-		if (bIsSurvivor(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT))
+		bDeveloper = bIsDeveloper(iPlayer);
+		bSpectator = bIsSpectator(iPlayer, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT);
+		if (bIsHumanSurvivor(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) || bSpectator || (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && bDeveloper))
 #else
 		if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 #endif
@@ -2772,12 +2777,12 @@ public void OnGameFrame()
 			if (bIsInfected(iTarget))
 			{
 #if defined _actions_included
-				if (bIsInfectedIdle(iTarget, 3) || !bIsVisibleToPlayer(iTarget, iPlayer, 1))
+				if (!bSpectator && !bDeveloper && (bIsInfectedIdle(iTarget, 3) || !bIsVisibleToPlayer(iTarget, iPlayer, 1)))
 				{
 					continue;
 				}
 #else
-				if (bIsSurvivor(iPlayer) && !bIsVisibleToPlayer(iTarget, iPlayer, 1))
+				if (bIsHumanSurvivor(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsVisibleToPlayer(iTarget, iPlayer, 1))
 				{
 					continue;
 				}
@@ -3026,7 +3031,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 void vInitialReset(int client)
 {
 	g_esPlayer[client].g_bBlindTank = false;
-	g_esPlayer[client].g_iHudPanelLevel = 0;
+	g_esPlayer[client].g_iHudPanelPage = 0;
 	g_esPlayer[client].g_iHudPanelPages = 0;
 	g_esPlayer[client].g_iLadyKillerCount = 0;
 	g_esPlayer[client].g_iLadyKillerLimit = 0;
@@ -6236,9 +6241,10 @@ int iConfigMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 	return 0;
 }
 
-void vDeveloperPanel(int developer, int level = 0)
+void vDeveloperPanel(int developer, int page = 0)
 {
-	g_esDeveloper[developer].g_iDevPanelLevel = level;
+	g_esDeveloper[developer].g_iDevPanelPage = page;
+	g_esDeveloper[developer].g_iDevPanelPages = 4;
 
 	char sDisplay[PLATFORM_MAX_PATH];
 	FormatEx(sDisplay, sizeof sDisplay, "%s Developer Panel v%s", MT_CONFIG_SECTION_MAIN, MT_VERSION);
@@ -6248,7 +6254,7 @@ void vDeveloperPanel(int developer, int level = 0)
 	pDevPanel.SetTitle(sDisplay);
 	pDevPanel.DrawItem("", ITEMDRAW_SPACER|ITEMDRAW_RAWLINE);
 
-	switch (level)
+	switch (page)
 	{
 		case 0:
 		{
@@ -6260,18 +6266,20 @@ void vDeveloperPanel(int developer, int level = 0)
 
 			FormatEx(sDisplay, sizeof sDisplay, "Ammo Regen: %i Bullet/s", g_esDeveloper[developer].g_iDevAmmoRegen);
 			pDevPanel.DrawText(sDisplay);
-
+#if defined _WeaponHandling_included
 			flValue = g_esDeveloper[developer].g_flDevAttackBoost;
 			FormatEx(sDisplay, sizeof sDisplay, "Attack Boost: +%.2f%% (%.2f)", ((flValue * 100.0) - 100.0), flValue);
 			pDevPanel.DrawText(sDisplay);
-
+#endif
 			FormatEx(sDisplay, sizeof sDisplay, "Cluster Bomb(s): %i (Max: 5)", g_esDeveloper[developer].g_iDevClusterBombs);
 			pDevPanel.DrawText(sDisplay);
 
 			flValue = g_esDeveloper[developer].g_flDevDamageBoost;
 			FormatEx(sDisplay, sizeof sDisplay, "Damage Boost: +%.2f%% (%.2f)", ((flValue * 100.0) - 100.0), flValue);
 			pDevPanel.DrawText(sDisplay);
-
+		}
+		case 1:
+		{
 			flValue = g_esDeveloper[developer].g_flDevDamageResistance;
 			FormatEx(sDisplay, sizeof sDisplay, "Damage Resistance: %.2f%% (%.2f)", ((flValue * 100.0) - 100.0), flValue);
 			pDevPanel.DrawText(sDisplay);
@@ -6297,38 +6305,29 @@ void vDeveloperPanel(int developer, int level = 0)
 
 			FormatEx(sDisplay, sizeof sDisplay, "Infinite Ammo Slots: %i (0: OFF, 31: ALL)", g_esDeveloper[developer].g_iDevInfiniteAmmo);
 			pDevPanel.DrawText(sDisplay);
-
+		}
+		case 2:
+		{
 			FormatEx(sDisplay, sizeof sDisplay, "Jump Height: %.2f HMU (Dashes: %i)", g_esDeveloper[developer].g_flDevJumpHeight, g_esDeveloper[developer].g_iDevMidairDashes);
 			pDevPanel.DrawText(sDisplay);
 
 			FormatEx(sDisplay, sizeof sDisplay, "Life Leech: %i HP/Hit", g_esDeveloper[developer].g_iDevLifeLeech);
 			pDevPanel.DrawText(sDisplay);
 
-			if (g_bSecondGame)
-			{
-				FormatEx(sDisplay, sizeof sDisplay, "Loadout: %s", g_esDeveloper[developer].g_sDevLoadout);
-				pDevPanel.DrawText(sDisplay);
-			}
-		}
-		case 1:
-		{
-			if (!g_bSecondGame)
-			{
-				FormatEx(sDisplay, sizeof sDisplay, "Loadout: %s", g_esDeveloper[developer].g_sDevLoadout);
-				pDevPanel.DrawText(sDisplay);
-			}
-			else
-			{
-				FormatEx(sDisplay, sizeof sDisplay, "Melee Range: %i HMU", g_esDeveloper[developer].g_iDevMeleeRange);
-				pDevPanel.DrawText(sDisplay);
-			}
+			FormatEx(sDisplay, sizeof sDisplay, "Loadout: %s", g_esDeveloper[developer].g_sDevLoadout);
+			pDevPanel.DrawText(sDisplay);
+
+			FormatEx(sDisplay, sizeof sDisplay, "Melee Range: %i HMU", g_esDeveloper[developer].g_iDevMeleeRange);
+			pDevPanel.DrawText(sDisplay);
 
 			FormatEx(sDisplay, sizeof sDisplay, "Particle Effect(s): %i", g_esDeveloper[developer].g_iDevParticle);
 			pDevPanel.DrawText(sDisplay);
 
 			FormatEx(sDisplay, sizeof sDisplay, "Pipe Bomb Duration: %.2f", g_esDeveloper[developer].g_flDevPipeBombDuration);
 			pDevPanel.DrawText(sDisplay);
-
+		}
+		case 3:
+		{
 			FormatEx(sDisplay, sizeof sDisplay, "Punch Resistance: %.2f", g_esDeveloper[developer].g_flDevPunchResistance);
 			pDevPanel.DrawText(sDisplay);
 
@@ -6348,7 +6347,9 @@ void vDeveloperPanel(int developer, int level = 0)
 			flValue = g_esDeveloper[developer].g_flDevShoveDamage;
 			FormatEx(sDisplay, sizeof sDisplay, "Shove Damage: %.2f%% (%.2f)", (flValue * 100.0), flValue);
 			pDevPanel.DrawText(sDisplay);
-
+		}
+		case 4:
+		{
 			flValue = g_esDeveloper[developer].g_flDevShoveRate;
 			FormatEx(sDisplay, sizeof sDisplay, "Shove Rate: %.2f%% (%.2f)", (flValue * 100.0), flValue);
 			pDevPanel.DrawText(sDisplay);
@@ -6391,9 +6392,38 @@ void vDeveloperPanel(int developer, int level = 0)
 
 int iDeveloperMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
-	if (action == MenuAction_Select && (param2 == 8 || param2 == 9))
+	if (action == MenuAction_Select)
 	{
-		vDeveloperPanel(param1, ((g_esDeveloper[param1].g_iDevPanelLevel == 0) ? 1 : 0));
+		switch (param2)
+		{
+			case 8:
+			{
+				g_esDeveloper[param1].g_iDevPanelPage--;
+				int iPage = g_esDeveloper[param1].g_iDevPanelPage;
+
+				switch (g_esDeveloper[param1].g_iDevPanelPages > 0)
+				{
+					case true: g_esDeveloper[param1].g_iDevPanelPage = (iPage < 0) ? g_esDeveloper[param1].g_iDevPanelPages : iPage;
+					case false: g_esDeveloper[param1].g_iDevPanelPage = 0;
+				}
+
+				vDeveloperPanel(param1, g_esDeveloper[param1].g_iDevPanelPage);
+			}
+			case 9:
+			{
+				g_esDeveloper[param1].g_iDevPanelPage++;
+				int iPage = g_esDeveloper[param1].g_iDevPanelPage;
+
+				switch (g_esDeveloper[param1].g_iDevPanelPages > 0)
+				{
+					case true: g_esDeveloper[param1].g_iDevPanelPage = (iPage > g_esDeveloper[param1].g_iDevPanelPages) ? 0 : iPage;
+					case false: g_esDeveloper[param1].g_iDevPanelPage = 0;
+				}
+
+				vDeveloperPanel(param1, g_esDeveloper[param1].g_iDevPanelPage);
+			}
+			case 10: g_esDeveloper[param1].g_iDevPanelPage = 0;
+		}
 	}
 
 	return 0;
@@ -6479,7 +6509,7 @@ int iFavoriteMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 	return 0;
 }
 
-void vHudPanel(int developer, int level = 0)
+void vHudPanel(int developer, int page = 0)
 {
 	if (iGetTankCount(true, true) <= 0)
 	{
@@ -6490,7 +6520,7 @@ void vHudPanel(int developer, int level = 0)
 		return;
 	}
 
-	g_esPlayer[developer].g_iHudPanelLevel = level;
+	g_esPlayer[developer].g_iHudPanelPage = page;
 	g_esPlayer[developer].g_iHudPanelPages = 0;
 
 	bool bHuman = false;
@@ -6512,7 +6542,7 @@ void vHudPanel(int developer, int level = 0)
 	pHudPanel.SetTitle(sDisplay);
 	pHudPanel.DrawItem("", ITEMDRAW_SPACER|ITEMDRAW_RAWLINE);
 
-	int iStartPos = (g_esPlayer[developer].g_iHudPanelLevel * 2), iTank = 0, iType = 0;
+	int iStartPos = (g_esPlayer[developer].g_iHudPanelPage * 2), iTank = 0, iType = 0;
 	for (int iPos = iStartPos; iPos < (iStartPos + 2); iPos++)
 	{
 		iTank = iTanks[iPos];
@@ -6577,25 +6607,36 @@ int iHudMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 		{
 			case 8:
 			{
-				switch (g_esPlayer[param1].g_iHudPanelLevel == 0)
+				g_esPlayer[param1].g_iHudPanelPage--;
+				int iPage = g_esPlayer[param1].g_iHudPanelPage;
+
+				switch (g_esPlayer[param1].g_iHudPanelPages > 0)
 				{
-					case true: g_esPlayer[param1].g_iHudPanelLevel = g_esPlayer[param1].g_iHudPanelPages;
-					case false: g_esPlayer[param1].g_iHudPanelLevel--;
+					case true: g_esPlayer[param1].g_iHudPanelPage = (iPage < 0) ? g_esPlayer[param1].g_iHudPanelPages : iPage;
+					case false: g_esPlayer[param1].g_iHudPanelPage = 0;
 				}
 
-				vHudPanel(param1, g_esPlayer[param1].g_iHudPanelLevel);
+				vHudPanel(param1, g_esPlayer[param1].g_iHudPanelPage);
 			}
 			case 9:
 			{
-				switch (g_esPlayer[param1].g_iHudPanelLevel == g_esPlayer[param1].g_iHudPanelPages)
+				g_esPlayer[param1].g_iHudPanelPage++;
+				int iPage = g_esPlayer[param1].g_iHudPanelPage;
+
+				switch (g_esPlayer[param1].g_iHudPanelPages > 0)
 				{
-					case true: g_esPlayer[param1].g_iHudPanelLevel = 0;
-					case false: g_esPlayer[param1].g_iHudPanelLevel++;
+					case true: g_esPlayer[param1].g_iHudPanelPage = (iPage > g_esPlayer[param1].g_iHudPanelPages) ? 0 : iPage;
+					case false: g_esPlayer[param1].g_iHudPanelPage = 0;
 				}
 
-				vHudPanel(param1, g_esPlayer[param1].g_iHudPanelLevel);
+				vHudPanel(param1, g_esPlayer[param1].g_iHudPanelPage);
 			}
-			case 10: delete g_esPlayer[param1].g_hHudTimer;
+			case 10:
+			{
+				g_esPlayer[param1].g_iHudPanelPage = 0;
+
+				delete g_esPlayer[param1].g_hHudTimer;
+			}
 		}
 	}
 
@@ -15493,7 +15534,8 @@ void vDeveloperSettings(int developer)
 	g_esDeveloper[developer].g_iDevLifeLeech = 5;
 	g_esDeveloper[developer].g_iDevMeleeRange = 150;
 	g_esDeveloper[developer].g_iDevMidairDashes = 2;
-	g_esDeveloper[developer].g_iDevPanelLevel = 0;
+	g_esDeveloper[developer].g_iDevPanelPage = 0;
+	g_esDeveloper[developer].g_iDevPanelPages = 4;
 	g_esDeveloper[developer].g_iDevParticle = MT_ROCK_FIRE;
 	g_esDeveloper[developer].g_iDevReviveHealth = 100;
 	g_esDeveloper[developer].g_iDevRewardTypes = MT_REWARD_HEALTH|MT_REWARD_AMMO|MT_REWARD_REFILL|MT_REWARD_ATTACKBOOST|MT_REWARD_DAMAGEBOOST|MT_REWARD_SPEEDBOOST|MT_REWARD_GODMODE|MT_REWARD_ITEM|MT_REWARD_RESPAWN|MT_REWARD_INFAMMO;
@@ -27223,7 +27265,7 @@ Action tTimerHudPanel(Handle timer, int userid)
 		return Plugin_Stop;
 	}
 
-	vHudPanel(iPlayer, g_esPlayer[iPlayer].g_iHudPanelLevel);
+	vHudPanel(iPlayer, g_esPlayer[iPlayer].g_iHudPanelPage);
 
 	return Plugin_Continue;
 }

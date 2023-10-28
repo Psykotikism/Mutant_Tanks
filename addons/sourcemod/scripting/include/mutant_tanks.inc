@@ -2580,6 +2580,11 @@ stock bool bIsSpecialInfected(int infected, int flags = MT_CHECK_INDEX|MT_CHECK_
 	return bIsSmoker(infected, flags) || bIsBoomer(infected, flags) || bIsHunter(infected, flags) || bIsSpitter(infected, flags) || bIsJockey(infected, flags) || bIsCharger(infected, flags);
 }
 
+stock bool bIsSpectator(int spectator, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME)
+{
+	return bIsValidClient(spectator, flags) && GetClientTeam(spectator) == 1;
+}
+
 stock bool bIsSpitter(int spitter, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
 {
 	return bIsInfected(spitter, flags) && bIsSecondGame() && GetEntProp(spitter, Prop_Send, "m_zombieClass") == 4;
