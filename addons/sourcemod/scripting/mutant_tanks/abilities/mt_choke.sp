@@ -96,6 +96,7 @@ enum struct esChokePlayer
 	int g_iRangeCooldown;
 	int g_iRequiresHumans;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esChokePlayer g_esChokePlayer[MAXPLAYERS + 1];
@@ -847,57 +848,59 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esChokePlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esChokePlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esChokePlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esChokeCache[tank].g_flChokeChance = flGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_flChokeChance, g_esChokePlayer[tank].g_flChokeChance, g_esChokeSpecial[type].g_flChokeChance, g_esChokeAbility[type].g_flChokeChance, 1);
-		g_esChokeCache[tank].g_flChokeDamage = flGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_flChokeDamage, g_esChokePlayer[tank].g_flChokeDamage, g_esChokeSpecial[type].g_flChokeDamage, g_esChokeAbility[type].g_flChokeDamage, 1);
-		g_esChokeCache[tank].g_flChokeDelay = flGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_flChokeDelay, g_esChokePlayer[tank].g_flChokeDelay, g_esChokeSpecial[type].g_flChokeDelay, g_esChokeAbility[type].g_flChokeDelay, 1);
-		g_esChokeCache[tank].g_flChokeRange = flGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_flChokeRange, g_esChokePlayer[tank].g_flChokeRange, g_esChokeSpecial[type].g_flChokeRange, g_esChokeAbility[type].g_flChokeRange, 1);
-		g_esChokeCache[tank].g_flChokeRangeChance = flGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_flChokeRangeChance, g_esChokePlayer[tank].g_flChokeRangeChance, g_esChokeSpecial[type].g_flChokeRangeChance, g_esChokeAbility[type].g_flChokeRangeChance, 1);
-		g_esChokeCache[tank].g_iChokeAbility = iGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_iChokeAbility, g_esChokePlayer[tank].g_iChokeAbility, g_esChokeSpecial[type].g_iChokeAbility, g_esChokeAbility[type].g_iChokeAbility, 1);
-		g_esChokeCache[tank].g_iChokeCooldown = iGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_iChokeCooldown, g_esChokePlayer[tank].g_iChokeCooldown, g_esChokeSpecial[type].g_iChokeCooldown, g_esChokeAbility[type].g_iChokeCooldown, 1);
-		g_esChokeCache[tank].g_iChokeDuration = iGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_iChokeDuration, g_esChokePlayer[tank].g_iChokeDuration, g_esChokeSpecial[type].g_iChokeDuration, g_esChokeAbility[type].g_iChokeDuration, 1);
-		g_esChokeCache[tank].g_iChokeEffect = iGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_iChokeEffect, g_esChokePlayer[tank].g_iChokeEffect, g_esChokeSpecial[type].g_iChokeEffect, g_esChokeAbility[type].g_iChokeEffect, 1);
-		g_esChokeCache[tank].g_iChokeHit = iGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_iChokeHit, g_esChokePlayer[tank].g_iChokeHit, g_esChokeSpecial[type].g_iChokeHit, g_esChokeAbility[type].g_iChokeHit, 1);
-		g_esChokeCache[tank].g_iChokeHitMode = iGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_iChokeHitMode, g_esChokePlayer[tank].g_iChokeHitMode, g_esChokeSpecial[type].g_iChokeHitMode, g_esChokeAbility[type].g_iChokeHitMode, 1);
-		g_esChokeCache[tank].g_iChokeMessage = iGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_iChokeMessage, g_esChokePlayer[tank].g_iChokeMessage, g_esChokeSpecial[type].g_iChokeMessage, g_esChokeAbility[type].g_iChokeMessage, 1);
-		g_esChokeCache[tank].g_iChokeRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_iChokeRangeCooldown, g_esChokePlayer[tank].g_iChokeRangeCooldown, g_esChokeSpecial[type].g_iChokeRangeCooldown, g_esChokeAbility[type].g_iChokeRangeCooldown, 1);
-		g_esChokeCache[tank].g_iChokeSight = iGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_iChokeSight, g_esChokePlayer[tank].g_iChokeSight, g_esChokeSpecial[type].g_iChokeSight, g_esChokeAbility[type].g_iChokeSight, 1);
-		g_esChokeCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_flCloseAreasOnly, g_esChokePlayer[tank].g_flCloseAreasOnly, g_esChokeSpecial[type].g_flCloseAreasOnly, g_esChokeAbility[type].g_flCloseAreasOnly, 1);
-		g_esChokeCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_iComboAbility, g_esChokePlayer[tank].g_iComboAbility, g_esChokeSpecial[type].g_iComboAbility, g_esChokeAbility[type].g_iComboAbility, 1);
-		g_esChokeCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_iHumanAbility, g_esChokePlayer[tank].g_iHumanAbility, g_esChokeSpecial[type].g_iHumanAbility, g_esChokeAbility[type].g_iHumanAbility, 1);
-		g_esChokeCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_iHumanAmmo, g_esChokePlayer[tank].g_iHumanAmmo, g_esChokeSpecial[type].g_iHumanAmmo, g_esChokeAbility[type].g_iHumanAmmo, 1);
-		g_esChokeCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_iHumanCooldown, g_esChokePlayer[tank].g_iHumanCooldown, g_esChokeSpecial[type].g_iHumanCooldown, g_esChokeAbility[type].g_iHumanCooldown, 1);
-		g_esChokeCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_iHumanRangeCooldown, g_esChokePlayer[tank].g_iHumanRangeCooldown, g_esChokeSpecial[type].g_iHumanRangeCooldown, g_esChokeAbility[type].g_iHumanRangeCooldown, 1);
-		g_esChokeCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_flOpenAreasOnly, g_esChokePlayer[tank].g_flOpenAreasOnly, g_esChokeSpecial[type].g_flOpenAreasOnly, g_esChokeAbility[type].g_flOpenAreasOnly, 1);
-		g_esChokeCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_iRequiresHumans, g_esChokePlayer[tank].g_iRequiresHumans, g_esChokeSpecial[type].g_iRequiresHumans, g_esChokeAbility[type].g_iRequiresHumans, 1);
+		g_esChokeCache[tank].g_flChokeChance = flGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_flChokeChance, g_esChokePlayer[tank].g_flChokeChance, g_esChokeSpecial[iType].g_flChokeChance, g_esChokeAbility[iType].g_flChokeChance, 1);
+		g_esChokeCache[tank].g_flChokeDamage = flGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_flChokeDamage, g_esChokePlayer[tank].g_flChokeDamage, g_esChokeSpecial[iType].g_flChokeDamage, g_esChokeAbility[iType].g_flChokeDamage, 1);
+		g_esChokeCache[tank].g_flChokeDelay = flGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_flChokeDelay, g_esChokePlayer[tank].g_flChokeDelay, g_esChokeSpecial[iType].g_flChokeDelay, g_esChokeAbility[iType].g_flChokeDelay, 1);
+		g_esChokeCache[tank].g_flChokeRange = flGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_flChokeRange, g_esChokePlayer[tank].g_flChokeRange, g_esChokeSpecial[iType].g_flChokeRange, g_esChokeAbility[iType].g_flChokeRange, 1);
+		g_esChokeCache[tank].g_flChokeRangeChance = flGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_flChokeRangeChance, g_esChokePlayer[tank].g_flChokeRangeChance, g_esChokeSpecial[iType].g_flChokeRangeChance, g_esChokeAbility[iType].g_flChokeRangeChance, 1);
+		g_esChokeCache[tank].g_iChokeAbility = iGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_iChokeAbility, g_esChokePlayer[tank].g_iChokeAbility, g_esChokeSpecial[iType].g_iChokeAbility, g_esChokeAbility[iType].g_iChokeAbility, 1);
+		g_esChokeCache[tank].g_iChokeCooldown = iGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_iChokeCooldown, g_esChokePlayer[tank].g_iChokeCooldown, g_esChokeSpecial[iType].g_iChokeCooldown, g_esChokeAbility[iType].g_iChokeCooldown, 1);
+		g_esChokeCache[tank].g_iChokeDuration = iGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_iChokeDuration, g_esChokePlayer[tank].g_iChokeDuration, g_esChokeSpecial[iType].g_iChokeDuration, g_esChokeAbility[iType].g_iChokeDuration, 1);
+		g_esChokeCache[tank].g_iChokeEffect = iGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_iChokeEffect, g_esChokePlayer[tank].g_iChokeEffect, g_esChokeSpecial[iType].g_iChokeEffect, g_esChokeAbility[iType].g_iChokeEffect, 1);
+		g_esChokeCache[tank].g_iChokeHit = iGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_iChokeHit, g_esChokePlayer[tank].g_iChokeHit, g_esChokeSpecial[iType].g_iChokeHit, g_esChokeAbility[iType].g_iChokeHit, 1);
+		g_esChokeCache[tank].g_iChokeHitMode = iGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_iChokeHitMode, g_esChokePlayer[tank].g_iChokeHitMode, g_esChokeSpecial[iType].g_iChokeHitMode, g_esChokeAbility[iType].g_iChokeHitMode, 1);
+		g_esChokeCache[tank].g_iChokeMessage = iGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_iChokeMessage, g_esChokePlayer[tank].g_iChokeMessage, g_esChokeSpecial[iType].g_iChokeMessage, g_esChokeAbility[iType].g_iChokeMessage, 1);
+		g_esChokeCache[tank].g_iChokeRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_iChokeRangeCooldown, g_esChokePlayer[tank].g_iChokeRangeCooldown, g_esChokeSpecial[iType].g_iChokeRangeCooldown, g_esChokeAbility[iType].g_iChokeRangeCooldown, 1);
+		g_esChokeCache[tank].g_iChokeSight = iGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_iChokeSight, g_esChokePlayer[tank].g_iChokeSight, g_esChokeSpecial[iType].g_iChokeSight, g_esChokeAbility[iType].g_iChokeSight, 1);
+		g_esChokeCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_flCloseAreasOnly, g_esChokePlayer[tank].g_flCloseAreasOnly, g_esChokeSpecial[iType].g_flCloseAreasOnly, g_esChokeAbility[iType].g_flCloseAreasOnly, 1);
+		g_esChokeCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_iComboAbility, g_esChokePlayer[tank].g_iComboAbility, g_esChokeSpecial[iType].g_iComboAbility, g_esChokeAbility[iType].g_iComboAbility, 1);
+		g_esChokeCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_iHumanAbility, g_esChokePlayer[tank].g_iHumanAbility, g_esChokeSpecial[iType].g_iHumanAbility, g_esChokeAbility[iType].g_iHumanAbility, 1);
+		g_esChokeCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_iHumanAmmo, g_esChokePlayer[tank].g_iHumanAmmo, g_esChokeSpecial[iType].g_iHumanAmmo, g_esChokeAbility[iType].g_iHumanAmmo, 1);
+		g_esChokeCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_iHumanCooldown, g_esChokePlayer[tank].g_iHumanCooldown, g_esChokeSpecial[iType].g_iHumanCooldown, g_esChokeAbility[iType].g_iHumanCooldown, 1);
+		g_esChokeCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_iHumanRangeCooldown, g_esChokePlayer[tank].g_iHumanRangeCooldown, g_esChokeSpecial[iType].g_iHumanRangeCooldown, g_esChokeAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esChokeCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_flOpenAreasOnly, g_esChokePlayer[tank].g_flOpenAreasOnly, g_esChokeSpecial[iType].g_flOpenAreasOnly, g_esChokeAbility[iType].g_flOpenAreasOnly, 1);
+		g_esChokeCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esChokeTeammate[tank].g_iRequiresHumans, g_esChokePlayer[tank].g_iRequiresHumans, g_esChokeSpecial[iType].g_iRequiresHumans, g_esChokeAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
 	{
-		g_esChokeCache[tank].g_flChokeChance = flGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_flChokeChance, g_esChokeAbility[type].g_flChokeChance, 1);
-		g_esChokeCache[tank].g_flChokeDamage = flGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_flChokeDamage, g_esChokeAbility[type].g_flChokeDamage, 1);
-		g_esChokeCache[tank].g_flChokeDelay = flGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_flChokeDelay, g_esChokeAbility[type].g_flChokeDelay, 1);
-		g_esChokeCache[tank].g_flChokeRange = flGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_flChokeRange, g_esChokeAbility[type].g_flChokeRange, 1);
-		g_esChokeCache[tank].g_flChokeRangeChance = flGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_flChokeRangeChance, g_esChokeAbility[type].g_flChokeRangeChance, 1);
-		g_esChokeCache[tank].g_iChokeAbility = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iChokeAbility, g_esChokeAbility[type].g_iChokeAbility, 1);
-		g_esChokeCache[tank].g_iChokeCooldown = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iChokeCooldown, g_esChokeAbility[type].g_iChokeCooldown, 1);
-		g_esChokeCache[tank].g_iChokeDuration = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iChokeDuration, g_esChokeAbility[type].g_iChokeDuration, 1);
-		g_esChokeCache[tank].g_iChokeEffect = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iChokeEffect, g_esChokeAbility[type].g_iChokeEffect, 1);
-		g_esChokeCache[tank].g_iChokeHit = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iChokeHit, g_esChokeAbility[type].g_iChokeHit, 1);
-		g_esChokeCache[tank].g_iChokeHitMode = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iChokeHitMode, g_esChokeAbility[type].g_iChokeHitMode, 1);
-		g_esChokeCache[tank].g_iChokeMessage = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iChokeMessage, g_esChokeAbility[type].g_iChokeMessage, 1);
-		g_esChokeCache[tank].g_iChokeRangeCooldown = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iChokeRangeCooldown, g_esChokeAbility[type].g_iChokeRangeCooldown, 1);
-		g_esChokeCache[tank].g_iChokeSight = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iChokeSight, g_esChokeAbility[type].g_iChokeSight, 1);
-		g_esChokeCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_flCloseAreasOnly, g_esChokeAbility[type].g_flCloseAreasOnly, 1);
-		g_esChokeCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iComboAbility, g_esChokeAbility[type].g_iComboAbility, 1);
-		g_esChokeCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iHumanAbility, g_esChokeAbility[type].g_iHumanAbility, 1);
-		g_esChokeCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iHumanAmmo, g_esChokeAbility[type].g_iHumanAmmo, 1);
-		g_esChokeCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iHumanCooldown, g_esChokeAbility[type].g_iHumanCooldown, 1);
-		g_esChokeCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iHumanRangeCooldown, g_esChokeAbility[type].g_iHumanRangeCooldown, 1);
-		g_esChokeCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_flOpenAreasOnly, g_esChokeAbility[type].g_flOpenAreasOnly, 1);
-		g_esChokeCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iRequiresHumans, g_esChokeAbility[type].g_iRequiresHumans, 1);
+		g_esChokeCache[tank].g_flChokeChance = flGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_flChokeChance, g_esChokeAbility[iType].g_flChokeChance, 1);
+		g_esChokeCache[tank].g_flChokeDamage = flGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_flChokeDamage, g_esChokeAbility[iType].g_flChokeDamage, 1);
+		g_esChokeCache[tank].g_flChokeDelay = flGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_flChokeDelay, g_esChokeAbility[iType].g_flChokeDelay, 1);
+		g_esChokeCache[tank].g_flChokeRange = flGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_flChokeRange, g_esChokeAbility[iType].g_flChokeRange, 1);
+		g_esChokeCache[tank].g_flChokeRangeChance = flGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_flChokeRangeChance, g_esChokeAbility[iType].g_flChokeRangeChance, 1);
+		g_esChokeCache[tank].g_iChokeAbility = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iChokeAbility, g_esChokeAbility[iType].g_iChokeAbility, 1);
+		g_esChokeCache[tank].g_iChokeCooldown = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iChokeCooldown, g_esChokeAbility[iType].g_iChokeCooldown, 1);
+		g_esChokeCache[tank].g_iChokeDuration = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iChokeDuration, g_esChokeAbility[iType].g_iChokeDuration, 1);
+		g_esChokeCache[tank].g_iChokeEffect = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iChokeEffect, g_esChokeAbility[iType].g_iChokeEffect, 1);
+		g_esChokeCache[tank].g_iChokeHit = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iChokeHit, g_esChokeAbility[iType].g_iChokeHit, 1);
+		g_esChokeCache[tank].g_iChokeHitMode = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iChokeHitMode, g_esChokeAbility[iType].g_iChokeHitMode, 1);
+		g_esChokeCache[tank].g_iChokeMessage = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iChokeMessage, g_esChokeAbility[iType].g_iChokeMessage, 1);
+		g_esChokeCache[tank].g_iChokeRangeCooldown = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iChokeRangeCooldown, g_esChokeAbility[iType].g_iChokeRangeCooldown, 1);
+		g_esChokeCache[tank].g_iChokeSight = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iChokeSight, g_esChokeAbility[iType].g_iChokeSight, 1);
+		g_esChokeCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_flCloseAreasOnly, g_esChokeAbility[iType].g_flCloseAreasOnly, 1);
+		g_esChokeCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iComboAbility, g_esChokeAbility[iType].g_iComboAbility, 1);
+		g_esChokeCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iHumanAbility, g_esChokeAbility[iType].g_iHumanAbility, 1);
+		g_esChokeCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iHumanAmmo, g_esChokeAbility[iType].g_iHumanAmmo, 1);
+		g_esChokeCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iHumanCooldown, g_esChokeAbility[iType].g_iHumanCooldown, 1);
+		g_esChokeCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iHumanRangeCooldown, g_esChokeAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esChokeCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_flOpenAreasOnly, g_esChokeAbility[iType].g_flOpenAreasOnly, 1);
+		g_esChokeCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iRequiresHumans, g_esChokeAbility[iType].g_iRequiresHumans, 1);
 	}
 }
 

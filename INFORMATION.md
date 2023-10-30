@@ -24,6 +24,7 @@
 	- Competitive
 	- Difficulty
 	- Health
+	- Protection
 	- Enhancements
 	- Immunities
 	- Administration
@@ -54,6 +55,7 @@
 	- Props
 	- Particles
 	- Health
+	- Protection
 	- Enhancements
 	- Immunities
 </details>
@@ -386,8 +388,7 @@
 			// 1-500: ON, the type that will spawn.
 			"Type Range"				"1-500"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "General" section for each special infected here.
 
@@ -591,8 +592,7 @@
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Vocalize Death"			"1"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Announcements" section for each special infected here.
 
@@ -2066,8 +2066,7 @@
 			// 4th number = Voice pitch for assistant killers.
 			"Voice Pitch Visual"			"100,100,100,100"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				"Reward Enabled"			"-1,-1,-1,-1"
 				"Reward Bots"				"-1,-1,-1,-1"
@@ -2329,21 +2328,249 @@
 			// 3: Multiply both.
 			"Multiply Health"			"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Health" section for each special infected here.
 
+				// Base health given to all Mutant Boomers.
+				// Note: Boomer's health limit on any difficulty is 1,000,000.
+				// Note: Disable this setting if it conflicts with other plugins.
+				// Note: Depending on the value of the "Multiply Health" setting, the Mutant Boomer's health will be multiplied based on player count.
+				// Note: This setting can be used for standard Boomers.
+				// Note: This setting can be overridden for each Mutant Boomer under the "Health" section of their settings.
+				// --
+				// Minimum: 0 (OFF)
+				// Maximum: 1000000
+				"Boomer Base Health"			"0"
+
+				// Extra health given to the Mutant Boomer.
+				// Note: Boomer's health limit on any difficulty is 1,000,000.
+				// Note: Disable this setting if it conflicts with other plugins.
+				// Note: Depending on the value of the "Multiply Health" setting, the Mutant Boomer's health will be multiplied based on player count.
+				// Note: This setting can be used for standard Boomers.
+				// Note: This setting can be overridden for each Mutant Boomer under the "Health" section of their settings.
+				// --
+				// Minimum: -1000000
+				// Maximum: 1000000
+				// --
+				// Positive numbers: Current health + Extra health
+				// Negative numbers: Current health - Extra health
+				"Boomer Extra Health"			"0"
+
+				// Base health given to all Mutant Chargers.
+				// Note: Charger's health limit on any difficulty is 1,000,000.
+				// Note: Disable this setting if it conflicts with other plugins.
+				// Note: Depending on the value of the "Multiply Health" setting, the Mutant Charger's health will be multiplied based on player count.
+				// Note: This setting can be used for standard Chargers.
+				// Note: This setting can be overridden for each Mutant Charger under the "Health" section of their settings.
+				// --
+				// Minimum: 0 (OFF)
+				// Maximum: 1000000
+				"Charger Base Health"			"0"
+
+				// Extra health given to the Mutant Charger.
+				// Note: Charger's health limit on any difficulty is 1,000,000.
+				// Note: Disable this setting if it conflicts with other plugins.
+				// Note: Depending on the value of the "Multiply Health" setting, the Mutant Charger's health will be multiplied based on player count.
+				// Note: This setting can be used for standard Chargers.
+				// Note: This setting can be overridden for each Mutant Charger under the "Health" section of their settings.
+				// --
+				// Minimum: -1000000
+				// Maximum: 1000000
+				// --
+				// Positive numbers: Current health + Extra health
+				// Negative numbers: Current health - Extra health
+				"Charger Extra Health"			"0"
+
+				// Base health given to all Mutant Hunters.
+				// Note: Hunter's health limit on any difficulty is 1,000,000.
+				// Note: Disable this setting if it conflicts with other plugins.
+				// Note: Depending on the value of the "Multiply Health" setting, the Mutant Hunter's health will be multiplied based on player count.
+				// Note: This setting can be used for standard Hunters.
+				// Note: This setting can be overridden for each Mutant Hunter under the "Health" section of their settings.
+				// --
+				// Minimum: 0 (OFF)
+				// Maximum: 1000000
+				"Hunter Base Health"			"0"
+
+				// Extra health given to the Mutant Hunter.
+				// Note: Hunter's health limit on any difficulty is 1,000,000.
+				// Note: Disable this setting if it conflicts with other plugins.
+				// Note: Depending on the value of the "Multiply Health" setting, the Mutant Hunter's health will be multiplied based on player count.
+				// Note: This setting can be used for standard Hunters.
+				// Note: This setting can be overridden for each Mutant Hunter under the "Health" section of their settings.
+				// --
+				// Minimum: -1000000
+				// Maximum: 1000000
+				// --
+				// Positive numbers: Current health + Extra health
+				// Negative numbers: Current health - Extra health
+				"Hunter Extra Health"			"0"
+
+				// Base health given to all Mutant Jockeys.
+				// Note: Jockey's health limit on any difficulty is 1,000,000.
+				// Note: Disable this setting if it conflicts with other plugins.
+				// Note: Depending on the value of the "Multiply Health" setting, the Mutant Jockey's health will be multiplied based on player count.
+				// Note: This setting can be used for standard Jockeys.
+				// Note: This setting can be overridden for each Mutant Jockey under the "Health" section of their settings.
+				// --
+				// Minimum: 0 (OFF)
+				// Maximum: 1000000
+				"Jockey Base Health"			"0"
+
+				// Extra health given to the Mutant Jockey.
+				// Note: Jockey's health limit on any difficulty is 1,000,000.
+				// Note: Disable this setting if it conflicts with other plugins.
+				// Note: Depending on the value of the "Multiply Health" setting, the Mutant Jockey's health will be multiplied based on player count.
+				// Note: This setting can be used for standard Jockeys.
+				// Note: This setting can be overridden for each Mutant Jockey under the "Health" section of their settings.
+				// --
+				// Minimum: -1000000
+				// Maximum: 1000000
+				// --
+				// Positive numbers: Current health + Extra health
+				// Negative numbers: Current health - Extra health
+				"Jockey Extra Health"			"0"
+
+				// Base health given to all Mutant Smokers.
+				// Note: Smoker's health limit on any difficulty is 1,000,000.
+				// Note: Disable this setting if it conflicts with other plugins.
+				// Note: Depending on the value of the "Multiply Health" setting, the Mutant Smoker's health will be multiplied based on player count.
+				// Note: This setting can be used for standard Smokers.
+				// Note: This setting can be overridden for each Mutant Smoker under the "Health" section of their settings.
+				// --
+				// Minimum: 0 (OFF)
+				// Maximum: 1000000
+				"Smoker Base Health"			"0"
+
+				// Extra health given to the Mutant Smoker.
+				// Note: Smoker's health limit on any difficulty is 1,000,000.
+				// Note: Disable this setting if it conflicts with other plugins.
+				// Note: Depending on the value of the "Multiply Health" setting, the Mutant Smoker's health will be multiplied based on player count.
+				// Note: This setting can be used for standard Smokers.
+				// Note: This setting can be overridden for each Mutant Smoker under the "Health" section of their settings.
+				// --
+				// Minimum: -1000000
+				// Maximum: 1000000
+				// --
+				// Positive numbers: Current health + Extra health
+				// Negative numbers: Current health - Extra health
+				"Smoker Extra Health"			"0"
+
+				// Base health given to all Mutant Spitters.
+				// Note: Spitter's health limit on any difficulty is 1,000,000.
+				// Note: Disable this setting if it conflicts with other plugins.
+				// Note: Depending on the value of the "Multiply Health" setting, the Mutant Spitter's health will be multiplied based on player count.
+				// Note: This setting can be used for standard Spitters.
+				// Note: This setting can be overridden for each Mutant Spitter under the "Health" section of their settings.
+				// --
+				// Minimum: 0 (OFF)
+				// Maximum: 1000000
+				"Spitter Base Health"			"0"
+
+				// Extra health given to the Mutant Spitter.
+				// Note: Spitter's health limit on any difficulty is 1,000,000.
+				// Note: Disable this setting if it conflicts with other plugins.
+				// Note: Depending on the value of the "Multiply Health" setting, the Mutant Spitter's health will be multiplied based on player count.
+				// Note: This setting can be used for standard Spitters.
+				// Note: This setting can be overridden for each Mutant Spitter under the "Health" section of their settings.
+				// --
+				// Minimum: -1000000
+				// Maximum: 1000000
+				// --
+				// Positive numbers: Current health + Extra health
+				// Negative numbers: Current health - Extra health
+				"Spitter Extra Health"			"0"
+
 				// Example
-				"Base Health"				"0"
+				"Boomer Base Health"			"0"
+				"Charger Base Health"			"0"
+				"Hunter Base Health"			"0"
+				"Jockey Base Health"			"0"
+				"Smoker Base Health"			"0"
+				"Spitter Base Health"			"0"
 				"Display Health"			"11"
-				"Extra Health"				"1"
+				"Boomer Extra Health"			"0"
+				"Charger Extra Health"			"0"
+				"Hunter Extra Health"			"0"
+				"Jockey Extra Health"			"0"
+				"Smoker Extra Health"			"0"
+				"Spitter Extra Health"			"0"
 				"Display Health Type"			"0"
 				"Health Characters"			"|,-"
 				"Health Percentage Multiplier"		"1.0"
 				"Human Multiplier Mode"			"0"
 				"Minimum Humans"			"2"
 				"Multiply Health"			"0"
+			}
+		}
+		"Protection"
+		{
+			// The Mutant Tank will have spawn protection for a limited time.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Protection" section of their settings.
+			// --
+			// 0: OFF
+			// 1: Spawn with a temporary shield.
+			// 2: Spawn with temporary armor.
+			// 3: Both
+			"Spawn Protection"			"0"
+
+			// The duration of the Mutant Tank's armor for spawn protection.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Protection" section of their settings.
+			// --
+			// Minimum: 0.1
+			// Maximum: 99999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Armor Duration"			"3.0"
+
+			// The Mutant Tank's armor blocks this percentage of incoming damage.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Protection" section of their settings.
+			// --
+			// Minimum: 0.0 (God mode)
+			// Maximum: 1.0 (None)
+			"Armor Resistance"			"0.75"
+
+			// The duration of the Mutant Tank's shield for spawn protection.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Protection" section of their settings.
+			// --
+			// Minimum: 0.1
+			// Maximum: 99999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Shield Duration"			"1.0"
+
+			// The Mutant Tank's shield blocks this percentage of incoming damage.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Protection" section of their settings.
+			// --
+			// Minimum: 0.0 (God mode)
+			// Maximum: 1.0 (None)
+			"Shield Resistance"			"0.0"
+
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
+			{
+				// Note: Override any of the settings in the "Protection" section for each special infected here.
+
+				// Example
+				"Spawn Protection"			"0"
+				"Armor Duration"			"3.0"
+				"Armor Resistance"			"0.75"
+				"Shield Duration"			"1.0"
+				"Shield Resistance"			"0.0"
 			}
 		}
 		"Enhancements"
@@ -2487,7 +2714,7 @@
 			// --
 			// OFF: 0.0
 			// Minimum: 0.1
-			// Maximum: 3.0
+			// Maximum: 99.0
 			"Run Speed"				"0.0"
 
 			// Skip every Mutant Tank's dying animation.
@@ -2542,8 +2769,7 @@
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Throw Rock"				"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Enhancements" section for each special infected here.
 
@@ -2637,8 +2863,7 @@
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Vomit Immunity"			"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Immunities" section for each special infected here.
 
@@ -3264,8 +3489,7 @@
 			// 0.01-1.0: Burn percentage
 			"Burnt Skin"				"-1.0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "General" section for each special infected here.
 
@@ -3564,8 +3788,7 @@
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Vocalize Death"			"1"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Announcements" section for each special infected here.
 
@@ -5001,8 +5224,7 @@
 			// 4th number = Voice pitch for assistant killers.
 			"Voice Pitch Visual"			"0,0,0,0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				"Reward Enabled"			"-1,-1,-1,-1"
 				"Reward Bots"				"-1,-1,-1,-1"
@@ -5144,8 +5366,7 @@
 			// 1: Glow outline visible through the walls.
 			"Glow Type"				"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Glow" section for each special infected here.
 
@@ -5184,8 +5405,7 @@
 			// 2: ON, do not inform players about activating their abilities manually.
 			"Human Support"				"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Human Support" section for each special infected here.
 
@@ -5246,8 +5466,7 @@
 			// 4: Spawn as normal Mutant Tanks that can combine abilities.
 			"Spawn Type"				"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Spawn" section for each special infected here.
 
@@ -5358,8 +5577,7 @@
 			// 4th number = 5th stage type
 			"Boss Types"				"2,3,4,5"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Boss" section for each special infected here.
 
@@ -5774,8 +5992,7 @@
 			// 6th number = Chance to combine upon-death abilities.
 			"Combo Type Chance"			"0.0,0.0,0.0,0.0,0.0,0.0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Combo" section for each special infected here.
 
@@ -5838,8 +6055,7 @@
 			// "forever" - 99999 seconds
 			"Random Interval"			"5.0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Random" section for each special infected here.
 
@@ -5906,8 +6122,7 @@
 			// Maximum: 500
 			"Transform Types"			"1,2,3,4,5,6,7,8,9,10"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Transform" section for each special infected here.
 
@@ -6076,8 +6291,7 @@
 			// 4th number = Alpha
 			"Crown Color"				"255,255,255,255"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Props" section for each special infected here.
 
@@ -6121,8 +6335,7 @@
 			// 8: Acid Trail (Only available in Left 4 Dead 2.)
 			"Rock Effects"				"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Particles" section for each special infected here.
 
@@ -6243,21 +6456,249 @@
 			// 3: Multiply both.
 			"Multiply Health"			"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Health" section for each special infected here.
 
+				// Base health given to all Mutant Boomers.
+				// Note: Boomer's health limit on any difficulty is 1,000,000.
+				// Note: Disable this setting if it conflicts with other plugins.
+				// Note: Depending on the value of the "Multiply Health" setting, the Mutant Boomer's health will be multiplied based on player count.
+				// Note: This setting overrides the same setting under the "Plugin Settings/Health" section.
+				// Note: This setting can be overridden for specific players.
+				// --
+				// Minimum: 0 (OFF)
+				// Maximum: 1000000
+				"Boomer Base Health"			"0"
+
+				// Extra health given to the Mutant Boomer.
+				// Note: Boomer's health limit on any difficulty is 1,000,000.
+				// Note: Disable this setting if it conflicts with other plugins.
+				// Note: Depending on the value of the "Multiply Health" setting, the Mutant Boomer's health will be multiplied based on player count.
+				// Note: This setting overrides the same setting under the "Plugin Settings/Health" section.
+				// Note: This setting can be overridden for specific players.
+				// --
+				// Minimum: -1000000
+				// Maximum: 1000000
+				// --
+				// Positive numbers: Current health + Extra health
+				// Negative numbers: Current health - Extra health
+				"Boomer Extra Health"			"0"
+
+				// Base health given to all Mutant Chargers.
+				// Note: Charger's health limit on any difficulty is 1,000,000.
+				// Note: Disable this setting if it conflicts with other plugins.
+				// Note: Depending on the value of the "Multiply Health" setting, the Mutant Charger's health will be multiplied based on player count.
+				// Note: This setting overrides the same setting under the "Plugin Settings/Health" section.
+				// Note: This setting can be overridden for specific players.
+				// --
+				// Minimum: 0 (OFF)
+				// Maximum: 1000000
+				"Charger Base Health"			"0"
+
+				// Extra health given to the Mutant Charger.
+				// Note: Charger's health limit on any difficulty is 1,000,000.
+				// Note: Disable this setting if it conflicts with other plugins.
+				// Note: Depending on the value of the "Multiply Health" setting, the Mutant Charger's health will be multiplied based on player count.
+				// Note: This setting overrides the same setting under the "Plugin Settings/Health" section.
+				// Note: This setting can be overridden for specific players.
+				// --
+				// Minimum: -1000000
+				// Maximum: 1000000
+				// --
+				// Positive numbers: Current health + Extra health
+				// Negative numbers: Current health - Extra health
+				"Charger Extra Health"			"0"
+
+				// Base health given to all Mutant Hunters.
+				// Note: Hunter's health limit on any difficulty is 1,000,000.
+				// Note: Disable this setting if it conflicts with other plugins.
+				// Note: Depending on the value of the "Multiply Health" setting, the Mutant Hunter's health will be multiplied based on player count.
+				// Note: This setting overrides the same setting under the "Plugin Settings/Health" section.
+				// Note: This setting can be overridden for specific players.
+				// --
+				// Minimum: 0 (OFF)
+				// Maximum: 1000000
+				"Hunter Base Health"			"0"
+
+				// Extra health given to the Mutant Hunter.
+				// Note: Hunter's health limit on any difficulty is 1,000,000.
+				// Note: Disable this setting if it conflicts with other plugins.
+				// Note: Depending on the value of the "Multiply Health" setting, the Mutant Hunter's health will be multiplied based on player count.
+				// Note: This setting overrides the same setting under the "Plugin Settings/Health" section.
+				// Note: This setting can be overridden for specific players.
+				// --
+				// Minimum: -1000000
+				// Maximum: 1000000
+				// --
+				// Positive numbers: Current health + Extra health
+				// Negative numbers: Current health - Extra health
+				"Hunter Extra Health"			"0"
+
+				// Base health given to all Mutant Jockeys.
+				// Note: Jockey's health limit on any difficulty is 1,000,000.
+				// Note: Disable this setting if it conflicts with other plugins.
+				// Note: Depending on the value of the "Multiply Health" setting, the Mutant Jockey's health will be multiplied based on player count.
+				// Note: This setting overrides the same setting under the "Plugin Settings/Health" section.
+				// Note: This setting can be overridden for specific players.
+				// --
+				// Minimum: 0 (OFF)
+				// Maximum: 1000000
+				"Jockey Base Health"			"0"
+
+				// Extra health given to the Mutant Jockey.
+				// Note: Jockey's health limit on any difficulty is 1,000,000.
+				// Note: Disable this setting if it conflicts with other plugins.
+				// Note: Depending on the value of the "Multiply Health" setting, the Mutant Jockey's health will be multiplied based on player count.
+				// Note: This setting overrides the same setting under the "Plugin Settings/Health" section.
+				// Note: This setting can be overridden for specific players.
+				// --
+				// Minimum: -1000000
+				// Maximum: 1000000
+				// --
+				// Positive numbers: Current health + Extra health
+				// Negative numbers: Current health - Extra health
+				"Jockey Extra Health"			"0"
+
+				// Base health given to all Mutant Smokers.
+				// Note: Smoker's health limit on any difficulty is 1,000,000.
+				// Note: Disable this setting if it conflicts with other plugins.
+				// Note: Depending on the value of the "Multiply Health" setting, the Mutant Smoker's health will be multiplied based on player count.
+				// Note: This setting overrides the same setting under the "Plugin Settings/Health" section.
+				// Note: This setting can be overridden for specific players.
+				// --
+				// Minimum: 0 (OFF)
+				// Maximum: 1000000
+				"Smoker Base Health"			"0"
+
+				// Extra health given to the Mutant Smoker.
+				// Note: Smoker's health limit on any difficulty is 1,000,000.
+				// Note: Disable this setting if it conflicts with other plugins.
+				// Note: Depending on the value of the "Multiply Health" setting, the Mutant Smoker's health will be multiplied based on player count.
+				// Note: This setting overrides the same setting under the "Plugin Settings/Health" section.
+				// Note: This setting can be overridden for specific players.
+				// --
+				// Minimum: -1000000
+				// Maximum: 1000000
+				// --
+				// Positive numbers: Current health + Extra health
+				// Negative numbers: Current health - Extra health
+				"Smoker Extra Health"			"0"
+
+				// Base health given to all Mutant Spitters.
+				// Note: Spitter's health limit on any difficulty is 1,000,000.
+				// Note: Disable this setting if it conflicts with other plugins.
+				// Note: Depending on the value of the "Multiply Health" setting, the Mutant Spitter's health will be multiplied based on player count.
+				// Note: This setting overrides the same setting under the "Plugin Settings/Health" section.
+				// Note: This setting can be overridden for specific players.
+				// --
+				// Minimum: 0 (OFF)
+				// Maximum: 1000000
+				"Spitter Base Health"			"0"
+
+				// Extra health given to the Mutant Spitter.
+				// Note: Spitter's health limit on any difficulty is 1,000,000.
+				// Note: Disable this setting if it conflicts with other plugins.
+				// Note: Depending on the value of the "Multiply Health" setting, the Mutant Spitter's health will be multiplied based on player count.
+				// Note: This setting overrides the same setting under the "Plugin Settings/Health" section.
+				// Note: This setting can be overridden for specific players.
+				// --
+				// Minimum: -1000000
+				// Maximum: 1000000
+				// --
+				// Positive numbers: Current health + Extra health
+				// Negative numbers: Current health - Extra health
+				"Spitter Extra Health"			"0"
+
 				// Example
-				"Base Health"				"0"
+				"Boomer Base Health"			"0"
+				"Charger Base Health"			"0"
+				"Hunter Base Health"			"0"
+				"Jockey Base Health"			"0"
+				"Smoker Base Health"			"0"
+				"Spitter Base Health"			"0"
 				"Display Health"			"0"
-				"Extra Health"				"0"
+				"Boomer Extra Health"			"0"
+				"Charger Extra Health"			"0"
+				"Hunter Extra Health"			"0"
+				"Jockey Extra Health"			"0"
+				"Smoker Extra Health"			"0"
+				"Spitter Extra Health"			"0"
 				"Display Health Type"			"0"
 				"Health Characters"			""
 				"Health Percentage Multiplier"		"0.0"
 				"Human Multiplier Mode"			"0"
 				"Minimum Humans"			"0"
 				"Multiply Health"			"0"
+			}
+		}
+		"Protection"
+		{
+			// The Mutant Tank will have spawn protection for a limited time.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Protection" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: Spawn with a temporary shield.
+			// 2: Spawn with temporary armor.
+			// 3: Both
+			"Spawn Protection"			"0"
+
+			// The duration of the Mutant Tank's armor for spawn protection.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Protection" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.1
+			// Maximum: 99999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Armor Duration"			"3.0"
+
+			// The Mutant Tank's armor blocks this percentage of incoming damage.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Protection" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.0 (God mode)
+			// Maximum: 1.0 (None)
+			"Armor Resistance"			"0.75"
+
+			// The duration of the Mutant Tank's shield for spawn protection.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Protection" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.1
+			// Maximum: 99999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Shield Duration"			"1.0"
+
+			// The Mutant Tank's shield blocks this percentage of incoming damage.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Protection" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.0 (God mode)
+			// Maximum: 1.0 (None)
+			"Shield Resistance"			"0.0"
+
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
+			{
+				// Note: Override any of the settings in the "Protection" section for each special infected here.
+
+				// Example
+				"Spawn Protection"			"0"
+				"Armor Duration"			"3.0"
+				"Armor Resistance"			"0.75"
+				"Shield Duration"			"1.0"
+				"Shield Resistance"			"0.0"
 			}
 		}
 		"Enhancements"
@@ -6401,7 +6842,7 @@
 			// --
 			// OFF: 0.0
 			// Minimum: 0.1
-			// Maximum: 3.0
+			// Maximum: 99.0
 			"Run Speed"				"0.0"
 
 			// Skip the Mutant Tank's dying animation.
@@ -6456,8 +6897,7 @@
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Throw Rock"				"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Enhancements" section for each special infected here.
 
@@ -6551,8 +6991,7 @@
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Vomit Immunity"			"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Immunities" section for each special infected here.
 
@@ -6808,8 +7247,7 @@
 			// Maximum: 99999.0
 			"Absorb Melee Divisor"			"200.0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Absorb Ability" section for each special infected here.
 
@@ -7219,8 +7657,7 @@
 			// "forever" - 99999 seconds
 			"Acid Rock Cooldown"			"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Acid Ability" section for each special infected here.
 
@@ -7559,8 +7996,7 @@
 			// "forever" - 99999 seconds
 			"Aimless Range Cooldown"		"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Aimless Ability" section for each special infected here.
 
@@ -7893,8 +8329,7 @@
 			// 2: Reserved (Ammo)
 			"Ammo Type"				"3"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Ammo Ability" section for each special infected here.
 
@@ -8246,8 +8681,7 @@
 			// 3: Stagger both.
 			"Blind Stagger"				"3"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Blind Ability" section for each special infected here.
 
@@ -8658,8 +9092,7 @@
 			// "forever" - 99999 seconds
 			"Bomb Rock Cooldown"			"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Bomb Ability" section for each special infected here.
 
@@ -9009,8 +9442,7 @@
 			// "forever" - 99999 seconds
 			"Bury Range Cooldown"			"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Bury Ability" section for each special infected here.
 
@@ -9275,8 +9707,7 @@
 			// Maximum: 200.0
 			"Car Radius"				"-180.0,180.0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Car Ability" section for each special infected here.
 
@@ -9624,8 +10055,7 @@
 			// "forever" - 99999 seconds
 			"Choke Range Cooldown"			"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Choke Ability" section for each special infected here.
 
@@ -9875,8 +10305,7 @@
 			// 1-500: ON, the type of the clone.
 			"Clone Type"				"0-0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Clone Ability" section for each special infected here.
 
@@ -10109,8 +10538,7 @@
 			// "forever" - 99999 seconds
 			"Cloud Duration"			"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Cloud Ability" section for each special infected here.
 
@@ -10302,8 +10730,7 @@
 			// Maximum: 2.0
 			"Drop Weapon Scale"			"1.0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Drop Ability" section for each special infected here.
 
@@ -10633,8 +11060,7 @@
 			// "forever" - 99999 seconds
 			"Drug Range Cooldown"			"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Drug Ability" section for each special infected here.
 
@@ -10986,8 +11412,7 @@
 			// "forever" - 99999 seconds
 			"Drunk Turn Interval"			"0.5"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Drunk Ability" section for each special infected here.
 
@@ -11348,8 +11773,7 @@
 			// Maximum: 0.99
 			"Electric Stun Speed"			"0.25"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Electric Ability" section for each special infected here.
 
@@ -11693,8 +12117,7 @@
 			// 16: 5th slot only.
 			"Enforce Weapon Slots"			"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Enforce Ability" section for each special infected here.
 
@@ -11904,12 +12327,11 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 3.0
-			// Maximum: 10.0
+			// Minimum: 0.1
+			// Maximum: 99.0
 			"Fast Speed"				"5.0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Fast Ability" section for each special infected here.
 
@@ -12311,8 +12733,7 @@
 			// "forever" - 99999 seconds
 			"Fire Rock Cooldown"			"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Fire Ability" section for each special infected here.
 
@@ -12677,8 +13098,7 @@
 			// "forever" - 99999 seconds
 			"Fling Range Cooldown"			"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Fling Ability" section for each special infected here.
 
@@ -12918,8 +13338,7 @@
 			// 8: When the Mutant Tank jumps.
 			"Fly Type"				"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Fly Ability" section for each special infected here.
 
@@ -13203,8 +13622,7 @@
 			// Maximum: 3.0
 			"Fragile Speed Boost"			"1.0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Fragile Ability" section for each special infected here.
 
@@ -13659,8 +14077,7 @@
 			// 16: 5th slot only.
 			"Ghost Weapon Slots"			"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Ghost Ability" section for each special infected here.
 
@@ -13884,8 +14301,7 @@
 			// "forever" - 99999 seconds
 			"God Duration"				"5"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "God Ability" section for each special infected here.
 
@@ -14345,8 +14761,7 @@
 			// Maximum: 99999.0
 			"Gravity Value"				"0.3"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Gravity Ability" section for each special infected here.
 
@@ -14680,8 +15095,7 @@
 			// 16: Special infected
 			"Gunner Target Type"			"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Gunner Ability" section for each special infected here.
 
@@ -15118,8 +15532,7 @@
 			// Negative numbers: Current health - Health from Tanks
 			"Health From Tanks"			"500"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Heal Ability" section for each special infected here.
 
@@ -15265,8 +15678,7 @@
 			// 64: Right leg shots only.
 			"Hit Group"				"1"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Hit Ability" section for each special infected here.
 
@@ -15604,8 +16016,7 @@
 			// "forever" - 99999 seconds
 			"Hurt Range Cooldown"			"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Hurt Ability" section for each special infected here.
 
@@ -16010,8 +16421,7 @@
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Hypno View"				"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Hypno Ability" section for each special infected here.
 
@@ -16345,8 +16755,7 @@
 			// "forever" - 99999 seconds
 			"Ice Range Cooldown"			"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Ice Ability" section for each special infected here.
 
@@ -16658,8 +17067,7 @@
 			// "forever" - 99999 seconds
 			"Idle Range Cooldown"			"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Idle Ability" section for each special infected here.
 
@@ -16984,8 +17392,7 @@
 			// "forever" - 99999 seconds
 			"Invert Range Cooldown"			"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Invert Ability" section for each special infected here.
 
@@ -17190,8 +17597,7 @@
 			// "always" - 100% chance
 			"Item Pinata Chance"			"33.3"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Item Ability" section for each special infected here.
 
@@ -17601,8 +18007,7 @@
 			// "tallest" - 99999.0 height
 			"Jump Sporadic Height"			"750.0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Jump Ability" section for each special infected here.
 
@@ -17882,8 +18287,7 @@
 			// "always" - 100% chance
 			"Kamikaze Range Chance"			"15.0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Kamikaze Ability" section for each special infected here.
 
@@ -18205,8 +18609,7 @@
 			// "forever" - 99999 seconds
 			"Lag Range Cooldown"			"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Lag Ability" section for each special infected here.
 
@@ -18468,8 +18871,7 @@
 			// "farthest" - 99999.0 range
 			"Laser Range"				"500.0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Laser Ability" section for each special infected here.
 
@@ -18806,8 +19208,7 @@
 			// "forever" - 99999 seconds
 			"Leech Range Cooldown"			"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Leech Ability" section for each special infected here.
 
@@ -19059,8 +19460,7 @@
 			// "forever" - 99999 seconds
 			"Lightning Interval"			"1.0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Lightning Ability" section for each special infected here.
 
@@ -19429,8 +19829,7 @@
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Medic Symbiosis"			"1"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Medic Ability" section for each special infected here.
 
@@ -19706,8 +20105,7 @@
 			// Maximum: 200.0
 			"Meteor Radius"				"-180.0,180.0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Meteor Ability" section for each special infected here.
 
@@ -19930,8 +20328,7 @@
 			// 32: Charger (Switches to Smoker in Left 4 Dead 1.)
 			"Minion Types"				"63"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Minion Ability" section for each special infected here.
 
@@ -20154,8 +20551,7 @@
 			// "farthest" - 99999.0 range
 			"Necro Range"				"500.0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Necro Ability" section for each special infected here.
 
@@ -20476,8 +20872,7 @@
 			// "forever" - 99999 seconds
 			"Nullify Range Cooldown"		"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Nullify Ability" section for each special infected here.
 
@@ -20712,8 +21107,7 @@
 			// "farthest" - 99999.0 range
 			"Omni Range"				"500.0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Omni Ability" section for each special infected here.
 
@@ -20928,8 +21322,7 @@
 			// "forever" - 99999 seconds
 			"Panic Interval"			"5.0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Panic Ability" section for each special infected here.
 
@@ -21274,8 +21667,7 @@
 			// "forever" - 99999 seconds
 			"Pimp Range Cooldown"			"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Pimp Ability" section for each special infected here.
 
@@ -21627,8 +22019,7 @@
 			// "forever" - 99999 seconds
 			"Puke Range Cooldown"			"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Puke Ability" section for each special infected here.
 
@@ -21878,8 +22269,7 @@
 			// Maximum: 3.0
 			"Pyro Speed Boost"			"1.0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Pyro Ability" section for each special infected here.
 
@@ -22223,8 +22613,7 @@
 			// "forever" - 99999 seconds
 			"Quiet Range Cooldown"			"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Quiet Ability" section for each special infected here.
 
@@ -22494,8 +22883,7 @@
 			// Maximum: 1.0 (Full)
 			"Recall Rewind Threshold"		"0.5"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Recall Ability" section for each special infected here.
 
@@ -22819,8 +23207,7 @@
 			// "forever" - 99999 seconds
 			"Recoil Range Cooldown"			"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Recoil Ability" section for each special infected here.
 
@@ -23056,8 +23443,7 @@
 			// Maximum: 1000000
 			"Regen Limit"				"1000000"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Regen Ability" section for each special infected here.
 
@@ -23231,8 +23617,7 @@
 			// 1-500: ON, the type to respawn as.
 			"Respawn Type"				"0-0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Respawn Ability" section for each special infected here.
 
@@ -23552,8 +23937,7 @@
 			// "forever" - 99999 seconds
 			"Restart Range Cooldown"		"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Restart Ability" section for each special infected here.
 
@@ -23800,8 +24184,7 @@
 			// Maximum: 5.0
 			"Rock Radius"				"-1.25,1.25"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Rock Ability" section for each special infected here.
 
@@ -24158,8 +24541,7 @@
 			// "forever" - 99999 seconds
 			"Rocket Range Cooldown"			"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Rocket Ability" section for each special infected here.
 
@@ -24539,8 +24921,7 @@
 			// "forever" - 99999 seconds
 			"Shake Range Cooldown"			"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Shake Ability" section for each special infected here.
 
@@ -24882,8 +25263,7 @@
 			// 8: Melee-based (Requires melee weapons to break shield.)
 			"Shield Type"				"2"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Shield Ability" section for each special infected here.
 
@@ -25264,8 +25644,7 @@
 			// "forever" - 99999 seconds
 			"Shove Range Cooldown"			"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Shove Ability" section for each special infected here.
 
@@ -25610,8 +25989,7 @@
 			// Maximum: 0.99
 			"Slow Speed"				"0.25"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Slow Ability" section for each special infected here.
 
@@ -25953,8 +26331,7 @@
 			// "forever" - 99999 seconds
 			"Smash Range Cooldown"			"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Smash Ability" section for each special infected here.
 
@@ -26303,8 +26680,7 @@
 			// "forever" - 99999 seconds
 			"Smite Range Cooldown"			"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Smite Ability" section for each special infected here.
 
@@ -26539,8 +26915,7 @@
 			// Maximum: 1.0
 			"Spam Interval"				"0.5"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Spam Ability" section for each special infected here.
 
@@ -26798,8 +27173,7 @@
 			// "farthest" - 99999.0 range
 			"Splash Range"				"500.0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Splash Ability" section for each special infected here.
 
@@ -27162,8 +27536,7 @@
 			// 19: Lightning
 			"Splatter Type"				"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Splatter Ability" section for each special infected here.
 
@@ -27484,8 +27857,7 @@
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Throw Witch Remove"			"1"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Throw Ability" section for each special infected here.
 
@@ -27693,8 +28065,7 @@
 			// Maximum: 99999.0
 			"Track Speed"				"500.0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Track Ability" section for each special infected here.
 
@@ -27915,8 +28286,7 @@
 			// Maximum: 1.0 (Full health)
 			"Ultimate Health Portion"		"0.5"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Ultimate Ability" section for each special infected here.
 
@@ -28092,8 +28462,7 @@
 			// "forever" - 99999 seconds
 			"Undead Cooldown"			"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Undead Ability" section for each special infected here.
 
@@ -28240,8 +28609,7 @@
 			// Maximum: 99999.0
 			"Vampire Health Multiplier"		"1.0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Vampire Ability" section for each special infected here.
 
@@ -28564,8 +28932,7 @@
 			// "forever" - 99999 seconds
 			"Vision Range Cooldown"			"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Vision Ability" section for each special infected here.
 
@@ -29010,8 +29377,7 @@
 			// "forever" - 99999 seconds
 			"Warp Rock Cooldown"			"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Warp Ability" section for each special infected here.
 
@@ -29366,8 +29732,7 @@
 			// Maximum: 99999.0
 			"Whirl Speed"				"500.0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Whirl Ability" section for each special infected here.
 
@@ -29602,8 +29967,7 @@
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Witch Remove"				"1"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Witch Ability" section for each special infected here.
 
@@ -29749,8 +30113,7 @@
 			// Maximum: 1000000
 			"Xiphos Max Health"			"100"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Xiphos Ability" section for each special infected here.
 
@@ -30016,8 +30379,7 @@
 			// "farthest" - 99999.0 range
 			"Yell Range"				"500.0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Yell Ability" section for each special infected here.
 
@@ -30270,8 +30632,7 @@
 			// 64: Riot Cop (The Parish)
 			"Zombie Type"				"0"
 
-			// Syntax: "Special"/"spec"/"Infected"/"inf"
-			"Special"
+			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Zombie Ability" section for each special infected here.
 

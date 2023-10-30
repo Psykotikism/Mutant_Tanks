@@ -90,6 +90,7 @@ enum struct esNecroPlayer
 	int g_iNecroSight;
 	int g_iRequiresHumans;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esNecroPlayer g_esNecroPlayer[MAXPLAYERS + 1];
@@ -436,12 +437,12 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 {
 	if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esNecroCache[tank].g_iHumanAbility != 2)
 	{
-		g_esNecroAbility[g_esNecroPlayer[tank].g_iTankType].g_iComboPosition = -1;
+		g_esNecroAbility[g_esNecroPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 		return;
 	}
 
-	g_esNecroAbility[g_esNecroPlayer[tank].g_iTankType].g_iComboPosition = -1;
+	g_esNecroAbility[g_esNecroPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 	char sCombo[320], sSet[4][32];
 	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
@@ -462,7 +463,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 			{
 				if (StrEqual(sSubset[iPos], MT_NECRO_SECTION, false) || StrEqual(sSubset[iPos], MT_NECRO_SECTION2, false) || StrEqual(sSubset[iPos], MT_NECRO_SECTION3, false) || StrEqual(sSubset[iPos], MT_NECRO_SECTION4, false))
 				{
-					g_esNecroAbility[g_esNecroPlayer[tank].g_iTankType].g_iComboPosition = iPos;
+					g_esNecroAbility[g_esNecroPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = iPos;
 
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
@@ -674,45 +675,47 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esNecroPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esNecroPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esNecroPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esNecroCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_flCloseAreasOnly, g_esNecroPlayer[tank].g_flCloseAreasOnly, g_esNecroSpecial[type].g_flCloseAreasOnly, g_esNecroAbility[type].g_flCloseAreasOnly, 1);
-		g_esNecroCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_iComboAbility, g_esNecroPlayer[tank].g_iComboAbility, g_esNecroSpecial[type].g_iComboAbility, g_esNecroAbility[type].g_iComboAbility, 1);
-		g_esNecroCache[tank].g_flNecroChance = flGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_flNecroChance, g_esNecroPlayer[tank].g_flNecroChance, g_esNecroSpecial[type].g_flNecroChance, g_esNecroAbility[type].g_flNecroChance, 1);
-		g_esNecroCache[tank].g_flNecroRange = flGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_flNecroRange, g_esNecroPlayer[tank].g_flNecroRange, g_esNecroSpecial[type].g_flNecroRange, g_esNecroAbility[type].g_flNecroRange, 1);
-		g_esNecroCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_iHumanAbility, g_esNecroPlayer[tank].g_iHumanAbility, g_esNecroSpecial[type].g_iHumanAbility, g_esNecroAbility[type].g_iHumanAbility, 1);
-		g_esNecroCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_iHumanAmmo, g_esNecroPlayer[tank].g_iHumanAmmo, g_esNecroSpecial[type].g_iHumanAmmo, g_esNecroAbility[type].g_iHumanAmmo, 1);
-		g_esNecroCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_iHumanCooldown, g_esNecroPlayer[tank].g_iHumanCooldown, g_esNecroSpecial[type].g_iHumanCooldown, g_esNecroAbility[type].g_iHumanCooldown, 1);
-		g_esNecroCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_iHumanDuration, g_esNecroPlayer[tank].g_iHumanDuration, g_esNecroSpecial[type].g_iHumanDuration, g_esNecroAbility[type].g_iHumanDuration, 1);
-		g_esNecroCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_iHumanMode, g_esNecroPlayer[tank].g_iHumanMode, g_esNecroSpecial[type].g_iHumanMode, g_esNecroAbility[type].g_iHumanMode, 1);
-		g_esNecroCache[tank].g_iNecroAbility = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_iNecroAbility, g_esNecroPlayer[tank].g_iNecroAbility, g_esNecroSpecial[type].g_iNecroAbility, g_esNecroAbility[type].g_iNecroAbility, 1);
-		g_esNecroCache[tank].g_iNecroCooldown = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_iNecroCooldown, g_esNecroPlayer[tank].g_iNecroCooldown, g_esNecroSpecial[type].g_iNecroCooldown, g_esNecroAbility[type].g_iNecroCooldown, 1);
-		g_esNecroCache[tank].g_iNecroDuration = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_iNecroDuration, g_esNecroPlayer[tank].g_iNecroDuration, g_esNecroSpecial[type].g_iNecroDuration, g_esNecroAbility[type].g_iNecroDuration, 1);
-		g_esNecroCache[tank].g_iNecroMessage = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_iNecroMessage, g_esNecroPlayer[tank].g_iNecroMessage, g_esNecroSpecial[type].g_iNecroMessage, g_esNecroAbility[type].g_iNecroMessage, 1);
-		g_esNecroCache[tank].g_iNecroSight = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_iNecroSight, g_esNecroPlayer[tank].g_iNecroSight, g_esNecroSpecial[type].g_iNecroSight, g_esNecroAbility[type].g_iNecroSight, 1);
-		g_esNecroCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_flOpenAreasOnly, g_esNecroPlayer[tank].g_flOpenAreasOnly, g_esNecroSpecial[type].g_flOpenAreasOnly, g_esNecroAbility[type].g_flOpenAreasOnly, 1);
-		g_esNecroCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_iRequiresHumans, g_esNecroPlayer[tank].g_iRequiresHumans, g_esNecroSpecial[type].g_iRequiresHumans, g_esNecroAbility[type].g_iRequiresHumans, 1);
+		g_esNecroCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_flCloseAreasOnly, g_esNecroPlayer[tank].g_flCloseAreasOnly, g_esNecroSpecial[iType].g_flCloseAreasOnly, g_esNecroAbility[iType].g_flCloseAreasOnly, 1);
+		g_esNecroCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_iComboAbility, g_esNecroPlayer[tank].g_iComboAbility, g_esNecroSpecial[iType].g_iComboAbility, g_esNecroAbility[iType].g_iComboAbility, 1);
+		g_esNecroCache[tank].g_flNecroChance = flGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_flNecroChance, g_esNecroPlayer[tank].g_flNecroChance, g_esNecroSpecial[iType].g_flNecroChance, g_esNecroAbility[iType].g_flNecroChance, 1);
+		g_esNecroCache[tank].g_flNecroRange = flGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_flNecroRange, g_esNecroPlayer[tank].g_flNecroRange, g_esNecroSpecial[iType].g_flNecroRange, g_esNecroAbility[iType].g_flNecroRange, 1);
+		g_esNecroCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_iHumanAbility, g_esNecroPlayer[tank].g_iHumanAbility, g_esNecroSpecial[iType].g_iHumanAbility, g_esNecroAbility[iType].g_iHumanAbility, 1);
+		g_esNecroCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_iHumanAmmo, g_esNecroPlayer[tank].g_iHumanAmmo, g_esNecroSpecial[iType].g_iHumanAmmo, g_esNecroAbility[iType].g_iHumanAmmo, 1);
+		g_esNecroCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_iHumanCooldown, g_esNecroPlayer[tank].g_iHumanCooldown, g_esNecroSpecial[iType].g_iHumanCooldown, g_esNecroAbility[iType].g_iHumanCooldown, 1);
+		g_esNecroCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_iHumanDuration, g_esNecroPlayer[tank].g_iHumanDuration, g_esNecroSpecial[iType].g_iHumanDuration, g_esNecroAbility[iType].g_iHumanDuration, 1);
+		g_esNecroCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_iHumanMode, g_esNecroPlayer[tank].g_iHumanMode, g_esNecroSpecial[iType].g_iHumanMode, g_esNecroAbility[iType].g_iHumanMode, 1);
+		g_esNecroCache[tank].g_iNecroAbility = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_iNecroAbility, g_esNecroPlayer[tank].g_iNecroAbility, g_esNecroSpecial[iType].g_iNecroAbility, g_esNecroAbility[iType].g_iNecroAbility, 1);
+		g_esNecroCache[tank].g_iNecroCooldown = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_iNecroCooldown, g_esNecroPlayer[tank].g_iNecroCooldown, g_esNecroSpecial[iType].g_iNecroCooldown, g_esNecroAbility[iType].g_iNecroCooldown, 1);
+		g_esNecroCache[tank].g_iNecroDuration = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_iNecroDuration, g_esNecroPlayer[tank].g_iNecroDuration, g_esNecroSpecial[iType].g_iNecroDuration, g_esNecroAbility[iType].g_iNecroDuration, 1);
+		g_esNecroCache[tank].g_iNecroMessage = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_iNecroMessage, g_esNecroPlayer[tank].g_iNecroMessage, g_esNecroSpecial[iType].g_iNecroMessage, g_esNecroAbility[iType].g_iNecroMessage, 1);
+		g_esNecroCache[tank].g_iNecroSight = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_iNecroSight, g_esNecroPlayer[tank].g_iNecroSight, g_esNecroSpecial[iType].g_iNecroSight, g_esNecroAbility[iType].g_iNecroSight, 1);
+		g_esNecroCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_flOpenAreasOnly, g_esNecroPlayer[tank].g_flOpenAreasOnly, g_esNecroSpecial[iType].g_flOpenAreasOnly, g_esNecroAbility[iType].g_flOpenAreasOnly, 1);
+		g_esNecroCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esNecroTeammate[tank].g_iRequiresHumans, g_esNecroPlayer[tank].g_iRequiresHumans, g_esNecroSpecial[iType].g_iRequiresHumans, g_esNecroAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
 	{
-		g_esNecroCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_flCloseAreasOnly, g_esNecroAbility[type].g_flCloseAreasOnly, 1);
-		g_esNecroCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_iComboAbility, g_esNecroAbility[type].g_iComboAbility, 1);
-		g_esNecroCache[tank].g_flNecroChance = flGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_flNecroChance, g_esNecroAbility[type].g_flNecroChance, 1);
-		g_esNecroCache[tank].g_flNecroRange = flGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_flNecroRange, g_esNecroAbility[type].g_flNecroRange, 1);
-		g_esNecroCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_iHumanAbility, g_esNecroAbility[type].g_iHumanAbility, 1);
-		g_esNecroCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_iHumanAmmo, g_esNecroAbility[type].g_iHumanAmmo, 1);
-		g_esNecroCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_iHumanCooldown, g_esNecroAbility[type].g_iHumanCooldown, 1);
-		g_esNecroCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_iHumanDuration, g_esNecroAbility[type].g_iHumanDuration, 1);
-		g_esNecroCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_iHumanMode, g_esNecroAbility[type].g_iHumanMode, 1);
-		g_esNecroCache[tank].g_iNecroAbility = iGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_iNecroAbility, g_esNecroAbility[type].g_iNecroAbility, 1);
-		g_esNecroCache[tank].g_iNecroCooldown = iGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_iNecroCooldown, g_esNecroAbility[type].g_iNecroCooldown, 1);
-		g_esNecroCache[tank].g_iNecroDuration = iGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_iNecroDuration, g_esNecroAbility[type].g_iNecroDuration, 1);
-		g_esNecroCache[tank].g_iNecroMessage = iGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_iNecroMessage, g_esNecroAbility[type].g_iNecroMessage, 1);
-		g_esNecroCache[tank].g_iNecroSight = iGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_iNecroSight, g_esNecroAbility[type].g_iNecroSight, 1);
-		g_esNecroCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_flOpenAreasOnly, g_esNecroAbility[type].g_flOpenAreasOnly, 1);
-		g_esNecroCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_iRequiresHumans, g_esNecroAbility[type].g_iRequiresHumans, 1);
+		g_esNecroCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_flCloseAreasOnly, g_esNecroAbility[iType].g_flCloseAreasOnly, 1);
+		g_esNecroCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_iComboAbility, g_esNecroAbility[iType].g_iComboAbility, 1);
+		g_esNecroCache[tank].g_flNecroChance = flGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_flNecroChance, g_esNecroAbility[iType].g_flNecroChance, 1);
+		g_esNecroCache[tank].g_flNecroRange = flGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_flNecroRange, g_esNecroAbility[iType].g_flNecroRange, 1);
+		g_esNecroCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_iHumanAbility, g_esNecroAbility[iType].g_iHumanAbility, 1);
+		g_esNecroCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_iHumanAmmo, g_esNecroAbility[iType].g_iHumanAmmo, 1);
+		g_esNecroCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_iHumanCooldown, g_esNecroAbility[iType].g_iHumanCooldown, 1);
+		g_esNecroCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_iHumanDuration, g_esNecroAbility[iType].g_iHumanDuration, 1);
+		g_esNecroCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_iHumanMode, g_esNecroAbility[iType].g_iHumanMode, 1);
+		g_esNecroCache[tank].g_iNecroAbility = iGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_iNecroAbility, g_esNecroAbility[iType].g_iNecroAbility, 1);
+		g_esNecroCache[tank].g_iNecroCooldown = iGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_iNecroCooldown, g_esNecroAbility[iType].g_iNecroCooldown, 1);
+		g_esNecroCache[tank].g_iNecroDuration = iGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_iNecroDuration, g_esNecroAbility[iType].g_iNecroDuration, 1);
+		g_esNecroCache[tank].g_iNecroMessage = iGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_iNecroMessage, g_esNecroAbility[iType].g_iNecroMessage, 1);
+		g_esNecroCache[tank].g_iNecroSight = iGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_iNecroSight, g_esNecroAbility[iType].g_iNecroSight, 1);
+		g_esNecroCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_flOpenAreasOnly, g_esNecroAbility[iType].g_flOpenAreasOnly, 1);
+		g_esNecroCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_iRequiresHumans, g_esNecroAbility[iType].g_iRequiresHumans, 1);
 	}
 }
 
@@ -798,7 +801,7 @@ public void MT_OnPlayerEventKilled(int victim, int attacker)
 					continue;
 				}
 
-				iPos = g_esNecroAbility[g_esNecroPlayer[iTank].g_iTankType].g_iComboPosition;
+				iPos = g_esNecroAbility[g_esNecroPlayer[iTank].g_iTankTypeRecorded].g_iComboPosition;
 				bRandom = (iPos != -1) ? true : GetRandomFloat(0.1, 100.0) <= g_esNecroCache[iTank].g_flNecroChance;
 				if (g_esNecroCache[iTank].g_iNecroAbility == 1 && bRandom)
 				{
@@ -1010,7 +1013,7 @@ void vNecroAbility(int tank)
 
 			if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esNecroCache[tank].g_iHumanAbility == 1)
 			{
-				int iPos = g_esNecroAbility[g_esNecroPlayer[tank].g_iTankType].g_iComboPosition, iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 5, iPos)) : g_esNecroCache[tank].g_iNecroDuration;
+				int iPos = g_esNecroAbility[g_esNecroPlayer[tank].g_iTankTypeRecorded].g_iComboPosition, iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 5, iPos)) : g_esNecroCache[tank].g_iNecroDuration;
 				iDuration = (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esNecroCache[tank].g_iHumanAbility == 1) ? g_esNecroCache[tank].g_iHumanDuration : iDuration;
 				g_esNecroPlayer[tank].g_iAmmoCount++;
 				g_esNecroPlayer[tank].g_iDuration = (iTime + iDuration);
@@ -1056,7 +1059,7 @@ void vNecroReset()
 
 void vNecroReset2(int tank)
 {
-	int iTime = GetTime(), iPos = g_esNecroAbility[g_esNecroPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esNecroCache[tank].g_iNecroCooldown;
+	int iTime = GetTime(), iPos = g_esNecroAbility[g_esNecroPlayer[tank].g_iTankTypeRecorded].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esNecroCache[tank].g_iNecroCooldown;
 	iCooldown = (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esNecroCache[tank].g_iHumanAbility == 1 && g_esNecroCache[tank].g_iHumanMode == 0 && g_esNecroPlayer[tank].g_iAmmoCount < g_esNecroCache[tank].g_iHumanAmmo && g_esNecroCache[tank].g_iHumanAmmo > 0) ? g_esNecroCache[tank].g_iHumanCooldown : iCooldown;
 	g_esNecroPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esNecroPlayer[tank].g_iCooldown != -1 && g_esNecroPlayer[tank].g_iCooldown >= iTime)

@@ -72,6 +72,7 @@ enum struct esHitPlayer
 	int g_iImmunityFlags;
 	int g_iRequiresHumans;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esHitPlayer g_esHitPlayer[MAXPLAYERS + 1];
@@ -465,27 +466,29 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esHitPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esHitPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esHitPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esHitCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esHitTeammate[tank].g_flCloseAreasOnly, g_esHitPlayer[tank].g_flCloseAreasOnly, g_esHitSpecial[type].g_flCloseAreasOnly, g_esHitAbility[type].g_flCloseAreasOnly, 1);
-		g_esHitCache[tank].g_flHitDamageMultiplier = flGetSubSettingValue(apply, bHuman, g_esHitTeammate[tank].g_flHitDamageMultiplier, g_esHitPlayer[tank].g_flHitDamageMultiplier, g_esHitSpecial[type].g_flHitDamageMultiplier, g_esHitAbility[type].g_flHitDamageMultiplier, 1);
-		g_esHitCache[tank].g_iHitAbility = iGetSubSettingValue(apply, bHuman, g_esHitTeammate[tank].g_iHitAbility, g_esHitPlayer[tank].g_iHitAbility, g_esHitSpecial[type].g_iHitAbility, g_esHitAbility[type].g_iHitAbility, 1);
-		g_esHitCache[tank].g_iHitGroup = iGetSubSettingValue(apply, bHuman, g_esHitTeammate[tank].g_iHitGroup, g_esHitPlayer[tank].g_iHitGroup, g_esHitSpecial[type].g_iHitGroup, g_esHitAbility[type].g_iHitGroup, 1);
-		g_esHitCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esHitTeammate[tank].g_iHumanAbility, g_esHitPlayer[tank].g_iHumanAbility, g_esHitSpecial[type].g_iHumanAbility, g_esHitAbility[type].g_iHumanAbility, 1);
-		g_esHitCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esHitTeammate[tank].g_flOpenAreasOnly, g_esHitPlayer[tank].g_flOpenAreasOnly, g_esHitSpecial[type].g_flOpenAreasOnly, g_esHitAbility[type].g_flOpenAreasOnly, 1);
-		g_esHitCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esHitTeammate[tank].g_iRequiresHumans, g_esHitPlayer[tank].g_iRequiresHumans, g_esHitSpecial[type].g_iRequiresHumans, g_esHitAbility[type].g_iRequiresHumans, 1);
+		g_esHitCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esHitTeammate[tank].g_flCloseAreasOnly, g_esHitPlayer[tank].g_flCloseAreasOnly, g_esHitSpecial[iType].g_flCloseAreasOnly, g_esHitAbility[iType].g_flCloseAreasOnly, 1);
+		g_esHitCache[tank].g_flHitDamageMultiplier = flGetSubSettingValue(apply, bHuman, g_esHitTeammate[tank].g_flHitDamageMultiplier, g_esHitPlayer[tank].g_flHitDamageMultiplier, g_esHitSpecial[iType].g_flHitDamageMultiplier, g_esHitAbility[iType].g_flHitDamageMultiplier, 1);
+		g_esHitCache[tank].g_iHitAbility = iGetSubSettingValue(apply, bHuman, g_esHitTeammate[tank].g_iHitAbility, g_esHitPlayer[tank].g_iHitAbility, g_esHitSpecial[iType].g_iHitAbility, g_esHitAbility[iType].g_iHitAbility, 1);
+		g_esHitCache[tank].g_iHitGroup = iGetSubSettingValue(apply, bHuman, g_esHitTeammate[tank].g_iHitGroup, g_esHitPlayer[tank].g_iHitGroup, g_esHitSpecial[iType].g_iHitGroup, g_esHitAbility[iType].g_iHitGroup, 1);
+		g_esHitCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esHitTeammate[tank].g_iHumanAbility, g_esHitPlayer[tank].g_iHumanAbility, g_esHitSpecial[iType].g_iHumanAbility, g_esHitAbility[iType].g_iHumanAbility, 1);
+		g_esHitCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esHitTeammate[tank].g_flOpenAreasOnly, g_esHitPlayer[tank].g_flOpenAreasOnly, g_esHitSpecial[iType].g_flOpenAreasOnly, g_esHitAbility[iType].g_flOpenAreasOnly, 1);
+		g_esHitCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esHitTeammate[tank].g_iRequiresHumans, g_esHitPlayer[tank].g_iRequiresHumans, g_esHitSpecial[iType].g_iRequiresHumans, g_esHitAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
 	{
-		g_esHitCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esHitPlayer[tank].g_flCloseAreasOnly, g_esHitAbility[type].g_flCloseAreasOnly, 1);
-		g_esHitCache[tank].g_flHitDamageMultiplier = flGetSettingValue(apply, bHuman, g_esHitPlayer[tank].g_flHitDamageMultiplier, g_esHitAbility[type].g_flHitDamageMultiplier, 1);
-		g_esHitCache[tank].g_iHitAbility = iGetSettingValue(apply, bHuman, g_esHitPlayer[tank].g_iHitAbility, g_esHitAbility[type].g_iHitAbility, 1);
-		g_esHitCache[tank].g_iHitGroup = iGetSettingValue(apply, bHuman, g_esHitPlayer[tank].g_iHitGroup, g_esHitAbility[type].g_iHitGroup, 1);
-		g_esHitCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esHitPlayer[tank].g_iHumanAbility, g_esHitAbility[type].g_iHumanAbility, 1);
-		g_esHitCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esHitPlayer[tank].g_flOpenAreasOnly, g_esHitAbility[type].g_flOpenAreasOnly, 1);
-		g_esHitCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esHitPlayer[tank].g_iRequiresHumans, g_esHitAbility[type].g_iRequiresHumans, 1);
+		g_esHitCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esHitPlayer[tank].g_flCloseAreasOnly, g_esHitAbility[iType].g_flCloseAreasOnly, 1);
+		g_esHitCache[tank].g_flHitDamageMultiplier = flGetSettingValue(apply, bHuman, g_esHitPlayer[tank].g_flHitDamageMultiplier, g_esHitAbility[iType].g_flHitDamageMultiplier, 1);
+		g_esHitCache[tank].g_iHitAbility = iGetSettingValue(apply, bHuman, g_esHitPlayer[tank].g_iHitAbility, g_esHitAbility[iType].g_iHitAbility, 1);
+		g_esHitCache[tank].g_iHitGroup = iGetSettingValue(apply, bHuman, g_esHitPlayer[tank].g_iHitGroup, g_esHitAbility[iType].g_iHitGroup, 1);
+		g_esHitCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esHitPlayer[tank].g_iHumanAbility, g_esHitAbility[iType].g_iHumanAbility, 1);
+		g_esHitCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esHitPlayer[tank].g_flOpenAreasOnly, g_esHitAbility[iType].g_flOpenAreasOnly, 1);
+		g_esHitCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esHitPlayer[tank].g_iRequiresHumans, g_esHitAbility[iType].g_iRequiresHumans, 1);
 	}
 }
 

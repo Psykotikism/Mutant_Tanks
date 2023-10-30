@@ -84,6 +84,7 @@ enum struct esGodPlayer
 	int g_iImmunityFlags;
 	int g_iRequiresHumans;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esGodPlayer g_esGodPlayer[MAXPLAYERS + 1];
@@ -472,12 +473,12 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 {
 	if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esGodCache[tank].g_iHumanAbility != 2)
 	{
-		g_esGodAbility[g_esGodPlayer[tank].g_iTankType].g_iComboPosition = -1;
+		g_esGodAbility[g_esGodPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 		return;
 	}
 
-	g_esGodAbility[g_esGodPlayer[tank].g_iTankType].g_iComboPosition = -1;
+	g_esGodAbility[g_esGodPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 	char sCombo[320], sSet[4][32];
 	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
@@ -498,7 +499,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 			{
 				if (StrEqual(sSubset[iPos], MT_GOD_SECTION, false) || StrEqual(sSubset[iPos], MT_GOD_SECTION2, false) || StrEqual(sSubset[iPos], MT_GOD_SECTION3, false) || StrEqual(sSubset[iPos], MT_GOD_SECTION4, false))
 				{
-					g_esGodAbility[g_esGodPlayer[tank].g_iTankType].g_iComboPosition = iPos;
+					g_esGodAbility[g_esGodPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = iPos;
 
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
@@ -704,41 +705,43 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esGodPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esGodPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esGodPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esGodCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_flCloseAreasOnly, g_esGodPlayer[tank].g_flCloseAreasOnly, g_esGodSpecial[type].g_flCloseAreasOnly, g_esGodAbility[type].g_flCloseAreasOnly, 1);
-		g_esGodCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_iComboAbility, g_esGodPlayer[tank].g_iComboAbility, g_esGodSpecial[type].g_iComboAbility, g_esGodAbility[type].g_iComboAbility, 1);
-		g_esGodCache[tank].g_flGodChance = flGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_flGodChance, g_esGodPlayer[tank].g_flGodChance, g_esGodSpecial[type].g_flGodChance, g_esGodAbility[type].g_flGodChance, 1);
-		g_esGodCache[tank].g_iGodAbility = iGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_iGodAbility, g_esGodPlayer[tank].g_iGodAbility, g_esGodSpecial[type].g_iGodAbility, g_esGodAbility[type].g_iGodAbility, 1);
-		g_esGodCache[tank].g_iGodCooldown = iGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_iGodCooldown, g_esGodPlayer[tank].g_iGodCooldown, g_esGodSpecial[type].g_iGodCooldown, g_esGodAbility[type].g_iGodCooldown, 1);
-		g_esGodCache[tank].g_iGodDuration = iGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_iGodDuration, g_esGodPlayer[tank].g_iGodDuration, g_esGodSpecial[type].g_iGodDuration, g_esGodAbility[type].g_iGodDuration, 1);
-		g_esGodCache[tank].g_iGodMessage = iGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_iGodMessage, g_esGodPlayer[tank].g_iGodMessage, g_esGodSpecial[type].g_iGodMessage, g_esGodAbility[type].g_iGodMessage, 1);
-		g_esGodCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_iHumanAbility, g_esGodPlayer[tank].g_iHumanAbility, g_esGodSpecial[type].g_iHumanAbility, g_esGodAbility[type].g_iHumanAbility, 1);
-		g_esGodCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_iHumanAmmo, g_esGodPlayer[tank].g_iHumanAmmo, g_esGodSpecial[type].g_iHumanAmmo, g_esGodAbility[type].g_iHumanAmmo, 1);
-		g_esGodCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_iHumanCooldown, g_esGodPlayer[tank].g_iHumanCooldown, g_esGodSpecial[type].g_iHumanCooldown, g_esGodAbility[type].g_iHumanCooldown, 1);
-		g_esGodCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_iHumanDuration, g_esGodPlayer[tank].g_iHumanDuration, g_esGodSpecial[type].g_iHumanDuration, g_esGodAbility[type].g_iHumanDuration, 1);
-		g_esGodCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_iHumanMode, g_esGodPlayer[tank].g_iHumanMode, g_esGodSpecial[type].g_iHumanMode, g_esGodAbility[type].g_iHumanMode, 1);
-		g_esGodCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_flOpenAreasOnly, g_esGodPlayer[tank].g_flOpenAreasOnly, g_esGodSpecial[type].g_flOpenAreasOnly, g_esGodAbility[type].g_flOpenAreasOnly, 1);
-		g_esGodCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_iRequiresHumans, g_esGodPlayer[tank].g_iRequiresHumans, g_esGodSpecial[type].g_iRequiresHumans, g_esGodAbility[type].g_iRequiresHumans, 1);
+		g_esGodCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_flCloseAreasOnly, g_esGodPlayer[tank].g_flCloseAreasOnly, g_esGodSpecial[iType].g_flCloseAreasOnly, g_esGodAbility[iType].g_flCloseAreasOnly, 1);
+		g_esGodCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_iComboAbility, g_esGodPlayer[tank].g_iComboAbility, g_esGodSpecial[iType].g_iComboAbility, g_esGodAbility[iType].g_iComboAbility, 1);
+		g_esGodCache[tank].g_flGodChance = flGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_flGodChance, g_esGodPlayer[tank].g_flGodChance, g_esGodSpecial[iType].g_flGodChance, g_esGodAbility[iType].g_flGodChance, 1);
+		g_esGodCache[tank].g_iGodAbility = iGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_iGodAbility, g_esGodPlayer[tank].g_iGodAbility, g_esGodSpecial[iType].g_iGodAbility, g_esGodAbility[iType].g_iGodAbility, 1);
+		g_esGodCache[tank].g_iGodCooldown = iGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_iGodCooldown, g_esGodPlayer[tank].g_iGodCooldown, g_esGodSpecial[iType].g_iGodCooldown, g_esGodAbility[iType].g_iGodCooldown, 1);
+		g_esGodCache[tank].g_iGodDuration = iGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_iGodDuration, g_esGodPlayer[tank].g_iGodDuration, g_esGodSpecial[iType].g_iGodDuration, g_esGodAbility[iType].g_iGodDuration, 1);
+		g_esGodCache[tank].g_iGodMessage = iGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_iGodMessage, g_esGodPlayer[tank].g_iGodMessage, g_esGodSpecial[iType].g_iGodMessage, g_esGodAbility[iType].g_iGodMessage, 1);
+		g_esGodCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_iHumanAbility, g_esGodPlayer[tank].g_iHumanAbility, g_esGodSpecial[iType].g_iHumanAbility, g_esGodAbility[iType].g_iHumanAbility, 1);
+		g_esGodCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_iHumanAmmo, g_esGodPlayer[tank].g_iHumanAmmo, g_esGodSpecial[iType].g_iHumanAmmo, g_esGodAbility[iType].g_iHumanAmmo, 1);
+		g_esGodCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_iHumanCooldown, g_esGodPlayer[tank].g_iHumanCooldown, g_esGodSpecial[iType].g_iHumanCooldown, g_esGodAbility[iType].g_iHumanCooldown, 1);
+		g_esGodCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_iHumanDuration, g_esGodPlayer[tank].g_iHumanDuration, g_esGodSpecial[iType].g_iHumanDuration, g_esGodAbility[iType].g_iHumanDuration, 1);
+		g_esGodCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_iHumanMode, g_esGodPlayer[tank].g_iHumanMode, g_esGodSpecial[iType].g_iHumanMode, g_esGodAbility[iType].g_iHumanMode, 1);
+		g_esGodCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_flOpenAreasOnly, g_esGodPlayer[tank].g_flOpenAreasOnly, g_esGodSpecial[iType].g_flOpenAreasOnly, g_esGodAbility[iType].g_flOpenAreasOnly, 1);
+		g_esGodCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_iRequiresHumans, g_esGodPlayer[tank].g_iRequiresHumans, g_esGodSpecial[iType].g_iRequiresHumans, g_esGodAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
 	{
-		g_esGodCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_flCloseAreasOnly, g_esGodAbility[type].g_flCloseAreasOnly, 1);
-		g_esGodCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iComboAbility, g_esGodAbility[type].g_iComboAbility, 1);
-		g_esGodCache[tank].g_flGodChance = flGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_flGodChance, g_esGodAbility[type].g_flGodChance, 1);
-		g_esGodCache[tank].g_iGodAbility = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iGodAbility, g_esGodAbility[type].g_iGodAbility, 1);
-		g_esGodCache[tank].g_iGodCooldown = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iGodCooldown, g_esGodAbility[type].g_iGodCooldown, 1);
-		g_esGodCache[tank].g_iGodDuration = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iGodDuration, g_esGodAbility[type].g_iGodDuration, 1);
-		g_esGodCache[tank].g_iGodMessage = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iGodMessage, g_esGodAbility[type].g_iGodMessage, 1);
-		g_esGodCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iHumanAbility, g_esGodAbility[type].g_iHumanAbility, 1);
-		g_esGodCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iHumanAmmo, g_esGodAbility[type].g_iHumanAmmo, 1);
-		g_esGodCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iHumanCooldown, g_esGodAbility[type].g_iHumanCooldown, 1);
-		g_esGodCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iHumanDuration, g_esGodAbility[type].g_iHumanDuration, 1);
-		g_esGodCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iHumanMode, g_esGodAbility[type].g_iHumanMode, 1);
-		g_esGodCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_flOpenAreasOnly, g_esGodAbility[type].g_flOpenAreasOnly, 1);
-		g_esGodCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iRequiresHumans, g_esGodAbility[type].g_iRequiresHumans, 1);
+		g_esGodCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_flCloseAreasOnly, g_esGodAbility[iType].g_flCloseAreasOnly, 1);
+		g_esGodCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iComboAbility, g_esGodAbility[iType].g_iComboAbility, 1);
+		g_esGodCache[tank].g_flGodChance = flGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_flGodChance, g_esGodAbility[iType].g_flGodChance, 1);
+		g_esGodCache[tank].g_iGodAbility = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iGodAbility, g_esGodAbility[iType].g_iGodAbility, 1);
+		g_esGodCache[tank].g_iGodCooldown = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iGodCooldown, g_esGodAbility[iType].g_iGodCooldown, 1);
+		g_esGodCache[tank].g_iGodDuration = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iGodDuration, g_esGodAbility[iType].g_iGodDuration, 1);
+		g_esGodCache[tank].g_iGodMessage = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iGodMessage, g_esGodAbility[iType].g_iGodMessage, 1);
+		g_esGodCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iHumanAbility, g_esGodAbility[iType].g_iHumanAbility, 1);
+		g_esGodCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iHumanAmmo, g_esGodAbility[iType].g_iHumanAmmo, 1);
+		g_esGodCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iHumanCooldown, g_esGodAbility[iType].g_iHumanCooldown, 1);
+		g_esGodCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iHumanDuration, g_esGodAbility[iType].g_iHumanDuration, 1);
+		g_esGodCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iHumanMode, g_esGodAbility[iType].g_iHumanMode, 1);
+		g_esGodCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_flOpenAreasOnly, g_esGodAbility[iType].g_flOpenAreasOnly, 1);
+		g_esGodCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iRequiresHumans, g_esGodAbility[iType].g_iRequiresHumans, 1);
 	}
 }
 
@@ -1039,7 +1042,7 @@ void vGodReset2(int tank)
 
 void vGodReset3(int tank)
 {
-	int iTime = GetTime(), iPos = g_esGodAbility[g_esGodPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esGodCache[tank].g_iGodCooldown;
+	int iTime = GetTime(), iPos = g_esGodAbility[g_esGodPlayer[tank].g_iTankTypeRecorded].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esGodCache[tank].g_iGodCooldown;
 	iCooldown = (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esGodCache[tank].g_iHumanAbility == 1 && g_esGodCache[tank].g_iHumanMode == 0 && g_esGodPlayer[tank].g_iAmmoCount < g_esGodCache[tank].g_iHumanAmmo && g_esGodCache[tank].g_iHumanAmmo > 0) ? g_esGodCache[tank].g_iHumanCooldown : iCooldown;
 	g_esGodPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esGodPlayer[tank].g_iCooldown != -1 && g_esGodPlayer[tank].g_iCooldown >= iTime)

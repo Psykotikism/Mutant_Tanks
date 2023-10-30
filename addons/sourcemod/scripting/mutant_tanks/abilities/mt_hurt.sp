@@ -103,6 +103,7 @@ enum struct esHurtPlayer
 	int g_iRangeCooldown;
 	int g_iRequiresHumans;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esHurtPlayer g_esHurtPlayer[MAXPLAYERS + 1];
@@ -825,57 +826,59 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esHurtPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esHurtPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esHurtPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esHurtCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_flCloseAreasOnly, g_esHurtPlayer[tank].g_flCloseAreasOnly, g_esHurtSpecial[type].g_flCloseAreasOnly, g_esHurtAbility[type].g_flCloseAreasOnly, 1);
-		g_esHurtCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iComboAbility, g_esHurtPlayer[tank].g_iComboAbility, g_esHurtSpecial[type].g_iComboAbility, g_esHurtAbility[type].g_iComboAbility, 1);
-		g_esHurtCache[tank].g_flHurtChance = flGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_flHurtChance, g_esHurtPlayer[tank].g_flHurtChance, g_esHurtSpecial[type].g_flHurtChance, g_esHurtAbility[type].g_flHurtChance, 1);
-		g_esHurtCache[tank].g_flHurtDamage = flGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_flHurtDamage, g_esHurtPlayer[tank].g_flHurtDamage, g_esHurtSpecial[type].g_flHurtDamage, g_esHurtAbility[type].g_flHurtDamage, 1);
-		g_esHurtCache[tank].g_flHurtInterval = flGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_flHurtInterval, g_esHurtPlayer[tank].g_flHurtInterval, g_esHurtSpecial[type].g_flHurtInterval, g_esHurtAbility[type].g_flHurtInterval, 1);
-		g_esHurtCache[tank].g_flHurtRange = flGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_flHurtRange, g_esHurtPlayer[tank].g_flHurtRange, g_esHurtSpecial[type].g_flHurtRange, g_esHurtAbility[type].g_flHurtRange, 1);
-		g_esHurtCache[tank].g_flHurtRangeChance = flGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_flHurtRangeChance, g_esHurtPlayer[tank].g_flHurtRangeChance, g_esHurtSpecial[type].g_flHurtRangeChance, g_esHurtAbility[type].g_flHurtRangeChance, 1);
-		g_esHurtCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHumanAbility, g_esHurtPlayer[tank].g_iHumanAbility, g_esHurtSpecial[type].g_iHumanAbility, g_esHurtAbility[type].g_iHumanAbility, 1);
-		g_esHurtCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHumanAmmo, g_esHurtPlayer[tank].g_iHumanAmmo, g_esHurtSpecial[type].g_iHumanAmmo, g_esHurtAbility[type].g_iHumanAmmo, 1);
-		g_esHurtCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHumanCooldown, g_esHurtPlayer[tank].g_iHumanCooldown, g_esHurtSpecial[type].g_iHumanCooldown, g_esHurtAbility[type].g_iHumanCooldown, 1);
-		g_esHurtCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHumanRangeCooldown, g_esHurtPlayer[tank].g_iHumanRangeCooldown, g_esHurtSpecial[type].g_iHumanRangeCooldown, g_esHurtAbility[type].g_iHumanRangeCooldown, 1);
-		g_esHurtCache[tank].g_iHurtAbility = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHurtAbility, g_esHurtPlayer[tank].g_iHurtAbility, g_esHurtSpecial[type].g_iHurtAbility, g_esHurtAbility[type].g_iHurtAbility, 1);
-		g_esHurtCache[tank].g_iHurtCooldown = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHurtCooldown, g_esHurtPlayer[tank].g_iHurtCooldown, g_esHurtSpecial[type].g_iHurtCooldown, g_esHurtAbility[type].g_iHurtCooldown, 1);
-		g_esHurtCache[tank].g_iHurtDuration = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHurtDuration, g_esHurtPlayer[tank].g_iHurtDuration, g_esHurtSpecial[type].g_iHurtDuration, g_esHurtAbility[type].g_iHurtDuration, 1);
-		g_esHurtCache[tank].g_iHurtEffect = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHurtEffect, g_esHurtPlayer[tank].g_iHurtEffect, g_esHurtSpecial[type].g_iHurtEffect, g_esHurtAbility[type].g_iHurtEffect, 1);
-		g_esHurtCache[tank].g_iHurtHit = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHurtHit, g_esHurtPlayer[tank].g_iHurtHit, g_esHurtSpecial[type].g_iHurtHit, g_esHurtAbility[type].g_iHurtHit, 1);
-		g_esHurtCache[tank].g_iHurtHitMode = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHurtHitMode, g_esHurtPlayer[tank].g_iHurtHitMode, g_esHurtSpecial[type].g_iHurtHitMode, g_esHurtAbility[type].g_iHurtHitMode, 1);
-		g_esHurtCache[tank].g_iHurtMessage = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHurtMessage, g_esHurtPlayer[tank].g_iHurtMessage, g_esHurtSpecial[type].g_iHurtMessage, g_esHurtAbility[type].g_iHurtMessage, 1);
-		g_esHurtCache[tank].g_iHurtRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHurtRangeCooldown, g_esHurtPlayer[tank].g_iHurtRangeCooldown, g_esHurtSpecial[type].g_iHurtRangeCooldown, g_esHurtAbility[type].g_iHurtRangeCooldown, 1);
-		g_esHurtCache[tank].g_iHurtSight = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHurtSight, g_esHurtPlayer[tank].g_iHurtSight, g_esHurtSpecial[type].g_iHurtSight, g_esHurtAbility[type].g_iHurtSight, 1);
-		g_esHurtCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_flOpenAreasOnly, g_esHurtPlayer[tank].g_flOpenAreasOnly, g_esHurtSpecial[type].g_flOpenAreasOnly, g_esHurtAbility[type].g_flOpenAreasOnly, 1);
-		g_esHurtCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iRequiresHumans, g_esHurtPlayer[tank].g_iRequiresHumans, g_esHurtSpecial[type].g_iRequiresHumans, g_esHurtAbility[type].g_iRequiresHumans, 1);
+		g_esHurtCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_flCloseAreasOnly, g_esHurtPlayer[tank].g_flCloseAreasOnly, g_esHurtSpecial[iType].g_flCloseAreasOnly, g_esHurtAbility[iType].g_flCloseAreasOnly, 1);
+		g_esHurtCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iComboAbility, g_esHurtPlayer[tank].g_iComboAbility, g_esHurtSpecial[iType].g_iComboAbility, g_esHurtAbility[iType].g_iComboAbility, 1);
+		g_esHurtCache[tank].g_flHurtChance = flGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_flHurtChance, g_esHurtPlayer[tank].g_flHurtChance, g_esHurtSpecial[iType].g_flHurtChance, g_esHurtAbility[iType].g_flHurtChance, 1);
+		g_esHurtCache[tank].g_flHurtDamage = flGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_flHurtDamage, g_esHurtPlayer[tank].g_flHurtDamage, g_esHurtSpecial[iType].g_flHurtDamage, g_esHurtAbility[iType].g_flHurtDamage, 1);
+		g_esHurtCache[tank].g_flHurtInterval = flGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_flHurtInterval, g_esHurtPlayer[tank].g_flHurtInterval, g_esHurtSpecial[iType].g_flHurtInterval, g_esHurtAbility[iType].g_flHurtInterval, 1);
+		g_esHurtCache[tank].g_flHurtRange = flGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_flHurtRange, g_esHurtPlayer[tank].g_flHurtRange, g_esHurtSpecial[iType].g_flHurtRange, g_esHurtAbility[iType].g_flHurtRange, 1);
+		g_esHurtCache[tank].g_flHurtRangeChance = flGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_flHurtRangeChance, g_esHurtPlayer[tank].g_flHurtRangeChance, g_esHurtSpecial[iType].g_flHurtRangeChance, g_esHurtAbility[iType].g_flHurtRangeChance, 1);
+		g_esHurtCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHumanAbility, g_esHurtPlayer[tank].g_iHumanAbility, g_esHurtSpecial[iType].g_iHumanAbility, g_esHurtAbility[iType].g_iHumanAbility, 1);
+		g_esHurtCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHumanAmmo, g_esHurtPlayer[tank].g_iHumanAmmo, g_esHurtSpecial[iType].g_iHumanAmmo, g_esHurtAbility[iType].g_iHumanAmmo, 1);
+		g_esHurtCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHumanCooldown, g_esHurtPlayer[tank].g_iHumanCooldown, g_esHurtSpecial[iType].g_iHumanCooldown, g_esHurtAbility[iType].g_iHumanCooldown, 1);
+		g_esHurtCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHumanRangeCooldown, g_esHurtPlayer[tank].g_iHumanRangeCooldown, g_esHurtSpecial[iType].g_iHumanRangeCooldown, g_esHurtAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esHurtCache[tank].g_iHurtAbility = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHurtAbility, g_esHurtPlayer[tank].g_iHurtAbility, g_esHurtSpecial[iType].g_iHurtAbility, g_esHurtAbility[iType].g_iHurtAbility, 1);
+		g_esHurtCache[tank].g_iHurtCooldown = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHurtCooldown, g_esHurtPlayer[tank].g_iHurtCooldown, g_esHurtSpecial[iType].g_iHurtCooldown, g_esHurtAbility[iType].g_iHurtCooldown, 1);
+		g_esHurtCache[tank].g_iHurtDuration = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHurtDuration, g_esHurtPlayer[tank].g_iHurtDuration, g_esHurtSpecial[iType].g_iHurtDuration, g_esHurtAbility[iType].g_iHurtDuration, 1);
+		g_esHurtCache[tank].g_iHurtEffect = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHurtEffect, g_esHurtPlayer[tank].g_iHurtEffect, g_esHurtSpecial[iType].g_iHurtEffect, g_esHurtAbility[iType].g_iHurtEffect, 1);
+		g_esHurtCache[tank].g_iHurtHit = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHurtHit, g_esHurtPlayer[tank].g_iHurtHit, g_esHurtSpecial[iType].g_iHurtHit, g_esHurtAbility[iType].g_iHurtHit, 1);
+		g_esHurtCache[tank].g_iHurtHitMode = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHurtHitMode, g_esHurtPlayer[tank].g_iHurtHitMode, g_esHurtSpecial[iType].g_iHurtHitMode, g_esHurtAbility[iType].g_iHurtHitMode, 1);
+		g_esHurtCache[tank].g_iHurtMessage = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHurtMessage, g_esHurtPlayer[tank].g_iHurtMessage, g_esHurtSpecial[iType].g_iHurtMessage, g_esHurtAbility[iType].g_iHurtMessage, 1);
+		g_esHurtCache[tank].g_iHurtRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHurtRangeCooldown, g_esHurtPlayer[tank].g_iHurtRangeCooldown, g_esHurtSpecial[iType].g_iHurtRangeCooldown, g_esHurtAbility[iType].g_iHurtRangeCooldown, 1);
+		g_esHurtCache[tank].g_iHurtSight = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHurtSight, g_esHurtPlayer[tank].g_iHurtSight, g_esHurtSpecial[iType].g_iHurtSight, g_esHurtAbility[iType].g_iHurtSight, 1);
+		g_esHurtCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_flOpenAreasOnly, g_esHurtPlayer[tank].g_flOpenAreasOnly, g_esHurtSpecial[iType].g_flOpenAreasOnly, g_esHurtAbility[iType].g_flOpenAreasOnly, 1);
+		g_esHurtCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iRequiresHumans, g_esHurtPlayer[tank].g_iRequiresHumans, g_esHurtSpecial[iType].g_iRequiresHumans, g_esHurtAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
 	{
-		g_esHurtCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_flCloseAreasOnly, g_esHurtAbility[type].g_flCloseAreasOnly, 1);
-		g_esHurtCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_iComboAbility, g_esHurtAbility[type].g_iComboAbility, 1);
-		g_esHurtCache[tank].g_flHurtChance = flGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_flHurtChance, g_esHurtAbility[type].g_flHurtChance, 1);
-		g_esHurtCache[tank].g_flHurtDamage = flGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_flHurtDamage, g_esHurtAbility[type].g_flHurtDamage, 1);
-		g_esHurtCache[tank].g_flHurtInterval = flGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_flHurtInterval, g_esHurtAbility[type].g_flHurtInterval, 1);
-		g_esHurtCache[tank].g_flHurtRange = flGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_flHurtRange, g_esHurtAbility[type].g_flHurtRange, 1);
-		g_esHurtCache[tank].g_flHurtRangeChance = flGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_flHurtRangeChance, g_esHurtAbility[type].g_flHurtRangeChance, 1);
-		g_esHurtCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_iHumanAbility, g_esHurtAbility[type].g_iHumanAbility, 1);
-		g_esHurtCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_iHumanAmmo, g_esHurtAbility[type].g_iHumanAmmo, 1);
-		g_esHurtCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_iHumanCooldown, g_esHurtAbility[type].g_iHumanCooldown, 1);
-		g_esHurtCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_iHumanRangeCooldown, g_esHurtAbility[type].g_iHumanRangeCooldown, 1);
-		g_esHurtCache[tank].g_iHurtAbility = iGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_iHurtAbility, g_esHurtAbility[type].g_iHurtAbility, 1);
-		g_esHurtCache[tank].g_iHurtCooldown = iGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_iHurtCooldown, g_esHurtAbility[type].g_iHurtCooldown, 1);
-		g_esHurtCache[tank].g_iHurtDuration = iGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_iHurtDuration, g_esHurtAbility[type].g_iHurtDuration, 1);
-		g_esHurtCache[tank].g_iHurtEffect = iGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_iHurtEffect, g_esHurtAbility[type].g_iHurtEffect, 1);
-		g_esHurtCache[tank].g_iHurtHit = iGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_iHurtHit, g_esHurtAbility[type].g_iHurtHit, 1);
-		g_esHurtCache[tank].g_iHurtHitMode = iGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_iHurtHitMode, g_esHurtAbility[type].g_iHurtHitMode, 1);
-		g_esHurtCache[tank].g_iHurtMessage = iGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_iHurtMessage, g_esHurtAbility[type].g_iHurtMessage, 1);
-		g_esHurtCache[tank].g_iHurtRangeCooldown = iGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_iHurtRangeCooldown, g_esHurtAbility[type].g_iHurtRangeCooldown, 1);
-		g_esHurtCache[tank].g_iHurtSight = iGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_iHurtSight, g_esHurtAbility[type].g_iHurtSight, 1);
-		g_esHurtCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_flOpenAreasOnly, g_esHurtAbility[type].g_flOpenAreasOnly, 1);
-		g_esHurtCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_iRequiresHumans, g_esHurtAbility[type].g_iRequiresHumans, 1);
+		g_esHurtCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_flCloseAreasOnly, g_esHurtAbility[iType].g_flCloseAreasOnly, 1);
+		g_esHurtCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_iComboAbility, g_esHurtAbility[iType].g_iComboAbility, 1);
+		g_esHurtCache[tank].g_flHurtChance = flGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_flHurtChance, g_esHurtAbility[iType].g_flHurtChance, 1);
+		g_esHurtCache[tank].g_flHurtDamage = flGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_flHurtDamage, g_esHurtAbility[iType].g_flHurtDamage, 1);
+		g_esHurtCache[tank].g_flHurtInterval = flGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_flHurtInterval, g_esHurtAbility[iType].g_flHurtInterval, 1);
+		g_esHurtCache[tank].g_flHurtRange = flGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_flHurtRange, g_esHurtAbility[iType].g_flHurtRange, 1);
+		g_esHurtCache[tank].g_flHurtRangeChance = flGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_flHurtRangeChance, g_esHurtAbility[iType].g_flHurtRangeChance, 1);
+		g_esHurtCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_iHumanAbility, g_esHurtAbility[iType].g_iHumanAbility, 1);
+		g_esHurtCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_iHumanAmmo, g_esHurtAbility[iType].g_iHumanAmmo, 1);
+		g_esHurtCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_iHumanCooldown, g_esHurtAbility[iType].g_iHumanCooldown, 1);
+		g_esHurtCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_iHumanRangeCooldown, g_esHurtAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esHurtCache[tank].g_iHurtAbility = iGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_iHurtAbility, g_esHurtAbility[iType].g_iHurtAbility, 1);
+		g_esHurtCache[tank].g_iHurtCooldown = iGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_iHurtCooldown, g_esHurtAbility[iType].g_iHurtCooldown, 1);
+		g_esHurtCache[tank].g_iHurtDuration = iGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_iHurtDuration, g_esHurtAbility[iType].g_iHurtDuration, 1);
+		g_esHurtCache[tank].g_iHurtEffect = iGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_iHurtEffect, g_esHurtAbility[iType].g_iHurtEffect, 1);
+		g_esHurtCache[tank].g_iHurtHit = iGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_iHurtHit, g_esHurtAbility[iType].g_iHurtHit, 1);
+		g_esHurtCache[tank].g_iHurtHitMode = iGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_iHurtHitMode, g_esHurtAbility[iType].g_iHurtHitMode, 1);
+		g_esHurtCache[tank].g_iHurtMessage = iGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_iHurtMessage, g_esHurtAbility[iType].g_iHurtMessage, 1);
+		g_esHurtCache[tank].g_iHurtRangeCooldown = iGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_iHurtRangeCooldown, g_esHurtAbility[iType].g_iHurtRangeCooldown, 1);
+		g_esHurtCache[tank].g_iHurtSight = iGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_iHurtSight, g_esHurtAbility[iType].g_iHurtSight, 1);
+		g_esHurtCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_flOpenAreasOnly, g_esHurtAbility[iType].g_flOpenAreasOnly, 1);
+		g_esHurtCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_iRequiresHumans, g_esHurtAbility[iType].g_iRequiresHumans, 1);
 	}
 }
 

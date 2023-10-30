@@ -81,6 +81,7 @@ enum struct esTrackPlayer
 	int g_iRequiresHumans;
 	int g_iRock;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 	int g_iTrackAbility;
 	int g_iTrackCooldown;
 	int g_iTrackGlow;
@@ -386,12 +387,12 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 {
 	if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esTrackCache[tank].g_iHumanAbility != 2)
 	{
-		g_esTrackAbility[g_esTrackPlayer[tank].g_iTankType].g_iComboPosition = -1;
+		g_esTrackAbility[g_esTrackPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 		return;
 	}
 
-	g_esTrackAbility[g_esTrackPlayer[tank].g_iTankType].g_iComboPosition = -1;
+	g_esTrackAbility[g_esTrackPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 	char sCombo[320], sSet[4][32];
 	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
@@ -410,7 +411,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 			{
 				if (StrEqual(sSubset[iPos], MT_TRACK_SECTION, false) || StrEqual(sSubset[iPos], MT_TRACK_SECTION2, false) || StrEqual(sSubset[iPos], MT_TRACK_SECTION3, false) || StrEqual(sSubset[iPos], MT_TRACK_SECTION4, false))
 				{
-					g_esTrackAbility[g_esTrackPlayer[tank].g_iTankType].g_iComboPosition = iPos;
+					g_esTrackAbility[g_esTrackPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = iPos;
 
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
@@ -604,41 +605,43 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esTrackPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esTrackPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esTrackPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esTrackCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esTrackTeammate[tank].g_flCloseAreasOnly, g_esTrackPlayer[tank].g_flCloseAreasOnly, g_esTrackSpecial[type].g_flCloseAreasOnly, g_esTrackAbility[type].g_flCloseAreasOnly, 1);
-		g_esTrackCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esTrackTeammate[tank].g_iComboAbility, g_esTrackPlayer[tank].g_iComboAbility, g_esTrackSpecial[type].g_iComboAbility, g_esTrackAbility[type].g_iComboAbility, 1);
-		g_esTrackCache[tank].g_flTrackChance = flGetSubSettingValue(apply, bHuman, g_esTrackTeammate[tank].g_flTrackChance, g_esTrackPlayer[tank].g_flTrackChance, g_esTrackSpecial[type].g_flTrackChance, g_esTrackAbility[type].g_flTrackChance, 1);
-		g_esTrackCache[tank].g_flTrackSpeed = flGetSubSettingValue(apply, bHuman, g_esTrackTeammate[tank].g_flTrackSpeed, g_esTrackPlayer[tank].g_flTrackSpeed, g_esTrackSpecial[type].g_flTrackSpeed, g_esTrackAbility[type].g_flTrackSpeed, 1);
-		g_esTrackCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esTrackTeammate[tank].g_iHumanAbility, g_esTrackPlayer[tank].g_iHumanAbility, g_esTrackSpecial[type].g_iHumanAbility, g_esTrackAbility[type].g_iHumanAbility, 1);
-		g_esTrackCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esTrackTeammate[tank].g_iHumanAmmo, g_esTrackPlayer[tank].g_iHumanAmmo, g_esTrackSpecial[type].g_iHumanAmmo, g_esTrackAbility[type].g_iHumanAmmo, 1);
-		g_esTrackCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esTrackTeammate[tank].g_iHumanCooldown, g_esTrackPlayer[tank].g_iHumanCooldown, g_esTrackSpecial[type].g_iHumanCooldown, g_esTrackAbility[type].g_iHumanCooldown, 1);
-		g_esTrackCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esTrackTeammate[tank].g_flOpenAreasOnly, g_esTrackPlayer[tank].g_flOpenAreasOnly, g_esTrackSpecial[type].g_flOpenAreasOnly, g_esTrackAbility[type].g_flOpenAreasOnly, 1);
-		g_esTrackCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esTrackTeammate[tank].g_iRequiresHumans, g_esTrackPlayer[tank].g_iRequiresHumans, g_esTrackSpecial[type].g_iRequiresHumans, g_esTrackAbility[type].g_iRequiresHumans, 1);
-		g_esTrackCache[tank].g_iTrackAbility = iGetSubSettingValue(apply, bHuman, g_esTrackTeammate[tank].g_iTrackAbility, g_esTrackPlayer[tank].g_iTrackAbility, g_esTrackSpecial[type].g_iTrackAbility, g_esTrackAbility[type].g_iTrackAbility, 1);
-		g_esTrackCache[tank].g_iTrackCooldown = iGetSubSettingValue(apply, bHuman, g_esTrackTeammate[tank].g_iTrackCooldown, g_esTrackPlayer[tank].g_iTrackCooldown, g_esTrackSpecial[type].g_iTrackCooldown, g_esTrackAbility[type].g_iTrackCooldown, 1);
-		g_esTrackCache[tank].g_iTrackGlow = iGetSubSettingValue(apply, bHuman, g_esTrackTeammate[tank].g_iTrackGlow, g_esTrackPlayer[tank].g_iTrackGlow, g_esTrackSpecial[type].g_iTrackGlow, g_esTrackAbility[type].g_iTrackGlow, 1);
-		g_esTrackCache[tank].g_iTrackMessage = iGetSubSettingValue(apply, bHuman, g_esTrackTeammate[tank].g_iTrackMessage, g_esTrackPlayer[tank].g_iTrackMessage, g_esTrackSpecial[type].g_iTrackMessage, g_esTrackAbility[type].g_iTrackMessage, 1);
-		g_esTrackCache[tank].g_iTrackMode = iGetSubSettingValue(apply, bHuman, g_esTrackTeammate[tank].g_iTrackMode, g_esTrackPlayer[tank].g_iTrackMode, g_esTrackSpecial[type].g_iTrackMode, g_esTrackAbility[type].g_iTrackMode, 1);
+		g_esTrackCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esTrackTeammate[tank].g_flCloseAreasOnly, g_esTrackPlayer[tank].g_flCloseAreasOnly, g_esTrackSpecial[iType].g_flCloseAreasOnly, g_esTrackAbility[iType].g_flCloseAreasOnly, 1);
+		g_esTrackCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esTrackTeammate[tank].g_iComboAbility, g_esTrackPlayer[tank].g_iComboAbility, g_esTrackSpecial[iType].g_iComboAbility, g_esTrackAbility[iType].g_iComboAbility, 1);
+		g_esTrackCache[tank].g_flTrackChance = flGetSubSettingValue(apply, bHuman, g_esTrackTeammate[tank].g_flTrackChance, g_esTrackPlayer[tank].g_flTrackChance, g_esTrackSpecial[iType].g_flTrackChance, g_esTrackAbility[iType].g_flTrackChance, 1);
+		g_esTrackCache[tank].g_flTrackSpeed = flGetSubSettingValue(apply, bHuman, g_esTrackTeammate[tank].g_flTrackSpeed, g_esTrackPlayer[tank].g_flTrackSpeed, g_esTrackSpecial[iType].g_flTrackSpeed, g_esTrackAbility[iType].g_flTrackSpeed, 1);
+		g_esTrackCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esTrackTeammate[tank].g_iHumanAbility, g_esTrackPlayer[tank].g_iHumanAbility, g_esTrackSpecial[iType].g_iHumanAbility, g_esTrackAbility[iType].g_iHumanAbility, 1);
+		g_esTrackCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esTrackTeammate[tank].g_iHumanAmmo, g_esTrackPlayer[tank].g_iHumanAmmo, g_esTrackSpecial[iType].g_iHumanAmmo, g_esTrackAbility[iType].g_iHumanAmmo, 1);
+		g_esTrackCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esTrackTeammate[tank].g_iHumanCooldown, g_esTrackPlayer[tank].g_iHumanCooldown, g_esTrackSpecial[iType].g_iHumanCooldown, g_esTrackAbility[iType].g_iHumanCooldown, 1);
+		g_esTrackCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esTrackTeammate[tank].g_flOpenAreasOnly, g_esTrackPlayer[tank].g_flOpenAreasOnly, g_esTrackSpecial[iType].g_flOpenAreasOnly, g_esTrackAbility[iType].g_flOpenAreasOnly, 1);
+		g_esTrackCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esTrackTeammate[tank].g_iRequiresHumans, g_esTrackPlayer[tank].g_iRequiresHumans, g_esTrackSpecial[iType].g_iRequiresHumans, g_esTrackAbility[iType].g_iRequiresHumans, 1);
+		g_esTrackCache[tank].g_iTrackAbility = iGetSubSettingValue(apply, bHuman, g_esTrackTeammate[tank].g_iTrackAbility, g_esTrackPlayer[tank].g_iTrackAbility, g_esTrackSpecial[iType].g_iTrackAbility, g_esTrackAbility[iType].g_iTrackAbility, 1);
+		g_esTrackCache[tank].g_iTrackCooldown = iGetSubSettingValue(apply, bHuman, g_esTrackTeammate[tank].g_iTrackCooldown, g_esTrackPlayer[tank].g_iTrackCooldown, g_esTrackSpecial[iType].g_iTrackCooldown, g_esTrackAbility[iType].g_iTrackCooldown, 1);
+		g_esTrackCache[tank].g_iTrackGlow = iGetSubSettingValue(apply, bHuman, g_esTrackTeammate[tank].g_iTrackGlow, g_esTrackPlayer[tank].g_iTrackGlow, g_esTrackSpecial[iType].g_iTrackGlow, g_esTrackAbility[iType].g_iTrackGlow, 1);
+		g_esTrackCache[tank].g_iTrackMessage = iGetSubSettingValue(apply, bHuman, g_esTrackTeammate[tank].g_iTrackMessage, g_esTrackPlayer[tank].g_iTrackMessage, g_esTrackSpecial[iType].g_iTrackMessage, g_esTrackAbility[iType].g_iTrackMessage, 1);
+		g_esTrackCache[tank].g_iTrackMode = iGetSubSettingValue(apply, bHuman, g_esTrackTeammate[tank].g_iTrackMode, g_esTrackPlayer[tank].g_iTrackMode, g_esTrackSpecial[iType].g_iTrackMode, g_esTrackAbility[iType].g_iTrackMode, 1);
 	}
 	else
 	{
-		g_esTrackCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_flCloseAreasOnly, g_esTrackAbility[type].g_flCloseAreasOnly, 1);
-		g_esTrackCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_iComboAbility, g_esTrackAbility[type].g_iComboAbility, 1);
-		g_esTrackCache[tank].g_flTrackChance = flGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_flTrackChance, g_esTrackAbility[type].g_flTrackChance, 1);
-		g_esTrackCache[tank].g_flTrackSpeed = flGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_flTrackSpeed, g_esTrackAbility[type].g_flTrackSpeed, 1);
-		g_esTrackCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_iHumanAbility, g_esTrackAbility[type].g_iHumanAbility, 1);
-		g_esTrackCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_iHumanAmmo, g_esTrackAbility[type].g_iHumanAmmo, 1);
-		g_esTrackCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_iHumanCooldown, g_esTrackAbility[type].g_iHumanCooldown, 1);
-		g_esTrackCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_flOpenAreasOnly, g_esTrackAbility[type].g_flOpenAreasOnly, 1);
-		g_esTrackCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_iRequiresHumans, g_esTrackAbility[type].g_iRequiresHumans, 1);
-		g_esTrackCache[tank].g_iTrackAbility = iGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_iTrackAbility, g_esTrackAbility[type].g_iTrackAbility, 1);
-		g_esTrackCache[tank].g_iTrackCooldown = iGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_iTrackCooldown, g_esTrackAbility[type].g_iTrackCooldown, 1);
-		g_esTrackCache[tank].g_iTrackGlow = iGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_iTrackGlow, g_esTrackAbility[type].g_iTrackGlow, 1);
-		g_esTrackCache[tank].g_iTrackMessage = iGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_iTrackMessage, g_esTrackAbility[type].g_iTrackMessage, 1);
-		g_esTrackCache[tank].g_iTrackMode = iGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_iTrackMode, g_esTrackAbility[type].g_iTrackMode, 1);
+		g_esTrackCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_flCloseAreasOnly, g_esTrackAbility[iType].g_flCloseAreasOnly, 1);
+		g_esTrackCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_iComboAbility, g_esTrackAbility[iType].g_iComboAbility, 1);
+		g_esTrackCache[tank].g_flTrackChance = flGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_flTrackChance, g_esTrackAbility[iType].g_flTrackChance, 1);
+		g_esTrackCache[tank].g_flTrackSpeed = flGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_flTrackSpeed, g_esTrackAbility[iType].g_flTrackSpeed, 1);
+		g_esTrackCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_iHumanAbility, g_esTrackAbility[iType].g_iHumanAbility, 1);
+		g_esTrackCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_iHumanAmmo, g_esTrackAbility[iType].g_iHumanAmmo, 1);
+		g_esTrackCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_iHumanCooldown, g_esTrackAbility[iType].g_iHumanCooldown, 1);
+		g_esTrackCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_flOpenAreasOnly, g_esTrackAbility[iType].g_flOpenAreasOnly, 1);
+		g_esTrackCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_iRequiresHumans, g_esTrackAbility[iType].g_iRequiresHumans, 1);
+		g_esTrackCache[tank].g_iTrackAbility = iGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_iTrackAbility, g_esTrackAbility[iType].g_iTrackAbility, 1);
+		g_esTrackCache[tank].g_iTrackCooldown = iGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_iTrackCooldown, g_esTrackAbility[iType].g_iTrackCooldown, 1);
+		g_esTrackCache[tank].g_iTrackGlow = iGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_iTrackGlow, g_esTrackAbility[iType].g_iTrackGlow, 1);
+		g_esTrackCache[tank].g_iTrackMessage = iGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_iTrackMessage, g_esTrackAbility[iType].g_iTrackMessage, 1);
+		g_esTrackCache[tank].g_iTrackMode = iGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_iTrackMode, g_esTrackAbility[iType].g_iTrackMode, 1);
 	}
 }
 
@@ -1082,7 +1085,7 @@ void vTrackThink(int rock)
 				AddVectors(flVelocity, flFront, flVelocity3);
 				NormalizeVector(flVelocity3, flVelocity3);
 
-				int iPos = g_esTrackAbility[g_esTrackPlayer[iTank].g_iTankType].g_iComboPosition;
+				int iPos = g_esTrackAbility[g_esTrackPlayer[iTank].g_iTankTypeRecorded].g_iComboPosition;
 				float flSpeed = (iPos != -1) ? MT_GetCombinationSetting(iTank, 16, iPos) : g_esTrackCache[iTank].g_flTrackSpeed;
 				ScaleVector(flVelocity3, flSpeed);
 
@@ -1247,7 +1250,7 @@ void tTimerTrack(Handle timer, DataPack pack)
 	{
 		g_esTrackPlayer[iTank].g_bActivated = false;
 
-		int iPos = g_esTrackAbility[g_esTrackPlayer[iTank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 2, iPos)) : g_esTrackCache[iTank].g_iTrackCooldown;
+		int iPos = g_esTrackAbility[g_esTrackPlayer[iTank].g_iTankTypeRecorded].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 2, iPos)) : g_esTrackCache[iTank].g_iTrackCooldown;
 		iCooldown = (bIsInfected(iTank, MT_CHECK_FAKECLIENT) && g_esTrackCache[iTank].g_iHumanAbility == 1 && g_esTrackPlayer[iTank].g_iAmmoCount < g_esTrackCache[iTank].g_iHumanAmmo && g_esTrackCache[iTank].g_iHumanAmmo > 0) ? g_esTrackCache[iTank].g_iHumanCooldown : iCooldown;
 		g_esTrackPlayer[iTank].g_iCooldown = (iTime + iCooldown);
 		if (g_esTrackPlayer[iTank].g_iCooldown != -1 && g_esTrackPlayer[iTank].g_iCooldown >= iTime)

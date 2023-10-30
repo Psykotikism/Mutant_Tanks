@@ -97,6 +97,7 @@ enum struct esSmitePlayer
 	int g_iSmiteRangeCooldown;
 	int g_iSmiteSight;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esSmitePlayer g_esSmitePlayer[MAXPLAYERS + 1];
@@ -844,57 +845,59 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esSmitePlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esSmitePlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esSmitePlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esSmiteCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_flCloseAreasOnly, g_esSmitePlayer[tank].g_flCloseAreasOnly, g_esSmiteSpecial[type].g_flCloseAreasOnly, g_esSmiteAbility[type].g_flCloseAreasOnly, 1);
-		g_esSmiteCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_iComboAbility, g_esSmitePlayer[tank].g_iComboAbility, g_esSmiteSpecial[type].g_iComboAbility, g_esSmiteAbility[type].g_iComboAbility, 1);
-		g_esSmiteCache[tank].g_flSmiteChance = flGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_flSmiteChance, g_esSmitePlayer[tank].g_flSmiteChance, g_esSmiteSpecial[type].g_flSmiteChance, g_esSmiteAbility[type].g_flSmiteChance, 1);
-		g_esSmiteCache[tank].g_flSmiteCountdown = flGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_flSmiteCountdown, g_esSmitePlayer[tank].g_flSmiteCountdown, g_esSmiteSpecial[type].g_flSmiteCountdown, g_esSmiteAbility[type].g_flSmiteCountdown, 1);
-		g_esSmiteCache[tank].g_flSmiteRange = flGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_flSmiteRange, g_esSmitePlayer[tank].g_flSmiteRange, g_esSmiteSpecial[type].g_flSmiteRange, g_esSmiteAbility[type].g_flSmiteRange, 1);
-		g_esSmiteCache[tank].g_flSmiteRangeChance = flGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_flSmiteRangeChance, g_esSmitePlayer[tank].g_flSmiteRangeChance, g_esSmiteSpecial[type].g_flSmiteRangeChance, g_esSmiteAbility[type].g_flSmiteRangeChance, 1);
-		g_esSmiteCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_iHumanAbility, g_esSmitePlayer[tank].g_iHumanAbility, g_esSmiteSpecial[type].g_iHumanAbility, g_esSmiteAbility[type].g_iHumanAbility, 1);
-		g_esSmiteCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_iHumanAmmo, g_esSmitePlayer[tank].g_iHumanAmmo, g_esSmiteSpecial[type].g_iHumanAmmo, g_esSmiteAbility[type].g_iHumanAmmo, 1);
-		g_esSmiteCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_iHumanCooldown, g_esSmitePlayer[tank].g_iHumanCooldown, g_esSmiteSpecial[type].g_iHumanCooldown, g_esSmiteAbility[type].g_iHumanCooldown, 1);
-		g_esSmiteCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_iHumanRangeCooldown, g_esSmitePlayer[tank].g_iHumanRangeCooldown, g_esSmiteSpecial[type].g_iHumanRangeCooldown, g_esSmiteAbility[type].g_iHumanRangeCooldown, 1);
-		g_esSmiteCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_flOpenAreasOnly, g_esSmitePlayer[tank].g_flOpenAreasOnly, g_esSmiteSpecial[type].g_flOpenAreasOnly, g_esSmiteAbility[type].g_flOpenAreasOnly, 1);
-		g_esSmiteCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_iRequiresHumans, g_esSmitePlayer[tank].g_iRequiresHumans, g_esSmiteSpecial[type].g_iRequiresHumans, g_esSmiteAbility[type].g_iRequiresHumans, 1);
-		g_esSmiteCache[tank].g_iSmiteAbility = iGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_iSmiteAbility, g_esSmitePlayer[tank].g_iSmiteAbility, g_esSmiteSpecial[type].g_iSmiteAbility, g_esSmiteAbility[type].g_iSmiteAbility, 1);
-		g_esSmiteCache[tank].g_iSmiteBody = iGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_iSmiteBody, g_esSmitePlayer[tank].g_iSmiteBody, g_esSmiteSpecial[type].g_iSmiteBody, g_esSmiteAbility[type].g_iSmiteBody, 1);
-		g_esSmiteCache[tank].g_iSmiteCooldown = iGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_iSmiteCooldown, g_esSmitePlayer[tank].g_iSmiteCooldown, g_esSmiteSpecial[type].g_iSmiteCooldown, g_esSmiteAbility[type].g_iSmiteCooldown, 1);
-		g_esSmiteCache[tank].g_iSmiteEffect = iGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_iSmiteEffect, g_esSmitePlayer[tank].g_iSmiteEffect, g_esSmiteSpecial[type].g_iSmiteEffect, g_esSmiteAbility[type].g_iSmiteEffect, 1);
-		g_esSmiteCache[tank].g_iSmiteHit = iGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_iSmiteHit, g_esSmitePlayer[tank].g_iSmiteHit, g_esSmiteSpecial[type].g_iSmiteHit, g_esSmiteAbility[type].g_iSmiteHit, 1);
-		g_esSmiteCache[tank].g_iSmiteHitMode = iGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_iSmiteHitMode, g_esSmitePlayer[tank].g_iSmiteHitMode, g_esSmiteSpecial[type].g_iSmiteHitMode, g_esSmiteAbility[type].g_iSmiteHitMode, 1);
-		g_esSmiteCache[tank].g_iSmiteMessage = iGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_iSmiteMessage, g_esSmitePlayer[tank].g_iSmiteMessage, g_esSmiteSpecial[type].g_iSmiteMessage, g_esSmiteAbility[type].g_iSmiteMessage, 1);
-		g_esSmiteCache[tank].g_iSmiteMode = iGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_iSmiteMode, g_esSmitePlayer[tank].g_iSmiteMode, g_esSmiteSpecial[type].g_iSmiteMode, g_esSmiteAbility[type].g_iSmiteMode, 1);
-		g_esSmiteCache[tank].g_iSmiteRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_iSmiteRangeCooldown, g_esSmitePlayer[tank].g_iSmiteRangeCooldown, g_esSmiteSpecial[type].g_iSmiteRangeCooldown, g_esSmiteAbility[type].g_iSmiteRangeCooldown, 1);
-		g_esSmiteCache[tank].g_iSmiteSight = iGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_iSmiteSight, g_esSmitePlayer[tank].g_iSmiteSight, g_esSmiteSpecial[type].g_iSmiteSight, g_esSmiteAbility[type].g_iSmiteSight, 1);
+		g_esSmiteCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_flCloseAreasOnly, g_esSmitePlayer[tank].g_flCloseAreasOnly, g_esSmiteSpecial[iType].g_flCloseAreasOnly, g_esSmiteAbility[iType].g_flCloseAreasOnly, 1);
+		g_esSmiteCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_iComboAbility, g_esSmitePlayer[tank].g_iComboAbility, g_esSmiteSpecial[iType].g_iComboAbility, g_esSmiteAbility[iType].g_iComboAbility, 1);
+		g_esSmiteCache[tank].g_flSmiteChance = flGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_flSmiteChance, g_esSmitePlayer[tank].g_flSmiteChance, g_esSmiteSpecial[iType].g_flSmiteChance, g_esSmiteAbility[iType].g_flSmiteChance, 1);
+		g_esSmiteCache[tank].g_flSmiteCountdown = flGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_flSmiteCountdown, g_esSmitePlayer[tank].g_flSmiteCountdown, g_esSmiteSpecial[iType].g_flSmiteCountdown, g_esSmiteAbility[iType].g_flSmiteCountdown, 1);
+		g_esSmiteCache[tank].g_flSmiteRange = flGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_flSmiteRange, g_esSmitePlayer[tank].g_flSmiteRange, g_esSmiteSpecial[iType].g_flSmiteRange, g_esSmiteAbility[iType].g_flSmiteRange, 1);
+		g_esSmiteCache[tank].g_flSmiteRangeChance = flGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_flSmiteRangeChance, g_esSmitePlayer[tank].g_flSmiteRangeChance, g_esSmiteSpecial[iType].g_flSmiteRangeChance, g_esSmiteAbility[iType].g_flSmiteRangeChance, 1);
+		g_esSmiteCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_iHumanAbility, g_esSmitePlayer[tank].g_iHumanAbility, g_esSmiteSpecial[iType].g_iHumanAbility, g_esSmiteAbility[iType].g_iHumanAbility, 1);
+		g_esSmiteCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_iHumanAmmo, g_esSmitePlayer[tank].g_iHumanAmmo, g_esSmiteSpecial[iType].g_iHumanAmmo, g_esSmiteAbility[iType].g_iHumanAmmo, 1);
+		g_esSmiteCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_iHumanCooldown, g_esSmitePlayer[tank].g_iHumanCooldown, g_esSmiteSpecial[iType].g_iHumanCooldown, g_esSmiteAbility[iType].g_iHumanCooldown, 1);
+		g_esSmiteCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_iHumanRangeCooldown, g_esSmitePlayer[tank].g_iHumanRangeCooldown, g_esSmiteSpecial[iType].g_iHumanRangeCooldown, g_esSmiteAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esSmiteCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_flOpenAreasOnly, g_esSmitePlayer[tank].g_flOpenAreasOnly, g_esSmiteSpecial[iType].g_flOpenAreasOnly, g_esSmiteAbility[iType].g_flOpenAreasOnly, 1);
+		g_esSmiteCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_iRequiresHumans, g_esSmitePlayer[tank].g_iRequiresHumans, g_esSmiteSpecial[iType].g_iRequiresHumans, g_esSmiteAbility[iType].g_iRequiresHumans, 1);
+		g_esSmiteCache[tank].g_iSmiteAbility = iGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_iSmiteAbility, g_esSmitePlayer[tank].g_iSmiteAbility, g_esSmiteSpecial[iType].g_iSmiteAbility, g_esSmiteAbility[iType].g_iSmiteAbility, 1);
+		g_esSmiteCache[tank].g_iSmiteBody = iGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_iSmiteBody, g_esSmitePlayer[tank].g_iSmiteBody, g_esSmiteSpecial[iType].g_iSmiteBody, g_esSmiteAbility[iType].g_iSmiteBody, 1);
+		g_esSmiteCache[tank].g_iSmiteCooldown = iGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_iSmiteCooldown, g_esSmitePlayer[tank].g_iSmiteCooldown, g_esSmiteSpecial[iType].g_iSmiteCooldown, g_esSmiteAbility[iType].g_iSmiteCooldown, 1);
+		g_esSmiteCache[tank].g_iSmiteEffect = iGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_iSmiteEffect, g_esSmitePlayer[tank].g_iSmiteEffect, g_esSmiteSpecial[iType].g_iSmiteEffect, g_esSmiteAbility[iType].g_iSmiteEffect, 1);
+		g_esSmiteCache[tank].g_iSmiteHit = iGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_iSmiteHit, g_esSmitePlayer[tank].g_iSmiteHit, g_esSmiteSpecial[iType].g_iSmiteHit, g_esSmiteAbility[iType].g_iSmiteHit, 1);
+		g_esSmiteCache[tank].g_iSmiteHitMode = iGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_iSmiteHitMode, g_esSmitePlayer[tank].g_iSmiteHitMode, g_esSmiteSpecial[iType].g_iSmiteHitMode, g_esSmiteAbility[iType].g_iSmiteHitMode, 1);
+		g_esSmiteCache[tank].g_iSmiteMessage = iGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_iSmiteMessage, g_esSmitePlayer[tank].g_iSmiteMessage, g_esSmiteSpecial[iType].g_iSmiteMessage, g_esSmiteAbility[iType].g_iSmiteMessage, 1);
+		g_esSmiteCache[tank].g_iSmiteMode = iGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_iSmiteMode, g_esSmitePlayer[tank].g_iSmiteMode, g_esSmiteSpecial[iType].g_iSmiteMode, g_esSmiteAbility[iType].g_iSmiteMode, 1);
+		g_esSmiteCache[tank].g_iSmiteRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_iSmiteRangeCooldown, g_esSmitePlayer[tank].g_iSmiteRangeCooldown, g_esSmiteSpecial[iType].g_iSmiteRangeCooldown, g_esSmiteAbility[iType].g_iSmiteRangeCooldown, 1);
+		g_esSmiteCache[tank].g_iSmiteSight = iGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_iSmiteSight, g_esSmitePlayer[tank].g_iSmiteSight, g_esSmiteSpecial[iType].g_iSmiteSight, g_esSmiteAbility[iType].g_iSmiteSight, 1);
 	}
 	else
 	{
-		g_esSmiteCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_flCloseAreasOnly, g_esSmiteAbility[type].g_flCloseAreasOnly, 1);
-		g_esSmiteCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_iComboAbility, g_esSmiteAbility[type].g_iComboAbility, 1);
-		g_esSmiteCache[tank].g_flSmiteChance = flGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_flSmiteChance, g_esSmiteAbility[type].g_flSmiteChance, 1);
-		g_esSmiteCache[tank].g_flSmiteCountdown = flGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_flSmiteCountdown, g_esSmiteAbility[type].g_flSmiteCountdown, 1);
-		g_esSmiteCache[tank].g_flSmiteRange = flGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_flSmiteRange, g_esSmiteAbility[type].g_flSmiteRange, 1);
-		g_esSmiteCache[tank].g_flSmiteRangeChance = flGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_flSmiteRangeChance, g_esSmiteAbility[type].g_flSmiteRangeChance, 1);
-		g_esSmiteCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_iHumanAbility, g_esSmiteAbility[type].g_iHumanAbility, 1);
-		g_esSmiteCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_iHumanAmmo, g_esSmiteAbility[type].g_iHumanAmmo, 1);
-		g_esSmiteCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_iHumanCooldown, g_esSmiteAbility[type].g_iHumanCooldown, 1);
-		g_esSmiteCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_iHumanRangeCooldown, g_esSmiteAbility[type].g_iHumanRangeCooldown, 1);
-		g_esSmiteCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_flOpenAreasOnly, g_esSmiteAbility[type].g_flOpenAreasOnly, 1);
-		g_esSmiteCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_iRequiresHumans, g_esSmiteAbility[type].g_iRequiresHumans, 1);
-		g_esSmiteCache[tank].g_iSmiteAbility = iGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_iSmiteAbility, g_esSmiteAbility[type].g_iSmiteAbility, 1);
-		g_esSmiteCache[tank].g_iSmiteBody = iGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_iSmiteBody, g_esSmiteAbility[type].g_iSmiteBody, 1);
-		g_esSmiteCache[tank].g_iSmiteCooldown = iGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_iSmiteCooldown, g_esSmiteAbility[type].g_iSmiteCooldown, 1);
-		g_esSmiteCache[tank].g_iSmiteEffect = iGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_iSmiteEffect, g_esSmiteAbility[type].g_iSmiteEffect, 1);
-		g_esSmiteCache[tank].g_iSmiteHit = iGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_iSmiteHit, g_esSmiteAbility[type].g_iSmiteHit, 1);
-		g_esSmiteCache[tank].g_iSmiteHitMode = iGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_iSmiteHitMode, g_esSmiteAbility[type].g_iSmiteHitMode, 1);
-		g_esSmiteCache[tank].g_iSmiteMessage = iGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_iSmiteMessage, g_esSmiteAbility[type].g_iSmiteMessage, 1);
-		g_esSmiteCache[tank].g_iSmiteMode = iGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_iSmiteMode, g_esSmiteAbility[type].g_iSmiteMode, 1);
-		g_esSmiteCache[tank].g_iSmiteRangeCooldown = iGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_iSmiteRangeCooldown, g_esSmiteAbility[type].g_iSmiteRangeCooldown, 1);
-		g_esSmiteCache[tank].g_iSmiteSight = iGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_iSmiteSight, g_esSmiteAbility[type].g_iSmiteSight, 1);
+		g_esSmiteCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_flCloseAreasOnly, g_esSmiteAbility[iType].g_flCloseAreasOnly, 1);
+		g_esSmiteCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_iComboAbility, g_esSmiteAbility[iType].g_iComboAbility, 1);
+		g_esSmiteCache[tank].g_flSmiteChance = flGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_flSmiteChance, g_esSmiteAbility[iType].g_flSmiteChance, 1);
+		g_esSmiteCache[tank].g_flSmiteCountdown = flGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_flSmiteCountdown, g_esSmiteAbility[iType].g_flSmiteCountdown, 1);
+		g_esSmiteCache[tank].g_flSmiteRange = flGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_flSmiteRange, g_esSmiteAbility[iType].g_flSmiteRange, 1);
+		g_esSmiteCache[tank].g_flSmiteRangeChance = flGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_flSmiteRangeChance, g_esSmiteAbility[iType].g_flSmiteRangeChance, 1);
+		g_esSmiteCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_iHumanAbility, g_esSmiteAbility[iType].g_iHumanAbility, 1);
+		g_esSmiteCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_iHumanAmmo, g_esSmiteAbility[iType].g_iHumanAmmo, 1);
+		g_esSmiteCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_iHumanCooldown, g_esSmiteAbility[iType].g_iHumanCooldown, 1);
+		g_esSmiteCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_iHumanRangeCooldown, g_esSmiteAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esSmiteCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_flOpenAreasOnly, g_esSmiteAbility[iType].g_flOpenAreasOnly, 1);
+		g_esSmiteCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_iRequiresHumans, g_esSmiteAbility[iType].g_iRequiresHumans, 1);
+		g_esSmiteCache[tank].g_iSmiteAbility = iGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_iSmiteAbility, g_esSmiteAbility[iType].g_iSmiteAbility, 1);
+		g_esSmiteCache[tank].g_iSmiteBody = iGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_iSmiteBody, g_esSmiteAbility[iType].g_iSmiteBody, 1);
+		g_esSmiteCache[tank].g_iSmiteCooldown = iGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_iSmiteCooldown, g_esSmiteAbility[iType].g_iSmiteCooldown, 1);
+		g_esSmiteCache[tank].g_iSmiteEffect = iGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_iSmiteEffect, g_esSmiteAbility[iType].g_iSmiteEffect, 1);
+		g_esSmiteCache[tank].g_iSmiteHit = iGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_iSmiteHit, g_esSmiteAbility[iType].g_iSmiteHit, 1);
+		g_esSmiteCache[tank].g_iSmiteHitMode = iGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_iSmiteHitMode, g_esSmiteAbility[iType].g_iSmiteHitMode, 1);
+		g_esSmiteCache[tank].g_iSmiteMessage = iGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_iSmiteMessage, g_esSmiteAbility[iType].g_iSmiteMessage, 1);
+		g_esSmiteCache[tank].g_iSmiteMode = iGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_iSmiteMode, g_esSmiteAbility[iType].g_iSmiteMode, 1);
+		g_esSmiteCache[tank].g_iSmiteRangeCooldown = iGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_iSmiteRangeCooldown, g_esSmiteAbility[iType].g_iSmiteRangeCooldown, 1);
+		g_esSmiteCache[tank].g_iSmiteSight = iGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_iSmiteSight, g_esSmiteAbility[iType].g_iSmiteSight, 1);
 	}
 }
 

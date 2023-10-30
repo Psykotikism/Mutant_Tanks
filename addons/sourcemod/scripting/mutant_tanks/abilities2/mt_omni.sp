@@ -88,6 +88,7 @@ enum struct esOmniPlayer
 	int g_iOmniType;
 	int g_iRequiresHumans;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esOmniPlayer g_esOmniPlayer[MAXPLAYERS + 1];
@@ -459,12 +460,12 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 {
 	if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esOmniCache[tank].g_iHumanAbility != 2)
 	{
-		g_esOmniAbility[g_esOmniPlayer[tank].g_iTankType].g_iComboPosition = -1;
+		g_esOmniAbility[g_esOmniPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 		return;
 	}
 
-	g_esOmniAbility[g_esOmniPlayer[tank].g_iTankType].g_iComboPosition = -1;
+	g_esOmniAbility[g_esOmniPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 	char sCombo[320], sSet[4][32];
 	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
@@ -485,7 +486,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 			{
 				if (StrEqual(sSubset[iPos], MT_OMNI_SECTION, false) || StrEqual(sSubset[iPos], MT_OMNI_SECTION2, false) || StrEqual(sSubset[iPos], MT_OMNI_SECTION3, false) || StrEqual(sSubset[iPos], MT_OMNI_SECTION4, false))
 				{
-					g_esOmniAbility[g_esOmniPlayer[tank].g_iTankType].g_iComboPosition = iPos;
+					g_esOmniAbility[g_esOmniPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = iPos;
 
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
@@ -711,54 +712,56 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esOmniPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esOmniPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esOmniPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esOmniCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_flCloseAreasOnly, g_esOmniPlayer[tank].g_flCloseAreasOnly, g_esOmniSpecial[type].g_flCloseAreasOnly, g_esOmniAbility[type].g_flCloseAreasOnly, 1);
-		g_esOmniCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_iComboAbility, g_esOmniPlayer[tank].g_iComboAbility, g_esOmniSpecial[type].g_iComboAbility, g_esOmniAbility[type].g_iComboAbility, 1);
-		g_esOmniCache[tank].g_flOmniChance = flGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_flOmniChance, g_esOmniPlayer[tank].g_flOmniChance, g_esOmniSpecial[type].g_flOmniChance, g_esOmniAbility[type].g_flOmniChance, 1);
-		g_esOmniCache[tank].g_flOmniRange = flGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_flOmniRange, g_esOmniPlayer[tank].g_flOmniRange, g_esOmniSpecial[type].g_flOmniRange, g_esOmniAbility[type].g_flOmniRange, 1);
-		g_esOmniCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_iHumanAbility, g_esOmniPlayer[tank].g_iHumanAbility, g_esOmniSpecial[type].g_iHumanAbility, g_esOmniAbility[type].g_iHumanAbility, 1);
-		g_esOmniCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_iHumanAmmo, g_esOmniPlayer[tank].g_iHumanAmmo, g_esOmniSpecial[type].g_iHumanAmmo, g_esOmniAbility[type].g_iHumanAmmo, 1);
-		g_esOmniCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_iHumanCooldown, g_esOmniPlayer[tank].g_iHumanCooldown, g_esOmniSpecial[type].g_iHumanCooldown, g_esOmniAbility[type].g_iHumanCooldown, 1);
-		g_esOmniCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_iHumanDuration, g_esOmniPlayer[tank].g_iHumanDuration, g_esOmniSpecial[type].g_iHumanDuration, g_esOmniAbility[type].g_iHumanDuration, 1);
-		g_esOmniCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_iHumanMode, g_esOmniPlayer[tank].g_iHumanMode, g_esOmniSpecial[type].g_iHumanMode, g_esOmniAbility[type].g_iHumanMode, 1);
-		g_esOmniCache[tank].g_iOmniAbility = iGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_iOmniAbility, g_esOmniPlayer[tank].g_iOmniAbility, g_esOmniSpecial[type].g_iOmniAbility, g_esOmniAbility[type].g_iOmniAbility, 1);
-		g_esOmniCache[tank].g_iOmniCooldown = iGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_iOmniCooldown, g_esOmniPlayer[tank].g_iOmniCooldown, g_esOmniSpecial[type].g_iOmniCooldown, g_esOmniAbility[type].g_iOmniCooldown, 1);
-		g_esOmniCache[tank].g_iOmniDuration = iGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_iOmniDuration, g_esOmniPlayer[tank].g_iOmniDuration, g_esOmniSpecial[type].g_iOmniDuration, g_esOmniAbility[type].g_iOmniDuration, 1);
-		g_esOmniCache[tank].g_iOmniMessage = iGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_iOmniMessage, g_esOmniPlayer[tank].g_iOmniMessage, g_esOmniSpecial[type].g_iOmniMessage, g_esOmniAbility[type].g_iOmniMessage, 1);
-		g_esOmniCache[tank].g_iOmniMode = iGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_iOmniMode, g_esOmniPlayer[tank].g_iOmniMode, g_esOmniSpecial[type].g_iOmniMode, g_esOmniAbility[type].g_iOmniMode, 1);
-		g_esOmniCache[tank].g_iOmniSight = iGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_iOmniSight, g_esOmniPlayer[tank].g_iOmniSight, g_esOmniSpecial[type].g_iOmniSight, g_esOmniAbility[type].g_iOmniSight, 1);
-		g_esOmniCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_flOpenAreasOnly, g_esOmniPlayer[tank].g_flOpenAreasOnly, g_esOmniSpecial[type].g_flOpenAreasOnly, g_esOmniAbility[type].g_flOpenAreasOnly, 1);
-		g_esOmniCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_iRequiresHumans, g_esOmniPlayer[tank].g_iRequiresHumans, g_esOmniSpecial[type].g_iRequiresHumans, g_esOmniAbility[type].g_iRequiresHumans, 1);
+		g_esOmniCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_flCloseAreasOnly, g_esOmniPlayer[tank].g_flCloseAreasOnly, g_esOmniSpecial[iType].g_flCloseAreasOnly, g_esOmniAbility[iType].g_flCloseAreasOnly, 1);
+		g_esOmniCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_iComboAbility, g_esOmniPlayer[tank].g_iComboAbility, g_esOmniSpecial[iType].g_iComboAbility, g_esOmniAbility[iType].g_iComboAbility, 1);
+		g_esOmniCache[tank].g_flOmniChance = flGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_flOmniChance, g_esOmniPlayer[tank].g_flOmniChance, g_esOmniSpecial[iType].g_flOmniChance, g_esOmniAbility[iType].g_flOmniChance, 1);
+		g_esOmniCache[tank].g_flOmniRange = flGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_flOmniRange, g_esOmniPlayer[tank].g_flOmniRange, g_esOmniSpecial[iType].g_flOmniRange, g_esOmniAbility[iType].g_flOmniRange, 1);
+		g_esOmniCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_iHumanAbility, g_esOmniPlayer[tank].g_iHumanAbility, g_esOmniSpecial[iType].g_iHumanAbility, g_esOmniAbility[iType].g_iHumanAbility, 1);
+		g_esOmniCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_iHumanAmmo, g_esOmniPlayer[tank].g_iHumanAmmo, g_esOmniSpecial[iType].g_iHumanAmmo, g_esOmniAbility[iType].g_iHumanAmmo, 1);
+		g_esOmniCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_iHumanCooldown, g_esOmniPlayer[tank].g_iHumanCooldown, g_esOmniSpecial[iType].g_iHumanCooldown, g_esOmniAbility[iType].g_iHumanCooldown, 1);
+		g_esOmniCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_iHumanDuration, g_esOmniPlayer[tank].g_iHumanDuration, g_esOmniSpecial[iType].g_iHumanDuration, g_esOmniAbility[iType].g_iHumanDuration, 1);
+		g_esOmniCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_iHumanMode, g_esOmniPlayer[tank].g_iHumanMode, g_esOmniSpecial[iType].g_iHumanMode, g_esOmniAbility[iType].g_iHumanMode, 1);
+		g_esOmniCache[tank].g_iOmniAbility = iGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_iOmniAbility, g_esOmniPlayer[tank].g_iOmniAbility, g_esOmniSpecial[iType].g_iOmniAbility, g_esOmniAbility[iType].g_iOmniAbility, 1);
+		g_esOmniCache[tank].g_iOmniCooldown = iGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_iOmniCooldown, g_esOmniPlayer[tank].g_iOmniCooldown, g_esOmniSpecial[iType].g_iOmniCooldown, g_esOmniAbility[iType].g_iOmniCooldown, 1);
+		g_esOmniCache[tank].g_iOmniDuration = iGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_iOmniDuration, g_esOmniPlayer[tank].g_iOmniDuration, g_esOmniSpecial[iType].g_iOmniDuration, g_esOmniAbility[iType].g_iOmniDuration, 1);
+		g_esOmniCache[tank].g_iOmniMessage = iGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_iOmniMessage, g_esOmniPlayer[tank].g_iOmniMessage, g_esOmniSpecial[iType].g_iOmniMessage, g_esOmniAbility[iType].g_iOmniMessage, 1);
+		g_esOmniCache[tank].g_iOmniMode = iGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_iOmniMode, g_esOmniPlayer[tank].g_iOmniMode, g_esOmniSpecial[iType].g_iOmniMode, g_esOmniAbility[iType].g_iOmniMode, 1);
+		g_esOmniCache[tank].g_iOmniSight = iGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_iOmniSight, g_esOmniPlayer[tank].g_iOmniSight, g_esOmniSpecial[iType].g_iOmniSight, g_esOmniAbility[iType].g_iOmniSight, 1);
+		g_esOmniCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_flOpenAreasOnly, g_esOmniPlayer[tank].g_flOpenAreasOnly, g_esOmniSpecial[iType].g_flOpenAreasOnly, g_esOmniAbility[iType].g_flOpenAreasOnly, 1);
+		g_esOmniCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_iRequiresHumans, g_esOmniPlayer[tank].g_iRequiresHumans, g_esOmniSpecial[iType].g_iRequiresHumans, g_esOmniAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
 	{
-		g_esOmniCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_flCloseAreasOnly, g_esOmniAbility[type].g_flCloseAreasOnly, 1);
-		g_esOmniCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iComboAbility, g_esOmniAbility[type].g_iComboAbility, 1);
-		g_esOmniCache[tank].g_flOmniChance = flGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_flOmniChance, g_esOmniAbility[type].g_flOmniChance, 1);
-		g_esOmniCache[tank].g_flOmniRange = flGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_flOmniRange, g_esOmniAbility[type].g_flOmniRange, 1);
-		g_esOmniCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iHumanAbility, g_esOmniAbility[type].g_iHumanAbility, 1);
-		g_esOmniCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iHumanAmmo, g_esOmniAbility[type].g_iHumanAmmo, 1);
-		g_esOmniCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iHumanCooldown, g_esOmniAbility[type].g_iHumanCooldown, 1);
-		g_esOmniCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iHumanDuration, g_esOmniAbility[type].g_iHumanDuration, 1);
-		g_esOmniCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iHumanMode, g_esOmniAbility[type].g_iHumanMode, 1);
-		g_esOmniCache[tank].g_iOmniAbility = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iOmniAbility, g_esOmniAbility[type].g_iOmniAbility, 1);
-		g_esOmniCache[tank].g_iOmniCooldown = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iOmniCooldown, g_esOmniAbility[type].g_iOmniCooldown, 1);
-		g_esOmniCache[tank].g_iOmniDuration = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iOmniDuration, g_esOmniAbility[type].g_iOmniDuration, 1);
-		g_esOmniCache[tank].g_iOmniMessage = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iOmniMessage, g_esOmniAbility[type].g_iOmniMessage, 1);
-		g_esOmniCache[tank].g_iOmniMode = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iOmniMode, g_esOmniAbility[type].g_iOmniMode, 1);
-		g_esOmniCache[tank].g_iOmniSight = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iOmniSight, g_esOmniAbility[type].g_iOmniSight, 1);
-		g_esOmniCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_flOpenAreasOnly, g_esOmniAbility[type].g_flOpenAreasOnly, 1);
-		g_esOmniCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iRequiresHumans, g_esOmniAbility[type].g_iRequiresHumans, 1);
+		g_esOmniCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_flCloseAreasOnly, g_esOmniAbility[iType].g_flCloseAreasOnly, 1);
+		g_esOmniCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iComboAbility, g_esOmniAbility[iType].g_iComboAbility, 1);
+		g_esOmniCache[tank].g_flOmniChance = flGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_flOmniChance, g_esOmniAbility[iType].g_flOmniChance, 1);
+		g_esOmniCache[tank].g_flOmniRange = flGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_flOmniRange, g_esOmniAbility[iType].g_flOmniRange, 1);
+		g_esOmniCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iHumanAbility, g_esOmniAbility[iType].g_iHumanAbility, 1);
+		g_esOmniCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iHumanAmmo, g_esOmniAbility[iType].g_iHumanAmmo, 1);
+		g_esOmniCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iHumanCooldown, g_esOmniAbility[iType].g_iHumanCooldown, 1);
+		g_esOmniCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iHumanDuration, g_esOmniAbility[iType].g_iHumanDuration, 1);
+		g_esOmniCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iHumanMode, g_esOmniAbility[iType].g_iHumanMode, 1);
+		g_esOmniCache[tank].g_iOmniAbility = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iOmniAbility, g_esOmniAbility[iType].g_iOmniAbility, 1);
+		g_esOmniCache[tank].g_iOmniCooldown = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iOmniCooldown, g_esOmniAbility[iType].g_iOmniCooldown, 1);
+		g_esOmniCache[tank].g_iOmniDuration = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iOmniDuration, g_esOmniAbility[iType].g_iOmniDuration, 1);
+		g_esOmniCache[tank].g_iOmniMessage = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iOmniMessage, g_esOmniAbility[iType].g_iOmniMessage, 1);
+		g_esOmniCache[tank].g_iOmniMode = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iOmniMode, g_esOmniAbility[iType].g_iOmniMode, 1);
+		g_esOmniCache[tank].g_iOmniSight = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iOmniSight, g_esOmniAbility[iType].g_iOmniSight, 1);
+		g_esOmniCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_flOpenAreasOnly, g_esOmniAbility[iType].g_flOpenAreasOnly, 1);
+		g_esOmniCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iRequiresHumans, g_esOmniAbility[iType].g_iRequiresHumans, 1);
 	}
 }
 
 void vCacheOriginalSettings(int tank)
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
-	int iType = (g_esOmniPlayer[tank].g_iOmniType > 0) ? g_esOmniPlayer[tank].g_iOmniType : g_esOmniPlayer[tank].g_iTankType;
+	int iType = (g_esOmniPlayer[tank].g_iOmniType > 0) ? MT_GetRecordedTankType(tank, g_esOmniPlayer[tank].g_iOmniType) : g_esOmniPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank))
 	{
@@ -1143,7 +1146,7 @@ void vOmniReset2(int tank)
 
 void vOmniReset3(int tank)
 {
-	int iTime = GetTime(), iPos = g_esOmniAbility[g_esOmniPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esOmni[tank].g_iOmniCooldown;
+	int iTime = GetTime(), iPos = g_esOmniAbility[g_esOmniPlayer[tank].g_iTankTypeRecorded].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esOmni[tank].g_iOmniCooldown;
 	iCooldown = (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esOmni[tank].g_iHumanAbility == 1 && g_esOmniPlayer[tank].g_iAmmoCount < g_esOmni[tank].g_iHumanAmmo && g_esOmni[tank].g_iHumanAmmo > 0) ? g_esOmni[tank].g_iHumanCooldown : iCooldown;
 	g_esOmniPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esOmniPlayer[tank].g_iCooldown != -1 && g_esOmniPlayer[tank].g_iCooldown >= iTime)

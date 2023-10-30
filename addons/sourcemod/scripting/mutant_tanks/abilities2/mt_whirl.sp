@@ -85,6 +85,7 @@ enum struct esWhirlPlayer
 	int g_iRangeCooldown;
 	int g_iRequiresHumans;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 	int g_iWhirlAbility;
 	int g_iWhirlAxis;
 	int g_iWhirlCooldown;
@@ -811,57 +812,59 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esWhirlPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esWhirlPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esWhirlPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esWhirlCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_flCloseAreasOnly, g_esWhirlPlayer[tank].g_flCloseAreasOnly, g_esWhirlSpecial[type].g_flCloseAreasOnly, g_esWhirlAbility[type].g_flCloseAreasOnly, 1);
-		g_esWhirlCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iComboAbility, g_esWhirlPlayer[tank].g_iComboAbility, g_esWhirlSpecial[type].g_iComboAbility, g_esWhirlAbility[type].g_iComboAbility, 1);
-		g_esWhirlCache[tank].g_flWhirlChance = flGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_flWhirlChance, g_esWhirlPlayer[tank].g_flWhirlChance, g_esWhirlSpecial[type].g_flWhirlChance, g_esWhirlAbility[type].g_flWhirlChance, 1);
-		g_esWhirlCache[tank].g_flWhirlRange = flGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_flWhirlRange, g_esWhirlPlayer[tank].g_flWhirlRange, g_esWhirlSpecial[type].g_flWhirlRange, g_esWhirlAbility[type].g_flWhirlRange, 1);
-		g_esWhirlCache[tank].g_flWhirlRangeChance = flGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_flWhirlRangeChance, g_esWhirlPlayer[tank].g_flWhirlRangeChance, g_esWhirlSpecial[type].g_flWhirlRangeChance, g_esWhirlAbility[type].g_flWhirlRangeChance, 1);
-		g_esWhirlCache[tank].g_flWhirlSpeed = flGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_flWhirlSpeed, g_esWhirlPlayer[tank].g_flWhirlSpeed, g_esWhirlSpecial[type].g_flWhirlSpeed, g_esWhirlAbility[type].g_flWhirlSpeed, 1);
-		g_esWhirlCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iHumanAbility, g_esWhirlPlayer[tank].g_iHumanAbility, g_esWhirlSpecial[type].g_iHumanAbility, g_esWhirlAbility[type].g_iHumanAbility, 1);
-		g_esWhirlCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iHumanAmmo, g_esWhirlPlayer[tank].g_iHumanAmmo, g_esWhirlSpecial[type].g_iHumanAmmo, g_esWhirlAbility[type].g_iHumanAmmo, 1);
-		g_esWhirlCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iHumanCooldown, g_esWhirlPlayer[tank].g_iHumanCooldown, g_esWhirlSpecial[type].g_iHumanCooldown, g_esWhirlAbility[type].g_iHumanCooldown, 1);
-		g_esWhirlCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iHumanRangeCooldown, g_esWhirlPlayer[tank].g_iHumanRangeCooldown, g_esWhirlSpecial[type].g_iHumanRangeCooldown, g_esWhirlAbility[type].g_iHumanRangeCooldown, 1);
-		g_esWhirlCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_flOpenAreasOnly, g_esWhirlPlayer[tank].g_flOpenAreasOnly, g_esWhirlSpecial[type].g_flOpenAreasOnly, g_esWhirlAbility[type].g_flOpenAreasOnly, 1);
-		g_esWhirlCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iRequiresHumans, g_esWhirlPlayer[tank].g_iRequiresHumans, g_esWhirlSpecial[type].g_iRequiresHumans, g_esWhirlAbility[type].g_iRequiresHumans, 1);
-		g_esWhirlCache[tank].g_iWhirlAbility = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iWhirlAbility, g_esWhirlPlayer[tank].g_iWhirlAbility, g_esWhirlSpecial[type].g_iWhirlAbility, g_esWhirlAbility[type].g_iWhirlAbility, 1);
-		g_esWhirlCache[tank].g_iWhirlAxis = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iWhirlAxis, g_esWhirlPlayer[tank].g_iWhirlAxis, g_esWhirlSpecial[type].g_iWhirlAxis, g_esWhirlAbility[type].g_iWhirlAxis, 1);
-		g_esWhirlCache[tank].g_iWhirlCooldown = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iWhirlCooldown, g_esWhirlPlayer[tank].g_iWhirlCooldown, g_esWhirlSpecial[type].g_iWhirlCooldown, g_esWhirlAbility[type].g_iWhirlCooldown, 1);
-		g_esWhirlCache[tank].g_iWhirlDuration = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iWhirlDuration, g_esWhirlPlayer[tank].g_iWhirlDuration, g_esWhirlSpecial[type].g_iWhirlDuration, g_esWhirlAbility[type].g_iWhirlDuration, 1);
-		g_esWhirlCache[tank].g_iWhirlEffect = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iWhirlEffect, g_esWhirlPlayer[tank].g_iWhirlEffect, g_esWhirlSpecial[type].g_iWhirlEffect, g_esWhirlAbility[type].g_iWhirlEffect, 1);
-		g_esWhirlCache[tank].g_iWhirlHit = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iWhirlHit, g_esWhirlPlayer[tank].g_iWhirlHit, g_esWhirlSpecial[type].g_iWhirlHit, g_esWhirlAbility[type].g_iWhirlHit, 1);
-		g_esWhirlCache[tank].g_iWhirlHitMode = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iWhirlHitMode, g_esWhirlPlayer[tank].g_iWhirlHitMode, g_esWhirlSpecial[type].g_iWhirlHitMode, g_esWhirlAbility[type].g_iWhirlHitMode, 1);
-		g_esWhirlCache[tank].g_iWhirlMessage = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iWhirlMessage, g_esWhirlPlayer[tank].g_iWhirlMessage, g_esWhirlSpecial[type].g_iWhirlMessage, g_esWhirlAbility[type].g_iWhirlMessage, 1);
-		g_esWhirlCache[tank].g_iWhirlRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iWhirlRangeCooldown, g_esWhirlPlayer[tank].g_iWhirlRangeCooldown, g_esWhirlSpecial[type].g_iWhirlRangeCooldown, g_esWhirlAbility[type].g_iWhirlRangeCooldown, 1);
-		g_esWhirlCache[tank].g_iWhirlSight = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iWhirlSight, g_esWhirlPlayer[tank].g_iWhirlSight, g_esWhirlSpecial[type].g_iWhirlSight, g_esWhirlAbility[type].g_iWhirlSight, 1);
+		g_esWhirlCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_flCloseAreasOnly, g_esWhirlPlayer[tank].g_flCloseAreasOnly, g_esWhirlSpecial[iType].g_flCloseAreasOnly, g_esWhirlAbility[iType].g_flCloseAreasOnly, 1);
+		g_esWhirlCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iComboAbility, g_esWhirlPlayer[tank].g_iComboAbility, g_esWhirlSpecial[iType].g_iComboAbility, g_esWhirlAbility[iType].g_iComboAbility, 1);
+		g_esWhirlCache[tank].g_flWhirlChance = flGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_flWhirlChance, g_esWhirlPlayer[tank].g_flWhirlChance, g_esWhirlSpecial[iType].g_flWhirlChance, g_esWhirlAbility[iType].g_flWhirlChance, 1);
+		g_esWhirlCache[tank].g_flWhirlRange = flGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_flWhirlRange, g_esWhirlPlayer[tank].g_flWhirlRange, g_esWhirlSpecial[iType].g_flWhirlRange, g_esWhirlAbility[iType].g_flWhirlRange, 1);
+		g_esWhirlCache[tank].g_flWhirlRangeChance = flGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_flWhirlRangeChance, g_esWhirlPlayer[tank].g_flWhirlRangeChance, g_esWhirlSpecial[iType].g_flWhirlRangeChance, g_esWhirlAbility[iType].g_flWhirlRangeChance, 1);
+		g_esWhirlCache[tank].g_flWhirlSpeed = flGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_flWhirlSpeed, g_esWhirlPlayer[tank].g_flWhirlSpeed, g_esWhirlSpecial[iType].g_flWhirlSpeed, g_esWhirlAbility[iType].g_flWhirlSpeed, 1);
+		g_esWhirlCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iHumanAbility, g_esWhirlPlayer[tank].g_iHumanAbility, g_esWhirlSpecial[iType].g_iHumanAbility, g_esWhirlAbility[iType].g_iHumanAbility, 1);
+		g_esWhirlCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iHumanAmmo, g_esWhirlPlayer[tank].g_iHumanAmmo, g_esWhirlSpecial[iType].g_iHumanAmmo, g_esWhirlAbility[iType].g_iHumanAmmo, 1);
+		g_esWhirlCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iHumanCooldown, g_esWhirlPlayer[tank].g_iHumanCooldown, g_esWhirlSpecial[iType].g_iHumanCooldown, g_esWhirlAbility[iType].g_iHumanCooldown, 1);
+		g_esWhirlCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iHumanRangeCooldown, g_esWhirlPlayer[tank].g_iHumanRangeCooldown, g_esWhirlSpecial[iType].g_iHumanRangeCooldown, g_esWhirlAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esWhirlCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_flOpenAreasOnly, g_esWhirlPlayer[tank].g_flOpenAreasOnly, g_esWhirlSpecial[iType].g_flOpenAreasOnly, g_esWhirlAbility[iType].g_flOpenAreasOnly, 1);
+		g_esWhirlCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iRequiresHumans, g_esWhirlPlayer[tank].g_iRequiresHumans, g_esWhirlSpecial[iType].g_iRequiresHumans, g_esWhirlAbility[iType].g_iRequiresHumans, 1);
+		g_esWhirlCache[tank].g_iWhirlAbility = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iWhirlAbility, g_esWhirlPlayer[tank].g_iWhirlAbility, g_esWhirlSpecial[iType].g_iWhirlAbility, g_esWhirlAbility[iType].g_iWhirlAbility, 1);
+		g_esWhirlCache[tank].g_iWhirlAxis = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iWhirlAxis, g_esWhirlPlayer[tank].g_iWhirlAxis, g_esWhirlSpecial[iType].g_iWhirlAxis, g_esWhirlAbility[iType].g_iWhirlAxis, 1);
+		g_esWhirlCache[tank].g_iWhirlCooldown = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iWhirlCooldown, g_esWhirlPlayer[tank].g_iWhirlCooldown, g_esWhirlSpecial[iType].g_iWhirlCooldown, g_esWhirlAbility[iType].g_iWhirlCooldown, 1);
+		g_esWhirlCache[tank].g_iWhirlDuration = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iWhirlDuration, g_esWhirlPlayer[tank].g_iWhirlDuration, g_esWhirlSpecial[iType].g_iWhirlDuration, g_esWhirlAbility[iType].g_iWhirlDuration, 1);
+		g_esWhirlCache[tank].g_iWhirlEffect = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iWhirlEffect, g_esWhirlPlayer[tank].g_iWhirlEffect, g_esWhirlSpecial[iType].g_iWhirlEffect, g_esWhirlAbility[iType].g_iWhirlEffect, 1);
+		g_esWhirlCache[tank].g_iWhirlHit = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iWhirlHit, g_esWhirlPlayer[tank].g_iWhirlHit, g_esWhirlSpecial[iType].g_iWhirlHit, g_esWhirlAbility[iType].g_iWhirlHit, 1);
+		g_esWhirlCache[tank].g_iWhirlHitMode = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iWhirlHitMode, g_esWhirlPlayer[tank].g_iWhirlHitMode, g_esWhirlSpecial[iType].g_iWhirlHitMode, g_esWhirlAbility[iType].g_iWhirlHitMode, 1);
+		g_esWhirlCache[tank].g_iWhirlMessage = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iWhirlMessage, g_esWhirlPlayer[tank].g_iWhirlMessage, g_esWhirlSpecial[iType].g_iWhirlMessage, g_esWhirlAbility[iType].g_iWhirlMessage, 1);
+		g_esWhirlCache[tank].g_iWhirlRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iWhirlRangeCooldown, g_esWhirlPlayer[tank].g_iWhirlRangeCooldown, g_esWhirlSpecial[iType].g_iWhirlRangeCooldown, g_esWhirlAbility[iType].g_iWhirlRangeCooldown, 1);
+		g_esWhirlCache[tank].g_iWhirlSight = iGetSubSettingValue(apply, bHuman, g_esWhirlTeammate[tank].g_iWhirlSight, g_esWhirlPlayer[tank].g_iWhirlSight, g_esWhirlSpecial[iType].g_iWhirlSight, g_esWhirlAbility[iType].g_iWhirlSight, 1);
 	}
 	else
 	{
-		g_esWhirlCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_flCloseAreasOnly, g_esWhirlAbility[type].g_flCloseAreasOnly, 1);
-		g_esWhirlCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_iComboAbility, g_esWhirlAbility[type].g_iComboAbility, 1);
-		g_esWhirlCache[tank].g_flWhirlChance = flGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_flWhirlChance, g_esWhirlAbility[type].g_flWhirlChance, 1);
-		g_esWhirlCache[tank].g_flWhirlRange = flGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_flWhirlRange, g_esWhirlAbility[type].g_flWhirlRange, 1);
-		g_esWhirlCache[tank].g_flWhirlRangeChance = flGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_flWhirlRangeChance, g_esWhirlAbility[type].g_flWhirlRangeChance, 1);
-		g_esWhirlCache[tank].g_flWhirlSpeed = flGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_flWhirlSpeed, g_esWhirlAbility[type].g_flWhirlSpeed, 1);
-		g_esWhirlCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_iHumanAbility, g_esWhirlAbility[type].g_iHumanAbility, 1);
-		g_esWhirlCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_iHumanAmmo, g_esWhirlAbility[type].g_iHumanAmmo, 1);
-		g_esWhirlCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_iHumanCooldown, g_esWhirlAbility[type].g_iHumanCooldown, 1);
-		g_esWhirlCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_iHumanRangeCooldown, g_esWhirlAbility[type].g_iHumanRangeCooldown, 1);
-		g_esWhirlCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_flOpenAreasOnly, g_esWhirlAbility[type].g_flOpenAreasOnly, 1);
-		g_esWhirlCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_iRequiresHumans, g_esWhirlAbility[type].g_iRequiresHumans, 1);
-		g_esWhirlCache[tank].g_iWhirlAbility = iGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_iWhirlAbility, g_esWhirlAbility[type].g_iWhirlAbility, 1);
-		g_esWhirlCache[tank].g_iWhirlAxis = iGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_iWhirlAxis, g_esWhirlAbility[type].g_iWhirlAxis, 1);
-		g_esWhirlCache[tank].g_iWhirlCooldown = iGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_iWhirlCooldown, g_esWhirlAbility[type].g_iWhirlCooldown, 1);
-		g_esWhirlCache[tank].g_iWhirlDuration = iGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_iWhirlDuration, g_esWhirlAbility[type].g_iWhirlDuration, 1);
-		g_esWhirlCache[tank].g_iWhirlEffect = iGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_iWhirlEffect, g_esWhirlAbility[type].g_iWhirlEffect, 1);
-		g_esWhirlCache[tank].g_iWhirlHit = iGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_iWhirlHit, g_esWhirlAbility[type].g_iWhirlHit, 1);
-		g_esWhirlCache[tank].g_iWhirlHitMode = iGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_iWhirlHitMode, g_esWhirlAbility[type].g_iWhirlHitMode, 1);
-		g_esWhirlCache[tank].g_iWhirlMessage = iGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_iWhirlMessage, g_esWhirlAbility[type].g_iWhirlMessage, 1);
-		g_esWhirlCache[tank].g_iWhirlRangeCooldown = iGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_iWhirlRangeCooldown, g_esWhirlAbility[type].g_iWhirlRangeCooldown, 1);
-		g_esWhirlCache[tank].g_iWhirlSight = iGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_iWhirlSight, g_esWhirlAbility[type].g_iWhirlSight, 1);
+		g_esWhirlCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_flCloseAreasOnly, g_esWhirlAbility[iType].g_flCloseAreasOnly, 1);
+		g_esWhirlCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_iComboAbility, g_esWhirlAbility[iType].g_iComboAbility, 1);
+		g_esWhirlCache[tank].g_flWhirlChance = flGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_flWhirlChance, g_esWhirlAbility[iType].g_flWhirlChance, 1);
+		g_esWhirlCache[tank].g_flWhirlRange = flGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_flWhirlRange, g_esWhirlAbility[iType].g_flWhirlRange, 1);
+		g_esWhirlCache[tank].g_flWhirlRangeChance = flGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_flWhirlRangeChance, g_esWhirlAbility[iType].g_flWhirlRangeChance, 1);
+		g_esWhirlCache[tank].g_flWhirlSpeed = flGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_flWhirlSpeed, g_esWhirlAbility[iType].g_flWhirlSpeed, 1);
+		g_esWhirlCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_iHumanAbility, g_esWhirlAbility[iType].g_iHumanAbility, 1);
+		g_esWhirlCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_iHumanAmmo, g_esWhirlAbility[iType].g_iHumanAmmo, 1);
+		g_esWhirlCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_iHumanCooldown, g_esWhirlAbility[iType].g_iHumanCooldown, 1);
+		g_esWhirlCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_iHumanRangeCooldown, g_esWhirlAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esWhirlCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_flOpenAreasOnly, g_esWhirlAbility[iType].g_flOpenAreasOnly, 1);
+		g_esWhirlCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_iRequiresHumans, g_esWhirlAbility[iType].g_iRequiresHumans, 1);
+		g_esWhirlCache[tank].g_iWhirlAbility = iGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_iWhirlAbility, g_esWhirlAbility[iType].g_iWhirlAbility, 1);
+		g_esWhirlCache[tank].g_iWhirlAxis = iGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_iWhirlAxis, g_esWhirlAbility[iType].g_iWhirlAxis, 1);
+		g_esWhirlCache[tank].g_iWhirlCooldown = iGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_iWhirlCooldown, g_esWhirlAbility[iType].g_iWhirlCooldown, 1);
+		g_esWhirlCache[tank].g_iWhirlDuration = iGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_iWhirlDuration, g_esWhirlAbility[iType].g_iWhirlDuration, 1);
+		g_esWhirlCache[tank].g_iWhirlEffect = iGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_iWhirlEffect, g_esWhirlAbility[iType].g_iWhirlEffect, 1);
+		g_esWhirlCache[tank].g_iWhirlHit = iGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_iWhirlHit, g_esWhirlAbility[iType].g_iWhirlHit, 1);
+		g_esWhirlCache[tank].g_iWhirlHitMode = iGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_iWhirlHitMode, g_esWhirlAbility[iType].g_iWhirlHitMode, 1);
+		g_esWhirlCache[tank].g_iWhirlMessage = iGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_iWhirlMessage, g_esWhirlAbility[iType].g_iWhirlMessage, 1);
+		g_esWhirlCache[tank].g_iWhirlRangeCooldown = iGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_iWhirlRangeCooldown, g_esWhirlAbility[iType].g_iWhirlRangeCooldown, 1);
+		g_esWhirlCache[tank].g_iWhirlSight = iGetSettingValue(apply, bHuman, g_esWhirlPlayer[tank].g_iWhirlSight, g_esWhirlAbility[iType].g_iWhirlSight, 1);
 	}
 }
 

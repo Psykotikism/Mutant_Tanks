@@ -243,6 +243,7 @@ enum struct esDropPlayer
 	int g_iHumanAbility;
 	int g_iRequiresHumans;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 	int g_iWeapon;
 	int g_iWeaponIndex;
 }
@@ -842,43 +843,45 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esDropPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esDropPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esDropPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esDropCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_flCloseAreasOnly, g_esDropPlayer[tank].g_flCloseAreasOnly, g_esDropSpecial[type].g_flCloseAreasOnly, g_esDropAbility[type].g_flCloseAreasOnly, 1);
-		g_esDropCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_iComboAbility, g_esDropPlayer[tank].g_iComboAbility, g_esDropSpecial[type].g_iComboAbility, g_esDropAbility[type].g_iComboAbility, 1);
-		g_esDropCache[tank].g_flDropChance = flGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_flDropChance, g_esDropPlayer[tank].g_flDropChance, g_esDropSpecial[type].g_flDropChance, g_esDropAbility[type].g_flDropChance, 1);
-		g_esDropCache[tank].g_flDropClipChance = flGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_flDropClipChance, g_esDropPlayer[tank].g_flDropClipChance, g_esDropSpecial[type].g_flDropClipChance, g_esDropAbility[type].g_flDropClipChance, 1);
-		g_esDropCache[tank].g_flDropWeaponScale = flGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_flDropWeaponScale, g_esDropPlayer[tank].g_flDropWeaponScale, g_esDropSpecial[type].g_flDropWeaponScale, g_esDropAbility[type].g_flDropWeaponScale, 1);
-		g_esDropCache[tank].g_iDropAbility = iGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_iDropAbility, g_esDropPlayer[tank].g_iDropAbility, g_esDropSpecial[type].g_iDropAbility, g_esDropAbility[type].g_iDropAbility, 1);
-		g_esDropCache[tank].g_iDropCount = iGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_iDropCount, g_esDropPlayer[tank].g_iDropCount, g_esDropSpecial[type].g_iDropCount, g_esDropAbility[type].g_iDropCount, 1);
-		g_esDropCache[tank].g_iDropMessage = iGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_iDropMessage, g_esDropPlayer[tank].g_iDropMessage, g_esDropSpecial[type].g_iDropMessage, g_esDropAbility[type].g_iDropMessage, 1);
-		g_esDropCache[tank].g_iDropHandPosition = iGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_iDropHandPosition, g_esDropPlayer[tank].g_iDropHandPosition, g_esDropSpecial[type].g_iDropHandPosition, g_esDropAbility[type].g_iDropHandPosition, 1);
-		g_esDropCache[tank].g_iDropMode = iGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_iDropMode, g_esDropPlayer[tank].g_iDropMode, g_esDropSpecial[type].g_iDropMode, g_esDropAbility[type].g_iDropMode, 1);
-		g_esDropCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_iHumanAbility, g_esDropPlayer[tank].g_iHumanAbility, g_esDropSpecial[type].g_iHumanAbility, g_esDropAbility[type].g_iHumanAbility, 1);
-		g_esDropCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_flOpenAreasOnly, g_esDropPlayer[tank].g_flOpenAreasOnly, g_esDropSpecial[type].g_flOpenAreasOnly, g_esDropAbility[type].g_flOpenAreasOnly, 1);
-		g_esDropCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_iRequiresHumans, g_esDropPlayer[tank].g_iRequiresHumans, g_esDropSpecial[type].g_iRequiresHumans, g_esDropAbility[type].g_iRequiresHumans, 1);
+		g_esDropCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_flCloseAreasOnly, g_esDropPlayer[tank].g_flCloseAreasOnly, g_esDropSpecial[iType].g_flCloseAreasOnly, g_esDropAbility[iType].g_flCloseAreasOnly, 1);
+		g_esDropCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_iComboAbility, g_esDropPlayer[tank].g_iComboAbility, g_esDropSpecial[iType].g_iComboAbility, g_esDropAbility[iType].g_iComboAbility, 1);
+		g_esDropCache[tank].g_flDropChance = flGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_flDropChance, g_esDropPlayer[tank].g_flDropChance, g_esDropSpecial[iType].g_flDropChance, g_esDropAbility[iType].g_flDropChance, 1);
+		g_esDropCache[tank].g_flDropClipChance = flGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_flDropClipChance, g_esDropPlayer[tank].g_flDropClipChance, g_esDropSpecial[iType].g_flDropClipChance, g_esDropAbility[iType].g_flDropClipChance, 1);
+		g_esDropCache[tank].g_flDropWeaponScale = flGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_flDropWeaponScale, g_esDropPlayer[tank].g_flDropWeaponScale, g_esDropSpecial[iType].g_flDropWeaponScale, g_esDropAbility[iType].g_flDropWeaponScale, 1);
+		g_esDropCache[tank].g_iDropAbility = iGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_iDropAbility, g_esDropPlayer[tank].g_iDropAbility, g_esDropSpecial[iType].g_iDropAbility, g_esDropAbility[iType].g_iDropAbility, 1);
+		g_esDropCache[tank].g_iDropCount = iGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_iDropCount, g_esDropPlayer[tank].g_iDropCount, g_esDropSpecial[iType].g_iDropCount, g_esDropAbility[iType].g_iDropCount, 1);
+		g_esDropCache[tank].g_iDropMessage = iGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_iDropMessage, g_esDropPlayer[tank].g_iDropMessage, g_esDropSpecial[iType].g_iDropMessage, g_esDropAbility[iType].g_iDropMessage, 1);
+		g_esDropCache[tank].g_iDropHandPosition = iGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_iDropHandPosition, g_esDropPlayer[tank].g_iDropHandPosition, g_esDropSpecial[iType].g_iDropHandPosition, g_esDropAbility[iType].g_iDropHandPosition, 1);
+		g_esDropCache[tank].g_iDropMode = iGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_iDropMode, g_esDropPlayer[tank].g_iDropMode, g_esDropSpecial[iType].g_iDropMode, g_esDropAbility[iType].g_iDropMode, 1);
+		g_esDropCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_iHumanAbility, g_esDropPlayer[tank].g_iHumanAbility, g_esDropSpecial[iType].g_iHumanAbility, g_esDropAbility[iType].g_iHumanAbility, 1);
+		g_esDropCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_flOpenAreasOnly, g_esDropPlayer[tank].g_flOpenAreasOnly, g_esDropSpecial[iType].g_flOpenAreasOnly, g_esDropAbility[iType].g_flOpenAreasOnly, 1);
+		g_esDropCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_iRequiresHumans, g_esDropPlayer[tank].g_iRequiresHumans, g_esDropSpecial[iType].g_iRequiresHumans, g_esDropAbility[iType].g_iRequiresHumans, 1);
 
-		vGetSubSettingValue(apply, bHuman, g_esDropCache[tank].g_sDropWeaponName, sizeof esDropCache::g_sDropWeaponName, g_esDropTeammate[tank].g_sDropWeaponName, g_esDropPlayer[tank].g_sDropWeaponName, g_esDropSpecial[type].g_sDropWeaponName, g_esDropAbility[type].g_sDropWeaponName);
+		vGetSubSettingValue(apply, bHuman, g_esDropCache[tank].g_sDropWeaponName, sizeof esDropCache::g_sDropWeaponName, g_esDropTeammate[tank].g_sDropWeaponName, g_esDropPlayer[tank].g_sDropWeaponName, g_esDropSpecial[iType].g_sDropWeaponName, g_esDropAbility[iType].g_sDropWeaponName);
 	}
 	else
 	{
-		g_esDropCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_flCloseAreasOnly, g_esDropAbility[type].g_flCloseAreasOnly, 1);
-		g_esDropCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_iComboAbility, g_esDropAbility[type].g_iComboAbility, 1);
-		g_esDropCache[tank].g_flDropChance = flGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_flDropChance, g_esDropAbility[type].g_flDropChance, 1);
-		g_esDropCache[tank].g_flDropClipChance = flGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_flDropClipChance, g_esDropAbility[type].g_flDropClipChance, 1);
-		g_esDropCache[tank].g_flDropWeaponScale = flGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_flDropWeaponScale, g_esDropAbility[type].g_flDropWeaponScale, 1);
-		g_esDropCache[tank].g_iDropAbility = iGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_iDropAbility, g_esDropAbility[type].g_iDropAbility, 1);
-		g_esDropCache[tank].g_iDropCount = iGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_iDropCount, g_esDropAbility[type].g_iDropCount, 1);
-		g_esDropCache[tank].g_iDropMessage = iGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_iDropMessage, g_esDropAbility[type].g_iDropMessage, 1);
-		g_esDropCache[tank].g_iDropHandPosition = iGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_iDropHandPosition, g_esDropAbility[type].g_iDropHandPosition, 1);
-		g_esDropCache[tank].g_iDropMode = iGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_iDropMode, g_esDropAbility[type].g_iDropMode, 1);
-		g_esDropCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_iHumanAbility, g_esDropAbility[type].g_iHumanAbility, 1);
-		g_esDropCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_flOpenAreasOnly, g_esDropAbility[type].g_flOpenAreasOnly, 1);
-		g_esDropCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_iRequiresHumans, g_esDropAbility[type].g_iRequiresHumans, 1);
+		g_esDropCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_flCloseAreasOnly, g_esDropAbility[iType].g_flCloseAreasOnly, 1);
+		g_esDropCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_iComboAbility, g_esDropAbility[iType].g_iComboAbility, 1);
+		g_esDropCache[tank].g_flDropChance = flGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_flDropChance, g_esDropAbility[iType].g_flDropChance, 1);
+		g_esDropCache[tank].g_flDropClipChance = flGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_flDropClipChance, g_esDropAbility[iType].g_flDropClipChance, 1);
+		g_esDropCache[tank].g_flDropWeaponScale = flGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_flDropWeaponScale, g_esDropAbility[iType].g_flDropWeaponScale, 1);
+		g_esDropCache[tank].g_iDropAbility = iGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_iDropAbility, g_esDropAbility[iType].g_iDropAbility, 1);
+		g_esDropCache[tank].g_iDropCount = iGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_iDropCount, g_esDropAbility[iType].g_iDropCount, 1);
+		g_esDropCache[tank].g_iDropMessage = iGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_iDropMessage, g_esDropAbility[iType].g_iDropMessage, 1);
+		g_esDropCache[tank].g_iDropHandPosition = iGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_iDropHandPosition, g_esDropAbility[iType].g_iDropHandPosition, 1);
+		g_esDropCache[tank].g_iDropMode = iGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_iDropMode, g_esDropAbility[iType].g_iDropMode, 1);
+		g_esDropCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_iHumanAbility, g_esDropAbility[iType].g_iHumanAbility, 1);
+		g_esDropCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_flOpenAreasOnly, g_esDropAbility[iType].g_flOpenAreasOnly, 1);
+		g_esDropCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_iRequiresHumans, g_esDropAbility[iType].g_iRequiresHumans, 1);
 
-		vGetSettingValue(apply, bHuman, g_esDropCache[tank].g_sDropWeaponName, sizeof esDropCache::g_sDropWeaponName, g_esDropPlayer[tank].g_sDropWeaponName, g_esDropAbility[type].g_sDropWeaponName);
+		vGetSettingValue(apply, bHuman, g_esDropCache[tank].g_sDropWeaponName, sizeof esDropCache::g_sDropWeaponName, g_esDropPlayer[tank].g_sDropWeaponName, g_esDropAbility[iType].g_sDropWeaponName);
 	}
 }
 

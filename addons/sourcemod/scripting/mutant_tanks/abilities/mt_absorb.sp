@@ -89,6 +89,7 @@ enum struct esAbsorbPlayer
 	int g_iImmunityFlags;
 	int g_iRequiresHumans;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esAbsorbPlayer g_esAbsorbPlayer[MAXPLAYERS + 1];
@@ -521,12 +522,12 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 {
 	if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esAbsorbCache[tank].g_iHumanAbility != 2)
 	{
-		g_esAbsorbAbility[g_esAbsorbPlayer[tank].g_iTankType].g_iComboPosition = -1;
+		g_esAbsorbAbility[g_esAbsorbPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 		return;
 	}
 
-	g_esAbsorbAbility[g_esAbsorbPlayer[tank].g_iTankType].g_iComboPosition = -1;
+	g_esAbsorbAbility[g_esAbsorbPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 	char sCombo[320], sSet[4][32];
 	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
@@ -547,7 +548,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 			{
 				if (StrEqual(sSubset[iPos], MT_ABSORB_SECTION, false) || StrEqual(sSubset[iPos], MT_ABSORB_SECTION2, false) || StrEqual(sSubset[iPos], MT_ABSORB_SECTION3, false) || StrEqual(sSubset[iPos], MT_ABSORB_SECTION4, false))
 				{
-					g_esAbsorbAbility[g_esAbsorbPlayer[tank].g_iTankType].g_iComboPosition = iPos;
+					g_esAbsorbAbility[g_esAbsorbPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = iPos;
 
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
@@ -801,53 +802,55 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esAbsorbPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esAbsorbPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esAbsorbPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esAbsorbCache[tank].g_flAbsorbBulletDivisor = flGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_flAbsorbBulletDivisor, g_esAbsorbPlayer[tank].g_flAbsorbBulletDivisor, g_esAbsorbSpecial[type].g_flAbsorbBulletDivisor, g_esAbsorbAbility[type].g_flAbsorbBulletDivisor, 1);
-		g_esAbsorbCache[tank].g_flAbsorbChance = flGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_flAbsorbChance, g_esAbsorbPlayer[tank].g_flAbsorbChance, g_esAbsorbSpecial[type].g_flAbsorbChance, g_esAbsorbAbility[type].g_flAbsorbChance, 1);
-		g_esAbsorbCache[tank].g_flAbsorbConvertPercentage = flGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_flAbsorbConvertPercentage, g_esAbsorbPlayer[tank].g_flAbsorbConvertPercentage, g_esAbsorbSpecial[type].g_flAbsorbConvertPercentage, g_esAbsorbAbility[type].g_flAbsorbConvertPercentage, 1);
-		g_esAbsorbCache[tank].g_flAbsorbExplosiveDivisor = flGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_flAbsorbExplosiveDivisor, g_esAbsorbPlayer[tank].g_flAbsorbExplosiveDivisor, g_esAbsorbSpecial[type].g_flAbsorbExplosiveDivisor, g_esAbsorbAbility[type].g_flAbsorbExplosiveDivisor, 1);
-		g_esAbsorbCache[tank].g_flAbsorbFireDivisor = flGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_flAbsorbFireDivisor, g_esAbsorbPlayer[tank].g_flAbsorbFireDivisor, g_esAbsorbSpecial[type].g_flAbsorbFireDivisor, g_esAbsorbAbility[type].g_flAbsorbFireDivisor, 1);
-		g_esAbsorbCache[tank].g_flAbsorbHittableDivisor = flGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_flAbsorbHittableDivisor, g_esAbsorbPlayer[tank].g_flAbsorbHittableDivisor, g_esAbsorbSpecial[type].g_flAbsorbHittableDivisor, g_esAbsorbAbility[type].g_flAbsorbHittableDivisor, 1);
-		g_esAbsorbCache[tank].g_flAbsorbMeleeDivisor = flGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_flAbsorbMeleeDivisor, g_esAbsorbPlayer[tank].g_flAbsorbMeleeDivisor, g_esAbsorbSpecial[type].g_flAbsorbMeleeDivisor, g_esAbsorbAbility[type].g_flAbsorbMeleeDivisor, 1);
-		g_esAbsorbCache[tank].g_iAbsorbAbility = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iAbsorbAbility, g_esAbsorbPlayer[tank].g_iAbsorbAbility, g_esAbsorbSpecial[type].g_iAbsorbAbility, g_esAbsorbAbility[type].g_iAbsorbAbility, 1);
-		g_esAbsorbCache[tank].g_iAbsorbCooldown = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iAbsorbCooldown, g_esAbsorbPlayer[tank].g_iAbsorbCooldown, g_esAbsorbSpecial[type].g_iAbsorbCooldown, g_esAbsorbAbility[type].g_iAbsorbCooldown, 1);
-		g_esAbsorbCache[tank].g_iAbsorbDuration = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iAbsorbDuration, g_esAbsorbPlayer[tank].g_iAbsorbDuration, g_esAbsorbSpecial[type].g_iAbsorbDuration, g_esAbsorbAbility[type].g_iAbsorbDuration, 1);
-		g_esAbsorbCache[tank].g_iAbsorbMessage = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iAbsorbMessage, g_esAbsorbPlayer[tank].g_iAbsorbMessage, g_esAbsorbSpecial[type].g_iAbsorbMessage, g_esAbsorbAbility[type].g_iAbsorbMessage, 1);
-		g_esAbsorbCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_flCloseAreasOnly, g_esAbsorbPlayer[tank].g_flCloseAreasOnly, g_esAbsorbSpecial[type].g_flCloseAreasOnly, g_esAbsorbAbility[type].g_flCloseAreasOnly, 1);
-		g_esAbsorbCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iComboAbility, g_esAbsorbPlayer[tank].g_iComboAbility, g_esAbsorbSpecial[type].g_iComboAbility, g_esAbsorbAbility[type].g_iComboAbility, 1);
-		g_esAbsorbCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iHumanAbility, g_esAbsorbPlayer[tank].g_iHumanAbility, g_esAbsorbSpecial[type].g_iHumanAbility, g_esAbsorbAbility[type].g_iHumanAbility, 1);
-		g_esAbsorbCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iHumanAmmo, g_esAbsorbPlayer[tank].g_iHumanAmmo, g_esAbsorbSpecial[type].g_iHumanAmmo, g_esAbsorbAbility[type].g_iHumanAmmo, 1);
-		g_esAbsorbCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iHumanCooldown, g_esAbsorbPlayer[tank].g_iHumanCooldown, g_esAbsorbSpecial[type].g_iHumanCooldown, g_esAbsorbAbility[type].g_iHumanCooldown, 1);
-		g_esAbsorbCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iHumanDuration, g_esAbsorbPlayer[tank].g_iHumanDuration, g_esAbsorbSpecial[type].g_iHumanDuration, g_esAbsorbAbility[type].g_iHumanDuration, 1);
-		g_esAbsorbCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iHumanMode, g_esAbsorbPlayer[tank].g_iHumanMode, g_esAbsorbSpecial[type].g_iHumanMode, g_esAbsorbAbility[type].g_iHumanMode, 1);
-		g_esAbsorbCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_flOpenAreasOnly, g_esAbsorbPlayer[tank].g_flOpenAreasOnly, g_esAbsorbSpecial[type].g_flOpenAreasOnly, g_esAbsorbAbility[type].g_flOpenAreasOnly, 1);
-		g_esAbsorbCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iRequiresHumans, g_esAbsorbPlayer[tank].g_iRequiresHumans, g_esAbsorbSpecial[type].g_iRequiresHumans, g_esAbsorbAbility[type].g_iRequiresHumans, 1);
+		g_esAbsorbCache[tank].g_flAbsorbBulletDivisor = flGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_flAbsorbBulletDivisor, g_esAbsorbPlayer[tank].g_flAbsorbBulletDivisor, g_esAbsorbSpecial[iType].g_flAbsorbBulletDivisor, g_esAbsorbAbility[iType].g_flAbsorbBulletDivisor, 1);
+		g_esAbsorbCache[tank].g_flAbsorbChance = flGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_flAbsorbChance, g_esAbsorbPlayer[tank].g_flAbsorbChance, g_esAbsorbSpecial[iType].g_flAbsorbChance, g_esAbsorbAbility[iType].g_flAbsorbChance, 1);
+		g_esAbsorbCache[tank].g_flAbsorbConvertPercentage = flGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_flAbsorbConvertPercentage, g_esAbsorbPlayer[tank].g_flAbsorbConvertPercentage, g_esAbsorbSpecial[iType].g_flAbsorbConvertPercentage, g_esAbsorbAbility[iType].g_flAbsorbConvertPercentage, 1);
+		g_esAbsorbCache[tank].g_flAbsorbExplosiveDivisor = flGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_flAbsorbExplosiveDivisor, g_esAbsorbPlayer[tank].g_flAbsorbExplosiveDivisor, g_esAbsorbSpecial[iType].g_flAbsorbExplosiveDivisor, g_esAbsorbAbility[iType].g_flAbsorbExplosiveDivisor, 1);
+		g_esAbsorbCache[tank].g_flAbsorbFireDivisor = flGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_flAbsorbFireDivisor, g_esAbsorbPlayer[tank].g_flAbsorbFireDivisor, g_esAbsorbSpecial[iType].g_flAbsorbFireDivisor, g_esAbsorbAbility[iType].g_flAbsorbFireDivisor, 1);
+		g_esAbsorbCache[tank].g_flAbsorbHittableDivisor = flGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_flAbsorbHittableDivisor, g_esAbsorbPlayer[tank].g_flAbsorbHittableDivisor, g_esAbsorbSpecial[iType].g_flAbsorbHittableDivisor, g_esAbsorbAbility[iType].g_flAbsorbHittableDivisor, 1);
+		g_esAbsorbCache[tank].g_flAbsorbMeleeDivisor = flGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_flAbsorbMeleeDivisor, g_esAbsorbPlayer[tank].g_flAbsorbMeleeDivisor, g_esAbsorbSpecial[iType].g_flAbsorbMeleeDivisor, g_esAbsorbAbility[iType].g_flAbsorbMeleeDivisor, 1);
+		g_esAbsorbCache[tank].g_iAbsorbAbility = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iAbsorbAbility, g_esAbsorbPlayer[tank].g_iAbsorbAbility, g_esAbsorbSpecial[iType].g_iAbsorbAbility, g_esAbsorbAbility[iType].g_iAbsorbAbility, 1);
+		g_esAbsorbCache[tank].g_iAbsorbCooldown = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iAbsorbCooldown, g_esAbsorbPlayer[tank].g_iAbsorbCooldown, g_esAbsorbSpecial[iType].g_iAbsorbCooldown, g_esAbsorbAbility[iType].g_iAbsorbCooldown, 1);
+		g_esAbsorbCache[tank].g_iAbsorbDuration = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iAbsorbDuration, g_esAbsorbPlayer[tank].g_iAbsorbDuration, g_esAbsorbSpecial[iType].g_iAbsorbDuration, g_esAbsorbAbility[iType].g_iAbsorbDuration, 1);
+		g_esAbsorbCache[tank].g_iAbsorbMessage = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iAbsorbMessage, g_esAbsorbPlayer[tank].g_iAbsorbMessage, g_esAbsorbSpecial[iType].g_iAbsorbMessage, g_esAbsorbAbility[iType].g_iAbsorbMessage, 1);
+		g_esAbsorbCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_flCloseAreasOnly, g_esAbsorbPlayer[tank].g_flCloseAreasOnly, g_esAbsorbSpecial[iType].g_flCloseAreasOnly, g_esAbsorbAbility[iType].g_flCloseAreasOnly, 1);
+		g_esAbsorbCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iComboAbility, g_esAbsorbPlayer[tank].g_iComboAbility, g_esAbsorbSpecial[iType].g_iComboAbility, g_esAbsorbAbility[iType].g_iComboAbility, 1);
+		g_esAbsorbCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iHumanAbility, g_esAbsorbPlayer[tank].g_iHumanAbility, g_esAbsorbSpecial[iType].g_iHumanAbility, g_esAbsorbAbility[iType].g_iHumanAbility, 1);
+		g_esAbsorbCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iHumanAmmo, g_esAbsorbPlayer[tank].g_iHumanAmmo, g_esAbsorbSpecial[iType].g_iHumanAmmo, g_esAbsorbAbility[iType].g_iHumanAmmo, 1);
+		g_esAbsorbCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iHumanCooldown, g_esAbsorbPlayer[tank].g_iHumanCooldown, g_esAbsorbSpecial[iType].g_iHumanCooldown, g_esAbsorbAbility[iType].g_iHumanCooldown, 1);
+		g_esAbsorbCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iHumanDuration, g_esAbsorbPlayer[tank].g_iHumanDuration, g_esAbsorbSpecial[iType].g_iHumanDuration, g_esAbsorbAbility[iType].g_iHumanDuration, 1);
+		g_esAbsorbCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iHumanMode, g_esAbsorbPlayer[tank].g_iHumanMode, g_esAbsorbSpecial[iType].g_iHumanMode, g_esAbsorbAbility[iType].g_iHumanMode, 1);
+		g_esAbsorbCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_flOpenAreasOnly, g_esAbsorbPlayer[tank].g_flOpenAreasOnly, g_esAbsorbSpecial[iType].g_flOpenAreasOnly, g_esAbsorbAbility[iType].g_flOpenAreasOnly, 1);
+		g_esAbsorbCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iRequiresHumans, g_esAbsorbPlayer[tank].g_iRequiresHumans, g_esAbsorbSpecial[iType].g_iRequiresHumans, g_esAbsorbAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
 	{
-		g_esAbsorbCache[tank].g_flAbsorbBulletDivisor = flGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_flAbsorbBulletDivisor, g_esAbsorbAbility[type].g_flAbsorbBulletDivisor, 1);
-		g_esAbsorbCache[tank].g_flAbsorbChance = flGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_flAbsorbChance, g_esAbsorbAbility[type].g_flAbsorbChance, 1);
-		g_esAbsorbCache[tank].g_flAbsorbConvertPercentage = flGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_flAbsorbConvertPercentage, g_esAbsorbAbility[type].g_flAbsorbConvertPercentage, 1);
-		g_esAbsorbCache[tank].g_flAbsorbExplosiveDivisor = flGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_flAbsorbExplosiveDivisor, g_esAbsorbAbility[type].g_flAbsorbExplosiveDivisor, 1);
-		g_esAbsorbCache[tank].g_flAbsorbFireDivisor = flGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_flAbsorbFireDivisor, g_esAbsorbAbility[type].g_flAbsorbFireDivisor, 1);
-		g_esAbsorbCache[tank].g_flAbsorbHittableDivisor = flGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_flAbsorbHittableDivisor, g_esAbsorbAbility[type].g_flAbsorbHittableDivisor, 1);
-		g_esAbsorbCache[tank].g_flAbsorbMeleeDivisor = flGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_flAbsorbMeleeDivisor, g_esAbsorbAbility[type].g_flAbsorbMeleeDivisor, 1);
-		g_esAbsorbCache[tank].g_iAbsorbAbility = iGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_iAbsorbAbility, g_esAbsorbAbility[type].g_iAbsorbAbility, 1);
-		g_esAbsorbCache[tank].g_iAbsorbCooldown = iGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_iAbsorbCooldown, g_esAbsorbAbility[type].g_iAbsorbCooldown, 1);
-		g_esAbsorbCache[tank].g_iAbsorbDuration = iGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_iAbsorbDuration, g_esAbsorbAbility[type].g_iAbsorbDuration, 1);
-		g_esAbsorbCache[tank].g_iAbsorbMessage = iGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_iAbsorbMessage, g_esAbsorbAbility[type].g_iAbsorbMessage, 1);
-		g_esAbsorbCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_flCloseAreasOnly, g_esAbsorbAbility[type].g_flCloseAreasOnly, 1);
-		g_esAbsorbCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_iComboAbility, g_esAbsorbAbility[type].g_iComboAbility, 1);
-		g_esAbsorbCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_iHumanAbility, g_esAbsorbAbility[type].g_iHumanAbility, 1);
-		g_esAbsorbCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_iHumanAmmo, g_esAbsorbAbility[type].g_iHumanAmmo, 1);
-		g_esAbsorbCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_iHumanCooldown, g_esAbsorbAbility[type].g_iHumanCooldown, 1);
-		g_esAbsorbCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_iHumanDuration, g_esAbsorbAbility[type].g_iHumanDuration, 1);
-		g_esAbsorbCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_iHumanMode, g_esAbsorbAbility[type].g_iHumanMode, 1);
-		g_esAbsorbCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_flOpenAreasOnly, g_esAbsorbAbility[type].g_flOpenAreasOnly, 1);
-		g_esAbsorbCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_iRequiresHumans, g_esAbsorbAbility[type].g_iRequiresHumans, 1);
+		g_esAbsorbCache[tank].g_flAbsorbBulletDivisor = flGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_flAbsorbBulletDivisor, g_esAbsorbAbility[iType].g_flAbsorbBulletDivisor, 1);
+		g_esAbsorbCache[tank].g_flAbsorbChance = flGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_flAbsorbChance, g_esAbsorbAbility[iType].g_flAbsorbChance, 1);
+		g_esAbsorbCache[tank].g_flAbsorbConvertPercentage = flGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_flAbsorbConvertPercentage, g_esAbsorbAbility[iType].g_flAbsorbConvertPercentage, 1);
+		g_esAbsorbCache[tank].g_flAbsorbExplosiveDivisor = flGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_flAbsorbExplosiveDivisor, g_esAbsorbAbility[iType].g_flAbsorbExplosiveDivisor, 1);
+		g_esAbsorbCache[tank].g_flAbsorbFireDivisor = flGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_flAbsorbFireDivisor, g_esAbsorbAbility[iType].g_flAbsorbFireDivisor, 1);
+		g_esAbsorbCache[tank].g_flAbsorbHittableDivisor = flGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_flAbsorbHittableDivisor, g_esAbsorbAbility[iType].g_flAbsorbHittableDivisor, 1);
+		g_esAbsorbCache[tank].g_flAbsorbMeleeDivisor = flGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_flAbsorbMeleeDivisor, g_esAbsorbAbility[iType].g_flAbsorbMeleeDivisor, 1);
+		g_esAbsorbCache[tank].g_iAbsorbAbility = iGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_iAbsorbAbility, g_esAbsorbAbility[iType].g_iAbsorbAbility, 1);
+		g_esAbsorbCache[tank].g_iAbsorbCooldown = iGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_iAbsorbCooldown, g_esAbsorbAbility[iType].g_iAbsorbCooldown, 1);
+		g_esAbsorbCache[tank].g_iAbsorbDuration = iGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_iAbsorbDuration, g_esAbsorbAbility[iType].g_iAbsorbDuration, 1);
+		g_esAbsorbCache[tank].g_iAbsorbMessage = iGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_iAbsorbMessage, g_esAbsorbAbility[iType].g_iAbsorbMessage, 1);
+		g_esAbsorbCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_flCloseAreasOnly, g_esAbsorbAbility[iType].g_flCloseAreasOnly, 1);
+		g_esAbsorbCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_iComboAbility, g_esAbsorbAbility[iType].g_iComboAbility, 1);
+		g_esAbsorbCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_iHumanAbility, g_esAbsorbAbility[iType].g_iHumanAbility, 1);
+		g_esAbsorbCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_iHumanAmmo, g_esAbsorbAbility[iType].g_iHumanAmmo, 1);
+		g_esAbsorbCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_iHumanCooldown, g_esAbsorbAbility[iType].g_iHumanCooldown, 1);
+		g_esAbsorbCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_iHumanDuration, g_esAbsorbAbility[iType].g_iHumanDuration, 1);
+		g_esAbsorbCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_iHumanMode, g_esAbsorbAbility[iType].g_iHumanMode, 1);
+		g_esAbsorbCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_flOpenAreasOnly, g_esAbsorbAbility[iType].g_flOpenAreasOnly, 1);
+		g_esAbsorbCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_iRequiresHumans, g_esAbsorbAbility[iType].g_iRequiresHumans, 1);
 	}
 }
 
@@ -1126,7 +1129,7 @@ void vAbsorbReset2(int tank)
 
 void vAbsorbReset3(int tank)
 {
-	int iTime = GetTime(), iPos = g_esAbsorbAbility[g_esAbsorbPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esAbsorbCache[tank].g_iAbsorbCooldown;
+	int iTime = GetTime(), iPos = g_esAbsorbAbility[g_esAbsorbPlayer[tank].g_iTankTypeRecorded].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esAbsorbCache[tank].g_iAbsorbCooldown;
 	iCooldown = (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esAbsorbCache[tank].g_iHumanAbility == 1 && g_esAbsorbCache[tank].g_iHumanMode == 0 && g_esAbsorbPlayer[tank].g_iAmmoCount < g_esAbsorbCache[tank].g_iHumanAmmo && g_esAbsorbCache[tank].g_iHumanAmmo > 0) ? g_esAbsorbCache[tank].g_iHumanCooldown : iCooldown;
 	g_esAbsorbPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esAbsorbPlayer[tank].g_iCooldown != -1 && g_esAbsorbPlayer[tank].g_iCooldown >= iTime)

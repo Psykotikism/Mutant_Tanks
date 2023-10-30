@@ -101,6 +101,7 @@ enum struct esJumpPlayer
 	int g_iRangeCooldown;
 	int g_iRequiresHumans;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esJumpPlayer g_esJumpPlayer[MAXPLAYERS + 1];
@@ -524,12 +525,12 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 {
 	if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esJumpCache[tank].g_iHumanAbility != 2)
 	{
-		g_esJumpAbility[g_esJumpPlayer[tank].g_iTankType].g_iComboPosition = -1;
+		g_esJumpAbility[g_esJumpPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 		return;
 	}
 
-	g_esJumpAbility[g_esJumpPlayer[tank].g_iTankType].g_iComboPosition = -1;
+	g_esJumpAbility[g_esJumpPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 	char sCombo[320], sSet[4][32];
 	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
@@ -548,7 +549,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		{
 			if (StrEqual(sSubset[iPos], MT_JUMP_SECTION, false) || StrEqual(sSubset[iPos], MT_JUMP_SECTION2, false) || StrEqual(sSubset[iPos], MT_JUMP_SECTION3, false) || StrEqual(sSubset[iPos], MT_JUMP_SECTION4, false))
 			{
-				g_esJumpAbility[g_esJumpPlayer[tank].g_iTankType].g_iComboPosition = iPos;
+				g_esJumpAbility[g_esJumpPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = iPos;
 				flDelay = MT_GetCombinationSetting(tank, 4, iPos);
 
 				switch (type)
@@ -908,67 +909,69 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esJumpPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esJumpPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esJumpPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esJumpCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_flCloseAreasOnly, g_esJumpPlayer[tank].g_flCloseAreasOnly, g_esJumpSpecial[type].g_flCloseAreasOnly, g_esJumpAbility[type].g_flCloseAreasOnly, 1);
-		g_esJumpCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_iComboAbility, g_esJumpPlayer[tank].g_iComboAbility, g_esJumpSpecial[type].g_iComboAbility, g_esJumpAbility[type].g_iComboAbility, 1);
-		g_esJumpCache[tank].g_flJumpChance = flGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_flJumpChance, g_esJumpPlayer[tank].g_flJumpChance, g_esJumpSpecial[type].g_flJumpChance, g_esJumpAbility[type].g_flJumpChance, 1);
-		g_esJumpCache[tank].g_flJumpHeight = flGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_flJumpHeight, g_esJumpPlayer[tank].g_flJumpHeight, g_esJumpSpecial[type].g_flJumpHeight, g_esJumpAbility[type].g_flJumpHeight, 1);
-		g_esJumpCache[tank].g_flJumpInterval = flGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_flJumpInterval, g_esJumpPlayer[tank].g_flJumpInterval, g_esJumpSpecial[type].g_flJumpInterval, g_esJumpAbility[type].g_flJumpInterval, 1);
-		g_esJumpCache[tank].g_flJumpRange = flGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_flJumpRange, g_esJumpPlayer[tank].g_flJumpRange, g_esJumpSpecial[type].g_flJumpRange, g_esJumpAbility[type].g_flJumpRange, 1);
-		g_esJumpCache[tank].g_flJumpRangeChance = flGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_flJumpRangeChance, g_esJumpPlayer[tank].g_flJumpRangeChance, g_esJumpSpecial[type].g_flJumpRangeChance, g_esJumpAbility[type].g_flJumpRangeChance, 1);
-		g_esJumpCache[tank].g_flJumpSporadicChance = flGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_flJumpSporadicChance, g_esJumpPlayer[tank].g_flJumpSporadicChance, g_esJumpSpecial[type].g_flJumpSporadicChance, g_esJumpAbility[type].g_flJumpSporadicChance, 1);
-		g_esJumpCache[tank].g_flJumpSporadicHeight = flGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_flJumpSporadicHeight, g_esJumpPlayer[tank].g_flJumpSporadicHeight, g_esJumpSpecial[type].g_flJumpSporadicHeight, g_esJumpAbility[type].g_flJumpSporadicHeight, 1);
-		g_esJumpCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_iHumanAbility, g_esJumpPlayer[tank].g_iHumanAbility, g_esJumpSpecial[type].g_iHumanAbility, g_esJumpAbility[type].g_iHumanAbility, 1);
-		g_esJumpCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_iHumanAmmo, g_esJumpPlayer[tank].g_iHumanAmmo, g_esJumpSpecial[type].g_iHumanAmmo, g_esJumpAbility[type].g_iHumanAmmo, 1);
-		g_esJumpCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_iHumanCooldown, g_esJumpPlayer[tank].g_iHumanCooldown, g_esJumpSpecial[type].g_iHumanCooldown, g_esJumpAbility[type].g_iHumanCooldown, 1);
-		g_esJumpCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_iHumanDuration, g_esJumpPlayer[tank].g_iHumanDuration, g_esJumpSpecial[type].g_iHumanDuration, g_esJumpAbility[type].g_iHumanDuration, 1);
-		g_esJumpCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_iHumanMode, g_esJumpPlayer[tank].g_iHumanMode, g_esJumpSpecial[type].g_iHumanMode, g_esJumpAbility[type].g_iHumanMode, 1);
-		g_esJumpCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_iHumanRangeCooldown, g_esJumpPlayer[tank].g_iHumanRangeCooldown, g_esJumpSpecial[type].g_iHumanRangeCooldown, g_esJumpAbility[type].g_iHumanRangeCooldown, 1);
-		g_esJumpCache[tank].g_iJumpAbility = iGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_iJumpAbility, g_esJumpPlayer[tank].g_iJumpAbility, g_esJumpSpecial[type].g_iJumpAbility, g_esJumpAbility[type].g_iJumpAbility, 1);
-		g_esJumpCache[tank].g_iJumpCooldown = iGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_iJumpCooldown, g_esJumpPlayer[tank].g_iJumpCooldown, g_esJumpSpecial[type].g_iJumpCooldown, g_esJumpAbility[type].g_iJumpCooldown, 1);
-		g_esJumpCache[tank].g_iJumpDuration = iGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_iJumpDuration, g_esJumpPlayer[tank].g_iJumpDuration, g_esJumpSpecial[type].g_iJumpDuration, g_esJumpAbility[type].g_iJumpDuration, 1);
-		g_esJumpCache[tank].g_iJumpEffect = iGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_iJumpEffect, g_esJumpPlayer[tank].g_iJumpEffect, g_esJumpSpecial[type].g_iJumpEffect, g_esJumpAbility[type].g_iJumpEffect, 1);
-		g_esJumpCache[tank].g_iJumpHit = iGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_iJumpHit, g_esJumpPlayer[tank].g_iJumpHit, g_esJumpSpecial[type].g_iJumpHit, g_esJumpAbility[type].g_iJumpHit, 1);
-		g_esJumpCache[tank].g_iJumpHitMode = iGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_iJumpHitMode, g_esJumpPlayer[tank].g_iJumpHitMode, g_esJumpSpecial[type].g_iJumpHitMode, g_esJumpAbility[type].g_iJumpHitMode, 1);
-		g_esJumpCache[tank].g_iJumpMessage = iGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_iJumpMessage, g_esJumpPlayer[tank].g_iJumpMessage, g_esJumpSpecial[type].g_iJumpMessage, g_esJumpAbility[type].g_iJumpMessage, 1);
-		g_esJumpCache[tank].g_iJumpMode = iGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_iJumpMode, g_esJumpPlayer[tank].g_iJumpMode, g_esJumpSpecial[type].g_iJumpMode, g_esJumpAbility[type].g_iJumpMode, 1);
-		g_esJumpCache[tank].g_iJumpRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_iJumpRangeCooldown, g_esJumpPlayer[tank].g_iJumpRangeCooldown, g_esJumpSpecial[type].g_iJumpRangeCooldown, g_esJumpAbility[type].g_iJumpRangeCooldown, 1);
-		g_esJumpCache[tank].g_iJumpSight = iGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_iJumpSight, g_esJumpPlayer[tank].g_iJumpSight, g_esJumpSpecial[type].g_iJumpSight, g_esJumpAbility[type].g_iJumpSight, 1);
-		g_esJumpCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_flOpenAreasOnly, g_esJumpPlayer[tank].g_flOpenAreasOnly, g_esJumpSpecial[type].g_flOpenAreasOnly, g_esJumpAbility[type].g_flOpenAreasOnly, 1);
-		g_esJumpCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_iRequiresHumans, g_esJumpPlayer[tank].g_iRequiresHumans, g_esJumpSpecial[type].g_iRequiresHumans, g_esJumpAbility[type].g_iRequiresHumans, 1);
+		g_esJumpCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_flCloseAreasOnly, g_esJumpPlayer[tank].g_flCloseAreasOnly, g_esJumpSpecial[iType].g_flCloseAreasOnly, g_esJumpAbility[iType].g_flCloseAreasOnly, 1);
+		g_esJumpCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_iComboAbility, g_esJumpPlayer[tank].g_iComboAbility, g_esJumpSpecial[iType].g_iComboAbility, g_esJumpAbility[iType].g_iComboAbility, 1);
+		g_esJumpCache[tank].g_flJumpChance = flGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_flJumpChance, g_esJumpPlayer[tank].g_flJumpChance, g_esJumpSpecial[iType].g_flJumpChance, g_esJumpAbility[iType].g_flJumpChance, 1);
+		g_esJumpCache[tank].g_flJumpHeight = flGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_flJumpHeight, g_esJumpPlayer[tank].g_flJumpHeight, g_esJumpSpecial[iType].g_flJumpHeight, g_esJumpAbility[iType].g_flJumpHeight, 1);
+		g_esJumpCache[tank].g_flJumpInterval = flGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_flJumpInterval, g_esJumpPlayer[tank].g_flJumpInterval, g_esJumpSpecial[iType].g_flJumpInterval, g_esJumpAbility[iType].g_flJumpInterval, 1);
+		g_esJumpCache[tank].g_flJumpRange = flGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_flJumpRange, g_esJumpPlayer[tank].g_flJumpRange, g_esJumpSpecial[iType].g_flJumpRange, g_esJumpAbility[iType].g_flJumpRange, 1);
+		g_esJumpCache[tank].g_flJumpRangeChance = flGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_flJumpRangeChance, g_esJumpPlayer[tank].g_flJumpRangeChance, g_esJumpSpecial[iType].g_flJumpRangeChance, g_esJumpAbility[iType].g_flJumpRangeChance, 1);
+		g_esJumpCache[tank].g_flJumpSporadicChance = flGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_flJumpSporadicChance, g_esJumpPlayer[tank].g_flJumpSporadicChance, g_esJumpSpecial[iType].g_flJumpSporadicChance, g_esJumpAbility[iType].g_flJumpSporadicChance, 1);
+		g_esJumpCache[tank].g_flJumpSporadicHeight = flGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_flJumpSporadicHeight, g_esJumpPlayer[tank].g_flJumpSporadicHeight, g_esJumpSpecial[iType].g_flJumpSporadicHeight, g_esJumpAbility[iType].g_flJumpSporadicHeight, 1);
+		g_esJumpCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_iHumanAbility, g_esJumpPlayer[tank].g_iHumanAbility, g_esJumpSpecial[iType].g_iHumanAbility, g_esJumpAbility[iType].g_iHumanAbility, 1);
+		g_esJumpCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_iHumanAmmo, g_esJumpPlayer[tank].g_iHumanAmmo, g_esJumpSpecial[iType].g_iHumanAmmo, g_esJumpAbility[iType].g_iHumanAmmo, 1);
+		g_esJumpCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_iHumanCooldown, g_esJumpPlayer[tank].g_iHumanCooldown, g_esJumpSpecial[iType].g_iHumanCooldown, g_esJumpAbility[iType].g_iHumanCooldown, 1);
+		g_esJumpCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_iHumanDuration, g_esJumpPlayer[tank].g_iHumanDuration, g_esJumpSpecial[iType].g_iHumanDuration, g_esJumpAbility[iType].g_iHumanDuration, 1);
+		g_esJumpCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_iHumanMode, g_esJumpPlayer[tank].g_iHumanMode, g_esJumpSpecial[iType].g_iHumanMode, g_esJumpAbility[iType].g_iHumanMode, 1);
+		g_esJumpCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_iHumanRangeCooldown, g_esJumpPlayer[tank].g_iHumanRangeCooldown, g_esJumpSpecial[iType].g_iHumanRangeCooldown, g_esJumpAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esJumpCache[tank].g_iJumpAbility = iGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_iJumpAbility, g_esJumpPlayer[tank].g_iJumpAbility, g_esJumpSpecial[iType].g_iJumpAbility, g_esJumpAbility[iType].g_iJumpAbility, 1);
+		g_esJumpCache[tank].g_iJumpCooldown = iGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_iJumpCooldown, g_esJumpPlayer[tank].g_iJumpCooldown, g_esJumpSpecial[iType].g_iJumpCooldown, g_esJumpAbility[iType].g_iJumpCooldown, 1);
+		g_esJumpCache[tank].g_iJumpDuration = iGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_iJumpDuration, g_esJumpPlayer[tank].g_iJumpDuration, g_esJumpSpecial[iType].g_iJumpDuration, g_esJumpAbility[iType].g_iJumpDuration, 1);
+		g_esJumpCache[tank].g_iJumpEffect = iGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_iJumpEffect, g_esJumpPlayer[tank].g_iJumpEffect, g_esJumpSpecial[iType].g_iJumpEffect, g_esJumpAbility[iType].g_iJumpEffect, 1);
+		g_esJumpCache[tank].g_iJumpHit = iGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_iJumpHit, g_esJumpPlayer[tank].g_iJumpHit, g_esJumpSpecial[iType].g_iJumpHit, g_esJumpAbility[iType].g_iJumpHit, 1);
+		g_esJumpCache[tank].g_iJumpHitMode = iGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_iJumpHitMode, g_esJumpPlayer[tank].g_iJumpHitMode, g_esJumpSpecial[iType].g_iJumpHitMode, g_esJumpAbility[iType].g_iJumpHitMode, 1);
+		g_esJumpCache[tank].g_iJumpMessage = iGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_iJumpMessage, g_esJumpPlayer[tank].g_iJumpMessage, g_esJumpSpecial[iType].g_iJumpMessage, g_esJumpAbility[iType].g_iJumpMessage, 1);
+		g_esJumpCache[tank].g_iJumpMode = iGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_iJumpMode, g_esJumpPlayer[tank].g_iJumpMode, g_esJumpSpecial[iType].g_iJumpMode, g_esJumpAbility[iType].g_iJumpMode, 1);
+		g_esJumpCache[tank].g_iJumpRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_iJumpRangeCooldown, g_esJumpPlayer[tank].g_iJumpRangeCooldown, g_esJumpSpecial[iType].g_iJumpRangeCooldown, g_esJumpAbility[iType].g_iJumpRangeCooldown, 1);
+		g_esJumpCache[tank].g_iJumpSight = iGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_iJumpSight, g_esJumpPlayer[tank].g_iJumpSight, g_esJumpSpecial[iType].g_iJumpSight, g_esJumpAbility[iType].g_iJumpSight, 1);
+		g_esJumpCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_flOpenAreasOnly, g_esJumpPlayer[tank].g_flOpenAreasOnly, g_esJumpSpecial[iType].g_flOpenAreasOnly, g_esJumpAbility[iType].g_flOpenAreasOnly, 1);
+		g_esJumpCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esJumpTeammate[tank].g_iRequiresHumans, g_esJumpPlayer[tank].g_iRequiresHumans, g_esJumpSpecial[iType].g_iRequiresHumans, g_esJumpAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
 	{
-		g_esJumpCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_flCloseAreasOnly, g_esJumpAbility[type].g_flCloseAreasOnly, 1);
-		g_esJumpCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_iComboAbility, g_esJumpAbility[type].g_iComboAbility, 1);
-		g_esJumpCache[tank].g_flJumpChance = flGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_flJumpChance, g_esJumpAbility[type].g_flJumpChance, 1);
-		g_esJumpCache[tank].g_flJumpHeight = flGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_flJumpHeight, g_esJumpAbility[type].g_flJumpHeight, 1);
-		g_esJumpCache[tank].g_flJumpInterval = flGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_flJumpInterval, g_esJumpAbility[type].g_flJumpInterval, 1);
-		g_esJumpCache[tank].g_flJumpRange = flGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_flJumpRange, g_esJumpAbility[type].g_flJumpRange, 1);
-		g_esJumpCache[tank].g_flJumpRangeChance = flGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_flJumpRangeChance, g_esJumpAbility[type].g_flJumpRangeChance, 1);
-		g_esJumpCache[tank].g_flJumpSporadicChance = flGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_flJumpSporadicChance, g_esJumpAbility[type].g_flJumpSporadicChance, 1);
-		g_esJumpCache[tank].g_flJumpSporadicHeight = flGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_flJumpSporadicHeight, g_esJumpAbility[type].g_flJumpSporadicHeight, 1);
-		g_esJumpCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_iHumanAbility, g_esJumpAbility[type].g_iHumanAbility, 1);
-		g_esJumpCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_iHumanAmmo, g_esJumpAbility[type].g_iHumanAmmo, 1);
-		g_esJumpCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_iHumanCooldown, g_esJumpAbility[type].g_iHumanCooldown, 1);
-		g_esJumpCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_iHumanDuration, g_esJumpAbility[type].g_iHumanDuration, 1);
-		g_esJumpCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_iHumanMode, g_esJumpAbility[type].g_iHumanMode, 1);
-		g_esJumpCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_iHumanRangeCooldown, g_esJumpAbility[type].g_iHumanRangeCooldown, 1);
-		g_esJumpCache[tank].g_iJumpAbility = iGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_iJumpAbility, g_esJumpAbility[type].g_iJumpAbility, 1);
-		g_esJumpCache[tank].g_iJumpCooldown = iGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_iJumpCooldown, g_esJumpAbility[type].g_iJumpCooldown, 1);
-		g_esJumpCache[tank].g_iJumpDuration = iGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_iJumpDuration, g_esJumpAbility[type].g_iJumpDuration, 1);
-		g_esJumpCache[tank].g_iJumpEffect = iGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_iJumpEffect, g_esJumpAbility[type].g_iJumpEffect, 1);
-		g_esJumpCache[tank].g_iJumpHit = iGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_iJumpHit, g_esJumpAbility[type].g_iJumpHit, 1);
-		g_esJumpCache[tank].g_iJumpHitMode = iGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_iJumpHitMode, g_esJumpAbility[type].g_iJumpHitMode, 1);
-		g_esJumpCache[tank].g_iJumpMessage = iGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_iJumpMessage, g_esJumpAbility[type].g_iJumpMessage, 1);
-		g_esJumpCache[tank].g_iJumpMode = iGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_iJumpMode, g_esJumpAbility[type].g_iJumpMode, 1);
-		g_esJumpCache[tank].g_iJumpRangeCooldown = iGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_iJumpRangeCooldown, g_esJumpAbility[type].g_iJumpRangeCooldown, 1);
-		g_esJumpCache[tank].g_iJumpSight = iGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_iJumpSight, g_esJumpAbility[type].g_iJumpSight, 1);
-		g_esJumpCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_flOpenAreasOnly, g_esJumpAbility[type].g_flOpenAreasOnly, 1);
-		g_esJumpCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_iRequiresHumans, g_esJumpAbility[type].g_iRequiresHumans, 1);
+		g_esJumpCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_flCloseAreasOnly, g_esJumpAbility[iType].g_flCloseAreasOnly, 1);
+		g_esJumpCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_iComboAbility, g_esJumpAbility[iType].g_iComboAbility, 1);
+		g_esJumpCache[tank].g_flJumpChance = flGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_flJumpChance, g_esJumpAbility[iType].g_flJumpChance, 1);
+		g_esJumpCache[tank].g_flJumpHeight = flGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_flJumpHeight, g_esJumpAbility[iType].g_flJumpHeight, 1);
+		g_esJumpCache[tank].g_flJumpInterval = flGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_flJumpInterval, g_esJumpAbility[iType].g_flJumpInterval, 1);
+		g_esJumpCache[tank].g_flJumpRange = flGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_flJumpRange, g_esJumpAbility[iType].g_flJumpRange, 1);
+		g_esJumpCache[tank].g_flJumpRangeChance = flGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_flJumpRangeChance, g_esJumpAbility[iType].g_flJumpRangeChance, 1);
+		g_esJumpCache[tank].g_flJumpSporadicChance = flGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_flJumpSporadicChance, g_esJumpAbility[iType].g_flJumpSporadicChance, 1);
+		g_esJumpCache[tank].g_flJumpSporadicHeight = flGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_flJumpSporadicHeight, g_esJumpAbility[iType].g_flJumpSporadicHeight, 1);
+		g_esJumpCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_iHumanAbility, g_esJumpAbility[iType].g_iHumanAbility, 1);
+		g_esJumpCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_iHumanAmmo, g_esJumpAbility[iType].g_iHumanAmmo, 1);
+		g_esJumpCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_iHumanCooldown, g_esJumpAbility[iType].g_iHumanCooldown, 1);
+		g_esJumpCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_iHumanDuration, g_esJumpAbility[iType].g_iHumanDuration, 1);
+		g_esJumpCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_iHumanMode, g_esJumpAbility[iType].g_iHumanMode, 1);
+		g_esJumpCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_iHumanRangeCooldown, g_esJumpAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esJumpCache[tank].g_iJumpAbility = iGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_iJumpAbility, g_esJumpAbility[iType].g_iJumpAbility, 1);
+		g_esJumpCache[tank].g_iJumpCooldown = iGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_iJumpCooldown, g_esJumpAbility[iType].g_iJumpCooldown, 1);
+		g_esJumpCache[tank].g_iJumpDuration = iGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_iJumpDuration, g_esJumpAbility[iType].g_iJumpDuration, 1);
+		g_esJumpCache[tank].g_iJumpEffect = iGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_iJumpEffect, g_esJumpAbility[iType].g_iJumpEffect, 1);
+		g_esJumpCache[tank].g_iJumpHit = iGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_iJumpHit, g_esJumpAbility[iType].g_iJumpHit, 1);
+		g_esJumpCache[tank].g_iJumpHitMode = iGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_iJumpHitMode, g_esJumpAbility[iType].g_iJumpHitMode, 1);
+		g_esJumpCache[tank].g_iJumpMessage = iGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_iJumpMessage, g_esJumpAbility[iType].g_iJumpMessage, 1);
+		g_esJumpCache[tank].g_iJumpMode = iGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_iJumpMode, g_esJumpAbility[iType].g_iJumpMode, 1);
+		g_esJumpCache[tank].g_iJumpRangeCooldown = iGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_iJumpRangeCooldown, g_esJumpAbility[iType].g_iJumpRangeCooldown, 1);
+		g_esJumpCache[tank].g_iJumpSight = iGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_iJumpSight, g_esJumpAbility[iType].g_iJumpSight, 1);
+		g_esJumpCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_flOpenAreasOnly, g_esJumpAbility[iType].g_flOpenAreasOnly, 1);
+		g_esJumpCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esJumpPlayer[tank].g_iRequiresHumans, g_esJumpAbility[iType].g_iRequiresHumans, 1);
 	}
 }
 
@@ -1445,7 +1448,7 @@ void vJumpReset3(int tank)
 {
 	g_esJumpPlayer[tank].g_bActivated = false;
 
-	int iTime = GetTime(), iPos = g_esJumpAbility[g_esJumpPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esJumpCache[tank].g_iJumpCooldown;
+	int iTime = GetTime(), iPos = g_esJumpAbility[g_esJumpPlayer[tank].g_iTankTypeRecorded].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esJumpCache[tank].g_iJumpCooldown;
 	iCooldown = (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esJumpCache[tank].g_iHumanAbility == 1 && g_esJumpCache[tank].g_iHumanMode == 0 && g_esJumpPlayer[tank].g_iAmmoCount < g_esJumpCache[tank].g_iHumanAmmo && g_esJumpCache[tank].g_iHumanAmmo > 0) ? g_esJumpCache[tank].g_iHumanCooldown : iCooldown;
 	g_esJumpPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esJumpPlayer[tank].g_iCooldown != -1 && g_esJumpPlayer[tank].g_iCooldown >= iTime)

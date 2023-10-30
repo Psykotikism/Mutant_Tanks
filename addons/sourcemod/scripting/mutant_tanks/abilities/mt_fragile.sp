@@ -90,6 +90,7 @@ enum struct esFragilePlayer
 	int g_iImmunityFlags;
 	int g_iRequiresHumans;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esFragilePlayer g_esFragilePlayer[MAXPLAYERS + 1];
@@ -562,12 +563,12 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 {
 	if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esFragileCache[tank].g_iHumanAbility != 2)
 	{
-		g_esFragileAbility[g_esFragilePlayer[tank].g_iTankType].g_iComboPosition = -1;
+		g_esFragileAbility[g_esFragilePlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 		return;
 	}
 
-	g_esFragileAbility[g_esFragilePlayer[tank].g_iTankType].g_iComboPosition = -1;
+	g_esFragileAbility[g_esFragilePlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 	char sCombo[320], sSet[4][32];
 	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
@@ -588,7 +589,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 			{
 				if (StrEqual(sSubset[iPos], MT_FRAGILE_SECTION, false) || StrEqual(sSubset[iPos], MT_FRAGILE_SECTION2, false) || StrEqual(sSubset[iPos], MT_FRAGILE_SECTION3, false) || StrEqual(sSubset[iPos], MT_FRAGILE_SECTION4, false))
 				{
-					g_esFragileAbility[g_esFragilePlayer[tank].g_iTankType].g_iComboPosition = iPos;
+					g_esFragileAbility[g_esFragilePlayer[tank].g_iTankTypeRecorded].g_iComboPosition = iPos;
 
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
@@ -858,55 +859,57 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esFragilePlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esFragilePlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esFragilePlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esFragileCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_flCloseAreasOnly, g_esFragilePlayer[tank].g_flCloseAreasOnly, g_esFragileSpecial[type].g_flCloseAreasOnly, g_esFragileAbility[type].g_flCloseAreasOnly, 1);
-		g_esFragileCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_iComboAbility, g_esFragilePlayer[tank].g_iComboAbility, g_esFragileSpecial[type].g_iComboAbility, g_esFragileAbility[type].g_iComboAbility, 1);
-		g_esFragileCache[tank].g_flFragileBulletMultiplier = flGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_flFragileBulletMultiplier, g_esFragilePlayer[tank].g_flFragileBulletMultiplier, g_esFragileSpecial[type].g_flFragileBulletMultiplier, g_esFragileAbility[type].g_flFragileBulletMultiplier, 1);
-		g_esFragileCache[tank].g_flFragileChance = flGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_flFragileChance, g_esFragilePlayer[tank].g_flFragileChance, g_esFragileSpecial[type].g_flFragileChance, g_esFragileAbility[type].g_flFragileChance, 1);
-		g_esFragileCache[tank].g_flFragileDamageBoost = flGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_flFragileDamageBoost, g_esFragilePlayer[tank].g_flFragileDamageBoost, g_esFragileSpecial[type].g_flFragileDamageBoost, g_esFragileAbility[type].g_flFragileDamageBoost, 1);
-		g_esFragileCache[tank].g_flFragileExplosiveMultiplier = flGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_flFragileExplosiveMultiplier, g_esFragilePlayer[tank].g_flFragileExplosiveMultiplier, g_esFragileSpecial[type].g_flFragileExplosiveMultiplier, g_esFragileAbility[type].g_flFragileExplosiveMultiplier, 1);
-		g_esFragileCache[tank].g_flFragileFireMultiplier = flGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_flFragileFireMultiplier, g_esFragilePlayer[tank].g_flFragileFireMultiplier, g_esFragileSpecial[type].g_flFragileFireMultiplier, g_esFragileAbility[type].g_flFragileFireMultiplier, 1);
-		g_esFragileCache[tank].g_flFragileHittableMultiplier = flGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_flFragileHittableMultiplier, g_esFragilePlayer[tank].g_flFragileHittableMultiplier, g_esFragileSpecial[type].g_flFragileHittableMultiplier, g_esFragileAbility[type].g_flFragileHittableMultiplier, 1);
-		g_esFragileCache[tank].g_flFragileMeleeMultiplier = flGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_flFragileMeleeMultiplier, g_esFragilePlayer[tank].g_flFragileMeleeMultiplier, g_esFragileSpecial[type].g_flFragileMeleeMultiplier, g_esFragileAbility[type].g_flFragileMeleeMultiplier, 1);
-		g_esFragileCache[tank].g_flFragileSpeedBoost = flGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_flFragileSpeedBoost, g_esFragilePlayer[tank].g_flFragileSpeedBoost, g_esFragileSpecial[type].g_flFragileSpeedBoost, g_esFragileAbility[type].g_flFragileSpeedBoost, 1);
-		g_esFragileCache[tank].g_iFragileAbility = iGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_iFragileAbility, g_esFragilePlayer[tank].g_iFragileAbility, g_esFragileSpecial[type].g_iFragileAbility, g_esFragileAbility[type].g_iFragileAbility, 1);
-		g_esFragileCache[tank].g_iFragileCooldown = iGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_iFragileCooldown, g_esFragilePlayer[tank].g_iFragileCooldown, g_esFragileSpecial[type].g_iFragileCooldown, g_esFragileAbility[type].g_iFragileCooldown, 1);
-		g_esFragileCache[tank].g_iFragileDuration = iGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_iFragileDuration, g_esFragilePlayer[tank].g_iFragileDuration, g_esFragileSpecial[type].g_iFragileDuration, g_esFragileAbility[type].g_iFragileDuration, 1);
-		g_esFragileCache[tank].g_iFragileMessage = iGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_iFragileMessage, g_esFragilePlayer[tank].g_iFragileMessage, g_esFragileSpecial[type].g_iFragileMessage, g_esFragileAbility[type].g_iFragileMessage, 1);
-		g_esFragileCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_iHumanAbility, g_esFragilePlayer[tank].g_iHumanAbility, g_esFragileSpecial[type].g_iHumanAbility, g_esFragileAbility[type].g_iHumanAbility, 1);
-		g_esFragileCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_iHumanAmmo, g_esFragilePlayer[tank].g_iHumanAmmo, g_esFragileSpecial[type].g_iHumanAmmo, g_esFragileAbility[type].g_iHumanAmmo, 1);
-		g_esFragileCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_iHumanCooldown, g_esFragilePlayer[tank].g_iHumanCooldown, g_esFragileSpecial[type].g_iHumanCooldown, g_esFragileAbility[type].g_iHumanCooldown, 1);
-		g_esFragileCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_iHumanDuration, g_esFragilePlayer[tank].g_iHumanDuration, g_esFragileSpecial[type].g_iHumanDuration, g_esFragileAbility[type].g_iHumanDuration, 1);
-		g_esFragileCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_iHumanMode, g_esFragilePlayer[tank].g_iHumanMode, g_esFragileSpecial[type].g_iHumanMode, g_esFragileAbility[type].g_iHumanMode, 1);
-		g_esFragileCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_flOpenAreasOnly, g_esFragilePlayer[tank].g_flOpenAreasOnly, g_esFragileSpecial[type].g_flOpenAreasOnly, g_esFragileAbility[type].g_flOpenAreasOnly, 1);
-		g_esFragileCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_iRequiresHumans, g_esFragilePlayer[tank].g_iRequiresHumans, g_esFragileSpecial[type].g_iRequiresHumans, g_esFragileAbility[type].g_iRequiresHumans, 1);
+		g_esFragileCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_flCloseAreasOnly, g_esFragilePlayer[tank].g_flCloseAreasOnly, g_esFragileSpecial[iType].g_flCloseAreasOnly, g_esFragileAbility[iType].g_flCloseAreasOnly, 1);
+		g_esFragileCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_iComboAbility, g_esFragilePlayer[tank].g_iComboAbility, g_esFragileSpecial[iType].g_iComboAbility, g_esFragileAbility[iType].g_iComboAbility, 1);
+		g_esFragileCache[tank].g_flFragileBulletMultiplier = flGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_flFragileBulletMultiplier, g_esFragilePlayer[tank].g_flFragileBulletMultiplier, g_esFragileSpecial[iType].g_flFragileBulletMultiplier, g_esFragileAbility[iType].g_flFragileBulletMultiplier, 1);
+		g_esFragileCache[tank].g_flFragileChance = flGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_flFragileChance, g_esFragilePlayer[tank].g_flFragileChance, g_esFragileSpecial[iType].g_flFragileChance, g_esFragileAbility[iType].g_flFragileChance, 1);
+		g_esFragileCache[tank].g_flFragileDamageBoost = flGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_flFragileDamageBoost, g_esFragilePlayer[tank].g_flFragileDamageBoost, g_esFragileSpecial[iType].g_flFragileDamageBoost, g_esFragileAbility[iType].g_flFragileDamageBoost, 1);
+		g_esFragileCache[tank].g_flFragileExplosiveMultiplier = flGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_flFragileExplosiveMultiplier, g_esFragilePlayer[tank].g_flFragileExplosiveMultiplier, g_esFragileSpecial[iType].g_flFragileExplosiveMultiplier, g_esFragileAbility[iType].g_flFragileExplosiveMultiplier, 1);
+		g_esFragileCache[tank].g_flFragileFireMultiplier = flGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_flFragileFireMultiplier, g_esFragilePlayer[tank].g_flFragileFireMultiplier, g_esFragileSpecial[iType].g_flFragileFireMultiplier, g_esFragileAbility[iType].g_flFragileFireMultiplier, 1);
+		g_esFragileCache[tank].g_flFragileHittableMultiplier = flGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_flFragileHittableMultiplier, g_esFragilePlayer[tank].g_flFragileHittableMultiplier, g_esFragileSpecial[iType].g_flFragileHittableMultiplier, g_esFragileAbility[iType].g_flFragileHittableMultiplier, 1);
+		g_esFragileCache[tank].g_flFragileMeleeMultiplier = flGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_flFragileMeleeMultiplier, g_esFragilePlayer[tank].g_flFragileMeleeMultiplier, g_esFragileSpecial[iType].g_flFragileMeleeMultiplier, g_esFragileAbility[iType].g_flFragileMeleeMultiplier, 1);
+		g_esFragileCache[tank].g_flFragileSpeedBoost = flGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_flFragileSpeedBoost, g_esFragilePlayer[tank].g_flFragileSpeedBoost, g_esFragileSpecial[iType].g_flFragileSpeedBoost, g_esFragileAbility[iType].g_flFragileSpeedBoost, 1);
+		g_esFragileCache[tank].g_iFragileAbility = iGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_iFragileAbility, g_esFragilePlayer[tank].g_iFragileAbility, g_esFragileSpecial[iType].g_iFragileAbility, g_esFragileAbility[iType].g_iFragileAbility, 1);
+		g_esFragileCache[tank].g_iFragileCooldown = iGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_iFragileCooldown, g_esFragilePlayer[tank].g_iFragileCooldown, g_esFragileSpecial[iType].g_iFragileCooldown, g_esFragileAbility[iType].g_iFragileCooldown, 1);
+		g_esFragileCache[tank].g_iFragileDuration = iGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_iFragileDuration, g_esFragilePlayer[tank].g_iFragileDuration, g_esFragileSpecial[iType].g_iFragileDuration, g_esFragileAbility[iType].g_iFragileDuration, 1);
+		g_esFragileCache[tank].g_iFragileMessage = iGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_iFragileMessage, g_esFragilePlayer[tank].g_iFragileMessage, g_esFragileSpecial[iType].g_iFragileMessage, g_esFragileAbility[iType].g_iFragileMessage, 1);
+		g_esFragileCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_iHumanAbility, g_esFragilePlayer[tank].g_iHumanAbility, g_esFragileSpecial[iType].g_iHumanAbility, g_esFragileAbility[iType].g_iHumanAbility, 1);
+		g_esFragileCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_iHumanAmmo, g_esFragilePlayer[tank].g_iHumanAmmo, g_esFragileSpecial[iType].g_iHumanAmmo, g_esFragileAbility[iType].g_iHumanAmmo, 1);
+		g_esFragileCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_iHumanCooldown, g_esFragilePlayer[tank].g_iHumanCooldown, g_esFragileSpecial[iType].g_iHumanCooldown, g_esFragileAbility[iType].g_iHumanCooldown, 1);
+		g_esFragileCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_iHumanDuration, g_esFragilePlayer[tank].g_iHumanDuration, g_esFragileSpecial[iType].g_iHumanDuration, g_esFragileAbility[iType].g_iHumanDuration, 1);
+		g_esFragileCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_iHumanMode, g_esFragilePlayer[tank].g_iHumanMode, g_esFragileSpecial[iType].g_iHumanMode, g_esFragileAbility[iType].g_iHumanMode, 1);
+		g_esFragileCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_flOpenAreasOnly, g_esFragilePlayer[tank].g_flOpenAreasOnly, g_esFragileSpecial[iType].g_flOpenAreasOnly, g_esFragileAbility[iType].g_flOpenAreasOnly, 1);
+		g_esFragileCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_iRequiresHumans, g_esFragilePlayer[tank].g_iRequiresHumans, g_esFragileSpecial[iType].g_iRequiresHumans, g_esFragileAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
 	{
-		g_esFragileCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_flCloseAreasOnly, g_esFragileAbility[type].g_flCloseAreasOnly, 1);
-		g_esFragileCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iComboAbility, g_esFragileAbility[type].g_iComboAbility, 1);
-		g_esFragileCache[tank].g_flFragileBulletMultiplier = flGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_flFragileBulletMultiplier, g_esFragileAbility[type].g_flFragileBulletMultiplier, 1);
-		g_esFragileCache[tank].g_flFragileChance = flGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_flFragileChance, g_esFragileAbility[type].g_flFragileChance, 1);
-		g_esFragileCache[tank].g_flFragileDamageBoost = flGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_flFragileDamageBoost, g_esFragileAbility[type].g_flFragileDamageBoost, 1);
-		g_esFragileCache[tank].g_flFragileExplosiveMultiplier = flGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_flFragileExplosiveMultiplier, g_esFragileAbility[type].g_flFragileExplosiveMultiplier, 1);
-		g_esFragileCache[tank].g_flFragileFireMultiplier = flGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_flFragileFireMultiplier, g_esFragileAbility[type].g_flFragileFireMultiplier, 1);
-		g_esFragileCache[tank].g_flFragileHittableMultiplier = flGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_flFragileHittableMultiplier, g_esFragileAbility[type].g_flFragileHittableMultiplier, 1);
-		g_esFragileCache[tank].g_flFragileMeleeMultiplier = flGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_flFragileMeleeMultiplier, g_esFragileAbility[type].g_flFragileMeleeMultiplier, 1);
-		g_esFragileCache[tank].g_flFragileSpeedBoost = flGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_flFragileSpeedBoost, g_esFragileAbility[type].g_flFragileSpeedBoost, 1);
-		g_esFragileCache[tank].g_iFragileAbility = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iFragileAbility, g_esFragileAbility[type].g_iFragileAbility, 1);
-		g_esFragileCache[tank].g_iFragileCooldown = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iFragileCooldown, g_esFragileAbility[type].g_iFragileCooldown, 1);
-		g_esFragileCache[tank].g_iFragileDuration = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iFragileDuration, g_esFragileAbility[type].g_iFragileDuration, 1);
-		g_esFragileCache[tank].g_iFragileMessage = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iFragileMessage, g_esFragileAbility[type].g_iFragileMessage, 1);
-		g_esFragileCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iHumanAbility, g_esFragileAbility[type].g_iHumanAbility, 1);
-		g_esFragileCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iHumanAmmo, g_esFragileAbility[type].g_iHumanAmmo, 1);
-		g_esFragileCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iHumanCooldown, g_esFragileAbility[type].g_iHumanCooldown, 1);
-		g_esFragileCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iHumanDuration, g_esFragileAbility[type].g_iHumanDuration, 1);
-		g_esFragileCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iHumanMode, g_esFragileAbility[type].g_iHumanMode, 1);
-		g_esFragileCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_flOpenAreasOnly, g_esFragileAbility[type].g_flOpenAreasOnly, 1);
-		g_esFragileCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iRequiresHumans, g_esFragileAbility[type].g_iRequiresHumans, 1);
+		g_esFragileCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_flCloseAreasOnly, g_esFragileAbility[iType].g_flCloseAreasOnly, 1);
+		g_esFragileCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iComboAbility, g_esFragileAbility[iType].g_iComboAbility, 1);
+		g_esFragileCache[tank].g_flFragileBulletMultiplier = flGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_flFragileBulletMultiplier, g_esFragileAbility[iType].g_flFragileBulletMultiplier, 1);
+		g_esFragileCache[tank].g_flFragileChance = flGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_flFragileChance, g_esFragileAbility[iType].g_flFragileChance, 1);
+		g_esFragileCache[tank].g_flFragileDamageBoost = flGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_flFragileDamageBoost, g_esFragileAbility[iType].g_flFragileDamageBoost, 1);
+		g_esFragileCache[tank].g_flFragileExplosiveMultiplier = flGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_flFragileExplosiveMultiplier, g_esFragileAbility[iType].g_flFragileExplosiveMultiplier, 1);
+		g_esFragileCache[tank].g_flFragileFireMultiplier = flGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_flFragileFireMultiplier, g_esFragileAbility[iType].g_flFragileFireMultiplier, 1);
+		g_esFragileCache[tank].g_flFragileHittableMultiplier = flGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_flFragileHittableMultiplier, g_esFragileAbility[iType].g_flFragileHittableMultiplier, 1);
+		g_esFragileCache[tank].g_flFragileMeleeMultiplier = flGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_flFragileMeleeMultiplier, g_esFragileAbility[iType].g_flFragileMeleeMultiplier, 1);
+		g_esFragileCache[tank].g_flFragileSpeedBoost = flGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_flFragileSpeedBoost, g_esFragileAbility[iType].g_flFragileSpeedBoost, 1);
+		g_esFragileCache[tank].g_iFragileAbility = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iFragileAbility, g_esFragileAbility[iType].g_iFragileAbility, 1);
+		g_esFragileCache[tank].g_iFragileCooldown = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iFragileCooldown, g_esFragileAbility[iType].g_iFragileCooldown, 1);
+		g_esFragileCache[tank].g_iFragileDuration = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iFragileDuration, g_esFragileAbility[iType].g_iFragileDuration, 1);
+		g_esFragileCache[tank].g_iFragileMessage = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iFragileMessage, g_esFragileAbility[iType].g_iFragileMessage, 1);
+		g_esFragileCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iHumanAbility, g_esFragileAbility[iType].g_iHumanAbility, 1);
+		g_esFragileCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iHumanAmmo, g_esFragileAbility[iType].g_iHumanAmmo, 1);
+		g_esFragileCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iHumanCooldown, g_esFragileAbility[iType].g_iHumanCooldown, 1);
+		g_esFragileCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iHumanDuration, g_esFragileAbility[iType].g_iHumanDuration, 1);
+		g_esFragileCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iHumanMode, g_esFragileAbility[iType].g_iHumanMode, 1);
+		g_esFragileCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_flOpenAreasOnly, g_esFragileAbility[iType].g_flOpenAreasOnly, 1);
+		g_esFragileCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iRequiresHumans, g_esFragileAbility[iType].g_iRequiresHumans, 1);
 	}
 }
 
@@ -1195,7 +1198,7 @@ void vFragileReset2(int tank)
 
 void vFragileReset3(int tank)
 {
-	int iTime = GetTime(), iPos = g_esFragileAbility[g_esFragilePlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esFragileCache[tank].g_iFragileCooldown;
+	int iTime = GetTime(), iPos = g_esFragileAbility[g_esFragilePlayer[tank].g_iTankTypeRecorded].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esFragileCache[tank].g_iFragileCooldown;
 	iCooldown = (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esFragileCache[tank].g_iHumanAbility == 1 && g_esFragileCache[tank].g_iHumanMode == 0 && g_esFragilePlayer[tank].g_iAmmoCount < g_esFragileCache[tank].g_iHumanAmmo && g_esFragileCache[tank].g_iHumanAmmo > 0) ? g_esFragileCache[tank].g_iHumanCooldown : iCooldown;
 	g_esFragilePlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esFragilePlayer[tank].g_iCooldown != -1 && g_esFragilePlayer[tank].g_iCooldown >= iTime)

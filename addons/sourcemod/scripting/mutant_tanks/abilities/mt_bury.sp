@@ -97,6 +97,7 @@ enum struct esBuryPlayer
 	int g_iRangeCooldown;
 	int g_iRequiresHumans;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esBuryPlayer g_esBuryPlayer[MAXPLAYERS + 1];
@@ -891,57 +892,59 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esBuryPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esBuryPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esBuryPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esBuryCache[tank].g_flBuryBuffer = flGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_flBuryBuffer, g_esBuryPlayer[tank].g_flBuryBuffer, g_esBurySpecial[type].g_flBuryBuffer, g_esBuryAbility[type].g_flBuryBuffer, 1);
-		g_esBuryCache[tank].g_flBuryChance = flGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_flBuryChance, g_esBuryPlayer[tank].g_flBuryChance, g_esBurySpecial[type].g_flBuryChance, g_esBuryAbility[type].g_flBuryChance, 1);
-		g_esBuryCache[tank].g_flBuryDuration = flGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_flBuryDuration, g_esBuryPlayer[tank].g_flBuryDuration, g_esBurySpecial[type].g_flBuryDuration, g_esBuryAbility[type].g_flBuryDuration, 1);
-		g_esBuryCache[tank].g_flBuryHeight = flGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_flBuryHeight, g_esBuryPlayer[tank].g_flBuryHeight, g_esBurySpecial[type].g_flBuryHeight, g_esBuryAbility[type].g_flBuryHeight, 1);
-		g_esBuryCache[tank].g_flBuryRange = flGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_flBuryRange, g_esBuryPlayer[tank].g_flBuryRange, g_esBurySpecial[type].g_flBuryRange, g_esBuryAbility[type].g_flBuryRange, 1);
-		g_esBuryCache[tank].g_flBuryRangeChance = flGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_flBuryRangeChance, g_esBuryPlayer[tank].g_flBuryRangeChance, g_esBurySpecial[type].g_flBuryRangeChance, g_esBuryAbility[type].g_flBuryRangeChance, 1);
-		g_esBuryCache[tank].g_iBuryAbility = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iBuryAbility, g_esBuryPlayer[tank].g_iBuryAbility, g_esBurySpecial[type].g_iBuryAbility, g_esBuryAbility[type].g_iBuryAbility, 1);
-		g_esBuryCache[tank].g_iBuryCooldown = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iBuryCooldown, g_esBuryPlayer[tank].g_iBuryCooldown, g_esBurySpecial[type].g_iBuryCooldown, g_esBuryAbility[type].g_iBuryCooldown, 1);
-		g_esBuryCache[tank].g_iBuryEffect = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iBuryEffect, g_esBuryPlayer[tank].g_iBuryEffect, g_esBurySpecial[type].g_iBuryEffect, g_esBuryAbility[type].g_iBuryEffect, 1);
-		g_esBuryCache[tank].g_iBuryHit = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iBuryHit, g_esBuryPlayer[tank].g_iBuryHit, g_esBurySpecial[type].g_iBuryHit, g_esBuryAbility[type].g_iBuryHit, 1);
-		g_esBuryCache[tank].g_iBuryHitMode = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iBuryHitMode, g_esBuryPlayer[tank].g_iBuryHitMode, g_esBurySpecial[type].g_iBuryHitMode, g_esBuryAbility[type].g_iBuryHitMode, 1);
-		g_esBuryCache[tank].g_iBuryMessage = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iBuryMessage, g_esBuryPlayer[tank].g_iBuryMessage, g_esBurySpecial[type].g_iBuryMessage, g_esBuryAbility[type].g_iBuryMessage, 1);
-		g_esBuryCache[tank].g_iBuryRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iBuryRangeCooldown, g_esBuryPlayer[tank].g_iBuryRangeCooldown, g_esBurySpecial[type].g_iBuryRangeCooldown, g_esBuryAbility[type].g_iBuryRangeCooldown, 1);
-		g_esBuryCache[tank].g_iBurySight = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iBurySight, g_esBuryPlayer[tank].g_iBurySight, g_esBurySpecial[type].g_iBurySight, g_esBuryAbility[type].g_iBurySight, 1);
-		g_esBuryCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_flCloseAreasOnly, g_esBuryPlayer[tank].g_flCloseAreasOnly, g_esBurySpecial[type].g_flCloseAreasOnly, g_esBuryAbility[type].g_flCloseAreasOnly, 1);
-		g_esBuryCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iComboAbility, g_esBuryPlayer[tank].g_iComboAbility, g_esBurySpecial[type].g_iComboAbility, g_esBuryAbility[type].g_iComboAbility, 1);
-		g_esBuryCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iHumanAbility, g_esBuryPlayer[tank].g_iHumanAbility, g_esBurySpecial[type].g_iHumanAbility, g_esBuryAbility[type].g_iHumanAbility, 1);
-		g_esBuryCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iHumanAmmo, g_esBuryPlayer[tank].g_iHumanAmmo, g_esBurySpecial[type].g_iHumanAmmo, g_esBuryAbility[type].g_iHumanAmmo, 1);
-		g_esBuryCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iHumanCooldown, g_esBuryPlayer[tank].g_iHumanCooldown, g_esBurySpecial[type].g_iHumanCooldown, g_esBuryAbility[type].g_iHumanCooldown, 1);
-		g_esBuryCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iHumanRangeCooldown, g_esBuryPlayer[tank].g_iHumanRangeCooldown, g_esBurySpecial[type].g_iHumanRangeCooldown, g_esBuryAbility[type].g_iHumanRangeCooldown, 1);
-		g_esBuryCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_flOpenAreasOnly, g_esBuryPlayer[tank].g_flOpenAreasOnly, g_esBurySpecial[type].g_flOpenAreasOnly, g_esBuryAbility[type].g_flOpenAreasOnly, 1);
-		g_esBuryCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iRequiresHumans, g_esBuryPlayer[tank].g_iRequiresHumans, g_esBurySpecial[type].g_iRequiresHumans, g_esBuryAbility[type].g_iRequiresHumans, 1);
+		g_esBuryCache[tank].g_flBuryBuffer = flGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_flBuryBuffer, g_esBuryPlayer[tank].g_flBuryBuffer, g_esBurySpecial[iType].g_flBuryBuffer, g_esBuryAbility[iType].g_flBuryBuffer, 1);
+		g_esBuryCache[tank].g_flBuryChance = flGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_flBuryChance, g_esBuryPlayer[tank].g_flBuryChance, g_esBurySpecial[iType].g_flBuryChance, g_esBuryAbility[iType].g_flBuryChance, 1);
+		g_esBuryCache[tank].g_flBuryDuration = flGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_flBuryDuration, g_esBuryPlayer[tank].g_flBuryDuration, g_esBurySpecial[iType].g_flBuryDuration, g_esBuryAbility[iType].g_flBuryDuration, 1);
+		g_esBuryCache[tank].g_flBuryHeight = flGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_flBuryHeight, g_esBuryPlayer[tank].g_flBuryHeight, g_esBurySpecial[iType].g_flBuryHeight, g_esBuryAbility[iType].g_flBuryHeight, 1);
+		g_esBuryCache[tank].g_flBuryRange = flGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_flBuryRange, g_esBuryPlayer[tank].g_flBuryRange, g_esBurySpecial[iType].g_flBuryRange, g_esBuryAbility[iType].g_flBuryRange, 1);
+		g_esBuryCache[tank].g_flBuryRangeChance = flGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_flBuryRangeChance, g_esBuryPlayer[tank].g_flBuryRangeChance, g_esBurySpecial[iType].g_flBuryRangeChance, g_esBuryAbility[iType].g_flBuryRangeChance, 1);
+		g_esBuryCache[tank].g_iBuryAbility = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iBuryAbility, g_esBuryPlayer[tank].g_iBuryAbility, g_esBurySpecial[iType].g_iBuryAbility, g_esBuryAbility[iType].g_iBuryAbility, 1);
+		g_esBuryCache[tank].g_iBuryCooldown = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iBuryCooldown, g_esBuryPlayer[tank].g_iBuryCooldown, g_esBurySpecial[iType].g_iBuryCooldown, g_esBuryAbility[iType].g_iBuryCooldown, 1);
+		g_esBuryCache[tank].g_iBuryEffect = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iBuryEffect, g_esBuryPlayer[tank].g_iBuryEffect, g_esBurySpecial[iType].g_iBuryEffect, g_esBuryAbility[iType].g_iBuryEffect, 1);
+		g_esBuryCache[tank].g_iBuryHit = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iBuryHit, g_esBuryPlayer[tank].g_iBuryHit, g_esBurySpecial[iType].g_iBuryHit, g_esBuryAbility[iType].g_iBuryHit, 1);
+		g_esBuryCache[tank].g_iBuryHitMode = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iBuryHitMode, g_esBuryPlayer[tank].g_iBuryHitMode, g_esBurySpecial[iType].g_iBuryHitMode, g_esBuryAbility[iType].g_iBuryHitMode, 1);
+		g_esBuryCache[tank].g_iBuryMessage = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iBuryMessage, g_esBuryPlayer[tank].g_iBuryMessage, g_esBurySpecial[iType].g_iBuryMessage, g_esBuryAbility[iType].g_iBuryMessage, 1);
+		g_esBuryCache[tank].g_iBuryRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iBuryRangeCooldown, g_esBuryPlayer[tank].g_iBuryRangeCooldown, g_esBurySpecial[iType].g_iBuryRangeCooldown, g_esBuryAbility[iType].g_iBuryRangeCooldown, 1);
+		g_esBuryCache[tank].g_iBurySight = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iBurySight, g_esBuryPlayer[tank].g_iBurySight, g_esBurySpecial[iType].g_iBurySight, g_esBuryAbility[iType].g_iBurySight, 1);
+		g_esBuryCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_flCloseAreasOnly, g_esBuryPlayer[tank].g_flCloseAreasOnly, g_esBurySpecial[iType].g_flCloseAreasOnly, g_esBuryAbility[iType].g_flCloseAreasOnly, 1);
+		g_esBuryCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iComboAbility, g_esBuryPlayer[tank].g_iComboAbility, g_esBurySpecial[iType].g_iComboAbility, g_esBuryAbility[iType].g_iComboAbility, 1);
+		g_esBuryCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iHumanAbility, g_esBuryPlayer[tank].g_iHumanAbility, g_esBurySpecial[iType].g_iHumanAbility, g_esBuryAbility[iType].g_iHumanAbility, 1);
+		g_esBuryCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iHumanAmmo, g_esBuryPlayer[tank].g_iHumanAmmo, g_esBurySpecial[iType].g_iHumanAmmo, g_esBuryAbility[iType].g_iHumanAmmo, 1);
+		g_esBuryCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iHumanCooldown, g_esBuryPlayer[tank].g_iHumanCooldown, g_esBurySpecial[iType].g_iHumanCooldown, g_esBuryAbility[iType].g_iHumanCooldown, 1);
+		g_esBuryCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iHumanRangeCooldown, g_esBuryPlayer[tank].g_iHumanRangeCooldown, g_esBurySpecial[iType].g_iHumanRangeCooldown, g_esBuryAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esBuryCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_flOpenAreasOnly, g_esBuryPlayer[tank].g_flOpenAreasOnly, g_esBurySpecial[iType].g_flOpenAreasOnly, g_esBuryAbility[iType].g_flOpenAreasOnly, 1);
+		g_esBuryCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esBuryTeammate[tank].g_iRequiresHumans, g_esBuryPlayer[tank].g_iRequiresHumans, g_esBurySpecial[iType].g_iRequiresHumans, g_esBuryAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
 	{
-		g_esBuryCache[tank].g_flBuryBuffer = flGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_flBuryBuffer, g_esBuryAbility[type].g_flBuryBuffer, 1);
-		g_esBuryCache[tank].g_flBuryChance = flGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_flBuryChance, g_esBuryAbility[type].g_flBuryChance, 1);
-		g_esBuryCache[tank].g_flBuryDuration = flGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_flBuryDuration, g_esBuryAbility[type].g_flBuryDuration, 1);
-		g_esBuryCache[tank].g_flBuryHeight = flGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_flBuryHeight, g_esBuryAbility[type].g_flBuryHeight, 1);
-		g_esBuryCache[tank].g_flBuryRange = flGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_flBuryRange, g_esBuryAbility[type].g_flBuryRange, 1);
-		g_esBuryCache[tank].g_flBuryRangeChance = flGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_flBuryRangeChance, g_esBuryAbility[type].g_flBuryRangeChance, 1);
-		g_esBuryCache[tank].g_iBuryAbility = iGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_iBuryAbility, g_esBuryAbility[type].g_iBuryAbility, 1);
-		g_esBuryCache[tank].g_iBuryCooldown = iGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_iBuryCooldown, g_esBuryAbility[type].g_iBuryCooldown, 1);
-		g_esBuryCache[tank].g_iBuryEffect = iGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_iBuryEffect, g_esBuryAbility[type].g_iBuryEffect, 1);
-		g_esBuryCache[tank].g_iBuryHit = iGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_iBuryHit, g_esBuryAbility[type].g_iBuryHit, 1);
-		g_esBuryCache[tank].g_iBuryHitMode = iGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_iBuryHitMode, g_esBuryAbility[type].g_iBuryHitMode, 1);
-		g_esBuryCache[tank].g_iBuryMessage = iGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_iBuryMessage, g_esBuryAbility[type].g_iBuryMessage, 1);
-		g_esBuryCache[tank].g_iBuryRangeCooldown = iGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_iBuryRangeCooldown, g_esBuryAbility[type].g_iBuryRangeCooldown, 1);
-		g_esBuryCache[tank].g_iBurySight = iGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_iBurySight, g_esBuryAbility[type].g_iBurySight, 1);
-		g_esBuryCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_flCloseAreasOnly, g_esBuryAbility[type].g_flCloseAreasOnly, 1);
-		g_esBuryCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_iComboAbility, g_esBuryAbility[type].g_iComboAbility, 1);
-		g_esBuryCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_iHumanAbility, g_esBuryAbility[type].g_iHumanAbility, 1);
-		g_esBuryCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_iHumanAmmo, g_esBuryAbility[type].g_iHumanAmmo, 1);
-		g_esBuryCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_iHumanCooldown, g_esBuryAbility[type].g_iHumanCooldown, 1);
-		g_esBuryCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_iHumanRangeCooldown, g_esBuryAbility[type].g_iHumanRangeCooldown, 1);
-		g_esBuryCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_flOpenAreasOnly, g_esBuryAbility[type].g_flOpenAreasOnly, 1);
-		g_esBuryCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_iRequiresHumans, g_esBuryAbility[type].g_iRequiresHumans, 1);
+		g_esBuryCache[tank].g_flBuryBuffer = flGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_flBuryBuffer, g_esBuryAbility[iType].g_flBuryBuffer, 1);
+		g_esBuryCache[tank].g_flBuryChance = flGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_flBuryChance, g_esBuryAbility[iType].g_flBuryChance, 1);
+		g_esBuryCache[tank].g_flBuryDuration = flGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_flBuryDuration, g_esBuryAbility[iType].g_flBuryDuration, 1);
+		g_esBuryCache[tank].g_flBuryHeight = flGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_flBuryHeight, g_esBuryAbility[iType].g_flBuryHeight, 1);
+		g_esBuryCache[tank].g_flBuryRange = flGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_flBuryRange, g_esBuryAbility[iType].g_flBuryRange, 1);
+		g_esBuryCache[tank].g_flBuryRangeChance = flGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_flBuryRangeChance, g_esBuryAbility[iType].g_flBuryRangeChance, 1);
+		g_esBuryCache[tank].g_iBuryAbility = iGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_iBuryAbility, g_esBuryAbility[iType].g_iBuryAbility, 1);
+		g_esBuryCache[tank].g_iBuryCooldown = iGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_iBuryCooldown, g_esBuryAbility[iType].g_iBuryCooldown, 1);
+		g_esBuryCache[tank].g_iBuryEffect = iGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_iBuryEffect, g_esBuryAbility[iType].g_iBuryEffect, 1);
+		g_esBuryCache[tank].g_iBuryHit = iGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_iBuryHit, g_esBuryAbility[iType].g_iBuryHit, 1);
+		g_esBuryCache[tank].g_iBuryHitMode = iGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_iBuryHitMode, g_esBuryAbility[iType].g_iBuryHitMode, 1);
+		g_esBuryCache[tank].g_iBuryMessage = iGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_iBuryMessage, g_esBuryAbility[iType].g_iBuryMessage, 1);
+		g_esBuryCache[tank].g_iBuryRangeCooldown = iGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_iBuryRangeCooldown, g_esBuryAbility[iType].g_iBuryRangeCooldown, 1);
+		g_esBuryCache[tank].g_iBurySight = iGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_iBurySight, g_esBuryAbility[iType].g_iBurySight, 1);
+		g_esBuryCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_flCloseAreasOnly, g_esBuryAbility[iType].g_flCloseAreasOnly, 1);
+		g_esBuryCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_iComboAbility, g_esBuryAbility[iType].g_iComboAbility, 1);
+		g_esBuryCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_iHumanAbility, g_esBuryAbility[iType].g_iHumanAbility, 1);
+		g_esBuryCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_iHumanAmmo, g_esBuryAbility[iType].g_iHumanAmmo, 1);
+		g_esBuryCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_iHumanCooldown, g_esBuryAbility[iType].g_iHumanCooldown, 1);
+		g_esBuryCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_iHumanRangeCooldown, g_esBuryAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esBuryCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_flOpenAreasOnly, g_esBuryAbility[iType].g_flOpenAreasOnly, 1);
+		g_esBuryCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_iRequiresHumans, g_esBuryAbility[iType].g_iRequiresHumans, 1);
 	}
 }
 

@@ -111,6 +111,7 @@ enum struct esRestartPlayer
 	int g_iRestartRangeCooldown;
 	int g_iRestartSight;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esRestartPlayer g_esRestartPlayer[MAXPLAYERS + 1];
@@ -873,57 +874,59 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esRestartPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esRestartPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esRestartPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esRestartCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_flCloseAreasOnly, g_esRestartPlayer[tank].g_flCloseAreasOnly, g_esRestartSpecial[type].g_flCloseAreasOnly, g_esRestartAbility[type].g_flCloseAreasOnly, 1);
-		g_esRestartCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_iComboAbility, g_esRestartPlayer[tank].g_iComboAbility, g_esRestartSpecial[type].g_iComboAbility, g_esRestartAbility[type].g_iComboAbility, 1);
-		g_esRestartCache[tank].g_flRestartChance = flGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_flRestartChance, g_esRestartPlayer[tank].g_flRestartChance, g_esRestartSpecial[type].g_flRestartChance, g_esRestartAbility[type].g_flRestartChance, 1);
-		g_esRestartCache[tank].g_flRestartRange = flGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_flRestartRange, g_esRestartPlayer[tank].g_flRestartRange, g_esRestartSpecial[type].g_flRestartRange, g_esRestartAbility[type].g_flRestartRange, 1);
-		g_esRestartCache[tank].g_flRestartRangeChance = flGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_flRestartRangeChance, g_esRestartPlayer[tank].g_flRestartRangeChance, g_esRestartSpecial[type].g_flRestartRangeChance, g_esRestartAbility[type].g_flRestartRangeChance, 1);
-		g_esRestartCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_iHumanAbility, g_esRestartPlayer[tank].g_iHumanAbility, g_esRestartSpecial[type].g_iHumanAbility, g_esRestartAbility[type].g_iHumanAbility, 1);
-		g_esRestartCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_iHumanAmmo, g_esRestartPlayer[tank].g_iHumanAmmo, g_esRestartSpecial[type].g_iHumanAmmo, g_esRestartAbility[type].g_iHumanAmmo, 1);
-		g_esRestartCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_iHumanCooldown, g_esRestartPlayer[tank].g_iHumanCooldown, g_esRestartSpecial[type].g_iHumanCooldown, g_esRestartAbility[type].g_iHumanCooldown, 1);
-		g_esRestartCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_iHumanRangeCooldown, g_esRestartPlayer[tank].g_iHumanRangeCooldown, g_esRestartSpecial[type].g_iHumanRangeCooldown, g_esRestartAbility[type].g_iHumanRangeCooldown, 1);
-		g_esRestartCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_flOpenAreasOnly, g_esRestartPlayer[tank].g_flOpenAreasOnly, g_esRestartSpecial[type].g_flOpenAreasOnly, g_esRestartAbility[type].g_flOpenAreasOnly, 1);
-		g_esRestartCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_iRequiresHumans, g_esRestartPlayer[tank].g_iRequiresHumans, g_esRestartSpecial[type].g_iRequiresHumans, g_esRestartAbility[type].g_iRequiresHumans, 1);
-		g_esRestartCache[tank].g_iRestartAbility = iGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_iRestartAbility, g_esRestartPlayer[tank].g_iRestartAbility, g_esRestartSpecial[type].g_iRestartAbility, g_esRestartAbility[type].g_iRestartAbility, 1);
-		g_esRestartCache[tank].g_iRestartCooldown = iGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_iRestartCooldown, g_esRestartPlayer[tank].g_iRestartCooldown, g_esRestartSpecial[type].g_iRestartCooldown, g_esRestartAbility[type].g_iRestartCooldown, 1);
-		g_esRestartCache[tank].g_iRestartEffect = iGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_iRestartEffect, g_esRestartPlayer[tank].g_iRestartEffect, g_esRestartSpecial[type].g_iRestartEffect, g_esRestartAbility[type].g_iRestartEffect, 1);
-		g_esRestartCache[tank].g_iRestartHit = iGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_iRestartHit, g_esRestartPlayer[tank].g_iRestartHit, g_esRestartSpecial[type].g_iRestartHit, g_esRestartAbility[type].g_iRestartHit, 1);
-		g_esRestartCache[tank].g_iRestartHitMode = iGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_iRestartHitMode, g_esRestartPlayer[tank].g_iRestartHitMode, g_esRestartSpecial[type].g_iRestartHitMode, g_esRestartAbility[type].g_iRestartHitMode, 1);
-		g_esRestartCache[tank].g_iRestartMessage = iGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_iRestartMessage, g_esRestartPlayer[tank].g_iRestartMessage, g_esRestartSpecial[type].g_iRestartMessage, g_esRestartAbility[type].g_iRestartMessage, 1);
-		g_esRestartCache[tank].g_iRestartMode = iGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_iRestartMode, g_esRestartPlayer[tank].g_iRestartMode, g_esRestartSpecial[type].g_iRestartMode, g_esRestartAbility[type].g_iRestartMode, 1);
-		g_esRestartCache[tank].g_iRestartRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_iRestartRangeCooldown, g_esRestartPlayer[tank].g_iRestartRangeCooldown, g_esRestartSpecial[type].g_iRestartRangeCooldown, g_esRestartAbility[type].g_iRestartRangeCooldown, 1);
-		g_esRestartCache[tank].g_iRestartSight = iGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_iRestartSight, g_esRestartPlayer[tank].g_iRestartSight, g_esRestartSpecial[type].g_iRestartSight, g_esRestartAbility[type].g_iRestartSight, 1);
+		g_esRestartCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_flCloseAreasOnly, g_esRestartPlayer[tank].g_flCloseAreasOnly, g_esRestartSpecial[iType].g_flCloseAreasOnly, g_esRestartAbility[iType].g_flCloseAreasOnly, 1);
+		g_esRestartCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_iComboAbility, g_esRestartPlayer[tank].g_iComboAbility, g_esRestartSpecial[iType].g_iComboAbility, g_esRestartAbility[iType].g_iComboAbility, 1);
+		g_esRestartCache[tank].g_flRestartChance = flGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_flRestartChance, g_esRestartPlayer[tank].g_flRestartChance, g_esRestartSpecial[iType].g_flRestartChance, g_esRestartAbility[iType].g_flRestartChance, 1);
+		g_esRestartCache[tank].g_flRestartRange = flGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_flRestartRange, g_esRestartPlayer[tank].g_flRestartRange, g_esRestartSpecial[iType].g_flRestartRange, g_esRestartAbility[iType].g_flRestartRange, 1);
+		g_esRestartCache[tank].g_flRestartRangeChance = flGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_flRestartRangeChance, g_esRestartPlayer[tank].g_flRestartRangeChance, g_esRestartSpecial[iType].g_flRestartRangeChance, g_esRestartAbility[iType].g_flRestartRangeChance, 1);
+		g_esRestartCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_iHumanAbility, g_esRestartPlayer[tank].g_iHumanAbility, g_esRestartSpecial[iType].g_iHumanAbility, g_esRestartAbility[iType].g_iHumanAbility, 1);
+		g_esRestartCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_iHumanAmmo, g_esRestartPlayer[tank].g_iHumanAmmo, g_esRestartSpecial[iType].g_iHumanAmmo, g_esRestartAbility[iType].g_iHumanAmmo, 1);
+		g_esRestartCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_iHumanCooldown, g_esRestartPlayer[tank].g_iHumanCooldown, g_esRestartSpecial[iType].g_iHumanCooldown, g_esRestartAbility[iType].g_iHumanCooldown, 1);
+		g_esRestartCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_iHumanRangeCooldown, g_esRestartPlayer[tank].g_iHumanRangeCooldown, g_esRestartSpecial[iType].g_iHumanRangeCooldown, g_esRestartAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esRestartCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_flOpenAreasOnly, g_esRestartPlayer[tank].g_flOpenAreasOnly, g_esRestartSpecial[iType].g_flOpenAreasOnly, g_esRestartAbility[iType].g_flOpenAreasOnly, 1);
+		g_esRestartCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_iRequiresHumans, g_esRestartPlayer[tank].g_iRequiresHumans, g_esRestartSpecial[iType].g_iRequiresHumans, g_esRestartAbility[iType].g_iRequiresHumans, 1);
+		g_esRestartCache[tank].g_iRestartAbility = iGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_iRestartAbility, g_esRestartPlayer[tank].g_iRestartAbility, g_esRestartSpecial[iType].g_iRestartAbility, g_esRestartAbility[iType].g_iRestartAbility, 1);
+		g_esRestartCache[tank].g_iRestartCooldown = iGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_iRestartCooldown, g_esRestartPlayer[tank].g_iRestartCooldown, g_esRestartSpecial[iType].g_iRestartCooldown, g_esRestartAbility[iType].g_iRestartCooldown, 1);
+		g_esRestartCache[tank].g_iRestartEffect = iGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_iRestartEffect, g_esRestartPlayer[tank].g_iRestartEffect, g_esRestartSpecial[iType].g_iRestartEffect, g_esRestartAbility[iType].g_iRestartEffect, 1);
+		g_esRestartCache[tank].g_iRestartHit = iGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_iRestartHit, g_esRestartPlayer[tank].g_iRestartHit, g_esRestartSpecial[iType].g_iRestartHit, g_esRestartAbility[iType].g_iRestartHit, 1);
+		g_esRestartCache[tank].g_iRestartHitMode = iGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_iRestartHitMode, g_esRestartPlayer[tank].g_iRestartHitMode, g_esRestartSpecial[iType].g_iRestartHitMode, g_esRestartAbility[iType].g_iRestartHitMode, 1);
+		g_esRestartCache[tank].g_iRestartMessage = iGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_iRestartMessage, g_esRestartPlayer[tank].g_iRestartMessage, g_esRestartSpecial[iType].g_iRestartMessage, g_esRestartAbility[iType].g_iRestartMessage, 1);
+		g_esRestartCache[tank].g_iRestartMode = iGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_iRestartMode, g_esRestartPlayer[tank].g_iRestartMode, g_esRestartSpecial[iType].g_iRestartMode, g_esRestartAbility[iType].g_iRestartMode, 1);
+		g_esRestartCache[tank].g_iRestartRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_iRestartRangeCooldown, g_esRestartPlayer[tank].g_iRestartRangeCooldown, g_esRestartSpecial[iType].g_iRestartRangeCooldown, g_esRestartAbility[iType].g_iRestartRangeCooldown, 1);
+		g_esRestartCache[tank].g_iRestartSight = iGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_iRestartSight, g_esRestartPlayer[tank].g_iRestartSight, g_esRestartSpecial[iType].g_iRestartSight, g_esRestartAbility[iType].g_iRestartSight, 1);
 
-		vGetSubSettingValue(apply, bHuman, g_esRestartCache[tank].g_sRestartLoadout, sizeof esRestartCache::g_sRestartLoadout, g_esRestartTeammate[tank].g_sRestartLoadout, g_esRestartPlayer[tank].g_sRestartLoadout, g_esRestartSpecial[type].g_sRestartLoadout, g_esRestartAbility[type].g_sRestartLoadout);
+		vGetSubSettingValue(apply, bHuman, g_esRestartCache[tank].g_sRestartLoadout, sizeof esRestartCache::g_sRestartLoadout, g_esRestartTeammate[tank].g_sRestartLoadout, g_esRestartPlayer[tank].g_sRestartLoadout, g_esRestartSpecial[iType].g_sRestartLoadout, g_esRestartAbility[iType].g_sRestartLoadout);
 	}
 	else
 	{
-		g_esRestartCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_flCloseAreasOnly, g_esRestartAbility[type].g_flCloseAreasOnly, 1);
-		g_esRestartCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_iComboAbility, g_esRestartAbility[type].g_iComboAbility, 1);
-		g_esRestartCache[tank].g_flRestartChance = flGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_flRestartChance, g_esRestartAbility[type].g_flRestartChance, 1);
-		g_esRestartCache[tank].g_flRestartRange = flGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_flRestartRange, g_esRestartAbility[type].g_flRestartRange, 1);
-		g_esRestartCache[tank].g_flRestartRangeChance = flGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_flRestartRangeChance, g_esRestartAbility[type].g_flRestartRangeChance, 1);
-		g_esRestartCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_iHumanAbility, g_esRestartAbility[type].g_iHumanAbility, 1);
-		g_esRestartCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_iHumanAmmo, g_esRestartAbility[type].g_iHumanAmmo, 1);
-		g_esRestartCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_iHumanCooldown, g_esRestartAbility[type].g_iHumanCooldown, 1);
-		g_esRestartCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_iHumanRangeCooldown, g_esRestartAbility[type].g_iHumanRangeCooldown, 1);
-		g_esRestartCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_flOpenAreasOnly, g_esRestartAbility[type].g_flOpenAreasOnly, 1);
-		g_esRestartCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_iRequiresHumans, g_esRestartAbility[type].g_iRequiresHumans, 1);
-		g_esRestartCache[tank].g_iRestartAbility = iGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_iRestartAbility, g_esRestartAbility[type].g_iRestartAbility, 1);
-		g_esRestartCache[tank].g_iRestartCooldown = iGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_iRestartCooldown, g_esRestartAbility[type].g_iRestartCooldown, 1);
-		g_esRestartCache[tank].g_iRestartEffect = iGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_iRestartEffect, g_esRestartAbility[type].g_iRestartEffect, 1);
-		g_esRestartCache[tank].g_iRestartHit = iGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_iRestartHit, g_esRestartAbility[type].g_iRestartHit, 1);
-		g_esRestartCache[tank].g_iRestartHitMode = iGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_iRestartHitMode, g_esRestartAbility[type].g_iRestartHitMode, 1);
-		g_esRestartCache[tank].g_iRestartMessage = iGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_iRestartMessage, g_esRestartAbility[type].g_iRestartMessage, 1);
-		g_esRestartCache[tank].g_iRestartMode = iGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_iRestartMode, g_esRestartAbility[type].g_iRestartMode, 1);
-		g_esRestartCache[tank].g_iRestartRangeCooldown = iGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_iRestartRangeCooldown, g_esRestartAbility[type].g_iRestartRangeCooldown, 1);
-		g_esRestartCache[tank].g_iRestartSight = iGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_iRestartSight, g_esRestartAbility[type].g_iRestartSight, 1);
+		g_esRestartCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_flCloseAreasOnly, g_esRestartAbility[iType].g_flCloseAreasOnly, 1);
+		g_esRestartCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_iComboAbility, g_esRestartAbility[iType].g_iComboAbility, 1);
+		g_esRestartCache[tank].g_flRestartChance = flGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_flRestartChance, g_esRestartAbility[iType].g_flRestartChance, 1);
+		g_esRestartCache[tank].g_flRestartRange = flGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_flRestartRange, g_esRestartAbility[iType].g_flRestartRange, 1);
+		g_esRestartCache[tank].g_flRestartRangeChance = flGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_flRestartRangeChance, g_esRestartAbility[iType].g_flRestartRangeChance, 1);
+		g_esRestartCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_iHumanAbility, g_esRestartAbility[iType].g_iHumanAbility, 1);
+		g_esRestartCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_iHumanAmmo, g_esRestartAbility[iType].g_iHumanAmmo, 1);
+		g_esRestartCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_iHumanCooldown, g_esRestartAbility[iType].g_iHumanCooldown, 1);
+		g_esRestartCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_iHumanRangeCooldown, g_esRestartAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esRestartCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_flOpenAreasOnly, g_esRestartAbility[iType].g_flOpenAreasOnly, 1);
+		g_esRestartCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_iRequiresHumans, g_esRestartAbility[iType].g_iRequiresHumans, 1);
+		g_esRestartCache[tank].g_iRestartAbility = iGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_iRestartAbility, g_esRestartAbility[iType].g_iRestartAbility, 1);
+		g_esRestartCache[tank].g_iRestartCooldown = iGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_iRestartCooldown, g_esRestartAbility[iType].g_iRestartCooldown, 1);
+		g_esRestartCache[tank].g_iRestartEffect = iGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_iRestartEffect, g_esRestartAbility[iType].g_iRestartEffect, 1);
+		g_esRestartCache[tank].g_iRestartHit = iGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_iRestartHit, g_esRestartAbility[iType].g_iRestartHit, 1);
+		g_esRestartCache[tank].g_iRestartHitMode = iGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_iRestartHitMode, g_esRestartAbility[iType].g_iRestartHitMode, 1);
+		g_esRestartCache[tank].g_iRestartMessage = iGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_iRestartMessage, g_esRestartAbility[iType].g_iRestartMessage, 1);
+		g_esRestartCache[tank].g_iRestartMode = iGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_iRestartMode, g_esRestartAbility[iType].g_iRestartMode, 1);
+		g_esRestartCache[tank].g_iRestartRangeCooldown = iGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_iRestartRangeCooldown, g_esRestartAbility[iType].g_iRestartRangeCooldown, 1);
+		g_esRestartCache[tank].g_iRestartSight = iGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_iRestartSight, g_esRestartAbility[iType].g_iRestartSight, 1);
 
-		vGetSettingValue(apply, bHuman, g_esRestartCache[tank].g_sRestartLoadout, sizeof esRestartCache::g_sRestartLoadout, g_esRestartPlayer[tank].g_sRestartLoadout, g_esRestartAbility[type].g_sRestartLoadout);
+		vGetSettingValue(apply, bHuman, g_esRestartCache[tank].g_sRestartLoadout, sizeof esRestartCache::g_sRestartLoadout, g_esRestartPlayer[tank].g_sRestartLoadout, g_esRestartAbility[iType].g_sRestartLoadout);
 	}
 }
 

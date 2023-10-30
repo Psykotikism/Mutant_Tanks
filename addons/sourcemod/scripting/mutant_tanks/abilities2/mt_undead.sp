@@ -77,6 +77,7 @@ enum struct esUndeadPlayer
 	int g_iHumanCooldown;
 	int g_iRequiresHumans;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 	int g_iUndeadAbility;
 	int g_iUndeadAmount;
 	int g_iUndeadCooldown;
@@ -383,7 +384,7 @@ Action OnUndeadTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 				int iTime = GetTime();
 				if (g_esUndeadPlayer[victim].g_iCooldown == -1 || g_esUndeadPlayer[victim].g_iCooldown <= iTime)
 				{
-					int iPos = g_esUndeadAbility[g_esUndeadPlayer[victim].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(victim, 2, iPos)) : g_esUndeadCache[victim].g_iUndeadCooldown;
+					int iPos = g_esUndeadAbility[g_esUndeadPlayer[victim].g_iTankTypeRecorded].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(victim, 2, iPos)) : g_esUndeadCache[victim].g_iUndeadCooldown;
 					iCooldown = (bIsInfected(victim, MT_CHECK_FAKECLIENT) && g_esUndeadCache[victim].g_iHumanAbility == 1 && g_esUndeadPlayer[victim].g_iAmmoCount < g_esUndeadCache[victim].g_iHumanAmmo && g_esUndeadCache[victim].g_iHumanAmmo > 0) ? g_esUndeadCache[victim].g_iHumanCooldown : iCooldown;
 					g_esUndeadPlayer[victim].g_iCooldown = (iTime + iCooldown);
 					if (g_esUndeadPlayer[victim].g_iCooldown != -1 && g_esUndeadPlayer[victim].g_iCooldown >= iTime)
@@ -437,12 +438,12 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 {
 	if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esUndeadCache[tank].g_iHumanAbility != 2)
 	{
-		g_esUndeadAbility[g_esUndeadPlayer[tank].g_iTankType].g_iComboPosition = -1;
+		g_esUndeadAbility[g_esUndeadPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 		return;
 	}
 
-	g_esUndeadAbility[g_esUndeadPlayer[tank].g_iTankType].g_iComboPosition = -1;
+	g_esUndeadAbility[g_esUndeadPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 	char sCombo[320], sSet[4][32];
 	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
@@ -463,7 +464,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 			{
 				if (StrEqual(sSubset[iPos], MT_UNDEAD_SECTION, false) || StrEqual(sSubset[iPos], MT_UNDEAD_SECTION2, false) || StrEqual(sSubset[iPos], MT_UNDEAD_SECTION3, false) || StrEqual(sSubset[iPos], MT_UNDEAD_SECTION4, false))
 				{
-					g_esUndeadAbility[g_esUndeadPlayer[tank].g_iTankType].g_iComboPosition = iPos;
+					g_esUndeadAbility[g_esUndeadPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = iPos;
 
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
@@ -643,37 +644,39 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esUndeadPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esUndeadPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esUndeadPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esUndeadCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank].g_flCloseAreasOnly, g_esUndeadPlayer[tank].g_flCloseAreasOnly, g_esUndeadSpecial[type].g_flCloseAreasOnly, g_esUndeadAbility[type].g_flCloseAreasOnly, 1);
-		g_esUndeadCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank].g_iComboAbility, g_esUndeadPlayer[tank].g_iComboAbility, g_esUndeadSpecial[type].g_iComboAbility, g_esUndeadAbility[type].g_iComboAbility, 1);
-		g_esUndeadCache[tank].g_flUndeadChance = flGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank].g_flUndeadChance, g_esUndeadPlayer[tank].g_flUndeadChance, g_esUndeadSpecial[type].g_flUndeadChance, g_esUndeadAbility[type].g_flUndeadChance, 1);
-		g_esUndeadCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank].g_iHumanAbility, g_esUndeadPlayer[tank].g_iHumanAbility, g_esUndeadSpecial[type].g_iHumanAbility, g_esUndeadAbility[type].g_iHumanAbility, 1);
-		g_esUndeadCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank].g_iHumanAmmo, g_esUndeadPlayer[tank].g_iHumanAmmo, g_esUndeadSpecial[type].g_iHumanAmmo, g_esUndeadAbility[type].g_iHumanAmmo, 1);
-		g_esUndeadCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank].g_iHumanCooldown, g_esUndeadPlayer[tank].g_iHumanCooldown, g_esUndeadSpecial[type].g_iHumanCooldown, g_esUndeadAbility[type].g_iHumanCooldown, 1);
-		g_esUndeadCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank].g_flOpenAreasOnly, g_esUndeadPlayer[tank].g_flOpenAreasOnly, g_esUndeadSpecial[type].g_flOpenAreasOnly, g_esUndeadAbility[type].g_flOpenAreasOnly, 1);
-		g_esUndeadCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank].g_iRequiresHumans, g_esUndeadPlayer[tank].g_iRequiresHumans, g_esUndeadSpecial[type].g_iRequiresHumans, g_esUndeadAbility[type].g_iRequiresHumans, 1);
-		g_esUndeadCache[tank].g_iUndeadAbility = iGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank].g_iUndeadAbility, g_esUndeadPlayer[tank].g_iUndeadAbility, g_esUndeadSpecial[type].g_iUndeadAbility, g_esUndeadAbility[type].g_iUndeadAbility, 1);
-		g_esUndeadCache[tank].g_iUndeadAmount = iGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank].g_iUndeadAmount, g_esUndeadPlayer[tank].g_iUndeadAmount, g_esUndeadSpecial[type].g_iUndeadAmount, g_esUndeadAbility[type].g_iUndeadAmount, 1);
-		g_esUndeadCache[tank].g_iUndeadCooldown = iGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank].g_iUndeadCooldown, g_esUndeadPlayer[tank].g_iUndeadCooldown, g_esUndeadSpecial[type].g_iUndeadCooldown, g_esUndeadAbility[type].g_iUndeadCooldown, 1);
-		g_esUndeadCache[tank].g_iUndeadMessage = iGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank].g_iUndeadMessage, g_esUndeadPlayer[tank].g_iUndeadMessage, g_esUndeadSpecial[type].g_iUndeadMessage, g_esUndeadAbility[type].g_iUndeadMessage, 1);
+		g_esUndeadCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank].g_flCloseAreasOnly, g_esUndeadPlayer[tank].g_flCloseAreasOnly, g_esUndeadSpecial[iType].g_flCloseAreasOnly, g_esUndeadAbility[iType].g_flCloseAreasOnly, 1);
+		g_esUndeadCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank].g_iComboAbility, g_esUndeadPlayer[tank].g_iComboAbility, g_esUndeadSpecial[iType].g_iComboAbility, g_esUndeadAbility[iType].g_iComboAbility, 1);
+		g_esUndeadCache[tank].g_flUndeadChance = flGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank].g_flUndeadChance, g_esUndeadPlayer[tank].g_flUndeadChance, g_esUndeadSpecial[iType].g_flUndeadChance, g_esUndeadAbility[iType].g_flUndeadChance, 1);
+		g_esUndeadCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank].g_iHumanAbility, g_esUndeadPlayer[tank].g_iHumanAbility, g_esUndeadSpecial[iType].g_iHumanAbility, g_esUndeadAbility[iType].g_iHumanAbility, 1);
+		g_esUndeadCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank].g_iHumanAmmo, g_esUndeadPlayer[tank].g_iHumanAmmo, g_esUndeadSpecial[iType].g_iHumanAmmo, g_esUndeadAbility[iType].g_iHumanAmmo, 1);
+		g_esUndeadCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank].g_iHumanCooldown, g_esUndeadPlayer[tank].g_iHumanCooldown, g_esUndeadSpecial[iType].g_iHumanCooldown, g_esUndeadAbility[iType].g_iHumanCooldown, 1);
+		g_esUndeadCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank].g_flOpenAreasOnly, g_esUndeadPlayer[tank].g_flOpenAreasOnly, g_esUndeadSpecial[iType].g_flOpenAreasOnly, g_esUndeadAbility[iType].g_flOpenAreasOnly, 1);
+		g_esUndeadCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank].g_iRequiresHumans, g_esUndeadPlayer[tank].g_iRequiresHumans, g_esUndeadSpecial[iType].g_iRequiresHumans, g_esUndeadAbility[iType].g_iRequiresHumans, 1);
+		g_esUndeadCache[tank].g_iUndeadAbility = iGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank].g_iUndeadAbility, g_esUndeadPlayer[tank].g_iUndeadAbility, g_esUndeadSpecial[iType].g_iUndeadAbility, g_esUndeadAbility[iType].g_iUndeadAbility, 1);
+		g_esUndeadCache[tank].g_iUndeadAmount = iGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank].g_iUndeadAmount, g_esUndeadPlayer[tank].g_iUndeadAmount, g_esUndeadSpecial[iType].g_iUndeadAmount, g_esUndeadAbility[iType].g_iUndeadAmount, 1);
+		g_esUndeadCache[tank].g_iUndeadCooldown = iGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank].g_iUndeadCooldown, g_esUndeadPlayer[tank].g_iUndeadCooldown, g_esUndeadSpecial[iType].g_iUndeadCooldown, g_esUndeadAbility[iType].g_iUndeadCooldown, 1);
+		g_esUndeadCache[tank].g_iUndeadMessage = iGetSubSettingValue(apply, bHuman, g_esUndeadTeammate[tank].g_iUndeadMessage, g_esUndeadPlayer[tank].g_iUndeadMessage, g_esUndeadSpecial[iType].g_iUndeadMessage, g_esUndeadAbility[iType].g_iUndeadMessage, 1);
 	}
 	else
 	{
-		g_esUndeadCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esUndeadPlayer[tank].g_flCloseAreasOnly, g_esUndeadAbility[type].g_flCloseAreasOnly, 1);
-		g_esUndeadCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esUndeadPlayer[tank].g_iComboAbility, g_esUndeadAbility[type].g_iComboAbility, 1);
-		g_esUndeadCache[tank].g_flUndeadChance = flGetSettingValue(apply, bHuman, g_esUndeadPlayer[tank].g_flUndeadChance, g_esUndeadAbility[type].g_flUndeadChance, 1);
-		g_esUndeadCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esUndeadPlayer[tank].g_iHumanAbility, g_esUndeadAbility[type].g_iHumanAbility, 1);
-		g_esUndeadCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esUndeadPlayer[tank].g_iHumanAmmo, g_esUndeadAbility[type].g_iHumanAmmo, 1);
-		g_esUndeadCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esUndeadPlayer[tank].g_iHumanCooldown, g_esUndeadAbility[type].g_iHumanCooldown, 1);
-		g_esUndeadCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esUndeadPlayer[tank].g_flOpenAreasOnly, g_esUndeadAbility[type].g_flOpenAreasOnly, 1);
-		g_esUndeadCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esUndeadPlayer[tank].g_iRequiresHumans, g_esUndeadAbility[type].g_iRequiresHumans, 1);
-		g_esUndeadCache[tank].g_iUndeadAbility = iGetSettingValue(apply, bHuman, g_esUndeadPlayer[tank].g_iUndeadAbility, g_esUndeadAbility[type].g_iUndeadAbility, 1);
-		g_esUndeadCache[tank].g_iUndeadAmount = iGetSettingValue(apply, bHuman, g_esUndeadPlayer[tank].g_iUndeadAmount, g_esUndeadAbility[type].g_iUndeadAmount, 1);
-		g_esUndeadCache[tank].g_iUndeadCooldown = iGetSettingValue(apply, bHuman, g_esUndeadPlayer[tank].g_iUndeadCooldown, g_esUndeadAbility[type].g_iUndeadCooldown, 1);
-		g_esUndeadCache[tank].g_iUndeadMessage = iGetSettingValue(apply, bHuman, g_esUndeadPlayer[tank].g_iUndeadMessage, g_esUndeadAbility[type].g_iUndeadMessage, 1);
+		g_esUndeadCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esUndeadPlayer[tank].g_flCloseAreasOnly, g_esUndeadAbility[iType].g_flCloseAreasOnly, 1);
+		g_esUndeadCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esUndeadPlayer[tank].g_iComboAbility, g_esUndeadAbility[iType].g_iComboAbility, 1);
+		g_esUndeadCache[tank].g_flUndeadChance = flGetSettingValue(apply, bHuman, g_esUndeadPlayer[tank].g_flUndeadChance, g_esUndeadAbility[iType].g_flUndeadChance, 1);
+		g_esUndeadCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esUndeadPlayer[tank].g_iHumanAbility, g_esUndeadAbility[iType].g_iHumanAbility, 1);
+		g_esUndeadCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esUndeadPlayer[tank].g_iHumanAmmo, g_esUndeadAbility[iType].g_iHumanAmmo, 1);
+		g_esUndeadCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esUndeadPlayer[tank].g_iHumanCooldown, g_esUndeadAbility[iType].g_iHumanCooldown, 1);
+		g_esUndeadCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esUndeadPlayer[tank].g_flOpenAreasOnly, g_esUndeadAbility[iType].g_flOpenAreasOnly, 1);
+		g_esUndeadCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esUndeadPlayer[tank].g_iRequiresHumans, g_esUndeadAbility[iType].g_iRequiresHumans, 1);
+		g_esUndeadCache[tank].g_iUndeadAbility = iGetSettingValue(apply, bHuman, g_esUndeadPlayer[tank].g_iUndeadAbility, g_esUndeadAbility[iType].g_iUndeadAbility, 1);
+		g_esUndeadCache[tank].g_iUndeadAmount = iGetSettingValue(apply, bHuman, g_esUndeadPlayer[tank].g_iUndeadAmount, g_esUndeadAbility[iType].g_iUndeadAmount, 1);
+		g_esUndeadCache[tank].g_iUndeadCooldown = iGetSettingValue(apply, bHuman, g_esUndeadPlayer[tank].g_iUndeadCooldown, g_esUndeadAbility[iType].g_iUndeadCooldown, 1);
+		g_esUndeadCache[tank].g_iUndeadMessage = iGetSettingValue(apply, bHuman, g_esUndeadPlayer[tank].g_iUndeadMessage, g_esUndeadAbility[iType].g_iUndeadMessage, 1);
 	}
 }
 

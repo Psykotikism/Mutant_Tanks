@@ -95,6 +95,7 @@ enum struct esAimlessPlayer
 	int g_iRangeCooldown;
 	int g_iRequiresHumans;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esAimlessPlayer g_esAimlessPlayer[MAXPLAYERS + 1];
@@ -833,55 +834,57 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esAimlessPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esAimlessPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esAimlessPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esAimlessCache[tank].g_flAimlessChance = flGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_flAimlessChance, g_esAimlessPlayer[tank].g_flAimlessChance, g_esAimlessSpecial[type].g_flAimlessChance, g_esAimlessAbility[type].g_flAimlessChance, 1);
-		g_esAimlessCache[tank].g_flAimlessDuration = flGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_flAimlessDuration, g_esAimlessPlayer[tank].g_flAimlessDuration, g_esAimlessSpecial[type].g_flAimlessDuration, g_esAimlessAbility[type].g_flAimlessDuration, 1);
-		g_esAimlessCache[tank].g_flAimlessRange = flGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_flAimlessRange, g_esAimlessPlayer[tank].g_flAimlessRange, g_esAimlessSpecial[type].g_flAimlessRange, g_esAimlessAbility[type].g_flAimlessRange, 1);
-		g_esAimlessCache[tank].g_flAimlessRangeChance = flGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_flAimlessRangeChance, g_esAimlessPlayer[tank].g_flAimlessRangeChance, g_esAimlessSpecial[type].g_flAimlessRangeChance, g_esAimlessAbility[type].g_flAimlessRangeChance, 1);
-		g_esAimlessCache[tank].g_iAimlessAbility = iGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_iAimlessAbility, g_esAimlessPlayer[tank].g_iAimlessAbility, g_esAimlessSpecial[type].g_iAimlessAbility, g_esAimlessAbility[type].g_iAimlessAbility, 1);
-		g_esAimlessCache[tank].g_iAimlessCooldown = iGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_iAimlessCooldown, g_esAimlessPlayer[tank].g_iAimlessCooldown, g_esAimlessSpecial[type].g_iAimlessCooldown, g_esAimlessAbility[type].g_iAimlessCooldown, 1);
-		g_esAimlessCache[tank].g_iAimlessEffect = iGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_iAimlessEffect, g_esAimlessPlayer[tank].g_iAimlessEffect, g_esAimlessSpecial[type].g_iAimlessEffect, g_esAimlessAbility[type].g_iAimlessEffect, 1);
-		g_esAimlessCache[tank].g_iAimlessGunshots = iGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_iAimlessGunshots, g_esAimlessPlayer[tank].g_iAimlessGunshots, g_esAimlessSpecial[type].g_iAimlessGunshots, g_esAimlessAbility[type].g_iAimlessGunshots, 1);
-		g_esAimlessCache[tank].g_iAimlessHit = iGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_iAimlessHit, g_esAimlessPlayer[tank].g_iAimlessHit, g_esAimlessSpecial[type].g_iAimlessHit, g_esAimlessAbility[type].g_iAimlessHit, 1);
-		g_esAimlessCache[tank].g_iAimlessHitMode = iGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_iAimlessHitMode, g_esAimlessPlayer[tank].g_iAimlessHitMode, g_esAimlessSpecial[type].g_iAimlessHitMode, g_esAimlessAbility[type].g_iAimlessHitMode, 1);
-		g_esAimlessCache[tank].g_iAimlessMessage = iGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_iAimlessMessage, g_esAimlessPlayer[tank].g_iAimlessMessage, g_esAimlessSpecial[type].g_iAimlessMessage, g_esAimlessAbility[type].g_iAimlessMessage, 1);
-		g_esAimlessCache[tank].g_iAimlessRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_iAimlessRangeCooldown, g_esAimlessPlayer[tank].g_iAimlessRangeCooldown, g_esAimlessSpecial[type].g_iAimlessRangeCooldown, g_esAimlessAbility[type].g_iAimlessRangeCooldown, 1);
-		g_esAimlessCache[tank].g_iAimlessSight = iGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_iAimlessSight, g_esAimlessPlayer[tank].g_iAimlessSight, g_esAimlessSpecial[type].g_iAimlessSight, g_esAimlessAbility[type].g_iAimlessSight, 1);
-		g_esAimlessCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_flCloseAreasOnly, g_esAimlessPlayer[tank].g_flCloseAreasOnly, g_esAimlessSpecial[type].g_flCloseAreasOnly, g_esAimlessAbility[type].g_flCloseAreasOnly, 1);
-		g_esAimlessCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_iComboAbility, g_esAimlessPlayer[tank].g_iComboAbility, g_esAimlessSpecial[type].g_iComboAbility, g_esAimlessAbility[type].g_iComboAbility, 1);
-		g_esAimlessCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_iHumanAbility, g_esAimlessPlayer[tank].g_iHumanAbility, g_esAimlessSpecial[type].g_iHumanAbility, g_esAimlessAbility[type].g_iHumanAbility, 1);
-		g_esAimlessCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_iHumanAmmo, g_esAimlessPlayer[tank].g_iHumanAmmo, g_esAimlessSpecial[type].g_iHumanAmmo, g_esAimlessAbility[type].g_iHumanAmmo, 1);
-		g_esAimlessCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_iHumanCooldown, g_esAimlessPlayer[tank].g_iHumanCooldown, g_esAimlessSpecial[type].g_iHumanCooldown, g_esAimlessAbility[type].g_iHumanCooldown, 1);
-		g_esAimlessCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_iHumanRangeCooldown, g_esAimlessPlayer[tank].g_iHumanRangeCooldown, g_esAimlessSpecial[type].g_iHumanRangeCooldown, g_esAimlessAbility[type].g_iHumanRangeCooldown, 1);
-		g_esAimlessCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_flOpenAreasOnly, g_esAimlessPlayer[tank].g_flOpenAreasOnly, g_esAimlessSpecial[type].g_flOpenAreasOnly, g_esAimlessAbility[type].g_flOpenAreasOnly, 1);
-		g_esAimlessCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_iRequiresHumans, g_esAimlessPlayer[tank].g_iRequiresHumans, g_esAimlessSpecial[type].g_iRequiresHumans, g_esAimlessAbility[type].g_iRequiresHumans, 1);
+		g_esAimlessCache[tank].g_flAimlessChance = flGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_flAimlessChance, g_esAimlessPlayer[tank].g_flAimlessChance, g_esAimlessSpecial[iType].g_flAimlessChance, g_esAimlessAbility[iType].g_flAimlessChance, 1);
+		g_esAimlessCache[tank].g_flAimlessDuration = flGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_flAimlessDuration, g_esAimlessPlayer[tank].g_flAimlessDuration, g_esAimlessSpecial[iType].g_flAimlessDuration, g_esAimlessAbility[iType].g_flAimlessDuration, 1);
+		g_esAimlessCache[tank].g_flAimlessRange = flGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_flAimlessRange, g_esAimlessPlayer[tank].g_flAimlessRange, g_esAimlessSpecial[iType].g_flAimlessRange, g_esAimlessAbility[iType].g_flAimlessRange, 1);
+		g_esAimlessCache[tank].g_flAimlessRangeChance = flGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_flAimlessRangeChance, g_esAimlessPlayer[tank].g_flAimlessRangeChance, g_esAimlessSpecial[iType].g_flAimlessRangeChance, g_esAimlessAbility[iType].g_flAimlessRangeChance, 1);
+		g_esAimlessCache[tank].g_iAimlessAbility = iGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_iAimlessAbility, g_esAimlessPlayer[tank].g_iAimlessAbility, g_esAimlessSpecial[iType].g_iAimlessAbility, g_esAimlessAbility[iType].g_iAimlessAbility, 1);
+		g_esAimlessCache[tank].g_iAimlessCooldown = iGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_iAimlessCooldown, g_esAimlessPlayer[tank].g_iAimlessCooldown, g_esAimlessSpecial[iType].g_iAimlessCooldown, g_esAimlessAbility[iType].g_iAimlessCooldown, 1);
+		g_esAimlessCache[tank].g_iAimlessEffect = iGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_iAimlessEffect, g_esAimlessPlayer[tank].g_iAimlessEffect, g_esAimlessSpecial[iType].g_iAimlessEffect, g_esAimlessAbility[iType].g_iAimlessEffect, 1);
+		g_esAimlessCache[tank].g_iAimlessGunshots = iGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_iAimlessGunshots, g_esAimlessPlayer[tank].g_iAimlessGunshots, g_esAimlessSpecial[iType].g_iAimlessGunshots, g_esAimlessAbility[iType].g_iAimlessGunshots, 1);
+		g_esAimlessCache[tank].g_iAimlessHit = iGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_iAimlessHit, g_esAimlessPlayer[tank].g_iAimlessHit, g_esAimlessSpecial[iType].g_iAimlessHit, g_esAimlessAbility[iType].g_iAimlessHit, 1);
+		g_esAimlessCache[tank].g_iAimlessHitMode = iGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_iAimlessHitMode, g_esAimlessPlayer[tank].g_iAimlessHitMode, g_esAimlessSpecial[iType].g_iAimlessHitMode, g_esAimlessAbility[iType].g_iAimlessHitMode, 1);
+		g_esAimlessCache[tank].g_iAimlessMessage = iGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_iAimlessMessage, g_esAimlessPlayer[tank].g_iAimlessMessage, g_esAimlessSpecial[iType].g_iAimlessMessage, g_esAimlessAbility[iType].g_iAimlessMessage, 1);
+		g_esAimlessCache[tank].g_iAimlessRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_iAimlessRangeCooldown, g_esAimlessPlayer[tank].g_iAimlessRangeCooldown, g_esAimlessSpecial[iType].g_iAimlessRangeCooldown, g_esAimlessAbility[iType].g_iAimlessRangeCooldown, 1);
+		g_esAimlessCache[tank].g_iAimlessSight = iGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_iAimlessSight, g_esAimlessPlayer[tank].g_iAimlessSight, g_esAimlessSpecial[iType].g_iAimlessSight, g_esAimlessAbility[iType].g_iAimlessSight, 1);
+		g_esAimlessCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_flCloseAreasOnly, g_esAimlessPlayer[tank].g_flCloseAreasOnly, g_esAimlessSpecial[iType].g_flCloseAreasOnly, g_esAimlessAbility[iType].g_flCloseAreasOnly, 1);
+		g_esAimlessCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_iComboAbility, g_esAimlessPlayer[tank].g_iComboAbility, g_esAimlessSpecial[iType].g_iComboAbility, g_esAimlessAbility[iType].g_iComboAbility, 1);
+		g_esAimlessCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_iHumanAbility, g_esAimlessPlayer[tank].g_iHumanAbility, g_esAimlessSpecial[iType].g_iHumanAbility, g_esAimlessAbility[iType].g_iHumanAbility, 1);
+		g_esAimlessCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_iHumanAmmo, g_esAimlessPlayer[tank].g_iHumanAmmo, g_esAimlessSpecial[iType].g_iHumanAmmo, g_esAimlessAbility[iType].g_iHumanAmmo, 1);
+		g_esAimlessCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_iHumanCooldown, g_esAimlessPlayer[tank].g_iHumanCooldown, g_esAimlessSpecial[iType].g_iHumanCooldown, g_esAimlessAbility[iType].g_iHumanCooldown, 1);
+		g_esAimlessCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_iHumanRangeCooldown, g_esAimlessPlayer[tank].g_iHumanRangeCooldown, g_esAimlessSpecial[iType].g_iHumanRangeCooldown, g_esAimlessAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esAimlessCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_flOpenAreasOnly, g_esAimlessPlayer[tank].g_flOpenAreasOnly, g_esAimlessSpecial[iType].g_flOpenAreasOnly, g_esAimlessAbility[iType].g_flOpenAreasOnly, 1);
+		g_esAimlessCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_iRequiresHumans, g_esAimlessPlayer[tank].g_iRequiresHumans, g_esAimlessSpecial[iType].g_iRequiresHumans, g_esAimlessAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
 	{
-		g_esAimlessCache[tank].g_flAimlessChance = flGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_flAimlessChance, g_esAimlessAbility[type].g_flAimlessChance, 1);
-		g_esAimlessCache[tank].g_flAimlessDuration = flGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_flAimlessDuration, g_esAimlessAbility[type].g_flAimlessDuration, 1);
-		g_esAimlessCache[tank].g_flAimlessRange = flGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_flAimlessRange, g_esAimlessAbility[type].g_flAimlessRange, 1);
-		g_esAimlessCache[tank].g_flAimlessRangeChance = flGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_flAimlessRangeChance, g_esAimlessAbility[type].g_flAimlessRangeChance, 1);
-		g_esAimlessCache[tank].g_iAimlessAbility = iGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_iAimlessAbility, g_esAimlessAbility[type].g_iAimlessAbility, 1);
-		g_esAimlessCache[tank].g_iAimlessCooldown = iGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_iAimlessCooldown, g_esAimlessAbility[type].g_iAimlessCooldown, 1);
-		g_esAimlessCache[tank].g_iAimlessEffect = iGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_iAimlessEffect, g_esAimlessAbility[type].g_iAimlessEffect, 1);
-		g_esAimlessCache[tank].g_iAimlessGunshots = iGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_iAimlessGunshots, g_esAimlessAbility[type].g_iAimlessGunshots, 1);
-		g_esAimlessCache[tank].g_iAimlessHit = iGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_iAimlessHit, g_esAimlessAbility[type].g_iAimlessHit, 1);
-		g_esAimlessCache[tank].g_iAimlessHitMode = iGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_iAimlessHitMode, g_esAimlessAbility[type].g_iAimlessHitMode, 1);
-		g_esAimlessCache[tank].g_iAimlessMessage = iGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_iAimlessMessage, g_esAimlessAbility[type].g_iAimlessMessage, 1);
-		g_esAimlessCache[tank].g_iAimlessRangeCooldown = iGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_iAimlessRangeCooldown, g_esAimlessAbility[type].g_iAimlessRangeCooldown, 1);
-		g_esAimlessCache[tank].g_iAimlessSight = iGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_iAimlessSight, g_esAimlessAbility[type].g_iAimlessSight, 1);
-		g_esAimlessCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_flCloseAreasOnly, g_esAimlessAbility[type].g_flCloseAreasOnly, 1);
-		g_esAimlessCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_iComboAbility, g_esAimlessAbility[type].g_iComboAbility, 1);
-		g_esAimlessCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_iHumanAbility, g_esAimlessAbility[type].g_iHumanAbility, 1);
-		g_esAimlessCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_iHumanAmmo, g_esAimlessAbility[type].g_iHumanAmmo, 1);
-		g_esAimlessCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_iHumanCooldown, g_esAimlessAbility[type].g_iHumanCooldown, 1);
-		g_esAimlessCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_iHumanRangeCooldown, g_esAimlessAbility[type].g_iHumanRangeCooldown, 1);
-		g_esAimlessCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_flOpenAreasOnly, g_esAimlessAbility[type].g_flOpenAreasOnly, 1);
-		g_esAimlessCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_iRequiresHumans, g_esAimlessAbility[type].g_iRequiresHumans, 1);
+		g_esAimlessCache[tank].g_flAimlessChance = flGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_flAimlessChance, g_esAimlessAbility[iType].g_flAimlessChance, 1);
+		g_esAimlessCache[tank].g_flAimlessDuration = flGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_flAimlessDuration, g_esAimlessAbility[iType].g_flAimlessDuration, 1);
+		g_esAimlessCache[tank].g_flAimlessRange = flGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_flAimlessRange, g_esAimlessAbility[iType].g_flAimlessRange, 1);
+		g_esAimlessCache[tank].g_flAimlessRangeChance = flGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_flAimlessRangeChance, g_esAimlessAbility[iType].g_flAimlessRangeChance, 1);
+		g_esAimlessCache[tank].g_iAimlessAbility = iGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_iAimlessAbility, g_esAimlessAbility[iType].g_iAimlessAbility, 1);
+		g_esAimlessCache[tank].g_iAimlessCooldown = iGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_iAimlessCooldown, g_esAimlessAbility[iType].g_iAimlessCooldown, 1);
+		g_esAimlessCache[tank].g_iAimlessEffect = iGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_iAimlessEffect, g_esAimlessAbility[iType].g_iAimlessEffect, 1);
+		g_esAimlessCache[tank].g_iAimlessGunshots = iGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_iAimlessGunshots, g_esAimlessAbility[iType].g_iAimlessGunshots, 1);
+		g_esAimlessCache[tank].g_iAimlessHit = iGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_iAimlessHit, g_esAimlessAbility[iType].g_iAimlessHit, 1);
+		g_esAimlessCache[tank].g_iAimlessHitMode = iGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_iAimlessHitMode, g_esAimlessAbility[iType].g_iAimlessHitMode, 1);
+		g_esAimlessCache[tank].g_iAimlessMessage = iGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_iAimlessMessage, g_esAimlessAbility[iType].g_iAimlessMessage, 1);
+		g_esAimlessCache[tank].g_iAimlessRangeCooldown = iGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_iAimlessRangeCooldown, g_esAimlessAbility[iType].g_iAimlessRangeCooldown, 1);
+		g_esAimlessCache[tank].g_iAimlessSight = iGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_iAimlessSight, g_esAimlessAbility[iType].g_iAimlessSight, 1);
+		g_esAimlessCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_flCloseAreasOnly, g_esAimlessAbility[iType].g_flCloseAreasOnly, 1);
+		g_esAimlessCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_iComboAbility, g_esAimlessAbility[iType].g_iComboAbility, 1);
+		g_esAimlessCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_iHumanAbility, g_esAimlessAbility[iType].g_iHumanAbility, 1);
+		g_esAimlessCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_iHumanAmmo, g_esAimlessAbility[iType].g_iHumanAmmo, 1);
+		g_esAimlessCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_iHumanCooldown, g_esAimlessAbility[iType].g_iHumanCooldown, 1);
+		g_esAimlessCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_iHumanRangeCooldown, g_esAimlessAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esAimlessCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_flOpenAreasOnly, g_esAimlessAbility[iType].g_flOpenAreasOnly, 1);
+		g_esAimlessCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_iRequiresHumans, g_esAimlessAbility[iType].g_iRequiresHumans, 1);
 	}
 }
 

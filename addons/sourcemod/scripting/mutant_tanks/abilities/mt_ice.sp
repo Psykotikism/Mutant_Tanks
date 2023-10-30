@@ -96,6 +96,7 @@ enum struct esIcePlayer
 	int g_iRangeCooldown;
 	int g_iRequiresHumans;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esIcePlayer g_esIcePlayer[MAXPLAYERS + 1];
@@ -820,53 +821,55 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esIcePlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esIcePlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esIcePlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esIceCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_flCloseAreasOnly, g_esIcePlayer[tank].g_flCloseAreasOnly, g_esIceSpecial[type].g_flCloseAreasOnly, g_esIceAbility[type].g_flCloseAreasOnly, 1);
-		g_esIceCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iComboAbility, g_esIcePlayer[tank].g_iComboAbility, g_esIceSpecial[type].g_iComboAbility, g_esIceAbility[type].g_iComboAbility, 1);
-		g_esIceCache[tank].g_flIceChance = flGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_flIceChance, g_esIcePlayer[tank].g_flIceChance, g_esIceSpecial[type].g_flIceChance, g_esIceAbility[type].g_flIceChance, 1);
-		g_esIceCache[tank].g_flIceDuration = flGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_flIceDuration, g_esIcePlayer[tank].g_flIceDuration, g_esIceSpecial[type].g_flIceDuration, g_esIceAbility[type].g_flIceDuration, 1);
-		g_esIceCache[tank].g_flIceRange = flGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_flIceRange, g_esIcePlayer[tank].g_flIceRange, g_esIceSpecial[type].g_flIceRange, g_esIceAbility[type].g_flIceRange, 1);
-		g_esIceCache[tank].g_flIceRangeChance = flGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_flIceRangeChance, g_esIcePlayer[tank].g_flIceRangeChance, g_esIceSpecial[type].g_flIceRangeChance, g_esIceAbility[type].g_flIceRangeChance, 1);
-		g_esIceCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iHumanAbility, g_esIcePlayer[tank].g_iHumanAbility, g_esIceSpecial[type].g_iHumanAbility, g_esIceAbility[type].g_iHumanAbility, 1);
-		g_esIceCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iHumanAmmo, g_esIcePlayer[tank].g_iHumanAmmo, g_esIceSpecial[type].g_iHumanAmmo, g_esIceAbility[type].g_iHumanAmmo, 1);
-		g_esIceCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iHumanCooldown, g_esIcePlayer[tank].g_iHumanCooldown, g_esIceSpecial[type].g_iHumanCooldown, g_esIceAbility[type].g_iHumanCooldown, 1);
-		g_esIceCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iHumanRangeCooldown, g_esIcePlayer[tank].g_iHumanRangeCooldown, g_esIceSpecial[type].g_iHumanRangeCooldown, g_esIceAbility[type].g_iHumanRangeCooldown, 1);
-		g_esIceCache[tank].g_iIceAbility = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iIceAbility, g_esIcePlayer[tank].g_iIceAbility, g_esIceSpecial[type].g_iIceAbility, g_esIceAbility[type].g_iIceAbility, 1);
-		g_esIceCache[tank].g_iIceCooldown = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iIceCooldown, g_esIcePlayer[tank].g_iIceCooldown, g_esIceSpecial[type].g_iIceCooldown, g_esIceAbility[type].g_iIceCooldown, 1);
-		g_esIceCache[tank].g_iIceEffect = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iIceEffect, g_esIcePlayer[tank].g_iIceEffect, g_esIceSpecial[type].g_iIceEffect, g_esIceAbility[type].g_iIceEffect, 1);
-		g_esIceCache[tank].g_iIceHit = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iIceHit, g_esIcePlayer[tank].g_iIceHit, g_esIceSpecial[type].g_iIceHit, g_esIceAbility[type].g_iIceHit, 1);
-		g_esIceCache[tank].g_iIceHitMode = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iIceHitMode, g_esIcePlayer[tank].g_iIceHitMode, g_esIceSpecial[type].g_iIceHitMode, g_esIceAbility[type].g_iIceHitMode, 1);
-		g_esIceCache[tank].g_iIceMessage = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iIceMessage, g_esIcePlayer[tank].g_iIceMessage, g_esIceSpecial[type].g_iIceMessage, g_esIceAbility[type].g_iIceMessage, 1);
-		g_esIceCache[tank].g_iIceRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iIceRangeCooldown, g_esIcePlayer[tank].g_iIceRangeCooldown, g_esIceSpecial[type].g_iIceRangeCooldown, g_esIceAbility[type].g_iIceRangeCooldown, 1);
-		g_esIceCache[tank].g_iIceSight = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iIceSight, g_esIcePlayer[tank].g_iIceSight, g_esIceSpecial[type].g_iIceSight, g_esIceAbility[type].g_iIceSight, 1);
-		g_esIceCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_flOpenAreasOnly, g_esIcePlayer[tank].g_flOpenAreasOnly, g_esIceSpecial[type].g_flOpenAreasOnly, g_esIceAbility[type].g_flOpenAreasOnly, 1);
-		g_esIceCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iRequiresHumans, g_esIcePlayer[tank].g_iRequiresHumans, g_esIceSpecial[type].g_iRequiresHumans, g_esIceAbility[type].g_iRequiresHumans, 1);
+		g_esIceCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_flCloseAreasOnly, g_esIcePlayer[tank].g_flCloseAreasOnly, g_esIceSpecial[iType].g_flCloseAreasOnly, g_esIceAbility[iType].g_flCloseAreasOnly, 1);
+		g_esIceCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iComboAbility, g_esIcePlayer[tank].g_iComboAbility, g_esIceSpecial[iType].g_iComboAbility, g_esIceAbility[iType].g_iComboAbility, 1);
+		g_esIceCache[tank].g_flIceChance = flGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_flIceChance, g_esIcePlayer[tank].g_flIceChance, g_esIceSpecial[iType].g_flIceChance, g_esIceAbility[iType].g_flIceChance, 1);
+		g_esIceCache[tank].g_flIceDuration = flGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_flIceDuration, g_esIcePlayer[tank].g_flIceDuration, g_esIceSpecial[iType].g_flIceDuration, g_esIceAbility[iType].g_flIceDuration, 1);
+		g_esIceCache[tank].g_flIceRange = flGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_flIceRange, g_esIcePlayer[tank].g_flIceRange, g_esIceSpecial[iType].g_flIceRange, g_esIceAbility[iType].g_flIceRange, 1);
+		g_esIceCache[tank].g_flIceRangeChance = flGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_flIceRangeChance, g_esIcePlayer[tank].g_flIceRangeChance, g_esIceSpecial[iType].g_flIceRangeChance, g_esIceAbility[iType].g_flIceRangeChance, 1);
+		g_esIceCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iHumanAbility, g_esIcePlayer[tank].g_iHumanAbility, g_esIceSpecial[iType].g_iHumanAbility, g_esIceAbility[iType].g_iHumanAbility, 1);
+		g_esIceCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iHumanAmmo, g_esIcePlayer[tank].g_iHumanAmmo, g_esIceSpecial[iType].g_iHumanAmmo, g_esIceAbility[iType].g_iHumanAmmo, 1);
+		g_esIceCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iHumanCooldown, g_esIcePlayer[tank].g_iHumanCooldown, g_esIceSpecial[iType].g_iHumanCooldown, g_esIceAbility[iType].g_iHumanCooldown, 1);
+		g_esIceCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iHumanRangeCooldown, g_esIcePlayer[tank].g_iHumanRangeCooldown, g_esIceSpecial[iType].g_iHumanRangeCooldown, g_esIceAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esIceCache[tank].g_iIceAbility = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iIceAbility, g_esIcePlayer[tank].g_iIceAbility, g_esIceSpecial[iType].g_iIceAbility, g_esIceAbility[iType].g_iIceAbility, 1);
+		g_esIceCache[tank].g_iIceCooldown = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iIceCooldown, g_esIcePlayer[tank].g_iIceCooldown, g_esIceSpecial[iType].g_iIceCooldown, g_esIceAbility[iType].g_iIceCooldown, 1);
+		g_esIceCache[tank].g_iIceEffect = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iIceEffect, g_esIcePlayer[tank].g_iIceEffect, g_esIceSpecial[iType].g_iIceEffect, g_esIceAbility[iType].g_iIceEffect, 1);
+		g_esIceCache[tank].g_iIceHit = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iIceHit, g_esIcePlayer[tank].g_iIceHit, g_esIceSpecial[iType].g_iIceHit, g_esIceAbility[iType].g_iIceHit, 1);
+		g_esIceCache[tank].g_iIceHitMode = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iIceHitMode, g_esIcePlayer[tank].g_iIceHitMode, g_esIceSpecial[iType].g_iIceHitMode, g_esIceAbility[iType].g_iIceHitMode, 1);
+		g_esIceCache[tank].g_iIceMessage = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iIceMessage, g_esIcePlayer[tank].g_iIceMessage, g_esIceSpecial[iType].g_iIceMessage, g_esIceAbility[iType].g_iIceMessage, 1);
+		g_esIceCache[tank].g_iIceRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iIceRangeCooldown, g_esIcePlayer[tank].g_iIceRangeCooldown, g_esIceSpecial[iType].g_iIceRangeCooldown, g_esIceAbility[iType].g_iIceRangeCooldown, 1);
+		g_esIceCache[tank].g_iIceSight = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iIceSight, g_esIcePlayer[tank].g_iIceSight, g_esIceSpecial[iType].g_iIceSight, g_esIceAbility[iType].g_iIceSight, 1);
+		g_esIceCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_flOpenAreasOnly, g_esIcePlayer[tank].g_flOpenAreasOnly, g_esIceSpecial[iType].g_flOpenAreasOnly, g_esIceAbility[iType].g_flOpenAreasOnly, 1);
+		g_esIceCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iRequiresHumans, g_esIcePlayer[tank].g_iRequiresHumans, g_esIceSpecial[iType].g_iRequiresHumans, g_esIceAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
 	{
-		g_esIceCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esIcePlayer[tank].g_flCloseAreasOnly, g_esIceAbility[type].g_flCloseAreasOnly, 1);
-		g_esIceCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esIcePlayer[tank].g_iComboAbility, g_esIceAbility[type].g_iComboAbility, 1);
-		g_esIceCache[tank].g_flIceChance = flGetSettingValue(apply, bHuman, g_esIcePlayer[tank].g_flIceChance, g_esIceAbility[type].g_flIceChance, 1);
-		g_esIceCache[tank].g_flIceDuration = flGetSettingValue(apply, bHuman, g_esIcePlayer[tank].g_flIceDuration, g_esIceAbility[type].g_flIceDuration, 1);
-		g_esIceCache[tank].g_flIceRange = flGetSettingValue(apply, bHuman, g_esIcePlayer[tank].g_flIceRange, g_esIceAbility[type].g_flIceRange, 1);
-		g_esIceCache[tank].g_flIceRangeChance = flGetSettingValue(apply, bHuman, g_esIcePlayer[tank].g_flIceRangeChance, g_esIceAbility[type].g_flIceRangeChance, 1);
-		g_esIceCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esIcePlayer[tank].g_iHumanAbility, g_esIceAbility[type].g_iHumanAbility, 1);
-		g_esIceCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esIcePlayer[tank].g_iHumanAmmo, g_esIceAbility[type].g_iHumanAmmo, 1);
-		g_esIceCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esIcePlayer[tank].g_iHumanCooldown, g_esIceAbility[type].g_iHumanCooldown, 1);
-		g_esIceCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esIcePlayer[tank].g_iHumanRangeCooldown, g_esIceAbility[type].g_iHumanRangeCooldown, 1);
-		g_esIceCache[tank].g_iIceAbility = iGetSettingValue(apply, bHuman, g_esIcePlayer[tank].g_iIceAbility, g_esIceAbility[type].g_iIceAbility, 1);
-		g_esIceCache[tank].g_iIceCooldown = iGetSettingValue(apply, bHuman, g_esIcePlayer[tank].g_iIceCooldown, g_esIceAbility[type].g_iIceCooldown, 1);
-		g_esIceCache[tank].g_iIceEffect = iGetSettingValue(apply, bHuman, g_esIcePlayer[tank].g_iIceEffect, g_esIceAbility[type].g_iIceEffect, 1);
-		g_esIceCache[tank].g_iIceHit = iGetSettingValue(apply, bHuman, g_esIcePlayer[tank].g_iIceHit, g_esIceAbility[type].g_iIceHit, 1);
-		g_esIceCache[tank].g_iIceHitMode = iGetSettingValue(apply, bHuman, g_esIcePlayer[tank].g_iIceHitMode, g_esIceAbility[type].g_iIceHitMode, 1);
-		g_esIceCache[tank].g_iIceMessage = iGetSettingValue(apply, bHuman, g_esIcePlayer[tank].g_iIceMessage, g_esIceAbility[type].g_iIceMessage, 1);
-		g_esIceCache[tank].g_iIceRangeCooldown = iGetSettingValue(apply, bHuman, g_esIcePlayer[tank].g_iIceRangeCooldown, g_esIceAbility[type].g_iIceRangeCooldown, 1);
-		g_esIceCache[tank].g_iIceSight = iGetSettingValue(apply, bHuman, g_esIcePlayer[tank].g_iIceSight, g_esIceAbility[type].g_iIceSight, 1);
-		g_esIceCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esIcePlayer[tank].g_flOpenAreasOnly, g_esIceAbility[type].g_flOpenAreasOnly, 1);
-		g_esIceCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esIcePlayer[tank].g_iRequiresHumans, g_esIceAbility[type].g_iRequiresHumans, 1);
+		g_esIceCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esIcePlayer[tank].g_flCloseAreasOnly, g_esIceAbility[iType].g_flCloseAreasOnly, 1);
+		g_esIceCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esIcePlayer[tank].g_iComboAbility, g_esIceAbility[iType].g_iComboAbility, 1);
+		g_esIceCache[tank].g_flIceChance = flGetSettingValue(apply, bHuman, g_esIcePlayer[tank].g_flIceChance, g_esIceAbility[iType].g_flIceChance, 1);
+		g_esIceCache[tank].g_flIceDuration = flGetSettingValue(apply, bHuman, g_esIcePlayer[tank].g_flIceDuration, g_esIceAbility[iType].g_flIceDuration, 1);
+		g_esIceCache[tank].g_flIceRange = flGetSettingValue(apply, bHuman, g_esIcePlayer[tank].g_flIceRange, g_esIceAbility[iType].g_flIceRange, 1);
+		g_esIceCache[tank].g_flIceRangeChance = flGetSettingValue(apply, bHuman, g_esIcePlayer[tank].g_flIceRangeChance, g_esIceAbility[iType].g_flIceRangeChance, 1);
+		g_esIceCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esIcePlayer[tank].g_iHumanAbility, g_esIceAbility[iType].g_iHumanAbility, 1);
+		g_esIceCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esIcePlayer[tank].g_iHumanAmmo, g_esIceAbility[iType].g_iHumanAmmo, 1);
+		g_esIceCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esIcePlayer[tank].g_iHumanCooldown, g_esIceAbility[iType].g_iHumanCooldown, 1);
+		g_esIceCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esIcePlayer[tank].g_iHumanRangeCooldown, g_esIceAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esIceCache[tank].g_iIceAbility = iGetSettingValue(apply, bHuman, g_esIcePlayer[tank].g_iIceAbility, g_esIceAbility[iType].g_iIceAbility, 1);
+		g_esIceCache[tank].g_iIceCooldown = iGetSettingValue(apply, bHuman, g_esIcePlayer[tank].g_iIceCooldown, g_esIceAbility[iType].g_iIceCooldown, 1);
+		g_esIceCache[tank].g_iIceEffect = iGetSettingValue(apply, bHuman, g_esIcePlayer[tank].g_iIceEffect, g_esIceAbility[iType].g_iIceEffect, 1);
+		g_esIceCache[tank].g_iIceHit = iGetSettingValue(apply, bHuman, g_esIcePlayer[tank].g_iIceHit, g_esIceAbility[iType].g_iIceHit, 1);
+		g_esIceCache[tank].g_iIceHitMode = iGetSettingValue(apply, bHuman, g_esIcePlayer[tank].g_iIceHitMode, g_esIceAbility[iType].g_iIceHitMode, 1);
+		g_esIceCache[tank].g_iIceMessage = iGetSettingValue(apply, bHuman, g_esIcePlayer[tank].g_iIceMessage, g_esIceAbility[iType].g_iIceMessage, 1);
+		g_esIceCache[tank].g_iIceRangeCooldown = iGetSettingValue(apply, bHuman, g_esIcePlayer[tank].g_iIceRangeCooldown, g_esIceAbility[iType].g_iIceRangeCooldown, 1);
+		g_esIceCache[tank].g_iIceSight = iGetSettingValue(apply, bHuman, g_esIcePlayer[tank].g_iIceSight, g_esIceAbility[iType].g_iIceSight, 1);
+		g_esIceCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esIcePlayer[tank].g_flOpenAreasOnly, g_esIceAbility[iType].g_flOpenAreasOnly, 1);
+		g_esIceCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esIcePlayer[tank].g_iRequiresHumans, g_esIceAbility[iType].g_iRequiresHumans, 1);
 	}
 }
 

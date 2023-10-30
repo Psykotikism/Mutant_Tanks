@@ -108,6 +108,7 @@ enum struct esHypnoPlayer
 	int g_iRequiresHumans;
 	int g_iShield;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esHypnoPlayer g_esHypnoPlayer[MAXPLAYERS + 1];
@@ -1026,79 +1027,81 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT), bInfected = bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME);
+	g_esHypnoPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esHypnoPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esHypnoPlayer[tank].g_iTankTypeRecorded;
 
 	if (bInfected)
 	{
-		g_esHypnoCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_flCloseAreasOnly, g_esHypnoPlayer[tank].g_flCloseAreasOnly, g_esHypnoSpecial[type].g_flCloseAreasOnly, g_esHypnoAbility[type].g_flCloseAreasOnly, 1);
-		g_esHypnoCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_iComboAbility, g_esHypnoPlayer[tank].g_iComboAbility, g_esHypnoSpecial[type].g_iComboAbility, g_esHypnoAbility[type].g_iComboAbility, 1);
-		g_esHypnoCache[tank].g_flHypnoBulletDivisor = flGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_flHypnoBulletDivisor, g_esHypnoPlayer[tank].g_flHypnoBulletDivisor, g_esHypnoSpecial[type].g_flHypnoBulletDivisor, g_esHypnoAbility[type].g_flHypnoBulletDivisor, 1);
-		g_esHypnoCache[tank].g_flHypnoChance = flGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_flHypnoChance, g_esHypnoPlayer[tank].g_flHypnoChance, g_esHypnoSpecial[type].g_flHypnoChance, g_esHypnoAbility[type].g_flHypnoChance, 1);
-		g_esHypnoCache[tank].g_iHypnoCooldown = iGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_iHypnoCooldown, g_esHypnoPlayer[tank].g_iHypnoCooldown, g_esHypnoSpecial[type].g_iHypnoCooldown, g_esHypnoAbility[type].g_iHypnoCooldown, 1);
-		g_esHypnoCache[tank].g_flHypnoDuration = flGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_flHypnoDuration, g_esHypnoPlayer[tank].g_flHypnoDuration, g_esHypnoSpecial[type].g_flHypnoDuration, g_esHypnoAbility[type].g_flHypnoDuration, 1);
-		g_esHypnoCache[tank].g_flHypnoExplosiveDivisor = flGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_flHypnoExplosiveDivisor, g_esHypnoPlayer[tank].g_flHypnoExplosiveDivisor, g_esHypnoSpecial[type].g_flHypnoExplosiveDivisor, g_esHypnoAbility[type].g_flHypnoExplosiveDivisor, 1);
-		g_esHypnoCache[tank].g_flHypnoFireDivisor = flGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_flHypnoFireDivisor, g_esHypnoPlayer[tank].g_flHypnoFireDivisor, g_esHypnoSpecial[type].g_flHypnoFireDivisor, g_esHypnoAbility[type].g_flHypnoFireDivisor, 1);
-		g_esHypnoCache[tank].g_flHypnoHittableDivisor = flGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_flHypnoHittableDivisor, g_esHypnoPlayer[tank].g_flHypnoHittableDivisor, g_esHypnoSpecial[type].g_flHypnoHittableDivisor, g_esHypnoAbility[type].g_flHypnoHittableDivisor, 1);
-		g_esHypnoCache[tank].g_flHypnoMeleeDivisor = flGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_flHypnoMeleeDivisor, g_esHypnoPlayer[tank].g_flHypnoMeleeDivisor, g_esHypnoSpecial[type].g_flHypnoMeleeDivisor, g_esHypnoAbility[type].g_flHypnoMeleeDivisor, 1);
-		g_esHypnoCache[tank].g_flHypnoRange = flGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_flHypnoRange, g_esHypnoPlayer[tank].g_flHypnoRange, g_esHypnoSpecial[type].g_flHypnoRange, g_esHypnoAbility[type].g_flHypnoRange, 1);
-		g_esHypnoCache[tank].g_flHypnoRangeChance = flGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_flHypnoRangeChance, g_esHypnoPlayer[tank].g_flHypnoRangeChance, g_esHypnoSpecial[type].g_flHypnoRangeChance, g_esHypnoAbility[type].g_flHypnoRangeChance, 1);
-		g_esHypnoCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_iHumanAbility, g_esHypnoPlayer[tank].g_iHumanAbility, g_esHypnoSpecial[type].g_iHumanAbility, g_esHypnoAbility[type].g_iHumanAbility, 1);
-		g_esHypnoCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_iHumanAmmo, g_esHypnoPlayer[tank].g_iHumanAmmo, g_esHypnoSpecial[type].g_iHumanAmmo, g_esHypnoAbility[type].g_iHumanAmmo, 1);
-		g_esHypnoCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_iHumanCooldown, g_esHypnoPlayer[tank].g_iHumanCooldown, g_esHypnoSpecial[type].g_iHumanCooldown, g_esHypnoAbility[type].g_iHumanCooldown, 1);
-		g_esHypnoCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_iHumanRangeCooldown, g_esHypnoPlayer[tank].g_iHumanRangeCooldown, g_esHypnoSpecial[type].g_iHumanRangeCooldown, g_esHypnoAbility[type].g_iHumanRangeCooldown, 1);
-		g_esHypnoCache[tank].g_iHypnoAbility = iGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_iHypnoAbility, g_esHypnoPlayer[tank].g_iHypnoAbility, g_esHypnoSpecial[type].g_iHypnoAbility, g_esHypnoAbility[type].g_iHypnoAbility, 1);
-		g_esHypnoCache[tank].g_iHypnoEffect = iGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_iHypnoEffect, g_esHypnoPlayer[tank].g_iHypnoEffect, g_esHypnoSpecial[type].g_iHypnoEffect, g_esHypnoAbility[type].g_iHypnoEffect, 1);
-		g_esHypnoCache[tank].g_iHypnoHit = iGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_iHypnoHit, g_esHypnoPlayer[tank].g_iHypnoHit, g_esHypnoSpecial[type].g_iHypnoHit, g_esHypnoAbility[type].g_iHypnoHit, 1);
-		g_esHypnoCache[tank].g_iHypnoHitMode = iGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_iHypnoHitMode, g_esHypnoPlayer[tank].g_iHypnoHitMode, g_esHypnoSpecial[type].g_iHypnoHitMode, g_esHypnoAbility[type].g_iHypnoHitMode, 1);
-		g_esHypnoCache[tank].g_iHypnoMessage = iGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_iHypnoMessage, g_esHypnoPlayer[tank].g_iHypnoMessage, g_esHypnoSpecial[type].g_iHypnoMessage, g_esHypnoAbility[type].g_iHypnoMessage, 1);
-		g_esHypnoCache[tank].g_iHypnoMode = iGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_iHypnoMode, g_esHypnoPlayer[tank].g_iHypnoMode, g_esHypnoSpecial[type].g_iHypnoMode, g_esHypnoAbility[type].g_iHypnoMode, 1);
-		g_esHypnoCache[tank].g_iHypnoRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_iHypnoRangeCooldown, g_esHypnoPlayer[tank].g_iHypnoRangeCooldown, g_esHypnoSpecial[type].g_iHypnoRangeCooldown, g_esHypnoAbility[type].g_iHypnoRangeCooldown, 1);
-		g_esHypnoCache[tank].g_iHypnoSight = iGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_iHypnoSight, g_esHypnoPlayer[tank].g_iHypnoSight, g_esHypnoSpecial[type].g_iHypnoSight, g_esHypnoAbility[type].g_iHypnoSight, 1);
-		g_esHypnoCache[tank].g_iHypnoView = iGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_iHypnoView, g_esHypnoPlayer[tank].g_iHypnoView, g_esHypnoSpecial[type].g_iHypnoView, g_esHypnoAbility[type].g_iHypnoView, 1);
-		g_esHypnoCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_flOpenAreasOnly, g_esHypnoPlayer[tank].g_flOpenAreasOnly, g_esHypnoSpecial[type].g_flOpenAreasOnly, g_esHypnoAbility[type].g_flOpenAreasOnly, 1);
-		g_esHypnoCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_iRequiresHumans, g_esHypnoPlayer[tank].g_iRequiresHumans, g_esHypnoSpecial[type].g_iRequiresHumans, g_esHypnoAbility[type].g_iRequiresHumans, 1);
+		g_esHypnoCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_flCloseAreasOnly, g_esHypnoPlayer[tank].g_flCloseAreasOnly, g_esHypnoSpecial[iType].g_flCloseAreasOnly, g_esHypnoAbility[iType].g_flCloseAreasOnly, 1);
+		g_esHypnoCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_iComboAbility, g_esHypnoPlayer[tank].g_iComboAbility, g_esHypnoSpecial[iType].g_iComboAbility, g_esHypnoAbility[iType].g_iComboAbility, 1);
+		g_esHypnoCache[tank].g_flHypnoBulletDivisor = flGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_flHypnoBulletDivisor, g_esHypnoPlayer[tank].g_flHypnoBulletDivisor, g_esHypnoSpecial[iType].g_flHypnoBulletDivisor, g_esHypnoAbility[iType].g_flHypnoBulletDivisor, 1);
+		g_esHypnoCache[tank].g_flHypnoChance = flGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_flHypnoChance, g_esHypnoPlayer[tank].g_flHypnoChance, g_esHypnoSpecial[iType].g_flHypnoChance, g_esHypnoAbility[iType].g_flHypnoChance, 1);
+		g_esHypnoCache[tank].g_iHypnoCooldown = iGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_iHypnoCooldown, g_esHypnoPlayer[tank].g_iHypnoCooldown, g_esHypnoSpecial[iType].g_iHypnoCooldown, g_esHypnoAbility[iType].g_iHypnoCooldown, 1);
+		g_esHypnoCache[tank].g_flHypnoDuration = flGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_flHypnoDuration, g_esHypnoPlayer[tank].g_flHypnoDuration, g_esHypnoSpecial[iType].g_flHypnoDuration, g_esHypnoAbility[iType].g_flHypnoDuration, 1);
+		g_esHypnoCache[tank].g_flHypnoExplosiveDivisor = flGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_flHypnoExplosiveDivisor, g_esHypnoPlayer[tank].g_flHypnoExplosiveDivisor, g_esHypnoSpecial[iType].g_flHypnoExplosiveDivisor, g_esHypnoAbility[iType].g_flHypnoExplosiveDivisor, 1);
+		g_esHypnoCache[tank].g_flHypnoFireDivisor = flGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_flHypnoFireDivisor, g_esHypnoPlayer[tank].g_flHypnoFireDivisor, g_esHypnoSpecial[iType].g_flHypnoFireDivisor, g_esHypnoAbility[iType].g_flHypnoFireDivisor, 1);
+		g_esHypnoCache[tank].g_flHypnoHittableDivisor = flGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_flHypnoHittableDivisor, g_esHypnoPlayer[tank].g_flHypnoHittableDivisor, g_esHypnoSpecial[iType].g_flHypnoHittableDivisor, g_esHypnoAbility[iType].g_flHypnoHittableDivisor, 1);
+		g_esHypnoCache[tank].g_flHypnoMeleeDivisor = flGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_flHypnoMeleeDivisor, g_esHypnoPlayer[tank].g_flHypnoMeleeDivisor, g_esHypnoSpecial[iType].g_flHypnoMeleeDivisor, g_esHypnoAbility[iType].g_flHypnoMeleeDivisor, 1);
+		g_esHypnoCache[tank].g_flHypnoRange = flGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_flHypnoRange, g_esHypnoPlayer[tank].g_flHypnoRange, g_esHypnoSpecial[iType].g_flHypnoRange, g_esHypnoAbility[iType].g_flHypnoRange, 1);
+		g_esHypnoCache[tank].g_flHypnoRangeChance = flGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_flHypnoRangeChance, g_esHypnoPlayer[tank].g_flHypnoRangeChance, g_esHypnoSpecial[iType].g_flHypnoRangeChance, g_esHypnoAbility[iType].g_flHypnoRangeChance, 1);
+		g_esHypnoCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_iHumanAbility, g_esHypnoPlayer[tank].g_iHumanAbility, g_esHypnoSpecial[iType].g_iHumanAbility, g_esHypnoAbility[iType].g_iHumanAbility, 1);
+		g_esHypnoCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_iHumanAmmo, g_esHypnoPlayer[tank].g_iHumanAmmo, g_esHypnoSpecial[iType].g_iHumanAmmo, g_esHypnoAbility[iType].g_iHumanAmmo, 1);
+		g_esHypnoCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_iHumanCooldown, g_esHypnoPlayer[tank].g_iHumanCooldown, g_esHypnoSpecial[iType].g_iHumanCooldown, g_esHypnoAbility[iType].g_iHumanCooldown, 1);
+		g_esHypnoCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_iHumanRangeCooldown, g_esHypnoPlayer[tank].g_iHumanRangeCooldown, g_esHypnoSpecial[iType].g_iHumanRangeCooldown, g_esHypnoAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esHypnoCache[tank].g_iHypnoAbility = iGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_iHypnoAbility, g_esHypnoPlayer[tank].g_iHypnoAbility, g_esHypnoSpecial[iType].g_iHypnoAbility, g_esHypnoAbility[iType].g_iHypnoAbility, 1);
+		g_esHypnoCache[tank].g_iHypnoEffect = iGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_iHypnoEffect, g_esHypnoPlayer[tank].g_iHypnoEffect, g_esHypnoSpecial[iType].g_iHypnoEffect, g_esHypnoAbility[iType].g_iHypnoEffect, 1);
+		g_esHypnoCache[tank].g_iHypnoHit = iGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_iHypnoHit, g_esHypnoPlayer[tank].g_iHypnoHit, g_esHypnoSpecial[iType].g_iHypnoHit, g_esHypnoAbility[iType].g_iHypnoHit, 1);
+		g_esHypnoCache[tank].g_iHypnoHitMode = iGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_iHypnoHitMode, g_esHypnoPlayer[tank].g_iHypnoHitMode, g_esHypnoSpecial[iType].g_iHypnoHitMode, g_esHypnoAbility[iType].g_iHypnoHitMode, 1);
+		g_esHypnoCache[tank].g_iHypnoMessage = iGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_iHypnoMessage, g_esHypnoPlayer[tank].g_iHypnoMessage, g_esHypnoSpecial[iType].g_iHypnoMessage, g_esHypnoAbility[iType].g_iHypnoMessage, 1);
+		g_esHypnoCache[tank].g_iHypnoMode = iGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_iHypnoMode, g_esHypnoPlayer[tank].g_iHypnoMode, g_esHypnoSpecial[iType].g_iHypnoMode, g_esHypnoAbility[iType].g_iHypnoMode, 1);
+		g_esHypnoCache[tank].g_iHypnoRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_iHypnoRangeCooldown, g_esHypnoPlayer[tank].g_iHypnoRangeCooldown, g_esHypnoSpecial[iType].g_iHypnoRangeCooldown, g_esHypnoAbility[iType].g_iHypnoRangeCooldown, 1);
+		g_esHypnoCache[tank].g_iHypnoSight = iGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_iHypnoSight, g_esHypnoPlayer[tank].g_iHypnoSight, g_esHypnoSpecial[iType].g_iHypnoSight, g_esHypnoAbility[iType].g_iHypnoSight, 1);
+		g_esHypnoCache[tank].g_iHypnoView = iGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_iHypnoView, g_esHypnoPlayer[tank].g_iHypnoView, g_esHypnoSpecial[iType].g_iHypnoView, g_esHypnoAbility[iType].g_iHypnoView, 1);
+		g_esHypnoCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_flOpenAreasOnly, g_esHypnoPlayer[tank].g_flOpenAreasOnly, g_esHypnoSpecial[iType].g_flOpenAreasOnly, g_esHypnoAbility[iType].g_flOpenAreasOnly, 1);
+		g_esHypnoCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_iRequiresHumans, g_esHypnoPlayer[tank].g_iRequiresHumans, g_esHypnoSpecial[iType].g_iRequiresHumans, g_esHypnoAbility[iType].g_iRequiresHumans, 1);
 
-		vGetSubSettingValue(apply, bHuman, g_esHypnoCache[tank].g_sHypnoColor, sizeof esHypnoCache::g_sHypnoColor, g_esHypnoTeammate[tank].g_sHypnoColor, g_esHypnoPlayer[tank].g_sHypnoColor, g_esHypnoSpecial[type].g_sHypnoColor, g_esHypnoAbility[type].g_sHypnoColor);
+		vGetSubSettingValue(apply, bHuman, g_esHypnoCache[tank].g_sHypnoColor, sizeof esHypnoCache::g_sHypnoColor, g_esHypnoTeammate[tank].g_sHypnoColor, g_esHypnoPlayer[tank].g_sHypnoColor, g_esHypnoSpecial[iType].g_sHypnoColor, g_esHypnoAbility[iType].g_sHypnoColor);
 	}
 	else
 	{
-		g_esHypnoCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flCloseAreasOnly, g_esHypnoAbility[type].g_flCloseAreasOnly, 1);
-		g_esHypnoCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iComboAbility, g_esHypnoAbility[type].g_iComboAbility, 1);
-		g_esHypnoCache[tank].g_flHypnoBulletDivisor = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flHypnoBulletDivisor, g_esHypnoAbility[type].g_flHypnoBulletDivisor, 1);
-		g_esHypnoCache[tank].g_flHypnoChance = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flHypnoChance, g_esHypnoAbility[type].g_flHypnoChance, 1);
-		g_esHypnoCache[tank].g_iHypnoCooldown = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHypnoCooldown, g_esHypnoAbility[type].g_iHypnoCooldown, 1);
-		g_esHypnoCache[tank].g_flHypnoDuration = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flHypnoDuration, g_esHypnoAbility[type].g_flHypnoDuration, 1);
-		g_esHypnoCache[tank].g_flHypnoExplosiveDivisor = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flHypnoExplosiveDivisor, g_esHypnoAbility[type].g_flHypnoExplosiveDivisor, 1);
-		g_esHypnoCache[tank].g_flHypnoFireDivisor = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flHypnoFireDivisor, g_esHypnoAbility[type].g_flHypnoFireDivisor, 1);
-		g_esHypnoCache[tank].g_flHypnoHittableDivisor = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flHypnoHittableDivisor, g_esHypnoAbility[type].g_flHypnoHittableDivisor, 1);
-		g_esHypnoCache[tank].g_flHypnoMeleeDivisor = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flHypnoMeleeDivisor, g_esHypnoAbility[type].g_flHypnoMeleeDivisor, 1);
-		g_esHypnoCache[tank].g_flHypnoRange = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flHypnoRange, g_esHypnoAbility[type].g_flHypnoRange, 1);
-		g_esHypnoCache[tank].g_flHypnoRangeChance = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flHypnoRangeChance, g_esHypnoAbility[type].g_flHypnoRangeChance, 1);
-		g_esHypnoCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHumanAbility, g_esHypnoAbility[type].g_iHumanAbility, 1);
-		g_esHypnoCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHumanAmmo, g_esHypnoAbility[type].g_iHumanAmmo, 1);
-		g_esHypnoCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHumanCooldown, g_esHypnoAbility[type].g_iHumanCooldown, 1);
-		g_esHypnoCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHumanRangeCooldown, g_esHypnoAbility[type].g_iHumanRangeCooldown, 1);
-		g_esHypnoCache[tank].g_iHypnoAbility = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHypnoAbility, g_esHypnoAbility[type].g_iHypnoAbility, 1);
-		g_esHypnoCache[tank].g_iHypnoEffect = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHypnoEffect, g_esHypnoAbility[type].g_iHypnoEffect, 1);
-		g_esHypnoCache[tank].g_iHypnoHit = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHypnoHit, g_esHypnoAbility[type].g_iHypnoHit, 1);
-		g_esHypnoCache[tank].g_iHypnoHitMode = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHypnoHitMode, g_esHypnoAbility[type].g_iHypnoHitMode, 1);
-		g_esHypnoCache[tank].g_iHypnoMessage = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHypnoMessage, g_esHypnoAbility[type].g_iHypnoMessage, 1);
-		g_esHypnoCache[tank].g_iHypnoMode = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHypnoMode, g_esHypnoAbility[type].g_iHypnoMode, 1);
-		g_esHypnoCache[tank].g_iHypnoRangeCooldown = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHypnoRangeCooldown, g_esHypnoAbility[type].g_iHypnoRangeCooldown, 1);
-		g_esHypnoCache[tank].g_iHypnoSight = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHypnoSight, g_esHypnoAbility[type].g_iHypnoSight, 1);
-		g_esHypnoCache[tank].g_iHypnoView = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHypnoView, g_esHypnoAbility[type].g_iHypnoView, 1);
-		g_esHypnoCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flOpenAreasOnly, g_esHypnoAbility[type].g_flOpenAreasOnly, 1);
-		g_esHypnoCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iRequiresHumans, g_esHypnoAbility[type].g_iRequiresHumans, 1);
+		g_esHypnoCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flCloseAreasOnly, g_esHypnoAbility[iType].g_flCloseAreasOnly, 1);
+		g_esHypnoCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iComboAbility, g_esHypnoAbility[iType].g_iComboAbility, 1);
+		g_esHypnoCache[tank].g_flHypnoBulletDivisor = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flHypnoBulletDivisor, g_esHypnoAbility[iType].g_flHypnoBulletDivisor, 1);
+		g_esHypnoCache[tank].g_flHypnoChance = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flHypnoChance, g_esHypnoAbility[iType].g_flHypnoChance, 1);
+		g_esHypnoCache[tank].g_iHypnoCooldown = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHypnoCooldown, g_esHypnoAbility[iType].g_iHypnoCooldown, 1);
+		g_esHypnoCache[tank].g_flHypnoDuration = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flHypnoDuration, g_esHypnoAbility[iType].g_flHypnoDuration, 1);
+		g_esHypnoCache[tank].g_flHypnoExplosiveDivisor = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flHypnoExplosiveDivisor, g_esHypnoAbility[iType].g_flHypnoExplosiveDivisor, 1);
+		g_esHypnoCache[tank].g_flHypnoFireDivisor = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flHypnoFireDivisor, g_esHypnoAbility[iType].g_flHypnoFireDivisor, 1);
+		g_esHypnoCache[tank].g_flHypnoHittableDivisor = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flHypnoHittableDivisor, g_esHypnoAbility[iType].g_flHypnoHittableDivisor, 1);
+		g_esHypnoCache[tank].g_flHypnoMeleeDivisor = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flHypnoMeleeDivisor, g_esHypnoAbility[iType].g_flHypnoMeleeDivisor, 1);
+		g_esHypnoCache[tank].g_flHypnoRange = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flHypnoRange, g_esHypnoAbility[iType].g_flHypnoRange, 1);
+		g_esHypnoCache[tank].g_flHypnoRangeChance = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flHypnoRangeChance, g_esHypnoAbility[iType].g_flHypnoRangeChance, 1);
+		g_esHypnoCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHumanAbility, g_esHypnoAbility[iType].g_iHumanAbility, 1);
+		g_esHypnoCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHumanAmmo, g_esHypnoAbility[iType].g_iHumanAmmo, 1);
+		g_esHypnoCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHumanCooldown, g_esHypnoAbility[iType].g_iHumanCooldown, 1);
+		g_esHypnoCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHumanRangeCooldown, g_esHypnoAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esHypnoCache[tank].g_iHypnoAbility = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHypnoAbility, g_esHypnoAbility[iType].g_iHypnoAbility, 1);
+		g_esHypnoCache[tank].g_iHypnoEffect = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHypnoEffect, g_esHypnoAbility[iType].g_iHypnoEffect, 1);
+		g_esHypnoCache[tank].g_iHypnoHit = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHypnoHit, g_esHypnoAbility[iType].g_iHypnoHit, 1);
+		g_esHypnoCache[tank].g_iHypnoHitMode = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHypnoHitMode, g_esHypnoAbility[iType].g_iHypnoHitMode, 1);
+		g_esHypnoCache[tank].g_iHypnoMessage = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHypnoMessage, g_esHypnoAbility[iType].g_iHypnoMessage, 1);
+		g_esHypnoCache[tank].g_iHypnoMode = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHypnoMode, g_esHypnoAbility[iType].g_iHypnoMode, 1);
+		g_esHypnoCache[tank].g_iHypnoRangeCooldown = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHypnoRangeCooldown, g_esHypnoAbility[iType].g_iHypnoRangeCooldown, 1);
+		g_esHypnoCache[tank].g_iHypnoSight = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHypnoSight, g_esHypnoAbility[iType].g_iHypnoSight, 1);
+		g_esHypnoCache[tank].g_iHypnoView = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHypnoView, g_esHypnoAbility[iType].g_iHypnoView, 1);
+		g_esHypnoCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flOpenAreasOnly, g_esHypnoAbility[iType].g_flOpenAreasOnly, 1);
+		g_esHypnoCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iRequiresHumans, g_esHypnoAbility[iType].g_iRequiresHumans, 1);
 
-		vGetSettingValue(apply, bHuman, g_esHypnoCache[tank].g_sHypnoColor, sizeof esHypnoCache::g_sHypnoColor, g_esHypnoPlayer[tank].g_sHypnoColor, g_esHypnoAbility[type].g_sHypnoColor);
+		vGetSettingValue(apply, bHuman, g_esHypnoCache[tank].g_sHypnoColor, sizeof esHypnoCache::g_sHypnoColor, g_esHypnoPlayer[tank].g_sHypnoColor, g_esHypnoAbility[iType].g_sHypnoColor);
 	}
 
 	for (int iPos = 0; iPos < (sizeof esHypnoCache::g_iHypnoColor); iPos++)
 	{
 		switch (bInfected)
 		{
-			case true: g_esHypnoCache[tank].g_iHypnoColor[iPos] = iGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_iHypnoColor[iPos], g_esHypnoPlayer[tank].g_iHypnoColor[iPos], g_esHypnoSpecial[type].g_iHypnoColor[iPos], g_esHypnoAbility[type].g_iHypnoColor[iPos], 1);
-			case false: g_esHypnoCache[tank].g_iHypnoColor[iPos] = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHypnoColor[iPos], g_esHypnoAbility[type].g_iHypnoColor[iPos], 1);
+			case true: g_esHypnoCache[tank].g_iHypnoColor[iPos] = iGetSubSettingValue(apply, bHuman, g_esHypnoTeammate[tank].g_iHypnoColor[iPos], g_esHypnoPlayer[tank].g_iHypnoColor[iPos], g_esHypnoSpecial[iType].g_iHypnoColor[iPos], g_esHypnoAbility[iType].g_iHypnoColor[iPos], 1);
+			case false: g_esHypnoCache[tank].g_iHypnoColor[iPos] = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHypnoColor[iPos], g_esHypnoAbility[iType].g_iHypnoColor[iPos], 1);
 		}
 	}
 }

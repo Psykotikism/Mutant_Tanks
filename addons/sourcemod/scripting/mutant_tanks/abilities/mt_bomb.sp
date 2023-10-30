@@ -105,6 +105,7 @@ enum struct esBombPlayer
 	int g_iRequiresHumans;
 	int g_iRockCooldown;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esBombPlayer g_esBombPlayer[MAXPLAYERS + 1];
@@ -872,63 +873,65 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esBombPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esBombPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esBombPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esBombCache[tank].g_flBombChance = flGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_flBombChance, g_esBombPlayer[tank].g_flBombChance, g_esBombSpecial[type].g_flBombChance, g_esBombAbility[type].g_flBombChance, 1);
-		g_esBombCache[tank].g_flBombDeathChance = flGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_flBombDeathChance, g_esBombPlayer[tank].g_flBombDeathChance, g_esBombSpecial[type].g_flBombDeathChance, g_esBombAbility[type].g_flBombDeathChance, 1);
-		g_esBombCache[tank].g_flBombRange = flGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_flBombRange, g_esBombPlayer[tank].g_flBombRange, g_esBombSpecial[type].g_flBombRange, g_esBombAbility[type].g_flBombRange, 1);
-		g_esBombCache[tank].g_flBombRangeChance = flGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_flBombRangeChance, g_esBombPlayer[tank].g_flBombRangeChance, g_esBombSpecial[type].g_flBombRangeChance, g_esBombAbility[type].g_flBombRangeChance, 1);
-		g_esBombCache[tank].g_flBombRockChance = flGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_flBombRockChance, g_esBombPlayer[tank].g_flBombRockChance, g_esBombSpecial[type].g_flBombRockChance, g_esBombAbility[type].g_flBombRockChance, 1);
-		g_esBombCache[tank].g_iBombAbility = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iBombAbility, g_esBombPlayer[tank].g_iBombAbility, g_esBombSpecial[type].g_iBombAbility, g_esBombAbility[type].g_iBombAbility, 1);
-		g_esBombCache[tank].g_iBombCooldown = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iBombCooldown, g_esBombPlayer[tank].g_iBombCooldown, g_esBombSpecial[type].g_iBombCooldown, g_esBombAbility[type].g_iBombCooldown, 1);
-		g_esBombCache[tank].g_iBombDeath = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iBombDeath, g_esBombPlayer[tank].g_iBombDeath, g_esBombSpecial[type].g_iBombDeath, g_esBombAbility[type].g_iBombDeath, 1);
-		g_esBombCache[tank].g_iBombEffect = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iBombEffect, g_esBombPlayer[tank].g_iBombEffect, g_esBombSpecial[type].g_iBombEffect, g_esBombAbility[type].g_iBombEffect, 1);
-		g_esBombCache[tank].g_iBombHit = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iBombHit, g_esBombPlayer[tank].g_iBombHit, g_esBombSpecial[type].g_iBombHit, g_esBombAbility[type].g_iBombHit, 1);
-		g_esBombCache[tank].g_iBombHitMode = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iBombHitMode, g_esBombPlayer[tank].g_iBombHitMode, g_esBombSpecial[type].g_iBombHitMode, g_esBombAbility[type].g_iBombHitMode, 1);
-		g_esBombCache[tank].g_iBombMessage = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iBombMessage, g_esBombPlayer[tank].g_iBombMessage, g_esBombSpecial[type].g_iBombMessage, g_esBombAbility[type].g_iBombMessage, 1);
-		g_esBombCache[tank].g_iBombRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iBombRangeCooldown, g_esBombPlayer[tank].g_iBombRangeCooldown, g_esBombSpecial[type].g_iBombRangeCooldown, g_esBombAbility[type].g_iBombRangeCooldown, 1);
-		g_esBombCache[tank].g_iBombRockBreak = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iBombRockBreak, g_esBombPlayer[tank].g_iBombRockBreak, g_esBombSpecial[type].g_iBombRockBreak, g_esBombAbility[type].g_iBombRockBreak, 1);
-		g_esBombCache[tank].g_iBombRockCooldown = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iBombRockCooldown, g_esBombPlayer[tank].g_iBombRockCooldown, g_esBombSpecial[type].g_iBombRockCooldown, g_esBombAbility[type].g_iBombRockCooldown, 1);
-		g_esBombCache[tank].g_iBombSight = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iBombSight, g_esBombPlayer[tank].g_iBombSight, g_esBombSpecial[type].g_iBombSight, g_esBombAbility[type].g_iBombSight, 1);
-		g_esBombCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_flCloseAreasOnly, g_esBombPlayer[tank].g_flCloseAreasOnly, g_esBombSpecial[type].g_flCloseAreasOnly, g_esBombAbility[type].g_flCloseAreasOnly, 1);
-		g_esBombCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iComboAbility, g_esBombPlayer[tank].g_iComboAbility, g_esBombSpecial[type].g_iComboAbility, g_esBombAbility[type].g_iComboAbility, 1);
-		g_esBombCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iHumanAbility, g_esBombPlayer[tank].g_iHumanAbility, g_esBombSpecial[type].g_iHumanAbility, g_esBombAbility[type].g_iHumanAbility, 1);
-		g_esBombCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iHumanAmmo, g_esBombPlayer[tank].g_iHumanAmmo, g_esBombSpecial[type].g_iHumanAmmo, g_esBombAbility[type].g_iHumanAmmo, 1);
-		g_esBombCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iHumanCooldown, g_esBombPlayer[tank].g_iHumanCooldown, g_esBombSpecial[type].g_iHumanCooldown, g_esBombAbility[type].g_iHumanCooldown, 1);
-		g_esBombCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iHumanRangeCooldown, g_esBombPlayer[tank].g_iHumanRangeCooldown, g_esBombSpecial[type].g_iHumanRangeCooldown, g_esBombAbility[type].g_iHumanRangeCooldown, 1);
-		g_esBombCache[tank].g_iHumanRockCooldown = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iHumanRockCooldown, g_esBombPlayer[tank].g_iHumanRockCooldown, g_esBombSpecial[type].g_iHumanRockCooldown, g_esBombAbility[type].g_iHumanRockCooldown, 1);
-		g_esBombCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_flOpenAreasOnly, g_esBombPlayer[tank].g_flOpenAreasOnly, g_esBombSpecial[type].g_flOpenAreasOnly, g_esBombAbility[type].g_flOpenAreasOnly, 1);
-		g_esBombCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iRequiresHumans, g_esBombPlayer[tank].g_iRequiresHumans, g_esBombSpecial[type].g_iRequiresHumans, g_esBombAbility[type].g_iRequiresHumans, 1);
+		g_esBombCache[tank].g_flBombChance = flGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_flBombChance, g_esBombPlayer[tank].g_flBombChance, g_esBombSpecial[iType].g_flBombChance, g_esBombAbility[iType].g_flBombChance, 1);
+		g_esBombCache[tank].g_flBombDeathChance = flGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_flBombDeathChance, g_esBombPlayer[tank].g_flBombDeathChance, g_esBombSpecial[iType].g_flBombDeathChance, g_esBombAbility[iType].g_flBombDeathChance, 1);
+		g_esBombCache[tank].g_flBombRange = flGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_flBombRange, g_esBombPlayer[tank].g_flBombRange, g_esBombSpecial[iType].g_flBombRange, g_esBombAbility[iType].g_flBombRange, 1);
+		g_esBombCache[tank].g_flBombRangeChance = flGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_flBombRangeChance, g_esBombPlayer[tank].g_flBombRangeChance, g_esBombSpecial[iType].g_flBombRangeChance, g_esBombAbility[iType].g_flBombRangeChance, 1);
+		g_esBombCache[tank].g_flBombRockChance = flGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_flBombRockChance, g_esBombPlayer[tank].g_flBombRockChance, g_esBombSpecial[iType].g_flBombRockChance, g_esBombAbility[iType].g_flBombRockChance, 1);
+		g_esBombCache[tank].g_iBombAbility = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iBombAbility, g_esBombPlayer[tank].g_iBombAbility, g_esBombSpecial[iType].g_iBombAbility, g_esBombAbility[iType].g_iBombAbility, 1);
+		g_esBombCache[tank].g_iBombCooldown = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iBombCooldown, g_esBombPlayer[tank].g_iBombCooldown, g_esBombSpecial[iType].g_iBombCooldown, g_esBombAbility[iType].g_iBombCooldown, 1);
+		g_esBombCache[tank].g_iBombDeath = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iBombDeath, g_esBombPlayer[tank].g_iBombDeath, g_esBombSpecial[iType].g_iBombDeath, g_esBombAbility[iType].g_iBombDeath, 1);
+		g_esBombCache[tank].g_iBombEffect = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iBombEffect, g_esBombPlayer[tank].g_iBombEffect, g_esBombSpecial[iType].g_iBombEffect, g_esBombAbility[iType].g_iBombEffect, 1);
+		g_esBombCache[tank].g_iBombHit = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iBombHit, g_esBombPlayer[tank].g_iBombHit, g_esBombSpecial[iType].g_iBombHit, g_esBombAbility[iType].g_iBombHit, 1);
+		g_esBombCache[tank].g_iBombHitMode = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iBombHitMode, g_esBombPlayer[tank].g_iBombHitMode, g_esBombSpecial[iType].g_iBombHitMode, g_esBombAbility[iType].g_iBombHitMode, 1);
+		g_esBombCache[tank].g_iBombMessage = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iBombMessage, g_esBombPlayer[tank].g_iBombMessage, g_esBombSpecial[iType].g_iBombMessage, g_esBombAbility[iType].g_iBombMessage, 1);
+		g_esBombCache[tank].g_iBombRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iBombRangeCooldown, g_esBombPlayer[tank].g_iBombRangeCooldown, g_esBombSpecial[iType].g_iBombRangeCooldown, g_esBombAbility[iType].g_iBombRangeCooldown, 1);
+		g_esBombCache[tank].g_iBombRockBreak = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iBombRockBreak, g_esBombPlayer[tank].g_iBombRockBreak, g_esBombSpecial[iType].g_iBombRockBreak, g_esBombAbility[iType].g_iBombRockBreak, 1);
+		g_esBombCache[tank].g_iBombRockCooldown = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iBombRockCooldown, g_esBombPlayer[tank].g_iBombRockCooldown, g_esBombSpecial[iType].g_iBombRockCooldown, g_esBombAbility[iType].g_iBombRockCooldown, 1);
+		g_esBombCache[tank].g_iBombSight = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iBombSight, g_esBombPlayer[tank].g_iBombSight, g_esBombSpecial[iType].g_iBombSight, g_esBombAbility[iType].g_iBombSight, 1);
+		g_esBombCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_flCloseAreasOnly, g_esBombPlayer[tank].g_flCloseAreasOnly, g_esBombSpecial[iType].g_flCloseAreasOnly, g_esBombAbility[iType].g_flCloseAreasOnly, 1);
+		g_esBombCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iComboAbility, g_esBombPlayer[tank].g_iComboAbility, g_esBombSpecial[iType].g_iComboAbility, g_esBombAbility[iType].g_iComboAbility, 1);
+		g_esBombCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iHumanAbility, g_esBombPlayer[tank].g_iHumanAbility, g_esBombSpecial[iType].g_iHumanAbility, g_esBombAbility[iType].g_iHumanAbility, 1);
+		g_esBombCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iHumanAmmo, g_esBombPlayer[tank].g_iHumanAmmo, g_esBombSpecial[iType].g_iHumanAmmo, g_esBombAbility[iType].g_iHumanAmmo, 1);
+		g_esBombCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iHumanCooldown, g_esBombPlayer[tank].g_iHumanCooldown, g_esBombSpecial[iType].g_iHumanCooldown, g_esBombAbility[iType].g_iHumanCooldown, 1);
+		g_esBombCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iHumanRangeCooldown, g_esBombPlayer[tank].g_iHumanRangeCooldown, g_esBombSpecial[iType].g_iHumanRangeCooldown, g_esBombAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esBombCache[tank].g_iHumanRockCooldown = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iHumanRockCooldown, g_esBombPlayer[tank].g_iHumanRockCooldown, g_esBombSpecial[iType].g_iHumanRockCooldown, g_esBombAbility[iType].g_iHumanRockCooldown, 1);
+		g_esBombCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_flOpenAreasOnly, g_esBombPlayer[tank].g_flOpenAreasOnly, g_esBombSpecial[iType].g_flOpenAreasOnly, g_esBombAbility[iType].g_flOpenAreasOnly, 1);
+		g_esBombCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iRequiresHumans, g_esBombPlayer[tank].g_iRequiresHumans, g_esBombSpecial[iType].g_iRequiresHumans, g_esBombAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
 	{
-		g_esBombCache[tank].g_flBombChance = flGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_flBombChance, g_esBombAbility[type].g_flBombChance, 1);
-		g_esBombCache[tank].g_flBombDeathChance = flGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_flBombDeathChance, g_esBombAbility[type].g_flBombDeathChance, 1);
-		g_esBombCache[tank].g_flBombRange = flGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_flBombRange, g_esBombAbility[type].g_flBombRange, 1);
-		g_esBombCache[tank].g_flBombRangeChance = flGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_flBombRangeChance, g_esBombAbility[type].g_flBombRangeChance, 1);
-		g_esBombCache[tank].g_flBombRockChance = flGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_flBombRockChance, g_esBombAbility[type].g_flBombRockChance, 1);
-		g_esBombCache[tank].g_iBombAbility = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iBombAbility, g_esBombAbility[type].g_iBombAbility, 1);
-		g_esBombCache[tank].g_iBombCooldown = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iBombCooldown, g_esBombAbility[type].g_iBombCooldown, 1);
-		g_esBombCache[tank].g_iBombDeath = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iBombDeath, g_esBombAbility[type].g_iBombDeath, 1);
-		g_esBombCache[tank].g_iBombEffect = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iBombEffect, g_esBombAbility[type].g_iBombEffect, 1);
-		g_esBombCache[tank].g_iBombHit = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iBombHit, g_esBombAbility[type].g_iBombHit, 1);
-		g_esBombCache[tank].g_iBombHitMode = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iBombHitMode, g_esBombAbility[type].g_iBombHitMode, 1);
-		g_esBombCache[tank].g_iBombMessage = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iBombMessage, g_esBombAbility[type].g_iBombMessage, 1);
-		g_esBombCache[tank].g_iBombRangeCooldown = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iBombRangeCooldown, g_esBombAbility[type].g_iBombRangeCooldown, 1);
-		g_esBombCache[tank].g_iBombRockBreak = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iBombRockBreak, g_esBombAbility[type].g_iBombRockBreak, 1);
-		g_esBombCache[tank].g_iBombRockCooldown = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iBombRockCooldown, g_esBombAbility[type].g_iBombRockCooldown, 1);
-		g_esBombCache[tank].g_iBombSight = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iBombSight, g_esBombAbility[type].g_iBombSight, 1);
-		g_esBombCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_flCloseAreasOnly, g_esBombAbility[type].g_flCloseAreasOnly, 1);
-		g_esBombCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iComboAbility, g_esBombAbility[type].g_iComboAbility, 1);
-		g_esBombCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iHumanAbility, g_esBombAbility[type].g_iHumanAbility, 1);
-		g_esBombCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iHumanAmmo, g_esBombAbility[type].g_iHumanAmmo, 1);
-		g_esBombCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iHumanCooldown, g_esBombAbility[type].g_iHumanCooldown, 1);
-		g_esBombCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iHumanRangeCooldown, g_esBombAbility[type].g_iHumanRangeCooldown, 1);
-		g_esBombCache[tank].g_iHumanRockCooldown = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iHumanRockCooldown, g_esBombAbility[type].g_iHumanRockCooldown, 1);
-		g_esBombCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_flOpenAreasOnly, g_esBombAbility[type].g_flOpenAreasOnly, 1);
-		g_esBombCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iRequiresHumans, g_esBombAbility[type].g_iRequiresHumans, 1);
+		g_esBombCache[tank].g_flBombChance = flGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_flBombChance, g_esBombAbility[iType].g_flBombChance, 1);
+		g_esBombCache[tank].g_flBombDeathChance = flGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_flBombDeathChance, g_esBombAbility[iType].g_flBombDeathChance, 1);
+		g_esBombCache[tank].g_flBombRange = flGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_flBombRange, g_esBombAbility[iType].g_flBombRange, 1);
+		g_esBombCache[tank].g_flBombRangeChance = flGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_flBombRangeChance, g_esBombAbility[iType].g_flBombRangeChance, 1);
+		g_esBombCache[tank].g_flBombRockChance = flGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_flBombRockChance, g_esBombAbility[iType].g_flBombRockChance, 1);
+		g_esBombCache[tank].g_iBombAbility = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iBombAbility, g_esBombAbility[iType].g_iBombAbility, 1);
+		g_esBombCache[tank].g_iBombCooldown = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iBombCooldown, g_esBombAbility[iType].g_iBombCooldown, 1);
+		g_esBombCache[tank].g_iBombDeath = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iBombDeath, g_esBombAbility[iType].g_iBombDeath, 1);
+		g_esBombCache[tank].g_iBombEffect = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iBombEffect, g_esBombAbility[iType].g_iBombEffect, 1);
+		g_esBombCache[tank].g_iBombHit = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iBombHit, g_esBombAbility[iType].g_iBombHit, 1);
+		g_esBombCache[tank].g_iBombHitMode = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iBombHitMode, g_esBombAbility[iType].g_iBombHitMode, 1);
+		g_esBombCache[tank].g_iBombMessage = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iBombMessage, g_esBombAbility[iType].g_iBombMessage, 1);
+		g_esBombCache[tank].g_iBombRangeCooldown = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iBombRangeCooldown, g_esBombAbility[iType].g_iBombRangeCooldown, 1);
+		g_esBombCache[tank].g_iBombRockBreak = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iBombRockBreak, g_esBombAbility[iType].g_iBombRockBreak, 1);
+		g_esBombCache[tank].g_iBombRockCooldown = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iBombRockCooldown, g_esBombAbility[iType].g_iBombRockCooldown, 1);
+		g_esBombCache[tank].g_iBombSight = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iBombSight, g_esBombAbility[iType].g_iBombSight, 1);
+		g_esBombCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_flCloseAreasOnly, g_esBombAbility[iType].g_flCloseAreasOnly, 1);
+		g_esBombCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iComboAbility, g_esBombAbility[iType].g_iComboAbility, 1);
+		g_esBombCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iHumanAbility, g_esBombAbility[iType].g_iHumanAbility, 1);
+		g_esBombCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iHumanAmmo, g_esBombAbility[iType].g_iHumanAmmo, 1);
+		g_esBombCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iHumanCooldown, g_esBombAbility[iType].g_iHumanCooldown, 1);
+		g_esBombCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iHumanRangeCooldown, g_esBombAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esBombCache[tank].g_iHumanRockCooldown = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iHumanRockCooldown, g_esBombAbility[iType].g_iHumanRockCooldown, 1);
+		g_esBombCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_flOpenAreasOnly, g_esBombAbility[iType].g_flOpenAreasOnly, 1);
+		g_esBombCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iRequiresHumans, g_esBombAbility[iType].g_iRequiresHumans, 1);
 	}
 }
 

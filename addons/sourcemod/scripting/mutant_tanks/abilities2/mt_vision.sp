@@ -82,6 +82,7 @@ enum struct esVisionPlayer
 	int g_iRangeCooldown;
 	int g_iRequiresHumans;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 	int g_iVisionAbility;
 	int g_iVisionCooldown;
 	int g_iVisionDuration;
@@ -794,55 +795,57 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esVisionPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esVisionPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esVisionPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esVisionCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_flCloseAreasOnly, g_esVisionPlayer[tank].g_flCloseAreasOnly, g_esVisionSpecial[type].g_flCloseAreasOnly, g_esVisionAbility[type].g_flCloseAreasOnly, 1);
-		g_esVisionCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iComboAbility, g_esVisionPlayer[tank].g_iComboAbility, g_esVisionSpecial[type].g_iComboAbility, g_esVisionAbility[type].g_iComboAbility, 1);
-		g_esVisionCache[tank].g_flVisionChance = flGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_flVisionChance, g_esVisionPlayer[tank].g_flVisionChance, g_esVisionSpecial[type].g_flVisionChance, g_esVisionAbility[type].g_flVisionChance, 1);
-		g_esVisionCache[tank].g_flVisionRange = flGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_flVisionRange, g_esVisionPlayer[tank].g_flVisionRange, g_esVisionSpecial[type].g_flVisionRange, g_esVisionAbility[type].g_flVisionRange, 1);
-		g_esVisionCache[tank].g_flVisionRangeChance = flGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_flVisionRangeChance, g_esVisionPlayer[tank].g_flVisionRangeChance, g_esVisionSpecial[type].g_flVisionRangeChance, g_esVisionAbility[type].g_flVisionRangeChance, 1);
-		g_esVisionCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iHumanAbility, g_esVisionPlayer[tank].g_iHumanAbility, g_esVisionSpecial[type].g_iHumanAbility, g_esVisionAbility[type].g_iHumanAbility, 1);
-		g_esVisionCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iHumanAmmo, g_esVisionPlayer[tank].g_iHumanAmmo, g_esVisionSpecial[type].g_iHumanAmmo, g_esVisionAbility[type].g_iHumanAmmo, 1);
-		g_esVisionCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iHumanCooldown, g_esVisionPlayer[tank].g_iHumanCooldown, g_esVisionSpecial[type].g_iHumanCooldown, g_esVisionAbility[type].g_iHumanCooldown, 1);
-		g_esVisionCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iHumanRangeCooldown, g_esVisionPlayer[tank].g_iHumanRangeCooldown, g_esVisionSpecial[type].g_iHumanRangeCooldown, g_esVisionAbility[type].g_iHumanRangeCooldown, 1);
-		g_esVisionCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_flOpenAreasOnly, g_esVisionPlayer[tank].g_flOpenAreasOnly, g_esVisionSpecial[type].g_flOpenAreasOnly, g_esVisionAbility[type].g_flOpenAreasOnly, 1);
-		g_esVisionCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iRequiresHumans, g_esVisionPlayer[tank].g_iRequiresHumans, g_esVisionSpecial[type].g_iRequiresHumans, g_esVisionAbility[type].g_iRequiresHumans, 1);
-		g_esVisionCache[tank].g_iVisionAbility = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iVisionAbility, g_esVisionPlayer[tank].g_iVisionAbility, g_esVisionSpecial[type].g_iVisionAbility, g_esVisionAbility[type].g_iVisionAbility, 1);
-		g_esVisionCache[tank].g_iVisionDuration = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iVisionDuration, g_esVisionPlayer[tank].g_iVisionDuration, g_esVisionSpecial[type].g_iVisionDuration, g_esVisionAbility[type].g_iVisionDuration, 1);
-		g_esVisionCache[tank].g_iVisionCooldown = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iVisionCooldown, g_esVisionPlayer[tank].g_iVisionCooldown, g_esVisionSpecial[type].g_iVisionCooldown, g_esVisionAbility[type].g_iVisionCooldown, 1);
-		g_esVisionCache[tank].g_iVisionEffect = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iVisionEffect, g_esVisionPlayer[tank].g_iVisionEffect, g_esVisionSpecial[type].g_iVisionEffect, g_esVisionAbility[type].g_iVisionEffect, 1);
-		g_esVisionCache[tank].g_iVisionFOV = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iVisionFOV, g_esVisionPlayer[tank].g_iVisionFOV, g_esVisionSpecial[type].g_iVisionFOV, g_esVisionAbility[type].g_iVisionFOV, 1);
-		g_esVisionCache[tank].g_iVisionHit = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iVisionHit, g_esVisionPlayer[tank].g_iVisionHit, g_esVisionSpecial[type].g_iVisionHit, g_esVisionAbility[type].g_iVisionHit, 1);
-		g_esVisionCache[tank].g_iVisionHitMode = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iVisionHitMode, g_esVisionPlayer[tank].g_iVisionHitMode, g_esVisionSpecial[type].g_iVisionHitMode, g_esVisionAbility[type].g_iVisionHitMode, 1);
-		g_esVisionCache[tank].g_iVisionMessage = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iVisionMessage, g_esVisionPlayer[tank].g_iVisionMessage, g_esVisionSpecial[type].g_iVisionMessage, g_esVisionAbility[type].g_iVisionMessage, 1);
-		g_esVisionCache[tank].g_iVisionRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iVisionRangeCooldown, g_esVisionPlayer[tank].g_iVisionRangeCooldown, g_esVisionSpecial[type].g_iVisionRangeCooldown, g_esVisionAbility[type].g_iVisionRangeCooldown, 1);
-		g_esVisionCache[tank].g_iVisionSight = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iVisionSight, g_esVisionPlayer[tank].g_iVisionSight, g_esVisionSpecial[type].g_iVisionSight, g_esVisionAbility[type].g_iVisionSight, 1);
+		g_esVisionCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_flCloseAreasOnly, g_esVisionPlayer[tank].g_flCloseAreasOnly, g_esVisionSpecial[iType].g_flCloseAreasOnly, g_esVisionAbility[iType].g_flCloseAreasOnly, 1);
+		g_esVisionCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iComboAbility, g_esVisionPlayer[tank].g_iComboAbility, g_esVisionSpecial[iType].g_iComboAbility, g_esVisionAbility[iType].g_iComboAbility, 1);
+		g_esVisionCache[tank].g_flVisionChance = flGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_flVisionChance, g_esVisionPlayer[tank].g_flVisionChance, g_esVisionSpecial[iType].g_flVisionChance, g_esVisionAbility[iType].g_flVisionChance, 1);
+		g_esVisionCache[tank].g_flVisionRange = flGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_flVisionRange, g_esVisionPlayer[tank].g_flVisionRange, g_esVisionSpecial[iType].g_flVisionRange, g_esVisionAbility[iType].g_flVisionRange, 1);
+		g_esVisionCache[tank].g_flVisionRangeChance = flGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_flVisionRangeChance, g_esVisionPlayer[tank].g_flVisionRangeChance, g_esVisionSpecial[iType].g_flVisionRangeChance, g_esVisionAbility[iType].g_flVisionRangeChance, 1);
+		g_esVisionCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iHumanAbility, g_esVisionPlayer[tank].g_iHumanAbility, g_esVisionSpecial[iType].g_iHumanAbility, g_esVisionAbility[iType].g_iHumanAbility, 1);
+		g_esVisionCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iHumanAmmo, g_esVisionPlayer[tank].g_iHumanAmmo, g_esVisionSpecial[iType].g_iHumanAmmo, g_esVisionAbility[iType].g_iHumanAmmo, 1);
+		g_esVisionCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iHumanCooldown, g_esVisionPlayer[tank].g_iHumanCooldown, g_esVisionSpecial[iType].g_iHumanCooldown, g_esVisionAbility[iType].g_iHumanCooldown, 1);
+		g_esVisionCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iHumanRangeCooldown, g_esVisionPlayer[tank].g_iHumanRangeCooldown, g_esVisionSpecial[iType].g_iHumanRangeCooldown, g_esVisionAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esVisionCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_flOpenAreasOnly, g_esVisionPlayer[tank].g_flOpenAreasOnly, g_esVisionSpecial[iType].g_flOpenAreasOnly, g_esVisionAbility[iType].g_flOpenAreasOnly, 1);
+		g_esVisionCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iRequiresHumans, g_esVisionPlayer[tank].g_iRequiresHumans, g_esVisionSpecial[iType].g_iRequiresHumans, g_esVisionAbility[iType].g_iRequiresHumans, 1);
+		g_esVisionCache[tank].g_iVisionAbility = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iVisionAbility, g_esVisionPlayer[tank].g_iVisionAbility, g_esVisionSpecial[iType].g_iVisionAbility, g_esVisionAbility[iType].g_iVisionAbility, 1);
+		g_esVisionCache[tank].g_iVisionDuration = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iVisionDuration, g_esVisionPlayer[tank].g_iVisionDuration, g_esVisionSpecial[iType].g_iVisionDuration, g_esVisionAbility[iType].g_iVisionDuration, 1);
+		g_esVisionCache[tank].g_iVisionCooldown = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iVisionCooldown, g_esVisionPlayer[tank].g_iVisionCooldown, g_esVisionSpecial[iType].g_iVisionCooldown, g_esVisionAbility[iType].g_iVisionCooldown, 1);
+		g_esVisionCache[tank].g_iVisionEffect = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iVisionEffect, g_esVisionPlayer[tank].g_iVisionEffect, g_esVisionSpecial[iType].g_iVisionEffect, g_esVisionAbility[iType].g_iVisionEffect, 1);
+		g_esVisionCache[tank].g_iVisionFOV = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iVisionFOV, g_esVisionPlayer[tank].g_iVisionFOV, g_esVisionSpecial[iType].g_iVisionFOV, g_esVisionAbility[iType].g_iVisionFOV, 1);
+		g_esVisionCache[tank].g_iVisionHit = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iVisionHit, g_esVisionPlayer[tank].g_iVisionHit, g_esVisionSpecial[iType].g_iVisionHit, g_esVisionAbility[iType].g_iVisionHit, 1);
+		g_esVisionCache[tank].g_iVisionHitMode = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iVisionHitMode, g_esVisionPlayer[tank].g_iVisionHitMode, g_esVisionSpecial[iType].g_iVisionHitMode, g_esVisionAbility[iType].g_iVisionHitMode, 1);
+		g_esVisionCache[tank].g_iVisionMessage = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iVisionMessage, g_esVisionPlayer[tank].g_iVisionMessage, g_esVisionSpecial[iType].g_iVisionMessage, g_esVisionAbility[iType].g_iVisionMessage, 1);
+		g_esVisionCache[tank].g_iVisionRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iVisionRangeCooldown, g_esVisionPlayer[tank].g_iVisionRangeCooldown, g_esVisionSpecial[iType].g_iVisionRangeCooldown, g_esVisionAbility[iType].g_iVisionRangeCooldown, 1);
+		g_esVisionCache[tank].g_iVisionSight = iGetSubSettingValue(apply, bHuman, g_esVisionTeammate[tank].g_iVisionSight, g_esVisionPlayer[tank].g_iVisionSight, g_esVisionSpecial[iType].g_iVisionSight, g_esVisionAbility[iType].g_iVisionSight, 1);
 	}
 	else
 	{
-		g_esVisionCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_flCloseAreasOnly, g_esVisionAbility[type].g_flCloseAreasOnly, 1);
-		g_esVisionCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iComboAbility, g_esVisionAbility[type].g_iComboAbility, 1);
-		g_esVisionCache[tank].g_flVisionChance = flGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_flVisionChance, g_esVisionAbility[type].g_flVisionChance, 1);
-		g_esVisionCache[tank].g_flVisionRange = flGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_flVisionRange, g_esVisionAbility[type].g_flVisionRange, 1);
-		g_esVisionCache[tank].g_flVisionRangeChance = flGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_flVisionRangeChance, g_esVisionAbility[type].g_flVisionRangeChance, 1);
-		g_esVisionCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iHumanAbility, g_esVisionAbility[type].g_iHumanAbility, 1);
-		g_esVisionCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iHumanAmmo, g_esVisionAbility[type].g_iHumanAmmo, 1);
-		g_esVisionCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iHumanCooldown, g_esVisionAbility[type].g_iHumanCooldown, 1);
-		g_esVisionCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iHumanRangeCooldown, g_esVisionAbility[type].g_iHumanRangeCooldown, 1);
-		g_esVisionCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_flOpenAreasOnly, g_esVisionAbility[type].g_flOpenAreasOnly, 1);
-		g_esVisionCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iRequiresHumans, g_esVisionAbility[type].g_iRequiresHumans, 1);
-		g_esVisionCache[tank].g_iVisionAbility = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iVisionAbility, g_esVisionAbility[type].g_iVisionAbility, 1);
-		g_esVisionCache[tank].g_iVisionDuration = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iVisionDuration, g_esVisionAbility[type].g_iVisionDuration, 1);
-		g_esVisionCache[tank].g_iVisionCooldown = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iVisionCooldown, g_esVisionAbility[type].g_iVisionCooldown, 1);
-		g_esVisionCache[tank].g_iVisionEffect = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iVisionEffect, g_esVisionAbility[type].g_iVisionEffect, 1);
-		g_esVisionCache[tank].g_iVisionFOV = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iVisionFOV, g_esVisionAbility[type].g_iVisionFOV, 1);
-		g_esVisionCache[tank].g_iVisionHit = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iVisionHit, g_esVisionAbility[type].g_iVisionHit, 1);
-		g_esVisionCache[tank].g_iVisionHitMode = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iVisionHitMode, g_esVisionAbility[type].g_iVisionHitMode, 1);
-		g_esVisionCache[tank].g_iVisionMessage = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iVisionMessage, g_esVisionAbility[type].g_iVisionMessage, 1);
-		g_esVisionCache[tank].g_iVisionRangeCooldown = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iVisionRangeCooldown, g_esVisionAbility[type].g_iVisionRangeCooldown, 1);
-		g_esVisionCache[tank].g_iVisionSight = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iVisionSight, g_esVisionAbility[type].g_iVisionSight, 1);
+		g_esVisionCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_flCloseAreasOnly, g_esVisionAbility[iType].g_flCloseAreasOnly, 1);
+		g_esVisionCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iComboAbility, g_esVisionAbility[iType].g_iComboAbility, 1);
+		g_esVisionCache[tank].g_flVisionChance = flGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_flVisionChance, g_esVisionAbility[iType].g_flVisionChance, 1);
+		g_esVisionCache[tank].g_flVisionRange = flGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_flVisionRange, g_esVisionAbility[iType].g_flVisionRange, 1);
+		g_esVisionCache[tank].g_flVisionRangeChance = flGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_flVisionRangeChance, g_esVisionAbility[iType].g_flVisionRangeChance, 1);
+		g_esVisionCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iHumanAbility, g_esVisionAbility[iType].g_iHumanAbility, 1);
+		g_esVisionCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iHumanAmmo, g_esVisionAbility[iType].g_iHumanAmmo, 1);
+		g_esVisionCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iHumanCooldown, g_esVisionAbility[iType].g_iHumanCooldown, 1);
+		g_esVisionCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iHumanRangeCooldown, g_esVisionAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esVisionCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_flOpenAreasOnly, g_esVisionAbility[iType].g_flOpenAreasOnly, 1);
+		g_esVisionCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iRequiresHumans, g_esVisionAbility[iType].g_iRequiresHumans, 1);
+		g_esVisionCache[tank].g_iVisionAbility = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iVisionAbility, g_esVisionAbility[iType].g_iVisionAbility, 1);
+		g_esVisionCache[tank].g_iVisionDuration = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iVisionDuration, g_esVisionAbility[iType].g_iVisionDuration, 1);
+		g_esVisionCache[tank].g_iVisionCooldown = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iVisionCooldown, g_esVisionAbility[iType].g_iVisionCooldown, 1);
+		g_esVisionCache[tank].g_iVisionEffect = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iVisionEffect, g_esVisionAbility[iType].g_iVisionEffect, 1);
+		g_esVisionCache[tank].g_iVisionFOV = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iVisionFOV, g_esVisionAbility[iType].g_iVisionFOV, 1);
+		g_esVisionCache[tank].g_iVisionHit = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iVisionHit, g_esVisionAbility[iType].g_iVisionHit, 1);
+		g_esVisionCache[tank].g_iVisionHitMode = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iVisionHitMode, g_esVisionAbility[iType].g_iVisionHitMode, 1);
+		g_esVisionCache[tank].g_iVisionMessage = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iVisionMessage, g_esVisionAbility[iType].g_iVisionMessage, 1);
+		g_esVisionCache[tank].g_iVisionRangeCooldown = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iVisionRangeCooldown, g_esVisionAbility[iType].g_iVisionRangeCooldown, 1);
+		g_esVisionCache[tank].g_iVisionSight = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iVisionSight, g_esVisionAbility[iType].g_iVisionSight, 1);
 	}
 }
 

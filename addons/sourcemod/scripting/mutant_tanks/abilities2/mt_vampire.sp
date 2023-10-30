@@ -69,6 +69,7 @@ enum struct esVampirePlayer
 	int g_iImmunityFlags;
 	int g_iRequiresHumans;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 	int g_iVampireAbility;
 	int g_iVampireEffect;
 	int g_iVampireHealth;
@@ -522,33 +523,35 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esVampirePlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esVampirePlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esVampirePlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esVampireCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esVampireTeammate[tank].g_flCloseAreasOnly, g_esVampirePlayer[tank].g_flCloseAreasOnly, g_esVampireSpecial[type].g_flCloseAreasOnly, g_esVampireAbility[type].g_flCloseAreasOnly, 1);
-		g_esVampireCache[tank].g_flVampireChance = flGetSubSettingValue(apply, bHuman, g_esVampireTeammate[tank].g_flVampireChance, g_esVampirePlayer[tank].g_flVampireChance, g_esVampireSpecial[type].g_flVampireChance, g_esVampireAbility[type].g_flVampireChance, 1);
-		g_esVampireCache[tank].g_flVampireHealthMultiplier = flGetSubSettingValue(apply, bHuman, g_esVampireTeammate[tank].g_flVampireHealthMultiplier, g_esVampirePlayer[tank].g_flVampireHealthMultiplier, g_esVampireSpecial[type].g_flVampireHealthMultiplier, g_esVampireAbility[type].g_flVampireHealthMultiplier, 1);
-		g_esVampireCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esVampireTeammate[tank].g_iHumanAbility, g_esVampirePlayer[tank].g_iHumanAbility, g_esVampireSpecial[type].g_iHumanAbility, g_esVampireAbility[type].g_iHumanAbility, 1);
-		g_esVampireCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esVampireTeammate[tank].g_flOpenAreasOnly, g_esVampirePlayer[tank].g_flOpenAreasOnly, g_esVampireSpecial[type].g_flOpenAreasOnly, g_esVampireAbility[type].g_flOpenAreasOnly, 1);
-		g_esVampireCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esVampireTeammate[tank].g_iRequiresHumans, g_esVampirePlayer[tank].g_iRequiresHumans, g_esVampireSpecial[type].g_iRequiresHumans, g_esVampireAbility[type].g_iRequiresHumans, 1);
-		g_esVampireCache[tank].g_iVampireAbility = iGetSubSettingValue(apply, bHuman, g_esVampireTeammate[tank].g_iVampireAbility, g_esVampirePlayer[tank].g_iVampireAbility, g_esVampireSpecial[type].g_iVampireAbility, g_esVampireAbility[type].g_iVampireAbility, 1);
-		g_esVampireCache[tank].g_iVampireEffect = iGetSubSettingValue(apply, bHuman, g_esVampireTeammate[tank].g_iVampireEffect, g_esVampirePlayer[tank].g_iVampireEffect, g_esVampireSpecial[type].g_iVampireEffect, g_esVampireAbility[type].g_iVampireEffect, 1);
-		g_esVampireCache[tank].g_iVampireHealth = iGetSubSettingValue(apply, bHuman, g_esVampireTeammate[tank].g_iVampireHealth, g_esVampirePlayer[tank].g_iVampireHealth, g_esVampireSpecial[type].g_iVampireHealth, g_esVampireAbility[type].g_iVampireHealth, 1);
-		g_esVampireCache[tank].g_iVampireMessage = iGetSubSettingValue(apply, bHuman, g_esVampireTeammate[tank].g_iVampireMessage, g_esVampirePlayer[tank].g_iVampireMessage, g_esVampireSpecial[type].g_iVampireMessage, g_esVampireAbility[type].g_iVampireMessage, 1);
+		g_esVampireCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esVampireTeammate[tank].g_flCloseAreasOnly, g_esVampirePlayer[tank].g_flCloseAreasOnly, g_esVampireSpecial[iType].g_flCloseAreasOnly, g_esVampireAbility[iType].g_flCloseAreasOnly, 1);
+		g_esVampireCache[tank].g_flVampireChance = flGetSubSettingValue(apply, bHuman, g_esVampireTeammate[tank].g_flVampireChance, g_esVampirePlayer[tank].g_flVampireChance, g_esVampireSpecial[iType].g_flVampireChance, g_esVampireAbility[iType].g_flVampireChance, 1);
+		g_esVampireCache[tank].g_flVampireHealthMultiplier = flGetSubSettingValue(apply, bHuman, g_esVampireTeammate[tank].g_flVampireHealthMultiplier, g_esVampirePlayer[tank].g_flVampireHealthMultiplier, g_esVampireSpecial[iType].g_flVampireHealthMultiplier, g_esVampireAbility[iType].g_flVampireHealthMultiplier, 1);
+		g_esVampireCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esVampireTeammate[tank].g_iHumanAbility, g_esVampirePlayer[tank].g_iHumanAbility, g_esVampireSpecial[iType].g_iHumanAbility, g_esVampireAbility[iType].g_iHumanAbility, 1);
+		g_esVampireCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esVampireTeammate[tank].g_flOpenAreasOnly, g_esVampirePlayer[tank].g_flOpenAreasOnly, g_esVampireSpecial[iType].g_flOpenAreasOnly, g_esVampireAbility[iType].g_flOpenAreasOnly, 1);
+		g_esVampireCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esVampireTeammate[tank].g_iRequiresHumans, g_esVampirePlayer[tank].g_iRequiresHumans, g_esVampireSpecial[iType].g_iRequiresHumans, g_esVampireAbility[iType].g_iRequiresHumans, 1);
+		g_esVampireCache[tank].g_iVampireAbility = iGetSubSettingValue(apply, bHuman, g_esVampireTeammate[tank].g_iVampireAbility, g_esVampirePlayer[tank].g_iVampireAbility, g_esVampireSpecial[iType].g_iVampireAbility, g_esVampireAbility[iType].g_iVampireAbility, 1);
+		g_esVampireCache[tank].g_iVampireEffect = iGetSubSettingValue(apply, bHuman, g_esVampireTeammate[tank].g_iVampireEffect, g_esVampirePlayer[tank].g_iVampireEffect, g_esVampireSpecial[iType].g_iVampireEffect, g_esVampireAbility[iType].g_iVampireEffect, 1);
+		g_esVampireCache[tank].g_iVampireHealth = iGetSubSettingValue(apply, bHuman, g_esVampireTeammate[tank].g_iVampireHealth, g_esVampirePlayer[tank].g_iVampireHealth, g_esVampireSpecial[iType].g_iVampireHealth, g_esVampireAbility[iType].g_iVampireHealth, 1);
+		g_esVampireCache[tank].g_iVampireMessage = iGetSubSettingValue(apply, bHuman, g_esVampireTeammate[tank].g_iVampireMessage, g_esVampirePlayer[tank].g_iVampireMessage, g_esVampireSpecial[iType].g_iVampireMessage, g_esVampireAbility[iType].g_iVampireMessage, 1);
 	}
 	else
 	{
-		g_esVampireCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_flCloseAreasOnly, g_esVampireAbility[type].g_flCloseAreasOnly, 1);
-		g_esVampireCache[tank].g_flVampireChance = flGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_flVampireChance, g_esVampireAbility[type].g_flVampireChance, 1);
-		g_esVampireCache[tank].g_flVampireHealthMultiplier = flGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_flVampireHealthMultiplier, g_esVampireAbility[type].g_flVampireHealthMultiplier, 1);
-		g_esVampireCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_iHumanAbility, g_esVampireAbility[type].g_iHumanAbility, 1);
-		g_esVampireCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_flOpenAreasOnly, g_esVampireAbility[type].g_flOpenAreasOnly, 1);
-		g_esVampireCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_iRequiresHumans, g_esVampireAbility[type].g_iRequiresHumans, 1);
-		g_esVampireCache[tank].g_iVampireAbility = iGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_iVampireAbility, g_esVampireAbility[type].g_iVampireAbility, 1);
-		g_esVampireCache[tank].g_iVampireEffect = iGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_iVampireEffect, g_esVampireAbility[type].g_iVampireEffect, 1);
-		g_esVampireCache[tank].g_iVampireHealth = iGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_iVampireHealth, g_esVampireAbility[type].g_iVampireHealth, 1);
-		g_esVampireCache[tank].g_iVampireMessage = iGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_iVampireMessage, g_esVampireAbility[type].g_iVampireMessage, 1);
+		g_esVampireCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_flCloseAreasOnly, g_esVampireAbility[iType].g_flCloseAreasOnly, 1);
+		g_esVampireCache[tank].g_flVampireChance = flGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_flVampireChance, g_esVampireAbility[iType].g_flVampireChance, 1);
+		g_esVampireCache[tank].g_flVampireHealthMultiplier = flGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_flVampireHealthMultiplier, g_esVampireAbility[iType].g_flVampireHealthMultiplier, 1);
+		g_esVampireCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_iHumanAbility, g_esVampireAbility[iType].g_iHumanAbility, 1);
+		g_esVampireCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_flOpenAreasOnly, g_esVampireAbility[iType].g_flOpenAreasOnly, 1);
+		g_esVampireCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_iRequiresHumans, g_esVampireAbility[iType].g_iRequiresHumans, 1);
+		g_esVampireCache[tank].g_iVampireAbility = iGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_iVampireAbility, g_esVampireAbility[iType].g_iVampireAbility, 1);
+		g_esVampireCache[tank].g_iVampireEffect = iGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_iVampireEffect, g_esVampireAbility[iType].g_iVampireEffect, 1);
+		g_esVampireCache[tank].g_iVampireHealth = iGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_iVampireHealth, g_esVampireAbility[iType].g_iVampireHealth, 1);
+		g_esVampireCache[tank].g_iVampireMessage = iGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_iVampireMessage, g_esVampireAbility[iType].g_iVampireMessage, 1);
 	}
 }
 

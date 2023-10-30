@@ -103,6 +103,7 @@ enum struct esLightningPlayer
 	int g_iLightningSight;
 	int g_iRequiresHumans;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esLightningPlayer g_esLightningPlayer[MAXPLAYERS + 1];
@@ -432,12 +433,12 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 {
 	if (!g_bSecondGame || (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esLightningCache[tank].g_iHumanAbility != 2))
 	{
-		g_esLightningAbility[g_esLightningPlayer[tank].g_iTankType].g_iComboPosition = -1;
+		g_esLightningAbility[g_esLightningPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 		return;
 	}
 
-	g_esLightningAbility[g_esLightningPlayer[tank].g_iTankType].g_iComboPosition = -1;
+	g_esLightningAbility[g_esLightningPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 	char sCombo[320], sSet[4][32];
 	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
@@ -458,7 +459,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 			{
 				if (StrEqual(sSubset[iPos], MT_LIGHTNING_SECTION, false) || StrEqual(sSubset[iPos], MT_LIGHTNING_SECTION2, false) || StrEqual(sSubset[iPos], MT_LIGHTNING_SECTION3, false) || StrEqual(sSubset[iPos], MT_LIGHTNING_SECTION4, false))
 				{
-					g_esLightningAbility[g_esLightningPlayer[tank].g_iTankType].g_iComboPosition = iPos;
+					g_esLightningAbility[g_esLightningPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = iPos;
 
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
@@ -688,47 +689,49 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esLightningPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esLightningPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esLightningPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esLightningCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_flCloseAreasOnly, g_esLightningPlayer[tank].g_flCloseAreasOnly, g_esLightningSpecial[type].g_flCloseAreasOnly, g_esLightningAbility[type].g_flCloseAreasOnly, 1);
-		g_esLightningCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_iComboAbility, g_esLightningPlayer[tank].g_iComboAbility, g_esLightningSpecial[type].g_iComboAbility, g_esLightningAbility[type].g_iComboAbility, 1);
-		g_esLightningCache[tank].g_flLightningChance = flGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_flLightningChance, g_esLightningPlayer[tank].g_flLightningChance, g_esLightningSpecial[type].g_flLightningChance, g_esLightningAbility[type].g_flLightningChance, 1);
-		g_esLightningCache[tank].g_flLightningDamage = flGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_flLightningDamage, g_esLightningPlayer[tank].g_flLightningDamage, g_esLightningSpecial[type].g_flLightningDamage, g_esLightningAbility[type].g_flLightningDamage, 1);
-		g_esLightningCache[tank].g_flLightningInterval = flGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_flLightningInterval, g_esLightningPlayer[tank].g_flLightningInterval, g_esLightningSpecial[type].g_flLightningInterval, g_esLightningAbility[type].g_flLightningInterval, 1);
-		g_esLightningCache[tank].g_iLightningAbility = iGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_iLightningAbility, g_esLightningPlayer[tank].g_iLightningAbility, g_esLightningSpecial[type].g_iLightningAbility, g_esLightningAbility[type].g_iLightningAbility, 1);
-		g_esLightningCache[tank].g_iLightningCooldown = iGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_iLightningCooldown, g_esLightningPlayer[tank].g_iLightningCooldown, g_esLightningSpecial[type].g_iLightningCooldown, g_esLightningAbility[type].g_iLightningCooldown, 1);
-		g_esLightningCache[tank].g_iLightningDuration = iGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_iLightningDuration, g_esLightningPlayer[tank].g_iLightningDuration, g_esLightningSpecial[type].g_iLightningDuration, g_esLightningAbility[type].g_iLightningDuration, 1);
-		g_esLightningCache[tank].g_iLightningMessage = iGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_iLightningMessage, g_esLightningPlayer[tank].g_iLightningMessage, g_esLightningSpecial[type].g_iLightningMessage, g_esLightningAbility[type].g_iLightningMessage, 1);
-		g_esLightningCache[tank].g_iLightningSight = iGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_iLightningSight, g_esLightningPlayer[tank].g_iLightningSight, g_esLightningSpecial[type].g_iLightningSight, g_esLightningAbility[type].g_iLightningSight, 1);
-		g_esLightningCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_iHumanAbility, g_esLightningPlayer[tank].g_iHumanAbility, g_esLightningSpecial[type].g_iHumanAbility, g_esLightningAbility[type].g_iHumanAbility, 1);
-		g_esLightningCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_iHumanAmmo, g_esLightningPlayer[tank].g_iHumanAmmo, g_esLightningSpecial[type].g_iHumanAmmo, g_esLightningAbility[type].g_iHumanAmmo, 1);
-		g_esLightningCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_iHumanCooldown, g_esLightningPlayer[tank].g_iHumanCooldown, g_esLightningSpecial[type].g_iHumanCooldown, g_esLightningAbility[type].g_iHumanCooldown, 1);
-		g_esLightningCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_iHumanDuration, g_esLightningPlayer[tank].g_iHumanDuration, g_esLightningSpecial[type].g_iHumanDuration, g_esLightningAbility[type].g_iHumanDuration, 1);
-		g_esLightningCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_iHumanMode, g_esLightningPlayer[tank].g_iHumanMode, g_esLightningSpecial[type].g_iHumanMode, g_esLightningAbility[type].g_iHumanMode, 1);
-		g_esLightningCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_flOpenAreasOnly, g_esLightningPlayer[tank].g_flOpenAreasOnly, g_esLightningSpecial[type].g_flOpenAreasOnly, g_esLightningAbility[type].g_flOpenAreasOnly, 1);
-		g_esLightningCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_iRequiresHumans, g_esLightningPlayer[tank].g_iRequiresHumans, g_esLightningSpecial[type].g_iRequiresHumans, g_esLightningAbility[type].g_iRequiresHumans, 1);
+		g_esLightningCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_flCloseAreasOnly, g_esLightningPlayer[tank].g_flCloseAreasOnly, g_esLightningSpecial[iType].g_flCloseAreasOnly, g_esLightningAbility[iType].g_flCloseAreasOnly, 1);
+		g_esLightningCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_iComboAbility, g_esLightningPlayer[tank].g_iComboAbility, g_esLightningSpecial[iType].g_iComboAbility, g_esLightningAbility[iType].g_iComboAbility, 1);
+		g_esLightningCache[tank].g_flLightningChance = flGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_flLightningChance, g_esLightningPlayer[tank].g_flLightningChance, g_esLightningSpecial[iType].g_flLightningChance, g_esLightningAbility[iType].g_flLightningChance, 1);
+		g_esLightningCache[tank].g_flLightningDamage = flGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_flLightningDamage, g_esLightningPlayer[tank].g_flLightningDamage, g_esLightningSpecial[iType].g_flLightningDamage, g_esLightningAbility[iType].g_flLightningDamage, 1);
+		g_esLightningCache[tank].g_flLightningInterval = flGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_flLightningInterval, g_esLightningPlayer[tank].g_flLightningInterval, g_esLightningSpecial[iType].g_flLightningInterval, g_esLightningAbility[iType].g_flLightningInterval, 1);
+		g_esLightningCache[tank].g_iLightningAbility = iGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_iLightningAbility, g_esLightningPlayer[tank].g_iLightningAbility, g_esLightningSpecial[iType].g_iLightningAbility, g_esLightningAbility[iType].g_iLightningAbility, 1);
+		g_esLightningCache[tank].g_iLightningCooldown = iGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_iLightningCooldown, g_esLightningPlayer[tank].g_iLightningCooldown, g_esLightningSpecial[iType].g_iLightningCooldown, g_esLightningAbility[iType].g_iLightningCooldown, 1);
+		g_esLightningCache[tank].g_iLightningDuration = iGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_iLightningDuration, g_esLightningPlayer[tank].g_iLightningDuration, g_esLightningSpecial[iType].g_iLightningDuration, g_esLightningAbility[iType].g_iLightningDuration, 1);
+		g_esLightningCache[tank].g_iLightningMessage = iGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_iLightningMessage, g_esLightningPlayer[tank].g_iLightningMessage, g_esLightningSpecial[iType].g_iLightningMessage, g_esLightningAbility[iType].g_iLightningMessage, 1);
+		g_esLightningCache[tank].g_iLightningSight = iGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_iLightningSight, g_esLightningPlayer[tank].g_iLightningSight, g_esLightningSpecial[iType].g_iLightningSight, g_esLightningAbility[iType].g_iLightningSight, 1);
+		g_esLightningCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_iHumanAbility, g_esLightningPlayer[tank].g_iHumanAbility, g_esLightningSpecial[iType].g_iHumanAbility, g_esLightningAbility[iType].g_iHumanAbility, 1);
+		g_esLightningCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_iHumanAmmo, g_esLightningPlayer[tank].g_iHumanAmmo, g_esLightningSpecial[iType].g_iHumanAmmo, g_esLightningAbility[iType].g_iHumanAmmo, 1);
+		g_esLightningCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_iHumanCooldown, g_esLightningPlayer[tank].g_iHumanCooldown, g_esLightningSpecial[iType].g_iHumanCooldown, g_esLightningAbility[iType].g_iHumanCooldown, 1);
+		g_esLightningCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_iHumanDuration, g_esLightningPlayer[tank].g_iHumanDuration, g_esLightningSpecial[iType].g_iHumanDuration, g_esLightningAbility[iType].g_iHumanDuration, 1);
+		g_esLightningCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_iHumanMode, g_esLightningPlayer[tank].g_iHumanMode, g_esLightningSpecial[iType].g_iHumanMode, g_esLightningAbility[iType].g_iHumanMode, 1);
+		g_esLightningCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_flOpenAreasOnly, g_esLightningPlayer[tank].g_flOpenAreasOnly, g_esLightningSpecial[iType].g_flOpenAreasOnly, g_esLightningAbility[iType].g_flOpenAreasOnly, 1);
+		g_esLightningCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_iRequiresHumans, g_esLightningPlayer[tank].g_iRequiresHumans, g_esLightningSpecial[iType].g_iRequiresHumans, g_esLightningAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
 	{
-		g_esLightningCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_flCloseAreasOnly, g_esLightningAbility[type].g_flCloseAreasOnly, 1);
-		g_esLightningCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iComboAbility, g_esLightningAbility[type].g_iComboAbility, 1);
-		g_esLightningCache[tank].g_flLightningChance = flGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_flLightningChance, g_esLightningAbility[type].g_flLightningChance, 1);
-		g_esLightningCache[tank].g_flLightningDamage = flGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_flLightningDamage, g_esLightningAbility[type].g_flLightningDamage, 1);
-		g_esLightningCache[tank].g_flLightningInterval = flGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_flLightningInterval, g_esLightningAbility[type].g_flLightningInterval, 1);
-		g_esLightningCache[tank].g_iLightningAbility = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iLightningAbility, g_esLightningAbility[type].g_iLightningAbility, 1);
-		g_esLightningCache[tank].g_iLightningCooldown = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iLightningCooldown, g_esLightningAbility[type].g_iLightningCooldown, 1);
-		g_esLightningCache[tank].g_iLightningDuration = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iLightningDuration, g_esLightningAbility[type].g_iLightningDuration, 1);
-		g_esLightningCache[tank].g_iLightningMessage = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iLightningMessage, g_esLightningAbility[type].g_iLightningMessage, 1);
-		g_esLightningCache[tank].g_iLightningSight = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iLightningSight, g_esLightningAbility[type].g_iLightningSight, 1);
-		g_esLightningCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iHumanAbility, g_esLightningAbility[type].g_iHumanAbility, 1);
-		g_esLightningCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iHumanAmmo, g_esLightningAbility[type].g_iHumanAmmo, 1);
-		g_esLightningCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iHumanCooldown, g_esLightningAbility[type].g_iHumanCooldown, 1);
-		g_esLightningCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iHumanDuration, g_esLightningAbility[type].g_iHumanDuration, 1);
-		g_esLightningCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iHumanMode, g_esLightningAbility[type].g_iHumanMode, 1);
-		g_esLightningCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_flOpenAreasOnly, g_esLightningAbility[type].g_flOpenAreasOnly, 1);
-		g_esLightningCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iRequiresHumans, g_esLightningAbility[type].g_iRequiresHumans, 1);
+		g_esLightningCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_flCloseAreasOnly, g_esLightningAbility[iType].g_flCloseAreasOnly, 1);
+		g_esLightningCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iComboAbility, g_esLightningAbility[iType].g_iComboAbility, 1);
+		g_esLightningCache[tank].g_flLightningChance = flGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_flLightningChance, g_esLightningAbility[iType].g_flLightningChance, 1);
+		g_esLightningCache[tank].g_flLightningDamage = flGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_flLightningDamage, g_esLightningAbility[iType].g_flLightningDamage, 1);
+		g_esLightningCache[tank].g_flLightningInterval = flGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_flLightningInterval, g_esLightningAbility[iType].g_flLightningInterval, 1);
+		g_esLightningCache[tank].g_iLightningAbility = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iLightningAbility, g_esLightningAbility[iType].g_iLightningAbility, 1);
+		g_esLightningCache[tank].g_iLightningCooldown = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iLightningCooldown, g_esLightningAbility[iType].g_iLightningCooldown, 1);
+		g_esLightningCache[tank].g_iLightningDuration = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iLightningDuration, g_esLightningAbility[iType].g_iLightningDuration, 1);
+		g_esLightningCache[tank].g_iLightningMessage = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iLightningMessage, g_esLightningAbility[iType].g_iLightningMessage, 1);
+		g_esLightningCache[tank].g_iLightningSight = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iLightningSight, g_esLightningAbility[iType].g_iLightningSight, 1);
+		g_esLightningCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iHumanAbility, g_esLightningAbility[iType].g_iHumanAbility, 1);
+		g_esLightningCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iHumanAmmo, g_esLightningAbility[iType].g_iHumanAmmo, 1);
+		g_esLightningCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iHumanCooldown, g_esLightningAbility[iType].g_iHumanCooldown, 1);
+		g_esLightningCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iHumanDuration, g_esLightningAbility[iType].g_iHumanDuration, 1);
+		g_esLightningCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iHumanMode, g_esLightningAbility[iType].g_iHumanMode, 1);
+		g_esLightningCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_flOpenAreasOnly, g_esLightningAbility[iType].g_flOpenAreasOnly, 1);
+		g_esLightningCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iRequiresHumans, g_esLightningAbility[iType].g_iRequiresHumans, 1);
 	}
 }
 
@@ -1015,7 +1018,7 @@ void vLightningReset2(int tank)
 
 void vLightningReset3(int tank)
 {
-	int iTime = GetTime(), iPos = g_esLightningAbility[g_esLightningPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esLightningCache[tank].g_iLightningCooldown;
+	int iTime = GetTime(), iPos = g_esLightningAbility[g_esLightningPlayer[tank].g_iTankTypeRecorded].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esLightningCache[tank].g_iLightningCooldown;
 	iCooldown = (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esLightningCache[tank].g_iHumanAbility == 1 && g_esLightningCache[tank].g_iHumanMode == 0 && g_esLightningPlayer[tank].g_iAmmoCount < g_esLightningCache[tank].g_iHumanAmmo && g_esLightningCache[tank].g_iHumanAmmo > 0) ? g_esLightningCache[tank].g_iHumanCooldown : iCooldown;
 	g_esLightningPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esLightningPlayer[tank].g_iCooldown != -1 && g_esLightningPlayer[tank].g_iCooldown >= iTime)
@@ -1080,7 +1083,7 @@ Action tTimerLightning(Handle timer, DataPack pack)
 	int iTarget = CreateEntityByName("info_particle_target");
 	if (bIsValidEntity(iTarget))
 	{
-		Format(sTargetName, sizeof sTargetName, "mutant_tank_target_%i_%i", iTank, g_esLightningPlayer[iTank].g_iTankType);
+		Format(sTargetName, sizeof sTargetName, "mutant_tank_target_%i_%i", iTank, g_esLightningPlayer[iTank].g_iTankTypeRecorded);
 		DispatchKeyValue(iTarget, "targetname", sTargetName);
 		TeleportEntity(iTarget, flOrigin);
 		DispatchSpawn(iTarget);
