@@ -2177,6 +2177,9 @@ public void MT_OnPlayerEventKilled(int victim, int attacker)
 #if defined MT_MENU_NECRO
 	vNecroPlayerEventKilled(victim);
 #endif
+#if defined MT_MENU_RECALL
+	vRecallPlayerEventKilled(victim);
+#endif
 #if defined MT_MENU_RESPAWN
 	vRespawnPlayerEventKilled(victim);
 #endif
@@ -2188,6 +2191,9 @@ public void MT_OnPlayerEventKilled(int victim, int attacker)
 #endif
 #if defined MT_MENU_SMITE
 	vSmitePlayerEventKilled(victim, attacker);
+#endif
+#if defined MT_MENU_WARP
+	vWarpPlayerEventKilled(victim);
 #endif
 }
 

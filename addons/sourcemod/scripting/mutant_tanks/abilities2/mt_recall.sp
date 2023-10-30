@@ -782,49 +782,52 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveRecall(iTank);
 		}
 	}
-	else if (StrEqual(name, "player_death"))
+	else if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			bool bTeleport = false;
-			float flOrigin[3], flAngles[3];
-			for (int iTeammate = 1; iTeammate <= MaxClients; iTeammate++)
-			{
-				if (bIsSurvivor(iTeammate, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsSurvivorDisabled(iTeammate) && !g_esRecallPlayer[iTeammate].g_bAffected)
-				{
-					bTeleport = true;
-
-					GetClientAbsOrigin(iTeammate, flOrigin);
-					GetClientEyeAngles(iTeammate, flAngles);
-
-					break;
-				}
-			}
-
-			if (bTeleport)
-			{
-				for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-				{
-					if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esRecallPlayer[iSurvivor].g_bAffected && g_esRecallPlayer[iSurvivor].g_iOwner == iTank)
-					{
-						g_esRecallPlayer[iSurvivor].g_bAffected = false;
-						g_esRecallPlayer[iSurvivor].g_iOwner = -1;
-
-						TeleportEntity(iSurvivor, flOrigin, flAngles, view_as<float>({0.0, 0.0, 0.0}));
-					}
-				}
-			}
-
 			vRemoveRecall(iTank);
 		}
 	}
-	else if (StrEqual(name, "player_spawn"))
+}
+
+#if defined MT_ABILITIES_MAIN2
+void vRecallPlayerEventKilled(int victim)
+#else
+public void MT_OnPlayerEventKilled(int victim, int attacker)
+#endif
+{
+	if (MT_IsTankSupported(victim, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+		bool bTeleport = false;
+		float flOrigin[3], flAngles[3];
+		int iTeammate = 0;
+		for (iTeammate = 1; iTeammate <= MaxClients; iTeammate++)
 		{
-			vRemoveRecall(iTank);
+			if (bIsSurvivor(iTeammate, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsSurvivorDisabled(iTeammate) && !g_esRecallPlayer[iTeammate].g_bAffected)
+			{
+				bTeleport = true;
+
+				GetClientAbsOrigin(iTeammate, flOrigin);
+				GetClientEyeAngles(iTeammate, flAngles);
+
+				break;
+			}
+		}
+
+		if (bTeleport)
+		{
+			for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+			{
+				if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esRecallPlayer[iSurvivor].g_bAffected && g_esRecallPlayer[iSurvivor].g_iOwner == victim && iSurvivor != iTeammate)
+				{
+					g_esRecallPlayer[iSurvivor].g_bAffected = false;
+					g_esRecallPlayer[iSurvivor].g_iOwner = -1;
+
+					TeleportEntity(iSurvivor, flOrigin, flAngles, view_as<float>({0.0, 0.0, 0.0}));
+				}
+			}
 		}
 	}
 }
@@ -1071,6 +1074,7 @@ void vRecallAbility(int tank, bool main)
 							float flEyeAngles[3], flOrigin[3], flDirection[3], flTemp[3];
 							GetClientEyeAngles(tank, flEyeAngles);
 							GetClientAbsOrigin(tank, flOrigin);
+							flOrigin[2] += 20.0;
 
 							if (bIsInfected(tank, MT_CHECK_FAKECLIENT))
 							{

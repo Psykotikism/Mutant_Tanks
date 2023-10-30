@@ -1124,40 +1124,11 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveWarp(iTank);
 		}
 	}
-	else if (StrEqual(name, "player_death"))
+	else if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			bool bTeleport = false;
-			float flOrigin[3], flAngles[3];
-			for (int iTeammate = 1; iTeammate <= MaxClients; iTeammate++)
-			{
-				if (bIsSurvivor(iTeammate, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsSurvivorDisabled(iTeammate) && !g_esWarpPlayer[iTeammate].g_bAffected)
-				{
-					bTeleport = true;
-
-					GetClientAbsOrigin(iTeammate, flOrigin);
-					GetClientEyeAngles(iTeammate, flAngles);
-
-					break;
-				}
-			}
-
-			if (bTeleport)
-			{
-				for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-				{
-					if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esWarpPlayer[iSurvivor].g_bAffected && g_esWarpPlayer[iSurvivor].g_iOwner == iTank)
-					{
-						g_esWarpPlayer[iSurvivor].g_bAffected = false;
-						g_esWarpPlayer[iSurvivor].g_iOwner = -1;
-
-						TeleportEntity(iSurvivor, flOrigin, flAngles, view_as<float>({0.0, 0.0, 0.0}));
-					}
-				}
-			}
-
 			vWarpRange(iTank);
 			vRemoveWarp(iTank);
 		}
@@ -1172,13 +1143,44 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vWarpHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esWarpCache[iBoomer].g_flWarpChance, g_esWarpCache[iBoomer].g_iWarpHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 		}
 	}
-	else if (StrEqual(name, "player_spawn"))
+}
+
+#if defined MT_ABILITIES_MAIN2
+void vWarpPlayerEventKilled(int victim)
+#else
+public void MT_OnPlayerEventKilled(int victim, int attacker)
+#endif
+{
+	if (MT_IsTankSupported(victim, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+		bool bTeleport = false;
+		float flOrigin[3], flAngles[3];
+		int iTeammate = 0;
+		for (iTeammate = 1; iTeammate <= MaxClients; iTeammate++)
 		{
-			vWarpRange(iTank);
-			vRemoveWarp(iTank);
+			if (bIsSurvivor(iTeammate, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsSurvivorDisabled(iTeammate) && !g_esWarpPlayer[iTeammate].g_bAffected)
+			{
+				bTeleport = true;
+
+				GetClientAbsOrigin(iTeammate, flOrigin);
+				GetClientEyeAngles(iTeammate, flAngles);
+
+				break;
+			}
+		}
+
+		if (bTeleport)
+		{
+			for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+			{
+				if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esWarpPlayer[iSurvivor].g_bAffected && g_esWarpPlayer[iSurvivor].g_iOwner == victim && iSurvivor != iTeammate)
+				{
+					g_esWarpPlayer[iSurvivor].g_bAffected = false;
+					g_esWarpPlayer[iSurvivor].g_iOwner = -1;
+
+					TeleportEntity(iSurvivor, flOrigin, flAngles, view_as<float>({0.0, 0.0, 0.0}));
+				}
+			}
 		}
 	}
 }

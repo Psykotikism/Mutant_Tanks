@@ -2839,7 +2839,7 @@ public void OnGameFrame()
 			if (bIsInfected(iTarget))
 			{
 #if defined _actions_included
-				if (!bSpectator && !bDeveloper && (bIsInfectedIdle(iTarget, 3) || !bIsVisibleToPlayer(iTarget, iPlayer, 1)))
+				if ((!bSpectator && !bDeveloper && bIsInfectedIdle(iTarget, 3)) || !bIsVisibleToPlayer(iTarget, iPlayer, 1))
 				{
 					continue;
 				}
