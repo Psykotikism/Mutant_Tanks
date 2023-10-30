@@ -98,6 +98,7 @@ enum struct esFlingPlayer
 	int g_iRangeCooldown;
 	int g_iRequiresHumans;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esFlingPlayer g_esFlingPlayer[MAXPLAYERS + 1];
@@ -876,59 +877,61 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esFlingPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esFlingPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esFlingPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esFlingCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_flCloseAreasOnly, g_esFlingPlayer[tank].g_flCloseAreasOnly, g_esFlingSpecial[type].g_flCloseAreasOnly, g_esFlingAbility[type].g_flCloseAreasOnly, 1);
-		g_esFlingCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_iComboAbility, g_esFlingPlayer[tank].g_iComboAbility, g_esFlingSpecial[type].g_iComboAbility, g_esFlingAbility[type].g_iComboAbility, 1);
-		g_esFlingCache[tank].g_flFlingChance = flGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_flFlingChance, g_esFlingPlayer[tank].g_flFlingChance, g_esFlingSpecial[type].g_flFlingChance, g_esFlingAbility[type].g_flFlingChance, 1);
-		g_esFlingCache[tank].g_flFlingDeathChance = flGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_flFlingDeathChance, g_esFlingPlayer[tank].g_flFlingDeathChance, g_esFlingSpecial[type].g_flFlingDeathChance, g_esFlingAbility[type].g_flFlingDeathChance, 1);
-		g_esFlingCache[tank].g_flFlingDeathRange = flGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_flFlingDeathRange, g_esFlingPlayer[tank].g_flFlingDeathRange, g_esFlingSpecial[type].g_flFlingDeathRange, g_esFlingAbility[type].g_flFlingDeathRange, 1);
-		g_esFlingCache[tank].g_flFlingForce = flGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_flFlingForce, g_esFlingPlayer[tank].g_flFlingForce, g_esFlingSpecial[type].g_flFlingForce, g_esFlingAbility[type].g_flFlingForce, 1);
-		g_esFlingCache[tank].g_flFlingRange = flGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_flFlingRange, g_esFlingPlayer[tank].g_flFlingRange, g_esFlingSpecial[type].g_flFlingRange, g_esFlingAbility[type].g_flFlingRange, 1);
-		g_esFlingCache[tank].g_flFlingRangeChance = flGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_flFlingRangeChance, g_esFlingPlayer[tank].g_flFlingRangeChance, g_esFlingSpecial[type].g_flFlingRangeChance, g_esFlingAbility[type].g_flFlingRangeChance, 1);
-		g_esFlingCache[tank].g_iFlingAbility = iGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_iFlingAbility, g_esFlingPlayer[tank].g_iFlingAbility, g_esFlingSpecial[type].g_iFlingAbility, g_esFlingAbility[type].g_iFlingAbility, 1);
-		g_esFlingCache[tank].g_iFlingCooldown = iGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_iFlingCooldown, g_esFlingPlayer[tank].g_iFlingCooldown, g_esFlingSpecial[type].g_iFlingCooldown, g_esFlingAbility[type].g_iFlingCooldown, 1);
-		g_esFlingCache[tank].g_iFlingDeath = iGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_iFlingDeath, g_esFlingPlayer[tank].g_iFlingDeath, g_esFlingSpecial[type].g_iFlingDeath, g_esFlingAbility[type].g_iFlingDeath, 1);
-		g_esFlingCache[tank].g_iFlingEffect = iGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_iFlingEffect, g_esFlingPlayer[tank].g_iFlingEffect, g_esFlingSpecial[type].g_iFlingEffect, g_esFlingAbility[type].g_iFlingEffect, 1);
-		g_esFlingCache[tank].g_iFlingHit = iGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_iFlingHit, g_esFlingPlayer[tank].g_iFlingHit, g_esFlingSpecial[type].g_iFlingHit, g_esFlingAbility[type].g_iFlingHit, 1);
-		g_esFlingCache[tank].g_iFlingHitMode = iGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_iFlingHitMode, g_esFlingPlayer[tank].g_iFlingHitMode, g_esFlingSpecial[type].g_iFlingHitMode, g_esFlingAbility[type].g_iFlingHitMode, 1);
-		g_esFlingCache[tank].g_iFlingMessage = iGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_iFlingMessage, g_esFlingPlayer[tank].g_iFlingMessage, g_esFlingSpecial[type].g_iFlingMessage, g_esFlingAbility[type].g_iFlingMessage, 1);
-		g_esFlingCache[tank].g_iFlingRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_iFlingRangeCooldown, g_esFlingPlayer[tank].g_iFlingRangeCooldown, g_esFlingSpecial[type].g_iFlingRangeCooldown, g_esFlingAbility[type].g_iFlingRangeCooldown, 1);
-		g_esFlingCache[tank].g_iFlingSight = iGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_iFlingSight, g_esFlingPlayer[tank].g_iFlingSight, g_esFlingSpecial[type].g_iFlingSight, g_esFlingAbility[type].g_iFlingSight, 1);
-		g_esFlingCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_iHumanAbility, g_esFlingPlayer[tank].g_iHumanAbility, g_esFlingSpecial[type].g_iHumanAbility, g_esFlingAbility[type].g_iHumanAbility, 1);
-		g_esFlingCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_iHumanAmmo, g_esFlingPlayer[tank].g_iHumanAmmo, g_esFlingSpecial[type].g_iHumanAmmo, g_esFlingAbility[type].g_iHumanAmmo, 1);
-		g_esFlingCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_iHumanCooldown, g_esFlingPlayer[tank].g_iHumanCooldown, g_esFlingSpecial[type].g_iHumanCooldown, g_esFlingAbility[type].g_iHumanCooldown, 1);
-		g_esFlingCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_iHumanRangeCooldown, g_esFlingPlayer[tank].g_iHumanRangeCooldown, g_esFlingSpecial[type].g_iHumanRangeCooldown, g_esFlingAbility[type].g_iHumanRangeCooldown, 1);
-		g_esFlingCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_flOpenAreasOnly, g_esFlingPlayer[tank].g_flOpenAreasOnly, g_esFlingSpecial[type].g_flOpenAreasOnly, g_esFlingAbility[type].g_flOpenAreasOnly, 1);
-		g_esFlingCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_iRequiresHumans, g_esFlingPlayer[tank].g_iRequiresHumans, g_esFlingSpecial[type].g_iRequiresHumans, g_esFlingAbility[type].g_iRequiresHumans, 1);
+		g_esFlingCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_flCloseAreasOnly, g_esFlingPlayer[tank].g_flCloseAreasOnly, g_esFlingSpecial[iType].g_flCloseAreasOnly, g_esFlingAbility[iType].g_flCloseAreasOnly, 1);
+		g_esFlingCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_iComboAbility, g_esFlingPlayer[tank].g_iComboAbility, g_esFlingSpecial[iType].g_iComboAbility, g_esFlingAbility[iType].g_iComboAbility, 1);
+		g_esFlingCache[tank].g_flFlingChance = flGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_flFlingChance, g_esFlingPlayer[tank].g_flFlingChance, g_esFlingSpecial[iType].g_flFlingChance, g_esFlingAbility[iType].g_flFlingChance, 1);
+		g_esFlingCache[tank].g_flFlingDeathChance = flGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_flFlingDeathChance, g_esFlingPlayer[tank].g_flFlingDeathChance, g_esFlingSpecial[iType].g_flFlingDeathChance, g_esFlingAbility[iType].g_flFlingDeathChance, 1);
+		g_esFlingCache[tank].g_flFlingDeathRange = flGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_flFlingDeathRange, g_esFlingPlayer[tank].g_flFlingDeathRange, g_esFlingSpecial[iType].g_flFlingDeathRange, g_esFlingAbility[iType].g_flFlingDeathRange, 1);
+		g_esFlingCache[tank].g_flFlingForce = flGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_flFlingForce, g_esFlingPlayer[tank].g_flFlingForce, g_esFlingSpecial[iType].g_flFlingForce, g_esFlingAbility[iType].g_flFlingForce, 1);
+		g_esFlingCache[tank].g_flFlingRange = flGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_flFlingRange, g_esFlingPlayer[tank].g_flFlingRange, g_esFlingSpecial[iType].g_flFlingRange, g_esFlingAbility[iType].g_flFlingRange, 1);
+		g_esFlingCache[tank].g_flFlingRangeChance = flGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_flFlingRangeChance, g_esFlingPlayer[tank].g_flFlingRangeChance, g_esFlingSpecial[iType].g_flFlingRangeChance, g_esFlingAbility[iType].g_flFlingRangeChance, 1);
+		g_esFlingCache[tank].g_iFlingAbility = iGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_iFlingAbility, g_esFlingPlayer[tank].g_iFlingAbility, g_esFlingSpecial[iType].g_iFlingAbility, g_esFlingAbility[iType].g_iFlingAbility, 1);
+		g_esFlingCache[tank].g_iFlingCooldown = iGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_iFlingCooldown, g_esFlingPlayer[tank].g_iFlingCooldown, g_esFlingSpecial[iType].g_iFlingCooldown, g_esFlingAbility[iType].g_iFlingCooldown, 1);
+		g_esFlingCache[tank].g_iFlingDeath = iGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_iFlingDeath, g_esFlingPlayer[tank].g_iFlingDeath, g_esFlingSpecial[iType].g_iFlingDeath, g_esFlingAbility[iType].g_iFlingDeath, 1);
+		g_esFlingCache[tank].g_iFlingEffect = iGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_iFlingEffect, g_esFlingPlayer[tank].g_iFlingEffect, g_esFlingSpecial[iType].g_iFlingEffect, g_esFlingAbility[iType].g_iFlingEffect, 1);
+		g_esFlingCache[tank].g_iFlingHit = iGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_iFlingHit, g_esFlingPlayer[tank].g_iFlingHit, g_esFlingSpecial[iType].g_iFlingHit, g_esFlingAbility[iType].g_iFlingHit, 1);
+		g_esFlingCache[tank].g_iFlingHitMode = iGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_iFlingHitMode, g_esFlingPlayer[tank].g_iFlingHitMode, g_esFlingSpecial[iType].g_iFlingHitMode, g_esFlingAbility[iType].g_iFlingHitMode, 1);
+		g_esFlingCache[tank].g_iFlingMessage = iGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_iFlingMessage, g_esFlingPlayer[tank].g_iFlingMessage, g_esFlingSpecial[iType].g_iFlingMessage, g_esFlingAbility[iType].g_iFlingMessage, 1);
+		g_esFlingCache[tank].g_iFlingRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_iFlingRangeCooldown, g_esFlingPlayer[tank].g_iFlingRangeCooldown, g_esFlingSpecial[iType].g_iFlingRangeCooldown, g_esFlingAbility[iType].g_iFlingRangeCooldown, 1);
+		g_esFlingCache[tank].g_iFlingSight = iGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_iFlingSight, g_esFlingPlayer[tank].g_iFlingSight, g_esFlingSpecial[iType].g_iFlingSight, g_esFlingAbility[iType].g_iFlingSight, 1);
+		g_esFlingCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_iHumanAbility, g_esFlingPlayer[tank].g_iHumanAbility, g_esFlingSpecial[iType].g_iHumanAbility, g_esFlingAbility[iType].g_iHumanAbility, 1);
+		g_esFlingCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_iHumanAmmo, g_esFlingPlayer[tank].g_iHumanAmmo, g_esFlingSpecial[iType].g_iHumanAmmo, g_esFlingAbility[iType].g_iHumanAmmo, 1);
+		g_esFlingCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_iHumanCooldown, g_esFlingPlayer[tank].g_iHumanCooldown, g_esFlingSpecial[iType].g_iHumanCooldown, g_esFlingAbility[iType].g_iHumanCooldown, 1);
+		g_esFlingCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_iHumanRangeCooldown, g_esFlingPlayer[tank].g_iHumanRangeCooldown, g_esFlingSpecial[iType].g_iHumanRangeCooldown, g_esFlingAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esFlingCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_flOpenAreasOnly, g_esFlingPlayer[tank].g_flOpenAreasOnly, g_esFlingSpecial[iType].g_flOpenAreasOnly, g_esFlingAbility[iType].g_flOpenAreasOnly, 1);
+		g_esFlingCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_iRequiresHumans, g_esFlingPlayer[tank].g_iRequiresHumans, g_esFlingSpecial[iType].g_iRequiresHumans, g_esFlingAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
 	{
-		g_esFlingCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_flCloseAreasOnly, g_esFlingAbility[type].g_flCloseAreasOnly, 1);
-		g_esFlingCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_iComboAbility, g_esFlingAbility[type].g_iComboAbility, 1);
-		g_esFlingCache[tank].g_flFlingChance = flGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_flFlingChance, g_esFlingAbility[type].g_flFlingChance, 1);
-		g_esFlingCache[tank].g_flFlingDeathChance = flGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_flFlingDeathChance, g_esFlingAbility[type].g_flFlingDeathChance, 1);
-		g_esFlingCache[tank].g_flFlingDeathRange = flGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_flFlingDeathRange, g_esFlingAbility[type].g_flFlingDeathRange, 1);
-		g_esFlingCache[tank].g_flFlingForce = flGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_flFlingForce, g_esFlingAbility[type].g_flFlingForce, 1);
-		g_esFlingCache[tank].g_flFlingRange = flGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_flFlingRange, g_esFlingAbility[type].g_flFlingRange, 1);
-		g_esFlingCache[tank].g_flFlingRangeChance = flGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_flFlingRangeChance, g_esFlingAbility[type].g_flFlingRangeChance, 1);
-		g_esFlingCache[tank].g_iFlingAbility = iGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_iFlingAbility, g_esFlingAbility[type].g_iFlingAbility, 1);
-		g_esFlingCache[tank].g_iFlingCooldown = iGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_iFlingCooldown, g_esFlingAbility[type].g_iFlingCooldown, 1);
-		g_esFlingCache[tank].g_iFlingDeath = iGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_iFlingDeath, g_esFlingAbility[type].g_iFlingDeath, 1);
-		g_esFlingCache[tank].g_iFlingEffect = iGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_iFlingEffect, g_esFlingAbility[type].g_iFlingEffect, 1);
-		g_esFlingCache[tank].g_iFlingHit = iGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_iFlingHit, g_esFlingAbility[type].g_iFlingHit, 1);
-		g_esFlingCache[tank].g_iFlingHitMode = iGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_iFlingHitMode, g_esFlingAbility[type].g_iFlingHitMode, 1);
-		g_esFlingCache[tank].g_iFlingMessage = iGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_iFlingMessage, g_esFlingAbility[type].g_iFlingMessage, 1);
-		g_esFlingCache[tank].g_iFlingRangeCooldown = iGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_iFlingRangeCooldown, g_esFlingAbility[type].g_iFlingRangeCooldown, 1);
-		g_esFlingCache[tank].g_iFlingSight = iGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_iFlingSight, g_esFlingAbility[type].g_iFlingSight, 1);
-		g_esFlingCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_iHumanAbility, g_esFlingAbility[type].g_iHumanAbility, 1);
-		g_esFlingCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_iHumanAmmo, g_esFlingAbility[type].g_iHumanAmmo, 1);
-		g_esFlingCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_iHumanCooldown, g_esFlingAbility[type].g_iHumanCooldown, 1);
-		g_esFlingCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_iHumanRangeCooldown, g_esFlingAbility[type].g_iHumanRangeCooldown, 1);
-		g_esFlingCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_flOpenAreasOnly, g_esFlingAbility[type].g_flOpenAreasOnly, 1);
-		g_esFlingCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_iRequiresHumans, g_esFlingAbility[type].g_iRequiresHumans, 1);
+		g_esFlingCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_flCloseAreasOnly, g_esFlingAbility[iType].g_flCloseAreasOnly, 1);
+		g_esFlingCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_iComboAbility, g_esFlingAbility[iType].g_iComboAbility, 1);
+		g_esFlingCache[tank].g_flFlingChance = flGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_flFlingChance, g_esFlingAbility[iType].g_flFlingChance, 1);
+		g_esFlingCache[tank].g_flFlingDeathChance = flGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_flFlingDeathChance, g_esFlingAbility[iType].g_flFlingDeathChance, 1);
+		g_esFlingCache[tank].g_flFlingDeathRange = flGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_flFlingDeathRange, g_esFlingAbility[iType].g_flFlingDeathRange, 1);
+		g_esFlingCache[tank].g_flFlingForce = flGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_flFlingForce, g_esFlingAbility[iType].g_flFlingForce, 1);
+		g_esFlingCache[tank].g_flFlingRange = flGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_flFlingRange, g_esFlingAbility[iType].g_flFlingRange, 1);
+		g_esFlingCache[tank].g_flFlingRangeChance = flGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_flFlingRangeChance, g_esFlingAbility[iType].g_flFlingRangeChance, 1);
+		g_esFlingCache[tank].g_iFlingAbility = iGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_iFlingAbility, g_esFlingAbility[iType].g_iFlingAbility, 1);
+		g_esFlingCache[tank].g_iFlingCooldown = iGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_iFlingCooldown, g_esFlingAbility[iType].g_iFlingCooldown, 1);
+		g_esFlingCache[tank].g_iFlingDeath = iGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_iFlingDeath, g_esFlingAbility[iType].g_iFlingDeath, 1);
+		g_esFlingCache[tank].g_iFlingEffect = iGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_iFlingEffect, g_esFlingAbility[iType].g_iFlingEffect, 1);
+		g_esFlingCache[tank].g_iFlingHit = iGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_iFlingHit, g_esFlingAbility[iType].g_iFlingHit, 1);
+		g_esFlingCache[tank].g_iFlingHitMode = iGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_iFlingHitMode, g_esFlingAbility[iType].g_iFlingHitMode, 1);
+		g_esFlingCache[tank].g_iFlingMessage = iGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_iFlingMessage, g_esFlingAbility[iType].g_iFlingMessage, 1);
+		g_esFlingCache[tank].g_iFlingRangeCooldown = iGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_iFlingRangeCooldown, g_esFlingAbility[iType].g_iFlingRangeCooldown, 1);
+		g_esFlingCache[tank].g_iFlingSight = iGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_iFlingSight, g_esFlingAbility[iType].g_iFlingSight, 1);
+		g_esFlingCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_iHumanAbility, g_esFlingAbility[iType].g_iHumanAbility, 1);
+		g_esFlingCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_iHumanAmmo, g_esFlingAbility[iType].g_iHumanAmmo, 1);
+		g_esFlingCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_iHumanCooldown, g_esFlingAbility[iType].g_iHumanCooldown, 1);
+		g_esFlingCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_iHumanRangeCooldown, g_esFlingAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esFlingCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_flOpenAreasOnly, g_esFlingAbility[iType].g_flOpenAreasOnly, 1);
+		g_esFlingCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_iRequiresHumans, g_esFlingAbility[iType].g_iRequiresHumans, 1);
 	}
 }
 

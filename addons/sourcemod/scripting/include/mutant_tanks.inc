@@ -55,6 +55,7 @@ public void __pl_mutanttanks_SetNTVOptional()
 	MarkNativeAsOptional("MT_GetMaxType");
 	MarkNativeAsOptional("MT_GetMinType");
 	MarkNativeAsOptional("MT_GetPropColors");
+	MarkNativeAsOptional("MT_GetRecordedTankType");
 	MarkNativeAsOptional("MT_GetRunSpeed");
 	MarkNativeAsOptional("MT_GetScaledDamage");
 	MarkNativeAsOptional("MT_GetSpawnType");
@@ -621,6 +622,17 @@ native int MT_GetMinType();
 native void MT_GetPropColors(int tank, int type, int &red, int &green, int &blue, int &alpha);
 
 /**
+ * Returns the recorded type of a Mutant Tank.
+ *
+ * @param tank			Client index of the Tank.
+ * @param type			Mutant Tank type. (Optional)
+ *
+ * @return			The Tank's recorded Mutant Tank type.
+ * @error			Invalid client index or client is not in-game.
+ **/
+native int MT_GetRecordedTankType(int tank, int type = 0);
+
+/**
  * Returns a Mutant Tank's run speed.
  *
  * @param tank			Client index of the Tank.
@@ -678,11 +690,12 @@ native void MT_GetTankName(int tank, char[] buffer);
  * Returns the type of a Mutant Tank.
  *
  * @param tank			Client index of the Tank.
+ * @param type			Recorded Mutant Tank type. (Optional)
  *
  * @return			The Tank's Mutant Tank type.
  * @error			Invalid client index or client is not in-game.
  **/
-native int MT_GetTankType(int tank);
+native int MT_GetTankType(int tank, int type = 0);
 
 /**
  * Returns if a human player has access to a Mutant Tank type.
@@ -1245,10 +1258,10 @@ stock void ST_TankName(int tank, char[] buffer)
  * @return			The Tank's Super Tank type.
  * @error			Invalid client index.
  **/
-#pragma deprecated Use the MT_GetTankType() native instead.
+#pragma deprecated Use the MT_GetRecordedTankType() native instead.
 stock int ST_TankType(int client)
 {
-	return MT_GetTankType(client);
+	return MT_GetRecordedTankType(client);
 }
 
 /**
@@ -2851,7 +2864,7 @@ bool bMutantFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsInfected(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && MT_GetTankType(iPlayer) > 0)
+		if (bIsInfected(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && MT_GetRecordedTankType(iPlayer) > 0)
 		{
 			clients.Push(iPlayer);
 		}
@@ -2864,7 +2877,7 @@ bool bMutantBoomerFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsBoomer(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && MT_GetTankType(iPlayer) > 0)
+		if (bIsBoomer(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && MT_GetRecordedTankType(iPlayer) > 0)
 		{
 			clients.Push(iPlayer);
 		}
@@ -2877,7 +2890,7 @@ bool bMutantChargerFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsCharger(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && MT_GetTankType(iPlayer) > 0)
+		if (bIsCharger(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && MT_GetRecordedTankType(iPlayer) > 0)
 		{
 			clients.Push(iPlayer);
 		}
@@ -2890,7 +2903,7 @@ bool bMutantHunterFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsHunter(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && MT_GetTankType(iPlayer) > 0)
+		if (bIsHunter(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && MT_GetRecordedTankType(iPlayer) > 0)
 		{
 			clients.Push(iPlayer);
 		}
@@ -2903,7 +2916,7 @@ bool bMutantJockeyFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsJockey(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && MT_GetTankType(iPlayer) > 0)
+		if (bIsJockey(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && MT_GetRecordedTankType(iPlayer) > 0)
 		{
 			clients.Push(iPlayer);
 		}
@@ -2916,7 +2929,7 @@ bool bMutantSmokerFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsSmoker(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && MT_GetTankType(iPlayer) > 0)
+		if (bIsSmoker(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && MT_GetRecordedTankType(iPlayer) > 0)
 		{
 			clients.Push(iPlayer);
 		}
@@ -2929,7 +2942,7 @@ bool bMutantSpitterFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsSpitter(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && MT_GetTankType(iPlayer) > 0)
+		if (bIsSpitter(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && MT_GetRecordedTankType(iPlayer) > 0)
 		{
 			clients.Push(iPlayer);
 		}
@@ -2942,7 +2955,7 @@ bool bMutantTankFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsTank(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && MT_GetTankType(iPlayer) > 0)
+		if (bIsTank(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && MT_GetRecordedTankType(iPlayer) > 0)
 		{
 			clients.Push(iPlayer);
 		}

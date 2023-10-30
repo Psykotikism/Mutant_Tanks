@@ -88,6 +88,7 @@ enum struct esCarPlayer
 	int g_iHumanMode;
 	int g_iRequiresHumans;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esCarPlayer g_esCarPlayer[MAXPLAYERS + 1];
@@ -428,12 +429,12 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 {
 	if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esCarCache[tank].g_iHumanAbility != 2)
 	{
-		g_esCarAbility[g_esCarPlayer[tank].g_iTankType].g_iComboPosition = -1;
+		g_esCarAbility[g_esCarPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 		return;
 	}
 
-	g_esCarAbility[g_esCarPlayer[tank].g_iTankType].g_iComboPosition = -1;
+	g_esCarAbility[g_esCarPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 	char sCombo[320], sSet[4][32];
 	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
@@ -454,7 +455,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 			{
 				if (StrEqual(sSubset[iPos], MT_CAR_SECTION, false) || StrEqual(sSubset[iPos], MT_CAR_SECTION2, false) || StrEqual(sSubset[iPos], MT_CAR_SECTION3, false) || StrEqual(sSubset[iPos], MT_CAR_SECTION4, false))
 				{
-					g_esCarAbility[g_esCarPlayer[tank].g_iTankType].g_iComboPosition = iPos;
+					g_esCarAbility[g_esCarPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = iPos;
 
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
@@ -739,53 +740,55 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esCarPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esCarPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esCarPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esCarCache[tank].g_flCarChance = flGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_flCarChance, g_esCarPlayer[tank].g_flCarChance, g_esCarSpecial[type].g_flCarChance, g_esCarAbility[type].g_flCarChance, 1);
-		g_esCarCache[tank].g_flCarInterval = flGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_flCarInterval, g_esCarPlayer[tank].g_flCarInterval, g_esCarSpecial[type].g_flCarInterval, g_esCarAbility[type].g_flCarInterval, 1);
-		g_esCarCache[tank].g_flCarLifetime = flGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_flCarLifetime, g_esCarPlayer[tank].g_flCarLifetime, g_esCarSpecial[type].g_flCarLifetime, g_esCarAbility[type].g_flCarLifetime, 1);
-		g_esCarCache[tank].g_flCarRadius[0] = flGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_flCarRadius[0], g_esCarPlayer[tank].g_flCarRadius[0], g_esCarSpecial[type].g_flCarRadius[0], g_esCarAbility[type].g_flCarRadius[0], 2, 1.0);
-		g_esCarCache[tank].g_flCarRadius[1] = flGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_flCarRadius[1], g_esCarPlayer[tank].g_flCarRadius[1], g_esCarSpecial[type].g_flCarRadius[1], g_esCarAbility[type].g_flCarRadius[1], 2, -1.0);
-		g_esCarCache[tank].g_iCarAbility = iGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_iCarAbility, g_esCarPlayer[tank].g_iCarAbility, g_esCarSpecial[type].g_iCarAbility, g_esCarAbility[type].g_iCarAbility, 1);
-		g_esCarCache[tank].g_iCarCooldown = iGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_iCarCooldown, g_esCarPlayer[tank].g_iCarCooldown, g_esCarSpecial[type].g_iCarCooldown, g_esCarAbility[type].g_iCarCooldown, 1);
-		g_esCarCache[tank].g_iCarDuration = iGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_iCarDuration, g_esCarPlayer[tank].g_iCarDuration, g_esCarSpecial[type].g_iCarDuration, g_esCarAbility[type].g_iCarDuration, 1);
-		g_esCarCache[tank].g_iCarMessage = iGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_iCarMessage, g_esCarPlayer[tank].g_iCarMessage, g_esCarSpecial[type].g_iCarMessage, g_esCarAbility[type].g_iCarMessage, 1);
-		g_esCarCache[tank].g_iCarOptions = iGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_iCarOptions, g_esCarPlayer[tank].g_iCarOptions, g_esCarSpecial[type].g_iCarOptions, g_esCarAbility[type].g_iCarOptions, 1);
-		g_esCarCache[tank].g_iCarOwner = iGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_iCarOwner, g_esCarPlayer[tank].g_iCarOwner, g_esCarSpecial[type].g_iCarOwner, g_esCarAbility[type].g_iCarOwner, 1);
-		g_esCarCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_flCloseAreasOnly, g_esCarPlayer[tank].g_flCloseAreasOnly, g_esCarSpecial[type].g_flCloseAreasOnly, g_esCarAbility[type].g_flCloseAreasOnly, 1);
-		g_esCarCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_iComboAbility, g_esCarPlayer[tank].g_iComboAbility, g_esCarSpecial[type].g_iComboAbility, g_esCarAbility[type].g_iComboAbility, 1);
-		g_esCarCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_iHumanAbility, g_esCarPlayer[tank].g_iHumanAbility, g_esCarSpecial[type].g_iHumanAbility, g_esCarAbility[type].g_iHumanAbility, 1);
-		g_esCarCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_iHumanAmmo, g_esCarPlayer[tank].g_iHumanAmmo, g_esCarSpecial[type].g_iHumanAmmo, g_esCarAbility[type].g_iHumanAmmo, 1);
-		g_esCarCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_iHumanCooldown, g_esCarPlayer[tank].g_iHumanCooldown, g_esCarSpecial[type].g_iHumanCooldown, g_esCarAbility[type].g_iHumanCooldown, 1);
-		g_esCarCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_iHumanDuration, g_esCarPlayer[tank].g_iHumanDuration, g_esCarSpecial[type].g_iHumanDuration, g_esCarAbility[type].g_iHumanDuration, 1);
-		g_esCarCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_iHumanMode, g_esCarPlayer[tank].g_iHumanMode, g_esCarSpecial[type].g_iHumanMode, g_esCarAbility[type].g_iHumanMode, 1);
-		g_esCarCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_flOpenAreasOnly, g_esCarPlayer[tank].g_flOpenAreasOnly, g_esCarSpecial[type].g_flOpenAreasOnly, g_esCarAbility[type].g_flOpenAreasOnly, 1);
-		g_esCarCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_iRequiresHumans, g_esCarPlayer[tank].g_iRequiresHumans, g_esCarSpecial[type].g_iRequiresHumans, g_esCarAbility[type].g_iRequiresHumans, 1);
+		g_esCarCache[tank].g_flCarChance = flGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_flCarChance, g_esCarPlayer[tank].g_flCarChance, g_esCarSpecial[iType].g_flCarChance, g_esCarAbility[iType].g_flCarChance, 1);
+		g_esCarCache[tank].g_flCarInterval = flGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_flCarInterval, g_esCarPlayer[tank].g_flCarInterval, g_esCarSpecial[iType].g_flCarInterval, g_esCarAbility[iType].g_flCarInterval, 1);
+		g_esCarCache[tank].g_flCarLifetime = flGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_flCarLifetime, g_esCarPlayer[tank].g_flCarLifetime, g_esCarSpecial[iType].g_flCarLifetime, g_esCarAbility[iType].g_flCarLifetime, 1);
+		g_esCarCache[tank].g_flCarRadius[0] = flGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_flCarRadius[0], g_esCarPlayer[tank].g_flCarRadius[0], g_esCarSpecial[iType].g_flCarRadius[0], g_esCarAbility[iType].g_flCarRadius[0], 2, 1.0);
+		g_esCarCache[tank].g_flCarRadius[1] = flGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_flCarRadius[1], g_esCarPlayer[tank].g_flCarRadius[1], g_esCarSpecial[iType].g_flCarRadius[1], g_esCarAbility[iType].g_flCarRadius[1], 2, -1.0);
+		g_esCarCache[tank].g_iCarAbility = iGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_iCarAbility, g_esCarPlayer[tank].g_iCarAbility, g_esCarSpecial[iType].g_iCarAbility, g_esCarAbility[iType].g_iCarAbility, 1);
+		g_esCarCache[tank].g_iCarCooldown = iGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_iCarCooldown, g_esCarPlayer[tank].g_iCarCooldown, g_esCarSpecial[iType].g_iCarCooldown, g_esCarAbility[iType].g_iCarCooldown, 1);
+		g_esCarCache[tank].g_iCarDuration = iGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_iCarDuration, g_esCarPlayer[tank].g_iCarDuration, g_esCarSpecial[iType].g_iCarDuration, g_esCarAbility[iType].g_iCarDuration, 1);
+		g_esCarCache[tank].g_iCarMessage = iGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_iCarMessage, g_esCarPlayer[tank].g_iCarMessage, g_esCarSpecial[iType].g_iCarMessage, g_esCarAbility[iType].g_iCarMessage, 1);
+		g_esCarCache[tank].g_iCarOptions = iGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_iCarOptions, g_esCarPlayer[tank].g_iCarOptions, g_esCarSpecial[iType].g_iCarOptions, g_esCarAbility[iType].g_iCarOptions, 1);
+		g_esCarCache[tank].g_iCarOwner = iGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_iCarOwner, g_esCarPlayer[tank].g_iCarOwner, g_esCarSpecial[iType].g_iCarOwner, g_esCarAbility[iType].g_iCarOwner, 1);
+		g_esCarCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_flCloseAreasOnly, g_esCarPlayer[tank].g_flCloseAreasOnly, g_esCarSpecial[iType].g_flCloseAreasOnly, g_esCarAbility[iType].g_flCloseAreasOnly, 1);
+		g_esCarCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_iComboAbility, g_esCarPlayer[tank].g_iComboAbility, g_esCarSpecial[iType].g_iComboAbility, g_esCarAbility[iType].g_iComboAbility, 1);
+		g_esCarCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_iHumanAbility, g_esCarPlayer[tank].g_iHumanAbility, g_esCarSpecial[iType].g_iHumanAbility, g_esCarAbility[iType].g_iHumanAbility, 1);
+		g_esCarCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_iHumanAmmo, g_esCarPlayer[tank].g_iHumanAmmo, g_esCarSpecial[iType].g_iHumanAmmo, g_esCarAbility[iType].g_iHumanAmmo, 1);
+		g_esCarCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_iHumanCooldown, g_esCarPlayer[tank].g_iHumanCooldown, g_esCarSpecial[iType].g_iHumanCooldown, g_esCarAbility[iType].g_iHumanCooldown, 1);
+		g_esCarCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_iHumanDuration, g_esCarPlayer[tank].g_iHumanDuration, g_esCarSpecial[iType].g_iHumanDuration, g_esCarAbility[iType].g_iHumanDuration, 1);
+		g_esCarCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_iHumanMode, g_esCarPlayer[tank].g_iHumanMode, g_esCarSpecial[iType].g_iHumanMode, g_esCarAbility[iType].g_iHumanMode, 1);
+		g_esCarCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_flOpenAreasOnly, g_esCarPlayer[tank].g_flOpenAreasOnly, g_esCarSpecial[iType].g_flOpenAreasOnly, g_esCarAbility[iType].g_flOpenAreasOnly, 1);
+		g_esCarCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_iRequiresHumans, g_esCarPlayer[tank].g_iRequiresHumans, g_esCarSpecial[iType].g_iRequiresHumans, g_esCarAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
 	{
-		g_esCarCache[tank].g_flCarChance = flGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_flCarChance, g_esCarAbility[type].g_flCarChance, 1);
-		g_esCarCache[tank].g_flCarInterval = flGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_flCarInterval, g_esCarAbility[type].g_flCarInterval, 1);
-		g_esCarCache[tank].g_flCarLifetime = flGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_flCarLifetime, g_esCarAbility[type].g_flCarLifetime, 1);
-		g_esCarCache[tank].g_flCarRadius[0] = flGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_flCarRadius[0], g_esCarAbility[type].g_flCarRadius[0], 2, 1.0);
-		g_esCarCache[tank].g_flCarRadius[1] = flGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_flCarRadius[1], g_esCarAbility[type].g_flCarRadius[1], 2, -1.0);
-		g_esCarCache[tank].g_iCarAbility = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iCarAbility, g_esCarAbility[type].g_iCarAbility, 1);
-		g_esCarCache[tank].g_iCarCooldown = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iCarCooldown, g_esCarAbility[type].g_iCarCooldown, 1);
-		g_esCarCache[tank].g_iCarDuration = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iCarDuration, g_esCarAbility[type].g_iCarDuration, 1);
-		g_esCarCache[tank].g_iCarMessage = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iCarMessage, g_esCarAbility[type].g_iCarMessage, 1);
-		g_esCarCache[tank].g_iCarOptions = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iCarOptions, g_esCarAbility[type].g_iCarOptions, 1);
-		g_esCarCache[tank].g_iCarOwner = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iCarOwner, g_esCarAbility[type].g_iCarOwner, 1);
-		g_esCarCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_flCloseAreasOnly, g_esCarAbility[type].g_flCloseAreasOnly, 1);
-		g_esCarCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iComboAbility, g_esCarAbility[type].g_iComboAbility, 1);
-		g_esCarCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iHumanAbility, g_esCarAbility[type].g_iHumanAbility, 1);
-		g_esCarCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iHumanAmmo, g_esCarAbility[type].g_iHumanAmmo, 1);
-		g_esCarCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iHumanCooldown, g_esCarAbility[type].g_iHumanCooldown, 1);
-		g_esCarCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iHumanDuration, g_esCarAbility[type].g_iHumanDuration, 1);
-		g_esCarCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iHumanMode, g_esCarAbility[type].g_iHumanMode, 1);
-		g_esCarCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_flOpenAreasOnly, g_esCarAbility[type].g_flOpenAreasOnly, 1);
-		g_esCarCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iRequiresHumans, g_esCarAbility[type].g_iRequiresHumans, 1);
+		g_esCarCache[tank].g_flCarChance = flGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_flCarChance, g_esCarAbility[iType].g_flCarChance, 1);
+		g_esCarCache[tank].g_flCarInterval = flGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_flCarInterval, g_esCarAbility[iType].g_flCarInterval, 1);
+		g_esCarCache[tank].g_flCarLifetime = flGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_flCarLifetime, g_esCarAbility[iType].g_flCarLifetime, 1);
+		g_esCarCache[tank].g_flCarRadius[0] = flGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_flCarRadius[0], g_esCarAbility[iType].g_flCarRadius[0], 2, 1.0);
+		g_esCarCache[tank].g_flCarRadius[1] = flGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_flCarRadius[1], g_esCarAbility[iType].g_flCarRadius[1], 2, -1.0);
+		g_esCarCache[tank].g_iCarAbility = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iCarAbility, g_esCarAbility[iType].g_iCarAbility, 1);
+		g_esCarCache[tank].g_iCarCooldown = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iCarCooldown, g_esCarAbility[iType].g_iCarCooldown, 1);
+		g_esCarCache[tank].g_iCarDuration = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iCarDuration, g_esCarAbility[iType].g_iCarDuration, 1);
+		g_esCarCache[tank].g_iCarMessage = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iCarMessage, g_esCarAbility[iType].g_iCarMessage, 1);
+		g_esCarCache[tank].g_iCarOptions = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iCarOptions, g_esCarAbility[iType].g_iCarOptions, 1);
+		g_esCarCache[tank].g_iCarOwner = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iCarOwner, g_esCarAbility[iType].g_iCarOwner, 1);
+		g_esCarCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_flCloseAreasOnly, g_esCarAbility[iType].g_flCloseAreasOnly, 1);
+		g_esCarCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iComboAbility, g_esCarAbility[iType].g_iComboAbility, 1);
+		g_esCarCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iHumanAbility, g_esCarAbility[iType].g_iHumanAbility, 1);
+		g_esCarCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iHumanAmmo, g_esCarAbility[iType].g_iHumanAmmo, 1);
+		g_esCarCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iHumanCooldown, g_esCarAbility[iType].g_iHumanCooldown, 1);
+		g_esCarCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iHumanDuration, g_esCarAbility[iType].g_iHumanDuration, 1);
+		g_esCarCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iHumanMode, g_esCarAbility[iType].g_iHumanMode, 1);
+		g_esCarCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_flOpenAreasOnly, g_esCarAbility[iType].g_flOpenAreasOnly, 1);
+		g_esCarCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iRequiresHumans, g_esCarAbility[iType].g_iRequiresHumans, 1);
 	}
 }
 
@@ -1072,7 +1075,7 @@ void vCarReset2(int tank)
 
 void vCarReset3(int tank)
 {
-	int iTime = GetTime(), iPos = g_esCarAbility[g_esCarPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esCarCache[tank].g_iCarCooldown;
+	int iTime = GetTime(), iPos = g_esCarAbility[g_esCarPlayer[tank].g_iTankTypeRecorded].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esCarCache[tank].g_iCarCooldown;
 	iCooldown = (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esCarCache[tank].g_iHumanAbility == 1 && g_esCarCache[tank].g_iHumanMode == 0 && g_esCarPlayer[tank].g_iAmmoCount < g_esCarCache[tank].g_iHumanAmmo && g_esCarCache[tank].g_iHumanAmmo > 0) ? g_esCarCache[tank].g_iHumanCooldown : iCooldown;
 	g_esCarPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esCarPlayer[tank].g_iCooldown != -1 && g_esCarPlayer[tank].g_iCooldown >= iTime)
@@ -1209,7 +1212,6 @@ Action tTimerCar(Handle timer, DataPack pack)
 			TeleportEntity(iCar, .velocity = flVelocity);
 
 			SDKHook(iCar, SDKHook_StartTouch, OnCarStartTouch);
-
 			iCar = EntIndexToEntRef(iCar);
 			vDeleteEntity(iCar, g_esCarCache[iTank].g_flCarLifetime);
 		}

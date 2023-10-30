@@ -95,6 +95,7 @@ enum struct esShovePlayer
 	int g_iShoveRangeCooldown;
 	int g_iShoveSight;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esShovePlayer g_esShovePlayer[MAXPLAYERS + 1];
@@ -835,61 +836,63 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esShovePlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esShovePlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esShovePlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esShoveCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_flCloseAreasOnly, g_esShovePlayer[tank].g_flCloseAreasOnly, g_esShoveSpecial[type].g_flCloseAreasOnly, g_esShoveAbility[type].g_flCloseAreasOnly, 1);
-		g_esShoveCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_iComboAbility, g_esShovePlayer[tank].g_iComboAbility, g_esShoveSpecial[type].g_iComboAbility, g_esShoveAbility[type].g_iComboAbility, 1);
-		g_esShoveCache[tank].g_flShoveChance = flGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_flShoveChance, g_esShovePlayer[tank].g_flShoveChance, g_esShoveSpecial[type].g_flShoveChance, g_esShoveAbility[type].g_flShoveChance, 1);
-		g_esShoveCache[tank].g_flShoveDeathChance = flGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_flShoveDeathChance, g_esShovePlayer[tank].g_flShoveDeathChance, g_esShoveSpecial[type].g_flShoveDeathChance, g_esShoveAbility[type].g_flShoveDeathChance, 1);
-		g_esShoveCache[tank].g_flShoveDeathRange = flGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_flShoveDeathRange, g_esShovePlayer[tank].g_flShoveDeathRange, g_esShoveSpecial[type].g_flShoveDeathRange, g_esShoveAbility[type].g_flShoveDeathRange, 1);
-		g_esShoveCache[tank].g_flShoveInterval = flGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_flShoveInterval, g_esShovePlayer[tank].g_flShoveInterval, g_esShoveSpecial[type].g_flShoveInterval, g_esShoveAbility[type].g_flShoveInterval, 1);
-		g_esShoveCache[tank].g_flShoveRange = flGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_flShoveRange, g_esShovePlayer[tank].g_flShoveRange, g_esShoveSpecial[type].g_flShoveRange, g_esShoveAbility[type].g_flShoveRange, 1);
-		g_esShoveCache[tank].g_flShoveRangeChance = flGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_flShoveRangeChance, g_esShovePlayer[tank].g_flShoveRangeChance, g_esShoveSpecial[type].g_flShoveRangeChance, g_esShoveAbility[type].g_flShoveRangeChance, 1);
-		g_esShoveCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_iHumanAbility, g_esShovePlayer[tank].g_iHumanAbility, g_esShoveSpecial[type].g_iHumanAbility, g_esShoveAbility[type].g_iHumanAbility, 1);
-		g_esShoveCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_iHumanAmmo, g_esShovePlayer[tank].g_iHumanAmmo, g_esShoveSpecial[type].g_iHumanAmmo, g_esShoveAbility[type].g_iHumanAmmo, 1);
-		g_esShoveCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_iHumanCooldown, g_esShovePlayer[tank].g_iHumanCooldown, g_esShoveSpecial[type].g_iHumanCooldown, g_esShoveAbility[type].g_iHumanCooldown, 1);
-		g_esShoveCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_iHumanRangeCooldown, g_esShovePlayer[tank].g_iHumanRangeCooldown, g_esShoveSpecial[type].g_iHumanRangeCooldown, g_esShoveAbility[type].g_iHumanRangeCooldown, 1);
-		g_esShoveCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_flOpenAreasOnly, g_esShovePlayer[tank].g_flOpenAreasOnly, g_esShoveSpecial[type].g_flOpenAreasOnly, g_esShoveAbility[type].g_flOpenAreasOnly, 1);
-		g_esShoveCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_iRequiresHumans, g_esShovePlayer[tank].g_iRequiresHumans, g_esShoveSpecial[type].g_iRequiresHumans, g_esShoveAbility[type].g_iRequiresHumans, 1);
-		g_esShoveCache[tank].g_iShoveAbility = iGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_iShoveAbility, g_esShovePlayer[tank].g_iShoveAbility, g_esShoveSpecial[type].g_iShoveAbility, g_esShoveAbility[type].g_iShoveAbility, 1);
-		g_esShoveCache[tank].g_iShoveCooldown = iGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_iShoveCooldown, g_esShovePlayer[tank].g_iShoveCooldown, g_esShoveSpecial[type].g_iShoveCooldown, g_esShoveAbility[type].g_iShoveCooldown, 1);
-		g_esShoveCache[tank].g_iShoveDeath = iGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_iShoveDeath, g_esShovePlayer[tank].g_iShoveDeath, g_esShoveSpecial[type].g_iShoveDeath, g_esShoveAbility[type].g_iShoveDeath, 1);
-		g_esShoveCache[tank].g_iShoveDuration = iGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_iShoveDuration, g_esShovePlayer[tank].g_iShoveDuration, g_esShoveSpecial[type].g_iShoveDuration, g_esShoveAbility[type].g_iShoveDuration, 1);
-		g_esShoveCache[tank].g_iShoveEffect = iGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_iShoveEffect, g_esShovePlayer[tank].g_iShoveEffect, g_esShoveSpecial[type].g_iShoveEffect, g_esShoveAbility[type].g_iShoveEffect, 1);
-		g_esShoveCache[tank].g_iShoveHit = iGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_iShoveHit, g_esShovePlayer[tank].g_iShoveHit, g_esShoveSpecial[type].g_iShoveHit, g_esShoveAbility[type].g_iShoveHit, 1);
-		g_esShoveCache[tank].g_iShoveHitMode = iGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_iShoveHitMode, g_esShovePlayer[tank].g_iShoveHitMode, g_esShoveSpecial[type].g_iShoveHitMode, g_esShoveAbility[type].g_iShoveHitMode, 1);
-		g_esShoveCache[tank].g_iShoveMessage = iGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_iShoveMessage, g_esShovePlayer[tank].g_iShoveMessage, g_esShoveSpecial[type].g_iShoveMessage, g_esShoveAbility[type].g_iShoveMessage, 1);
-		g_esShoveCache[tank].g_iShoveRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_iShoveRangeCooldown, g_esShovePlayer[tank].g_iShoveRangeCooldown, g_esShoveSpecial[type].g_iShoveRangeCooldown, g_esShoveAbility[type].g_iShoveRangeCooldown, 1);
-		g_esShoveCache[tank].g_iShoveSight = iGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_iShoveSight, g_esShovePlayer[tank].g_iShoveSight, g_esShoveSpecial[type].g_iShoveSight, g_esShoveAbility[type].g_iShoveSight, 1);
+		g_esShoveCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_flCloseAreasOnly, g_esShovePlayer[tank].g_flCloseAreasOnly, g_esShoveSpecial[iType].g_flCloseAreasOnly, g_esShoveAbility[iType].g_flCloseAreasOnly, 1);
+		g_esShoveCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_iComboAbility, g_esShovePlayer[tank].g_iComboAbility, g_esShoveSpecial[iType].g_iComboAbility, g_esShoveAbility[iType].g_iComboAbility, 1);
+		g_esShoveCache[tank].g_flShoveChance = flGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_flShoveChance, g_esShovePlayer[tank].g_flShoveChance, g_esShoveSpecial[iType].g_flShoveChance, g_esShoveAbility[iType].g_flShoveChance, 1);
+		g_esShoveCache[tank].g_flShoveDeathChance = flGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_flShoveDeathChance, g_esShovePlayer[tank].g_flShoveDeathChance, g_esShoveSpecial[iType].g_flShoveDeathChance, g_esShoveAbility[iType].g_flShoveDeathChance, 1);
+		g_esShoveCache[tank].g_flShoveDeathRange = flGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_flShoveDeathRange, g_esShovePlayer[tank].g_flShoveDeathRange, g_esShoveSpecial[iType].g_flShoveDeathRange, g_esShoveAbility[iType].g_flShoveDeathRange, 1);
+		g_esShoveCache[tank].g_flShoveInterval = flGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_flShoveInterval, g_esShovePlayer[tank].g_flShoveInterval, g_esShoveSpecial[iType].g_flShoveInterval, g_esShoveAbility[iType].g_flShoveInterval, 1);
+		g_esShoveCache[tank].g_flShoveRange = flGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_flShoveRange, g_esShovePlayer[tank].g_flShoveRange, g_esShoveSpecial[iType].g_flShoveRange, g_esShoveAbility[iType].g_flShoveRange, 1);
+		g_esShoveCache[tank].g_flShoveRangeChance = flGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_flShoveRangeChance, g_esShovePlayer[tank].g_flShoveRangeChance, g_esShoveSpecial[iType].g_flShoveRangeChance, g_esShoveAbility[iType].g_flShoveRangeChance, 1);
+		g_esShoveCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_iHumanAbility, g_esShovePlayer[tank].g_iHumanAbility, g_esShoveSpecial[iType].g_iHumanAbility, g_esShoveAbility[iType].g_iHumanAbility, 1);
+		g_esShoveCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_iHumanAmmo, g_esShovePlayer[tank].g_iHumanAmmo, g_esShoveSpecial[iType].g_iHumanAmmo, g_esShoveAbility[iType].g_iHumanAmmo, 1);
+		g_esShoveCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_iHumanCooldown, g_esShovePlayer[tank].g_iHumanCooldown, g_esShoveSpecial[iType].g_iHumanCooldown, g_esShoveAbility[iType].g_iHumanCooldown, 1);
+		g_esShoveCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_iHumanRangeCooldown, g_esShovePlayer[tank].g_iHumanRangeCooldown, g_esShoveSpecial[iType].g_iHumanRangeCooldown, g_esShoveAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esShoveCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_flOpenAreasOnly, g_esShovePlayer[tank].g_flOpenAreasOnly, g_esShoveSpecial[iType].g_flOpenAreasOnly, g_esShoveAbility[iType].g_flOpenAreasOnly, 1);
+		g_esShoveCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_iRequiresHumans, g_esShovePlayer[tank].g_iRequiresHumans, g_esShoveSpecial[iType].g_iRequiresHumans, g_esShoveAbility[iType].g_iRequiresHumans, 1);
+		g_esShoveCache[tank].g_iShoveAbility = iGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_iShoveAbility, g_esShovePlayer[tank].g_iShoveAbility, g_esShoveSpecial[iType].g_iShoveAbility, g_esShoveAbility[iType].g_iShoveAbility, 1);
+		g_esShoveCache[tank].g_iShoveCooldown = iGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_iShoveCooldown, g_esShovePlayer[tank].g_iShoveCooldown, g_esShoveSpecial[iType].g_iShoveCooldown, g_esShoveAbility[iType].g_iShoveCooldown, 1);
+		g_esShoveCache[tank].g_iShoveDeath = iGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_iShoveDeath, g_esShovePlayer[tank].g_iShoveDeath, g_esShoveSpecial[iType].g_iShoveDeath, g_esShoveAbility[iType].g_iShoveDeath, 1);
+		g_esShoveCache[tank].g_iShoveDuration = iGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_iShoveDuration, g_esShovePlayer[tank].g_iShoveDuration, g_esShoveSpecial[iType].g_iShoveDuration, g_esShoveAbility[iType].g_iShoveDuration, 1);
+		g_esShoveCache[tank].g_iShoveEffect = iGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_iShoveEffect, g_esShovePlayer[tank].g_iShoveEffect, g_esShoveSpecial[iType].g_iShoveEffect, g_esShoveAbility[iType].g_iShoveEffect, 1);
+		g_esShoveCache[tank].g_iShoveHit = iGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_iShoveHit, g_esShovePlayer[tank].g_iShoveHit, g_esShoveSpecial[iType].g_iShoveHit, g_esShoveAbility[iType].g_iShoveHit, 1);
+		g_esShoveCache[tank].g_iShoveHitMode = iGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_iShoveHitMode, g_esShovePlayer[tank].g_iShoveHitMode, g_esShoveSpecial[iType].g_iShoveHitMode, g_esShoveAbility[iType].g_iShoveHitMode, 1);
+		g_esShoveCache[tank].g_iShoveMessage = iGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_iShoveMessage, g_esShovePlayer[tank].g_iShoveMessage, g_esShoveSpecial[iType].g_iShoveMessage, g_esShoveAbility[iType].g_iShoveMessage, 1);
+		g_esShoveCache[tank].g_iShoveRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_iShoveRangeCooldown, g_esShovePlayer[tank].g_iShoveRangeCooldown, g_esShoveSpecial[iType].g_iShoveRangeCooldown, g_esShoveAbility[iType].g_iShoveRangeCooldown, 1);
+		g_esShoveCache[tank].g_iShoveSight = iGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_iShoveSight, g_esShovePlayer[tank].g_iShoveSight, g_esShoveSpecial[iType].g_iShoveSight, g_esShoveAbility[iType].g_iShoveSight, 1);
 	}
 	else
 	{
-		g_esShoveCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_flCloseAreasOnly, g_esShoveAbility[type].g_flCloseAreasOnly, 1);
-		g_esShoveCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_iComboAbility, g_esShoveAbility[type].g_iComboAbility, 1);
-		g_esShoveCache[tank].g_flShoveChance = flGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_flShoveChance, g_esShoveAbility[type].g_flShoveChance, 1);
-		g_esShoveCache[tank].g_flShoveDeathChance = flGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_flShoveDeathChance, g_esShoveAbility[type].g_flShoveDeathChance, 1);
-		g_esShoveCache[tank].g_flShoveDeathRange = flGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_flShoveDeathRange, g_esShoveAbility[type].g_flShoveDeathRange, 1);
-		g_esShoveCache[tank].g_flShoveInterval = flGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_flShoveInterval, g_esShoveAbility[type].g_flShoveInterval, 1);
-		g_esShoveCache[tank].g_flShoveRange = flGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_flShoveRange, g_esShoveAbility[type].g_flShoveRange, 1);
-		g_esShoveCache[tank].g_flShoveRangeChance = flGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_flShoveRangeChance, g_esShoveAbility[type].g_flShoveRangeChance, 1);
-		g_esShoveCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_iHumanAbility, g_esShoveAbility[type].g_iHumanAbility, 1);
-		g_esShoveCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_iHumanAmmo, g_esShoveAbility[type].g_iHumanAmmo, 1);
-		g_esShoveCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_iHumanCooldown, g_esShoveAbility[type].g_iHumanCooldown, 1);
-		g_esShoveCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_iHumanRangeCooldown, g_esShoveAbility[type].g_iHumanRangeCooldown, 1);
-		g_esShoveCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_flOpenAreasOnly, g_esShoveAbility[type].g_flOpenAreasOnly, 1);
-		g_esShoveCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_iRequiresHumans, g_esShoveAbility[type].g_iRequiresHumans, 1);
-		g_esShoveCache[tank].g_iShoveAbility = iGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_iShoveAbility, g_esShoveAbility[type].g_iShoveAbility, 1);
-		g_esShoveCache[tank].g_iShoveCooldown = iGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_iShoveCooldown, g_esShoveAbility[type].g_iShoveCooldown, 1);
-		g_esShoveCache[tank].g_iShoveDeath = iGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_iShoveDeath, g_esShoveAbility[type].g_iShoveDeath, 1);
-		g_esShoveCache[tank].g_iShoveDuration = iGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_iShoveDuration, g_esShoveAbility[type].g_iShoveDuration, 1);
-		g_esShoveCache[tank].g_iShoveEffect = iGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_iShoveEffect, g_esShoveAbility[type].g_iShoveEffect, 1);
-		g_esShoveCache[tank].g_iShoveHit = iGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_iShoveHit, g_esShoveAbility[type].g_iShoveHit, 1);
-		g_esShoveCache[tank].g_iShoveHitMode = iGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_iShoveHitMode, g_esShoveAbility[type].g_iShoveHitMode, 1);
-		g_esShoveCache[tank].g_iShoveMessage = iGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_iShoveMessage, g_esShoveAbility[type].g_iShoveMessage, 1);
-		g_esShoveCache[tank].g_iShoveRangeCooldown = iGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_iShoveRangeCooldown, g_esShoveAbility[type].g_iShoveRangeCooldown, 1);
-		g_esShoveCache[tank].g_iShoveSight = iGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_iShoveSight, g_esShoveAbility[type].g_iShoveSight, 1);
+		g_esShoveCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_flCloseAreasOnly, g_esShoveAbility[iType].g_flCloseAreasOnly, 1);
+		g_esShoveCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_iComboAbility, g_esShoveAbility[iType].g_iComboAbility, 1);
+		g_esShoveCache[tank].g_flShoveChance = flGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_flShoveChance, g_esShoveAbility[iType].g_flShoveChance, 1);
+		g_esShoveCache[tank].g_flShoveDeathChance = flGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_flShoveDeathChance, g_esShoveAbility[iType].g_flShoveDeathChance, 1);
+		g_esShoveCache[tank].g_flShoveDeathRange = flGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_flShoveDeathRange, g_esShoveAbility[iType].g_flShoveDeathRange, 1);
+		g_esShoveCache[tank].g_flShoveInterval = flGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_flShoveInterval, g_esShoveAbility[iType].g_flShoveInterval, 1);
+		g_esShoveCache[tank].g_flShoveRange = flGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_flShoveRange, g_esShoveAbility[iType].g_flShoveRange, 1);
+		g_esShoveCache[tank].g_flShoveRangeChance = flGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_flShoveRangeChance, g_esShoveAbility[iType].g_flShoveRangeChance, 1);
+		g_esShoveCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_iHumanAbility, g_esShoveAbility[iType].g_iHumanAbility, 1);
+		g_esShoveCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_iHumanAmmo, g_esShoveAbility[iType].g_iHumanAmmo, 1);
+		g_esShoveCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_iHumanCooldown, g_esShoveAbility[iType].g_iHumanCooldown, 1);
+		g_esShoveCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_iHumanRangeCooldown, g_esShoveAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esShoveCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_flOpenAreasOnly, g_esShoveAbility[iType].g_flOpenAreasOnly, 1);
+		g_esShoveCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_iRequiresHumans, g_esShoveAbility[iType].g_iRequiresHumans, 1);
+		g_esShoveCache[tank].g_iShoveAbility = iGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_iShoveAbility, g_esShoveAbility[iType].g_iShoveAbility, 1);
+		g_esShoveCache[tank].g_iShoveCooldown = iGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_iShoveCooldown, g_esShoveAbility[iType].g_iShoveCooldown, 1);
+		g_esShoveCache[tank].g_iShoveDeath = iGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_iShoveDeath, g_esShoveAbility[iType].g_iShoveDeath, 1);
+		g_esShoveCache[tank].g_iShoveDuration = iGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_iShoveDuration, g_esShoveAbility[iType].g_iShoveDuration, 1);
+		g_esShoveCache[tank].g_iShoveEffect = iGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_iShoveEffect, g_esShoveAbility[iType].g_iShoveEffect, 1);
+		g_esShoveCache[tank].g_iShoveHit = iGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_iShoveHit, g_esShoveAbility[iType].g_iShoveHit, 1);
+		g_esShoveCache[tank].g_iShoveHitMode = iGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_iShoveHitMode, g_esShoveAbility[iType].g_iShoveHitMode, 1);
+		g_esShoveCache[tank].g_iShoveMessage = iGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_iShoveMessage, g_esShoveAbility[iType].g_iShoveMessage, 1);
+		g_esShoveCache[tank].g_iShoveRangeCooldown = iGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_iShoveRangeCooldown, g_esShoveAbility[iType].g_iShoveRangeCooldown, 1);
+		g_esShoveCache[tank].g_iShoveSight = iGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_iShoveSight, g_esShoveAbility[iType].g_iShoveSight, 1);
 	}
 }
 

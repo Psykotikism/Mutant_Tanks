@@ -76,6 +76,7 @@ enum struct esWitchPlayer
 	int g_iImmunityFlags;
 	int g_iRequiresHumans;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 	int g_iWitchAbility;
 	int g_iWitchAmount;
 	int g_iWitchCooldown;
@@ -386,7 +387,7 @@ Action OnWitchTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 				return Plugin_Handled;
 			}
 
-			int iPos = g_esWitchAbility[g_esWitchPlayer[iTank].g_iTankType].g_iComboPosition;
+			int iPos = g_esWitchAbility[g_esWitchPlayer[iTank].g_iTankTypeRecorded].g_iComboPosition;
 			float flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 3, iPos) : g_esWitchCache[iTank].g_flWitchDamage;
 			damage = MT_GetScaledDamage(flDamage);
 
@@ -426,12 +427,12 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 {
 	if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esWitchCache[tank].g_iHumanAbility != 2)
 	{
-		g_esWitchAbility[g_esWitchPlayer[tank].g_iTankType].g_iComboPosition = -1;
+		g_esWitchAbility[g_esWitchPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 		return;
 	}
 
-	g_esWitchAbility[g_esWitchPlayer[tank].g_iTankType].g_iComboPosition = -1;
+	g_esWitchAbility[g_esWitchPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 	char sCombo[320], sSet[4][32];
 	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
@@ -452,7 +453,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 			{
 				if (StrEqual(sSubset[iPos], MT_WITCH_SECTION, false) || StrEqual(sSubset[iPos], MT_WITCH_SECTION2, false) || StrEqual(sSubset[iPos], MT_WITCH_SECTION3, false) || StrEqual(sSubset[iPos], MT_WITCH_SECTION4, false))
 				{
-					g_esWitchAbility[g_esWitchPlayer[tank].g_iTankType].g_iComboPosition = iPos;
+					g_esWitchAbility[g_esWitchPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = iPos;
 
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
@@ -674,45 +675,47 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esWitchPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esWitchPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esWitchPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esWitchCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_flCloseAreasOnly, g_esWitchPlayer[tank].g_flCloseAreasOnly, g_esWitchSpecial[type].g_flCloseAreasOnly, g_esWitchAbility[type].g_flCloseAreasOnly, 1);
-		g_esWitchCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_iComboAbility, g_esWitchPlayer[tank].g_iComboAbility, g_esWitchSpecial[type].g_iComboAbility, g_esWitchAbility[type].g_iComboAbility, 1);
-		g_esWitchCache[tank].g_flWitchChance = flGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_flWitchChance, g_esWitchPlayer[tank].g_flWitchChance, g_esWitchSpecial[type].g_flWitchChance, g_esWitchAbility[type].g_flWitchChance, 1);
-		g_esWitchCache[tank].g_flWitchDamage = flGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_flWitchDamage, g_esWitchPlayer[tank].g_flWitchDamage, g_esWitchSpecial[type].g_flWitchDamage, g_esWitchAbility[type].g_flWitchDamage, 1);
-		g_esWitchCache[tank].g_flWitchLifetime = flGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_flWitchLifetime, g_esWitchPlayer[tank].g_flWitchLifetime, g_esWitchSpecial[type].g_flWitchLifetime, g_esWitchAbility[type].g_flWitchLifetime, 1);
-		g_esWitchCache[tank].g_flWitchRange = flGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_flWitchRange, g_esWitchPlayer[tank].g_flWitchRange, g_esWitchSpecial[type].g_flWitchRange, g_esWitchAbility[type].g_flWitchRange, 1);
-		g_esWitchCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_iHumanAbility, g_esWitchPlayer[tank].g_iHumanAbility, g_esWitchSpecial[type].g_iHumanAbility, g_esWitchAbility[type].g_iHumanAbility, 1);
-		g_esWitchCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_iHumanAmmo, g_esWitchPlayer[tank].g_iHumanAmmo, g_esWitchSpecial[type].g_iHumanAmmo, g_esWitchAbility[type].g_iHumanAmmo, 1);
-		g_esWitchCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_iHumanCooldown, g_esWitchPlayer[tank].g_iHumanCooldown, g_esWitchSpecial[type].g_iHumanCooldown, g_esWitchAbility[type].g_iHumanCooldown, 1);
-		g_esWitchCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_flOpenAreasOnly, g_esWitchPlayer[tank].g_flOpenAreasOnly, g_esWitchSpecial[type].g_flOpenAreasOnly, g_esWitchAbility[type].g_flOpenAreasOnly, 1);
-		g_esWitchCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_iRequiresHumans, g_esWitchPlayer[tank].g_iRequiresHumans, g_esWitchSpecial[type].g_iRequiresHumans, g_esWitchAbility[type].g_iRequiresHumans, 1);
-		g_esWitchCache[tank].g_iWitchAbility = iGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_iWitchAbility, g_esWitchPlayer[tank].g_iWitchAbility, g_esWitchSpecial[type].g_iWitchAbility, g_esWitchAbility[type].g_iWitchAbility, 1);
-		g_esWitchCache[tank].g_iWitchAmount = iGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_iWitchAmount, g_esWitchPlayer[tank].g_iWitchAmount, g_esWitchSpecial[type].g_iWitchAmount, g_esWitchAbility[type].g_iWitchAmount, 1);
-		g_esWitchCache[tank].g_iWitchCooldown = iGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_iWitchCooldown, g_esWitchPlayer[tank].g_iWitchCooldown, g_esWitchSpecial[type].g_iWitchCooldown, g_esWitchAbility[type].g_iWitchCooldown, 1);
-		g_esWitchCache[tank].g_iWitchMessage = iGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_iWitchMessage, g_esWitchPlayer[tank].g_iWitchMessage, g_esWitchSpecial[type].g_iWitchMessage, g_esWitchAbility[type].g_iWitchMessage, 1);
-		g_esWitchCache[tank].g_iWitchRemove = iGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_iWitchRemove, g_esWitchPlayer[tank].g_iWitchRemove, g_esWitchSpecial[type].g_iWitchRemove, g_esWitchAbility[type].g_iWitchRemove, 1);
+		g_esWitchCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_flCloseAreasOnly, g_esWitchPlayer[tank].g_flCloseAreasOnly, g_esWitchSpecial[iType].g_flCloseAreasOnly, g_esWitchAbility[iType].g_flCloseAreasOnly, 1);
+		g_esWitchCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_iComboAbility, g_esWitchPlayer[tank].g_iComboAbility, g_esWitchSpecial[iType].g_iComboAbility, g_esWitchAbility[iType].g_iComboAbility, 1);
+		g_esWitchCache[tank].g_flWitchChance = flGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_flWitchChance, g_esWitchPlayer[tank].g_flWitchChance, g_esWitchSpecial[iType].g_flWitchChance, g_esWitchAbility[iType].g_flWitchChance, 1);
+		g_esWitchCache[tank].g_flWitchDamage = flGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_flWitchDamage, g_esWitchPlayer[tank].g_flWitchDamage, g_esWitchSpecial[iType].g_flWitchDamage, g_esWitchAbility[iType].g_flWitchDamage, 1);
+		g_esWitchCache[tank].g_flWitchLifetime = flGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_flWitchLifetime, g_esWitchPlayer[tank].g_flWitchLifetime, g_esWitchSpecial[iType].g_flWitchLifetime, g_esWitchAbility[iType].g_flWitchLifetime, 1);
+		g_esWitchCache[tank].g_flWitchRange = flGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_flWitchRange, g_esWitchPlayer[tank].g_flWitchRange, g_esWitchSpecial[iType].g_flWitchRange, g_esWitchAbility[iType].g_flWitchRange, 1);
+		g_esWitchCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_iHumanAbility, g_esWitchPlayer[tank].g_iHumanAbility, g_esWitchSpecial[iType].g_iHumanAbility, g_esWitchAbility[iType].g_iHumanAbility, 1);
+		g_esWitchCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_iHumanAmmo, g_esWitchPlayer[tank].g_iHumanAmmo, g_esWitchSpecial[iType].g_iHumanAmmo, g_esWitchAbility[iType].g_iHumanAmmo, 1);
+		g_esWitchCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_iHumanCooldown, g_esWitchPlayer[tank].g_iHumanCooldown, g_esWitchSpecial[iType].g_iHumanCooldown, g_esWitchAbility[iType].g_iHumanCooldown, 1);
+		g_esWitchCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_flOpenAreasOnly, g_esWitchPlayer[tank].g_flOpenAreasOnly, g_esWitchSpecial[iType].g_flOpenAreasOnly, g_esWitchAbility[iType].g_flOpenAreasOnly, 1);
+		g_esWitchCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_iRequiresHumans, g_esWitchPlayer[tank].g_iRequiresHumans, g_esWitchSpecial[iType].g_iRequiresHumans, g_esWitchAbility[iType].g_iRequiresHumans, 1);
+		g_esWitchCache[tank].g_iWitchAbility = iGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_iWitchAbility, g_esWitchPlayer[tank].g_iWitchAbility, g_esWitchSpecial[iType].g_iWitchAbility, g_esWitchAbility[iType].g_iWitchAbility, 1);
+		g_esWitchCache[tank].g_iWitchAmount = iGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_iWitchAmount, g_esWitchPlayer[tank].g_iWitchAmount, g_esWitchSpecial[iType].g_iWitchAmount, g_esWitchAbility[iType].g_iWitchAmount, 1);
+		g_esWitchCache[tank].g_iWitchCooldown = iGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_iWitchCooldown, g_esWitchPlayer[tank].g_iWitchCooldown, g_esWitchSpecial[iType].g_iWitchCooldown, g_esWitchAbility[iType].g_iWitchCooldown, 1);
+		g_esWitchCache[tank].g_iWitchMessage = iGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_iWitchMessage, g_esWitchPlayer[tank].g_iWitchMessage, g_esWitchSpecial[iType].g_iWitchMessage, g_esWitchAbility[iType].g_iWitchMessage, 1);
+		g_esWitchCache[tank].g_iWitchRemove = iGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_iWitchRemove, g_esWitchPlayer[tank].g_iWitchRemove, g_esWitchSpecial[iType].g_iWitchRemove, g_esWitchAbility[iType].g_iWitchRemove, 1);
 	}
 	else
 	{
-		g_esWitchCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_flCloseAreasOnly, g_esWitchAbility[type].g_flCloseAreasOnly, 1);
-		g_esWitchCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iComboAbility, g_esWitchAbility[type].g_iComboAbility, 1);
-		g_esWitchCache[tank].g_flWitchChance = flGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_flWitchChance, g_esWitchAbility[type].g_flWitchChance, 1);
-		g_esWitchCache[tank].g_flWitchDamage = flGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_flWitchDamage, g_esWitchAbility[type].g_flWitchDamage, 1);
-		g_esWitchCache[tank].g_flWitchLifetime = flGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_flWitchLifetime, g_esWitchAbility[type].g_flWitchLifetime, 1);
-		g_esWitchCache[tank].g_flWitchRange = flGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_flWitchRange, g_esWitchAbility[type].g_flWitchRange, 1);
-		g_esWitchCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iHumanAbility, g_esWitchAbility[type].g_iHumanAbility, 1);
-		g_esWitchCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iHumanAmmo, g_esWitchAbility[type].g_iHumanAmmo, 1);
-		g_esWitchCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iHumanCooldown, g_esWitchAbility[type].g_iHumanCooldown, 1);
-		g_esWitchCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_flOpenAreasOnly, g_esWitchAbility[type].g_flOpenAreasOnly, 1);
-		g_esWitchCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iRequiresHumans, g_esWitchAbility[type].g_iRequiresHumans, 1);
-		g_esWitchCache[tank].g_iWitchAbility = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iWitchAbility, g_esWitchAbility[type].g_iWitchAbility, 1);
-		g_esWitchCache[tank].g_iWitchAmount = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iWitchAmount, g_esWitchAbility[type].g_iWitchAmount, 1);
-		g_esWitchCache[tank].g_iWitchCooldown = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iWitchCooldown, g_esWitchAbility[type].g_iWitchCooldown, 1);
-		g_esWitchCache[tank].g_iWitchMessage = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iWitchMessage, g_esWitchAbility[type].g_iWitchMessage, 1);
-		g_esWitchCache[tank].g_iWitchRemove = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iWitchRemove, g_esWitchAbility[type].g_iWitchRemove, 1);
+		g_esWitchCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_flCloseAreasOnly, g_esWitchAbility[iType].g_flCloseAreasOnly, 1);
+		g_esWitchCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iComboAbility, g_esWitchAbility[iType].g_iComboAbility, 1);
+		g_esWitchCache[tank].g_flWitchChance = flGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_flWitchChance, g_esWitchAbility[iType].g_flWitchChance, 1);
+		g_esWitchCache[tank].g_flWitchDamage = flGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_flWitchDamage, g_esWitchAbility[iType].g_flWitchDamage, 1);
+		g_esWitchCache[tank].g_flWitchLifetime = flGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_flWitchLifetime, g_esWitchAbility[iType].g_flWitchLifetime, 1);
+		g_esWitchCache[tank].g_flWitchRange = flGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_flWitchRange, g_esWitchAbility[iType].g_flWitchRange, 1);
+		g_esWitchCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iHumanAbility, g_esWitchAbility[iType].g_iHumanAbility, 1);
+		g_esWitchCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iHumanAmmo, g_esWitchAbility[iType].g_iHumanAmmo, 1);
+		g_esWitchCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iHumanCooldown, g_esWitchAbility[iType].g_iHumanCooldown, 1);
+		g_esWitchCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_flOpenAreasOnly, g_esWitchAbility[iType].g_flOpenAreasOnly, 1);
+		g_esWitchCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iRequiresHumans, g_esWitchAbility[iType].g_iRequiresHumans, 1);
+		g_esWitchCache[tank].g_iWitchAbility = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iWitchAbility, g_esWitchAbility[iType].g_iWitchAbility, 1);
+		g_esWitchCache[tank].g_iWitchAmount = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iWitchAmount, g_esWitchAbility[iType].g_iWitchAmount, 1);
+		g_esWitchCache[tank].g_iWitchCooldown = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iWitchCooldown, g_esWitchAbility[iType].g_iWitchCooldown, 1);
+		g_esWitchCache[tank].g_iWitchMessage = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iWitchMessage, g_esWitchAbility[iType].g_iWitchMessage, 1);
+		g_esWitchCache[tank].g_iWitchRemove = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iWitchRemove, g_esWitchAbility[iType].g_iWitchRemove, 1);
 	}
 }
 

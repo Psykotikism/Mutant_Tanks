@@ -109,6 +109,7 @@ enum struct esElectricPlayer
 	int g_iRangeCooldown;
 	int g_iRequiresHumans;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esElectricPlayer g_esElectricPlayer[MAXPLAYERS + 1];
@@ -842,59 +843,61 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esElectricPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esElectricPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esElectricPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esElectricCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_flCloseAreasOnly, g_esElectricPlayer[tank].g_flCloseAreasOnly, g_esElectricSpecial[type].g_flCloseAreasOnly, g_esElectricAbility[type].g_flCloseAreasOnly, 1);
-		g_esElectricCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_iComboAbility, g_esElectricPlayer[tank].g_iComboAbility, g_esElectricSpecial[type].g_iComboAbility, g_esElectricAbility[type].g_iComboAbility, 1);
-		g_esElectricCache[tank].g_flElectricChance = flGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_flElectricChance, g_esElectricPlayer[tank].g_flElectricChance, g_esElectricSpecial[type].g_flElectricChance, g_esElectricAbility[type].g_flElectricChance, 1);
-		g_esElectricCache[tank].g_flElectricDamage = flGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_flElectricDamage, g_esElectricPlayer[tank].g_flElectricDamage, g_esElectricSpecial[type].g_flElectricDamage, g_esElectricAbility[type].g_flElectricDamage, 1);
-		g_esElectricCache[tank].g_iElectricDuration = iGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_iElectricDuration, g_esElectricPlayer[tank].g_iElectricDuration, g_esElectricSpecial[type].g_iElectricDuration, g_esElectricAbility[type].g_iElectricDuration, 1);
-		g_esElectricCache[tank].g_flElectricInterval = flGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_flElectricInterval, g_esElectricPlayer[tank].g_flElectricInterval, g_esElectricSpecial[type].g_flElectricInterval, g_esElectricAbility[type].g_flElectricInterval, 1);
-		g_esElectricCache[tank].g_flElectricRange = flGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_flElectricRange, g_esElectricPlayer[tank].g_flElectricRange, g_esElectricSpecial[type].g_flElectricRange, g_esElectricAbility[type].g_flElectricRange, 1);
-		g_esElectricCache[tank].g_flElectricRangeChance = flGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_flElectricRangeChance, g_esElectricPlayer[tank].g_flElectricRangeChance, g_esElectricSpecial[type].g_flElectricRangeChance, g_esElectricAbility[type].g_flElectricRangeChance, 1);
-		g_esElectricCache[tank].g_flElectricStunSpeed = flGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_flElectricStunSpeed, g_esElectricPlayer[tank].g_flElectricStunSpeed, g_esElectricSpecial[type].g_flElectricStunSpeed, g_esElectricAbility[type].g_flElectricStunSpeed, 1);
-		g_esElectricCache[tank].g_iElectricAbility = iGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_iElectricAbility, g_esElectricPlayer[tank].g_iElectricAbility, g_esElectricSpecial[type].g_iElectricAbility, g_esElectricAbility[type].g_iElectricAbility, 1);
-		g_esElectricCache[tank].g_iElectricCooldown = iGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_iElectricCooldown, g_esElectricPlayer[tank].g_iElectricCooldown, g_esElectricSpecial[type].g_iElectricCooldown, g_esElectricAbility[type].g_iElectricCooldown, 1);
-		g_esElectricCache[tank].g_iElectricEffect = iGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_iElectricEffect, g_esElectricPlayer[tank].g_iElectricEffect, g_esElectricSpecial[type].g_iElectricEffect, g_esElectricAbility[type].g_iElectricEffect, 1);
-		g_esElectricCache[tank].g_iElectricHit = iGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_iElectricHit, g_esElectricPlayer[tank].g_iElectricHit, g_esElectricSpecial[type].g_iElectricHit, g_esElectricAbility[type].g_iElectricHit, 1);
-		g_esElectricCache[tank].g_iElectricHitMode = iGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_iElectricHitMode, g_esElectricPlayer[tank].g_iElectricHitMode, g_esElectricSpecial[type].g_iElectricHitMode, g_esElectricAbility[type].g_iElectricHitMode, 1);
-		g_esElectricCache[tank].g_iElectricMessage = iGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_iElectricMessage, g_esElectricPlayer[tank].g_iElectricMessage, g_esElectricSpecial[type].g_iElectricMessage, g_esElectricAbility[type].g_iElectricMessage, 1);
-		g_esElectricCache[tank].g_iElectricRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_iElectricRangeCooldown, g_esElectricPlayer[tank].g_iElectricRangeCooldown, g_esElectricSpecial[type].g_iElectricRangeCooldown, g_esElectricAbility[type].g_iElectricRangeCooldown, 1);
-		g_esElectricCache[tank].g_iElectricSight = iGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_iElectricSight, g_esElectricPlayer[tank].g_iElectricSight, g_esElectricSpecial[type].g_iElectricSight, g_esElectricAbility[type].g_iElectricSight, 1);
-		g_esElectricCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_iHumanAbility, g_esElectricPlayer[tank].g_iHumanAbility, g_esElectricSpecial[type].g_iHumanAbility, g_esElectricAbility[type].g_iHumanAbility, 1);
-		g_esElectricCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_iHumanAmmo, g_esElectricPlayer[tank].g_iHumanAmmo, g_esElectricSpecial[type].g_iHumanAmmo, g_esElectricAbility[type].g_iHumanAmmo, 1);
-		g_esElectricCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_iHumanCooldown, g_esElectricPlayer[tank].g_iHumanCooldown, g_esElectricSpecial[type].g_iHumanCooldown, g_esElectricAbility[type].g_iHumanCooldown, 1);
-		g_esElectricCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_iHumanRangeCooldown, g_esElectricPlayer[tank].g_iHumanRangeCooldown, g_esElectricSpecial[type].g_iHumanRangeCooldown, g_esElectricAbility[type].g_iHumanRangeCooldown, 1);
-		g_esElectricCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_flOpenAreasOnly, g_esElectricPlayer[tank].g_flOpenAreasOnly, g_esElectricSpecial[type].g_flOpenAreasOnly, g_esElectricAbility[type].g_flOpenAreasOnly, 1);
-		g_esElectricCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_iRequiresHumans, g_esElectricPlayer[tank].g_iRequiresHumans, g_esElectricSpecial[type].g_iRequiresHumans, g_esElectricAbility[type].g_iRequiresHumans, 1);
+		g_esElectricCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_flCloseAreasOnly, g_esElectricPlayer[tank].g_flCloseAreasOnly, g_esElectricSpecial[iType].g_flCloseAreasOnly, g_esElectricAbility[iType].g_flCloseAreasOnly, 1);
+		g_esElectricCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_iComboAbility, g_esElectricPlayer[tank].g_iComboAbility, g_esElectricSpecial[iType].g_iComboAbility, g_esElectricAbility[iType].g_iComboAbility, 1);
+		g_esElectricCache[tank].g_flElectricChance = flGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_flElectricChance, g_esElectricPlayer[tank].g_flElectricChance, g_esElectricSpecial[iType].g_flElectricChance, g_esElectricAbility[iType].g_flElectricChance, 1);
+		g_esElectricCache[tank].g_flElectricDamage = flGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_flElectricDamage, g_esElectricPlayer[tank].g_flElectricDamage, g_esElectricSpecial[iType].g_flElectricDamage, g_esElectricAbility[iType].g_flElectricDamage, 1);
+		g_esElectricCache[tank].g_iElectricDuration = iGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_iElectricDuration, g_esElectricPlayer[tank].g_iElectricDuration, g_esElectricSpecial[iType].g_iElectricDuration, g_esElectricAbility[iType].g_iElectricDuration, 1);
+		g_esElectricCache[tank].g_flElectricInterval = flGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_flElectricInterval, g_esElectricPlayer[tank].g_flElectricInterval, g_esElectricSpecial[iType].g_flElectricInterval, g_esElectricAbility[iType].g_flElectricInterval, 1);
+		g_esElectricCache[tank].g_flElectricRange = flGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_flElectricRange, g_esElectricPlayer[tank].g_flElectricRange, g_esElectricSpecial[iType].g_flElectricRange, g_esElectricAbility[iType].g_flElectricRange, 1);
+		g_esElectricCache[tank].g_flElectricRangeChance = flGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_flElectricRangeChance, g_esElectricPlayer[tank].g_flElectricRangeChance, g_esElectricSpecial[iType].g_flElectricRangeChance, g_esElectricAbility[iType].g_flElectricRangeChance, 1);
+		g_esElectricCache[tank].g_flElectricStunSpeed = flGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_flElectricStunSpeed, g_esElectricPlayer[tank].g_flElectricStunSpeed, g_esElectricSpecial[iType].g_flElectricStunSpeed, g_esElectricAbility[iType].g_flElectricStunSpeed, 1);
+		g_esElectricCache[tank].g_iElectricAbility = iGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_iElectricAbility, g_esElectricPlayer[tank].g_iElectricAbility, g_esElectricSpecial[iType].g_iElectricAbility, g_esElectricAbility[iType].g_iElectricAbility, 1);
+		g_esElectricCache[tank].g_iElectricCooldown = iGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_iElectricCooldown, g_esElectricPlayer[tank].g_iElectricCooldown, g_esElectricSpecial[iType].g_iElectricCooldown, g_esElectricAbility[iType].g_iElectricCooldown, 1);
+		g_esElectricCache[tank].g_iElectricEffect = iGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_iElectricEffect, g_esElectricPlayer[tank].g_iElectricEffect, g_esElectricSpecial[iType].g_iElectricEffect, g_esElectricAbility[iType].g_iElectricEffect, 1);
+		g_esElectricCache[tank].g_iElectricHit = iGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_iElectricHit, g_esElectricPlayer[tank].g_iElectricHit, g_esElectricSpecial[iType].g_iElectricHit, g_esElectricAbility[iType].g_iElectricHit, 1);
+		g_esElectricCache[tank].g_iElectricHitMode = iGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_iElectricHitMode, g_esElectricPlayer[tank].g_iElectricHitMode, g_esElectricSpecial[iType].g_iElectricHitMode, g_esElectricAbility[iType].g_iElectricHitMode, 1);
+		g_esElectricCache[tank].g_iElectricMessage = iGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_iElectricMessage, g_esElectricPlayer[tank].g_iElectricMessage, g_esElectricSpecial[iType].g_iElectricMessage, g_esElectricAbility[iType].g_iElectricMessage, 1);
+		g_esElectricCache[tank].g_iElectricRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_iElectricRangeCooldown, g_esElectricPlayer[tank].g_iElectricRangeCooldown, g_esElectricSpecial[iType].g_iElectricRangeCooldown, g_esElectricAbility[iType].g_iElectricRangeCooldown, 1);
+		g_esElectricCache[tank].g_iElectricSight = iGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_iElectricSight, g_esElectricPlayer[tank].g_iElectricSight, g_esElectricSpecial[iType].g_iElectricSight, g_esElectricAbility[iType].g_iElectricSight, 1);
+		g_esElectricCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_iHumanAbility, g_esElectricPlayer[tank].g_iHumanAbility, g_esElectricSpecial[iType].g_iHumanAbility, g_esElectricAbility[iType].g_iHumanAbility, 1);
+		g_esElectricCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_iHumanAmmo, g_esElectricPlayer[tank].g_iHumanAmmo, g_esElectricSpecial[iType].g_iHumanAmmo, g_esElectricAbility[iType].g_iHumanAmmo, 1);
+		g_esElectricCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_iHumanCooldown, g_esElectricPlayer[tank].g_iHumanCooldown, g_esElectricSpecial[iType].g_iHumanCooldown, g_esElectricAbility[iType].g_iHumanCooldown, 1);
+		g_esElectricCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_iHumanRangeCooldown, g_esElectricPlayer[tank].g_iHumanRangeCooldown, g_esElectricSpecial[iType].g_iHumanRangeCooldown, g_esElectricAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esElectricCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_flOpenAreasOnly, g_esElectricPlayer[tank].g_flOpenAreasOnly, g_esElectricSpecial[iType].g_flOpenAreasOnly, g_esElectricAbility[iType].g_flOpenAreasOnly, 1);
+		g_esElectricCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_iRequiresHumans, g_esElectricPlayer[tank].g_iRequiresHumans, g_esElectricSpecial[iType].g_iRequiresHumans, g_esElectricAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
 	{
-		g_esElectricCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_flCloseAreasOnly, g_esElectricAbility[type].g_flCloseAreasOnly, 1);
-		g_esElectricCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iComboAbility, g_esElectricAbility[type].g_iComboAbility, 1);
-		g_esElectricCache[tank].g_flElectricChance = flGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_flElectricChance, g_esElectricAbility[type].g_flElectricChance, 1);
-		g_esElectricCache[tank].g_flElectricDamage = flGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_flElectricDamage, g_esElectricAbility[type].g_flElectricDamage, 1);
-		g_esElectricCache[tank].g_iElectricDuration = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iElectricDuration, g_esElectricAbility[type].g_iElectricDuration, 1);
-		g_esElectricCache[tank].g_flElectricInterval = flGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_flElectricInterval, g_esElectricAbility[type].g_flElectricInterval, 1);
-		g_esElectricCache[tank].g_flElectricRange = flGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_flElectricRange, g_esElectricAbility[type].g_flElectricRange, 1);
-		g_esElectricCache[tank].g_flElectricRangeChance = flGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_flElectricRangeChance, g_esElectricAbility[type].g_flElectricRangeChance, 1);
-		g_esElectricCache[tank].g_flElectricStunSpeed = flGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_flElectricStunSpeed, g_esElectricAbility[type].g_flElectricStunSpeed, 1);
-		g_esElectricCache[tank].g_iElectricAbility = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iElectricAbility, g_esElectricAbility[type].g_iElectricAbility, 1);
-		g_esElectricCache[tank].g_iElectricCooldown = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iElectricCooldown, g_esElectricAbility[type].g_iElectricCooldown, 1);
-		g_esElectricCache[tank].g_iElectricEffect = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iElectricEffect, g_esElectricAbility[type].g_iElectricEffect, 1);
-		g_esElectricCache[tank].g_iElectricHit = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iElectricHit, g_esElectricAbility[type].g_iElectricHit, 1);
-		g_esElectricCache[tank].g_iElectricHitMode = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iElectricHitMode, g_esElectricAbility[type].g_iElectricHitMode, 1);
-		g_esElectricCache[tank].g_iElectricMessage = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iElectricMessage, g_esElectricAbility[type].g_iElectricMessage, 1);
-		g_esElectricCache[tank].g_iElectricRangeCooldown = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iElectricRangeCooldown, g_esElectricAbility[type].g_iElectricRangeCooldown, 1);
-		g_esElectricCache[tank].g_iElectricSight = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iElectricSight, g_esElectricAbility[type].g_iElectricSight, 1);
-		g_esElectricCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iHumanAbility, g_esElectricAbility[type].g_iHumanAbility, 1);
-		g_esElectricCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iHumanAmmo, g_esElectricAbility[type].g_iHumanAmmo, 1);
-		g_esElectricCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iHumanCooldown, g_esElectricAbility[type].g_iHumanCooldown, 1);
-		g_esElectricCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iHumanRangeCooldown, g_esElectricAbility[type].g_iHumanRangeCooldown, 1);
-		g_esElectricCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_flOpenAreasOnly, g_esElectricAbility[type].g_flOpenAreasOnly, 1);
-		g_esElectricCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iRequiresHumans, g_esElectricAbility[type].g_iRequiresHumans, 1);
+		g_esElectricCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_flCloseAreasOnly, g_esElectricAbility[iType].g_flCloseAreasOnly, 1);
+		g_esElectricCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iComboAbility, g_esElectricAbility[iType].g_iComboAbility, 1);
+		g_esElectricCache[tank].g_flElectricChance = flGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_flElectricChance, g_esElectricAbility[iType].g_flElectricChance, 1);
+		g_esElectricCache[tank].g_flElectricDamage = flGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_flElectricDamage, g_esElectricAbility[iType].g_flElectricDamage, 1);
+		g_esElectricCache[tank].g_iElectricDuration = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iElectricDuration, g_esElectricAbility[iType].g_iElectricDuration, 1);
+		g_esElectricCache[tank].g_flElectricInterval = flGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_flElectricInterval, g_esElectricAbility[iType].g_flElectricInterval, 1);
+		g_esElectricCache[tank].g_flElectricRange = flGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_flElectricRange, g_esElectricAbility[iType].g_flElectricRange, 1);
+		g_esElectricCache[tank].g_flElectricRangeChance = flGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_flElectricRangeChance, g_esElectricAbility[iType].g_flElectricRangeChance, 1);
+		g_esElectricCache[tank].g_flElectricStunSpeed = flGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_flElectricStunSpeed, g_esElectricAbility[iType].g_flElectricStunSpeed, 1);
+		g_esElectricCache[tank].g_iElectricAbility = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iElectricAbility, g_esElectricAbility[iType].g_iElectricAbility, 1);
+		g_esElectricCache[tank].g_iElectricCooldown = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iElectricCooldown, g_esElectricAbility[iType].g_iElectricCooldown, 1);
+		g_esElectricCache[tank].g_iElectricEffect = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iElectricEffect, g_esElectricAbility[iType].g_iElectricEffect, 1);
+		g_esElectricCache[tank].g_iElectricHit = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iElectricHit, g_esElectricAbility[iType].g_iElectricHit, 1);
+		g_esElectricCache[tank].g_iElectricHitMode = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iElectricHitMode, g_esElectricAbility[iType].g_iElectricHitMode, 1);
+		g_esElectricCache[tank].g_iElectricMessage = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iElectricMessage, g_esElectricAbility[iType].g_iElectricMessage, 1);
+		g_esElectricCache[tank].g_iElectricRangeCooldown = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iElectricRangeCooldown, g_esElectricAbility[iType].g_iElectricRangeCooldown, 1);
+		g_esElectricCache[tank].g_iElectricSight = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iElectricSight, g_esElectricAbility[iType].g_iElectricSight, 1);
+		g_esElectricCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iHumanAbility, g_esElectricAbility[iType].g_iHumanAbility, 1);
+		g_esElectricCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iHumanAmmo, g_esElectricAbility[iType].g_iHumanAmmo, 1);
+		g_esElectricCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iHumanCooldown, g_esElectricAbility[iType].g_iHumanCooldown, 1);
+		g_esElectricCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iHumanRangeCooldown, g_esElectricAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esElectricCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_flOpenAreasOnly, g_esElectricAbility[iType].g_flOpenAreasOnly, 1);
+		g_esElectricCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iRequiresHumans, g_esElectricAbility[iType].g_iRequiresHumans, 1);
 	}
 }
 

@@ -93,6 +93,7 @@ enum struct esNullifyPlayer
 	int g_iRangeCooldown;
 	int g_iRequiresHumans;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esNullifyPlayer g_esNullifyPlayer[MAXPLAYERS + 1];
@@ -800,53 +801,55 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esNullifyPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esNullifyPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esNullifyPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esNullifyCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_flCloseAreasOnly, g_esNullifyPlayer[tank].g_flCloseAreasOnly, g_esNullifySpecial[type].g_flCloseAreasOnly, g_esNullifyAbility[type].g_flCloseAreasOnly, 1);
-		g_esNullifyCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iComboAbility, g_esNullifyPlayer[tank].g_iComboAbility, g_esNullifySpecial[type].g_iComboAbility, g_esNullifyAbility[type].g_iComboAbility, 1);
-		g_esNullifyCache[tank].g_flNullifyChance = flGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_flNullifyChance, g_esNullifyPlayer[tank].g_flNullifyChance, g_esNullifySpecial[type].g_flNullifyChance, g_esNullifyAbility[type].g_flNullifyChance, 1);
-		g_esNullifyCache[tank].g_flNullifyDuration = flGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_flNullifyDuration, g_esNullifyPlayer[tank].g_flNullifyDuration, g_esNullifySpecial[type].g_flNullifyDuration, g_esNullifyAbility[type].g_flNullifyDuration, 1);
-		g_esNullifyCache[tank].g_flNullifyRange = flGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_flNullifyRange, g_esNullifyPlayer[tank].g_flNullifyRange, g_esNullifySpecial[type].g_flNullifyRange, g_esNullifyAbility[type].g_flNullifyRange, 1);
-		g_esNullifyCache[tank].g_flNullifyRangeChance = flGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_flNullifyRangeChance, g_esNullifyPlayer[tank].g_flNullifyRangeChance, g_esNullifySpecial[type].g_flNullifyRangeChance, g_esNullifyAbility[type].g_flNullifyRangeChance, 1);
-		g_esNullifyCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iHumanAbility, g_esNullifyPlayer[tank].g_iHumanAbility, g_esNullifySpecial[type].g_iHumanAbility, g_esNullifyAbility[type].g_iHumanAbility, 1);
-		g_esNullifyCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iHumanAmmo, g_esNullifyPlayer[tank].g_iHumanAmmo, g_esNullifySpecial[type].g_iHumanAmmo, g_esNullifyAbility[type].g_iHumanAmmo, 1);
-		g_esNullifyCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iHumanCooldown, g_esNullifyPlayer[tank].g_iHumanCooldown, g_esNullifySpecial[type].g_iHumanCooldown, g_esNullifyAbility[type].g_iHumanCooldown, 1);
-		g_esNullifyCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iHumanRangeCooldown, g_esNullifyPlayer[tank].g_iHumanRangeCooldown, g_esNullifySpecial[type].g_iHumanRangeCooldown, g_esNullifyAbility[type].g_iHumanRangeCooldown, 1);
-		g_esNullifyCache[tank].g_iNullifyAbility = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iNullifyAbility, g_esNullifyPlayer[tank].g_iNullifyAbility, g_esNullifySpecial[type].g_iNullifyAbility, g_esNullifyAbility[type].g_iNullifyAbility, 1);
-		g_esNullifyCache[tank].g_iNullifyCooldown = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iNullifyCooldown, g_esNullifyPlayer[tank].g_iNullifyCooldown, g_esNullifySpecial[type].g_iNullifyCooldown, g_esNullifyAbility[type].g_iNullifyCooldown, 1);
-		g_esNullifyCache[tank].g_iNullifyEffect = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iNullifyEffect, g_esNullifyPlayer[tank].g_iNullifyEffect, g_esNullifySpecial[type].g_iNullifyEffect, g_esNullifyAbility[type].g_iNullifyEffect, 1);
-		g_esNullifyCache[tank].g_iNullifyHit = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iNullifyHit, g_esNullifyPlayer[tank].g_iNullifyHit, g_esNullifySpecial[type].g_iNullifyHit, g_esNullifyAbility[type].g_iNullifyHit, 1);
-		g_esNullifyCache[tank].g_iNullifyHitMode = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iNullifyHitMode, g_esNullifyPlayer[tank].g_iNullifyHitMode, g_esNullifySpecial[type].g_iNullifyHitMode, g_esNullifyAbility[type].g_iNullifyHitMode, 1);
-		g_esNullifyCache[tank].g_iNullifyMessage = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iNullifyMessage, g_esNullifyPlayer[tank].g_iNullifyMessage, g_esNullifySpecial[type].g_iNullifyMessage, g_esNullifyAbility[type].g_iNullifyMessage, 1);
-		g_esNullifyCache[tank].g_iNullifyRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iNullifyRangeCooldown, g_esNullifyPlayer[tank].g_iNullifyRangeCooldown, g_esNullifySpecial[type].g_iNullifyRangeCooldown, g_esNullifyAbility[type].g_iNullifyRangeCooldown, 1);
-		g_esNullifyCache[tank].g_iNullifySight = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iNullifySight, g_esNullifyPlayer[tank].g_iNullifySight, g_esNullifySpecial[type].g_iNullifySight, g_esNullifyAbility[type].g_iNullifySight, 1);
-		g_esNullifyCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_flOpenAreasOnly, g_esNullifyPlayer[tank].g_flOpenAreasOnly, g_esNullifySpecial[type].g_flOpenAreasOnly, g_esNullifyAbility[type].g_flOpenAreasOnly, 1);
-		g_esNullifyCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iRequiresHumans, g_esNullifyPlayer[tank].g_iRequiresHumans, g_esNullifySpecial[type].g_iRequiresHumans, g_esNullifyAbility[type].g_iRequiresHumans, 1);
+		g_esNullifyCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_flCloseAreasOnly, g_esNullifyPlayer[tank].g_flCloseAreasOnly, g_esNullifySpecial[iType].g_flCloseAreasOnly, g_esNullifyAbility[iType].g_flCloseAreasOnly, 1);
+		g_esNullifyCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iComboAbility, g_esNullifyPlayer[tank].g_iComboAbility, g_esNullifySpecial[iType].g_iComboAbility, g_esNullifyAbility[iType].g_iComboAbility, 1);
+		g_esNullifyCache[tank].g_flNullifyChance = flGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_flNullifyChance, g_esNullifyPlayer[tank].g_flNullifyChance, g_esNullifySpecial[iType].g_flNullifyChance, g_esNullifyAbility[iType].g_flNullifyChance, 1);
+		g_esNullifyCache[tank].g_flNullifyDuration = flGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_flNullifyDuration, g_esNullifyPlayer[tank].g_flNullifyDuration, g_esNullifySpecial[iType].g_flNullifyDuration, g_esNullifyAbility[iType].g_flNullifyDuration, 1);
+		g_esNullifyCache[tank].g_flNullifyRange = flGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_flNullifyRange, g_esNullifyPlayer[tank].g_flNullifyRange, g_esNullifySpecial[iType].g_flNullifyRange, g_esNullifyAbility[iType].g_flNullifyRange, 1);
+		g_esNullifyCache[tank].g_flNullifyRangeChance = flGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_flNullifyRangeChance, g_esNullifyPlayer[tank].g_flNullifyRangeChance, g_esNullifySpecial[iType].g_flNullifyRangeChance, g_esNullifyAbility[iType].g_flNullifyRangeChance, 1);
+		g_esNullifyCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iHumanAbility, g_esNullifyPlayer[tank].g_iHumanAbility, g_esNullifySpecial[iType].g_iHumanAbility, g_esNullifyAbility[iType].g_iHumanAbility, 1);
+		g_esNullifyCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iHumanAmmo, g_esNullifyPlayer[tank].g_iHumanAmmo, g_esNullifySpecial[iType].g_iHumanAmmo, g_esNullifyAbility[iType].g_iHumanAmmo, 1);
+		g_esNullifyCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iHumanCooldown, g_esNullifyPlayer[tank].g_iHumanCooldown, g_esNullifySpecial[iType].g_iHumanCooldown, g_esNullifyAbility[iType].g_iHumanCooldown, 1);
+		g_esNullifyCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iHumanRangeCooldown, g_esNullifyPlayer[tank].g_iHumanRangeCooldown, g_esNullifySpecial[iType].g_iHumanRangeCooldown, g_esNullifyAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esNullifyCache[tank].g_iNullifyAbility = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iNullifyAbility, g_esNullifyPlayer[tank].g_iNullifyAbility, g_esNullifySpecial[iType].g_iNullifyAbility, g_esNullifyAbility[iType].g_iNullifyAbility, 1);
+		g_esNullifyCache[tank].g_iNullifyCooldown = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iNullifyCooldown, g_esNullifyPlayer[tank].g_iNullifyCooldown, g_esNullifySpecial[iType].g_iNullifyCooldown, g_esNullifyAbility[iType].g_iNullifyCooldown, 1);
+		g_esNullifyCache[tank].g_iNullifyEffect = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iNullifyEffect, g_esNullifyPlayer[tank].g_iNullifyEffect, g_esNullifySpecial[iType].g_iNullifyEffect, g_esNullifyAbility[iType].g_iNullifyEffect, 1);
+		g_esNullifyCache[tank].g_iNullifyHit = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iNullifyHit, g_esNullifyPlayer[tank].g_iNullifyHit, g_esNullifySpecial[iType].g_iNullifyHit, g_esNullifyAbility[iType].g_iNullifyHit, 1);
+		g_esNullifyCache[tank].g_iNullifyHitMode = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iNullifyHitMode, g_esNullifyPlayer[tank].g_iNullifyHitMode, g_esNullifySpecial[iType].g_iNullifyHitMode, g_esNullifyAbility[iType].g_iNullifyHitMode, 1);
+		g_esNullifyCache[tank].g_iNullifyMessage = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iNullifyMessage, g_esNullifyPlayer[tank].g_iNullifyMessage, g_esNullifySpecial[iType].g_iNullifyMessage, g_esNullifyAbility[iType].g_iNullifyMessage, 1);
+		g_esNullifyCache[tank].g_iNullifyRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iNullifyRangeCooldown, g_esNullifyPlayer[tank].g_iNullifyRangeCooldown, g_esNullifySpecial[iType].g_iNullifyRangeCooldown, g_esNullifyAbility[iType].g_iNullifyRangeCooldown, 1);
+		g_esNullifyCache[tank].g_iNullifySight = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iNullifySight, g_esNullifyPlayer[tank].g_iNullifySight, g_esNullifySpecial[iType].g_iNullifySight, g_esNullifyAbility[iType].g_iNullifySight, 1);
+		g_esNullifyCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_flOpenAreasOnly, g_esNullifyPlayer[tank].g_flOpenAreasOnly, g_esNullifySpecial[iType].g_flOpenAreasOnly, g_esNullifyAbility[iType].g_flOpenAreasOnly, 1);
+		g_esNullifyCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esNullifyTeammate[tank].g_iRequiresHumans, g_esNullifyPlayer[tank].g_iRequiresHumans, g_esNullifySpecial[iType].g_iRequiresHumans, g_esNullifyAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
 	{
-		g_esNullifyCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_flCloseAreasOnly, g_esNullifyAbility[type].g_flCloseAreasOnly, 1);
-		g_esNullifyCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iComboAbility, g_esNullifyAbility[type].g_iComboAbility, 1);
-		g_esNullifyCache[tank].g_flNullifyChance = flGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_flNullifyChance, g_esNullifyAbility[type].g_flNullifyChance, 1);
-		g_esNullifyCache[tank].g_flNullifyDuration = flGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_flNullifyDuration, g_esNullifyAbility[type].g_flNullifyDuration, 1);
-		g_esNullifyCache[tank].g_flNullifyRange = flGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_flNullifyRange, g_esNullifyAbility[type].g_flNullifyRange, 1);
-		g_esNullifyCache[tank].g_flNullifyRangeChance = flGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_flNullifyRangeChance, g_esNullifyAbility[type].g_flNullifyRangeChance, 1);
-		g_esNullifyCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iHumanAbility, g_esNullifyAbility[type].g_iHumanAbility, 1);
-		g_esNullifyCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iHumanAmmo, g_esNullifyAbility[type].g_iHumanAmmo, 1);
-		g_esNullifyCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iHumanCooldown, g_esNullifyAbility[type].g_iHumanCooldown, 1);
-		g_esNullifyCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iHumanRangeCooldown, g_esNullifyAbility[type].g_iHumanRangeCooldown, 1);
-		g_esNullifyCache[tank].g_iNullifyAbility = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iNullifyAbility, g_esNullifyAbility[type].g_iNullifyAbility, 1);
-		g_esNullifyCache[tank].g_iNullifyCooldown = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iNullifyCooldown, g_esNullifyAbility[type].g_iNullifyCooldown, 1);
-		g_esNullifyCache[tank].g_iNullifyEffect = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iNullifyEffect, g_esNullifyAbility[type].g_iNullifyEffect, 1);
-		g_esNullifyCache[tank].g_iNullifyHit = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iNullifyHit, g_esNullifyAbility[type].g_iNullifyHit, 1);
-		g_esNullifyCache[tank].g_iNullifyHitMode = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iNullifyHitMode, g_esNullifyAbility[type].g_iNullifyHitMode, 1);
-		g_esNullifyCache[tank].g_iNullifyMessage = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iNullifyMessage, g_esNullifyAbility[type].g_iNullifyMessage, 1);
-		g_esNullifyCache[tank].g_iNullifyRangeCooldown = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iNullifyRangeCooldown, g_esNullifyAbility[type].g_iNullifyRangeCooldown, 1);
-		g_esNullifyCache[tank].g_iNullifySight = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iNullifySight, g_esNullifyAbility[type].g_iNullifySight, 1);
-		g_esNullifyCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_flOpenAreasOnly, g_esNullifyAbility[type].g_flOpenAreasOnly, 1);
-		g_esNullifyCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iRequiresHumans, g_esNullifyAbility[type].g_iRequiresHumans, 1);
+		g_esNullifyCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_flCloseAreasOnly, g_esNullifyAbility[iType].g_flCloseAreasOnly, 1);
+		g_esNullifyCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iComboAbility, g_esNullifyAbility[iType].g_iComboAbility, 1);
+		g_esNullifyCache[tank].g_flNullifyChance = flGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_flNullifyChance, g_esNullifyAbility[iType].g_flNullifyChance, 1);
+		g_esNullifyCache[tank].g_flNullifyDuration = flGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_flNullifyDuration, g_esNullifyAbility[iType].g_flNullifyDuration, 1);
+		g_esNullifyCache[tank].g_flNullifyRange = flGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_flNullifyRange, g_esNullifyAbility[iType].g_flNullifyRange, 1);
+		g_esNullifyCache[tank].g_flNullifyRangeChance = flGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_flNullifyRangeChance, g_esNullifyAbility[iType].g_flNullifyRangeChance, 1);
+		g_esNullifyCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iHumanAbility, g_esNullifyAbility[iType].g_iHumanAbility, 1);
+		g_esNullifyCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iHumanAmmo, g_esNullifyAbility[iType].g_iHumanAmmo, 1);
+		g_esNullifyCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iHumanCooldown, g_esNullifyAbility[iType].g_iHumanCooldown, 1);
+		g_esNullifyCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iHumanRangeCooldown, g_esNullifyAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esNullifyCache[tank].g_iNullifyAbility = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iNullifyAbility, g_esNullifyAbility[iType].g_iNullifyAbility, 1);
+		g_esNullifyCache[tank].g_iNullifyCooldown = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iNullifyCooldown, g_esNullifyAbility[iType].g_iNullifyCooldown, 1);
+		g_esNullifyCache[tank].g_iNullifyEffect = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iNullifyEffect, g_esNullifyAbility[iType].g_iNullifyEffect, 1);
+		g_esNullifyCache[tank].g_iNullifyHit = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iNullifyHit, g_esNullifyAbility[iType].g_iNullifyHit, 1);
+		g_esNullifyCache[tank].g_iNullifyHitMode = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iNullifyHitMode, g_esNullifyAbility[iType].g_iNullifyHitMode, 1);
+		g_esNullifyCache[tank].g_iNullifyMessage = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iNullifyMessage, g_esNullifyAbility[iType].g_iNullifyMessage, 1);
+		g_esNullifyCache[tank].g_iNullifyRangeCooldown = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iNullifyRangeCooldown, g_esNullifyAbility[iType].g_iNullifyRangeCooldown, 1);
+		g_esNullifyCache[tank].g_iNullifySight = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iNullifySight, g_esNullifyAbility[iType].g_iNullifySight, 1);
+		g_esNullifyCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_flOpenAreasOnly, g_esNullifyAbility[iType].g_flOpenAreasOnly, 1);
+		g_esNullifyCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iRequiresHumans, g_esNullifyAbility[iType].g_iRequiresHumans, 1);
 	}
 }
 

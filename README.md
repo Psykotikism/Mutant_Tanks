@@ -30,7 +30,7 @@ Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, 
 <details>
 	<summary>Click to expand!</summary>
 
-1. `SourceMod 1.12.0.6985` or higher
+1. `SourceMod 1.12.0.7066` or higher
 2. [`DHooks 2.2.0-detours15` or higher](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
 3. Recommended (Optional):
 - [`Actions`](https://forums.alliedmods.net/showthread.php?t=336374)
@@ -1413,6 +1413,17 @@ native int MT_GetMinType();
 native void MT_GetPropColors(int tank, int type, int &red, int &green, int &blue, int &alpha);
 
 /**
+ * Returns the recorded type of a Mutant Tank.
+ *
+ * @param tank			Client index of the Tank.
+ * @param type			Mutant Tank type. (Optional)
+ *
+ * @return			The Tank's recorded Mutant Tank type.
+ * @error			Invalid client index or client is not in-game.
+ **/
+native int MT_GetRecordedTankType(int tank, int type = 0);
+
+/**
  * Returns a Mutant Tank's run speed.
  *
  * @param tank			Client index of the Tank.
@@ -1470,11 +1481,12 @@ native void MT_GetTankName(int tank, char[] buffer);
  * Returns the type of a Mutant Tank.
  *
  * @param tank			Client index of the Tank.
+ * @param type			Recorded Mutant Tank type. (Optional)
  *
  * @return			The Tank's Mutant Tank type.
  * @error			Invalid client index or client is not in-game.
  **/
-native int MT_GetTankType(int tank);
+native int MT_GetTankType(int tank, int type = 0);
 
 /**
  * Returns if a human player has access to a Mutant Tank type.

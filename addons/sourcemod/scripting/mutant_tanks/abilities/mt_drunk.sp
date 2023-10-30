@@ -93,6 +93,7 @@ enum struct esDrunkPlayer
 	int g_iRangeCooldown;
 	int g_iRequiresHumans;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esDrunkPlayer g_esDrunkPlayer[MAXPLAYERS + 1];
@@ -807,57 +808,59 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esDrunkPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esDrunkPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esDrunkPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esDrunkCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_flCloseAreasOnly, g_esDrunkPlayer[tank].g_flCloseAreasOnly, g_esDrunkSpecial[type].g_flCloseAreasOnly, g_esDrunkAbility[type].g_flCloseAreasOnly, 1);
-		g_esDrunkCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_iComboAbility, g_esDrunkPlayer[tank].g_iComboAbility, g_esDrunkSpecial[type].g_iComboAbility, g_esDrunkAbility[type].g_iComboAbility, 1);
-		g_esDrunkCache[tank].g_flDrunkChance = flGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_flDrunkChance, g_esDrunkPlayer[tank].g_flDrunkChance, g_esDrunkSpecial[type].g_flDrunkChance, g_esDrunkAbility[type].g_flDrunkChance, 1);
-		g_esDrunkCache[tank].g_flDrunkRange = flGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_flDrunkRange, g_esDrunkPlayer[tank].g_flDrunkRange, g_esDrunkSpecial[type].g_flDrunkRange, g_esDrunkAbility[type].g_flDrunkRange, 1);
-		g_esDrunkCache[tank].g_flDrunkRangeChance = flGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_flDrunkRangeChance, g_esDrunkPlayer[tank].g_flDrunkRangeChance, g_esDrunkSpecial[type].g_flDrunkRangeChance, g_esDrunkAbility[type].g_flDrunkRangeChance, 1);
-		g_esDrunkCache[tank].g_flDrunkSpeedInterval = flGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_flDrunkSpeedInterval, g_esDrunkPlayer[tank].g_flDrunkSpeedInterval, g_esDrunkSpecial[type].g_flDrunkSpeedInterval, g_esDrunkAbility[type].g_flDrunkSpeedInterval, 1);
-		g_esDrunkCache[tank].g_flDrunkTurnInterval = flGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_flDrunkTurnInterval, g_esDrunkPlayer[tank].g_flDrunkTurnInterval, g_esDrunkSpecial[type].g_flDrunkTurnInterval, g_esDrunkAbility[type].g_flDrunkTurnInterval, 1);
-		g_esDrunkCache[tank].g_iDrunkAbility = iGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_iDrunkAbility, g_esDrunkPlayer[tank].g_iDrunkAbility, g_esDrunkSpecial[type].g_iDrunkAbility, g_esDrunkAbility[type].g_iDrunkAbility, 1);
-		g_esDrunkCache[tank].g_iDrunkCooldown = iGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_iDrunkCooldown, g_esDrunkPlayer[tank].g_iDrunkCooldown, g_esDrunkSpecial[type].g_iDrunkCooldown, g_esDrunkAbility[type].g_iDrunkCooldown, 1);
-		g_esDrunkCache[tank].g_iDrunkDuration = iGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_iDrunkDuration, g_esDrunkPlayer[tank].g_iDrunkDuration, g_esDrunkSpecial[type].g_iDrunkDuration, g_esDrunkAbility[type].g_iDrunkDuration, 1);
-		g_esDrunkCache[tank].g_iDrunkEffect = iGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_iDrunkEffect, g_esDrunkPlayer[tank].g_iDrunkEffect, g_esDrunkSpecial[type].g_iDrunkEffect, g_esDrunkAbility[type].g_iDrunkEffect, 1);
-		g_esDrunkCache[tank].g_iDrunkHit = iGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_iDrunkHit, g_esDrunkPlayer[tank].g_iDrunkHit, g_esDrunkSpecial[type].g_iDrunkHit, g_esDrunkAbility[type].g_iDrunkHit, 1);
-		g_esDrunkCache[tank].g_iDrunkHitMode = iGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_iDrunkHitMode, g_esDrunkPlayer[tank].g_iDrunkHitMode, g_esDrunkSpecial[type].g_iDrunkHitMode, g_esDrunkAbility[type].g_iDrunkHitMode, 1);
-		g_esDrunkCache[tank].g_iDrunkMessage = iGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_iDrunkMessage, g_esDrunkPlayer[tank].g_iDrunkMessage, g_esDrunkSpecial[type].g_iDrunkMessage, g_esDrunkAbility[type].g_iDrunkMessage, 1);
-		g_esDrunkCache[tank].g_iDrunkRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_iDrunkRangeCooldown, g_esDrunkPlayer[tank].g_iDrunkRangeCooldown, g_esDrunkSpecial[type].g_iDrunkRangeCooldown, g_esDrunkAbility[type].g_iDrunkRangeCooldown, 1);
-		g_esDrunkCache[tank].g_iDrunkSight = iGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_iDrunkSight, g_esDrunkPlayer[tank].g_iDrunkSight, g_esDrunkSpecial[type].g_iDrunkSight, g_esDrunkAbility[type].g_iDrunkSight, 1);
-		g_esDrunkCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_iHumanAbility, g_esDrunkPlayer[tank].g_iHumanAbility, g_esDrunkSpecial[type].g_iHumanAbility, g_esDrunkAbility[type].g_iHumanAbility, 1);
-		g_esDrunkCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_iHumanAmmo, g_esDrunkPlayer[tank].g_iHumanAmmo, g_esDrunkSpecial[type].g_iHumanAmmo, g_esDrunkAbility[type].g_iHumanAmmo, 1);
-		g_esDrunkCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_iHumanCooldown, g_esDrunkPlayer[tank].g_iHumanCooldown, g_esDrunkSpecial[type].g_iHumanCooldown, g_esDrunkAbility[type].g_iHumanCooldown, 1);
-		g_esDrunkCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_iHumanRangeCooldown, g_esDrunkPlayer[tank].g_iHumanRangeCooldown, g_esDrunkSpecial[type].g_iHumanRangeCooldown, g_esDrunkAbility[type].g_iHumanRangeCooldown, 1);
-		g_esDrunkCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_flOpenAreasOnly, g_esDrunkPlayer[tank].g_flOpenAreasOnly, g_esDrunkSpecial[type].g_flOpenAreasOnly, g_esDrunkAbility[type].g_flOpenAreasOnly, 1);
-		g_esDrunkCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_iRequiresHumans, g_esDrunkPlayer[tank].g_iRequiresHumans, g_esDrunkSpecial[type].g_iRequiresHumans, g_esDrunkAbility[type].g_iRequiresHumans, 1);
+		g_esDrunkCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_flCloseAreasOnly, g_esDrunkPlayer[tank].g_flCloseAreasOnly, g_esDrunkSpecial[iType].g_flCloseAreasOnly, g_esDrunkAbility[iType].g_flCloseAreasOnly, 1);
+		g_esDrunkCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_iComboAbility, g_esDrunkPlayer[tank].g_iComboAbility, g_esDrunkSpecial[iType].g_iComboAbility, g_esDrunkAbility[iType].g_iComboAbility, 1);
+		g_esDrunkCache[tank].g_flDrunkChance = flGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_flDrunkChance, g_esDrunkPlayer[tank].g_flDrunkChance, g_esDrunkSpecial[iType].g_flDrunkChance, g_esDrunkAbility[iType].g_flDrunkChance, 1);
+		g_esDrunkCache[tank].g_flDrunkRange = flGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_flDrunkRange, g_esDrunkPlayer[tank].g_flDrunkRange, g_esDrunkSpecial[iType].g_flDrunkRange, g_esDrunkAbility[iType].g_flDrunkRange, 1);
+		g_esDrunkCache[tank].g_flDrunkRangeChance = flGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_flDrunkRangeChance, g_esDrunkPlayer[tank].g_flDrunkRangeChance, g_esDrunkSpecial[iType].g_flDrunkRangeChance, g_esDrunkAbility[iType].g_flDrunkRangeChance, 1);
+		g_esDrunkCache[tank].g_flDrunkSpeedInterval = flGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_flDrunkSpeedInterval, g_esDrunkPlayer[tank].g_flDrunkSpeedInterval, g_esDrunkSpecial[iType].g_flDrunkSpeedInterval, g_esDrunkAbility[iType].g_flDrunkSpeedInterval, 1);
+		g_esDrunkCache[tank].g_flDrunkTurnInterval = flGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_flDrunkTurnInterval, g_esDrunkPlayer[tank].g_flDrunkTurnInterval, g_esDrunkSpecial[iType].g_flDrunkTurnInterval, g_esDrunkAbility[iType].g_flDrunkTurnInterval, 1);
+		g_esDrunkCache[tank].g_iDrunkAbility = iGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_iDrunkAbility, g_esDrunkPlayer[tank].g_iDrunkAbility, g_esDrunkSpecial[iType].g_iDrunkAbility, g_esDrunkAbility[iType].g_iDrunkAbility, 1);
+		g_esDrunkCache[tank].g_iDrunkCooldown = iGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_iDrunkCooldown, g_esDrunkPlayer[tank].g_iDrunkCooldown, g_esDrunkSpecial[iType].g_iDrunkCooldown, g_esDrunkAbility[iType].g_iDrunkCooldown, 1);
+		g_esDrunkCache[tank].g_iDrunkDuration = iGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_iDrunkDuration, g_esDrunkPlayer[tank].g_iDrunkDuration, g_esDrunkSpecial[iType].g_iDrunkDuration, g_esDrunkAbility[iType].g_iDrunkDuration, 1);
+		g_esDrunkCache[tank].g_iDrunkEffect = iGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_iDrunkEffect, g_esDrunkPlayer[tank].g_iDrunkEffect, g_esDrunkSpecial[iType].g_iDrunkEffect, g_esDrunkAbility[iType].g_iDrunkEffect, 1);
+		g_esDrunkCache[tank].g_iDrunkHit = iGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_iDrunkHit, g_esDrunkPlayer[tank].g_iDrunkHit, g_esDrunkSpecial[iType].g_iDrunkHit, g_esDrunkAbility[iType].g_iDrunkHit, 1);
+		g_esDrunkCache[tank].g_iDrunkHitMode = iGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_iDrunkHitMode, g_esDrunkPlayer[tank].g_iDrunkHitMode, g_esDrunkSpecial[iType].g_iDrunkHitMode, g_esDrunkAbility[iType].g_iDrunkHitMode, 1);
+		g_esDrunkCache[tank].g_iDrunkMessage = iGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_iDrunkMessage, g_esDrunkPlayer[tank].g_iDrunkMessage, g_esDrunkSpecial[iType].g_iDrunkMessage, g_esDrunkAbility[iType].g_iDrunkMessage, 1);
+		g_esDrunkCache[tank].g_iDrunkRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_iDrunkRangeCooldown, g_esDrunkPlayer[tank].g_iDrunkRangeCooldown, g_esDrunkSpecial[iType].g_iDrunkRangeCooldown, g_esDrunkAbility[iType].g_iDrunkRangeCooldown, 1);
+		g_esDrunkCache[tank].g_iDrunkSight = iGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_iDrunkSight, g_esDrunkPlayer[tank].g_iDrunkSight, g_esDrunkSpecial[iType].g_iDrunkSight, g_esDrunkAbility[iType].g_iDrunkSight, 1);
+		g_esDrunkCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_iHumanAbility, g_esDrunkPlayer[tank].g_iHumanAbility, g_esDrunkSpecial[iType].g_iHumanAbility, g_esDrunkAbility[iType].g_iHumanAbility, 1);
+		g_esDrunkCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_iHumanAmmo, g_esDrunkPlayer[tank].g_iHumanAmmo, g_esDrunkSpecial[iType].g_iHumanAmmo, g_esDrunkAbility[iType].g_iHumanAmmo, 1);
+		g_esDrunkCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_iHumanCooldown, g_esDrunkPlayer[tank].g_iHumanCooldown, g_esDrunkSpecial[iType].g_iHumanCooldown, g_esDrunkAbility[iType].g_iHumanCooldown, 1);
+		g_esDrunkCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_iHumanRangeCooldown, g_esDrunkPlayer[tank].g_iHumanRangeCooldown, g_esDrunkSpecial[iType].g_iHumanRangeCooldown, g_esDrunkAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esDrunkCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_flOpenAreasOnly, g_esDrunkPlayer[tank].g_flOpenAreasOnly, g_esDrunkSpecial[iType].g_flOpenAreasOnly, g_esDrunkAbility[iType].g_flOpenAreasOnly, 1);
+		g_esDrunkCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esDrunkTeammate[tank].g_iRequiresHumans, g_esDrunkPlayer[tank].g_iRequiresHumans, g_esDrunkSpecial[iType].g_iRequiresHumans, g_esDrunkAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
 	{
-		g_esDrunkCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_flCloseAreasOnly, g_esDrunkAbility[type].g_flCloseAreasOnly, 1);
-		g_esDrunkCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_iComboAbility, g_esDrunkAbility[type].g_iComboAbility, 1);
-		g_esDrunkCache[tank].g_flDrunkChance = flGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_flDrunkChance, g_esDrunkAbility[type].g_flDrunkChance, 1);
-		g_esDrunkCache[tank].g_flDrunkRange = flGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_flDrunkRange, g_esDrunkAbility[type].g_flDrunkRange, 1);
-		g_esDrunkCache[tank].g_flDrunkRangeChance = flGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_flDrunkRangeChance, g_esDrunkAbility[type].g_flDrunkRangeChance, 1);
-		g_esDrunkCache[tank].g_flDrunkSpeedInterval = flGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_flDrunkSpeedInterval, g_esDrunkAbility[type].g_flDrunkSpeedInterval, 1);
-		g_esDrunkCache[tank].g_flDrunkTurnInterval = flGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_flDrunkTurnInterval, g_esDrunkAbility[type].g_flDrunkTurnInterval, 1);
-		g_esDrunkCache[tank].g_iDrunkAbility = iGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_iDrunkAbility, g_esDrunkAbility[type].g_iDrunkAbility, 1);
-		g_esDrunkCache[tank].g_iDrunkCooldown = iGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_iDrunkCooldown, g_esDrunkAbility[type].g_iDrunkCooldown, 1);
-		g_esDrunkCache[tank].g_iDrunkDuration = iGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_iDrunkDuration, g_esDrunkAbility[type].g_iDrunkDuration, 1);
-		g_esDrunkCache[tank].g_iDrunkEffect = iGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_iDrunkEffect, g_esDrunkAbility[type].g_iDrunkEffect, 1);
-		g_esDrunkCache[tank].g_iDrunkHit = iGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_iDrunkHit, g_esDrunkAbility[type].g_iDrunkHit, 1);
-		g_esDrunkCache[tank].g_iDrunkHitMode = iGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_iDrunkHitMode, g_esDrunkAbility[type].g_iDrunkHitMode, 1);
-		g_esDrunkCache[tank].g_iDrunkMessage = iGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_iDrunkMessage, g_esDrunkAbility[type].g_iDrunkMessage, 1);
-		g_esDrunkCache[tank].g_iDrunkRangeCooldown = iGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_iDrunkRangeCooldown, g_esDrunkAbility[type].g_iDrunkRangeCooldown, 1);
-		g_esDrunkCache[tank].g_iDrunkSight = iGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_iDrunkSight, g_esDrunkAbility[type].g_iDrunkSight, 1);
-		g_esDrunkCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_iHumanAbility, g_esDrunkAbility[type].g_iHumanAbility, 1);
-		g_esDrunkCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_iHumanAmmo, g_esDrunkAbility[type].g_iHumanAmmo, 1);
-		g_esDrunkCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_iHumanCooldown, g_esDrunkAbility[type].g_iHumanCooldown, 1);
-		g_esDrunkCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_iHumanRangeCooldown, g_esDrunkAbility[type].g_iHumanRangeCooldown, 1);
-		g_esDrunkCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_flOpenAreasOnly, g_esDrunkAbility[type].g_flOpenAreasOnly, 1);
-		g_esDrunkCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_iRequiresHumans, g_esDrunkAbility[type].g_iRequiresHumans, 1);
+		g_esDrunkCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_flCloseAreasOnly, g_esDrunkAbility[iType].g_flCloseAreasOnly, 1);
+		g_esDrunkCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_iComboAbility, g_esDrunkAbility[iType].g_iComboAbility, 1);
+		g_esDrunkCache[tank].g_flDrunkChance = flGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_flDrunkChance, g_esDrunkAbility[iType].g_flDrunkChance, 1);
+		g_esDrunkCache[tank].g_flDrunkRange = flGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_flDrunkRange, g_esDrunkAbility[iType].g_flDrunkRange, 1);
+		g_esDrunkCache[tank].g_flDrunkRangeChance = flGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_flDrunkRangeChance, g_esDrunkAbility[iType].g_flDrunkRangeChance, 1);
+		g_esDrunkCache[tank].g_flDrunkSpeedInterval = flGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_flDrunkSpeedInterval, g_esDrunkAbility[iType].g_flDrunkSpeedInterval, 1);
+		g_esDrunkCache[tank].g_flDrunkTurnInterval = flGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_flDrunkTurnInterval, g_esDrunkAbility[iType].g_flDrunkTurnInterval, 1);
+		g_esDrunkCache[tank].g_iDrunkAbility = iGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_iDrunkAbility, g_esDrunkAbility[iType].g_iDrunkAbility, 1);
+		g_esDrunkCache[tank].g_iDrunkCooldown = iGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_iDrunkCooldown, g_esDrunkAbility[iType].g_iDrunkCooldown, 1);
+		g_esDrunkCache[tank].g_iDrunkDuration = iGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_iDrunkDuration, g_esDrunkAbility[iType].g_iDrunkDuration, 1);
+		g_esDrunkCache[tank].g_iDrunkEffect = iGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_iDrunkEffect, g_esDrunkAbility[iType].g_iDrunkEffect, 1);
+		g_esDrunkCache[tank].g_iDrunkHit = iGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_iDrunkHit, g_esDrunkAbility[iType].g_iDrunkHit, 1);
+		g_esDrunkCache[tank].g_iDrunkHitMode = iGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_iDrunkHitMode, g_esDrunkAbility[iType].g_iDrunkHitMode, 1);
+		g_esDrunkCache[tank].g_iDrunkMessage = iGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_iDrunkMessage, g_esDrunkAbility[iType].g_iDrunkMessage, 1);
+		g_esDrunkCache[tank].g_iDrunkRangeCooldown = iGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_iDrunkRangeCooldown, g_esDrunkAbility[iType].g_iDrunkRangeCooldown, 1);
+		g_esDrunkCache[tank].g_iDrunkSight = iGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_iDrunkSight, g_esDrunkAbility[iType].g_iDrunkSight, 1);
+		g_esDrunkCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_iHumanAbility, g_esDrunkAbility[iType].g_iHumanAbility, 1);
+		g_esDrunkCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_iHumanAmmo, g_esDrunkAbility[iType].g_iHumanAmmo, 1);
+		g_esDrunkCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_iHumanCooldown, g_esDrunkAbility[iType].g_iHumanCooldown, 1);
+		g_esDrunkCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_iHumanRangeCooldown, g_esDrunkAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esDrunkCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_flOpenAreasOnly, g_esDrunkAbility[iType].g_flOpenAreasOnly, 1);
+		g_esDrunkCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esDrunkPlayer[tank].g_iRequiresHumans, g_esDrunkAbility[iType].g_iRequiresHumans, 1);
 	}
 }
 

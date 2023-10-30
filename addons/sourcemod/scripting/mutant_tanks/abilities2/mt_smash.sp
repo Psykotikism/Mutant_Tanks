@@ -103,6 +103,7 @@ enum struct esSmashPlayer
 	int g_iSmashRangeCooldown;
 	int g_iSmashSight;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esSmashPlayer g_esSmashPlayer[MAXPLAYERS + 1];
@@ -867,57 +868,59 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esSmashPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esSmashPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esSmashPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esSmashCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_flCloseAreasOnly, g_esSmashPlayer[tank].g_flCloseAreasOnly, g_esSmashSpecial[type].g_flCloseAreasOnly, g_esSmashAbility[type].g_flCloseAreasOnly, 1);
-		g_esSmashCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_iComboAbility, g_esSmashPlayer[tank].g_iComboAbility, g_esSmashSpecial[type].g_iComboAbility, g_esSmashAbility[type].g_iComboAbility, 1);
-		g_esSmashCache[tank].g_flSmashChance = flGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_flSmashChance, g_esSmashPlayer[tank].g_flSmashChance, g_esSmashSpecial[type].g_flSmashChance, g_esSmashAbility[type].g_flSmashChance, 1);
-		g_esSmashCache[tank].g_flSmashMeter = flGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_flSmashMeter, g_esSmashPlayer[tank].g_flSmashMeter, g_esSmashSpecial[type].g_flSmashMeter, g_esSmashAbility[type].g_flSmashMeter, 1);
-		g_esSmashCache[tank].g_flSmashRange = flGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_flSmashRange, g_esSmashPlayer[tank].g_flSmashRange, g_esSmashSpecial[type].g_flSmashRange, g_esSmashAbility[type].g_flSmashRange, 1);
-		g_esSmashCache[tank].g_flSmashRangeChance = flGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_flSmashRangeChance, g_esSmashPlayer[tank].g_flSmashRangeChance, g_esSmashSpecial[type].g_flSmashRangeChance, g_esSmashAbility[type].g_flSmashRangeChance, 1);
-		g_esSmashCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_iHumanAbility, g_esSmashPlayer[tank].g_iHumanAbility, g_esSmashSpecial[type].g_iHumanAbility, g_esSmashAbility[type].g_iHumanAbility, 1);
-		g_esSmashCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_iHumanAmmo, g_esSmashPlayer[tank].g_iHumanAmmo, g_esSmashSpecial[type].g_iHumanAmmo, g_esSmashAbility[type].g_iHumanAmmo, 1);
-		g_esSmashCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_iHumanCooldown, g_esSmashPlayer[tank].g_iHumanCooldown, g_esSmashSpecial[type].g_iHumanCooldown, g_esSmashAbility[type].g_iHumanCooldown, 1);
-		g_esSmashCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_iHumanRangeCooldown, g_esSmashPlayer[tank].g_iHumanRangeCooldown, g_esSmashSpecial[type].g_iHumanRangeCooldown, g_esSmashAbility[type].g_iHumanRangeCooldown, 1);
-		g_esSmashCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_flOpenAreasOnly, g_esSmashPlayer[tank].g_flOpenAreasOnly, g_esSmashSpecial[type].g_flOpenAreasOnly, g_esSmashAbility[type].g_flOpenAreasOnly, 1);
-		g_esSmashCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_iRequiresHumans, g_esSmashPlayer[tank].g_iRequiresHumans, g_esSmashSpecial[type].g_iRequiresHumans, g_esSmashAbility[type].g_iRequiresHumans, 1);
-		g_esSmashCache[tank].g_iSmashAbility = iGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_iSmashAbility, g_esSmashPlayer[tank].g_iSmashAbility, g_esSmashSpecial[type].g_iSmashAbility, g_esSmashAbility[type].g_iSmashAbility, 1);
-		g_esSmashCache[tank].g_iSmashBody = iGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_iSmashBody, g_esSmashPlayer[tank].g_iSmashBody, g_esSmashSpecial[type].g_iSmashBody, g_esSmashAbility[type].g_iSmashBody, 1);
-		g_esSmashCache[tank].g_iSmashCooldown = iGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_iSmashCooldown, g_esSmashPlayer[tank].g_iSmashCooldown, g_esSmashSpecial[type].g_iSmashCooldown, g_esSmashAbility[type].g_iSmashCooldown, 1);
-		g_esSmashCache[tank].g_iSmashEffect = iGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_iSmashEffect, g_esSmashPlayer[tank].g_iSmashEffect, g_esSmashSpecial[type].g_iSmashEffect, g_esSmashAbility[type].g_iSmashEffect, 1);
-		g_esSmashCache[tank].g_iSmashHit = iGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_iSmashHit, g_esSmashPlayer[tank].g_iSmashHit, g_esSmashSpecial[type].g_iSmashHit, g_esSmashAbility[type].g_iSmashHit, 1);
-		g_esSmashCache[tank].g_iSmashHitMode = iGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_iSmashHitMode, g_esSmashPlayer[tank].g_iSmashHitMode, g_esSmashSpecial[type].g_iSmashHitMode, g_esSmashAbility[type].g_iSmashHitMode, 1);
-		g_esSmashCache[tank].g_iSmashMessage = iGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_iSmashMessage, g_esSmashPlayer[tank].g_iSmashMessage, g_esSmashSpecial[type].g_iSmashMessage, g_esSmashAbility[type].g_iSmashMessage, 1);
-		g_esSmashCache[tank].g_iSmashMode = iGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_iSmashMode, g_esSmashPlayer[tank].g_iSmashMode, g_esSmashSpecial[type].g_iSmashMode, g_esSmashAbility[type].g_iSmashMode, 1);
-		g_esSmashCache[tank].g_iSmashRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_iSmashRangeCooldown, g_esSmashPlayer[tank].g_iSmashRangeCooldown, g_esSmashSpecial[type].g_iSmashRangeCooldown, g_esSmashAbility[type].g_iSmashRangeCooldown, 1);
-		g_esSmashCache[tank].g_iSmashSight = iGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_iSmashSight, g_esSmashPlayer[tank].g_iSmashSight, g_esSmashSpecial[type].g_iSmashSight, g_esSmashAbility[type].g_iSmashSight, 1);
+		g_esSmashCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_flCloseAreasOnly, g_esSmashPlayer[tank].g_flCloseAreasOnly, g_esSmashSpecial[iType].g_flCloseAreasOnly, g_esSmashAbility[iType].g_flCloseAreasOnly, 1);
+		g_esSmashCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_iComboAbility, g_esSmashPlayer[tank].g_iComboAbility, g_esSmashSpecial[iType].g_iComboAbility, g_esSmashAbility[iType].g_iComboAbility, 1);
+		g_esSmashCache[tank].g_flSmashChance = flGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_flSmashChance, g_esSmashPlayer[tank].g_flSmashChance, g_esSmashSpecial[iType].g_flSmashChance, g_esSmashAbility[iType].g_flSmashChance, 1);
+		g_esSmashCache[tank].g_flSmashMeter = flGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_flSmashMeter, g_esSmashPlayer[tank].g_flSmashMeter, g_esSmashSpecial[iType].g_flSmashMeter, g_esSmashAbility[iType].g_flSmashMeter, 1);
+		g_esSmashCache[tank].g_flSmashRange = flGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_flSmashRange, g_esSmashPlayer[tank].g_flSmashRange, g_esSmashSpecial[iType].g_flSmashRange, g_esSmashAbility[iType].g_flSmashRange, 1);
+		g_esSmashCache[tank].g_flSmashRangeChance = flGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_flSmashRangeChance, g_esSmashPlayer[tank].g_flSmashRangeChance, g_esSmashSpecial[iType].g_flSmashRangeChance, g_esSmashAbility[iType].g_flSmashRangeChance, 1);
+		g_esSmashCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_iHumanAbility, g_esSmashPlayer[tank].g_iHumanAbility, g_esSmashSpecial[iType].g_iHumanAbility, g_esSmashAbility[iType].g_iHumanAbility, 1);
+		g_esSmashCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_iHumanAmmo, g_esSmashPlayer[tank].g_iHumanAmmo, g_esSmashSpecial[iType].g_iHumanAmmo, g_esSmashAbility[iType].g_iHumanAmmo, 1);
+		g_esSmashCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_iHumanCooldown, g_esSmashPlayer[tank].g_iHumanCooldown, g_esSmashSpecial[iType].g_iHumanCooldown, g_esSmashAbility[iType].g_iHumanCooldown, 1);
+		g_esSmashCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_iHumanRangeCooldown, g_esSmashPlayer[tank].g_iHumanRangeCooldown, g_esSmashSpecial[iType].g_iHumanRangeCooldown, g_esSmashAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esSmashCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_flOpenAreasOnly, g_esSmashPlayer[tank].g_flOpenAreasOnly, g_esSmashSpecial[iType].g_flOpenAreasOnly, g_esSmashAbility[iType].g_flOpenAreasOnly, 1);
+		g_esSmashCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_iRequiresHumans, g_esSmashPlayer[tank].g_iRequiresHumans, g_esSmashSpecial[iType].g_iRequiresHumans, g_esSmashAbility[iType].g_iRequiresHumans, 1);
+		g_esSmashCache[tank].g_iSmashAbility = iGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_iSmashAbility, g_esSmashPlayer[tank].g_iSmashAbility, g_esSmashSpecial[iType].g_iSmashAbility, g_esSmashAbility[iType].g_iSmashAbility, 1);
+		g_esSmashCache[tank].g_iSmashBody = iGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_iSmashBody, g_esSmashPlayer[tank].g_iSmashBody, g_esSmashSpecial[iType].g_iSmashBody, g_esSmashAbility[iType].g_iSmashBody, 1);
+		g_esSmashCache[tank].g_iSmashCooldown = iGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_iSmashCooldown, g_esSmashPlayer[tank].g_iSmashCooldown, g_esSmashSpecial[iType].g_iSmashCooldown, g_esSmashAbility[iType].g_iSmashCooldown, 1);
+		g_esSmashCache[tank].g_iSmashEffect = iGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_iSmashEffect, g_esSmashPlayer[tank].g_iSmashEffect, g_esSmashSpecial[iType].g_iSmashEffect, g_esSmashAbility[iType].g_iSmashEffect, 1);
+		g_esSmashCache[tank].g_iSmashHit = iGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_iSmashHit, g_esSmashPlayer[tank].g_iSmashHit, g_esSmashSpecial[iType].g_iSmashHit, g_esSmashAbility[iType].g_iSmashHit, 1);
+		g_esSmashCache[tank].g_iSmashHitMode = iGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_iSmashHitMode, g_esSmashPlayer[tank].g_iSmashHitMode, g_esSmashSpecial[iType].g_iSmashHitMode, g_esSmashAbility[iType].g_iSmashHitMode, 1);
+		g_esSmashCache[tank].g_iSmashMessage = iGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_iSmashMessage, g_esSmashPlayer[tank].g_iSmashMessage, g_esSmashSpecial[iType].g_iSmashMessage, g_esSmashAbility[iType].g_iSmashMessage, 1);
+		g_esSmashCache[tank].g_iSmashMode = iGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_iSmashMode, g_esSmashPlayer[tank].g_iSmashMode, g_esSmashSpecial[iType].g_iSmashMode, g_esSmashAbility[iType].g_iSmashMode, 1);
+		g_esSmashCache[tank].g_iSmashRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_iSmashRangeCooldown, g_esSmashPlayer[tank].g_iSmashRangeCooldown, g_esSmashSpecial[iType].g_iSmashRangeCooldown, g_esSmashAbility[iType].g_iSmashRangeCooldown, 1);
+		g_esSmashCache[tank].g_iSmashSight = iGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_iSmashSight, g_esSmashPlayer[tank].g_iSmashSight, g_esSmashSpecial[iType].g_iSmashSight, g_esSmashAbility[iType].g_iSmashSight, 1);
 	}
 	else
 	{
-		g_esSmashCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_flCloseAreasOnly, g_esSmashAbility[type].g_flCloseAreasOnly, 1);
-		g_esSmashCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_iComboAbility, g_esSmashAbility[type].g_iComboAbility, 1);
-		g_esSmashCache[tank].g_flSmashChance = flGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_flSmashChance, g_esSmashAbility[type].g_flSmashChance, 1);
-		g_esSmashCache[tank].g_flSmashMeter = flGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_flSmashMeter, g_esSmashAbility[type].g_flSmashMeter, 1);
-		g_esSmashCache[tank].g_flSmashRange = flGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_flSmashRange, g_esSmashAbility[type].g_flSmashRange, 1);
-		g_esSmashCache[tank].g_flSmashRangeChance = flGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_flSmashRangeChance, g_esSmashAbility[type].g_flSmashRangeChance, 1);
-		g_esSmashCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_iHumanAbility, g_esSmashAbility[type].g_iHumanAbility, 1);
-		g_esSmashCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_iHumanAmmo, g_esSmashAbility[type].g_iHumanAmmo, 1);
-		g_esSmashCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_iHumanCooldown, g_esSmashAbility[type].g_iHumanCooldown, 1);
-		g_esSmashCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_iHumanRangeCooldown, g_esSmashAbility[type].g_iHumanRangeCooldown, 1);
-		g_esSmashCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_flOpenAreasOnly, g_esSmashAbility[type].g_flOpenAreasOnly, 1);
-		g_esSmashCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_iRequiresHumans, g_esSmashAbility[type].g_iRequiresHumans, 1);
-		g_esSmashCache[tank].g_iSmashAbility = iGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_iSmashAbility, g_esSmashAbility[type].g_iSmashAbility, 1);
-		g_esSmashCache[tank].g_iSmashBody = iGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_iSmashBody, g_esSmashAbility[type].g_iSmashBody, 1);
-		g_esSmashCache[tank].g_iSmashCooldown = iGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_iSmashCooldown, g_esSmashAbility[type].g_iSmashCooldown, 1);
-		g_esSmashCache[tank].g_iSmashEffect = iGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_iSmashEffect, g_esSmashAbility[type].g_iSmashEffect, 1);
-		g_esSmashCache[tank].g_iSmashHit = iGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_iSmashHit, g_esSmashAbility[type].g_iSmashHit, 1);
-		g_esSmashCache[tank].g_iSmashHitMode = iGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_iSmashHitMode, g_esSmashAbility[type].g_iSmashHitMode, 1);
-		g_esSmashCache[tank].g_iSmashMessage = iGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_iSmashMessage, g_esSmashAbility[type].g_iSmashMessage, 1);
-		g_esSmashCache[tank].g_iSmashMode = iGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_iSmashMode, g_esSmashAbility[type].g_iSmashMode, 1);
-		g_esSmashCache[tank].g_iSmashRangeCooldown = iGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_iSmashRangeCooldown, g_esSmashAbility[type].g_iSmashRangeCooldown, 1);
-		g_esSmashCache[tank].g_iSmashSight = iGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_iSmashSight, g_esSmashAbility[type].g_iSmashSight, 1);
+		g_esSmashCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_flCloseAreasOnly, g_esSmashAbility[iType].g_flCloseAreasOnly, 1);
+		g_esSmashCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_iComboAbility, g_esSmashAbility[iType].g_iComboAbility, 1);
+		g_esSmashCache[tank].g_flSmashChance = flGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_flSmashChance, g_esSmashAbility[iType].g_flSmashChance, 1);
+		g_esSmashCache[tank].g_flSmashMeter = flGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_flSmashMeter, g_esSmashAbility[iType].g_flSmashMeter, 1);
+		g_esSmashCache[tank].g_flSmashRange = flGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_flSmashRange, g_esSmashAbility[iType].g_flSmashRange, 1);
+		g_esSmashCache[tank].g_flSmashRangeChance = flGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_flSmashRangeChance, g_esSmashAbility[iType].g_flSmashRangeChance, 1);
+		g_esSmashCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_iHumanAbility, g_esSmashAbility[iType].g_iHumanAbility, 1);
+		g_esSmashCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_iHumanAmmo, g_esSmashAbility[iType].g_iHumanAmmo, 1);
+		g_esSmashCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_iHumanCooldown, g_esSmashAbility[iType].g_iHumanCooldown, 1);
+		g_esSmashCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_iHumanRangeCooldown, g_esSmashAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esSmashCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_flOpenAreasOnly, g_esSmashAbility[iType].g_flOpenAreasOnly, 1);
+		g_esSmashCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_iRequiresHumans, g_esSmashAbility[iType].g_iRequiresHumans, 1);
+		g_esSmashCache[tank].g_iSmashAbility = iGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_iSmashAbility, g_esSmashAbility[iType].g_iSmashAbility, 1);
+		g_esSmashCache[tank].g_iSmashBody = iGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_iSmashBody, g_esSmashAbility[iType].g_iSmashBody, 1);
+		g_esSmashCache[tank].g_iSmashCooldown = iGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_iSmashCooldown, g_esSmashAbility[iType].g_iSmashCooldown, 1);
+		g_esSmashCache[tank].g_iSmashEffect = iGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_iSmashEffect, g_esSmashAbility[iType].g_iSmashEffect, 1);
+		g_esSmashCache[tank].g_iSmashHit = iGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_iSmashHit, g_esSmashAbility[iType].g_iSmashHit, 1);
+		g_esSmashCache[tank].g_iSmashHitMode = iGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_iSmashHitMode, g_esSmashAbility[iType].g_iSmashHitMode, 1);
+		g_esSmashCache[tank].g_iSmashMessage = iGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_iSmashMessage, g_esSmashAbility[iType].g_iSmashMessage, 1);
+		g_esSmashCache[tank].g_iSmashMode = iGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_iSmashMode, g_esSmashAbility[iType].g_iSmashMode, 1);
+		g_esSmashCache[tank].g_iSmashRangeCooldown = iGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_iSmashRangeCooldown, g_esSmashAbility[iType].g_iSmashRangeCooldown, 1);
+		g_esSmashCache[tank].g_iSmashSight = iGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_iSmashSight, g_esSmashAbility[iType].g_iSmashSight, 1);
 	}
 }
 

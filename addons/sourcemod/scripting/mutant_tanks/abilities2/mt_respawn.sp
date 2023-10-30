@@ -80,6 +80,7 @@ enum struct esRespawnPlayer
 	int g_iRespawnMinType;
 	int g_iRespawnMessage;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esRespawnPlayer g_esRespawnPlayer[MAXPLAYERS + 1];
@@ -602,37 +603,39 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esRespawnPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esRespawnPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esRespawnPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esRespawnCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esRespawnTeammate[tank].g_flCloseAreasOnly, g_esRespawnPlayer[tank].g_flCloseAreasOnly, g_esRespawnSpecial[type].g_flCloseAreasOnly, g_esRespawnAbility[type].g_flCloseAreasOnly, 1);
-		g_esRespawnCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esRespawnTeammate[tank].g_iComboAbility, g_esRespawnPlayer[tank].g_iComboAbility, g_esRespawnSpecial[type].g_iComboAbility, g_esRespawnAbility[type].g_iComboAbility, 1);
-		g_esRespawnCache[tank].g_flRespawnChance = flGetSubSettingValue(apply, bHuman, g_esRespawnTeammate[tank].g_flRespawnChance, g_esRespawnPlayer[tank].g_flRespawnChance, g_esRespawnSpecial[type].g_flRespawnChance, g_esRespawnAbility[type].g_flRespawnChance, 1);
-		g_esRespawnCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esRespawnTeammate[tank].g_iHumanAbility, g_esRespawnPlayer[tank].g_iHumanAbility, g_esRespawnSpecial[type].g_iHumanAbility, g_esRespawnAbility[type].g_iHumanAbility, 1);
-		g_esRespawnCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esRespawnTeammate[tank].g_iHumanAmmo, g_esRespawnPlayer[tank].g_iHumanAmmo, g_esRespawnSpecial[type].g_iHumanAmmo, g_esRespawnAbility[type].g_iHumanAmmo, 1);
-		g_esRespawnCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esRespawnTeammate[tank].g_flOpenAreasOnly, g_esRespawnPlayer[tank].g_flOpenAreasOnly, g_esRespawnSpecial[type].g_flOpenAreasOnly, g_esRespawnAbility[type].g_flOpenAreasOnly, 1);
-		g_esRespawnCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esRespawnTeammate[tank].g_iRequiresHumans, g_esRespawnPlayer[tank].g_iRequiresHumans, g_esRespawnSpecial[type].g_iRequiresHumans, g_esRespawnAbility[type].g_iRequiresHumans, 1);
-		g_esRespawnCache[tank].g_iRespawnAbility = iGetSubSettingValue(apply, bHuman, g_esRespawnTeammate[tank].g_iRespawnAbility, g_esRespawnPlayer[tank].g_iRespawnAbility, g_esRespawnSpecial[type].g_iRespawnAbility, g_esRespawnAbility[type].g_iRespawnAbility, 1);
-		g_esRespawnCache[tank].g_iRespawnAmount = iGetSubSettingValue(apply, bHuman, g_esRespawnTeammate[tank].g_iRespawnAmount, g_esRespawnPlayer[tank].g_iRespawnAmount, g_esRespawnSpecial[type].g_iRespawnAmount, g_esRespawnAbility[type].g_iRespawnAmount, 1);
-		g_esRespawnCache[tank].g_iRespawnMaxType = iGetSubSettingValue(apply, bHuman, g_esRespawnTeammate[tank].g_iRespawnMaxType, g_esRespawnPlayer[tank].g_iRespawnMaxType, g_esRespawnSpecial[type].g_iRespawnMaxType, g_esRespawnAbility[type].g_iRespawnMaxType, 1);
-		g_esRespawnCache[tank].g_iRespawnMinType = iGetSubSettingValue(apply, bHuman, g_esRespawnTeammate[tank].g_iRespawnMinType, g_esRespawnPlayer[tank].g_iRespawnMinType, g_esRespawnSpecial[type].g_iRespawnMinType, g_esRespawnAbility[type].g_iRespawnMinType, 1);
-		g_esRespawnCache[tank].g_iRespawnMessage = iGetSubSettingValue(apply, bHuman, g_esRespawnTeammate[tank].g_iRespawnMessage, g_esRespawnPlayer[tank].g_iRespawnMessage, g_esRespawnSpecial[type].g_iRespawnMessage, g_esRespawnAbility[type].g_iRespawnMessage, 1);
+		g_esRespawnCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esRespawnTeammate[tank].g_flCloseAreasOnly, g_esRespawnPlayer[tank].g_flCloseAreasOnly, g_esRespawnSpecial[iType].g_flCloseAreasOnly, g_esRespawnAbility[iType].g_flCloseAreasOnly, 1);
+		g_esRespawnCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esRespawnTeammate[tank].g_iComboAbility, g_esRespawnPlayer[tank].g_iComboAbility, g_esRespawnSpecial[iType].g_iComboAbility, g_esRespawnAbility[iType].g_iComboAbility, 1);
+		g_esRespawnCache[tank].g_flRespawnChance = flGetSubSettingValue(apply, bHuman, g_esRespawnTeammate[tank].g_flRespawnChance, g_esRespawnPlayer[tank].g_flRespawnChance, g_esRespawnSpecial[iType].g_flRespawnChance, g_esRespawnAbility[iType].g_flRespawnChance, 1);
+		g_esRespawnCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esRespawnTeammate[tank].g_iHumanAbility, g_esRespawnPlayer[tank].g_iHumanAbility, g_esRespawnSpecial[iType].g_iHumanAbility, g_esRespawnAbility[iType].g_iHumanAbility, 1);
+		g_esRespawnCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esRespawnTeammate[tank].g_iHumanAmmo, g_esRespawnPlayer[tank].g_iHumanAmmo, g_esRespawnSpecial[iType].g_iHumanAmmo, g_esRespawnAbility[iType].g_iHumanAmmo, 1);
+		g_esRespawnCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esRespawnTeammate[tank].g_flOpenAreasOnly, g_esRespawnPlayer[tank].g_flOpenAreasOnly, g_esRespawnSpecial[iType].g_flOpenAreasOnly, g_esRespawnAbility[iType].g_flOpenAreasOnly, 1);
+		g_esRespawnCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esRespawnTeammate[tank].g_iRequiresHumans, g_esRespawnPlayer[tank].g_iRequiresHumans, g_esRespawnSpecial[iType].g_iRequiresHumans, g_esRespawnAbility[iType].g_iRequiresHumans, 1);
+		g_esRespawnCache[tank].g_iRespawnAbility = iGetSubSettingValue(apply, bHuman, g_esRespawnTeammate[tank].g_iRespawnAbility, g_esRespawnPlayer[tank].g_iRespawnAbility, g_esRespawnSpecial[iType].g_iRespawnAbility, g_esRespawnAbility[iType].g_iRespawnAbility, 1);
+		g_esRespawnCache[tank].g_iRespawnAmount = iGetSubSettingValue(apply, bHuman, g_esRespawnTeammate[tank].g_iRespawnAmount, g_esRespawnPlayer[tank].g_iRespawnAmount, g_esRespawnSpecial[iType].g_iRespawnAmount, g_esRespawnAbility[iType].g_iRespawnAmount, 1);
+		g_esRespawnCache[tank].g_iRespawnMaxType = iGetSubSettingValue(apply, bHuman, g_esRespawnTeammate[tank].g_iRespawnMaxType, g_esRespawnPlayer[tank].g_iRespawnMaxType, g_esRespawnSpecial[iType].g_iRespawnMaxType, g_esRespawnAbility[iType].g_iRespawnMaxType, 1);
+		g_esRespawnCache[tank].g_iRespawnMinType = iGetSubSettingValue(apply, bHuman, g_esRespawnTeammate[tank].g_iRespawnMinType, g_esRespawnPlayer[tank].g_iRespawnMinType, g_esRespawnSpecial[iType].g_iRespawnMinType, g_esRespawnAbility[iType].g_iRespawnMinType, 1);
+		g_esRespawnCache[tank].g_iRespawnMessage = iGetSubSettingValue(apply, bHuman, g_esRespawnTeammate[tank].g_iRespawnMessage, g_esRespawnPlayer[tank].g_iRespawnMessage, g_esRespawnSpecial[iType].g_iRespawnMessage, g_esRespawnAbility[iType].g_iRespawnMessage, 1);
 	}
 	else
 	{
-		g_esRespawnCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esRespawnPlayer[tank].g_flCloseAreasOnly, g_esRespawnAbility[type].g_flCloseAreasOnly, 1);
-		g_esRespawnCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esRespawnPlayer[tank].g_iComboAbility, g_esRespawnAbility[type].g_iComboAbility, 1);
-		g_esRespawnCache[tank].g_flRespawnChance = flGetSettingValue(apply, bHuman, g_esRespawnPlayer[tank].g_flRespawnChance, g_esRespawnAbility[type].g_flRespawnChance, 1);
-		g_esRespawnCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esRespawnPlayer[tank].g_iHumanAbility, g_esRespawnAbility[type].g_iHumanAbility, 1);
-		g_esRespawnCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esRespawnPlayer[tank].g_iHumanAmmo, g_esRespawnAbility[type].g_iHumanAmmo, 1);
-		g_esRespawnCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esRespawnPlayer[tank].g_flOpenAreasOnly, g_esRespawnAbility[type].g_flOpenAreasOnly, 1);
-		g_esRespawnCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esRespawnPlayer[tank].g_iRequiresHumans, g_esRespawnAbility[type].g_iRequiresHumans, 1);
-		g_esRespawnCache[tank].g_iRespawnAbility = iGetSettingValue(apply, bHuman, g_esRespawnPlayer[tank].g_iRespawnAbility, g_esRespawnAbility[type].g_iRespawnAbility, 1);
-		g_esRespawnCache[tank].g_iRespawnAmount = iGetSettingValue(apply, bHuman, g_esRespawnPlayer[tank].g_iRespawnAmount, g_esRespawnAbility[type].g_iRespawnAmount, 1);
-		g_esRespawnCache[tank].g_iRespawnMaxType = iGetSettingValue(apply, bHuman, g_esRespawnPlayer[tank].g_iRespawnMaxType, g_esRespawnAbility[type].g_iRespawnMaxType, 1);
-		g_esRespawnCache[tank].g_iRespawnMinType = iGetSettingValue(apply, bHuman, g_esRespawnPlayer[tank].g_iRespawnMinType, g_esRespawnAbility[type].g_iRespawnMinType, 1);
-		g_esRespawnCache[tank].g_iRespawnMessage = iGetSettingValue(apply, bHuman, g_esRespawnPlayer[tank].g_iRespawnMessage, g_esRespawnAbility[type].g_iRespawnMessage, 1);
+		g_esRespawnCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esRespawnPlayer[tank].g_flCloseAreasOnly, g_esRespawnAbility[iType].g_flCloseAreasOnly, 1);
+		g_esRespawnCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esRespawnPlayer[tank].g_iComboAbility, g_esRespawnAbility[iType].g_iComboAbility, 1);
+		g_esRespawnCache[tank].g_flRespawnChance = flGetSettingValue(apply, bHuman, g_esRespawnPlayer[tank].g_flRespawnChance, g_esRespawnAbility[iType].g_flRespawnChance, 1);
+		g_esRespawnCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esRespawnPlayer[tank].g_iHumanAbility, g_esRespawnAbility[iType].g_iHumanAbility, 1);
+		g_esRespawnCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esRespawnPlayer[tank].g_iHumanAmmo, g_esRespawnAbility[iType].g_iHumanAmmo, 1);
+		g_esRespawnCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esRespawnPlayer[tank].g_flOpenAreasOnly, g_esRespawnAbility[iType].g_flOpenAreasOnly, 1);
+		g_esRespawnCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esRespawnPlayer[tank].g_iRequiresHumans, g_esRespawnAbility[iType].g_iRequiresHumans, 1);
+		g_esRespawnCache[tank].g_iRespawnAbility = iGetSettingValue(apply, bHuman, g_esRespawnPlayer[tank].g_iRespawnAbility, g_esRespawnAbility[iType].g_iRespawnAbility, 1);
+		g_esRespawnCache[tank].g_iRespawnAmount = iGetSettingValue(apply, bHuman, g_esRespawnPlayer[tank].g_iRespawnAmount, g_esRespawnAbility[iType].g_iRespawnAmount, 1);
+		g_esRespawnCache[tank].g_iRespawnMaxType = iGetSettingValue(apply, bHuman, g_esRespawnPlayer[tank].g_iRespawnMaxType, g_esRespawnAbility[iType].g_iRespawnMaxType, 1);
+		g_esRespawnCache[tank].g_iRespawnMinType = iGetSettingValue(apply, bHuman, g_esRespawnPlayer[tank].g_iRespawnMinType, g_esRespawnAbility[iType].g_iRespawnMinType, 1);
+		g_esRespawnCache[tank].g_iRespawnMessage = iGetSettingValue(apply, bHuman, g_esRespawnPlayer[tank].g_iRespawnMessage, g_esRespawnAbility[iType].g_iRespawnMessage, 1);
 	}
 }
 

@@ -71,6 +71,7 @@ enum struct esXiphosPlayer
 	int g_iImmunityFlags;
 	int g_iRequiresHumans;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 	int g_iXiphosAbility;
 	int g_iXiphosEffect;
 	int g_iXiphosMaxHealth;
@@ -519,31 +520,33 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esXiphosPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esXiphosPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esXiphosPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esXiphosCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esXiphosTeammate[tank].g_flCloseAreasOnly, g_esXiphosPlayer[tank].g_flCloseAreasOnly, g_esXiphosSpecial[type].g_flCloseAreasOnly, g_esXiphosAbility[type].g_flCloseAreasOnly, 1);
-		g_esXiphosCache[tank].g_flXiphosChance = flGetSubSettingValue(apply, bHuman, g_esXiphosTeammate[tank].g_flXiphosChance, g_esXiphosPlayer[tank].g_flXiphosChance, g_esXiphosSpecial[type].g_flXiphosChance, g_esXiphosAbility[type].g_flXiphosChance, 1);
-		g_esXiphosCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esXiphosTeammate[tank].g_iHumanAbility, g_esXiphosPlayer[tank].g_iHumanAbility, g_esXiphosSpecial[type].g_iHumanAbility, g_esXiphosAbility[type].g_iHumanAbility, 1);
-		g_esXiphosCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esXiphosTeammate[tank].g_flOpenAreasOnly, g_esXiphosPlayer[tank].g_flOpenAreasOnly, g_esXiphosSpecial[type].g_flOpenAreasOnly, g_esXiphosAbility[type].g_flOpenAreasOnly, 1);
-		g_esXiphosCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esXiphosTeammate[tank].g_iRequiresHumans, g_esXiphosPlayer[tank].g_iRequiresHumans, g_esXiphosSpecial[type].g_iRequiresHumans, g_esXiphosAbility[type].g_iRequiresHumans, 1);
-		g_esXiphosCache[tank].g_iXiphosAbility = iGetSubSettingValue(apply, bHuman, g_esXiphosTeammate[tank].g_iXiphosAbility, g_esXiphosPlayer[tank].g_iXiphosAbility, g_esXiphosSpecial[type].g_iXiphosAbility, g_esXiphosAbility[type].g_iXiphosAbility, 1);
-		g_esXiphosCache[tank].g_iXiphosEffect = iGetSubSettingValue(apply, bHuman, g_esXiphosTeammate[tank].g_iXiphosEffect, g_esXiphosPlayer[tank].g_iXiphosEffect, g_esXiphosSpecial[type].g_iXiphosEffect, g_esXiphosAbility[type].g_iXiphosEffect, 1);
-		g_esXiphosCache[tank].g_iXiphosMaxHealth = iGetSubSettingValue(apply, bHuman, g_esXiphosTeammate[tank].g_iXiphosMaxHealth, g_esXiphosPlayer[tank].g_iXiphosMaxHealth, g_esXiphosSpecial[type].g_iXiphosMaxHealth, g_esXiphosAbility[type].g_iXiphosMaxHealth, 1);
-		g_esXiphosCache[tank].g_iXiphosMessage = iGetSubSettingValue(apply, bHuman, g_esXiphosTeammate[tank].g_iXiphosMessage, g_esXiphosPlayer[tank].g_iXiphosMessage, g_esXiphosSpecial[type].g_iXiphosMessage, g_esXiphosAbility[type].g_iXiphosMessage, 1);
+		g_esXiphosCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esXiphosTeammate[tank].g_flCloseAreasOnly, g_esXiphosPlayer[tank].g_flCloseAreasOnly, g_esXiphosSpecial[iType].g_flCloseAreasOnly, g_esXiphosAbility[iType].g_flCloseAreasOnly, 1);
+		g_esXiphosCache[tank].g_flXiphosChance = flGetSubSettingValue(apply, bHuman, g_esXiphosTeammate[tank].g_flXiphosChance, g_esXiphosPlayer[tank].g_flXiphosChance, g_esXiphosSpecial[iType].g_flXiphosChance, g_esXiphosAbility[iType].g_flXiphosChance, 1);
+		g_esXiphosCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esXiphosTeammate[tank].g_iHumanAbility, g_esXiphosPlayer[tank].g_iHumanAbility, g_esXiphosSpecial[iType].g_iHumanAbility, g_esXiphosAbility[iType].g_iHumanAbility, 1);
+		g_esXiphosCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esXiphosTeammate[tank].g_flOpenAreasOnly, g_esXiphosPlayer[tank].g_flOpenAreasOnly, g_esXiphosSpecial[iType].g_flOpenAreasOnly, g_esXiphosAbility[iType].g_flOpenAreasOnly, 1);
+		g_esXiphosCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esXiphosTeammate[tank].g_iRequiresHumans, g_esXiphosPlayer[tank].g_iRequiresHumans, g_esXiphosSpecial[iType].g_iRequiresHumans, g_esXiphosAbility[iType].g_iRequiresHumans, 1);
+		g_esXiphosCache[tank].g_iXiphosAbility = iGetSubSettingValue(apply, bHuman, g_esXiphosTeammate[tank].g_iXiphosAbility, g_esXiphosPlayer[tank].g_iXiphosAbility, g_esXiphosSpecial[iType].g_iXiphosAbility, g_esXiphosAbility[iType].g_iXiphosAbility, 1);
+		g_esXiphosCache[tank].g_iXiphosEffect = iGetSubSettingValue(apply, bHuman, g_esXiphosTeammate[tank].g_iXiphosEffect, g_esXiphosPlayer[tank].g_iXiphosEffect, g_esXiphosSpecial[iType].g_iXiphosEffect, g_esXiphosAbility[iType].g_iXiphosEffect, 1);
+		g_esXiphosCache[tank].g_iXiphosMaxHealth = iGetSubSettingValue(apply, bHuman, g_esXiphosTeammate[tank].g_iXiphosMaxHealth, g_esXiphosPlayer[tank].g_iXiphosMaxHealth, g_esXiphosSpecial[iType].g_iXiphosMaxHealth, g_esXiphosAbility[iType].g_iXiphosMaxHealth, 1);
+		g_esXiphosCache[tank].g_iXiphosMessage = iGetSubSettingValue(apply, bHuman, g_esXiphosTeammate[tank].g_iXiphosMessage, g_esXiphosPlayer[tank].g_iXiphosMessage, g_esXiphosSpecial[iType].g_iXiphosMessage, g_esXiphosAbility[iType].g_iXiphosMessage, 1);
 	}
 	else
 	{
-		g_esXiphosCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esXiphosPlayer[tank].g_flCloseAreasOnly, g_esXiphosAbility[type].g_flCloseAreasOnly, 1);
-		g_esXiphosCache[tank].g_flXiphosChance = flGetSettingValue(apply, bHuman, g_esXiphosPlayer[tank].g_flXiphosChance, g_esXiphosAbility[type].g_flXiphosChance, 1);
-		g_esXiphosCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esXiphosPlayer[tank].g_iHumanAbility, g_esXiphosAbility[type].g_iHumanAbility, 1);
-		g_esXiphosCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esXiphosPlayer[tank].g_flOpenAreasOnly, g_esXiphosAbility[type].g_flOpenAreasOnly, 1);
-		g_esXiphosCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esXiphosPlayer[tank].g_iRequiresHumans, g_esXiphosAbility[type].g_iRequiresHumans, 1);
-		g_esXiphosCache[tank].g_iXiphosAbility = iGetSettingValue(apply, bHuman, g_esXiphosPlayer[tank].g_iXiphosAbility, g_esXiphosAbility[type].g_iXiphosAbility, 1);
-		g_esXiphosCache[tank].g_iXiphosEffect = iGetSettingValue(apply, bHuman, g_esXiphosPlayer[tank].g_iXiphosEffect, g_esXiphosAbility[type].g_iXiphosEffect, 1);
-		g_esXiphosCache[tank].g_iXiphosMaxHealth = iGetSettingValue(apply, bHuman, g_esXiphosPlayer[tank].g_iXiphosMaxHealth, g_esXiphosAbility[type].g_iXiphosMaxHealth, 1);
-		g_esXiphosCache[tank].g_iXiphosMessage = iGetSettingValue(apply, bHuman, g_esXiphosPlayer[tank].g_iXiphosMessage, g_esXiphosAbility[type].g_iXiphosMessage, 1);
+		g_esXiphosCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esXiphosPlayer[tank].g_flCloseAreasOnly, g_esXiphosAbility[iType].g_flCloseAreasOnly, 1);
+		g_esXiphosCache[tank].g_flXiphosChance = flGetSettingValue(apply, bHuman, g_esXiphosPlayer[tank].g_flXiphosChance, g_esXiphosAbility[iType].g_flXiphosChance, 1);
+		g_esXiphosCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esXiphosPlayer[tank].g_iHumanAbility, g_esXiphosAbility[iType].g_iHumanAbility, 1);
+		g_esXiphosCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esXiphosPlayer[tank].g_flOpenAreasOnly, g_esXiphosAbility[iType].g_flOpenAreasOnly, 1);
+		g_esXiphosCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esXiphosPlayer[tank].g_iRequiresHumans, g_esXiphosAbility[iType].g_iRequiresHumans, 1);
+		g_esXiphosCache[tank].g_iXiphosAbility = iGetSettingValue(apply, bHuman, g_esXiphosPlayer[tank].g_iXiphosAbility, g_esXiphosAbility[iType].g_iXiphosAbility, 1);
+		g_esXiphosCache[tank].g_iXiphosEffect = iGetSettingValue(apply, bHuman, g_esXiphosPlayer[tank].g_iXiphosEffect, g_esXiphosAbility[iType].g_iXiphosEffect, 1);
+		g_esXiphosCache[tank].g_iXiphosMaxHealth = iGetSettingValue(apply, bHuman, g_esXiphosPlayer[tank].g_iXiphosMaxHealth, g_esXiphosAbility[iType].g_iXiphosMaxHealth, 1);
+		g_esXiphosCache[tank].g_iXiphosMessage = iGetSettingValue(apply, bHuman, g_esXiphosPlayer[tank].g_iXiphosMessage, g_esXiphosAbility[iType].g_iXiphosMessage, 1);
 	}
 }
 

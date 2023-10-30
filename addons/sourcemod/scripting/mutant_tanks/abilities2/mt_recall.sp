@@ -95,6 +95,7 @@ enum struct esRecallPlayer
 	int g_iRecallRewindMode;
 	int g_iRequiresHumans;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esRecallPlayer g_esRecallPlayer[MAXPLAYERS + 1];
@@ -680,51 +681,53 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
 	g_esRecallPlayer[tank].g_iInfectedType = iGetInfectedType(tank);
+	g_esRecallPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esRecallPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esRecallPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esRecallCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_flCloseAreasOnly, g_esRecallPlayer[tank].g_flCloseAreasOnly, g_esRecallSpecial[type].g_flCloseAreasOnly, g_esRecallAbility[type].g_flCloseAreasOnly, 1);
-		g_esRecallCache[tank].g_flRecallBlinkChance = flGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_flRecallBlinkChance, g_esRecallPlayer[tank].g_flRecallBlinkChance, g_esRecallSpecial[type].g_flRecallBlinkChance, g_esRecallAbility[type].g_flRecallBlinkChance, 1);
-		g_esRecallCache[tank].g_flRecallBlinkRange = flGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_flRecallBlinkRange, g_esRecallPlayer[tank].g_flRecallBlinkRange, g_esRecallSpecial[type].g_flRecallBlinkRange, g_esRecallAbility[type].g_flRecallBlinkRange, 1);
-		g_esRecallCache[tank].g_flRecallRewindChance = flGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_flRecallRewindChance, g_esRecallPlayer[tank].g_flRecallRewindChance, g_esRecallSpecial[type].g_flRecallRewindChance, g_esRecallAbility[type].g_flRecallRewindChance, 1);
-		g_esRecallCache[tank].g_flRecallRewindThreshold = flGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_flRecallRewindThreshold, g_esRecallPlayer[tank].g_flRecallRewindThreshold, g_esRecallSpecial[type].g_flRecallRewindThreshold, g_esRecallAbility[type].g_flRecallRewindThreshold, 1);
-		g_esRecallCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_iHumanAbility, g_esRecallPlayer[tank].g_iHumanAbility, g_esRecallSpecial[type].g_iHumanAbility, g_esRecallAbility[type].g_iHumanAbility, 1);
-		g_esRecallCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_iHumanAmmo, g_esRecallPlayer[tank].g_iHumanAmmo, g_esRecallSpecial[type].g_iHumanAmmo, g_esRecallAbility[type].g_iHumanAmmo, 1);
-		g_esRecallCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_iHumanCooldown, g_esRecallPlayer[tank].g_iHumanCooldown, g_esRecallSpecial[type].g_iHumanCooldown, g_esRecallAbility[type].g_iHumanCooldown, 1);
-		g_esRecallCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_iHumanRangeCooldown, g_esRecallPlayer[tank].g_iHumanRangeCooldown, g_esRecallSpecial[type].g_iHumanRangeCooldown, g_esRecallAbility[type].g_iHumanRangeCooldown, 1);
-		g_esRecallCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_flOpenAreasOnly, g_esRecallPlayer[tank].g_flOpenAreasOnly, g_esRecallSpecial[type].g_flOpenAreasOnly, g_esRecallAbility[type].g_flOpenAreasOnly, 1);
-		g_esRecallCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_iRequiresHumans, g_esRecallPlayer[tank].g_iRequiresHumans, g_esRecallSpecial[type].g_iRequiresHumans, g_esRecallAbility[type].g_iRequiresHumans, 1);
-		g_esRecallCache[tank].g_iRecallAbility = iGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_iRecallAbility, g_esRecallPlayer[tank].g_iRecallAbility, g_esRecallSpecial[type].g_iRecallAbility, g_esRecallAbility[type].g_iRecallAbility, 1);
-		g_esRecallCache[tank].g_iRecallBlinkCooldown = iGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_iRecallBlinkCooldown, g_esRecallPlayer[tank].g_iRecallBlinkCooldown, g_esRecallSpecial[type].g_iRecallBlinkCooldown, g_esRecallAbility[type].g_iRecallBlinkCooldown, 1);
-		g_esRecallCache[tank].g_iRecallBlinkCount = iGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_iRecallBlinkCount, g_esRecallPlayer[tank].g_iRecallBlinkCount, g_esRecallSpecial[type].g_iRecallBlinkCount, g_esRecallAbility[type].g_iRecallBlinkCount, 1);
-		g_esRecallCache[tank].g_iRecallRewindCleanse = iGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_iRecallRewindCleanse, g_esRecallPlayer[tank].g_iRecallRewindCleanse, g_esRecallSpecial[type].g_iRecallRewindCleanse, g_esRecallAbility[type].g_iRecallRewindCleanse, 1);
-		g_esRecallCache[tank].g_iRecallRewindCooldown = iGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_iRecallRewindCooldown, g_esRecallPlayer[tank].g_iRecallRewindCooldown, g_esRecallSpecial[type].g_iRecallRewindCooldown, g_esRecallAbility[type].g_iRecallRewindCooldown, 1);
-		g_esRecallCache[tank].g_iRecallRewindLifetime = iGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_iRecallRewindLifetime, g_esRecallPlayer[tank].g_iRecallRewindLifetime, g_esRecallSpecial[type].g_iRecallRewindLifetime, g_esRecallAbility[type].g_iRecallRewindLifetime, 1);
-		g_esRecallCache[tank].g_iRecallRewindMode = iGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_iRecallRewindMode, g_esRecallPlayer[tank].g_iRecallRewindMode, g_esRecallSpecial[type].g_iRecallRewindMode, g_esRecallAbility[type].g_iRecallRewindMode, 1);
-		g_esRecallCache[tank].g_iRecallMessage = iGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_iRecallMessage, g_esRecallPlayer[tank].g_iRecallMessage, g_esRecallSpecial[type].g_iRecallMessage, g_esRecallAbility[type].g_iRecallMessage, 1);
+		g_esRecallCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_flCloseAreasOnly, g_esRecallPlayer[tank].g_flCloseAreasOnly, g_esRecallSpecial[iType].g_flCloseAreasOnly, g_esRecallAbility[iType].g_flCloseAreasOnly, 1);
+		g_esRecallCache[tank].g_flRecallBlinkChance = flGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_flRecallBlinkChance, g_esRecallPlayer[tank].g_flRecallBlinkChance, g_esRecallSpecial[iType].g_flRecallBlinkChance, g_esRecallAbility[iType].g_flRecallBlinkChance, 1);
+		g_esRecallCache[tank].g_flRecallBlinkRange = flGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_flRecallBlinkRange, g_esRecallPlayer[tank].g_flRecallBlinkRange, g_esRecallSpecial[iType].g_flRecallBlinkRange, g_esRecallAbility[iType].g_flRecallBlinkRange, 1);
+		g_esRecallCache[tank].g_flRecallRewindChance = flGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_flRecallRewindChance, g_esRecallPlayer[tank].g_flRecallRewindChance, g_esRecallSpecial[iType].g_flRecallRewindChance, g_esRecallAbility[iType].g_flRecallRewindChance, 1);
+		g_esRecallCache[tank].g_flRecallRewindThreshold = flGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_flRecallRewindThreshold, g_esRecallPlayer[tank].g_flRecallRewindThreshold, g_esRecallSpecial[iType].g_flRecallRewindThreshold, g_esRecallAbility[iType].g_flRecallRewindThreshold, 1);
+		g_esRecallCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_iHumanAbility, g_esRecallPlayer[tank].g_iHumanAbility, g_esRecallSpecial[iType].g_iHumanAbility, g_esRecallAbility[iType].g_iHumanAbility, 1);
+		g_esRecallCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_iHumanAmmo, g_esRecallPlayer[tank].g_iHumanAmmo, g_esRecallSpecial[iType].g_iHumanAmmo, g_esRecallAbility[iType].g_iHumanAmmo, 1);
+		g_esRecallCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_iHumanCooldown, g_esRecallPlayer[tank].g_iHumanCooldown, g_esRecallSpecial[iType].g_iHumanCooldown, g_esRecallAbility[iType].g_iHumanCooldown, 1);
+		g_esRecallCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_iHumanRangeCooldown, g_esRecallPlayer[tank].g_iHumanRangeCooldown, g_esRecallSpecial[iType].g_iHumanRangeCooldown, g_esRecallAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esRecallCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_flOpenAreasOnly, g_esRecallPlayer[tank].g_flOpenAreasOnly, g_esRecallSpecial[iType].g_flOpenAreasOnly, g_esRecallAbility[iType].g_flOpenAreasOnly, 1);
+		g_esRecallCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_iRequiresHumans, g_esRecallPlayer[tank].g_iRequiresHumans, g_esRecallSpecial[iType].g_iRequiresHumans, g_esRecallAbility[iType].g_iRequiresHumans, 1);
+		g_esRecallCache[tank].g_iRecallAbility = iGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_iRecallAbility, g_esRecallPlayer[tank].g_iRecallAbility, g_esRecallSpecial[iType].g_iRecallAbility, g_esRecallAbility[iType].g_iRecallAbility, 1);
+		g_esRecallCache[tank].g_iRecallBlinkCooldown = iGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_iRecallBlinkCooldown, g_esRecallPlayer[tank].g_iRecallBlinkCooldown, g_esRecallSpecial[iType].g_iRecallBlinkCooldown, g_esRecallAbility[iType].g_iRecallBlinkCooldown, 1);
+		g_esRecallCache[tank].g_iRecallBlinkCount = iGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_iRecallBlinkCount, g_esRecallPlayer[tank].g_iRecallBlinkCount, g_esRecallSpecial[iType].g_iRecallBlinkCount, g_esRecallAbility[iType].g_iRecallBlinkCount, 1);
+		g_esRecallCache[tank].g_iRecallRewindCleanse = iGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_iRecallRewindCleanse, g_esRecallPlayer[tank].g_iRecallRewindCleanse, g_esRecallSpecial[iType].g_iRecallRewindCleanse, g_esRecallAbility[iType].g_iRecallRewindCleanse, 1);
+		g_esRecallCache[tank].g_iRecallRewindCooldown = iGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_iRecallRewindCooldown, g_esRecallPlayer[tank].g_iRecallRewindCooldown, g_esRecallSpecial[iType].g_iRecallRewindCooldown, g_esRecallAbility[iType].g_iRecallRewindCooldown, 1);
+		g_esRecallCache[tank].g_iRecallRewindLifetime = iGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_iRecallRewindLifetime, g_esRecallPlayer[tank].g_iRecallRewindLifetime, g_esRecallSpecial[iType].g_iRecallRewindLifetime, g_esRecallAbility[iType].g_iRecallRewindLifetime, 1);
+		g_esRecallCache[tank].g_iRecallRewindMode = iGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_iRecallRewindMode, g_esRecallPlayer[tank].g_iRecallRewindMode, g_esRecallSpecial[iType].g_iRecallRewindMode, g_esRecallAbility[iType].g_iRecallRewindMode, 1);
+		g_esRecallCache[tank].g_iRecallMessage = iGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_iRecallMessage, g_esRecallPlayer[tank].g_iRecallMessage, g_esRecallSpecial[iType].g_iRecallMessage, g_esRecallAbility[iType].g_iRecallMessage, 1);
 	}
 	else
 	{
-		g_esRecallCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_flCloseAreasOnly, g_esRecallAbility[type].g_flCloseAreasOnly, 1);
-		g_esRecallCache[tank].g_flRecallBlinkChance = flGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_flRecallBlinkChance, g_esRecallAbility[type].g_flRecallBlinkChance, 1);
-		g_esRecallCache[tank].g_flRecallBlinkRange = flGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_flRecallBlinkRange, g_esRecallAbility[type].g_flRecallBlinkRange, 1);
-		g_esRecallCache[tank].g_flRecallRewindChance = flGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_flRecallRewindChance, g_esRecallAbility[type].g_flRecallRewindChance, 1);
-		g_esRecallCache[tank].g_flRecallRewindThreshold = flGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_flRecallRewindThreshold, g_esRecallAbility[type].g_flRecallRewindThreshold, 1);
-		g_esRecallCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_iHumanAbility, g_esRecallAbility[type].g_iHumanAbility, 1);
-		g_esRecallCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_iHumanAmmo, g_esRecallAbility[type].g_iHumanAmmo, 1);
-		g_esRecallCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_iHumanCooldown, g_esRecallAbility[type].g_iHumanCooldown, 1);
-		g_esRecallCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_iHumanRangeCooldown, g_esRecallAbility[type].g_iHumanRangeCooldown, 1);
-		g_esRecallCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_flOpenAreasOnly, g_esRecallAbility[type].g_flOpenAreasOnly, 1);
-		g_esRecallCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_iRequiresHumans, g_esRecallAbility[type].g_iRequiresHumans, 1);
-		g_esRecallCache[tank].g_iRecallAbility = iGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_iRecallAbility, g_esRecallAbility[type].g_iRecallAbility, 1);
-		g_esRecallCache[tank].g_iRecallBlinkCooldown = iGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_iRecallBlinkCooldown, g_esRecallAbility[type].g_iRecallBlinkCooldown, 1);
-		g_esRecallCache[tank].g_iRecallBlinkCount = iGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_iRecallBlinkCount, g_esRecallAbility[type].g_iRecallBlinkCount, 1);
-		g_esRecallCache[tank].g_iRecallRewindCleanse = iGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_iRecallRewindCleanse, g_esRecallAbility[type].g_iRecallRewindCleanse, 1);
-		g_esRecallCache[tank].g_iRecallRewindCooldown = iGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_iRecallRewindCooldown, g_esRecallAbility[type].g_iRecallRewindCooldown, 1);
-		g_esRecallCache[tank].g_iRecallRewindLifetime = iGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_iRecallRewindLifetime, g_esRecallAbility[type].g_iRecallRewindLifetime, 1);
-		g_esRecallCache[tank].g_iRecallRewindMode = iGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_iRecallRewindMode, g_esRecallAbility[type].g_iRecallRewindMode, 1);
-		g_esRecallCache[tank].g_iRecallMessage = iGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_iRecallMessage, g_esRecallAbility[type].g_iRecallMessage, 1);
+		g_esRecallCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_flCloseAreasOnly, g_esRecallAbility[iType].g_flCloseAreasOnly, 1);
+		g_esRecallCache[tank].g_flRecallBlinkChance = flGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_flRecallBlinkChance, g_esRecallAbility[iType].g_flRecallBlinkChance, 1);
+		g_esRecallCache[tank].g_flRecallBlinkRange = flGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_flRecallBlinkRange, g_esRecallAbility[iType].g_flRecallBlinkRange, 1);
+		g_esRecallCache[tank].g_flRecallRewindChance = flGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_flRecallRewindChance, g_esRecallAbility[iType].g_flRecallRewindChance, 1);
+		g_esRecallCache[tank].g_flRecallRewindThreshold = flGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_flRecallRewindThreshold, g_esRecallAbility[iType].g_flRecallRewindThreshold, 1);
+		g_esRecallCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_iHumanAbility, g_esRecallAbility[iType].g_iHumanAbility, 1);
+		g_esRecallCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_iHumanAmmo, g_esRecallAbility[iType].g_iHumanAmmo, 1);
+		g_esRecallCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_iHumanCooldown, g_esRecallAbility[iType].g_iHumanCooldown, 1);
+		g_esRecallCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_iHumanRangeCooldown, g_esRecallAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esRecallCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_flOpenAreasOnly, g_esRecallAbility[iType].g_flOpenAreasOnly, 1);
+		g_esRecallCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_iRequiresHumans, g_esRecallAbility[iType].g_iRequiresHumans, 1);
+		g_esRecallCache[tank].g_iRecallAbility = iGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_iRecallAbility, g_esRecallAbility[iType].g_iRecallAbility, 1);
+		g_esRecallCache[tank].g_iRecallBlinkCooldown = iGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_iRecallBlinkCooldown, g_esRecallAbility[iType].g_iRecallBlinkCooldown, 1);
+		g_esRecallCache[tank].g_iRecallBlinkCount = iGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_iRecallBlinkCount, g_esRecallAbility[iType].g_iRecallBlinkCount, 1);
+		g_esRecallCache[tank].g_iRecallRewindCleanse = iGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_iRecallRewindCleanse, g_esRecallAbility[iType].g_iRecallRewindCleanse, 1);
+		g_esRecallCache[tank].g_iRecallRewindCooldown = iGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_iRecallRewindCooldown, g_esRecallAbility[iType].g_iRecallRewindCooldown, 1);
+		g_esRecallCache[tank].g_iRecallRewindLifetime = iGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_iRecallRewindLifetime, g_esRecallAbility[iType].g_iRecallRewindLifetime, 1);
+		g_esRecallCache[tank].g_iRecallRewindMode = iGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_iRecallRewindMode, g_esRecallAbility[iType].g_iRecallRewindMode, 1);
+		g_esRecallCache[tank].g_iRecallMessage = iGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_iRecallMessage, g_esRecallAbility[iType].g_iRecallMessage, 1);
 	}
 }
 

@@ -93,6 +93,7 @@ enum struct esAmmoPlayer
 	int g_iRangeCooldown;
 	int g_iRequiresHumans;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esAmmoPlayer g_esAmmoPlayer[MAXPLAYERS + 1];
@@ -792,55 +793,57 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esAmmoPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esAmmoPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esAmmoPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esAmmoCache[tank].g_flAmmoChance = flGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_flAmmoChance, g_esAmmoPlayer[tank].g_flAmmoChance, g_esAmmoSpecial[type].g_flAmmoChance, g_esAmmoAbility[type].g_flAmmoChance, 1);
-		g_esAmmoCache[tank].g_flAmmoRange = flGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_flAmmoRange, g_esAmmoPlayer[tank].g_flAmmoRange, g_esAmmoSpecial[type].g_flAmmoRange, g_esAmmoAbility[type].g_flAmmoRange, 1);
-		g_esAmmoCache[tank].g_flAmmoRangeChance = flGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_flAmmoRangeChance, g_esAmmoPlayer[tank].g_flAmmoRangeChance, g_esAmmoSpecial[type].g_flAmmoRangeChance, g_esAmmoAbility[type].g_flAmmoRangeChance, 1);
-		g_esAmmoCache[tank].g_iAmmoAbility = iGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_iAmmoAbility, g_esAmmoPlayer[tank].g_iAmmoAbility, g_esAmmoSpecial[type].g_iAmmoAbility, g_esAmmoAbility[type].g_iAmmoAbility, 1);
-		g_esAmmoCache[tank].g_iAmmoAmount = iGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_iAmmoAmount, g_esAmmoPlayer[tank].g_iAmmoAmount, g_esAmmoSpecial[type].g_iAmmoAmount, g_esAmmoAbility[type].g_iAmmoAmount, 1);
-		g_esAmmoCache[tank].g_iAmmoCooldown = iGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_iAmmoCooldown, g_esAmmoPlayer[tank].g_iAmmoCooldown, g_esAmmoSpecial[type].g_iAmmoCooldown, g_esAmmoAbility[type].g_iAmmoCooldown, 1);
-		g_esAmmoCache[tank].g_iAmmoEffect = iGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_iAmmoEffect, g_esAmmoPlayer[tank].g_iAmmoEffect, g_esAmmoSpecial[type].g_iAmmoEffect, g_esAmmoAbility[type].g_iAmmoEffect, 1);
-		g_esAmmoCache[tank].g_iAmmoHit = iGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_iAmmoHit, g_esAmmoPlayer[tank].g_iAmmoHit, g_esAmmoSpecial[type].g_iAmmoHit, g_esAmmoAbility[type].g_iAmmoHit, 1);
-		g_esAmmoCache[tank].g_iAmmoHitMode = iGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_iAmmoHitMode, g_esAmmoPlayer[tank].g_iAmmoHitMode, g_esAmmoSpecial[type].g_iAmmoHitMode, g_esAmmoAbility[type].g_iAmmoHitMode, 1);
-		g_esAmmoCache[tank].g_iAmmoMessage = iGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_iAmmoMessage, g_esAmmoPlayer[tank].g_iAmmoMessage, g_esAmmoSpecial[type].g_iAmmoMessage, g_esAmmoAbility[type].g_iAmmoMessage, 1);
-		g_esAmmoCache[tank].g_iAmmoRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_iAmmoRangeCooldown, g_esAmmoPlayer[tank].g_iAmmoRangeCooldown, g_esAmmoSpecial[type].g_iAmmoRangeCooldown, g_esAmmoAbility[type].g_iAmmoRangeCooldown, 1);
-		g_esAmmoCache[tank].g_iAmmoSight = iGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_iAmmoSight, g_esAmmoPlayer[tank].g_iAmmoSight, g_esAmmoSpecial[type].g_iAmmoSight, g_esAmmoAbility[type].g_iAmmoSight, 1);
-		g_esAmmoCache[tank].g_iAmmoType = iGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_iAmmoType, g_esAmmoPlayer[tank].g_iAmmoType, g_esAmmoSpecial[type].g_iAmmoType, g_esAmmoAbility[type].g_iAmmoType, 1);
-		g_esAmmoCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_flCloseAreasOnly, g_esAmmoPlayer[tank].g_flCloseAreasOnly, g_esAmmoSpecial[type].g_flCloseAreasOnly, g_esAmmoAbility[type].g_flCloseAreasOnly, 1);
-		g_esAmmoCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_iComboAbility, g_esAmmoPlayer[tank].g_iComboAbility, g_esAmmoSpecial[type].g_iComboAbility, g_esAmmoAbility[type].g_iComboAbility, 1);
-		g_esAmmoCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_iHumanAbility, g_esAmmoPlayer[tank].g_iHumanAbility, g_esAmmoSpecial[type].g_iHumanAbility, g_esAmmoAbility[type].g_iHumanAbility, 1);
-		g_esAmmoCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_iHumanAmmo, g_esAmmoPlayer[tank].g_iHumanAmmo, g_esAmmoSpecial[type].g_iHumanAmmo, g_esAmmoAbility[type].g_iHumanAmmo, 1);
-		g_esAmmoCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_iHumanCooldown, g_esAmmoPlayer[tank].g_iHumanCooldown, g_esAmmoSpecial[type].g_iHumanCooldown, g_esAmmoAbility[type].g_iHumanCooldown, 1);
-		g_esAmmoCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_iHumanRangeCooldown, g_esAmmoPlayer[tank].g_iHumanRangeCooldown, g_esAmmoSpecial[type].g_iHumanRangeCooldown, g_esAmmoAbility[type].g_iHumanRangeCooldown, 1);
-		g_esAmmoCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_flOpenAreasOnly, g_esAmmoPlayer[tank].g_flOpenAreasOnly, g_esAmmoSpecial[type].g_flOpenAreasOnly, g_esAmmoAbility[type].g_flOpenAreasOnly, 1);
-		g_esAmmoCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_iRequiresHumans, g_esAmmoPlayer[tank].g_iRequiresHumans, g_esAmmoSpecial[type].g_iRequiresHumans, g_esAmmoAbility[type].g_iRequiresHumans, 1);
+		g_esAmmoCache[tank].g_flAmmoChance = flGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_flAmmoChance, g_esAmmoPlayer[tank].g_flAmmoChance, g_esAmmoSpecial[iType].g_flAmmoChance, g_esAmmoAbility[iType].g_flAmmoChance, 1);
+		g_esAmmoCache[tank].g_flAmmoRange = flGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_flAmmoRange, g_esAmmoPlayer[tank].g_flAmmoRange, g_esAmmoSpecial[iType].g_flAmmoRange, g_esAmmoAbility[iType].g_flAmmoRange, 1);
+		g_esAmmoCache[tank].g_flAmmoRangeChance = flGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_flAmmoRangeChance, g_esAmmoPlayer[tank].g_flAmmoRangeChance, g_esAmmoSpecial[iType].g_flAmmoRangeChance, g_esAmmoAbility[iType].g_flAmmoRangeChance, 1);
+		g_esAmmoCache[tank].g_iAmmoAbility = iGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_iAmmoAbility, g_esAmmoPlayer[tank].g_iAmmoAbility, g_esAmmoSpecial[iType].g_iAmmoAbility, g_esAmmoAbility[iType].g_iAmmoAbility, 1);
+		g_esAmmoCache[tank].g_iAmmoAmount = iGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_iAmmoAmount, g_esAmmoPlayer[tank].g_iAmmoAmount, g_esAmmoSpecial[iType].g_iAmmoAmount, g_esAmmoAbility[iType].g_iAmmoAmount, 1);
+		g_esAmmoCache[tank].g_iAmmoCooldown = iGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_iAmmoCooldown, g_esAmmoPlayer[tank].g_iAmmoCooldown, g_esAmmoSpecial[iType].g_iAmmoCooldown, g_esAmmoAbility[iType].g_iAmmoCooldown, 1);
+		g_esAmmoCache[tank].g_iAmmoEffect = iGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_iAmmoEffect, g_esAmmoPlayer[tank].g_iAmmoEffect, g_esAmmoSpecial[iType].g_iAmmoEffect, g_esAmmoAbility[iType].g_iAmmoEffect, 1);
+		g_esAmmoCache[tank].g_iAmmoHit = iGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_iAmmoHit, g_esAmmoPlayer[tank].g_iAmmoHit, g_esAmmoSpecial[iType].g_iAmmoHit, g_esAmmoAbility[iType].g_iAmmoHit, 1);
+		g_esAmmoCache[tank].g_iAmmoHitMode = iGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_iAmmoHitMode, g_esAmmoPlayer[tank].g_iAmmoHitMode, g_esAmmoSpecial[iType].g_iAmmoHitMode, g_esAmmoAbility[iType].g_iAmmoHitMode, 1);
+		g_esAmmoCache[tank].g_iAmmoMessage = iGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_iAmmoMessage, g_esAmmoPlayer[tank].g_iAmmoMessage, g_esAmmoSpecial[iType].g_iAmmoMessage, g_esAmmoAbility[iType].g_iAmmoMessage, 1);
+		g_esAmmoCache[tank].g_iAmmoRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_iAmmoRangeCooldown, g_esAmmoPlayer[tank].g_iAmmoRangeCooldown, g_esAmmoSpecial[iType].g_iAmmoRangeCooldown, g_esAmmoAbility[iType].g_iAmmoRangeCooldown, 1);
+		g_esAmmoCache[tank].g_iAmmoSight = iGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_iAmmoSight, g_esAmmoPlayer[tank].g_iAmmoSight, g_esAmmoSpecial[iType].g_iAmmoSight, g_esAmmoAbility[iType].g_iAmmoSight, 1);
+		g_esAmmoCache[tank].g_iAmmoType = iGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_iAmmoType, g_esAmmoPlayer[tank].g_iAmmoType, g_esAmmoSpecial[iType].g_iAmmoType, g_esAmmoAbility[iType].g_iAmmoType, 1);
+		g_esAmmoCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_flCloseAreasOnly, g_esAmmoPlayer[tank].g_flCloseAreasOnly, g_esAmmoSpecial[iType].g_flCloseAreasOnly, g_esAmmoAbility[iType].g_flCloseAreasOnly, 1);
+		g_esAmmoCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_iComboAbility, g_esAmmoPlayer[tank].g_iComboAbility, g_esAmmoSpecial[iType].g_iComboAbility, g_esAmmoAbility[iType].g_iComboAbility, 1);
+		g_esAmmoCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_iHumanAbility, g_esAmmoPlayer[tank].g_iHumanAbility, g_esAmmoSpecial[iType].g_iHumanAbility, g_esAmmoAbility[iType].g_iHumanAbility, 1);
+		g_esAmmoCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_iHumanAmmo, g_esAmmoPlayer[tank].g_iHumanAmmo, g_esAmmoSpecial[iType].g_iHumanAmmo, g_esAmmoAbility[iType].g_iHumanAmmo, 1);
+		g_esAmmoCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_iHumanCooldown, g_esAmmoPlayer[tank].g_iHumanCooldown, g_esAmmoSpecial[iType].g_iHumanCooldown, g_esAmmoAbility[iType].g_iHumanCooldown, 1);
+		g_esAmmoCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_iHumanRangeCooldown, g_esAmmoPlayer[tank].g_iHumanRangeCooldown, g_esAmmoSpecial[iType].g_iHumanRangeCooldown, g_esAmmoAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esAmmoCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_flOpenAreasOnly, g_esAmmoPlayer[tank].g_flOpenAreasOnly, g_esAmmoSpecial[iType].g_flOpenAreasOnly, g_esAmmoAbility[iType].g_flOpenAreasOnly, 1);
+		g_esAmmoCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esAmmoTeammate[tank].g_iRequiresHumans, g_esAmmoPlayer[tank].g_iRequiresHumans, g_esAmmoSpecial[iType].g_iRequiresHumans, g_esAmmoAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
 	{
-		g_esAmmoCache[tank].g_flAmmoChance = flGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_flAmmoChance, g_esAmmoAbility[type].g_flAmmoChance, 1);
-		g_esAmmoCache[tank].g_flAmmoRange = flGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_flAmmoRange, g_esAmmoAbility[type].g_flAmmoRange, 1);
-		g_esAmmoCache[tank].g_flAmmoRangeChance = flGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_flAmmoRangeChance, g_esAmmoAbility[type].g_flAmmoRangeChance, 1);
-		g_esAmmoCache[tank].g_iAmmoAbility = iGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_iAmmoAbility, g_esAmmoAbility[type].g_iAmmoAbility, 1);
-		g_esAmmoCache[tank].g_iAmmoAmount = iGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_iAmmoAmount, g_esAmmoAbility[type].g_iAmmoAmount, 1);
-		g_esAmmoCache[tank].g_iAmmoCooldown = iGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_iAmmoCooldown, g_esAmmoAbility[type].g_iAmmoCooldown, 1);
-		g_esAmmoCache[tank].g_iAmmoEffect = iGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_iAmmoEffect, g_esAmmoAbility[type].g_iAmmoEffect, 1);
-		g_esAmmoCache[tank].g_iAmmoHit = iGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_iAmmoHit, g_esAmmoAbility[type].g_iAmmoHit, 1);
-		g_esAmmoCache[tank].g_iAmmoHitMode = iGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_iAmmoHitMode, g_esAmmoAbility[type].g_iAmmoHitMode, 1);
-		g_esAmmoCache[tank].g_iAmmoMessage = iGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_iAmmoMessage, g_esAmmoAbility[type].g_iAmmoMessage, 1);
-		g_esAmmoCache[tank].g_iAmmoRangeCooldown = iGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_iAmmoRangeCooldown, g_esAmmoAbility[type].g_iAmmoRangeCooldown, 1);
-		g_esAmmoCache[tank].g_iAmmoSight = iGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_iAmmoSight, g_esAmmoAbility[type].g_iAmmoSight, 1);
-		g_esAmmoCache[tank].g_iAmmoType = iGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_iAmmoType, g_esAmmoAbility[type].g_iAmmoType, 1);
-		g_esAmmoCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_flCloseAreasOnly, g_esAmmoAbility[type].g_flCloseAreasOnly, 1);
-		g_esAmmoCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_iComboAbility, g_esAmmoAbility[type].g_iComboAbility, 1);
-		g_esAmmoCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_iHumanAbility, g_esAmmoAbility[type].g_iHumanAbility, 1);
-		g_esAmmoCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_iHumanAmmo, g_esAmmoAbility[type].g_iHumanAmmo, 1);
-		g_esAmmoCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_iHumanCooldown, g_esAmmoAbility[type].g_iHumanCooldown, 1);
-		g_esAmmoCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_iHumanRangeCooldown, g_esAmmoAbility[type].g_iHumanRangeCooldown, 1);
-		g_esAmmoCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_flOpenAreasOnly, g_esAmmoAbility[type].g_flOpenAreasOnly, 1);
-		g_esAmmoCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_iRequiresHumans, g_esAmmoAbility[type].g_iRequiresHumans, 1);
+		g_esAmmoCache[tank].g_flAmmoChance = flGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_flAmmoChance, g_esAmmoAbility[iType].g_flAmmoChance, 1);
+		g_esAmmoCache[tank].g_flAmmoRange = flGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_flAmmoRange, g_esAmmoAbility[iType].g_flAmmoRange, 1);
+		g_esAmmoCache[tank].g_flAmmoRangeChance = flGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_flAmmoRangeChance, g_esAmmoAbility[iType].g_flAmmoRangeChance, 1);
+		g_esAmmoCache[tank].g_iAmmoAbility = iGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_iAmmoAbility, g_esAmmoAbility[iType].g_iAmmoAbility, 1);
+		g_esAmmoCache[tank].g_iAmmoAmount = iGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_iAmmoAmount, g_esAmmoAbility[iType].g_iAmmoAmount, 1);
+		g_esAmmoCache[tank].g_iAmmoCooldown = iGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_iAmmoCooldown, g_esAmmoAbility[iType].g_iAmmoCooldown, 1);
+		g_esAmmoCache[tank].g_iAmmoEffect = iGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_iAmmoEffect, g_esAmmoAbility[iType].g_iAmmoEffect, 1);
+		g_esAmmoCache[tank].g_iAmmoHit = iGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_iAmmoHit, g_esAmmoAbility[iType].g_iAmmoHit, 1);
+		g_esAmmoCache[tank].g_iAmmoHitMode = iGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_iAmmoHitMode, g_esAmmoAbility[iType].g_iAmmoHitMode, 1);
+		g_esAmmoCache[tank].g_iAmmoMessage = iGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_iAmmoMessage, g_esAmmoAbility[iType].g_iAmmoMessage, 1);
+		g_esAmmoCache[tank].g_iAmmoRangeCooldown = iGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_iAmmoRangeCooldown, g_esAmmoAbility[iType].g_iAmmoRangeCooldown, 1);
+		g_esAmmoCache[tank].g_iAmmoSight = iGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_iAmmoSight, g_esAmmoAbility[iType].g_iAmmoSight, 1);
+		g_esAmmoCache[tank].g_iAmmoType = iGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_iAmmoType, g_esAmmoAbility[iType].g_iAmmoType, 1);
+		g_esAmmoCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_flCloseAreasOnly, g_esAmmoAbility[iType].g_flCloseAreasOnly, 1);
+		g_esAmmoCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_iComboAbility, g_esAmmoAbility[iType].g_iComboAbility, 1);
+		g_esAmmoCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_iHumanAbility, g_esAmmoAbility[iType].g_iHumanAbility, 1);
+		g_esAmmoCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_iHumanAmmo, g_esAmmoAbility[iType].g_iHumanAmmo, 1);
+		g_esAmmoCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_iHumanCooldown, g_esAmmoAbility[iType].g_iHumanCooldown, 1);
+		g_esAmmoCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_iHumanRangeCooldown, g_esAmmoAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esAmmoCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_flOpenAreasOnly, g_esAmmoAbility[iType].g_flOpenAreasOnly, 1);
+		g_esAmmoCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esAmmoPlayer[tank].g_iRequiresHumans, g_esAmmoAbility[iType].g_iRequiresHumans, 1);
 	}
 }
 

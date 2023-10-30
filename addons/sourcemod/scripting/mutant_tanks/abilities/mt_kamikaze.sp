@@ -94,6 +94,7 @@ enum struct esKamikazePlayer
 	int g_iKamikazeSight;
 	int g_iRequiresHumans;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esKamikazePlayer g_esKamikazePlayer[MAXPLAYERS + 1];
@@ -791,47 +792,49 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esKamikazePlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esKamikazePlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esKamikazePlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esKamikazeCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_flCloseAreasOnly, g_esKamikazePlayer[tank].g_flCloseAreasOnly, g_esKamikazeSpecial[type].g_flCloseAreasOnly, g_esKamikazeAbility[type].g_flCloseAreasOnly, 1);
-		g_esKamikazeCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_iComboAbility, g_esKamikazePlayer[tank].g_iComboAbility, g_esKamikazeSpecial[type].g_iComboAbility, g_esKamikazeAbility[type].g_iComboAbility, 1);
-		g_esKamikazeCache[tank].g_flKamikazeChance = flGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_flKamikazeChance, g_esKamikazePlayer[tank].g_flKamikazeChance, g_esKamikazeSpecial[type].g_flKamikazeChance, g_esKamikazeAbility[type].g_flKamikazeChance, 1);
-		g_esKamikazeCache[tank].g_flKamikazeMeter = flGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_flKamikazeMeter, g_esKamikazePlayer[tank].g_flKamikazeMeter, g_esKamikazeSpecial[type].g_flKamikazeMeter, g_esKamikazeAbility[type].g_flKamikazeMeter, 1);
-		g_esKamikazeCache[tank].g_flKamikazeRange = flGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_flKamikazeRange, g_esKamikazePlayer[tank].g_flKamikazeRange, g_esKamikazeSpecial[type].g_flKamikazeRange, g_esKamikazeAbility[type].g_flKamikazeRange, 1);
-		g_esKamikazeCache[tank].g_flKamikazeRangeChance = flGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_flKamikazeRangeChance, g_esKamikazePlayer[tank].g_flKamikazeRangeChance, g_esKamikazeSpecial[type].g_flKamikazeRangeChance, g_esKamikazeAbility[type].g_flKamikazeRangeChance, 1);
-		g_esKamikazeCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_iHumanAbility, g_esKamikazePlayer[tank].g_iHumanAbility, g_esKamikazeSpecial[type].g_iHumanAbility, g_esKamikazeAbility[type].g_iHumanAbility, 1);
-		g_esKamikazeCache[tank].g_iKamikazeAbility = iGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_iKamikazeAbility, g_esKamikazePlayer[tank].g_iKamikazeAbility, g_esKamikazeSpecial[type].g_iKamikazeAbility, g_esKamikazeAbility[type].g_iKamikazeAbility, 1);
-		g_esKamikazeCache[tank].g_iKamikazeEffect = iGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_iKamikazeEffect, g_esKamikazePlayer[tank].g_iKamikazeEffect, g_esKamikazeSpecial[type].g_iKamikazeEffect, g_esKamikazeAbility[type].g_iKamikazeEffect, 1);
-		g_esKamikazeCache[tank].g_iKamikazeBody = iGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_iKamikazeBody, g_esKamikazePlayer[tank].g_iKamikazeBody, g_esKamikazeSpecial[type].g_iKamikazeBody, g_esKamikazeAbility[type].g_iKamikazeBody, 1);
-		g_esKamikazeCache[tank].g_iKamikazeHit = iGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_iKamikazeHit, g_esKamikazePlayer[tank].g_iKamikazeHit, g_esKamikazeSpecial[type].g_iKamikazeHit, g_esKamikazeAbility[type].g_iKamikazeHit, 1);
-		g_esKamikazeCache[tank].g_iKamikazeHitMode = iGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_iKamikazeHitMode, g_esKamikazePlayer[tank].g_iKamikazeHitMode, g_esKamikazeSpecial[type].g_iKamikazeHitMode, g_esKamikazeAbility[type].g_iKamikazeHitMode, 1);
-		g_esKamikazeCache[tank].g_iKamikazeMessage = iGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_iKamikazeMessage, g_esKamikazePlayer[tank].g_iKamikazeMessage, g_esKamikazeSpecial[type].g_iKamikazeMessage, g_esKamikazeAbility[type].g_iKamikazeMessage, 1);
-		g_esKamikazeCache[tank].g_iKamikazeMode = iGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_iKamikazeMode, g_esKamikazePlayer[tank].g_iKamikazeMode, g_esKamikazeSpecial[type].g_iKamikazeMode, g_esKamikazeAbility[type].g_iKamikazeMode, 1);
-		g_esKamikazeCache[tank].g_iKamikazeSight = iGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_iKamikazeSight, g_esKamikazePlayer[tank].g_iKamikazeSight, g_esKamikazeSpecial[type].g_iKamikazeSight, g_esKamikazeAbility[type].g_iKamikazeSight, 1);
-		g_esKamikazeCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_flOpenAreasOnly, g_esKamikazePlayer[tank].g_flOpenAreasOnly, g_esKamikazeSpecial[type].g_flOpenAreasOnly, g_esKamikazeAbility[type].g_flOpenAreasOnly, 1);
-		g_esKamikazeCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_iRequiresHumans, g_esKamikazePlayer[tank].g_iRequiresHumans, g_esKamikazeSpecial[type].g_iRequiresHumans, g_esKamikazeAbility[type].g_iRequiresHumans, 1);
+		g_esKamikazeCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_flCloseAreasOnly, g_esKamikazePlayer[tank].g_flCloseAreasOnly, g_esKamikazeSpecial[iType].g_flCloseAreasOnly, g_esKamikazeAbility[iType].g_flCloseAreasOnly, 1);
+		g_esKamikazeCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_iComboAbility, g_esKamikazePlayer[tank].g_iComboAbility, g_esKamikazeSpecial[iType].g_iComboAbility, g_esKamikazeAbility[iType].g_iComboAbility, 1);
+		g_esKamikazeCache[tank].g_flKamikazeChance = flGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_flKamikazeChance, g_esKamikazePlayer[tank].g_flKamikazeChance, g_esKamikazeSpecial[iType].g_flKamikazeChance, g_esKamikazeAbility[iType].g_flKamikazeChance, 1);
+		g_esKamikazeCache[tank].g_flKamikazeMeter = flGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_flKamikazeMeter, g_esKamikazePlayer[tank].g_flKamikazeMeter, g_esKamikazeSpecial[iType].g_flKamikazeMeter, g_esKamikazeAbility[iType].g_flKamikazeMeter, 1);
+		g_esKamikazeCache[tank].g_flKamikazeRange = flGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_flKamikazeRange, g_esKamikazePlayer[tank].g_flKamikazeRange, g_esKamikazeSpecial[iType].g_flKamikazeRange, g_esKamikazeAbility[iType].g_flKamikazeRange, 1);
+		g_esKamikazeCache[tank].g_flKamikazeRangeChance = flGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_flKamikazeRangeChance, g_esKamikazePlayer[tank].g_flKamikazeRangeChance, g_esKamikazeSpecial[iType].g_flKamikazeRangeChance, g_esKamikazeAbility[iType].g_flKamikazeRangeChance, 1);
+		g_esKamikazeCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_iHumanAbility, g_esKamikazePlayer[tank].g_iHumanAbility, g_esKamikazeSpecial[iType].g_iHumanAbility, g_esKamikazeAbility[iType].g_iHumanAbility, 1);
+		g_esKamikazeCache[tank].g_iKamikazeAbility = iGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_iKamikazeAbility, g_esKamikazePlayer[tank].g_iKamikazeAbility, g_esKamikazeSpecial[iType].g_iKamikazeAbility, g_esKamikazeAbility[iType].g_iKamikazeAbility, 1);
+		g_esKamikazeCache[tank].g_iKamikazeEffect = iGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_iKamikazeEffect, g_esKamikazePlayer[tank].g_iKamikazeEffect, g_esKamikazeSpecial[iType].g_iKamikazeEffect, g_esKamikazeAbility[iType].g_iKamikazeEffect, 1);
+		g_esKamikazeCache[tank].g_iKamikazeBody = iGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_iKamikazeBody, g_esKamikazePlayer[tank].g_iKamikazeBody, g_esKamikazeSpecial[iType].g_iKamikazeBody, g_esKamikazeAbility[iType].g_iKamikazeBody, 1);
+		g_esKamikazeCache[tank].g_iKamikazeHit = iGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_iKamikazeHit, g_esKamikazePlayer[tank].g_iKamikazeHit, g_esKamikazeSpecial[iType].g_iKamikazeHit, g_esKamikazeAbility[iType].g_iKamikazeHit, 1);
+		g_esKamikazeCache[tank].g_iKamikazeHitMode = iGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_iKamikazeHitMode, g_esKamikazePlayer[tank].g_iKamikazeHitMode, g_esKamikazeSpecial[iType].g_iKamikazeHitMode, g_esKamikazeAbility[iType].g_iKamikazeHitMode, 1);
+		g_esKamikazeCache[tank].g_iKamikazeMessage = iGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_iKamikazeMessage, g_esKamikazePlayer[tank].g_iKamikazeMessage, g_esKamikazeSpecial[iType].g_iKamikazeMessage, g_esKamikazeAbility[iType].g_iKamikazeMessage, 1);
+		g_esKamikazeCache[tank].g_iKamikazeMode = iGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_iKamikazeMode, g_esKamikazePlayer[tank].g_iKamikazeMode, g_esKamikazeSpecial[iType].g_iKamikazeMode, g_esKamikazeAbility[iType].g_iKamikazeMode, 1);
+		g_esKamikazeCache[tank].g_iKamikazeSight = iGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_iKamikazeSight, g_esKamikazePlayer[tank].g_iKamikazeSight, g_esKamikazeSpecial[iType].g_iKamikazeSight, g_esKamikazeAbility[iType].g_iKamikazeSight, 1);
+		g_esKamikazeCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_flOpenAreasOnly, g_esKamikazePlayer[tank].g_flOpenAreasOnly, g_esKamikazeSpecial[iType].g_flOpenAreasOnly, g_esKamikazeAbility[iType].g_flOpenAreasOnly, 1);
+		g_esKamikazeCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_iRequiresHumans, g_esKamikazePlayer[tank].g_iRequiresHumans, g_esKamikazeSpecial[iType].g_iRequiresHumans, g_esKamikazeAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
 	{
-		g_esKamikazeCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_flCloseAreasOnly, g_esKamikazeAbility[type].g_flCloseAreasOnly, 1);
-		g_esKamikazeCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iComboAbility, g_esKamikazeAbility[type].g_iComboAbility, 1);
-		g_esKamikazeCache[tank].g_flKamikazeChance = flGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_flKamikazeChance, g_esKamikazeAbility[type].g_flKamikazeChance, 1);
-		g_esKamikazeCache[tank].g_flKamikazeMeter = flGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_flKamikazeMeter, g_esKamikazeAbility[type].g_flKamikazeMeter, 1);
-		g_esKamikazeCache[tank].g_flKamikazeRange = flGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_flKamikazeRange, g_esKamikazeAbility[type].g_flKamikazeRange, 1);
-		g_esKamikazeCache[tank].g_flKamikazeRangeChance = flGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_flKamikazeRangeChance, g_esKamikazeAbility[type].g_flKamikazeRangeChance, 1);
-		g_esKamikazeCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iHumanAbility, g_esKamikazeAbility[type].g_iHumanAbility, 1);
-		g_esKamikazeCache[tank].g_iKamikazeAbility = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iKamikazeAbility, g_esKamikazeAbility[type].g_iKamikazeAbility, 1);
-		g_esKamikazeCache[tank].g_iKamikazeEffect = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iKamikazeEffect, g_esKamikazeAbility[type].g_iKamikazeEffect, 1);
-		g_esKamikazeCache[tank].g_iKamikazeBody = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iKamikazeBody, g_esKamikazeAbility[type].g_iKamikazeBody, 1);
-		g_esKamikazeCache[tank].g_iKamikazeHit = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iKamikazeHit, g_esKamikazeAbility[type].g_iKamikazeHit, 1);
-		g_esKamikazeCache[tank].g_iKamikazeHitMode = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iKamikazeHitMode, g_esKamikazeAbility[type].g_iKamikazeHitMode, 1);
-		g_esKamikazeCache[tank].g_iKamikazeMessage = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iKamikazeMessage, g_esKamikazeAbility[type].g_iKamikazeMessage, 1);
-		g_esKamikazeCache[tank].g_iKamikazeMode = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iKamikazeMode, g_esKamikazeAbility[type].g_iKamikazeMode, 1);
-		g_esKamikazeCache[tank].g_iKamikazeSight = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iKamikazeSight, g_esKamikazeAbility[type].g_iKamikazeSight, 1);
-		g_esKamikazeCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_flOpenAreasOnly, g_esKamikazeAbility[type].g_flOpenAreasOnly, 1);
-		g_esKamikazeCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iRequiresHumans, g_esKamikazeAbility[type].g_iRequiresHumans, 1);
+		g_esKamikazeCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_flCloseAreasOnly, g_esKamikazeAbility[iType].g_flCloseAreasOnly, 1);
+		g_esKamikazeCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iComboAbility, g_esKamikazeAbility[iType].g_iComboAbility, 1);
+		g_esKamikazeCache[tank].g_flKamikazeChance = flGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_flKamikazeChance, g_esKamikazeAbility[iType].g_flKamikazeChance, 1);
+		g_esKamikazeCache[tank].g_flKamikazeMeter = flGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_flKamikazeMeter, g_esKamikazeAbility[iType].g_flKamikazeMeter, 1);
+		g_esKamikazeCache[tank].g_flKamikazeRange = flGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_flKamikazeRange, g_esKamikazeAbility[iType].g_flKamikazeRange, 1);
+		g_esKamikazeCache[tank].g_flKamikazeRangeChance = flGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_flKamikazeRangeChance, g_esKamikazeAbility[iType].g_flKamikazeRangeChance, 1);
+		g_esKamikazeCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iHumanAbility, g_esKamikazeAbility[iType].g_iHumanAbility, 1);
+		g_esKamikazeCache[tank].g_iKamikazeAbility = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iKamikazeAbility, g_esKamikazeAbility[iType].g_iKamikazeAbility, 1);
+		g_esKamikazeCache[tank].g_iKamikazeEffect = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iKamikazeEffect, g_esKamikazeAbility[iType].g_iKamikazeEffect, 1);
+		g_esKamikazeCache[tank].g_iKamikazeBody = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iKamikazeBody, g_esKamikazeAbility[iType].g_iKamikazeBody, 1);
+		g_esKamikazeCache[tank].g_iKamikazeHit = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iKamikazeHit, g_esKamikazeAbility[iType].g_iKamikazeHit, 1);
+		g_esKamikazeCache[tank].g_iKamikazeHitMode = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iKamikazeHitMode, g_esKamikazeAbility[iType].g_iKamikazeHitMode, 1);
+		g_esKamikazeCache[tank].g_iKamikazeMessage = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iKamikazeMessage, g_esKamikazeAbility[iType].g_iKamikazeMessage, 1);
+		g_esKamikazeCache[tank].g_iKamikazeMode = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iKamikazeMode, g_esKamikazeAbility[iType].g_iKamikazeMode, 1);
+		g_esKamikazeCache[tank].g_iKamikazeSight = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iKamikazeSight, g_esKamikazeAbility[iType].g_iKamikazeSight, 1);
+		g_esKamikazeCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_flOpenAreasOnly, g_esKamikazeAbility[iType].g_flOpenAreasOnly, 1);
+		g_esKamikazeCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iRequiresHumans, g_esKamikazeAbility[iType].g_iRequiresHumans, 1);
 	}
 }
 

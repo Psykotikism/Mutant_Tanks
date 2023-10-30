@@ -86,6 +86,7 @@ enum struct esSplashPlayer
 	int g_iSplashMessage;
 	int g_iSplashSight;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esSplashPlayer g_esSplashPlayer[MAXPLAYERS + 1];
@@ -408,12 +409,12 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 {
 	if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esSplashCache[tank].g_iHumanAbility != 2)
 	{
-		g_esSplashAbility[g_esSplashPlayer[tank].g_iTankType].g_iComboPosition = -1;
+		g_esSplashAbility[g_esSplashPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 		return;
 	}
 
-	g_esSplashAbility[g_esSplashPlayer[tank].g_iTankType].g_iComboPosition = -1;
+	g_esSplashAbility[g_esSplashPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 	char sCombo[320], sSet[4][32];
 	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
@@ -434,7 +435,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 			{
 				if (StrEqual(sSubset[iPos], MT_SPLASH_SECTION, false) || StrEqual(sSubset[iPos], MT_SPLASH_SECTION2, false) || StrEqual(sSubset[iPos], MT_SPLASH_SECTION3, false) || StrEqual(sSubset[iPos], MT_SPLASH_SECTION4, false))
 				{
-					g_esSplashAbility[g_esSplashPlayer[tank].g_iTankType].g_iComboPosition = iPos;
+					g_esSplashAbility[g_esSplashPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = iPos;
 
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
@@ -672,49 +673,51 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esSplashPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esSplashPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esSplashPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esSplashCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_flCloseAreasOnly, g_esSplashPlayer[tank].g_flCloseAreasOnly, g_esSplashSpecial[type].g_flCloseAreasOnly, g_esSplashAbility[type].g_flCloseAreasOnly, 1);
-		g_esSplashCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_iComboAbility, g_esSplashPlayer[tank].g_iComboAbility, g_esSplashSpecial[type].g_iComboAbility, g_esSplashAbility[type].g_iComboAbility, 1);
-		g_esSplashCache[tank].g_flSplashChance = flGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_flSplashChance, g_esSplashPlayer[tank].g_flSplashChance, g_esSplashSpecial[type].g_flSplashChance, g_esSplashAbility[type].g_flSplashChance, 1);
-		g_esSplashCache[tank].g_flSplashDamage = flGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_flSplashDamage, g_esSplashPlayer[tank].g_flSplashDamage, g_esSplashSpecial[type].g_flSplashDamage, g_esSplashAbility[type].g_flSplashDamage, 1);
-		g_esSplashCache[tank].g_flSplashInterval = flGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_flSplashInterval, g_esSplashPlayer[tank].g_flSplashInterval, g_esSplashSpecial[type].g_flSplashInterval, g_esSplashAbility[type].g_flSplashInterval, 1);
-		g_esSplashCache[tank].g_flSplashRange = flGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_flSplashRange, g_esSplashPlayer[tank].g_flSplashRange, g_esSplashSpecial[type].g_flSplashRange, g_esSplashAbility[type].g_flSplashRange, 1);
-		g_esSplashCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_iHumanAbility, g_esSplashPlayer[tank].g_iHumanAbility, g_esSplashSpecial[type].g_iHumanAbility, g_esSplashAbility[type].g_iHumanAbility, 1);
-		g_esSplashCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_iHumanAmmo, g_esSplashPlayer[tank].g_iHumanAmmo, g_esSplashSpecial[type].g_iHumanAmmo, g_esSplashAbility[type].g_iHumanAmmo, 1);
-		g_esSplashCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_iHumanCooldown, g_esSplashPlayer[tank].g_iHumanCooldown, g_esSplashSpecial[type].g_iHumanCooldown, g_esSplashAbility[type].g_iHumanCooldown, 1);
-		g_esSplashCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_iHumanDuration, g_esSplashPlayer[tank].g_iHumanDuration, g_esSplashSpecial[type].g_iHumanDuration, g_esSplashAbility[type].g_iHumanDuration, 1);
-		g_esSplashCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_iHumanMode, g_esSplashPlayer[tank].g_iHumanMode, g_esSplashSpecial[type].g_iHumanMode, g_esSplashAbility[type].g_iHumanMode, 1);
-		g_esSplashCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_flOpenAreasOnly, g_esSplashPlayer[tank].g_flOpenAreasOnly, g_esSplashSpecial[type].g_flOpenAreasOnly, g_esSplashAbility[type].g_flOpenAreasOnly, 1);
-		g_esSplashCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_iRequiresHumans, g_esSplashPlayer[tank].g_iRequiresHumans, g_esSplashSpecial[type].g_iRequiresHumans, g_esSplashAbility[type].g_iRequiresHumans, 1);
-		g_esSplashCache[tank].g_iSplashAbility = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_iSplashAbility, g_esSplashPlayer[tank].g_iSplashAbility, g_esSplashSpecial[type].g_iSplashAbility, g_esSplashAbility[type].g_iSplashAbility, 1);
-		g_esSplashCache[tank].g_iSplashCooldown = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_iSplashCooldown, g_esSplashPlayer[tank].g_iSplashCooldown, g_esSplashSpecial[type].g_iSplashCooldown, g_esSplashAbility[type].g_iSplashCooldown, 1);
-		g_esSplashCache[tank].g_iSplashDuration = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_iSplashDuration, g_esSplashPlayer[tank].g_iSplashDuration, g_esSplashSpecial[type].g_iSplashDuration, g_esSplashAbility[type].g_iSplashDuration, 1);
-		g_esSplashCache[tank].g_iSplashMessage = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_iSplashMessage, g_esSplashPlayer[tank].g_iSplashMessage, g_esSplashSpecial[type].g_iSplashMessage, g_esSplashAbility[type].g_iSplashMessage, 1);
-		g_esSplashCache[tank].g_iSplashSight = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_iSplashSight, g_esSplashPlayer[tank].g_iSplashSight, g_esSplashSpecial[type].g_iSplashSight, g_esSplashAbility[type].g_iSplashSight, 1);
+		g_esSplashCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_flCloseAreasOnly, g_esSplashPlayer[tank].g_flCloseAreasOnly, g_esSplashSpecial[iType].g_flCloseAreasOnly, g_esSplashAbility[iType].g_flCloseAreasOnly, 1);
+		g_esSplashCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_iComboAbility, g_esSplashPlayer[tank].g_iComboAbility, g_esSplashSpecial[iType].g_iComboAbility, g_esSplashAbility[iType].g_iComboAbility, 1);
+		g_esSplashCache[tank].g_flSplashChance = flGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_flSplashChance, g_esSplashPlayer[tank].g_flSplashChance, g_esSplashSpecial[iType].g_flSplashChance, g_esSplashAbility[iType].g_flSplashChance, 1);
+		g_esSplashCache[tank].g_flSplashDamage = flGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_flSplashDamage, g_esSplashPlayer[tank].g_flSplashDamage, g_esSplashSpecial[iType].g_flSplashDamage, g_esSplashAbility[iType].g_flSplashDamage, 1);
+		g_esSplashCache[tank].g_flSplashInterval = flGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_flSplashInterval, g_esSplashPlayer[tank].g_flSplashInterval, g_esSplashSpecial[iType].g_flSplashInterval, g_esSplashAbility[iType].g_flSplashInterval, 1);
+		g_esSplashCache[tank].g_flSplashRange = flGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_flSplashRange, g_esSplashPlayer[tank].g_flSplashRange, g_esSplashSpecial[iType].g_flSplashRange, g_esSplashAbility[iType].g_flSplashRange, 1);
+		g_esSplashCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_iHumanAbility, g_esSplashPlayer[tank].g_iHumanAbility, g_esSplashSpecial[iType].g_iHumanAbility, g_esSplashAbility[iType].g_iHumanAbility, 1);
+		g_esSplashCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_iHumanAmmo, g_esSplashPlayer[tank].g_iHumanAmmo, g_esSplashSpecial[iType].g_iHumanAmmo, g_esSplashAbility[iType].g_iHumanAmmo, 1);
+		g_esSplashCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_iHumanCooldown, g_esSplashPlayer[tank].g_iHumanCooldown, g_esSplashSpecial[iType].g_iHumanCooldown, g_esSplashAbility[iType].g_iHumanCooldown, 1);
+		g_esSplashCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_iHumanDuration, g_esSplashPlayer[tank].g_iHumanDuration, g_esSplashSpecial[iType].g_iHumanDuration, g_esSplashAbility[iType].g_iHumanDuration, 1);
+		g_esSplashCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_iHumanMode, g_esSplashPlayer[tank].g_iHumanMode, g_esSplashSpecial[iType].g_iHumanMode, g_esSplashAbility[iType].g_iHumanMode, 1);
+		g_esSplashCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_flOpenAreasOnly, g_esSplashPlayer[tank].g_flOpenAreasOnly, g_esSplashSpecial[iType].g_flOpenAreasOnly, g_esSplashAbility[iType].g_flOpenAreasOnly, 1);
+		g_esSplashCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_iRequiresHumans, g_esSplashPlayer[tank].g_iRequiresHumans, g_esSplashSpecial[iType].g_iRequiresHumans, g_esSplashAbility[iType].g_iRequiresHumans, 1);
+		g_esSplashCache[tank].g_iSplashAbility = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_iSplashAbility, g_esSplashPlayer[tank].g_iSplashAbility, g_esSplashSpecial[iType].g_iSplashAbility, g_esSplashAbility[iType].g_iSplashAbility, 1);
+		g_esSplashCache[tank].g_iSplashCooldown = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_iSplashCooldown, g_esSplashPlayer[tank].g_iSplashCooldown, g_esSplashSpecial[iType].g_iSplashCooldown, g_esSplashAbility[iType].g_iSplashCooldown, 1);
+		g_esSplashCache[tank].g_iSplashDuration = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_iSplashDuration, g_esSplashPlayer[tank].g_iSplashDuration, g_esSplashSpecial[iType].g_iSplashDuration, g_esSplashAbility[iType].g_iSplashDuration, 1);
+		g_esSplashCache[tank].g_iSplashMessage = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_iSplashMessage, g_esSplashPlayer[tank].g_iSplashMessage, g_esSplashSpecial[iType].g_iSplashMessage, g_esSplashAbility[iType].g_iSplashMessage, 1);
+		g_esSplashCache[tank].g_iSplashSight = iGetSubSettingValue(apply, bHuman, g_esSplashTeammate[tank].g_iSplashSight, g_esSplashPlayer[tank].g_iSplashSight, g_esSplashSpecial[iType].g_iSplashSight, g_esSplashAbility[iType].g_iSplashSight, 1);
 	}
 	else
 	{
-		g_esSplashCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_flCloseAreasOnly, g_esSplashAbility[type].g_flCloseAreasOnly, 1);
-		g_esSplashCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_iComboAbility, g_esSplashAbility[type].g_iComboAbility, 1);
-		g_esSplashCache[tank].g_flSplashChance = flGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_flSplashChance, g_esSplashAbility[type].g_flSplashChance, 1);
-		g_esSplashCache[tank].g_flSplashDamage = flGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_flSplashDamage, g_esSplashAbility[type].g_flSplashDamage, 1);
-		g_esSplashCache[tank].g_flSplashInterval = flGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_flSplashInterval, g_esSplashAbility[type].g_flSplashInterval, 1);
-		g_esSplashCache[tank].g_flSplashRange = flGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_flSplashRange, g_esSplashAbility[type].g_flSplashRange, 1);
-		g_esSplashCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_iHumanAbility, g_esSplashAbility[type].g_iHumanAbility, 1);
-		g_esSplashCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_iHumanAmmo, g_esSplashAbility[type].g_iHumanAmmo, 1);
-		g_esSplashCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_iHumanCooldown, g_esSplashAbility[type].g_iHumanCooldown, 1);
-		g_esSplashCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_iHumanDuration, g_esSplashAbility[type].g_iHumanDuration, 1);
-		g_esSplashCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_iHumanMode, g_esSplashAbility[type].g_iHumanMode, 1);
-		g_esSplashCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_flOpenAreasOnly, g_esSplashAbility[type].g_flOpenAreasOnly, 1);
-		g_esSplashCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_iRequiresHumans, g_esSplashAbility[type].g_iRequiresHumans, 1);
-		g_esSplashCache[tank].g_iSplashAbility = iGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_iSplashAbility, g_esSplashAbility[type].g_iSplashAbility, 1);
-		g_esSplashCache[tank].g_iSplashCooldown = iGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_iSplashCooldown, g_esSplashAbility[type].g_iSplashCooldown, 1);
-		g_esSplashCache[tank].g_iSplashDuration = iGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_iSplashDuration, g_esSplashAbility[type].g_iSplashDuration, 1);
-		g_esSplashCache[tank].g_iSplashMessage = iGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_iSplashMessage, g_esSplashAbility[type].g_iSplashMessage, 1);
-		g_esSplashCache[tank].g_iSplashSight = iGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_iSplashSight, g_esSplashAbility[type].g_iSplashSight, 1);
+		g_esSplashCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_flCloseAreasOnly, g_esSplashAbility[iType].g_flCloseAreasOnly, 1);
+		g_esSplashCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_iComboAbility, g_esSplashAbility[iType].g_iComboAbility, 1);
+		g_esSplashCache[tank].g_flSplashChance = flGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_flSplashChance, g_esSplashAbility[iType].g_flSplashChance, 1);
+		g_esSplashCache[tank].g_flSplashDamage = flGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_flSplashDamage, g_esSplashAbility[iType].g_flSplashDamage, 1);
+		g_esSplashCache[tank].g_flSplashInterval = flGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_flSplashInterval, g_esSplashAbility[iType].g_flSplashInterval, 1);
+		g_esSplashCache[tank].g_flSplashRange = flGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_flSplashRange, g_esSplashAbility[iType].g_flSplashRange, 1);
+		g_esSplashCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_iHumanAbility, g_esSplashAbility[iType].g_iHumanAbility, 1);
+		g_esSplashCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_iHumanAmmo, g_esSplashAbility[iType].g_iHumanAmmo, 1);
+		g_esSplashCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_iHumanCooldown, g_esSplashAbility[iType].g_iHumanCooldown, 1);
+		g_esSplashCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_iHumanDuration, g_esSplashAbility[iType].g_iHumanDuration, 1);
+		g_esSplashCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_iHumanMode, g_esSplashAbility[iType].g_iHumanMode, 1);
+		g_esSplashCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_flOpenAreasOnly, g_esSplashAbility[iType].g_flOpenAreasOnly, 1);
+		g_esSplashCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_iRequiresHumans, g_esSplashAbility[iType].g_iRequiresHumans, 1);
+		g_esSplashCache[tank].g_iSplashAbility = iGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_iSplashAbility, g_esSplashAbility[iType].g_iSplashAbility, 1);
+		g_esSplashCache[tank].g_iSplashCooldown = iGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_iSplashCooldown, g_esSplashAbility[iType].g_iSplashCooldown, 1);
+		g_esSplashCache[tank].g_iSplashDuration = iGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_iSplashDuration, g_esSplashAbility[iType].g_iSplashDuration, 1);
+		g_esSplashCache[tank].g_iSplashMessage = iGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_iSplashMessage, g_esSplashAbility[iType].g_iSplashMessage, 1);
+		g_esSplashCache[tank].g_iSplashSight = iGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_iSplashSight, g_esSplashAbility[iType].g_iSplashSight, 1);
 	}
 }
 
@@ -1001,7 +1004,7 @@ void vSplashReset2(int tank)
 
 void vSplashReset3(int tank)
 {
-	int iTime = GetTime(), iPos = g_esSplashAbility[g_esSplashPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esSplashCache[tank].g_iSplashCooldown;
+	int iTime = GetTime(), iPos = g_esSplashAbility[g_esSplashPlayer[tank].g_iTankTypeRecorded].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esSplashCache[tank].g_iSplashCooldown;
 	iCooldown = (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esSplashCache[tank].g_iHumanAbility == 1 && g_esSplashCache[tank].g_iHumanMode == 0 && g_esSplashPlayer[tank].g_iAmmoCount < g_esSplashCache[tank].g_iHumanAmmo && g_esSplashCache[tank].g_iHumanAmmo > 0) ? g_esSplashCache[tank].g_iHumanCooldown : iCooldown;
 	g_esSplashPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esSplashPlayer[tank].g_iCooldown != -1 && g_esSplashPlayer[tank].g_iCooldown >= iTime)

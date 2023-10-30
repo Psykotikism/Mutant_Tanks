@@ -106,6 +106,7 @@ enum struct esWarpPlayer
 	int g_iRequiresHumans;
 	int g_iRockCooldown;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 	int g_iWarpAbility;
 	int g_iWarpCooldown;
 	int g_iWarpDuration;
@@ -604,12 +605,12 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 {
 	if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esWarpCache[tank].g_iHumanAbility != 2)
 	{
-		g_esWarpAbility[g_esWarpPlayer[tank].g_iTankType].g_iComboPosition = -1;
+		g_esWarpAbility[g_esWarpPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 		return;
 	}
 
-	g_esWarpAbility[g_esWarpPlayer[tank].g_iTankType].g_iComboPosition = -1;
+	g_esWarpAbility[g_esWarpPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 	char sCombo[320], sSet[4][32];
 	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
@@ -628,7 +629,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		{
 			if (StrEqual(sSubset[iPos], MT_WARP_SECTION, false) || StrEqual(sSubset[iPos], MT_WARP_SECTION2, false) || StrEqual(sSubset[iPos], MT_WARP_SECTION3, false) || StrEqual(sSubset[iPos], MT_WARP_SECTION4, false))
 			{
-				g_esWarpAbility[g_esWarpPlayer[tank].g_iTankType].g_iComboPosition = iPos;
+				g_esWarpAbility[g_esWarpPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = iPos;
 				flDelay = MT_GetCombinationSetting(tank, 4, iPos);
 
 				switch (type)
@@ -1004,69 +1005,71 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
 	g_esWarpPlayer[tank].g_iInfectedType = iGetInfectedType(tank);
+	g_esWarpPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esWarpPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esWarpPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esWarpCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_flCloseAreasOnly, g_esWarpPlayer[tank].g_flCloseAreasOnly, g_esWarpSpecial[type].g_flCloseAreasOnly, g_esWarpAbility[type].g_flCloseAreasOnly, 1);
-		g_esWarpCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iComboAbility, g_esWarpPlayer[tank].g_iComboAbility, g_esWarpSpecial[type].g_iComboAbility, g_esWarpAbility[type].g_iComboAbility, 1);
-		g_esWarpCache[tank].g_flWarpChance = flGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_flWarpChance, g_esWarpPlayer[tank].g_flWarpChance, g_esWarpSpecial[type].g_flWarpChance, g_esWarpAbility[type].g_flWarpChance, 1);
-		g_esWarpCache[tank].g_flWarpInterval = flGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_flWarpInterval, g_esWarpPlayer[tank].g_flWarpInterval, g_esWarpSpecial[type].g_flWarpInterval, g_esWarpAbility[type].g_flWarpInterval, 1);
-		g_esWarpCache[tank].g_flWarpRange = flGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_flWarpRange, g_esWarpPlayer[tank].g_flWarpRange, g_esWarpSpecial[type].g_flWarpRange, g_esWarpAbility[type].g_flWarpRange, 1);
-		g_esWarpCache[tank].g_flWarpRangeChance = flGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_flWarpRangeChance, g_esWarpPlayer[tank].g_flWarpRangeChance, g_esWarpSpecial[type].g_flWarpRangeChance, g_esWarpAbility[type].g_flWarpRangeChance, 1);
-		g_esWarpCache[tank].g_flWarpRockChance = flGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_flWarpRockChance, g_esWarpPlayer[tank].g_flWarpRockChance, g_esWarpSpecial[type].g_flWarpRockChance, g_esWarpAbility[type].g_flWarpRockChance, 1);
-		g_esWarpCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iHumanAbility, g_esWarpPlayer[tank].g_iHumanAbility, g_esWarpSpecial[type].g_iHumanAbility, g_esWarpAbility[type].g_iHumanAbility, 1);
-		g_esWarpCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iHumanAmmo, g_esWarpPlayer[tank].g_iHumanAmmo, g_esWarpSpecial[type].g_iHumanAmmo, g_esWarpAbility[type].g_iHumanAmmo, 1);
-		g_esWarpCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iHumanCooldown, g_esWarpPlayer[tank].g_iHumanCooldown, g_esWarpSpecial[type].g_iHumanCooldown, g_esWarpAbility[type].g_iHumanCooldown, 1);
-		g_esWarpCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iHumanDuration, g_esWarpPlayer[tank].g_iHumanDuration, g_esWarpSpecial[type].g_iHumanDuration, g_esWarpAbility[type].g_iHumanDuration, 1);
-		g_esWarpCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iHumanMode, g_esWarpPlayer[tank].g_iHumanMode, g_esWarpSpecial[type].g_iHumanMode, g_esWarpAbility[type].g_iHumanMode, 1);
-		g_esWarpCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iHumanRangeCooldown, g_esWarpPlayer[tank].g_iHumanRangeCooldown, g_esWarpSpecial[type].g_iHumanRangeCooldown, g_esWarpAbility[type].g_iHumanRangeCooldown, 1);
-		g_esWarpCache[tank].g_iHumanRockCooldown = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iHumanRockCooldown, g_esWarpPlayer[tank].g_iHumanRockCooldown, g_esWarpSpecial[type].g_iHumanRockCooldown, g_esWarpAbility[type].g_iHumanRockCooldown, 1);
-		g_esWarpCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_flOpenAreasOnly, g_esWarpPlayer[tank].g_flOpenAreasOnly, g_esWarpSpecial[type].g_flOpenAreasOnly, g_esWarpAbility[type].g_flOpenAreasOnly, 1);
-		g_esWarpCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iRequiresHumans, g_esWarpPlayer[tank].g_iRequiresHumans, g_esWarpSpecial[type].g_iRequiresHumans, g_esWarpAbility[type].g_iRequiresHumans, 1);
-		g_esWarpCache[tank].g_iWarpAbility = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iWarpAbility, g_esWarpPlayer[tank].g_iWarpAbility, g_esWarpSpecial[type].g_iWarpAbility, g_esWarpAbility[type].g_iWarpAbility, 1);
-		g_esWarpCache[tank].g_iWarpCooldown = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iWarpCooldown, g_esWarpPlayer[tank].g_iWarpCooldown, g_esWarpSpecial[type].g_iWarpCooldown, g_esWarpAbility[type].g_iWarpCooldown, 1);
-		g_esWarpCache[tank].g_iWarpDuration = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iWarpDuration, g_esWarpPlayer[tank].g_iWarpDuration, g_esWarpSpecial[type].g_iWarpDuration, g_esWarpAbility[type].g_iWarpDuration, 1);
-		g_esWarpCache[tank].g_iWarpEffect = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iWarpEffect, g_esWarpPlayer[tank].g_iWarpEffect, g_esWarpSpecial[type].g_iWarpEffect, g_esWarpAbility[type].g_iWarpEffect, 1);
-		g_esWarpCache[tank].g_iWarpHit = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iWarpHit, g_esWarpPlayer[tank].g_iWarpHit, g_esWarpSpecial[type].g_iWarpHit, g_esWarpAbility[type].g_iWarpHit, 1);
-		g_esWarpCache[tank].g_iWarpHitMode = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iWarpHitMode, g_esWarpPlayer[tank].g_iWarpHitMode, g_esWarpSpecial[type].g_iWarpHitMode, g_esWarpAbility[type].g_iWarpHitMode, 1);
-		g_esWarpCache[tank].g_iWarpMessage = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iWarpMessage, g_esWarpPlayer[tank].g_iWarpMessage, g_esWarpSpecial[type].g_iWarpMessage, g_esWarpAbility[type].g_iWarpMessage, 1);
-		g_esWarpCache[tank].g_iWarpMode = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iWarpMode, g_esWarpPlayer[tank].g_iWarpMode, g_esWarpSpecial[type].g_iWarpMode, g_esWarpAbility[type].g_iWarpMode, 1);
-		g_esWarpCache[tank].g_iWarpRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iWarpRangeCooldown, g_esWarpPlayer[tank].g_iWarpRangeCooldown, g_esWarpSpecial[type].g_iWarpRangeCooldown, g_esWarpAbility[type].g_iWarpRangeCooldown, 1);
-		g_esWarpCache[tank].g_iWarpSight = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iWarpSight, g_esWarpPlayer[tank].g_iWarpSight, g_esWarpSpecial[type].g_iWarpSight, g_esWarpAbility[type].g_iWarpSight, 1);
-		g_esWarpCache[tank].g_iWarpRockBreak = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iWarpRockBreak, g_esWarpPlayer[tank].g_iWarpRockBreak, g_esWarpSpecial[type].g_iWarpRockBreak, g_esWarpAbility[type].g_iWarpRockBreak, 1);
-		g_esWarpCache[tank].g_iWarpRockCooldown = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iWarpRockCooldown, g_esWarpPlayer[tank].g_iWarpRockCooldown, g_esWarpSpecial[type].g_iWarpRockCooldown, g_esWarpAbility[type].g_iWarpRockCooldown, 1);
+		g_esWarpCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_flCloseAreasOnly, g_esWarpPlayer[tank].g_flCloseAreasOnly, g_esWarpSpecial[iType].g_flCloseAreasOnly, g_esWarpAbility[iType].g_flCloseAreasOnly, 1);
+		g_esWarpCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iComboAbility, g_esWarpPlayer[tank].g_iComboAbility, g_esWarpSpecial[iType].g_iComboAbility, g_esWarpAbility[iType].g_iComboAbility, 1);
+		g_esWarpCache[tank].g_flWarpChance = flGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_flWarpChance, g_esWarpPlayer[tank].g_flWarpChance, g_esWarpSpecial[iType].g_flWarpChance, g_esWarpAbility[iType].g_flWarpChance, 1);
+		g_esWarpCache[tank].g_flWarpInterval = flGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_flWarpInterval, g_esWarpPlayer[tank].g_flWarpInterval, g_esWarpSpecial[iType].g_flWarpInterval, g_esWarpAbility[iType].g_flWarpInterval, 1);
+		g_esWarpCache[tank].g_flWarpRange = flGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_flWarpRange, g_esWarpPlayer[tank].g_flWarpRange, g_esWarpSpecial[iType].g_flWarpRange, g_esWarpAbility[iType].g_flWarpRange, 1);
+		g_esWarpCache[tank].g_flWarpRangeChance = flGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_flWarpRangeChance, g_esWarpPlayer[tank].g_flWarpRangeChance, g_esWarpSpecial[iType].g_flWarpRangeChance, g_esWarpAbility[iType].g_flWarpRangeChance, 1);
+		g_esWarpCache[tank].g_flWarpRockChance = flGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_flWarpRockChance, g_esWarpPlayer[tank].g_flWarpRockChance, g_esWarpSpecial[iType].g_flWarpRockChance, g_esWarpAbility[iType].g_flWarpRockChance, 1);
+		g_esWarpCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iHumanAbility, g_esWarpPlayer[tank].g_iHumanAbility, g_esWarpSpecial[iType].g_iHumanAbility, g_esWarpAbility[iType].g_iHumanAbility, 1);
+		g_esWarpCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iHumanAmmo, g_esWarpPlayer[tank].g_iHumanAmmo, g_esWarpSpecial[iType].g_iHumanAmmo, g_esWarpAbility[iType].g_iHumanAmmo, 1);
+		g_esWarpCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iHumanCooldown, g_esWarpPlayer[tank].g_iHumanCooldown, g_esWarpSpecial[iType].g_iHumanCooldown, g_esWarpAbility[iType].g_iHumanCooldown, 1);
+		g_esWarpCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iHumanDuration, g_esWarpPlayer[tank].g_iHumanDuration, g_esWarpSpecial[iType].g_iHumanDuration, g_esWarpAbility[iType].g_iHumanDuration, 1);
+		g_esWarpCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iHumanMode, g_esWarpPlayer[tank].g_iHumanMode, g_esWarpSpecial[iType].g_iHumanMode, g_esWarpAbility[iType].g_iHumanMode, 1);
+		g_esWarpCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iHumanRangeCooldown, g_esWarpPlayer[tank].g_iHumanRangeCooldown, g_esWarpSpecial[iType].g_iHumanRangeCooldown, g_esWarpAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esWarpCache[tank].g_iHumanRockCooldown = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iHumanRockCooldown, g_esWarpPlayer[tank].g_iHumanRockCooldown, g_esWarpSpecial[iType].g_iHumanRockCooldown, g_esWarpAbility[iType].g_iHumanRockCooldown, 1);
+		g_esWarpCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_flOpenAreasOnly, g_esWarpPlayer[tank].g_flOpenAreasOnly, g_esWarpSpecial[iType].g_flOpenAreasOnly, g_esWarpAbility[iType].g_flOpenAreasOnly, 1);
+		g_esWarpCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iRequiresHumans, g_esWarpPlayer[tank].g_iRequiresHumans, g_esWarpSpecial[iType].g_iRequiresHumans, g_esWarpAbility[iType].g_iRequiresHumans, 1);
+		g_esWarpCache[tank].g_iWarpAbility = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iWarpAbility, g_esWarpPlayer[tank].g_iWarpAbility, g_esWarpSpecial[iType].g_iWarpAbility, g_esWarpAbility[iType].g_iWarpAbility, 1);
+		g_esWarpCache[tank].g_iWarpCooldown = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iWarpCooldown, g_esWarpPlayer[tank].g_iWarpCooldown, g_esWarpSpecial[iType].g_iWarpCooldown, g_esWarpAbility[iType].g_iWarpCooldown, 1);
+		g_esWarpCache[tank].g_iWarpDuration = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iWarpDuration, g_esWarpPlayer[tank].g_iWarpDuration, g_esWarpSpecial[iType].g_iWarpDuration, g_esWarpAbility[iType].g_iWarpDuration, 1);
+		g_esWarpCache[tank].g_iWarpEffect = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iWarpEffect, g_esWarpPlayer[tank].g_iWarpEffect, g_esWarpSpecial[iType].g_iWarpEffect, g_esWarpAbility[iType].g_iWarpEffect, 1);
+		g_esWarpCache[tank].g_iWarpHit = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iWarpHit, g_esWarpPlayer[tank].g_iWarpHit, g_esWarpSpecial[iType].g_iWarpHit, g_esWarpAbility[iType].g_iWarpHit, 1);
+		g_esWarpCache[tank].g_iWarpHitMode = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iWarpHitMode, g_esWarpPlayer[tank].g_iWarpHitMode, g_esWarpSpecial[iType].g_iWarpHitMode, g_esWarpAbility[iType].g_iWarpHitMode, 1);
+		g_esWarpCache[tank].g_iWarpMessage = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iWarpMessage, g_esWarpPlayer[tank].g_iWarpMessage, g_esWarpSpecial[iType].g_iWarpMessage, g_esWarpAbility[iType].g_iWarpMessage, 1);
+		g_esWarpCache[tank].g_iWarpMode = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iWarpMode, g_esWarpPlayer[tank].g_iWarpMode, g_esWarpSpecial[iType].g_iWarpMode, g_esWarpAbility[iType].g_iWarpMode, 1);
+		g_esWarpCache[tank].g_iWarpRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iWarpRangeCooldown, g_esWarpPlayer[tank].g_iWarpRangeCooldown, g_esWarpSpecial[iType].g_iWarpRangeCooldown, g_esWarpAbility[iType].g_iWarpRangeCooldown, 1);
+		g_esWarpCache[tank].g_iWarpSight = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iWarpSight, g_esWarpPlayer[tank].g_iWarpSight, g_esWarpSpecial[iType].g_iWarpSight, g_esWarpAbility[iType].g_iWarpSight, 1);
+		g_esWarpCache[tank].g_iWarpRockBreak = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iWarpRockBreak, g_esWarpPlayer[tank].g_iWarpRockBreak, g_esWarpSpecial[iType].g_iWarpRockBreak, g_esWarpAbility[iType].g_iWarpRockBreak, 1);
+		g_esWarpCache[tank].g_iWarpRockCooldown = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iWarpRockCooldown, g_esWarpPlayer[tank].g_iWarpRockCooldown, g_esWarpSpecial[iType].g_iWarpRockCooldown, g_esWarpAbility[iType].g_iWarpRockCooldown, 1);
 	}
 	else
 	{
-		g_esWarpCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_flCloseAreasOnly, g_esWarpAbility[type].g_flCloseAreasOnly, 1);
-		g_esWarpCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iComboAbility, g_esWarpAbility[type].g_iComboAbility, 1);
-		g_esWarpCache[tank].g_flWarpChance = flGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_flWarpChance, g_esWarpAbility[type].g_flWarpChance, 1);
-		g_esWarpCache[tank].g_flWarpInterval = flGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_flWarpInterval, g_esWarpAbility[type].g_flWarpInterval, 1);
-		g_esWarpCache[tank].g_flWarpRange = flGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_flWarpRange, g_esWarpAbility[type].g_flWarpRange, 1);
-		g_esWarpCache[tank].g_flWarpRangeChance = flGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_flWarpRangeChance, g_esWarpAbility[type].g_flWarpRangeChance, 1);
-		g_esWarpCache[tank].g_flWarpRockChance = flGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_flWarpRockChance, g_esWarpAbility[type].g_flWarpRockChance, 1);
-		g_esWarpCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iHumanAbility, g_esWarpAbility[type].g_iHumanAbility, 1);
-		g_esWarpCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iHumanAmmo, g_esWarpAbility[type].g_iHumanAmmo, 1);
-		g_esWarpCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iHumanCooldown, g_esWarpAbility[type].g_iHumanCooldown, 1);
-		g_esWarpCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iHumanDuration, g_esWarpAbility[type].g_iHumanDuration, 1);
-		g_esWarpCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iHumanMode, g_esWarpAbility[type].g_iHumanMode, 1);
-		g_esWarpCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iHumanRangeCooldown, g_esWarpAbility[type].g_iHumanRangeCooldown, 1);
-		g_esWarpCache[tank].g_iHumanRockCooldown = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iHumanRockCooldown, g_esWarpAbility[type].g_iHumanRockCooldown, 1);
-		g_esWarpCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_flOpenAreasOnly, g_esWarpAbility[type].g_flOpenAreasOnly, 1);
-		g_esWarpCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iRequiresHumans, g_esWarpAbility[type].g_iRequiresHumans, 1);
-		g_esWarpCache[tank].g_iWarpAbility = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iWarpAbility, g_esWarpAbility[type].g_iWarpAbility, 1);
-		g_esWarpCache[tank].g_iWarpCooldown = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iWarpCooldown, g_esWarpAbility[type].g_iWarpCooldown, 1);
-		g_esWarpCache[tank].g_iWarpDuration = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iWarpDuration, g_esWarpAbility[type].g_iWarpDuration, 1);
-		g_esWarpCache[tank].g_iWarpEffect = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iWarpEffect, g_esWarpAbility[type].g_iWarpEffect, 1);
-		g_esWarpCache[tank].g_iWarpHit = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iWarpHit, g_esWarpAbility[type].g_iWarpHit, 1);
-		g_esWarpCache[tank].g_iWarpHitMode = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iWarpHitMode, g_esWarpAbility[type].g_iWarpHitMode, 1);
-		g_esWarpCache[tank].g_iWarpMessage = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iWarpMessage, g_esWarpAbility[type].g_iWarpMessage, 1);
-		g_esWarpCache[tank].g_iWarpMode = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iWarpMode, g_esWarpAbility[type].g_iWarpMode, 1);
-		g_esWarpCache[tank].g_iWarpRangeCooldown = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iWarpRangeCooldown, g_esWarpAbility[type].g_iWarpRangeCooldown, 1);
-		g_esWarpCache[tank].g_iWarpSight = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iWarpSight, g_esWarpAbility[type].g_iWarpSight, 1);
-		g_esWarpCache[tank].g_iWarpRockBreak = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iWarpRockBreak, g_esWarpAbility[type].g_iWarpRockBreak, 1);
-		g_esWarpCache[tank].g_iWarpRockCooldown = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iWarpRockCooldown, g_esWarpAbility[type].g_iWarpRockCooldown, 1);
+		g_esWarpCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_flCloseAreasOnly, g_esWarpAbility[iType].g_flCloseAreasOnly, 1);
+		g_esWarpCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iComboAbility, g_esWarpAbility[iType].g_iComboAbility, 1);
+		g_esWarpCache[tank].g_flWarpChance = flGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_flWarpChance, g_esWarpAbility[iType].g_flWarpChance, 1);
+		g_esWarpCache[tank].g_flWarpInterval = flGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_flWarpInterval, g_esWarpAbility[iType].g_flWarpInterval, 1);
+		g_esWarpCache[tank].g_flWarpRange = flGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_flWarpRange, g_esWarpAbility[iType].g_flWarpRange, 1);
+		g_esWarpCache[tank].g_flWarpRangeChance = flGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_flWarpRangeChance, g_esWarpAbility[iType].g_flWarpRangeChance, 1);
+		g_esWarpCache[tank].g_flWarpRockChance = flGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_flWarpRockChance, g_esWarpAbility[iType].g_flWarpRockChance, 1);
+		g_esWarpCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iHumanAbility, g_esWarpAbility[iType].g_iHumanAbility, 1);
+		g_esWarpCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iHumanAmmo, g_esWarpAbility[iType].g_iHumanAmmo, 1);
+		g_esWarpCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iHumanCooldown, g_esWarpAbility[iType].g_iHumanCooldown, 1);
+		g_esWarpCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iHumanDuration, g_esWarpAbility[iType].g_iHumanDuration, 1);
+		g_esWarpCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iHumanMode, g_esWarpAbility[iType].g_iHumanMode, 1);
+		g_esWarpCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iHumanRangeCooldown, g_esWarpAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esWarpCache[tank].g_iHumanRockCooldown = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iHumanRockCooldown, g_esWarpAbility[iType].g_iHumanRockCooldown, 1);
+		g_esWarpCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_flOpenAreasOnly, g_esWarpAbility[iType].g_flOpenAreasOnly, 1);
+		g_esWarpCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iRequiresHumans, g_esWarpAbility[iType].g_iRequiresHumans, 1);
+		g_esWarpCache[tank].g_iWarpAbility = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iWarpAbility, g_esWarpAbility[iType].g_iWarpAbility, 1);
+		g_esWarpCache[tank].g_iWarpCooldown = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iWarpCooldown, g_esWarpAbility[iType].g_iWarpCooldown, 1);
+		g_esWarpCache[tank].g_iWarpDuration = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iWarpDuration, g_esWarpAbility[iType].g_iWarpDuration, 1);
+		g_esWarpCache[tank].g_iWarpEffect = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iWarpEffect, g_esWarpAbility[iType].g_iWarpEffect, 1);
+		g_esWarpCache[tank].g_iWarpHit = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iWarpHit, g_esWarpAbility[iType].g_iWarpHit, 1);
+		g_esWarpCache[tank].g_iWarpHitMode = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iWarpHitMode, g_esWarpAbility[iType].g_iWarpHitMode, 1);
+		g_esWarpCache[tank].g_iWarpMessage = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iWarpMessage, g_esWarpAbility[iType].g_iWarpMessage, 1);
+		g_esWarpCache[tank].g_iWarpMode = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iWarpMode, g_esWarpAbility[iType].g_iWarpMode, 1);
+		g_esWarpCache[tank].g_iWarpRangeCooldown = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iWarpRangeCooldown, g_esWarpAbility[iType].g_iWarpRangeCooldown, 1);
+		g_esWarpCache[tank].g_iWarpSight = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iWarpSight, g_esWarpAbility[iType].g_iWarpSight, 1);
+		g_esWarpCache[tank].g_iWarpRockBreak = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iWarpRockBreak, g_esWarpAbility[iType].g_iWarpRockBreak, 1);
+		g_esWarpCache[tank].g_iWarpRockCooldown = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iWarpRockCooldown, g_esWarpAbility[iType].g_iWarpRockCooldown, 1);
 	}
 }
 
@@ -1770,7 +1773,7 @@ void vWarpReset2(int tank)
 {
 	g_esWarpPlayer[tank].g_bActivated = false;
 
-	int iTime = GetTime(), iPos = g_esWarpAbility[g_esWarpPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esWarpCache[tank].g_iWarpCooldown;
+	int iTime = GetTime(), iPos = g_esWarpAbility[g_esWarpPlayer[tank].g_iTankTypeRecorded].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esWarpCache[tank].g_iWarpCooldown;
 	iCooldown = (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esWarpCache[tank].g_iHumanAbility == 1 && g_esWarpPlayer[tank].g_iAmmoCount < g_esWarpCache[tank].g_iHumanAmmo && g_esWarpCache[tank].g_iHumanAmmo > 0) ? g_esWarpCache[tank].g_iHumanCooldown : iCooldown;
 	g_esWarpPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esWarpPlayer[tank].g_iCooldown != -1 && g_esWarpPlayer[tank].g_iCooldown >= iTime)

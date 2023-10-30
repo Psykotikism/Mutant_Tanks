@@ -114,6 +114,7 @@ enum struct esShieldPlayer
 	int g_iShieldMessage;
 	int g_iShieldType;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esShieldPlayer g_esShieldPlayer[MAXPLAYERS + 1];
@@ -737,12 +738,12 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 {
 	if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esShieldCache[tank].g_iHumanAbility != 2)
 	{
-		g_esShieldAbility[g_esShieldPlayer[tank].g_iTankType].g_iComboPosition = -1;
+		g_esShieldAbility[g_esShieldPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 		return;
 	}
 
-	g_esShieldAbility[g_esShieldPlayer[tank].g_iTankType].g_iComboPosition = -1;
+	g_esShieldAbility[g_esShieldPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 	char sCombo[320], sSet[4][32];
 	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
@@ -763,7 +764,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 			{
 				if (StrEqual(sSubset[iPos], MT_SHIELD_SECTION, false) || StrEqual(sSubset[iPos], MT_SHIELD_SECTION2, false) || StrEqual(sSubset[iPos], MT_SHIELD_SECTION3, false) || StrEqual(sSubset[iPos], MT_SHIELD_SECTION4, false))
 				{
-					g_esShieldAbility[g_esShieldPlayer[tank].g_iTankType].g_iComboPosition = iPos;
+					g_esShieldAbility[g_esShieldPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = iPos;
 
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
@@ -1113,71 +1114,73 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT), bInfected = bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME);
+	g_esShieldPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esShieldPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esShieldPlayer[tank].g_iTankTypeRecorded;
 
 	if (bInfected)
 	{
-		g_esShieldCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_flCloseAreasOnly, g_esShieldPlayer[tank].g_flCloseAreasOnly, g_esShieldSpecial[type].g_flCloseAreasOnly, g_esShieldAbility[type].g_flCloseAreasOnly, 1);
-		g_esShieldCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_iComboAbility, g_esShieldPlayer[tank].g_iComboAbility, g_esShieldSpecial[type].g_iComboAbility, g_esShieldAbility[type].g_iComboAbility, 1);
-		g_esShieldCache[tank].g_flShieldChance = flGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_flShieldChance, g_esShieldPlayer[tank].g_flShieldChance, g_esShieldSpecial[type].g_flShieldChance, g_esShieldAbility[type].g_flShieldChance, 1);
-		g_esShieldCache[tank].g_flShieldConvertPercentage = flGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_flShieldConvertPercentage, g_esShieldPlayer[tank].g_flShieldConvertPercentage, g_esShieldSpecial[type].g_flShieldConvertPercentage, g_esShieldAbility[type].g_flShieldConvertPercentage, 1);
-		g_esShieldCache[tank].g_flShieldHealth = flGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_flShieldHealth, g_esShieldPlayer[tank].g_flShieldHealth, g_esShieldSpecial[type].g_flShieldHealth, g_esShieldAbility[type].g_flShieldHealth, 1);
-		g_esShieldCache[tank].g_flShieldThrowChance = flGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_flShieldThrowChance, g_esShieldPlayer[tank].g_flShieldThrowChance, g_esShieldSpecial[type].g_flShieldThrowChance, g_esShieldAbility[type].g_flShieldThrowChance, 1);
-		g_esShieldCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_iHumanAbility, g_esShieldPlayer[tank].g_iHumanAbility, g_esShieldSpecial[type].g_iHumanAbility, g_esShieldAbility[type].g_iHumanAbility, 1);
-		g_esShieldCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_iHumanAmmo, g_esShieldPlayer[tank].g_iHumanAmmo, g_esShieldSpecial[type].g_iHumanAmmo, g_esShieldAbility[type].g_iHumanAmmo, 1);
-		g_esShieldCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_iHumanCooldown, g_esShieldPlayer[tank].g_iHumanCooldown, g_esShieldSpecial[type].g_iHumanCooldown, g_esShieldAbility[type].g_iHumanCooldown, 1);
-		g_esShieldCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_iHumanDuration, g_esShieldPlayer[tank].g_iHumanDuration, g_esShieldSpecial[type].g_iHumanDuration, g_esShieldAbility[type].g_iHumanDuration, 1);
-		g_esShieldCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_iHumanMode, g_esShieldPlayer[tank].g_iHumanMode, g_esShieldSpecial[type].g_iHumanMode, g_esShieldAbility[type].g_iHumanMode, 1);
-		g_esShieldCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_flOpenAreasOnly, g_esShieldPlayer[tank].g_flOpenAreasOnly, g_esShieldSpecial[type].g_flOpenAreasOnly, g_esShieldAbility[type].g_flOpenAreasOnly, 1);
-		g_esShieldCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_iRequiresHumans, g_esShieldPlayer[tank].g_iRequiresHumans, g_esShieldSpecial[type].g_iRequiresHumans, g_esShieldAbility[type].g_iRequiresHumans, 1);
-		g_esShieldCache[tank].g_iShieldAbility = iGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_iShieldAbility, g_esShieldPlayer[tank].g_iShieldAbility, g_esShieldSpecial[type].g_iShieldAbility, g_esShieldAbility[type].g_iShieldAbility, 1);
-		g_esShieldCache[tank].g_iShieldCooldown = iGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_iShieldCooldown, g_esShieldPlayer[tank].g_iShieldCooldown, g_esShieldSpecial[type].g_iShieldCooldown, g_esShieldAbility[type].g_iShieldCooldown, 1);
-		g_esShieldCache[tank].g_iShieldDelay = iGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_iShieldDelay, g_esShieldPlayer[tank].g_iShieldDelay, g_esShieldSpecial[type].g_iShieldDelay, g_esShieldAbility[type].g_iShieldDelay, 1);
-		g_esShieldCache[tank].g_iShieldDisplayHP = iGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_iShieldDisplayHP, g_esShieldPlayer[tank].g_iShieldDisplayHP, g_esShieldSpecial[type].g_iShieldDisplayHP, g_esShieldAbility[type].g_iShieldDisplayHP, 1);
-		g_esShieldCache[tank].g_iShieldDisplayHPType = iGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_iShieldDisplayHPType, g_esShieldPlayer[tank].g_iShieldDisplayHPType, g_esShieldSpecial[type].g_iShieldDisplayHPType, g_esShieldAbility[type].g_iShieldDisplayHPType, 1);
-		g_esShieldCache[tank].g_iShieldDuration = iGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_iShieldDuration, g_esShieldPlayer[tank].g_iShieldDuration, g_esShieldSpecial[type].g_iShieldDuration, g_esShieldAbility[type].g_iShieldDuration, 1);
-		g_esShieldCache[tank].g_iShieldGlow = iGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_iShieldGlow, g_esShieldPlayer[tank].g_iShieldGlow, g_esShieldSpecial[type].g_iShieldGlow, g_esShieldAbility[type].g_iShieldGlow, 1);
-		g_esShieldCache[tank].g_iShieldMessage = iGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_iShieldMessage, g_esShieldPlayer[tank].g_iShieldMessage, g_esShieldSpecial[type].g_iShieldMessage, g_esShieldAbility[type].g_iShieldMessage, 1);
-		g_esShieldCache[tank].g_iShieldType = iGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_iShieldType, g_esShieldPlayer[tank].g_iShieldType, g_esShieldSpecial[type].g_iShieldType, g_esShieldAbility[type].g_iShieldType, 1);
+		g_esShieldCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_flCloseAreasOnly, g_esShieldPlayer[tank].g_flCloseAreasOnly, g_esShieldSpecial[iType].g_flCloseAreasOnly, g_esShieldAbility[iType].g_flCloseAreasOnly, 1);
+		g_esShieldCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_iComboAbility, g_esShieldPlayer[tank].g_iComboAbility, g_esShieldSpecial[iType].g_iComboAbility, g_esShieldAbility[iType].g_iComboAbility, 1);
+		g_esShieldCache[tank].g_flShieldChance = flGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_flShieldChance, g_esShieldPlayer[tank].g_flShieldChance, g_esShieldSpecial[iType].g_flShieldChance, g_esShieldAbility[iType].g_flShieldChance, 1);
+		g_esShieldCache[tank].g_flShieldConvertPercentage = flGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_flShieldConvertPercentage, g_esShieldPlayer[tank].g_flShieldConvertPercentage, g_esShieldSpecial[iType].g_flShieldConvertPercentage, g_esShieldAbility[iType].g_flShieldConvertPercentage, 1);
+		g_esShieldCache[tank].g_flShieldHealth = flGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_flShieldHealth, g_esShieldPlayer[tank].g_flShieldHealth, g_esShieldSpecial[iType].g_flShieldHealth, g_esShieldAbility[iType].g_flShieldHealth, 1);
+		g_esShieldCache[tank].g_flShieldThrowChance = flGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_flShieldThrowChance, g_esShieldPlayer[tank].g_flShieldThrowChance, g_esShieldSpecial[iType].g_flShieldThrowChance, g_esShieldAbility[iType].g_flShieldThrowChance, 1);
+		g_esShieldCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_iHumanAbility, g_esShieldPlayer[tank].g_iHumanAbility, g_esShieldSpecial[iType].g_iHumanAbility, g_esShieldAbility[iType].g_iHumanAbility, 1);
+		g_esShieldCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_iHumanAmmo, g_esShieldPlayer[tank].g_iHumanAmmo, g_esShieldSpecial[iType].g_iHumanAmmo, g_esShieldAbility[iType].g_iHumanAmmo, 1);
+		g_esShieldCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_iHumanCooldown, g_esShieldPlayer[tank].g_iHumanCooldown, g_esShieldSpecial[iType].g_iHumanCooldown, g_esShieldAbility[iType].g_iHumanCooldown, 1);
+		g_esShieldCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_iHumanDuration, g_esShieldPlayer[tank].g_iHumanDuration, g_esShieldSpecial[iType].g_iHumanDuration, g_esShieldAbility[iType].g_iHumanDuration, 1);
+		g_esShieldCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_iHumanMode, g_esShieldPlayer[tank].g_iHumanMode, g_esShieldSpecial[iType].g_iHumanMode, g_esShieldAbility[iType].g_iHumanMode, 1);
+		g_esShieldCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_flOpenAreasOnly, g_esShieldPlayer[tank].g_flOpenAreasOnly, g_esShieldSpecial[iType].g_flOpenAreasOnly, g_esShieldAbility[iType].g_flOpenAreasOnly, 1);
+		g_esShieldCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_iRequiresHumans, g_esShieldPlayer[tank].g_iRequiresHumans, g_esShieldSpecial[iType].g_iRequiresHumans, g_esShieldAbility[iType].g_iRequiresHumans, 1);
+		g_esShieldCache[tank].g_iShieldAbility = iGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_iShieldAbility, g_esShieldPlayer[tank].g_iShieldAbility, g_esShieldSpecial[iType].g_iShieldAbility, g_esShieldAbility[iType].g_iShieldAbility, 1);
+		g_esShieldCache[tank].g_iShieldCooldown = iGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_iShieldCooldown, g_esShieldPlayer[tank].g_iShieldCooldown, g_esShieldSpecial[iType].g_iShieldCooldown, g_esShieldAbility[iType].g_iShieldCooldown, 1);
+		g_esShieldCache[tank].g_iShieldDelay = iGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_iShieldDelay, g_esShieldPlayer[tank].g_iShieldDelay, g_esShieldSpecial[iType].g_iShieldDelay, g_esShieldAbility[iType].g_iShieldDelay, 1);
+		g_esShieldCache[tank].g_iShieldDisplayHP = iGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_iShieldDisplayHP, g_esShieldPlayer[tank].g_iShieldDisplayHP, g_esShieldSpecial[iType].g_iShieldDisplayHP, g_esShieldAbility[iType].g_iShieldDisplayHP, 1);
+		g_esShieldCache[tank].g_iShieldDisplayHPType = iGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_iShieldDisplayHPType, g_esShieldPlayer[tank].g_iShieldDisplayHPType, g_esShieldSpecial[iType].g_iShieldDisplayHPType, g_esShieldAbility[iType].g_iShieldDisplayHPType, 1);
+		g_esShieldCache[tank].g_iShieldDuration = iGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_iShieldDuration, g_esShieldPlayer[tank].g_iShieldDuration, g_esShieldSpecial[iType].g_iShieldDuration, g_esShieldAbility[iType].g_iShieldDuration, 1);
+		g_esShieldCache[tank].g_iShieldGlow = iGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_iShieldGlow, g_esShieldPlayer[tank].g_iShieldGlow, g_esShieldSpecial[iType].g_iShieldGlow, g_esShieldAbility[iType].g_iShieldGlow, 1);
+		g_esShieldCache[tank].g_iShieldMessage = iGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_iShieldMessage, g_esShieldPlayer[tank].g_iShieldMessage, g_esShieldSpecial[iType].g_iShieldMessage, g_esShieldAbility[iType].g_iShieldMessage, 1);
+		g_esShieldCache[tank].g_iShieldType = iGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_iShieldType, g_esShieldPlayer[tank].g_iShieldType, g_esShieldSpecial[iType].g_iShieldType, g_esShieldAbility[iType].g_iShieldType, 1);
 
-		vGetSubSettingValue(apply, bHuman, g_esShieldCache[tank].g_sShieldColor, sizeof esShieldCache::g_sShieldColor, g_esShieldTeammate[tank].g_sShieldColor, g_esShieldPlayer[tank].g_sShieldColor, g_esShieldSpecial[type].g_sShieldColor, g_esShieldAbility[type].g_sShieldColor);
-		vGetSubSettingValue(apply, bHuman, g_esShieldCache[tank].g_sShieldHealthChars, sizeof esShieldCache::g_sShieldHealthChars, g_esShieldTeammate[tank].g_sShieldHealthChars, g_esShieldPlayer[tank].g_sShieldHealthChars, g_esShieldSpecial[type].g_sShieldHealthChars, g_esShieldAbility[type].g_sShieldHealthChars);
+		vGetSubSettingValue(apply, bHuman, g_esShieldCache[tank].g_sShieldColor, sizeof esShieldCache::g_sShieldColor, g_esShieldTeammate[tank].g_sShieldColor, g_esShieldPlayer[tank].g_sShieldColor, g_esShieldSpecial[iType].g_sShieldColor, g_esShieldAbility[iType].g_sShieldColor);
+		vGetSubSettingValue(apply, bHuman, g_esShieldCache[tank].g_sShieldHealthChars, sizeof esShieldCache::g_sShieldHealthChars, g_esShieldTeammate[tank].g_sShieldHealthChars, g_esShieldPlayer[tank].g_sShieldHealthChars, g_esShieldSpecial[iType].g_sShieldHealthChars, g_esShieldAbility[iType].g_sShieldHealthChars);
 	}
 	else
 	{
-		g_esShieldCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_flCloseAreasOnly, g_esShieldAbility[type].g_flCloseAreasOnly, 1);
-		g_esShieldCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iComboAbility, g_esShieldAbility[type].g_iComboAbility, 1);
-		g_esShieldCache[tank].g_flShieldChance = flGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_flShieldChance, g_esShieldAbility[type].g_flShieldChance, 1);
-		g_esShieldCache[tank].g_flShieldConvertPercentage = flGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_flShieldConvertPercentage, g_esShieldAbility[type].g_flShieldConvertPercentage, 1);
-		g_esShieldCache[tank].g_flShieldHealth = flGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_flShieldHealth, g_esShieldAbility[type].g_flShieldHealth, 1);
-		g_esShieldCache[tank].g_flShieldThrowChance = flGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_flShieldThrowChance, g_esShieldAbility[type].g_flShieldThrowChance, 1);
-		g_esShieldCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iHumanAbility, g_esShieldAbility[type].g_iHumanAbility, 1);
-		g_esShieldCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iHumanAmmo, g_esShieldAbility[type].g_iHumanAmmo, 1);
-		g_esShieldCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iHumanCooldown, g_esShieldAbility[type].g_iHumanCooldown, 1);
-		g_esShieldCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iHumanDuration, g_esShieldAbility[type].g_iHumanDuration, 1);
-		g_esShieldCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iHumanMode, g_esShieldAbility[type].g_iHumanMode, 1);
-		g_esShieldCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_flOpenAreasOnly, g_esShieldAbility[type].g_flOpenAreasOnly, 1);
-		g_esShieldCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iRequiresHumans, g_esShieldAbility[type].g_iRequiresHumans, 1);
-		g_esShieldCache[tank].g_iShieldAbility = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iShieldAbility, g_esShieldAbility[type].g_iShieldAbility, 1);
-		g_esShieldCache[tank].g_iShieldCooldown = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iShieldCooldown, g_esShieldAbility[type].g_iShieldCooldown, 1);
-		g_esShieldCache[tank].g_iShieldDelay = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iShieldDelay, g_esShieldAbility[type].g_iShieldDelay, 1);
-		g_esShieldCache[tank].g_iShieldDisplayHP = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iShieldDisplayHP, g_esShieldAbility[type].g_iShieldDisplayHP, 1);
-		g_esShieldCache[tank].g_iShieldDisplayHPType = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iShieldDisplayHPType, g_esShieldAbility[type].g_iShieldDisplayHPType, 1);
-		g_esShieldCache[tank].g_iShieldDuration = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iShieldDuration, g_esShieldAbility[type].g_iShieldDuration, 1);
-		g_esShieldCache[tank].g_iShieldGlow = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iShieldGlow, g_esShieldAbility[type].g_iShieldGlow, 1);
-		g_esShieldCache[tank].g_iShieldMessage = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iShieldMessage, g_esShieldAbility[type].g_iShieldMessage, 1);
-		g_esShieldCache[tank].g_iShieldType = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iShieldType, g_esShieldAbility[type].g_iShieldType, 1);
+		g_esShieldCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_flCloseAreasOnly, g_esShieldAbility[iType].g_flCloseAreasOnly, 1);
+		g_esShieldCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iComboAbility, g_esShieldAbility[iType].g_iComboAbility, 1);
+		g_esShieldCache[tank].g_flShieldChance = flGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_flShieldChance, g_esShieldAbility[iType].g_flShieldChance, 1);
+		g_esShieldCache[tank].g_flShieldConvertPercentage = flGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_flShieldConvertPercentage, g_esShieldAbility[iType].g_flShieldConvertPercentage, 1);
+		g_esShieldCache[tank].g_flShieldHealth = flGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_flShieldHealth, g_esShieldAbility[iType].g_flShieldHealth, 1);
+		g_esShieldCache[tank].g_flShieldThrowChance = flGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_flShieldThrowChance, g_esShieldAbility[iType].g_flShieldThrowChance, 1);
+		g_esShieldCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iHumanAbility, g_esShieldAbility[iType].g_iHumanAbility, 1);
+		g_esShieldCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iHumanAmmo, g_esShieldAbility[iType].g_iHumanAmmo, 1);
+		g_esShieldCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iHumanCooldown, g_esShieldAbility[iType].g_iHumanCooldown, 1);
+		g_esShieldCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iHumanDuration, g_esShieldAbility[iType].g_iHumanDuration, 1);
+		g_esShieldCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iHumanMode, g_esShieldAbility[iType].g_iHumanMode, 1);
+		g_esShieldCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_flOpenAreasOnly, g_esShieldAbility[iType].g_flOpenAreasOnly, 1);
+		g_esShieldCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iRequiresHumans, g_esShieldAbility[iType].g_iRequiresHumans, 1);
+		g_esShieldCache[tank].g_iShieldAbility = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iShieldAbility, g_esShieldAbility[iType].g_iShieldAbility, 1);
+		g_esShieldCache[tank].g_iShieldCooldown = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iShieldCooldown, g_esShieldAbility[iType].g_iShieldCooldown, 1);
+		g_esShieldCache[tank].g_iShieldDelay = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iShieldDelay, g_esShieldAbility[iType].g_iShieldDelay, 1);
+		g_esShieldCache[tank].g_iShieldDisplayHP = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iShieldDisplayHP, g_esShieldAbility[iType].g_iShieldDisplayHP, 1);
+		g_esShieldCache[tank].g_iShieldDisplayHPType = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iShieldDisplayHPType, g_esShieldAbility[iType].g_iShieldDisplayHPType, 1);
+		g_esShieldCache[tank].g_iShieldDuration = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iShieldDuration, g_esShieldAbility[iType].g_iShieldDuration, 1);
+		g_esShieldCache[tank].g_iShieldGlow = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iShieldGlow, g_esShieldAbility[iType].g_iShieldGlow, 1);
+		g_esShieldCache[tank].g_iShieldMessage = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iShieldMessage, g_esShieldAbility[iType].g_iShieldMessage, 1);
+		g_esShieldCache[tank].g_iShieldType = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iShieldType, g_esShieldAbility[iType].g_iShieldType, 1);
 
-		vGetSettingValue(apply, bHuman, g_esShieldCache[tank].g_sShieldColor, sizeof esShieldCache::g_sShieldColor, g_esShieldPlayer[tank].g_sShieldColor, g_esShieldAbility[type].g_sShieldColor);
-		vGetSettingValue(apply, bHuman, g_esShieldCache[tank].g_sShieldHealthChars, sizeof esShieldCache::g_sShieldHealthChars, g_esShieldPlayer[tank].g_sShieldHealthChars, g_esShieldAbility[type].g_sShieldHealthChars);
+		vGetSettingValue(apply, bHuman, g_esShieldCache[tank].g_sShieldColor, sizeof esShieldCache::g_sShieldColor, g_esShieldPlayer[tank].g_sShieldColor, g_esShieldAbility[iType].g_sShieldColor);
+		vGetSettingValue(apply, bHuman, g_esShieldCache[tank].g_sShieldHealthChars, sizeof esShieldCache::g_sShieldHealthChars, g_esShieldPlayer[tank].g_sShieldHealthChars, g_esShieldAbility[iType].g_sShieldHealthChars);
 	}
 
 	for (int iPos = 0; iPos < (sizeof esShieldCache::g_iShieldColor); iPos++)
 	{
 		switch (bInfected)
 		{
-			case true: g_esShieldCache[tank].g_iShieldColor[iPos] = iGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_iShieldColor[iPos], g_esShieldPlayer[tank].g_iShieldColor[iPos], g_esShieldSpecial[type].g_iShieldColor[iPos], g_esShieldAbility[type].g_iShieldColor[iPos], 1);
-			case false: g_esShieldCache[tank].g_iShieldColor[iPos] = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iShieldColor[iPos], g_esShieldAbility[type].g_iShieldColor[iPos], 1);
+			case true: g_esShieldCache[tank].g_iShieldColor[iPos] = iGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_iShieldColor[iPos], g_esShieldPlayer[tank].g_iShieldColor[iPos], g_esShieldSpecial[iType].g_iShieldColor[iPos], g_esShieldAbility[iType].g_iShieldColor[iPos], 1);
+			case false: g_esShieldCache[tank].g_iShieldColor[iPos] = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iShieldColor[iPos], g_esShieldAbility[iType].g_iShieldColor[iPos], 1);
 		}
 	}
 }
@@ -1530,7 +1533,7 @@ void vShieldAbility(int tank, bool shield)
 
 						if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esShieldCache[tank].g_iHumanAbility == 1)
 						{
-							int iPos = g_esShieldAbility[g_esShieldPlayer[tank].g_iTankType].g_iComboPosition, iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 5, iPos)) : g_esShieldCache[tank].g_iShieldDuration;
+							int iPos = g_esShieldAbility[g_esShieldPlayer[tank].g_iTankTypeRecorded].g_iComboPosition, iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 5, iPos)) : g_esShieldCache[tank].g_iShieldDuration;
 							iDuration = (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esShieldCache[tank].g_iHumanAbility == 1) ? g_esShieldCache[tank].g_iHumanDuration : iDuration;
 							g_esShieldPlayer[tank].g_iAmmoCount++;
 							g_esShieldPlayer[tank].g_iDuration = (iTime + iDuration);
@@ -1704,7 +1707,7 @@ void vShieldReset2(int tank)
 
 void vShieldReset3(int tank)
 {
-	int iTime = GetTime(), iPos = g_esShieldAbility[g_esShieldPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esShieldCache[tank].g_iShieldCooldown;
+	int iTime = GetTime(), iPos = g_esShieldAbility[g_esShieldPlayer[tank].g_iTankTypeRecorded].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esShieldCache[tank].g_iShieldCooldown;
 	iCooldown = (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esShieldCache[tank].g_iHumanAbility == 1 && g_esShieldCache[tank].g_iHumanMode == 0 && g_esShieldPlayer[tank].g_iAmmoCount < g_esShieldCache[tank].g_iHumanAmmo && g_esShieldCache[tank].g_iHumanAmmo > 0) ? g_esShieldCache[tank].g_iHumanCooldown : iCooldown;
 	g_esShieldPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esShieldPlayer[tank].g_iCooldown != -1 && g_esShieldPlayer[tank].g_iCooldown >= iTime)

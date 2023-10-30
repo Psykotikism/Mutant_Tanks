@@ -96,6 +96,7 @@ enum struct esUltimatePlayer
 	int g_iImmunityFlags;
 	int g_iRequiresHumans;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 	int g_iUltimateAbility;
 	int g_iUltimateAmount;
 	int g_iUltimateCooldown;
@@ -433,7 +434,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	{
 		if (g_esUltimatePlayer[client].g_iCooldown == -1 || g_esUltimatePlayer[client].g_iCooldown <= iTime)
 		{
-			int iPos = g_esUltimateAbility[g_esUltimatePlayer[client].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(client, 2, iPos)) : g_esUltimateCache[client].g_iUltimateCooldown;
+			int iPos = g_esUltimateAbility[g_esUltimatePlayer[client].g_iTankTypeRecorded].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(client, 2, iPos)) : g_esUltimateCache[client].g_iUltimateCooldown;
 			iCooldown = (bIsInfected(client, MT_CHECK_FAKECLIENT) && g_esUltimateCache[client].g_iHumanAbility == 1 && g_esUltimatePlayer[client].g_iAmmoCount < g_esUltimateCache[client].g_iHumanAmmo && g_esUltimateCache[client].g_iHumanAmmo > 0) ? g_esUltimateCache[client].g_iHumanCooldown : iCooldown;
 			g_esUltimatePlayer[client].g_iCooldown = (iTime + iCooldown);
 			if (g_esUltimatePlayer[client].g_iCooldown != -1 && g_esUltimatePlayer[client].g_iCooldown >= iTime)
@@ -555,12 +556,12 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 {
 	if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esUltimateCache[tank].g_iHumanAbility != 2)
 	{
-		g_esUltimateAbility[g_esUltimatePlayer[tank].g_iTankType].g_iComboPosition = -1;
+		g_esUltimateAbility[g_esUltimatePlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 		return;
 	}
 
-	g_esUltimateAbility[g_esUltimatePlayer[tank].g_iTankType].g_iComboPosition = -1;
+	g_esUltimateAbility[g_esUltimatePlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 	char sCombo[320], sSet[4][32];
 	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
@@ -581,7 +582,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 			{
 				if (StrEqual(sSubset[iPos], MT_ULTIMATE_SECTION, false) || StrEqual(sSubset[iPos], MT_ULTIMATE_SECTION2, false) || StrEqual(sSubset[iPos], MT_ULTIMATE_SECTION3, false) || StrEqual(sSubset[iPos], MT_ULTIMATE_SECTION4, false))
 				{
-					g_esUltimateAbility[g_esUltimatePlayer[tank].g_iTankType].g_iComboPosition = iPos;
+					g_esUltimateAbility[g_esUltimatePlayer[tank].g_iTankTypeRecorded].g_iComboPosition = iPos;
 
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
@@ -811,47 +812,49 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esUltimatePlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esUltimatePlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esUltimatePlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esUltimateCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esUltimateTeammate[tank].g_flCloseAreasOnly, g_esUltimatePlayer[tank].g_flCloseAreasOnly, g_esUltimateSpecial[type].g_flCloseAreasOnly, g_esUltimateAbility[type].g_flCloseAreasOnly, 1);
-		g_esUltimateCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esUltimateTeammate[tank].g_iComboAbility, g_esUltimatePlayer[tank].g_iComboAbility, g_esUltimateSpecial[type].g_iComboAbility, g_esUltimateAbility[type].g_iComboAbility, 1);
-		g_esUltimateCache[tank].g_flUltimateChance = flGetSubSettingValue(apply, bHuman, g_esUltimateTeammate[tank].g_flUltimateChance, g_esUltimatePlayer[tank].g_flUltimateChance, g_esUltimateSpecial[type].g_flUltimateChance, g_esUltimateAbility[type].g_flUltimateChance, 1);
-		g_esUltimateCache[tank].g_flUltimateDamageBoost = flGetSubSettingValue(apply, bHuman, g_esUltimateTeammate[tank].g_flUltimateDamageBoost, g_esUltimatePlayer[tank].g_flUltimateDamageBoost, g_esUltimateSpecial[type].g_flUltimateDamageBoost, g_esUltimateAbility[type].g_flUltimateDamageBoost, 1);
-		g_esUltimateCache[tank].g_flUltimateDamageRequired = flGetSubSettingValue(apply, bHuman, g_esUltimateTeammate[tank].g_flUltimateDamageRequired, g_esUltimatePlayer[tank].g_flUltimateDamageRequired, g_esUltimateSpecial[type].g_flUltimateDamageRequired, g_esUltimateAbility[type].g_flUltimateDamageRequired, 1);
-		g_esUltimateCache[tank].g_flUltimateHealthPortion = flGetSubSettingValue(apply, bHuman, g_esUltimateTeammate[tank].g_flUltimateHealthPortion, g_esUltimatePlayer[tank].g_flUltimateHealthPortion, g_esUltimateSpecial[type].g_flUltimateHealthPortion, g_esUltimateAbility[type].g_flUltimateHealthPortion, 1);
-		g_esUltimateCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esUltimateTeammate[tank].g_iHumanAbility, g_esUltimatePlayer[tank].g_iHumanAbility, g_esUltimateSpecial[type].g_iHumanAbility, g_esUltimateAbility[type].g_iHumanAbility, 1);
-		g_esUltimateCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esUltimateTeammate[tank].g_iHumanAmmo, g_esUltimatePlayer[tank].g_iHumanAmmo, g_esUltimateSpecial[type].g_iHumanAmmo, g_esUltimateAbility[type].g_iHumanAmmo, 1);
-		g_esUltimateCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esUltimateTeammate[tank].g_iHumanCooldown, g_esUltimatePlayer[tank].g_iHumanCooldown, g_esUltimateSpecial[type].g_iHumanCooldown, g_esUltimateAbility[type].g_iHumanCooldown, 1);
-		g_esUltimateCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esUltimateTeammate[tank].g_flOpenAreasOnly, g_esUltimatePlayer[tank].g_flOpenAreasOnly, g_esUltimateSpecial[type].g_flOpenAreasOnly, g_esUltimateAbility[type].g_flOpenAreasOnly, 1);
-		g_esUltimateCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esUltimateTeammate[tank].g_iRequiresHumans, g_esUltimatePlayer[tank].g_iRequiresHumans, g_esUltimateSpecial[type].g_iRequiresHumans, g_esUltimateAbility[type].g_iRequiresHumans, 1);
-		g_esUltimateCache[tank].g_iUltimateAbility = iGetSubSettingValue(apply, bHuman, g_esUltimateTeammate[tank].g_iUltimateAbility, g_esUltimatePlayer[tank].g_iUltimateAbility, g_esUltimateSpecial[type].g_iUltimateAbility, g_esUltimateAbility[type].g_iUltimateAbility, 1);
-		g_esUltimateCache[tank].g_iUltimateAmount = iGetSubSettingValue(apply, bHuman, g_esUltimateTeammate[tank].g_iUltimateAmount, g_esUltimatePlayer[tank].g_iUltimateAmount, g_esUltimateSpecial[type].g_iUltimateAmount, g_esUltimateAbility[type].g_iUltimateAmount, 1);
-		g_esUltimateCache[tank].g_iUltimateCooldown = iGetSubSettingValue(apply, bHuman, g_esUltimateTeammate[tank].g_iUltimateCooldown, g_esUltimatePlayer[tank].g_iUltimateCooldown, g_esUltimateSpecial[type].g_iUltimateCooldown, g_esUltimateAbility[type].g_iUltimateCooldown, 1);
-		g_esUltimateCache[tank].g_iUltimateDuration = iGetSubSettingValue(apply, bHuman, g_esUltimateTeammate[tank].g_iUltimateDuration, g_esUltimatePlayer[tank].g_iUltimateDuration, g_esUltimateSpecial[type].g_iUltimateDuration, g_esUltimateAbility[type].g_iUltimateDuration, 1);
-		g_esUltimateCache[tank].g_iUltimateHealthLimit = iGetSubSettingValue(apply, bHuman, g_esUltimateTeammate[tank].g_iUltimateHealthLimit, g_esUltimatePlayer[tank].g_iUltimateHealthLimit, g_esUltimateSpecial[type].g_iUltimateHealthLimit, g_esUltimateAbility[type].g_iUltimateHealthLimit, 1);
-		g_esUltimateCache[tank].g_iUltimateMessage = iGetSubSettingValue(apply, bHuman, g_esUltimateTeammate[tank].g_iUltimateMessage, g_esUltimatePlayer[tank].g_iUltimateMessage, g_esUltimateSpecial[type].g_iUltimateMessage, g_esUltimateAbility[type].g_iUltimateMessage, 1);
+		g_esUltimateCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esUltimateTeammate[tank].g_flCloseAreasOnly, g_esUltimatePlayer[tank].g_flCloseAreasOnly, g_esUltimateSpecial[iType].g_flCloseAreasOnly, g_esUltimateAbility[iType].g_flCloseAreasOnly, 1);
+		g_esUltimateCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esUltimateTeammate[tank].g_iComboAbility, g_esUltimatePlayer[tank].g_iComboAbility, g_esUltimateSpecial[iType].g_iComboAbility, g_esUltimateAbility[iType].g_iComboAbility, 1);
+		g_esUltimateCache[tank].g_flUltimateChance = flGetSubSettingValue(apply, bHuman, g_esUltimateTeammate[tank].g_flUltimateChance, g_esUltimatePlayer[tank].g_flUltimateChance, g_esUltimateSpecial[iType].g_flUltimateChance, g_esUltimateAbility[iType].g_flUltimateChance, 1);
+		g_esUltimateCache[tank].g_flUltimateDamageBoost = flGetSubSettingValue(apply, bHuman, g_esUltimateTeammate[tank].g_flUltimateDamageBoost, g_esUltimatePlayer[tank].g_flUltimateDamageBoost, g_esUltimateSpecial[iType].g_flUltimateDamageBoost, g_esUltimateAbility[iType].g_flUltimateDamageBoost, 1);
+		g_esUltimateCache[tank].g_flUltimateDamageRequired = flGetSubSettingValue(apply, bHuman, g_esUltimateTeammate[tank].g_flUltimateDamageRequired, g_esUltimatePlayer[tank].g_flUltimateDamageRequired, g_esUltimateSpecial[iType].g_flUltimateDamageRequired, g_esUltimateAbility[iType].g_flUltimateDamageRequired, 1);
+		g_esUltimateCache[tank].g_flUltimateHealthPortion = flGetSubSettingValue(apply, bHuman, g_esUltimateTeammate[tank].g_flUltimateHealthPortion, g_esUltimatePlayer[tank].g_flUltimateHealthPortion, g_esUltimateSpecial[iType].g_flUltimateHealthPortion, g_esUltimateAbility[iType].g_flUltimateHealthPortion, 1);
+		g_esUltimateCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esUltimateTeammate[tank].g_iHumanAbility, g_esUltimatePlayer[tank].g_iHumanAbility, g_esUltimateSpecial[iType].g_iHumanAbility, g_esUltimateAbility[iType].g_iHumanAbility, 1);
+		g_esUltimateCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esUltimateTeammate[tank].g_iHumanAmmo, g_esUltimatePlayer[tank].g_iHumanAmmo, g_esUltimateSpecial[iType].g_iHumanAmmo, g_esUltimateAbility[iType].g_iHumanAmmo, 1);
+		g_esUltimateCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esUltimateTeammate[tank].g_iHumanCooldown, g_esUltimatePlayer[tank].g_iHumanCooldown, g_esUltimateSpecial[iType].g_iHumanCooldown, g_esUltimateAbility[iType].g_iHumanCooldown, 1);
+		g_esUltimateCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esUltimateTeammate[tank].g_flOpenAreasOnly, g_esUltimatePlayer[tank].g_flOpenAreasOnly, g_esUltimateSpecial[iType].g_flOpenAreasOnly, g_esUltimateAbility[iType].g_flOpenAreasOnly, 1);
+		g_esUltimateCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esUltimateTeammate[tank].g_iRequiresHumans, g_esUltimatePlayer[tank].g_iRequiresHumans, g_esUltimateSpecial[iType].g_iRequiresHumans, g_esUltimateAbility[iType].g_iRequiresHumans, 1);
+		g_esUltimateCache[tank].g_iUltimateAbility = iGetSubSettingValue(apply, bHuman, g_esUltimateTeammate[tank].g_iUltimateAbility, g_esUltimatePlayer[tank].g_iUltimateAbility, g_esUltimateSpecial[iType].g_iUltimateAbility, g_esUltimateAbility[iType].g_iUltimateAbility, 1);
+		g_esUltimateCache[tank].g_iUltimateAmount = iGetSubSettingValue(apply, bHuman, g_esUltimateTeammate[tank].g_iUltimateAmount, g_esUltimatePlayer[tank].g_iUltimateAmount, g_esUltimateSpecial[iType].g_iUltimateAmount, g_esUltimateAbility[iType].g_iUltimateAmount, 1);
+		g_esUltimateCache[tank].g_iUltimateCooldown = iGetSubSettingValue(apply, bHuman, g_esUltimateTeammate[tank].g_iUltimateCooldown, g_esUltimatePlayer[tank].g_iUltimateCooldown, g_esUltimateSpecial[iType].g_iUltimateCooldown, g_esUltimateAbility[iType].g_iUltimateCooldown, 1);
+		g_esUltimateCache[tank].g_iUltimateDuration = iGetSubSettingValue(apply, bHuman, g_esUltimateTeammate[tank].g_iUltimateDuration, g_esUltimatePlayer[tank].g_iUltimateDuration, g_esUltimateSpecial[iType].g_iUltimateDuration, g_esUltimateAbility[iType].g_iUltimateDuration, 1);
+		g_esUltimateCache[tank].g_iUltimateHealthLimit = iGetSubSettingValue(apply, bHuman, g_esUltimateTeammate[tank].g_iUltimateHealthLimit, g_esUltimatePlayer[tank].g_iUltimateHealthLimit, g_esUltimateSpecial[iType].g_iUltimateHealthLimit, g_esUltimateAbility[iType].g_iUltimateHealthLimit, 1);
+		g_esUltimateCache[tank].g_iUltimateMessage = iGetSubSettingValue(apply, bHuman, g_esUltimateTeammate[tank].g_iUltimateMessage, g_esUltimatePlayer[tank].g_iUltimateMessage, g_esUltimateSpecial[iType].g_iUltimateMessage, g_esUltimateAbility[iType].g_iUltimateMessage, 1);
 	}
 	else
 	{
-		g_esUltimateCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esUltimatePlayer[tank].g_flCloseAreasOnly, g_esUltimateAbility[type].g_flCloseAreasOnly, 1);
-		g_esUltimateCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esUltimatePlayer[tank].g_iComboAbility, g_esUltimateAbility[type].g_iComboAbility, 1);
-		g_esUltimateCache[tank].g_flUltimateChance = flGetSettingValue(apply, bHuman, g_esUltimatePlayer[tank].g_flUltimateChance, g_esUltimateAbility[type].g_flUltimateChance, 1);
-		g_esUltimateCache[tank].g_flUltimateDamageBoost = flGetSettingValue(apply, bHuman, g_esUltimatePlayer[tank].g_flUltimateDamageBoost, g_esUltimateAbility[type].g_flUltimateDamageBoost, 1);
-		g_esUltimateCache[tank].g_flUltimateDamageRequired = flGetSettingValue(apply, bHuman, g_esUltimatePlayer[tank].g_flUltimateDamageRequired, g_esUltimateAbility[type].g_flUltimateDamageRequired, 1);
-		g_esUltimateCache[tank].g_flUltimateHealthPortion = flGetSettingValue(apply, bHuman, g_esUltimatePlayer[tank].g_flUltimateHealthPortion, g_esUltimateAbility[type].g_flUltimateHealthPortion, 1);
-		g_esUltimateCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esUltimatePlayer[tank].g_iHumanAbility, g_esUltimateAbility[type].g_iHumanAbility, 1);
-		g_esUltimateCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esUltimatePlayer[tank].g_iHumanAmmo, g_esUltimateAbility[type].g_iHumanAmmo, 1);
-		g_esUltimateCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esUltimatePlayer[tank].g_iHumanCooldown, g_esUltimateAbility[type].g_iHumanCooldown, 1);
-		g_esUltimateCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esUltimatePlayer[tank].g_flOpenAreasOnly, g_esUltimateAbility[type].g_flOpenAreasOnly, 1);
-		g_esUltimateCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esUltimatePlayer[tank].g_iRequiresHumans, g_esUltimateAbility[type].g_iRequiresHumans, 1);
-		g_esUltimateCache[tank].g_iUltimateAbility = iGetSettingValue(apply, bHuman, g_esUltimatePlayer[tank].g_iUltimateAbility, g_esUltimateAbility[type].g_iUltimateAbility, 1);
-		g_esUltimateCache[tank].g_iUltimateAmount = iGetSettingValue(apply, bHuman, g_esUltimatePlayer[tank].g_iUltimateAmount, g_esUltimateAbility[type].g_iUltimateAmount, 1);
-		g_esUltimateCache[tank].g_iUltimateCooldown = iGetSettingValue(apply, bHuman, g_esUltimatePlayer[tank].g_iUltimateCooldown, g_esUltimateAbility[type].g_iUltimateCooldown, 1);
-		g_esUltimateCache[tank].g_iUltimateDuration = iGetSettingValue(apply, bHuman, g_esUltimatePlayer[tank].g_iUltimateDuration, g_esUltimateAbility[type].g_iUltimateDuration, 1);
-		g_esUltimateCache[tank].g_iUltimateHealthLimit = iGetSettingValue(apply, bHuman, g_esUltimatePlayer[tank].g_iUltimateHealthLimit, g_esUltimateAbility[type].g_iUltimateHealthLimit, 1);
-		g_esUltimateCache[tank].g_iUltimateMessage = iGetSettingValue(apply, bHuman, g_esUltimatePlayer[tank].g_iUltimateMessage, g_esUltimateAbility[type].g_iUltimateMessage, 1);
+		g_esUltimateCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esUltimatePlayer[tank].g_flCloseAreasOnly, g_esUltimateAbility[iType].g_flCloseAreasOnly, 1);
+		g_esUltimateCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esUltimatePlayer[tank].g_iComboAbility, g_esUltimateAbility[iType].g_iComboAbility, 1);
+		g_esUltimateCache[tank].g_flUltimateChance = flGetSettingValue(apply, bHuman, g_esUltimatePlayer[tank].g_flUltimateChance, g_esUltimateAbility[iType].g_flUltimateChance, 1);
+		g_esUltimateCache[tank].g_flUltimateDamageBoost = flGetSettingValue(apply, bHuman, g_esUltimatePlayer[tank].g_flUltimateDamageBoost, g_esUltimateAbility[iType].g_flUltimateDamageBoost, 1);
+		g_esUltimateCache[tank].g_flUltimateDamageRequired = flGetSettingValue(apply, bHuman, g_esUltimatePlayer[tank].g_flUltimateDamageRequired, g_esUltimateAbility[iType].g_flUltimateDamageRequired, 1);
+		g_esUltimateCache[tank].g_flUltimateHealthPortion = flGetSettingValue(apply, bHuman, g_esUltimatePlayer[tank].g_flUltimateHealthPortion, g_esUltimateAbility[iType].g_flUltimateHealthPortion, 1);
+		g_esUltimateCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esUltimatePlayer[tank].g_iHumanAbility, g_esUltimateAbility[iType].g_iHumanAbility, 1);
+		g_esUltimateCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esUltimatePlayer[tank].g_iHumanAmmo, g_esUltimateAbility[iType].g_iHumanAmmo, 1);
+		g_esUltimateCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esUltimatePlayer[tank].g_iHumanCooldown, g_esUltimateAbility[iType].g_iHumanCooldown, 1);
+		g_esUltimateCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esUltimatePlayer[tank].g_flOpenAreasOnly, g_esUltimateAbility[iType].g_flOpenAreasOnly, 1);
+		g_esUltimateCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esUltimatePlayer[tank].g_iRequiresHumans, g_esUltimateAbility[iType].g_iRequiresHumans, 1);
+		g_esUltimateCache[tank].g_iUltimateAbility = iGetSettingValue(apply, bHuman, g_esUltimatePlayer[tank].g_iUltimateAbility, g_esUltimateAbility[iType].g_iUltimateAbility, 1);
+		g_esUltimateCache[tank].g_iUltimateAmount = iGetSettingValue(apply, bHuman, g_esUltimatePlayer[tank].g_iUltimateAmount, g_esUltimateAbility[iType].g_iUltimateAmount, 1);
+		g_esUltimateCache[tank].g_iUltimateCooldown = iGetSettingValue(apply, bHuman, g_esUltimatePlayer[tank].g_iUltimateCooldown, g_esUltimateAbility[iType].g_iUltimateCooldown, 1);
+		g_esUltimateCache[tank].g_iUltimateDuration = iGetSettingValue(apply, bHuman, g_esUltimatePlayer[tank].g_iUltimateDuration, g_esUltimateAbility[iType].g_iUltimateDuration, 1);
+		g_esUltimateCache[tank].g_iUltimateHealthLimit = iGetSettingValue(apply, bHuman, g_esUltimatePlayer[tank].g_iUltimateHealthLimit, g_esUltimateAbility[iType].g_iUltimateHealthLimit, 1);
+		g_esUltimateCache[tank].g_iUltimateMessage = iGetSettingValue(apply, bHuman, g_esUltimatePlayer[tank].g_iUltimateMessage, g_esUltimateAbility[iType].g_iUltimateMessage, 1);
 	}
 }
 

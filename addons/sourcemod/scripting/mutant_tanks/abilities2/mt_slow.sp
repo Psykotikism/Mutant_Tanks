@@ -98,6 +98,7 @@ enum struct esSlowPlayer
 	int g_iSlowRangeCooldown;
 	int g_iSlowSight;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esSlowPlayer g_esSlowPlayer[MAXPLAYERS + 1];
@@ -815,57 +816,59 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esSlowPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esSlowPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esSlowPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esSlowCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_flCloseAreasOnly, g_esSlowPlayer[tank].g_flCloseAreasOnly, g_esSlowSpecial[type].g_flCloseAreasOnly, g_esSlowAbility[type].g_flCloseAreasOnly, 1);
-		g_esSlowCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_iComboAbility, g_esSlowPlayer[tank].g_iComboAbility, g_esSlowSpecial[type].g_iComboAbility, g_esSlowAbility[type].g_iComboAbility, 1);
-		g_esSlowCache[tank].g_flSlowChance = flGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_flSlowChance, g_esSlowPlayer[tank].g_flSlowChance, g_esSlowSpecial[type].g_flSlowChance, g_esSlowAbility[type].g_flSlowChance, 1);
-		g_esSlowCache[tank].g_flSlowDuration = flGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_flSlowDuration, g_esSlowPlayer[tank].g_flSlowDuration, g_esSlowSpecial[type].g_flSlowDuration, g_esSlowAbility[type].g_flSlowDuration, 1);
-		g_esSlowCache[tank].g_flSlowRange = flGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_flSlowRange, g_esSlowPlayer[tank].g_flSlowRange, g_esSlowSpecial[type].g_flSlowRange, g_esSlowAbility[type].g_flSlowRange, 1);
-		g_esSlowCache[tank].g_flSlowRangeChance = flGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_flSlowRangeChance, g_esSlowPlayer[tank].g_flSlowRangeChance, g_esSlowSpecial[type].g_flSlowRangeChance, g_esSlowAbility[type].g_flSlowRangeChance, 1);
-		g_esSlowCache[tank].g_flSlowSpeed = flGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_flSlowSpeed, g_esSlowPlayer[tank].g_flSlowSpeed, g_esSlowSpecial[type].g_flSlowSpeed, g_esSlowAbility[type].g_flSlowSpeed, 1);
-		g_esSlowCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_iHumanAbility, g_esSlowPlayer[tank].g_iHumanAbility, g_esSlowSpecial[type].g_iHumanAbility, g_esSlowAbility[type].g_iHumanAbility, 1);
-		g_esSlowCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_iHumanAmmo, g_esSlowPlayer[tank].g_iHumanAmmo, g_esSlowSpecial[type].g_iHumanAmmo, g_esSlowAbility[type].g_iHumanAmmo, 1);
-		g_esSlowCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_iHumanCooldown, g_esSlowPlayer[tank].g_iHumanCooldown, g_esSlowSpecial[type].g_iHumanCooldown, g_esSlowAbility[type].g_iHumanCooldown, 1);
-		g_esSlowCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_iHumanRangeCooldown, g_esSlowPlayer[tank].g_iHumanRangeCooldown, g_esSlowSpecial[type].g_iHumanRangeCooldown, g_esSlowAbility[type].g_iHumanRangeCooldown, 1);
-		g_esSlowCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_flOpenAreasOnly, g_esSlowPlayer[tank].g_flOpenAreasOnly, g_esSlowSpecial[type].g_flOpenAreasOnly, g_esSlowAbility[type].g_flOpenAreasOnly, 1);
-		g_esSlowCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_iRequiresHumans, g_esSlowPlayer[tank].g_iRequiresHumans, g_esSlowSpecial[type].g_iRequiresHumans, g_esSlowAbility[type].g_iRequiresHumans, 1);
-		g_esSlowCache[tank].g_iSlowAbility = iGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_iSlowAbility, g_esSlowPlayer[tank].g_iSlowAbility, g_esSlowSpecial[type].g_iSlowAbility, g_esSlowAbility[type].g_iSlowAbility, 1);
-		g_esSlowCache[tank].g_iSlowCooldown = iGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_iSlowCooldown, g_esSlowPlayer[tank].g_iSlowCooldown, g_esSlowSpecial[type].g_iSlowCooldown, g_esSlowAbility[type].g_iSlowCooldown, 1);
-		g_esSlowCache[tank].g_iSlowEffect = iGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_iSlowEffect, g_esSlowPlayer[tank].g_iSlowEffect, g_esSlowSpecial[type].g_iSlowEffect, g_esSlowAbility[type].g_iSlowEffect, 1);
-		g_esSlowCache[tank].g_iSlowHit = iGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_iSlowHit, g_esSlowPlayer[tank].g_iSlowHit, g_esSlowSpecial[type].g_iSlowHit, g_esSlowAbility[type].g_iSlowHit, 1);
-		g_esSlowCache[tank].g_iSlowHitMode = iGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_iSlowHitMode, g_esSlowPlayer[tank].g_iSlowHitMode, g_esSlowSpecial[type].g_iSlowHitMode, g_esSlowAbility[type].g_iSlowHitMode, 1);
-		g_esSlowCache[tank].g_iSlowIncline = iGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_iSlowIncline, g_esSlowPlayer[tank].g_iSlowIncline, g_esSlowSpecial[type].g_iSlowIncline, g_esSlowAbility[type].g_iSlowIncline, 1);
-		g_esSlowCache[tank].g_iSlowMessage = iGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_iSlowMessage, g_esSlowPlayer[tank].g_iSlowMessage, g_esSlowSpecial[type].g_iSlowMessage, g_esSlowAbility[type].g_iSlowMessage, 1);
-		g_esSlowCache[tank].g_iSlowRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_iSlowRangeCooldown, g_esSlowPlayer[tank].g_iSlowRangeCooldown, g_esSlowSpecial[type].g_iSlowRangeCooldown, g_esSlowAbility[type].g_iSlowRangeCooldown, 1);
-		g_esSlowCache[tank].g_iSlowSight = iGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_iSlowSight, g_esSlowPlayer[tank].g_iSlowSight, g_esSlowSpecial[type].g_iSlowSight, g_esSlowAbility[type].g_iSlowSight, 1);
+		g_esSlowCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_flCloseAreasOnly, g_esSlowPlayer[tank].g_flCloseAreasOnly, g_esSlowSpecial[iType].g_flCloseAreasOnly, g_esSlowAbility[iType].g_flCloseAreasOnly, 1);
+		g_esSlowCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_iComboAbility, g_esSlowPlayer[tank].g_iComboAbility, g_esSlowSpecial[iType].g_iComboAbility, g_esSlowAbility[iType].g_iComboAbility, 1);
+		g_esSlowCache[tank].g_flSlowChance = flGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_flSlowChance, g_esSlowPlayer[tank].g_flSlowChance, g_esSlowSpecial[iType].g_flSlowChance, g_esSlowAbility[iType].g_flSlowChance, 1);
+		g_esSlowCache[tank].g_flSlowDuration = flGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_flSlowDuration, g_esSlowPlayer[tank].g_flSlowDuration, g_esSlowSpecial[iType].g_flSlowDuration, g_esSlowAbility[iType].g_flSlowDuration, 1);
+		g_esSlowCache[tank].g_flSlowRange = flGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_flSlowRange, g_esSlowPlayer[tank].g_flSlowRange, g_esSlowSpecial[iType].g_flSlowRange, g_esSlowAbility[iType].g_flSlowRange, 1);
+		g_esSlowCache[tank].g_flSlowRangeChance = flGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_flSlowRangeChance, g_esSlowPlayer[tank].g_flSlowRangeChance, g_esSlowSpecial[iType].g_flSlowRangeChance, g_esSlowAbility[iType].g_flSlowRangeChance, 1);
+		g_esSlowCache[tank].g_flSlowSpeed = flGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_flSlowSpeed, g_esSlowPlayer[tank].g_flSlowSpeed, g_esSlowSpecial[iType].g_flSlowSpeed, g_esSlowAbility[iType].g_flSlowSpeed, 1);
+		g_esSlowCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_iHumanAbility, g_esSlowPlayer[tank].g_iHumanAbility, g_esSlowSpecial[iType].g_iHumanAbility, g_esSlowAbility[iType].g_iHumanAbility, 1);
+		g_esSlowCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_iHumanAmmo, g_esSlowPlayer[tank].g_iHumanAmmo, g_esSlowSpecial[iType].g_iHumanAmmo, g_esSlowAbility[iType].g_iHumanAmmo, 1);
+		g_esSlowCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_iHumanCooldown, g_esSlowPlayer[tank].g_iHumanCooldown, g_esSlowSpecial[iType].g_iHumanCooldown, g_esSlowAbility[iType].g_iHumanCooldown, 1);
+		g_esSlowCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_iHumanRangeCooldown, g_esSlowPlayer[tank].g_iHumanRangeCooldown, g_esSlowSpecial[iType].g_iHumanRangeCooldown, g_esSlowAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esSlowCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_flOpenAreasOnly, g_esSlowPlayer[tank].g_flOpenAreasOnly, g_esSlowSpecial[iType].g_flOpenAreasOnly, g_esSlowAbility[iType].g_flOpenAreasOnly, 1);
+		g_esSlowCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_iRequiresHumans, g_esSlowPlayer[tank].g_iRequiresHumans, g_esSlowSpecial[iType].g_iRequiresHumans, g_esSlowAbility[iType].g_iRequiresHumans, 1);
+		g_esSlowCache[tank].g_iSlowAbility = iGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_iSlowAbility, g_esSlowPlayer[tank].g_iSlowAbility, g_esSlowSpecial[iType].g_iSlowAbility, g_esSlowAbility[iType].g_iSlowAbility, 1);
+		g_esSlowCache[tank].g_iSlowCooldown = iGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_iSlowCooldown, g_esSlowPlayer[tank].g_iSlowCooldown, g_esSlowSpecial[iType].g_iSlowCooldown, g_esSlowAbility[iType].g_iSlowCooldown, 1);
+		g_esSlowCache[tank].g_iSlowEffect = iGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_iSlowEffect, g_esSlowPlayer[tank].g_iSlowEffect, g_esSlowSpecial[iType].g_iSlowEffect, g_esSlowAbility[iType].g_iSlowEffect, 1);
+		g_esSlowCache[tank].g_iSlowHit = iGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_iSlowHit, g_esSlowPlayer[tank].g_iSlowHit, g_esSlowSpecial[iType].g_iSlowHit, g_esSlowAbility[iType].g_iSlowHit, 1);
+		g_esSlowCache[tank].g_iSlowHitMode = iGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_iSlowHitMode, g_esSlowPlayer[tank].g_iSlowHitMode, g_esSlowSpecial[iType].g_iSlowHitMode, g_esSlowAbility[iType].g_iSlowHitMode, 1);
+		g_esSlowCache[tank].g_iSlowIncline = iGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_iSlowIncline, g_esSlowPlayer[tank].g_iSlowIncline, g_esSlowSpecial[iType].g_iSlowIncline, g_esSlowAbility[iType].g_iSlowIncline, 1);
+		g_esSlowCache[tank].g_iSlowMessage = iGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_iSlowMessage, g_esSlowPlayer[tank].g_iSlowMessage, g_esSlowSpecial[iType].g_iSlowMessage, g_esSlowAbility[iType].g_iSlowMessage, 1);
+		g_esSlowCache[tank].g_iSlowRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_iSlowRangeCooldown, g_esSlowPlayer[tank].g_iSlowRangeCooldown, g_esSlowSpecial[iType].g_iSlowRangeCooldown, g_esSlowAbility[iType].g_iSlowRangeCooldown, 1);
+		g_esSlowCache[tank].g_iSlowSight = iGetSubSettingValue(apply, bHuman, g_esSlowTeammate[tank].g_iSlowSight, g_esSlowPlayer[tank].g_iSlowSight, g_esSlowSpecial[iType].g_iSlowSight, g_esSlowAbility[iType].g_iSlowSight, 1);
 	}
 	else
 	{
-		g_esSlowCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_flCloseAreasOnly, g_esSlowAbility[type].g_flCloseAreasOnly, 1);
-		g_esSlowCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_iComboAbility, g_esSlowAbility[type].g_iComboAbility, 1);
-		g_esSlowCache[tank].g_flSlowChance = flGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_flSlowChance, g_esSlowAbility[type].g_flSlowChance, 1);
-		g_esSlowCache[tank].g_flSlowDuration = flGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_flSlowDuration, g_esSlowAbility[type].g_flSlowDuration, 1);
-		g_esSlowCache[tank].g_flSlowRange = flGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_flSlowRange, g_esSlowAbility[type].g_flSlowRange, 1);
-		g_esSlowCache[tank].g_flSlowRangeChance = flGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_flSlowRangeChance, g_esSlowAbility[type].g_flSlowRangeChance, 1);
-		g_esSlowCache[tank].g_flSlowSpeed = flGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_flSlowSpeed, g_esSlowAbility[type].g_flSlowSpeed, 1);
-		g_esSlowCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_iHumanAbility, g_esSlowAbility[type].g_iHumanAbility, 1);
-		g_esSlowCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_iHumanAmmo, g_esSlowAbility[type].g_iHumanAmmo, 1);
-		g_esSlowCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_iHumanCooldown, g_esSlowAbility[type].g_iHumanCooldown, 1);
-		g_esSlowCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_iHumanRangeCooldown, g_esSlowAbility[type].g_iHumanRangeCooldown, 1);
-		g_esSlowCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_flOpenAreasOnly, g_esSlowAbility[type].g_flOpenAreasOnly, 1);
-		g_esSlowCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_iRequiresHumans, g_esSlowAbility[type].g_iRequiresHumans, 1);
-		g_esSlowCache[tank].g_iSlowAbility = iGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_iSlowAbility, g_esSlowAbility[type].g_iSlowAbility, 1);
-		g_esSlowCache[tank].g_iSlowCooldown = iGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_iSlowCooldown, g_esSlowAbility[type].g_iSlowCooldown, 1);
-		g_esSlowCache[tank].g_iSlowEffect = iGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_iSlowEffect, g_esSlowAbility[type].g_iSlowEffect, 1);
-		g_esSlowCache[tank].g_iSlowHit = iGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_iSlowHit, g_esSlowAbility[type].g_iSlowHit, 1);
-		g_esSlowCache[tank].g_iSlowHitMode = iGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_iSlowHitMode, g_esSlowAbility[type].g_iSlowHitMode, 1);
-		g_esSlowCache[tank].g_iSlowIncline = iGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_iSlowIncline, g_esSlowAbility[type].g_iSlowIncline, 1);
-		g_esSlowCache[tank].g_iSlowMessage = iGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_iSlowMessage, g_esSlowAbility[type].g_iSlowMessage, 1);
-		g_esSlowCache[tank].g_iSlowRangeCooldown = iGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_iSlowRangeCooldown, g_esSlowAbility[type].g_iSlowRangeCooldown, 1);
-		g_esSlowCache[tank].g_iSlowSight = iGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_iSlowSight, g_esSlowAbility[type].g_iSlowSight, 1);
+		g_esSlowCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_flCloseAreasOnly, g_esSlowAbility[iType].g_flCloseAreasOnly, 1);
+		g_esSlowCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_iComboAbility, g_esSlowAbility[iType].g_iComboAbility, 1);
+		g_esSlowCache[tank].g_flSlowChance = flGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_flSlowChance, g_esSlowAbility[iType].g_flSlowChance, 1);
+		g_esSlowCache[tank].g_flSlowDuration = flGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_flSlowDuration, g_esSlowAbility[iType].g_flSlowDuration, 1);
+		g_esSlowCache[tank].g_flSlowRange = flGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_flSlowRange, g_esSlowAbility[iType].g_flSlowRange, 1);
+		g_esSlowCache[tank].g_flSlowRangeChance = flGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_flSlowRangeChance, g_esSlowAbility[iType].g_flSlowRangeChance, 1);
+		g_esSlowCache[tank].g_flSlowSpeed = flGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_flSlowSpeed, g_esSlowAbility[iType].g_flSlowSpeed, 1);
+		g_esSlowCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_iHumanAbility, g_esSlowAbility[iType].g_iHumanAbility, 1);
+		g_esSlowCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_iHumanAmmo, g_esSlowAbility[iType].g_iHumanAmmo, 1);
+		g_esSlowCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_iHumanCooldown, g_esSlowAbility[iType].g_iHumanCooldown, 1);
+		g_esSlowCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_iHumanRangeCooldown, g_esSlowAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esSlowCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_flOpenAreasOnly, g_esSlowAbility[iType].g_flOpenAreasOnly, 1);
+		g_esSlowCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_iRequiresHumans, g_esSlowAbility[iType].g_iRequiresHumans, 1);
+		g_esSlowCache[tank].g_iSlowAbility = iGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_iSlowAbility, g_esSlowAbility[iType].g_iSlowAbility, 1);
+		g_esSlowCache[tank].g_iSlowCooldown = iGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_iSlowCooldown, g_esSlowAbility[iType].g_iSlowCooldown, 1);
+		g_esSlowCache[tank].g_iSlowEffect = iGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_iSlowEffect, g_esSlowAbility[iType].g_iSlowEffect, 1);
+		g_esSlowCache[tank].g_iSlowHit = iGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_iSlowHit, g_esSlowAbility[iType].g_iSlowHit, 1);
+		g_esSlowCache[tank].g_iSlowHitMode = iGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_iSlowHitMode, g_esSlowAbility[iType].g_iSlowHitMode, 1);
+		g_esSlowCache[tank].g_iSlowIncline = iGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_iSlowIncline, g_esSlowAbility[iType].g_iSlowIncline, 1);
+		g_esSlowCache[tank].g_iSlowMessage = iGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_iSlowMessage, g_esSlowAbility[iType].g_iSlowMessage, 1);
+		g_esSlowCache[tank].g_iSlowRangeCooldown = iGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_iSlowRangeCooldown, g_esSlowAbility[iType].g_iSlowRangeCooldown, 1);
+		g_esSlowCache[tank].g_iSlowSight = iGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_iSlowSight, g_esSlowAbility[iType].g_iSlowSight, 1);
 	}
 }
 

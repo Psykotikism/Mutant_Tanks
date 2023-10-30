@@ -87,6 +87,7 @@ enum struct esMinionPlayer
 	int g_iOwner;
 	int g_iRequiresHumans;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esMinionPlayer g_esMinionPlayer[MAXPLAYERS + 1];
@@ -412,12 +413,12 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 {
 	if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esMinionCache[tank].g_iHumanAbility != 2)
 	{
-		g_esMinionAbility[g_esMinionPlayer[tank].g_iTankType].g_iComboPosition = -1;
+		g_esMinionAbility[g_esMinionPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 		return;
 	}
 
-	g_esMinionAbility[g_esMinionPlayer[tank].g_iTankType].g_iComboPosition = -1;
+	g_esMinionAbility[g_esMinionPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 	char sCombo[320], sSet[4][32];
 	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
@@ -438,7 +439,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 			{
 				if (StrEqual(sSubset[iPos], MT_MINION_SECTION, false) || StrEqual(sSubset[iPos], MT_MINION_SECTION2, false) || StrEqual(sSubset[iPos], MT_MINION_SECTION3, false) || StrEqual(sSubset[iPos], MT_MINION_SECTION4, false))
 				{
-					g_esMinionAbility[g_esMinionPlayer[tank].g_iTankType].g_iComboPosition = iPos;
+					g_esMinionAbility[g_esMinionPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = iPos;
 
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
@@ -650,45 +651,47 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esMinionPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esMinionPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esMinionPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esMinionCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_flCloseAreasOnly, g_esMinionPlayer[tank].g_flCloseAreasOnly, g_esMinionSpecial[type].g_flCloseAreasOnly, g_esMinionAbility[type].g_flCloseAreasOnly, 1);
-		g_esMinionCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iComboAbility, g_esMinionPlayer[tank].g_iComboAbility, g_esMinionSpecial[type].g_iComboAbility, g_esMinionAbility[type].g_iComboAbility, 1);
-		g_esMinionCache[tank].g_flMinionChance = flGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_flMinionChance, g_esMinionPlayer[tank].g_flMinionChance, g_esMinionSpecial[type].g_flMinionChance, g_esMinionAbility[type].g_flMinionChance, 1);
-		g_esMinionCache[tank].g_flMinionLifetime = flGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_flMinionLifetime, g_esMinionPlayer[tank].g_flMinionLifetime, g_esMinionSpecial[type].g_flMinionLifetime, g_esMinionAbility[type].g_flMinionLifetime, 1);
-		g_esMinionCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iHumanAbility, g_esMinionPlayer[tank].g_iHumanAbility, g_esMinionSpecial[type].g_iHumanAbility, g_esMinionAbility[type].g_iHumanAbility, 1);
-		g_esMinionCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iHumanAmmo, g_esMinionPlayer[tank].g_iHumanAmmo, g_esMinionSpecial[type].g_iHumanAmmo, g_esMinionAbility[type].g_iHumanAmmo, 1);
-		g_esMinionCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iHumanCooldown, g_esMinionPlayer[tank].g_iHumanCooldown, g_esMinionSpecial[type].g_iHumanCooldown, g_esMinionAbility[type].g_iHumanCooldown, 1);
-		g_esMinionCache[tank].g_iMinionAbility = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iMinionAbility, g_esMinionPlayer[tank].g_iMinionAbility, g_esMinionSpecial[type].g_iMinionAbility, g_esMinionAbility[type].g_iMinionAbility, 1);
-		g_esMinionCache[tank].g_iMinionAmount = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iMinionAmount, g_esMinionPlayer[tank].g_iMinionAmount, g_esMinionSpecial[type].g_iMinionAmount, g_esMinionAbility[type].g_iMinionAmount, 1);
-		g_esMinionCache[tank].g_iMinionCooldown = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iMinionCooldown, g_esMinionPlayer[tank].g_iMinionCooldown, g_esMinionSpecial[type].g_iMinionCooldown, g_esMinionAbility[type].g_iMinionCooldown, 1);
-		g_esMinionCache[tank].g_iMinionMessage = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iMinionMessage, g_esMinionPlayer[tank].g_iMinionMessage, g_esMinionSpecial[type].g_iMinionMessage, g_esMinionAbility[type].g_iMinionMessage, 1);
-		g_esMinionCache[tank].g_iMinionRemove = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iMinionRemove, g_esMinionPlayer[tank].g_iMinionRemove, g_esMinionSpecial[type].g_iMinionRemove, g_esMinionAbility[type].g_iMinionRemove, 1);
-		g_esMinionCache[tank].g_iMinionReplace = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iMinionReplace, g_esMinionPlayer[tank].g_iMinionReplace, g_esMinionSpecial[type].g_iMinionReplace, g_esMinionAbility[type].g_iMinionReplace, 1);
-		g_esMinionCache[tank].g_iMinionTypes = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iMinionTypes, g_esMinionPlayer[tank].g_iMinionTypes, g_esMinionSpecial[type].g_iMinionTypes, g_esMinionAbility[type].g_iMinionTypes, 1);
-		g_esMinionCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_flOpenAreasOnly, g_esMinionPlayer[tank].g_flOpenAreasOnly, g_esMinionSpecial[type].g_flOpenAreasOnly, g_esMinionAbility[type].g_flOpenAreasOnly, 1);
-		g_esMinionCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iRequiresHumans, g_esMinionPlayer[tank].g_iRequiresHumans, g_esMinionSpecial[type].g_iRequiresHumans, g_esMinionAbility[type].g_iRequiresHumans, 1);
+		g_esMinionCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_flCloseAreasOnly, g_esMinionPlayer[tank].g_flCloseAreasOnly, g_esMinionSpecial[iType].g_flCloseAreasOnly, g_esMinionAbility[iType].g_flCloseAreasOnly, 1);
+		g_esMinionCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iComboAbility, g_esMinionPlayer[tank].g_iComboAbility, g_esMinionSpecial[iType].g_iComboAbility, g_esMinionAbility[iType].g_iComboAbility, 1);
+		g_esMinionCache[tank].g_flMinionChance = flGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_flMinionChance, g_esMinionPlayer[tank].g_flMinionChance, g_esMinionSpecial[iType].g_flMinionChance, g_esMinionAbility[iType].g_flMinionChance, 1);
+		g_esMinionCache[tank].g_flMinionLifetime = flGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_flMinionLifetime, g_esMinionPlayer[tank].g_flMinionLifetime, g_esMinionSpecial[iType].g_flMinionLifetime, g_esMinionAbility[iType].g_flMinionLifetime, 1);
+		g_esMinionCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iHumanAbility, g_esMinionPlayer[tank].g_iHumanAbility, g_esMinionSpecial[iType].g_iHumanAbility, g_esMinionAbility[iType].g_iHumanAbility, 1);
+		g_esMinionCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iHumanAmmo, g_esMinionPlayer[tank].g_iHumanAmmo, g_esMinionSpecial[iType].g_iHumanAmmo, g_esMinionAbility[iType].g_iHumanAmmo, 1);
+		g_esMinionCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iHumanCooldown, g_esMinionPlayer[tank].g_iHumanCooldown, g_esMinionSpecial[iType].g_iHumanCooldown, g_esMinionAbility[iType].g_iHumanCooldown, 1);
+		g_esMinionCache[tank].g_iMinionAbility = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iMinionAbility, g_esMinionPlayer[tank].g_iMinionAbility, g_esMinionSpecial[iType].g_iMinionAbility, g_esMinionAbility[iType].g_iMinionAbility, 1);
+		g_esMinionCache[tank].g_iMinionAmount = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iMinionAmount, g_esMinionPlayer[tank].g_iMinionAmount, g_esMinionSpecial[iType].g_iMinionAmount, g_esMinionAbility[iType].g_iMinionAmount, 1);
+		g_esMinionCache[tank].g_iMinionCooldown = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iMinionCooldown, g_esMinionPlayer[tank].g_iMinionCooldown, g_esMinionSpecial[iType].g_iMinionCooldown, g_esMinionAbility[iType].g_iMinionCooldown, 1);
+		g_esMinionCache[tank].g_iMinionMessage = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iMinionMessage, g_esMinionPlayer[tank].g_iMinionMessage, g_esMinionSpecial[iType].g_iMinionMessage, g_esMinionAbility[iType].g_iMinionMessage, 1);
+		g_esMinionCache[tank].g_iMinionRemove = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iMinionRemove, g_esMinionPlayer[tank].g_iMinionRemove, g_esMinionSpecial[iType].g_iMinionRemove, g_esMinionAbility[iType].g_iMinionRemove, 1);
+		g_esMinionCache[tank].g_iMinionReplace = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iMinionReplace, g_esMinionPlayer[tank].g_iMinionReplace, g_esMinionSpecial[iType].g_iMinionReplace, g_esMinionAbility[iType].g_iMinionReplace, 1);
+		g_esMinionCache[tank].g_iMinionTypes = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iMinionTypes, g_esMinionPlayer[tank].g_iMinionTypes, g_esMinionSpecial[iType].g_iMinionTypes, g_esMinionAbility[iType].g_iMinionTypes, 1);
+		g_esMinionCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_flOpenAreasOnly, g_esMinionPlayer[tank].g_flOpenAreasOnly, g_esMinionSpecial[iType].g_flOpenAreasOnly, g_esMinionAbility[iType].g_flOpenAreasOnly, 1);
+		g_esMinionCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iRequiresHumans, g_esMinionPlayer[tank].g_iRequiresHumans, g_esMinionSpecial[iType].g_iRequiresHumans, g_esMinionAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
 	{
-		g_esMinionCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_flCloseAreasOnly, g_esMinionAbility[type].g_flCloseAreasOnly, 1);
-		g_esMinionCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iComboAbility, g_esMinionAbility[type].g_iComboAbility, 1);
-		g_esMinionCache[tank].g_flMinionChance = flGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_flMinionChance, g_esMinionAbility[type].g_flMinionChance, 1);
-		g_esMinionCache[tank].g_flMinionLifetime = flGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_flMinionLifetime, g_esMinionAbility[type].g_flMinionLifetime, 1);
-		g_esMinionCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iHumanAbility, g_esMinionAbility[type].g_iHumanAbility, 1);
-		g_esMinionCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iHumanAmmo, g_esMinionAbility[type].g_iHumanAmmo, 1);
-		g_esMinionCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iHumanCooldown, g_esMinionAbility[type].g_iHumanCooldown, 1);
-		g_esMinionCache[tank].g_iMinionAbility = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iMinionAbility, g_esMinionAbility[type].g_iMinionAbility, 1);
-		g_esMinionCache[tank].g_iMinionAmount = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iMinionAmount, g_esMinionAbility[type].g_iMinionAmount, 1);
-		g_esMinionCache[tank].g_iMinionCooldown = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iMinionCooldown, g_esMinionAbility[type].g_iMinionCooldown, 1);
-		g_esMinionCache[tank].g_iMinionMessage = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iMinionMessage, g_esMinionAbility[type].g_iMinionMessage, 1);
-		g_esMinionCache[tank].g_iMinionRemove = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iMinionRemove, g_esMinionAbility[type].g_iMinionRemove, 1);
-		g_esMinionCache[tank].g_iMinionReplace = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iMinionReplace, g_esMinionAbility[type].g_iMinionReplace, 1);
-		g_esMinionCache[tank].g_iMinionTypes = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iMinionTypes, g_esMinionAbility[type].g_iMinionTypes, 1);
-		g_esMinionCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_flOpenAreasOnly, g_esMinionAbility[type].g_flOpenAreasOnly, 1);
-		g_esMinionCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iRequiresHumans, g_esMinionAbility[type].g_iRequiresHumans, 1);
+		g_esMinionCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_flCloseAreasOnly, g_esMinionAbility[iType].g_flCloseAreasOnly, 1);
+		g_esMinionCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iComboAbility, g_esMinionAbility[iType].g_iComboAbility, 1);
+		g_esMinionCache[tank].g_flMinionChance = flGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_flMinionChance, g_esMinionAbility[iType].g_flMinionChance, 1);
+		g_esMinionCache[tank].g_flMinionLifetime = flGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_flMinionLifetime, g_esMinionAbility[iType].g_flMinionLifetime, 1);
+		g_esMinionCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iHumanAbility, g_esMinionAbility[iType].g_iHumanAbility, 1);
+		g_esMinionCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iHumanAmmo, g_esMinionAbility[iType].g_iHumanAmmo, 1);
+		g_esMinionCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iHumanCooldown, g_esMinionAbility[iType].g_iHumanCooldown, 1);
+		g_esMinionCache[tank].g_iMinionAbility = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iMinionAbility, g_esMinionAbility[iType].g_iMinionAbility, 1);
+		g_esMinionCache[tank].g_iMinionAmount = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iMinionAmount, g_esMinionAbility[iType].g_iMinionAmount, 1);
+		g_esMinionCache[tank].g_iMinionCooldown = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iMinionCooldown, g_esMinionAbility[iType].g_iMinionCooldown, 1);
+		g_esMinionCache[tank].g_iMinionMessage = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iMinionMessage, g_esMinionAbility[iType].g_iMinionMessage, 1);
+		g_esMinionCache[tank].g_iMinionRemove = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iMinionRemove, g_esMinionAbility[iType].g_iMinionRemove, 1);
+		g_esMinionCache[tank].g_iMinionReplace = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iMinionReplace, g_esMinionAbility[iType].g_iMinionReplace, 1);
+		g_esMinionCache[tank].g_iMinionTypes = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iMinionTypes, g_esMinionAbility[iType].g_iMinionTypes, 1);
+		g_esMinionCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_flOpenAreasOnly, g_esMinionAbility[iType].g_flOpenAreasOnly, 1);
+		g_esMinionCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iRequiresHumans, g_esMinionAbility[iType].g_iRequiresHumans, 1);
 	}
 }
 
@@ -969,7 +972,7 @@ void vMinion(int tank)
 								MT_PrintToChat(tank, "%s %t", MT_TAG3, "MinionHuman", g_esMinionPlayer[tank].g_iAmmoCount, g_esMinionCache[tank].g_iHumanAmmo);
 							}
 
-							int iPos = g_esMinionAbility[g_esMinionPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esMinionCache[tank].g_iMinionCooldown;
+							int iPos = g_esMinionAbility[g_esMinionPlayer[tank].g_iTankTypeRecorded].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esMinionCache[tank].g_iMinionCooldown;
 							iCooldown = (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esMinionCache[tank].g_iHumanAbility == 1 && g_esMinionPlayer[tank].g_iAmmoCount < g_esMinionCache[tank].g_iHumanAmmo && g_esMinionCache[tank].g_iHumanAmmo > 0) ? g_esMinionCache[tank].g_iHumanCooldown : iCooldown;
 							g_esMinionPlayer[tank].g_iCooldown = (iTime + iCooldown);
 							if (g_esMinionPlayer[tank].g_iCooldown != -1 && g_esMinionPlayer[tank].g_iCooldown >= iTime)

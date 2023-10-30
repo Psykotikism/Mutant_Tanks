@@ -30,7 +30,7 @@
 <details>
 	<summary>Нажмите, чтобы расширить!</summary>
 
-1. `SourceMod 1.12.0.6985` или выше
+1. `SourceMod 1.12.0.7066` или выше
 2. [`DHooks 2.2.0-detours15` или выше](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
 3. Рекомендуется (Необязательно):
 - [`Actions`](https://forums.alliedmods.net/showthread.php?t=336374)
@@ -1413,6 +1413,17 @@ native int MT_GetMinType();
 native void MT_GetPropColors(int tank, int type, int &red, int &green, int &blue, int &alpha);
 
 /**
+ * Возвращает записанный тип танка-мутанта.
+ *
+ * @param tank			Клиентский индекс танка.
+ * @param type			Тип танка-мутанта. (Необязательно)
+ *
+ * @return			Записанный тип танка-мутанта.
+ * @error			Неверный индекс клиента или клиента нет в игре.
+ **/
+native int MT_GetRecordedTankType(int tank, int type = 0);
+
+/**
  * Возвращает скорость бега танка-мутанта.
  *
  * @param tank			Клиентский индекс танка.
@@ -1470,11 +1481,12 @@ native void MT_GetTankName(int tank, char[] buffer);
  * Возвращает тип танка-мутанта.
  *
  * @param tank			Клиентский индекс танка.
+ * @param type			Записанный тип танка-мутанта. (Необязательно)
  *
  * @return			Тип танка-мутанта.
  * @error			Неверный индекс клиента или клиента нет в игре.
  **/
-native int MT_GetTankType(int tank);
+native int MT_GetTankType(int tank, int type = 0);
 
 /**
  * Возвращает, если игрок-выживший имеет доступ к типу танка-мутанта.

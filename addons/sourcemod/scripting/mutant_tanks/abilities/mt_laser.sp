@@ -96,6 +96,7 @@ enum struct esLaserPlayer
 	int g_iLaserSight;
 	int g_iRequiresHumans;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esLaserPlayer g_esLaserPlayer[MAXPLAYERS + 1];
@@ -429,12 +430,12 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 {
 	if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esLaserCache[tank].g_iHumanAbility != 2)
 	{
-		g_esLaserAbility[g_esLaserPlayer[tank].g_iTankType].g_iComboPosition = -1;
+		g_esLaserAbility[g_esLaserPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 		return;
 	}
 
-	g_esLaserAbility[g_esLaserPlayer[tank].g_iTankType].g_iComboPosition = -1;
+	g_esLaserAbility[g_esLaserPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 	char sCombo[320], sSet[4][32];
 	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
@@ -455,7 +456,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 			{
 				if (StrEqual(sSubset[iPos], MT_LASER_SECTION, false) || StrEqual(sSubset[iPos], MT_LASER_SECTION2, false) || StrEqual(sSubset[iPos], MT_LASER_SECTION3, false) || StrEqual(sSubset[iPos], MT_LASER_SECTION4, false))
 				{
-					g_esLaserAbility[g_esLaserPlayer[tank].g_iTankType].g_iComboPosition = iPos;
+					g_esLaserAbility[g_esLaserPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = iPos;
 
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
@@ -693,49 +694,51 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esLaserPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esLaserPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esLaserPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esLaserCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_flCloseAreasOnly, g_esLaserPlayer[tank].g_flCloseAreasOnly, g_esLaserSpecial[type].g_flCloseAreasOnly, g_esLaserAbility[type].g_flCloseAreasOnly, 1);
-		g_esLaserCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_iComboAbility, g_esLaserPlayer[tank].g_iComboAbility, g_esLaserSpecial[type].g_iComboAbility, g_esLaserAbility[type].g_iComboAbility, 1);
-		g_esLaserCache[tank].g_flLaserChance = flGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_flLaserChance, g_esLaserPlayer[tank].g_flLaserChance, g_esLaserSpecial[type].g_flLaserChance, g_esLaserAbility[type].g_flLaserChance, 1);
-		g_esLaserCache[tank].g_flLaserDamage = flGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_flLaserDamage, g_esLaserPlayer[tank].g_flLaserDamage, g_esLaserSpecial[type].g_flLaserDamage, g_esLaserAbility[type].g_flLaserDamage, 1);
-		g_esLaserCache[tank].g_flLaserInterval = flGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_flLaserInterval, g_esLaserPlayer[tank].g_flLaserInterval, g_esLaserSpecial[type].g_flLaserInterval, g_esLaserAbility[type].g_flLaserInterval, 1);
-		g_esLaserCache[tank].g_flLaserRange = flGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_flLaserRange, g_esLaserPlayer[tank].g_flLaserRange, g_esLaserSpecial[type].g_flLaserRange, g_esLaserAbility[type].g_flLaserRange, 1);
-		g_esLaserCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_iHumanAbility, g_esLaserPlayer[tank].g_iHumanAbility, g_esLaserSpecial[type].g_iHumanAbility, g_esLaserAbility[type].g_iHumanAbility, 1);
-		g_esLaserCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_iHumanAmmo, g_esLaserPlayer[tank].g_iHumanAmmo, g_esLaserSpecial[type].g_iHumanAmmo, g_esLaserAbility[type].g_iHumanAmmo, 1);
-		g_esLaserCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_iHumanCooldown, g_esLaserPlayer[tank].g_iHumanCooldown, g_esLaserSpecial[type].g_iHumanCooldown, g_esLaserAbility[type].g_iHumanCooldown, 1);
-		g_esLaserCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_iHumanDuration, g_esLaserPlayer[tank].g_iHumanDuration, g_esLaserSpecial[type].g_iHumanDuration, g_esLaserAbility[type].g_iHumanDuration, 1);
-		g_esLaserCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_iHumanMode, g_esLaserPlayer[tank].g_iHumanMode, g_esLaserSpecial[type].g_iHumanMode, g_esLaserAbility[type].g_iHumanMode, 1);
-		g_esLaserCache[tank].g_iLaserAbility = iGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_iLaserAbility, g_esLaserPlayer[tank].g_iLaserAbility, g_esLaserSpecial[type].g_iLaserAbility, g_esLaserAbility[type].g_iLaserAbility, 1);
-		g_esLaserCache[tank].g_iLaserCooldown = iGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_iLaserCooldown, g_esLaserPlayer[tank].g_iLaserCooldown, g_esLaserSpecial[type].g_iLaserCooldown, g_esLaserAbility[type].g_iLaserCooldown, 1);
-		g_esLaserCache[tank].g_iLaserDuration = iGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_iLaserDuration, g_esLaserPlayer[tank].g_iLaserDuration, g_esLaserSpecial[type].g_iLaserDuration, g_esLaserAbility[type].g_iLaserDuration, 1);
-		g_esLaserCache[tank].g_iLaserMessage = iGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_iLaserMessage, g_esLaserPlayer[tank].g_iLaserMessage, g_esLaserSpecial[type].g_iLaserMessage, g_esLaserAbility[type].g_iLaserMessage, 1);
-		g_esLaserCache[tank].g_iLaserSight = iGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_iLaserSight, g_esLaserPlayer[tank].g_iLaserSight, g_esLaserSpecial[type].g_iLaserSight, g_esLaserAbility[type].g_iLaserSight, 1);
-		g_esLaserCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_flOpenAreasOnly, g_esLaserPlayer[tank].g_flOpenAreasOnly, g_esLaserSpecial[type].g_flOpenAreasOnly, g_esLaserAbility[type].g_flOpenAreasOnly, 1);
-		g_esLaserCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_iRequiresHumans, g_esLaserPlayer[tank].g_iRequiresHumans, g_esLaserSpecial[type].g_iRequiresHumans, g_esLaserAbility[type].g_iRequiresHumans, 1);
+		g_esLaserCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_flCloseAreasOnly, g_esLaserPlayer[tank].g_flCloseAreasOnly, g_esLaserSpecial[iType].g_flCloseAreasOnly, g_esLaserAbility[iType].g_flCloseAreasOnly, 1);
+		g_esLaserCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_iComboAbility, g_esLaserPlayer[tank].g_iComboAbility, g_esLaserSpecial[iType].g_iComboAbility, g_esLaserAbility[iType].g_iComboAbility, 1);
+		g_esLaserCache[tank].g_flLaserChance = flGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_flLaserChance, g_esLaserPlayer[tank].g_flLaserChance, g_esLaserSpecial[iType].g_flLaserChance, g_esLaserAbility[iType].g_flLaserChance, 1);
+		g_esLaserCache[tank].g_flLaserDamage = flGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_flLaserDamage, g_esLaserPlayer[tank].g_flLaserDamage, g_esLaserSpecial[iType].g_flLaserDamage, g_esLaserAbility[iType].g_flLaserDamage, 1);
+		g_esLaserCache[tank].g_flLaserInterval = flGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_flLaserInterval, g_esLaserPlayer[tank].g_flLaserInterval, g_esLaserSpecial[iType].g_flLaserInterval, g_esLaserAbility[iType].g_flLaserInterval, 1);
+		g_esLaserCache[tank].g_flLaserRange = flGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_flLaserRange, g_esLaserPlayer[tank].g_flLaserRange, g_esLaserSpecial[iType].g_flLaserRange, g_esLaserAbility[iType].g_flLaserRange, 1);
+		g_esLaserCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_iHumanAbility, g_esLaserPlayer[tank].g_iHumanAbility, g_esLaserSpecial[iType].g_iHumanAbility, g_esLaserAbility[iType].g_iHumanAbility, 1);
+		g_esLaserCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_iHumanAmmo, g_esLaserPlayer[tank].g_iHumanAmmo, g_esLaserSpecial[iType].g_iHumanAmmo, g_esLaserAbility[iType].g_iHumanAmmo, 1);
+		g_esLaserCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_iHumanCooldown, g_esLaserPlayer[tank].g_iHumanCooldown, g_esLaserSpecial[iType].g_iHumanCooldown, g_esLaserAbility[iType].g_iHumanCooldown, 1);
+		g_esLaserCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_iHumanDuration, g_esLaserPlayer[tank].g_iHumanDuration, g_esLaserSpecial[iType].g_iHumanDuration, g_esLaserAbility[iType].g_iHumanDuration, 1);
+		g_esLaserCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_iHumanMode, g_esLaserPlayer[tank].g_iHumanMode, g_esLaserSpecial[iType].g_iHumanMode, g_esLaserAbility[iType].g_iHumanMode, 1);
+		g_esLaserCache[tank].g_iLaserAbility = iGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_iLaserAbility, g_esLaserPlayer[tank].g_iLaserAbility, g_esLaserSpecial[iType].g_iLaserAbility, g_esLaserAbility[iType].g_iLaserAbility, 1);
+		g_esLaserCache[tank].g_iLaserCooldown = iGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_iLaserCooldown, g_esLaserPlayer[tank].g_iLaserCooldown, g_esLaserSpecial[iType].g_iLaserCooldown, g_esLaserAbility[iType].g_iLaserCooldown, 1);
+		g_esLaserCache[tank].g_iLaserDuration = iGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_iLaserDuration, g_esLaserPlayer[tank].g_iLaserDuration, g_esLaserSpecial[iType].g_iLaserDuration, g_esLaserAbility[iType].g_iLaserDuration, 1);
+		g_esLaserCache[tank].g_iLaserMessage = iGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_iLaserMessage, g_esLaserPlayer[tank].g_iLaserMessage, g_esLaserSpecial[iType].g_iLaserMessage, g_esLaserAbility[iType].g_iLaserMessage, 1);
+		g_esLaserCache[tank].g_iLaserSight = iGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_iLaserSight, g_esLaserPlayer[tank].g_iLaserSight, g_esLaserSpecial[iType].g_iLaserSight, g_esLaserAbility[iType].g_iLaserSight, 1);
+		g_esLaserCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_flOpenAreasOnly, g_esLaserPlayer[tank].g_flOpenAreasOnly, g_esLaserSpecial[iType].g_flOpenAreasOnly, g_esLaserAbility[iType].g_flOpenAreasOnly, 1);
+		g_esLaserCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_iRequiresHumans, g_esLaserPlayer[tank].g_iRequiresHumans, g_esLaserSpecial[iType].g_iRequiresHumans, g_esLaserAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
 	{
-		g_esLaserCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_flCloseAreasOnly, g_esLaserAbility[type].g_flCloseAreasOnly, 1);
-		g_esLaserCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_iComboAbility, g_esLaserAbility[type].g_iComboAbility, 1);
-		g_esLaserCache[tank].g_flLaserChance = flGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_flLaserChance, g_esLaserAbility[type].g_flLaserChance, 1);
-		g_esLaserCache[tank].g_flLaserDamage = flGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_flLaserDamage, g_esLaserAbility[type].g_flLaserDamage, 1);
-		g_esLaserCache[tank].g_flLaserInterval = flGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_flLaserInterval, g_esLaserAbility[type].g_flLaserInterval, 1);
-		g_esLaserCache[tank].g_flLaserRange = flGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_flLaserRange, g_esLaserAbility[type].g_flLaserRange, 1);
-		g_esLaserCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_iHumanAbility, g_esLaserAbility[type].g_iHumanAbility, 1);
-		g_esLaserCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_iHumanAmmo, g_esLaserAbility[type].g_iHumanAmmo, 1);
-		g_esLaserCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_iHumanCooldown, g_esLaserAbility[type].g_iHumanCooldown, 1);
-		g_esLaserCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_iHumanDuration, g_esLaserAbility[type].g_iHumanDuration, 1);
-		g_esLaserCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_iHumanMode, g_esLaserAbility[type].g_iHumanMode, 1);
-		g_esLaserCache[tank].g_iLaserAbility = iGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_iLaserAbility, g_esLaserAbility[type].g_iLaserAbility, 1);
-		g_esLaserCache[tank].g_iLaserCooldown = iGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_iLaserCooldown, g_esLaserAbility[type].g_iLaserCooldown, 1);
-		g_esLaserCache[tank].g_iLaserDuration = iGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_iLaserDuration, g_esLaserAbility[type].g_iLaserDuration, 1);
-		g_esLaserCache[tank].g_iLaserMessage = iGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_iLaserMessage, g_esLaserAbility[type].g_iLaserMessage, 1);
-		g_esLaserCache[tank].g_iLaserSight = iGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_iLaserSight, g_esLaserAbility[type].g_iLaserSight, 1);
-		g_esLaserCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_flOpenAreasOnly, g_esLaserAbility[type].g_flOpenAreasOnly, 1);
-		g_esLaserCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_iRequiresHumans, g_esLaserAbility[type].g_iRequiresHumans, 1);
+		g_esLaserCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_flCloseAreasOnly, g_esLaserAbility[iType].g_flCloseAreasOnly, 1);
+		g_esLaserCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_iComboAbility, g_esLaserAbility[iType].g_iComboAbility, 1);
+		g_esLaserCache[tank].g_flLaserChance = flGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_flLaserChance, g_esLaserAbility[iType].g_flLaserChance, 1);
+		g_esLaserCache[tank].g_flLaserDamage = flGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_flLaserDamage, g_esLaserAbility[iType].g_flLaserDamage, 1);
+		g_esLaserCache[tank].g_flLaserInterval = flGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_flLaserInterval, g_esLaserAbility[iType].g_flLaserInterval, 1);
+		g_esLaserCache[tank].g_flLaserRange = flGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_flLaserRange, g_esLaserAbility[iType].g_flLaserRange, 1);
+		g_esLaserCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_iHumanAbility, g_esLaserAbility[iType].g_iHumanAbility, 1);
+		g_esLaserCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_iHumanAmmo, g_esLaserAbility[iType].g_iHumanAmmo, 1);
+		g_esLaserCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_iHumanCooldown, g_esLaserAbility[iType].g_iHumanCooldown, 1);
+		g_esLaserCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_iHumanDuration, g_esLaserAbility[iType].g_iHumanDuration, 1);
+		g_esLaserCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_iHumanMode, g_esLaserAbility[iType].g_iHumanMode, 1);
+		g_esLaserCache[tank].g_iLaserAbility = iGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_iLaserAbility, g_esLaserAbility[iType].g_iLaserAbility, 1);
+		g_esLaserCache[tank].g_iLaserCooldown = iGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_iLaserCooldown, g_esLaserAbility[iType].g_iLaserCooldown, 1);
+		g_esLaserCache[tank].g_iLaserDuration = iGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_iLaserDuration, g_esLaserAbility[iType].g_iLaserDuration, 1);
+		g_esLaserCache[tank].g_iLaserMessage = iGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_iLaserMessage, g_esLaserAbility[iType].g_iLaserMessage, 1);
+		g_esLaserCache[tank].g_iLaserSight = iGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_iLaserSight, g_esLaserAbility[iType].g_iLaserSight, 1);
+		g_esLaserCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_flOpenAreasOnly, g_esLaserAbility[iType].g_flOpenAreasOnly, 1);
+		g_esLaserCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_iRequiresHumans, g_esLaserAbility[iType].g_iRequiresHumans, 1);
 	}
 }
 
@@ -1039,7 +1042,7 @@ void vLaserReset2(int tank)
 
 void vLaserReset3(int tank)
 {
-	int iTime = GetTime(), iPos = g_esLaserAbility[g_esLaserPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esLaserCache[tank].g_iLaserCooldown;
+	int iTime = GetTime(), iPos = g_esLaserAbility[g_esLaserPlayer[tank].g_iTankTypeRecorded].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esLaserCache[tank].g_iLaserCooldown;
 	iCooldown = (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esLaserCache[tank].g_iHumanAbility == 1 && g_esLaserCache[tank].g_iHumanMode == 0 && g_esLaserPlayer[tank].g_iAmmoCount < g_esLaserCache[tank].g_iHumanAmmo && g_esLaserCache[tank].g_iHumanAmmo > 0) ? g_esLaserCache[tank].g_iHumanCooldown : iCooldown;
 	g_esLaserPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esLaserPlayer[tank].g_iCooldown != -1 && g_esLaserPlayer[tank].g_iCooldown >= iTime)

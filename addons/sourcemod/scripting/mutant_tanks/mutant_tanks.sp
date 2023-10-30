@@ -248,6 +248,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_CONFIG_SECTION_SPAWN "Spawn"
 #define MT_CONFIG_SECTION_BOSS "Boss"
 #define MT_CONFIG_SECTION_COMBO "Combo"
+#define MT_CONFIG_SECTION_PROTECTION "Protection"
+#define MT_CONFIG_SECTION_PROTECTION2 "protect"
 #define MT_CONFIG_SECTION_RANDOM "Random"
 #define MT_CONFIG_SECTION_TRANSFORM "Transform"
 #define MT_CONFIG_SECTION_ADMIN "Administration"
@@ -658,6 +660,8 @@ enum struct esGeneral
 	DynamicHook g_dhWeaponShootPositionHook;
 
 	float g_flActionDurationReward[4];
+	float g_flArmorDuration;
+	float g_flArmorResistance;
 	float g_flAttackBoostReward[4];
 	float g_flAttackInterval;
 	float g_flBurnDuration;
@@ -703,6 +707,8 @@ enum struct esGeneral
 	float g_flRewardPercentage[4];
 	float g_flRockDamage;
 	float g_flRunSpeed;
+	float g_flShieldDuration;
+	float g_flShieldResistance;
 	float g_flShoveDamageReward[4];
 	float g_flShoveRateReward[4];
 	float g_flSpawnInterval;
@@ -924,6 +930,7 @@ enum struct esGeneral
 	int g_iSpawnLimit;
 	int g_iSpawnEnabled;
 	int g_iSpawnMode;
+	int g_iSpawnProtection;
 	int g_iSpecialAmmoReward[4];
 	int g_iSpecialCount;
 	int g_iStackLimits[8];
@@ -994,6 +1001,8 @@ enum struct esSpecific
 	char g_sScreenColorVisual4[64];
 
 	float g_flActionDurationReward[4];
+	float g_flArmorDuration;
+	float g_flArmorResistance;
 	float g_flAttackBoostReward[4];
 	float g_flAttackInterval;
 	float g_flBurnDuration;
@@ -1016,6 +1025,8 @@ enum struct esSpecific
 	float g_flRewardDuration[4];
 	float g_flRewardPercentage[4];
 	float g_flRunSpeed;
+	float g_flShieldDuration;
+	float g_flShieldResistance;
 	float g_flShoveDamageReward[4];
 	float g_flShoveRateReward[4];
 	float g_flSpecialInterval;
@@ -1028,7 +1039,7 @@ enum struct esSpecific
 	int g_iAnnounceKill;
 	int g_iArrivalMessage;
 	int g_iArrivalSound;
-	int g_iBaseHealth;
+	int g_iBaseHealth[7];
 	int g_iBlazeHealthReward[4];
 	int g_iBulletImmunity;
 	int g_iBunnyHopReward[4];
@@ -1042,7 +1053,7 @@ enum struct esSpecific
 	int g_iDisplayHealth;
 	int g_iDisplayHealthType;
 	int g_iExplosiveImmunity;
-	int g_iExtraHealth;
+	int g_iExtraHealth[7];
 	int g_iFinalesOnly;
 	int g_iFireImmunity;
 	int g_iFriendlyFireReward[4];
@@ -1083,6 +1094,7 @@ enum struct esSpecific
 	int g_iSledgehammerRoundsReward[4];
 	int g_iSpawnEnabled;
 	int g_iSpawnMode;
+	int g_iSpawnProtection;
 	int g_iSpecialAmmoReward[4];
 	int g_iSpecialModel;
 	int g_iSpecialTypes;
@@ -1179,6 +1191,7 @@ enum struct esPlayer
 	bool g_bLastLife[2];
 	bool g_bMeteor;
 	bool g_bMutantMenu;
+	bool g_bProtected[2];
 	bool g_bRainbowColor;
 	bool g_bRandomized;
 	bool g_bReleasedJump;
@@ -1259,6 +1272,8 @@ enum struct esPlayer
 
 	float g_flActionDuration;
 	float g_flActionDurationReward[4];
+	float g_flArmorDuration;
+	float g_flArmorResistance;
 	float g_flAttackBoost;
 	float g_flAttackBoostReward[4];
 	float g_flAttackInterval;
@@ -1315,6 +1330,8 @@ enum struct esPlayer
 	float g_flRewardTime[8];
 	float g_flRockDamage;
 	float g_flRunSpeed;
+	float g_flShieldDuration;
+	float g_flShieldResistance;
 	float g_flShoveDamage;
 	float g_flShoveDamageReward[4];
 	float g_flShoveRate;
@@ -1328,6 +1345,7 @@ enum struct esPlayer
 	float g_flVisualTime[7];
 
 	Handle g_hHudTimer;
+	Handle g_hProtectionTimer[2];
 
 	int g_iAccessFlags;
 	int g_iAmmoBoost;
@@ -1485,6 +1503,7 @@ enum struct esPlayer
 	int g_iSkipTaunt;
 	int g_iSledgehammerRounds;
 	int g_iSledgehammerRoundsReward[4];
+	int g_iSpawnProtection;
 	int g_iSpawnType;
 	int g_iSpecialAmmo;
 	int g_iSpecialAmmoReward[4];
@@ -1568,6 +1587,8 @@ enum struct esTeammate
 	char g_sSpitterName[33];
 
 	float g_flActionDurationReward[4];
+	float g_flArmorDuration;
+	float g_flArmorResistance;
 	float g_flAttackBoostReward[4];
 	float g_flAttackInterval;
 	float g_flBurnDuration;
@@ -1606,6 +1627,8 @@ enum struct esTeammate
 	float g_flRewardDuration[4];
 	float g_flRewardPercentage[4];
 	float g_flRunSpeed;
+	float g_flShieldDuration;
+	float g_flShieldResistance;
 	float g_flShoveDamageReward[4];
 	float g_flShoveRateReward[4];
 	float g_flSpecialInterval;
@@ -1620,7 +1643,7 @@ enum struct esTeammate
 	int g_iAnnounceKill;
 	int g_iArrivalMessage;
 	int g_iArrivalSound;
-	int g_iBaseHealth;
+	int g_iBaseHealth[7];
 	int g_iBlazeHealthReward[4];
 	int g_iBodyEffects;
 	int g_iBossEffects;
@@ -1642,7 +1665,7 @@ enum struct esTeammate
 	int g_iDisplayHealth;
 	int g_iDisplayHealthType;
 	int g_iExplosiveImmunity;
-	int g_iExtraHealth;
+	int g_iExtraHealth[7];
 	int g_iFireImmunity;
 	int g_iFriendlyFireReward[4];
 	int g_iGhostBulletsReward[4];
@@ -1688,6 +1711,7 @@ enum struct esTeammate
 	int g_iShovePenaltyReward[4];
 	int g_iSkinColor[4];
 	int g_iSledgehammerRoundsReward[4];
+	int g_iSpawnProtection;
 	int g_iSpawnType;
 	int g_iSpecialAmmoReward[4];
 	int g_iSpecialModel;
@@ -1753,6 +1777,8 @@ enum struct esTank
 	char g_sTireColor[64];
 
 	float g_flActionDurationReward[4];
+	float g_flArmorDuration;
+	float g_flArmorResistance;
 	float g_flAttackBoostReward[4];
 	float g_flAttackInterval;
 	float g_flBurnDuration;
@@ -1796,6 +1822,8 @@ enum struct esTank
 	float g_flRewardPercentage[4];
 	float g_flRockDamage;
 	float g_flRunSpeed;
+	float g_flShieldDuration;
+	float g_flShieldResistance;
 	float g_flShoveDamageReward[4];
 	float g_flShoveRateReward[4];
 	float g_flSpeedBoostReward[4];
@@ -1906,6 +1934,7 @@ enum struct esTank
 	int g_iSkipTaunt;
 	int g_iSledgehammerRoundsReward[4];
 	int g_iSpawnEnabled;
+	int g_iSpawnProtection;
 	int g_iSpawnType;
 	int g_iSpecialAmmoReward[4];
 	int g_iStackLimits[8];
@@ -1973,6 +2002,8 @@ enum struct esSpecial
 	char g_sSpitterName[33];
 
 	float g_flActionDurationReward[4];
+	float g_flArmorDuration;
+	float g_flArmorResistance;
 	float g_flAttackBoostReward[4];
 	float g_flAttackInterval;
 	float g_flBurnDuration;
@@ -2013,6 +2044,8 @@ enum struct esSpecial
 	float g_flRewardDuration[4];
 	float g_flRewardPercentage[4];
 	float g_flRunSpeed;
+	float g_flShieldDuration;
+	float g_flShieldResistance;
 	float g_flShoveDamageReward[4];
 	float g_flShoveRateReward[4];
 	float g_flSpecialChance;
@@ -2028,7 +2061,7 @@ enum struct esSpecial
 	int g_iAnnounceKill;
 	int g_iArrivalMessage;
 	int g_iArrivalSound;
-	int g_iBaseHealth;
+	int g_iBaseHealth[7];
 	int g_iBlazeHealthReward[4];
 	int g_iBodyEffects;
 	int g_iBossBaseType;
@@ -2052,7 +2085,7 @@ enum struct esSpecial
 	int g_iDisplayHealth;
 	int g_iDisplayHealthType;
 	int g_iExplosiveImmunity;
-	int g_iExtraHealth;
+	int g_iExtraHealth[7];
 	int g_iFinaleSpecial;
 	int g_iFireImmunity;
 	int g_iFriendlyFireReward[4];
@@ -2102,6 +2135,7 @@ enum struct esSpecial
 	int g_iSkinColor[4];
 	int g_iSledgehammerRoundsReward[4];
 	int g_iSpawnEnabled;
+	int g_iSpawnProtection;
 	int g_iSpawnType;
 	int g_iSpecialAmmoReward[4];
 	int g_iSpecialModel;
@@ -2172,6 +2206,8 @@ enum struct esCache
 	char g_sTireColor[64];
 
 	float g_flActionDurationReward[4];
+	float g_flArmorDuration;
+	float g_flArmorResistance;
 	float g_flAttackBoostReward[4];
 	float g_flAttackInterval;
 	float g_flBurnDuration;
@@ -2214,6 +2250,8 @@ enum struct esCache
 	float g_flRewardPercentage[4];
 	float g_flRockDamage;
 	float g_flRunSpeed;
+	float g_flShieldDuration;
+	float g_flShieldResistance;
 	float g_flShoveDamageReward[4];
 	float g_flShoveRateReward[4];
 	float g_flSpeedBoostReward[4];
@@ -2313,6 +2351,7 @@ enum struct esCache
 	int g_iSkipTaunt;
 	int g_iSledgehammerRoundsReward[4];
 	int g_iSpawnEnabled;
+	int g_iSpawnProtection;
 	int g_iSpawnType;
 	int g_iSpecialAmmoReward[4];
 	int g_iSpecialModel;
@@ -3377,6 +3416,7 @@ void vRegisterNatives()
 	CreateNative("MT_GetMaxType", aNative_GetMaxType);
 	CreateNative("MT_GetMinType", aNative_GetMinType);
 	CreateNative("MT_GetPropColors", aNative_GetPropColors);
+	CreateNative("MT_GetRecordedTankType", aNative_GetRecordedTankType);
 	CreateNative("MT_GetRunSpeed", aNative_GetRunSpeed);
 	CreateNative("MT_GetScaledDamage", aNative_GetScaledDamage);
 	CreateNative("MT_GetSpawnType", aNative_GetSpawnType);
@@ -3640,6 +3680,13 @@ any aNative_GetPropColors(Handle plugin, int numParams)
 	return 0;
 }
 
+any aNative_GetRecordedTankType(Handle plugin, int numParams)
+{
+	int iTank = GetNativeCell(1), iType = GetNativeCell(2);
+	iType = (iType > 0) ? g_esTank[iType].g_iRecordedType[0] : g_esPlayer[iTank].g_iTankType;
+	return bIsInfectedSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) ? iType : 0;
+}
+
 any aNative_GetRunSpeed(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
@@ -3708,8 +3755,9 @@ any aNative_GetTankName(Handle plugin, int numParams)
 
 any aNative_GetTankType(Handle plugin, int numParams)
 {
-	int iTank = GetNativeCell(1);
-	return bIsInfectedSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) ? g_esTank[g_esPlayer[iTank].g_iTankType].g_iRealType[0] : 0;
+	int iTank = GetNativeCell(1), iType = GetNativeCell(2);
+	iType = (iType > 0) ? iType : g_esPlayer[iTank].g_iTankType;
+	return bIsInfectedSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) ? g_esTank[iType].g_iRealType[0] : 0;
 }
 
 any aNative_HasAdminAccess(Handle plugin, int numParams)
@@ -12567,6 +12615,24 @@ void vAnnounceTankArrival(int tank, const char[] name, int specType)
 			}
 		}
 
+		int iProtection = g_esCache[tank].g_iSpawnProtection;
+		if (iProtection > 0)
+		{
+			if ((iProtection == 1 || iProtection == 3) && g_esCache[tank].g_flShieldDuration > 0.0)
+			{
+				g_esPlayer[tank].g_bProtected[0] = true;
+
+				vResetProtectionTimers(tank, iProtection);
+			}
+
+			if ((iProtection == 2 || iProtection == 3) && g_esCache[tank].g_flArmorDuration > 0.0)
+			{
+				g_esPlayer[tank].g_bProtected[1] = true;
+
+				vResetProtectionTimers(tank, iProtection);
+			}
+		}
+
 		if (g_esCache[tank].g_iVocalizeArrival == 1 || g_esCache[tank].g_iArrivalSound == 1)
 		{
 			for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -12870,6 +12936,8 @@ void vCopyTankStats(int tank, int newtank)
 	g_esPlayer[newtank].g_bIce = g_esPlayer[tank].g_bIce;
 	g_esPlayer[newtank].g_bKeepCurrentType = g_esPlayer[tank].g_bKeepCurrentType;
 	g_esPlayer[newtank].g_bMeteor = g_esPlayer[tank].g_bMeteor;
+	g_esPlayer[newtank].g_bProtected[0] = g_esPlayer[tank].g_bProtected[0];
+	g_esPlayer[newtank].g_bProtected[1] = g_esPlayer[tank].g_bProtected[1];
 	g_esPlayer[newtank].g_bRandomized = g_esPlayer[tank].g_bRandomized;
 	g_esPlayer[newtank].g_bSmoke = g_esPlayer[tank].g_bSmoke;
 	g_esPlayer[newtank].g_bSpit = g_esPlayer[tank].g_bSpit;
@@ -12901,6 +12969,19 @@ void vCopyTankStats(int tank, int newtank)
 	if (bIsValidClient(newtank, MT_CHECK_FAKECLIENT) && g_esGeneral.g_iSpawnMode != 2)
 	{
 		vMutantMenu(newtank, g_esPlayer[newtank].g_iInfectedType);
+	}
+
+	delete g_esPlayer[tank].g_hProtectionTimer[0];
+	delete g_esPlayer[tank].g_hProtectionTimer[1];
+
+	if (g_esPlayer[newtank].g_bProtected[0])
+	{
+		vResetProtectionTimers(tank, 1);
+	}
+
+	if (g_esPlayer[newtank].g_bProtected[1])
+	{
+		vResetProtectionTimers(tank, 2);
 	}
 
 	Call_StartForward(g_esGeneral.g_gfCopyStatsForward);
@@ -13539,6 +13620,8 @@ void vResetTank2(int tank, bool full = true)
 	g_esPlayer[tank].g_bIce = false;
 	g_esPlayer[tank].g_bKeepCurrentType = false;
 	g_esPlayer[tank].g_bMeteor = false;
+	g_esPlayer[tank].g_bProtected[0] = false;
+	g_esPlayer[tank].g_bProtected[1] = false;
 	g_esPlayer[tank].g_bReplaceSelf = false;
 	g_esPlayer[tank].g_bSmoke = false;
 	g_esPlayer[tank].g_bSpit = false;
@@ -13568,6 +13651,9 @@ void vResetTank2(int tank, bool full = true)
 	{
 		vResetSurvivorStats(tank, true);
 	}
+
+	delete g_esPlayer[tank].g_hProtectionTimer[0];
+	delete g_esPlayer[tank].g_hProtectionTimer[1];
 }
 
 void vResetTank3(int tank)
@@ -13591,41 +13677,6 @@ void vResetTankSpeed(int tank, bool mode = true)
 	}
 }
 
-void vSetRockColor(int rock)
-{
-	if (bIsValidEntity(rock) && bIsValidEntRef(g_esGeneral.g_iLauncher))
-	{
-		g_esGeneral.g_iLauncher = EntRefToEntIndex(g_esGeneral.g_iLauncher);
-
-		if (bIsValidEntity(g_esGeneral.g_iLauncher))
-		{
-			int iTank = GetEntPropEnt(g_esGeneral.g_iLauncher, Prop_Data, "m_hOwnerEntity");
-			if (bIsInfectedSupported(iTank))
-			{
-				SetEntPropEnt(rock, Prop_Data, "m_hThrower", iTank);
-				SetEntPropEnt(rock, Prop_Data, "m_hOwnerEntity", g_esGeneral.g_iLauncher);
-				vSetRockModel(iTank, rock);
-				vSetRockEffects(iTank, rock);
-				vRockThrowForward(iTank, rock);
-
-				switch (StrEqual(g_esCache[iTank].g_sRockColor, "rainbow", false))
-				{
-					case true:
-					{
-						g_esPlayer[iTank].g_iThrownRock[rock] = EntIndexToEntRef(rock);
-
-						if (!g_esPlayer[iTank].g_bRainbowColor)
-						{
-							g_esPlayer[iTank].g_bRainbowColor = SDKHookEx(iTank, SDKHook_PreThinkPost, OnRainbowPreThinkPost);
-						}
-					}
-					case false: SetEntityRenderColor(rock, iGetRandomColor(g_esCache[iTank].g_iRockColor[0]), iGetRandomColor(g_esCache[iTank].g_iRockColor[1]), iGetRandomColor(g_esCache[iTank].g_iRockColor[2]), iGetRandomColor(g_esCache[iTank].g_iRockColor[3]));
-				}
-			}
-		}
-	}
-}
-
 void vSetRockEffects(int tank, int rock)
 {
 	if (g_esCache[tank].g_iRockEffects > 0)
@@ -13644,6 +13695,23 @@ void vSetRockModel(int tank, int rock)
 		case -1, 0: SetEntityModel(rock, MODEL_CONCRETE_CHUNK);
 		case 1: SetEntityModel(rock, MODEL_TREE_TRUNK);
 		case 2: SetEntityModel(rock, ((MT_GetRandomInt(0, 1) == 0) ? MODEL_CONCRETE_CHUNK : MODEL_TREE_TRUNK));
+	}
+}
+
+void vSetRockColor(int tank, int rock)
+{
+	switch (StrEqual(g_esCache[tank].g_sRockColor, "rainbow", false))
+	{
+		case true:
+		{
+			g_esPlayer[tank].g_iThrownRock[rock] = EntIndexToEntRef(rock);
+
+			if (!g_esPlayer[tank].g_bRainbowColor)
+			{
+				g_esPlayer[tank].g_bRainbowColor = SDKHookEx(tank, SDKHook_PreThinkPost, OnRainbowPreThinkPost);
+			}
+		}
+		case false: SetEntityRenderColor(rock, iGetRandomColor(g_esCache[tank].g_iRockColor[0]), iGetRandomColor(g_esCache[tank].g_iRockColor[1]), iGetRandomColor(g_esCache[tank].g_iRockColor[2]), iGetRandomColor(g_esCache[tank].g_iRockColor[3]));
 	}
 }
 
@@ -14422,6 +14490,28 @@ void vSetTankRainbowColor(int tank)
 	}
 }
 
+void vSetTankRock(int rock)
+{
+	if (bIsValidEntity(rock) && bIsValidEntRef(g_esGeneral.g_iLauncher))
+	{
+		g_esGeneral.g_iLauncher = EntRefToEntIndex(g_esGeneral.g_iLauncher);
+
+		if (bIsValidEntity(g_esGeneral.g_iLauncher))
+		{
+			int iTank = GetEntPropEnt(g_esGeneral.g_iLauncher, Prop_Data, "m_hOwnerEntity");
+			if (bIsInfectedSupported(iTank))
+			{
+				SetEntPropEnt(rock, Prop_Data, "m_hThrower", iTank);
+				SetEntPropEnt(rock, Prop_Data, "m_hOwnerEntity", g_esGeneral.g_iLauncher);
+				vSetRockModel(iTank, rock);
+				vSetRockEffects(iTank, rock);
+				vSetRockColor(iTank, rock);
+				vRockThrowForward(iTank, rock);
+			}
+		}
+	}
+}
+
 void vSetTankThrowInterval(int tank)
 {
 	float flInterval = bIsTank(tank) ? g_esCache[tank].g_flThrowInterval : g_esCache[tank].g_flSpecialInterval;
@@ -14482,13 +14572,13 @@ void vSetupTankSpawn(int admin, int specType, char[] type, bool spawn = false, b
 
 					switch (specType)
 					{
-						case 1: bCheck = (bIsSmokerEnabled(iRealType) && bMenu);
-						case 2: bCheck = (bIsBoomerEnabled(iRealType) && bMenu);
-						case 3: bCheck = (bIsHunterEnabled(iRealType) && bMenu);
-						case 4: bCheck = (bIsSpitterEnabled(iRealType) && bMenu);
-						case 5: bCheck = (bIsJockeyEnabled(iRealType) && bMenu);
-						case 6: bCheck = (bIsChargerEnabled(iRealType) && bMenu);
-						case 8: bCheck = (bIsTankEnabled(iRealType) && bMenu);
+						case 1: bCheck = bIsSmokerEnabled(iRealType) && bMenu;
+						case 2: bCheck = bIsBoomerEnabled(iRealType) && bMenu;
+						case 3: bCheck = bIsHunterEnabled(iRealType) && bMenu;
+						case 4: bCheck = bIsSpitterEnabled(iRealType) && bMenu;
+						case 5: bCheck = bIsJockeyEnabled(iRealType) && bMenu;
+						case 6: bCheck = bIsChargerEnabled(iRealType) && bMenu;
+						case 8: bCheck = bIsTankEnabled(iRealType) && bMenu;
 					}
 
 					vGetTranslatedName(sPhrase, sizeof sPhrase, .type = iIndex, .specType = specType);
@@ -14784,277 +14874,296 @@ void vCacheSettings(int tank)
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esCache[tank].g_flAttackInterval = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flAttackInterval, g_esTank[iType].g_flAttackInterval, g_esSpecific.g_flAttackInterval, g_esGeneral.g_flAttackInterval, 1);
-		g_esCache[tank].g_flAttackInterval = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flAttackInterval, g_esPlayer[tank].g_flAttackInterval, g_esCache[tank].g_flAttackInterval, g_esCache[tank].g_flAttackInterval, 1);
-		g_esCache[tank].g_flBurnDuration = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flBurnDuration, g_esTank[iType].g_flBurnDuration, g_esSpecific.g_flBurnDuration, g_esGeneral.g_flBurnDuration, 1);
-		g_esCache[tank].g_flBurnDuration = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flBurnDuration, g_esPlayer[tank].g_flBurnDuration, g_esCache[tank].g_flBurnDuration, g_esCache[tank].g_flBurnDuration, 1);
-		g_esCache[tank].g_flBurntSkin = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flBurntSkin, g_esTank[iType].g_flBurntSkin, g_esSpecific.g_flBurntSkin, g_esGeneral.g_flBurntSkin, 1, -1.0);
-		g_esCache[tank].g_flBurntSkin = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flBurntSkin, g_esPlayer[tank].g_flBurntSkin, g_esCache[tank].g_flBurntSkin, g_esCache[tank].g_flBurntSkin, 1, -1.0);
-		g_esCache[tank].g_flClawDamage = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flClawDamage, g_esTank[iType].g_flClawDamage, g_esSpecific.g_flClawDamage, g_esGeneral.g_flClawDamage, 1, -1.0);
-		g_esCache[tank].g_flClawDamage = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flClawDamage, g_esPlayer[tank].g_flClawDamage, g_esCache[tank].g_flClawDamage, g_esCache[tank].g_flClawDamage, 1, -1.0);
-		g_esCache[tank].g_flHealPercentMultiplier = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flHealPercentMultiplier, g_esTank[iType].g_flHealPercentMultiplier, g_esSpecific.g_flHealPercentMultiplier, g_esGeneral.g_flHealPercentMultiplier, 1);
-		g_esCache[tank].g_flHealPercentMultiplier = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flHealPercentMultiplier, g_esPlayer[tank].g_flHealPercentMultiplier, g_esCache[tank].g_flHealPercentMultiplier, g_esCache[tank].g_flHealPercentMultiplier, 1);
-		g_esCache[tank].g_flHittableDamage = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flHittableDamage, g_esTank[iType].g_flHittableDamage, g_esSpecific.g_flHittableDamage, g_esGeneral.g_flHittableDamage, 1, -1.0);
-		g_esCache[tank].g_flHittableDamage = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flHittableDamage, g_esPlayer[tank].g_flHittableDamage, g_esCache[tank].g_flHittableDamage, g_esCache[tank].g_flHittableDamage, 1, -1.0);
-		g_esCache[tank].g_flIncapDamageMultiplier = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flIncapDamageMultiplier, g_esTank[iType].g_flIncapDamageMultiplier, g_esSpecific.g_flIncapDamageMultiplier, g_esGeneral.g_flIncapDamageMultiplier, 1);
-		g_esCache[tank].g_flIncapDamageMultiplier = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flIncapDamageMultiplier, g_esPlayer[tank].g_flIncapDamageMultiplier, g_esCache[tank].g_flIncapDamageMultiplier, g_esCache[tank].g_flIncapDamageMultiplier, 1);
-		g_esCache[tank].g_flRandomDuration = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flRandomDuration, g_esPlayer[tank].g_flRandomDuration, g_esSpecial[iType].g_flRandomDuration, g_esTank[iType].g_flRandomDuration, 1);
-		g_esCache[tank].g_flRandomInterval = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flRandomInterval, g_esPlayer[tank].g_flRandomInterval, g_esSpecial[iType].g_flRandomInterval, g_esTank[iType].g_flRandomInterval, 1);
-		g_esCache[tank].g_flPinDamage = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flPinDamage, g_esTank[iType].g_flRockDamage, g_esSpecific.g_flPinDamage, g_esGeneral.g_flRockDamage, 1, -1.0);
-		g_esCache[tank].g_flPinDamage = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flPinDamage, g_esPlayer[tank].g_flRockDamage, g_esCache[tank].g_flPinDamage, g_esCache[tank].g_flPinDamage, 1, -1.0);
-		g_esCache[tank].g_flRunSpeed = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flRunSpeed, g_esTank[iType].g_flRunSpeed, g_esSpecific.g_flRunSpeed, g_esGeneral.g_flRunSpeed, 1);
-		g_esCache[tank].g_flRunSpeed = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flRunSpeed, g_esPlayer[tank].g_flRunSpeed, g_esCache[tank].g_flRunSpeed, g_esCache[tank].g_flRunSpeed, 1);
-		g_esCache[tank].g_flSpecialInterval = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flSpecialInterval, g_esTank[iType].g_flThrowInterval, g_esSpecific.g_flSpecialInterval, g_esGeneral.g_flThrowInterval, 1);
-		g_esCache[tank].g_flSpecialInterval = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flSpecialInterval, g_esPlayer[tank].g_flThrowInterval, g_esCache[tank].g_flSpecialInterval, g_esCache[tank].g_flSpecialInterval, 1);
-		g_esCache[tank].g_iThrowRock = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iThrowRock, g_esTank[iType].g_iThrowRock, g_esSpecific.g_iThrowRock, g_esGeneral.g_iThrowRock, 1);
-		g_esCache[tank].g_iThrowRock = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iThrowRock, g_esPlayer[tank].g_iThrowRock, g_esCache[tank].g_iThrowRock, g_esCache[tank].g_iThrowRock, 1);
-		g_esCache[tank].g_flTransformDelay = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flTransformDelay, g_esPlayer[tank].g_flTransformDelay, g_esSpecial[iType].g_flTransformDelay, g_esTank[iType].g_flTransformDelay, 1);
-		g_esCache[tank].g_flTransformDuration = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flTransformDuration, g_esPlayer[tank].g_flTransformDuration, g_esSpecial[iType].g_flTransformDuration, g_esTank[iType].g_flTransformDuration, 1);
-		g_esCache[tank].g_iAnnounceArrival = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iAnnounceArrival, g_esTank[iType].g_iAnnounceArrival, g_esSpecific.g_iAnnounceArrival, g_esGeneral.g_iAnnounceArrival, 1);
-		g_esCache[tank].g_iAnnounceArrival = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iAnnounceArrival, g_esPlayer[tank].g_iAnnounceArrival, g_esCache[tank].g_iAnnounceArrival, g_esCache[tank].g_iAnnounceArrival, 1);
-		g_esCache[tank].g_iAnnounceDeath = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iAnnounceDeath, g_esTank[iType].g_iAnnounceDeath, g_esSpecific.g_iAnnounceDeath, g_esGeneral.g_iAnnounceDeath, 1);
-		g_esCache[tank].g_iAnnounceDeath = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iAnnounceDeath, g_esPlayer[tank].g_iAnnounceDeath, g_esCache[tank].g_iAnnounceDeath, g_esCache[tank].g_iAnnounceDeath, 1);
-		g_esCache[tank].g_iAnnounceKill = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iAnnounceKill, g_esTank[iType].g_iAnnounceKill, g_esSpecific.g_iAnnounceKill, g_esGeneral.g_iAnnounceKill, 1);
-		g_esCache[tank].g_iAnnounceKill = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iAnnounceKill, g_esPlayer[tank].g_iAnnounceKill, g_esCache[tank].g_iAnnounceKill, g_esCache[tank].g_iAnnounceKill, 1);
-		g_esCache[tank].g_iArrivalMessage = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iArrivalMessage, g_esTank[iType].g_iArrivalMessage, g_esSpecific.g_iArrivalMessage, g_esGeneral.g_iArrivalMessage, 1);
-		g_esCache[tank].g_iArrivalMessage = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iArrivalMessage, g_esPlayer[tank].g_iArrivalMessage, g_esCache[tank].g_iArrivalMessage, g_esCache[tank].g_iArrivalMessage, 1);
-		g_esCache[tank].g_iArrivalSound = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iArrivalSound, g_esTank[iType].g_iArrivalSound, g_esSpecific.g_iArrivalSound, g_esGeneral.g_iArrivalSound, 1);
-		g_esCache[tank].g_iArrivalSound = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iArrivalSound, g_esPlayer[tank].g_iArrivalSound, g_esCache[tank].g_iArrivalSound, g_esCache[tank].g_iArrivalSound, 1);
-		g_esCache[tank].g_iBaseHealth = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iBaseHealth, g_esTank[iType].g_iBaseHealth, g_esSpecific.g_iBaseHealth, g_esGeneral.g_iBaseHealth, 1);
-		g_esCache[tank].g_iBaseHealth = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iBaseHealth, g_esPlayer[tank].g_iBaseHealth, g_esCache[tank].g_iBaseHealth, g_esCache[tank].g_iBaseHealth, 1);
-		g_esCache[tank].g_iBodyEffects = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iBodyEffects, g_esPlayer[tank].g_iBodyEffects, g_esSpecial[iType].g_iBodyEffects, g_esTank[iType].g_iBodyEffects, 1);
-		g_esCache[tank].g_iBossEffects = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iBossEffects, g_esPlayer[tank].g_iBossEffects, g_esSpecial[iType].g_iBossEffects, g_esTank[iType].g_iBossEffects, 1);
-		g_esCache[tank].g_iBossStages = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iBossStages, g_esPlayer[tank].g_iBossStages, g_esSpecial[iType].g_iBossStages, g_esTank[iType].g_iBossStages, 1);
-		g_esCache[tank].g_iBulletImmunity = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iBulletImmunity, g_esTank[iType].g_iBulletImmunity, g_esSpecific.g_iBulletImmunity, g_esGeneral.g_iBulletImmunity, 1);
-		g_esCache[tank].g_iBulletImmunity = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iBulletImmunity, g_esPlayer[tank].g_iBulletImmunity, g_esCache[tank].g_iBulletImmunity, g_esCache[tank].g_iBulletImmunity, 1);
-		g_esCache[tank].g_iDeathDetails = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iDeathDetails, g_esTank[iType].g_iDeathDetails, g_esSpecific.g_iDeathDetails, g_esGeneral.g_iDeathDetails, 1);
-		g_esCache[tank].g_iDeathDetails = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iDeathDetails, g_esPlayer[tank].g_iDeathDetails, g_esCache[tank].g_iDeathDetails, g_esCache[tank].g_iDeathDetails, 1);
-		g_esCache[tank].g_iDeathMessage = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iDeathMessage, g_esTank[iType].g_iDeathMessage, g_esSpecific.g_iDeathMessage, g_esGeneral.g_iDeathMessage, 1);
-		g_esCache[tank].g_iDeathMessage = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iDeathMessage, g_esPlayer[tank].g_iDeathMessage, g_esCache[tank].g_iDeathMessage, g_esCache[tank].g_iDeathMessage, 1);
-		g_esCache[tank].g_iDeathRevert = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iDeathRevert, g_esTank[iType].g_iDeathRevert, g_esSpecific.g_iDeathRevert, g_esGeneral.g_iDeathRevert, 1);
-		g_esCache[tank].g_iDeathRevert = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iDeathRevert, g_esPlayer[tank].g_iDeathRevert, g_esCache[tank].g_iDeathRevert, g_esCache[tank].g_iDeathRevert, 1);
-		g_esCache[tank].g_iDeathSound = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iDeathSound, g_esTank[iType].g_iDeathSound, g_esSpecific.g_iDeathSound, g_esGeneral.g_iDeathSound, 1);
-		g_esCache[tank].g_iDeathSound = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iDeathSound, g_esPlayer[tank].g_iDeathSound, g_esCache[tank].g_iDeathSound, g_esCache[tank].g_iDeathSound, 1);
-		g_esCache[tank].g_iDisplayHealth = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iDisplayHealth, g_esTank[iType].g_iDisplayHealth, g_esSpecific.g_iDisplayHealth, g_esGeneral.g_iDisplayHealth, 1);
-		g_esCache[tank].g_iDisplayHealth = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iDisplayHealth, g_esPlayer[tank].g_iDisplayHealth, g_esCache[tank].g_iDisplayHealth, g_esCache[tank].g_iDisplayHealth, 1);
-		g_esCache[tank].g_iDisplayHealthType = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iDisplayHealthType, g_esTank[iType].g_iDisplayHealthType, g_esSpecific.g_iDisplayHealthType, g_esGeneral.g_iDisplayHealthType, 1);
-		g_esCache[tank].g_iDisplayHealthType = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iDisplayHealthType, g_esPlayer[tank].g_iDisplayHealthType, g_esCache[tank].g_iDisplayHealthType, g_esCache[tank].g_iDisplayHealthType, 1);
-		g_esCache[tank].g_iExplosiveImmunity = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iExplosiveImmunity, g_esTank[iType].g_iExplosiveImmunity, g_esSpecific.g_iExplosiveImmunity, g_esGeneral.g_iExplosiveImmunity, 1);
-		g_esCache[tank].g_iExplosiveImmunity = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iExplosiveImmunity, g_esPlayer[tank].g_iExplosiveImmunity, g_esCache[tank].g_iExplosiveImmunity, g_esCache[tank].g_iExplosiveImmunity, 1);
-		g_esCache[tank].g_iExtraHealth = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iExtraHealth, g_esTank[iType].g_iExtraHealth, g_esSpecific.g_iExtraHealth, g_esGeneral.g_iExtraHealth, 2);
-		g_esCache[tank].g_iExtraHealth = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iExtraHealth, g_esPlayer[tank].g_iExtraHealth, g_esCache[tank].g_iExtraHealth, g_esCache[tank].g_iExtraHealth, 2);
-		g_esCache[tank].g_iFireImmunity = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iFireImmunity, g_esTank[iType].g_iFireImmunity, g_esSpecific.g_iFireImmunity, g_esGeneral.g_iFireImmunity, 1);
-		g_esCache[tank].g_iFireImmunity = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iFireImmunity, g_esPlayer[tank].g_iFireImmunity, g_esCache[tank].g_iFireImmunity, g_esCache[tank].g_iFireImmunity, 1);
-		g_esCache[tank].g_iGlowEnabled = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iGlowEnabled, g_esPlayer[tank].g_iGlowEnabled, g_esSpecial[iType].g_iGlowEnabled, g_esTank[iType].g_iGlowEnabled, 1);
-		g_esCache[tank].g_iGlowFlashing = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iGlowFlashing, g_esPlayer[tank].g_iGlowFlashing, g_esSpecial[iType].g_iGlowFlashing, g_esTank[iType].g_iGlowFlashing, 1);
-		g_esCache[tank].g_iGlowMaxRange = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iGlowMaxRange, g_esPlayer[tank].g_iGlowMaxRange, g_esSpecial[iType].g_iGlowMaxRange, g_esTank[iType].g_iGlowMaxRange, 1);
-		g_esCache[tank].g_iGlowMinRange = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iGlowMinRange, g_esPlayer[tank].g_iGlowMinRange, g_esSpecial[iType].g_iGlowMinRange, g_esTank[iType].g_iGlowMinRange, 1);
-		g_esCache[tank].g_iGlowType = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iGlowType, g_esPlayer[tank].g_iGlowType, g_esSpecial[iType].g_iGlowType, g_esTank[iType].g_iGlowType, 1);
-		g_esCache[tank].g_iHittableImmunity = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iHittableImmunity, g_esTank[iType].g_iHittableImmunity, g_esSpecific.g_iHittableImmunity, g_esGeneral.g_iHittableImmunity, 1);
-		g_esCache[tank].g_iHittableImmunity = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iHittableImmunity, g_esPlayer[tank].g_iHittableImmunity, g_esCache[tank].g_iHittableImmunity, g_esCache[tank].g_iHittableImmunity, 1);
-		g_esCache[tank].g_iHumanMultiplierMode = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iHumanMultiplierMode, g_esTank[iType].g_iHumanMultiplierMode, g_esSpecific.g_iHumanMultiplierMode, g_esGeneral.g_iHumanMultiplierMode, 1);
-		g_esCache[tank].g_iHumanMultiplierMode = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iHumanMultiplierMode, g_esPlayer[tank].g_iHumanMultiplierMode, g_esCache[tank].g_iHumanMultiplierMode, g_esCache[tank].g_iHumanMultiplierMode, 1);
-		g_esCache[tank].g_iIntangibleBody = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iIntangibleBody, g_esTank[iType].g_iIntangibleBody, g_esSpecific.g_iIntangibleBody, g_esGeneral.g_iIntangibleBody, 1);
-		g_esCache[tank].g_iIntangibleBody = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iIntangibleBody, g_esPlayer[tank].g_iIntangibleBody, g_esCache[tank].g_iIntangibleBody, g_esCache[tank].g_iIntangibleBody, 1);
-		g_esCache[tank].g_iKillMessage = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iKillMessage, g_esTank[iType].g_iKillMessage, g_esSpecific.g_iKillMessage, g_esGeneral.g_iKillMessage, 1);
-		g_esCache[tank].g_iKillMessage = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iKillMessage, g_esPlayer[tank].g_iKillMessage, g_esCache[tank].g_iKillMessage, g_esCache[tank].g_iKillMessage, 1);
-		g_esCache[tank].g_iMeleeImmunity = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iMeleeImmunity, g_esTank[iType].g_iMeleeImmunity, g_esSpecific.g_iMeleeImmunity, g_esGeneral.g_iMeleeImmunity, 1);
-		g_esCache[tank].g_iMeleeImmunity = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iMeleeImmunity, g_esPlayer[tank].g_iMeleeImmunity, g_esCache[tank].g_iMeleeImmunity, g_esCache[tank].g_iMeleeImmunity, 1);
-		g_esCache[tank].g_iMinimumHumans = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iMinimumHumans, g_esTank[iType].g_iMinimumHumans, g_esSpecific.g_iMinimumHumans, g_esGeneral.g_iMinimumHumans, 1);
-		g_esCache[tank].g_iMinimumHumans = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iMinimumHumans, g_esPlayer[tank].g_iMinimumHumans, g_esCache[tank].g_iMinimumHumans, g_esCache[tank].g_iMinimumHumans, 1);
-		g_esCache[tank].g_iMultiplyHealth = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iMultiplyHealth, g_esTank[iType].g_iMultiplyHealth, g_esSpecific.g_iMultiplyHealth, g_esGeneral.g_iMultiplyHealth, 1);
-		g_esCache[tank].g_iMultiplyHealth = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iMultiplyHealth, g_esPlayer[tank].g_iMultiplyHealth, g_esCache[tank].g_iMultiplyHealth, g_esCache[tank].g_iMultiplyHealth, 1);
-		g_esCache[tank].g_iRandomSpecial = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iRandomSpecial, g_esPlayer[tank].g_iRandomTank, g_esSpecial[iType].g_iRandomSpecial, g_esTank[iType].g_iRandomTank, 1);
-		g_esCache[tank].g_iRockEffects = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iRockEffects, g_esPlayer[tank].g_iRockEffects, g_esSpecial[iType].g_iRockEffects, g_esTank[iType].g_iRockEffects, 1);
-		g_esCache[tank].g_iRockModel = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iRockModel, g_esPlayer[tank].g_iRockModel, g_esSpecial[iType].g_iRockModel, g_esTank[iType].g_iRockModel, 1);
-		g_esCache[tank].g_iSpawnType = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iSpawnType, g_esPlayer[tank].g_iSpawnType, g_esSpecial[iType].g_iSpawnType, g_esTank[iType].g_iSpawnType, 1);
-		g_esCache[tank].g_iSpecialModel = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iSpecialModel, g_esTank[iType].g_iTankModel, g_esSpecific.g_iSpecialModel, g_esGeneral.g_iTankModel, 1);
-		g_esCache[tank].g_iSpecialModel = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iSpecialModel, g_esPlayer[tank].g_iTankModel, g_esCache[tank].g_iSpecialModel, g_esCache[tank].g_iSpecialModel, 1);
-		g_esCache[tank].g_iSpecialNote = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iSpecialNote, g_esPlayer[tank].g_iTankNote, g_esSpecial[iType].g_iSpecialNote, g_esTank[iType].g_iTankNote, 1);
-		g_esCache[tank].g_iSpecialTypes = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iSpecialTypes, g_esSpecial[iType].g_iSpecialTypes, g_esSpecific.g_iSpecialTypes, g_esSpecific.g_iSpecialTypes, 1);
-		g_esCache[tank].g_iVocalizeArrival = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iVocalizeArrival, g_esTank[iType].g_iVocalizeArrival, g_esSpecific.g_iVocalizeArrival, g_esGeneral.g_iVocalizeArrival, 1);
-		g_esCache[tank].g_iVocalizeArrival = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iVocalizeArrival, g_esPlayer[tank].g_iVocalizeArrival, g_esCache[tank].g_iVocalizeArrival, g_esCache[tank].g_iVocalizeArrival, 1);
-		g_esCache[tank].g_iVocalizeDeath = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iVocalizeDeath, g_esTank[iType].g_iVocalizeDeath, g_esSpecific.g_iVocalizeDeath, g_esGeneral.g_iVocalizeDeath, 1);
-		g_esCache[tank].g_iVocalizeDeath = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iVocalizeDeath, g_esPlayer[tank].g_iVocalizeDeath, g_esCache[tank].g_iVocalizeDeath, g_esCache[tank].g_iVocalizeDeath, 1);
-		g_esCache[tank].g_iVomitImmunity = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iVomitImmunity, g_esTank[iType].g_iVomitImmunity, g_esSpecific.g_iVomitImmunity, g_esGeneral.g_iVomitImmunity, 1);
-		g_esCache[tank].g_iVomitImmunity = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iVomitImmunity, g_esPlayer[tank].g_iVomitImmunity, g_esCache[tank].g_iVomitImmunity, g_esCache[tank].g_iVomitImmunity, 1);
+		g_esCache[tank].g_iSpecialTypes = iGetSettingValue(bAccess, true, g_esSpecial[iType].g_iSpecialTypes, g_esSpecific.g_iSpecialTypes, 1);
 
-		vGetSubSettingValue(bAccess, bHuman, g_esCache[tank].g_sComboSet, sizeof esCache::g_sComboSet, g_esTeammate[tank].g_sComboSet, g_esPlayer[tank].g_sComboSet, g_esSpecial[iType].g_sComboSet, g_esTank[iType].g_sComboSet);
-		vGetSubSettingValue(bAccess, bHuman, g_esCache[tank].g_sGlowColor, sizeof esCache::g_sGlowColor, g_esTeammate[tank].g_sGlowColor, g_esPlayer[tank].g_sGlowColor, g_esSpecial[iType].g_sGlowColor, g_esTank[iType].g_sGlowColor);
-		vGetSubSettingValue(bAccess, bHuman, g_esCache[tank].g_sHealthCharacters, sizeof esCache::g_sHealthCharacters, g_esSpecial[iType].g_sHealthCharacters, g_esTank[iType].g_sHealthCharacters, g_esSpecific.g_sHealthCharacters, g_esGeneral.g_sHealthCharacters);
-		vGetSubSettingValue(bAccess, bHuman, g_esCache[tank].g_sHealthCharacters, sizeof esCache::g_sHealthCharacters, g_esTeammate[tank].g_sHealthCharacters, g_esPlayer[tank].g_sHealthCharacters, g_esCache[tank].g_sHealthCharacters, g_esCache[tank].g_sHealthCharacters);
-		vGetSubSettingValue(bAccess, bHuman, g_esCache[tank].g_sRockColor, sizeof esCache::g_sRockColor, g_esTeammate[tank].g_sRockColor, g_esPlayer[tank].g_sRockColor, g_esSpecial[iType].g_sRockColor, g_esTank[iType].g_sRockColor);
-		vGetSubSettingValue(bAccess, bHuman, g_esCache[tank].g_sSkinColor, sizeof esCache::g_sSkinColor, g_esTeammate[tank].g_sSkinColor, g_esPlayer[tank].g_sSkinColor, g_esSpecial[iType].g_sSkinColor, g_esTank[iType].g_sSkinColor);
-		vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sSmokerName, sizeof esCache::g_sSmokerName, g_esTeammate[tank].g_sSmokerName, g_esSpecial[iType].g_sSmokerName);
-		vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sBoomerName, sizeof esCache::g_sBoomerName, g_esTeammate[tank].g_sBoomerName, g_esSpecial[iType].g_sBoomerName);
-		vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sHunterName, sizeof esCache::g_sHunterName, g_esTeammate[tank].g_sHunterName, g_esSpecial[iType].g_sHunterName);
-		vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sSpitterName, sizeof esCache::g_sSpitterName, g_esTeammate[tank].g_sSpitterName, g_esSpecial[iType].g_sSpitterName);
-		vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sJockeyName, sizeof esCache::g_sJockeyName, g_esTeammate[tank].g_sJockeyName, g_esSpecial[iType].g_sJockeyName);
-		vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sChargerName, sizeof esCache::g_sChargerName, g_esTeammate[tank].g_sChargerName, g_esSpecial[iType].g_sChargerName);
-
-		for (int iPos = 0; iPos < (sizeof esCache::g_iTransformType); iPos++)
+		int iSpecType = g_esPlayer[tank].g_iInfectedType - 1;
+		if (g_esCache[tank].g_iSpecialTypes > 0 && g_esCache[tank].g_iSpecialTypes & (1 << iSpecType))
 		{
-			g_esCache[tank].g_iTransformType[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iTransformType[iPos], g_esPlayer[tank].g_iTransformType[iPos], g_esSpecial[iType].g_iTransformType[iPos], g_esTank[iType].g_iTransformType[iPos], 1);
+			g_esCache[tank].g_flArmorDuration = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flArmorDuration, g_esTank[iType].g_flArmorDuration, g_esSpecific.g_flArmorDuration, g_esGeneral.g_flArmorDuration, 1);
+			g_esCache[tank].g_flArmorDuration = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flArmorDuration, g_esPlayer[tank].g_flArmorDuration, g_esCache[tank].g_flArmorDuration, g_esCache[tank].g_flArmorDuration, 1);
+			g_esCache[tank].g_flArmorResistance = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flArmorResistance, g_esTank[iType].g_flArmorResistance, g_esSpecific.g_flArmorResistance, g_esGeneral.g_flArmorResistance, 1);
+			g_esCache[tank].g_flArmorResistance = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flArmorResistance, g_esPlayer[tank].g_flArmorResistance, g_esCache[tank].g_flArmorResistance, g_esCache[tank].g_flArmorResistance, 1);
+			g_esCache[tank].g_flAttackInterval = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flAttackInterval, g_esTank[iType].g_flAttackInterval, g_esSpecific.g_flAttackInterval, g_esGeneral.g_flAttackInterval, 1);
+			g_esCache[tank].g_flAttackInterval = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flAttackInterval, g_esPlayer[tank].g_flAttackInterval, g_esCache[tank].g_flAttackInterval, g_esCache[tank].g_flAttackInterval, 1);
+			g_esCache[tank].g_flBurnDuration = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flBurnDuration, g_esTank[iType].g_flBurnDuration, g_esSpecific.g_flBurnDuration, g_esGeneral.g_flBurnDuration, 1);
+			g_esCache[tank].g_flBurnDuration = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flBurnDuration, g_esPlayer[tank].g_flBurnDuration, g_esCache[tank].g_flBurnDuration, g_esCache[tank].g_flBurnDuration, 1);
+			g_esCache[tank].g_flBurntSkin = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flBurntSkin, g_esTank[iType].g_flBurntSkin, g_esSpecific.g_flBurntSkin, g_esGeneral.g_flBurntSkin, 1, -1.0);
+			g_esCache[tank].g_flBurntSkin = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flBurntSkin, g_esPlayer[tank].g_flBurntSkin, g_esCache[tank].g_flBurntSkin, g_esCache[tank].g_flBurntSkin, 1, -1.0);
+			g_esCache[tank].g_flClawDamage = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flClawDamage, g_esTank[iType].g_flClawDamage, g_esSpecific.g_flClawDamage, g_esGeneral.g_flClawDamage, 1, -1.0);
+			g_esCache[tank].g_flClawDamage = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flClawDamage, g_esPlayer[tank].g_flClawDamage, g_esCache[tank].g_flClawDamage, g_esCache[tank].g_flClawDamage, 1, -1.0);
+			g_esCache[tank].g_flHealPercentMultiplier = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flHealPercentMultiplier, g_esTank[iType].g_flHealPercentMultiplier, g_esSpecific.g_flHealPercentMultiplier, g_esGeneral.g_flHealPercentMultiplier, 1);
+			g_esCache[tank].g_flHealPercentMultiplier = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flHealPercentMultiplier, g_esPlayer[tank].g_flHealPercentMultiplier, g_esCache[tank].g_flHealPercentMultiplier, g_esCache[tank].g_flHealPercentMultiplier, 1);
+			g_esCache[tank].g_flHittableDamage = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flHittableDamage, g_esTank[iType].g_flHittableDamage, g_esSpecific.g_flHittableDamage, g_esGeneral.g_flHittableDamage, 1, -1.0);
+			g_esCache[tank].g_flHittableDamage = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flHittableDamage, g_esPlayer[tank].g_flHittableDamage, g_esCache[tank].g_flHittableDamage, g_esCache[tank].g_flHittableDamage, 1, -1.0);
+			g_esCache[tank].g_flIncapDamageMultiplier = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flIncapDamageMultiplier, g_esTank[iType].g_flIncapDamageMultiplier, g_esSpecific.g_flIncapDamageMultiplier, g_esGeneral.g_flIncapDamageMultiplier, 1);
+			g_esCache[tank].g_flIncapDamageMultiplier = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flIncapDamageMultiplier, g_esPlayer[tank].g_flIncapDamageMultiplier, g_esCache[tank].g_flIncapDamageMultiplier, g_esCache[tank].g_flIncapDamageMultiplier, 1);
+			g_esCache[tank].g_flRandomDuration = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flRandomDuration, g_esPlayer[tank].g_flRandomDuration, g_esSpecial[iType].g_flRandomDuration, g_esTank[iType].g_flRandomDuration, 1);
+			g_esCache[tank].g_flRandomInterval = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flRandomInterval, g_esPlayer[tank].g_flRandomInterval, g_esSpecial[iType].g_flRandomInterval, g_esTank[iType].g_flRandomInterval, 1);
+			g_esCache[tank].g_flPinDamage = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flPinDamage, g_esTank[iType].g_flRockDamage, g_esSpecific.g_flPinDamage, g_esGeneral.g_flRockDamage, 1, -1.0);
+			g_esCache[tank].g_flPinDamage = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flPinDamage, g_esPlayer[tank].g_flRockDamage, g_esCache[tank].g_flPinDamage, g_esCache[tank].g_flPinDamage, 1, -1.0);
+			g_esCache[tank].g_flRunSpeed = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flRunSpeed, g_esTank[iType].g_flRunSpeed, g_esSpecific.g_flRunSpeed, g_esGeneral.g_flRunSpeed, 1);
+			g_esCache[tank].g_flRunSpeed = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flRunSpeed, g_esPlayer[tank].g_flRunSpeed, g_esCache[tank].g_flRunSpeed, g_esCache[tank].g_flRunSpeed, 1);
+			g_esCache[tank].g_flShieldDuration = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flShieldDuration, g_esTank[iType].g_flShieldDuration, g_esSpecific.g_flShieldDuration, g_esGeneral.g_flShieldDuration, 1);
+			g_esCache[tank].g_flShieldDuration = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flShieldDuration, g_esPlayer[tank].g_flShieldDuration, g_esCache[tank].g_flShieldDuration, g_esCache[tank].g_flShieldDuration, 1);
+			g_esCache[tank].g_flShieldResistance = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flShieldResistance, g_esTank[iType].g_flShieldResistance, g_esSpecific.g_flShieldResistance, g_esGeneral.g_flShieldResistance, 1);
+			g_esCache[tank].g_flShieldResistance = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flShieldResistance, g_esPlayer[tank].g_flShieldResistance, g_esCache[tank].g_flShieldResistance, g_esCache[tank].g_flShieldResistance, 1);
+			g_esCache[tank].g_flSpecialInterval = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flSpecialInterval, g_esTank[iType].g_flThrowInterval, g_esSpecific.g_flSpecialInterval, g_esGeneral.g_flThrowInterval, 1);
+			g_esCache[tank].g_flSpecialInterval = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flSpecialInterval, g_esPlayer[tank].g_flThrowInterval, g_esCache[tank].g_flSpecialInterval, g_esCache[tank].g_flSpecialInterval, 1);
+			g_esCache[tank].g_flTransformDelay = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flTransformDelay, g_esPlayer[tank].g_flTransformDelay, g_esSpecial[iType].g_flTransformDelay, g_esTank[iType].g_flTransformDelay, 1);
+			g_esCache[tank].g_flTransformDuration = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flTransformDuration, g_esPlayer[tank].g_flTransformDuration, g_esSpecial[iType].g_flTransformDuration, g_esTank[iType].g_flTransformDuration, 1);
+			g_esCache[tank].g_iAnnounceArrival = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iAnnounceArrival, g_esTank[iType].g_iAnnounceArrival, g_esSpecific.g_iAnnounceArrival, g_esGeneral.g_iAnnounceArrival, 1);
+			g_esCache[tank].g_iAnnounceArrival = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iAnnounceArrival, g_esPlayer[tank].g_iAnnounceArrival, g_esCache[tank].g_iAnnounceArrival, g_esCache[tank].g_iAnnounceArrival, 1);
+			g_esCache[tank].g_iAnnounceDeath = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iAnnounceDeath, g_esTank[iType].g_iAnnounceDeath, g_esSpecific.g_iAnnounceDeath, g_esGeneral.g_iAnnounceDeath, 1);
+			g_esCache[tank].g_iAnnounceDeath = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iAnnounceDeath, g_esPlayer[tank].g_iAnnounceDeath, g_esCache[tank].g_iAnnounceDeath, g_esCache[tank].g_iAnnounceDeath, 1);
+			g_esCache[tank].g_iAnnounceKill = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iAnnounceKill, g_esTank[iType].g_iAnnounceKill, g_esSpecific.g_iAnnounceKill, g_esGeneral.g_iAnnounceKill, 1);
+			g_esCache[tank].g_iAnnounceKill = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iAnnounceKill, g_esPlayer[tank].g_iAnnounceKill, g_esCache[tank].g_iAnnounceKill, g_esCache[tank].g_iAnnounceKill, 1);
+			g_esCache[tank].g_iArrivalMessage = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iArrivalMessage, g_esTank[iType].g_iArrivalMessage, g_esSpecific.g_iArrivalMessage, g_esGeneral.g_iArrivalMessage, 1);
+			g_esCache[tank].g_iArrivalMessage = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iArrivalMessage, g_esPlayer[tank].g_iArrivalMessage, g_esCache[tank].g_iArrivalMessage, g_esCache[tank].g_iArrivalMessage, 1);
+			g_esCache[tank].g_iArrivalSound = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iArrivalSound, g_esTank[iType].g_iArrivalSound, g_esSpecific.g_iArrivalSound, g_esGeneral.g_iArrivalSound, 1);
+			g_esCache[tank].g_iArrivalSound = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iArrivalSound, g_esPlayer[tank].g_iArrivalSound, g_esCache[tank].g_iArrivalSound, g_esCache[tank].g_iArrivalSound, 1);
+			g_esCache[tank].g_iBaseHealth = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iBaseHealth[iSpecType + 1], g_esTank[iType].g_iBaseHealth, g_esSpecific.g_iBaseHealth[iSpecType + 1], g_esGeneral.g_iBaseHealth, 1);
+			g_esCache[tank].g_iBaseHealth = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iBaseHealth[iSpecType + 1], g_esPlayer[tank].g_iBaseHealth, g_esCache[tank].g_iBaseHealth, g_esCache[tank].g_iBaseHealth, 1);
+			g_esCache[tank].g_iBodyEffects = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iBodyEffects, g_esPlayer[tank].g_iBodyEffects, g_esSpecial[iType].g_iBodyEffects, g_esTank[iType].g_iBodyEffects, 1);
+			g_esCache[tank].g_iBossEffects = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iBossEffects, g_esPlayer[tank].g_iBossEffects, g_esSpecial[iType].g_iBossEffects, g_esTank[iType].g_iBossEffects, 1);
+			g_esCache[tank].g_iBossStages = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iBossStages, g_esPlayer[tank].g_iBossStages, g_esSpecial[iType].g_iBossStages, g_esTank[iType].g_iBossStages, 1);
+			g_esCache[tank].g_iBulletImmunity = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iBulletImmunity, g_esTank[iType].g_iBulletImmunity, g_esSpecific.g_iBulletImmunity, g_esGeneral.g_iBulletImmunity, 1);
+			g_esCache[tank].g_iBulletImmunity = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iBulletImmunity, g_esPlayer[tank].g_iBulletImmunity, g_esCache[tank].g_iBulletImmunity, g_esCache[tank].g_iBulletImmunity, 1);
+			g_esCache[tank].g_iDeathDetails = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iDeathDetails, g_esTank[iType].g_iDeathDetails, g_esSpecific.g_iDeathDetails, g_esGeneral.g_iDeathDetails, 1);
+			g_esCache[tank].g_iDeathDetails = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iDeathDetails, g_esPlayer[tank].g_iDeathDetails, g_esCache[tank].g_iDeathDetails, g_esCache[tank].g_iDeathDetails, 1);
+			g_esCache[tank].g_iDeathMessage = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iDeathMessage, g_esTank[iType].g_iDeathMessage, g_esSpecific.g_iDeathMessage, g_esGeneral.g_iDeathMessage, 1);
+			g_esCache[tank].g_iDeathMessage = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iDeathMessage, g_esPlayer[tank].g_iDeathMessage, g_esCache[tank].g_iDeathMessage, g_esCache[tank].g_iDeathMessage, 1);
+			g_esCache[tank].g_iDeathRevert = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iDeathRevert, g_esTank[iType].g_iDeathRevert, g_esSpecific.g_iDeathRevert, g_esGeneral.g_iDeathRevert, 1);
+			g_esCache[tank].g_iDeathRevert = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iDeathRevert, g_esPlayer[tank].g_iDeathRevert, g_esCache[tank].g_iDeathRevert, g_esCache[tank].g_iDeathRevert, 1);
+			g_esCache[tank].g_iDeathSound = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iDeathSound, g_esTank[iType].g_iDeathSound, g_esSpecific.g_iDeathSound, g_esGeneral.g_iDeathSound, 1);
+			g_esCache[tank].g_iDeathSound = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iDeathSound, g_esPlayer[tank].g_iDeathSound, g_esCache[tank].g_iDeathSound, g_esCache[tank].g_iDeathSound, 1);
+			g_esCache[tank].g_iDisplayHealth = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iDisplayHealth, g_esTank[iType].g_iDisplayHealth, g_esSpecific.g_iDisplayHealth, g_esGeneral.g_iDisplayHealth, 1);
+			g_esCache[tank].g_iDisplayHealth = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iDisplayHealth, g_esPlayer[tank].g_iDisplayHealth, g_esCache[tank].g_iDisplayHealth, g_esCache[tank].g_iDisplayHealth, 1);
+			g_esCache[tank].g_iDisplayHealthType = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iDisplayHealthType, g_esTank[iType].g_iDisplayHealthType, g_esSpecific.g_iDisplayHealthType, g_esGeneral.g_iDisplayHealthType, 1);
+			g_esCache[tank].g_iDisplayHealthType = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iDisplayHealthType, g_esPlayer[tank].g_iDisplayHealthType, g_esCache[tank].g_iDisplayHealthType, g_esCache[tank].g_iDisplayHealthType, 1);
+			g_esCache[tank].g_iExplosiveImmunity = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iExplosiveImmunity, g_esTank[iType].g_iExplosiveImmunity, g_esSpecific.g_iExplosiveImmunity, g_esGeneral.g_iExplosiveImmunity, 1);
+			g_esCache[tank].g_iExplosiveImmunity = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iExplosiveImmunity, g_esPlayer[tank].g_iExplosiveImmunity, g_esCache[tank].g_iExplosiveImmunity, g_esCache[tank].g_iExplosiveImmunity, 1);
+			g_esCache[tank].g_iExtraHealth = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iExtraHealth[iSpecType + 1], g_esTank[iType].g_iExtraHealth, g_esSpecific.g_iExtraHealth[iSpecType + 1], g_esGeneral.g_iExtraHealth, 2);
+			g_esCache[tank].g_iExtraHealth = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iExtraHealth[iSpecType + 1], g_esPlayer[tank].g_iExtraHealth, g_esCache[tank].g_iExtraHealth, g_esCache[tank].g_iExtraHealth, 2);
+			g_esCache[tank].g_iFireImmunity = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iFireImmunity, g_esTank[iType].g_iFireImmunity, g_esSpecific.g_iFireImmunity, g_esGeneral.g_iFireImmunity, 1);
+			g_esCache[tank].g_iFireImmunity = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iFireImmunity, g_esPlayer[tank].g_iFireImmunity, g_esCache[tank].g_iFireImmunity, g_esCache[tank].g_iFireImmunity, 1);
+			g_esCache[tank].g_iGlowEnabled = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iGlowEnabled, g_esPlayer[tank].g_iGlowEnabled, g_esSpecial[iType].g_iGlowEnabled, g_esTank[iType].g_iGlowEnabled, 1);
+			g_esCache[tank].g_iGlowFlashing = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iGlowFlashing, g_esPlayer[tank].g_iGlowFlashing, g_esSpecial[iType].g_iGlowFlashing, g_esTank[iType].g_iGlowFlashing, 1);
+			g_esCache[tank].g_iGlowMaxRange = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iGlowMaxRange, g_esPlayer[tank].g_iGlowMaxRange, g_esSpecial[iType].g_iGlowMaxRange, g_esTank[iType].g_iGlowMaxRange, 1);
+			g_esCache[tank].g_iGlowMinRange = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iGlowMinRange, g_esPlayer[tank].g_iGlowMinRange, g_esSpecial[iType].g_iGlowMinRange, g_esTank[iType].g_iGlowMinRange, 1);
+			g_esCache[tank].g_iGlowType = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iGlowType, g_esPlayer[tank].g_iGlowType, g_esSpecial[iType].g_iGlowType, g_esTank[iType].g_iGlowType, 1);
+			g_esCache[tank].g_iHittableImmunity = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iHittableImmunity, g_esTank[iType].g_iHittableImmunity, g_esSpecific.g_iHittableImmunity, g_esGeneral.g_iHittableImmunity, 1);
+			g_esCache[tank].g_iHittableImmunity = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iHittableImmunity, g_esPlayer[tank].g_iHittableImmunity, g_esCache[tank].g_iHittableImmunity, g_esCache[tank].g_iHittableImmunity, 1);
+			g_esCache[tank].g_iHumanMultiplierMode = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iHumanMultiplierMode, g_esTank[iType].g_iHumanMultiplierMode, g_esSpecific.g_iHumanMultiplierMode, g_esGeneral.g_iHumanMultiplierMode, 1);
+			g_esCache[tank].g_iHumanMultiplierMode = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iHumanMultiplierMode, g_esPlayer[tank].g_iHumanMultiplierMode, g_esCache[tank].g_iHumanMultiplierMode, g_esCache[tank].g_iHumanMultiplierMode, 1);
+			g_esCache[tank].g_iIntangibleBody = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iIntangibleBody, g_esTank[iType].g_iIntangibleBody, g_esSpecific.g_iIntangibleBody, g_esGeneral.g_iIntangibleBody, 1);
+			g_esCache[tank].g_iIntangibleBody = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iIntangibleBody, g_esPlayer[tank].g_iIntangibleBody, g_esCache[tank].g_iIntangibleBody, g_esCache[tank].g_iIntangibleBody, 1);
+			g_esCache[tank].g_iKillMessage = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iKillMessage, g_esTank[iType].g_iKillMessage, g_esSpecific.g_iKillMessage, g_esGeneral.g_iKillMessage, 1);
+			g_esCache[tank].g_iKillMessage = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iKillMessage, g_esPlayer[tank].g_iKillMessage, g_esCache[tank].g_iKillMessage, g_esCache[tank].g_iKillMessage, 1);
+			g_esCache[tank].g_iMeleeImmunity = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iMeleeImmunity, g_esTank[iType].g_iMeleeImmunity, g_esSpecific.g_iMeleeImmunity, g_esGeneral.g_iMeleeImmunity, 1);
+			g_esCache[tank].g_iMeleeImmunity = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iMeleeImmunity, g_esPlayer[tank].g_iMeleeImmunity, g_esCache[tank].g_iMeleeImmunity, g_esCache[tank].g_iMeleeImmunity, 1);
+			g_esCache[tank].g_iMinimumHumans = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iMinimumHumans, g_esTank[iType].g_iMinimumHumans, g_esSpecific.g_iMinimumHumans, g_esGeneral.g_iMinimumHumans, 1);
+			g_esCache[tank].g_iMinimumHumans = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iMinimumHumans, g_esPlayer[tank].g_iMinimumHumans, g_esCache[tank].g_iMinimumHumans, g_esCache[tank].g_iMinimumHumans, 1);
+			g_esCache[tank].g_iMultiplyHealth = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iMultiplyHealth, g_esTank[iType].g_iMultiplyHealth, g_esSpecific.g_iMultiplyHealth, g_esGeneral.g_iMultiplyHealth, 1);
+			g_esCache[tank].g_iMultiplyHealth = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iMultiplyHealth, g_esPlayer[tank].g_iMultiplyHealth, g_esCache[tank].g_iMultiplyHealth, g_esCache[tank].g_iMultiplyHealth, 1);
+			g_esCache[tank].g_iRandomSpecial = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iRandomSpecial, g_esPlayer[tank].g_iRandomTank, g_esSpecial[iType].g_iRandomSpecial, g_esTank[iType].g_iRandomTank, 1);
+			g_esCache[tank].g_iRockEffects = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iRockEffects, g_esPlayer[tank].g_iRockEffects, g_esSpecial[iType].g_iRockEffects, g_esTank[iType].g_iRockEffects, 1);
+			g_esCache[tank].g_iRockModel = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iRockModel, g_esPlayer[tank].g_iRockModel, g_esSpecial[iType].g_iRockModel, g_esTank[iType].g_iRockModel, 1);
+			g_esCache[tank].g_iSpawnProtection = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iSpawnProtection, g_esTank[iType].g_iSpawnProtection, g_esSpecific.g_iSpawnProtection, g_esGeneral.g_iSpawnProtection, 1);
+			g_esCache[tank].g_iSpawnProtection = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iSpawnProtection, g_esPlayer[tank].g_iSpawnProtection, g_esCache[tank].g_iSpawnProtection, g_esCache[tank].g_iSpawnProtection, 1);
+			g_esCache[tank].g_iSpawnType = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iSpawnType, g_esPlayer[tank].g_iSpawnType, g_esSpecial[iType].g_iSpawnType, g_esTank[iType].g_iSpawnType, 1);
+			g_esCache[tank].g_iSpecialModel = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iSpecialModel, g_esTank[iType].g_iTankModel, g_esSpecific.g_iSpecialModel, g_esGeneral.g_iTankModel, 1);
+			g_esCache[tank].g_iSpecialModel = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iSpecialModel, g_esPlayer[tank].g_iTankModel, g_esCache[tank].g_iSpecialModel, g_esCache[tank].g_iSpecialModel, 1);
+			g_esCache[tank].g_iSpecialNote = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iSpecialNote, g_esPlayer[tank].g_iTankNote, g_esSpecial[iType].g_iSpecialNote, g_esTank[iType].g_iTankNote, 1);
+			g_esCache[tank].g_iThrowRock = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iThrowRock, g_esTank[iType].g_iThrowRock, g_esSpecific.g_iThrowRock, g_esGeneral.g_iThrowRock, 1);
+			g_esCache[tank].g_iThrowRock = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iThrowRock, g_esPlayer[tank].g_iThrowRock, g_esCache[tank].g_iThrowRock, g_esCache[tank].g_iThrowRock, 1);
+			g_esCache[tank].g_iVocalizeArrival = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iVocalizeArrival, g_esTank[iType].g_iVocalizeArrival, g_esSpecific.g_iVocalizeArrival, g_esGeneral.g_iVocalizeArrival, 1);
+			g_esCache[tank].g_iVocalizeArrival = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iVocalizeArrival, g_esPlayer[tank].g_iVocalizeArrival, g_esCache[tank].g_iVocalizeArrival, g_esCache[tank].g_iVocalizeArrival, 1);
+			g_esCache[tank].g_iVocalizeDeath = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iVocalizeDeath, g_esTank[iType].g_iVocalizeDeath, g_esSpecific.g_iVocalizeDeath, g_esGeneral.g_iVocalizeDeath, 1);
+			g_esCache[tank].g_iVocalizeDeath = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iVocalizeDeath, g_esPlayer[tank].g_iVocalizeDeath, g_esCache[tank].g_iVocalizeDeath, g_esCache[tank].g_iVocalizeDeath, 1);
+			g_esCache[tank].g_iVomitImmunity = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iVomitImmunity, g_esTank[iType].g_iVomitImmunity, g_esSpecific.g_iVomitImmunity, g_esGeneral.g_iVomitImmunity, 1);
+			g_esCache[tank].g_iVomitImmunity = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iVomitImmunity, g_esPlayer[tank].g_iVomitImmunity, g_esCache[tank].g_iVomitImmunity, g_esCache[tank].g_iVomitImmunity, 1);
 
-			if (iPos < (sizeof esCache::g_iRewardEnabled))
-			{
-				g_esCache[tank].g_flActionDurationReward[iPos] = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flActionDurationReward[iPos], g_esTank[iType].g_flActionDurationReward[iPos], g_esSpecific.g_flActionDurationReward[iPos], g_esGeneral.g_flActionDurationReward[iPos], 1);
-				g_esCache[tank].g_flActionDurationReward[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flActionDurationReward[iPos], g_esPlayer[tank].g_flActionDurationReward[iPos], g_esCache[tank].g_flActionDurationReward[iPos], g_esCache[tank].g_flActionDurationReward[iPos], 1);
-				g_esCache[tank].g_iAmmoBoostReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iAmmoBoostReward[iPos], g_esTank[iType].g_iAmmoBoostReward[iPos], g_esSpecific.g_iAmmoBoostReward[iPos], g_esGeneral.g_iAmmoBoostReward[iPos], 1);
-				g_esCache[tank].g_iAmmoBoostReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iAmmoBoostReward[iPos], g_esPlayer[tank].g_iAmmoBoostReward[iPos], g_esCache[tank].g_iAmmoBoostReward[iPos], g_esCache[tank].g_iAmmoBoostReward[iPos], 1);
-				g_esCache[tank].g_iAmmoRegenReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iAmmoRegenReward[iPos], g_esTank[iType].g_iAmmoRegenReward[iPos], g_esSpecific.g_iAmmoRegenReward[iPos], g_esGeneral.g_iAmmoRegenReward[iPos], 1);
-				g_esCache[tank].g_iAmmoRegenReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iAmmoRegenReward[iPos], g_esPlayer[tank].g_iAmmoRegenReward[iPos], g_esCache[tank].g_iAmmoRegenReward[iPos], g_esCache[tank].g_iAmmoRegenReward[iPos], 1);
-				g_esCache[tank].g_flAttackBoostReward[iPos] = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flAttackBoostReward[iPos], g_esTank[iType].g_flAttackBoostReward[iPos], g_esSpecific.g_flAttackBoostReward[iPos], g_esGeneral.g_flAttackBoostReward[iPos], 1);
-				g_esCache[tank].g_flAttackBoostReward[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flAttackBoostReward[iPos], g_esPlayer[tank].g_flAttackBoostReward[iPos], g_esCache[tank].g_flAttackBoostReward[iPos], g_esCache[tank].g_flAttackBoostReward[iPos], 1);
-				g_esCache[tank].g_iBlazeHealthReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iBlazeHealthReward[iPos], g_esTank[iType].g_iBlazeHealthReward[iPos], g_esSpecific.g_iBlazeHealthReward[iPos], g_esGeneral.g_iBlazeHealthReward[iPos], 1);
-				g_esCache[tank].g_iBlazeHealthReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iBlazeHealthReward[iPos], g_esPlayer[tank].g_iBlazeHealthReward[iPos], g_esCache[tank].g_iBlazeHealthReward[iPos], g_esCache[tank].g_iBlazeHealthReward[iPos], 1);
-				g_esCache[tank].g_iBunnyHopReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iBunnyHopReward[iPos], g_esTank[iType].g_iBunnyHopReward[iPos], g_esSpecific.g_iBunnyHopReward[iPos], g_esGeneral.g_iBunnyHopReward[iPos], 1);
-				g_esCache[tank].g_iBunnyHopReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iBunnyHopReward[iPos], g_esPlayer[tank].g_iBunnyHopReward[iPos], g_esCache[tank].g_iBunnyHopReward[iPos], g_esCache[tank].g_iBunnyHopReward[iPos], 1);
-				g_esCache[tank].g_iBurstDoorsReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iBurstDoorsReward[iPos], g_esTank[iType].g_iBurstDoorsReward[iPos], g_esSpecific.g_iBurstDoorsReward[iPos], g_esGeneral.g_iBurstDoorsReward[iPos], 1);
-				g_esCache[tank].g_iBurstDoorsReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iBurstDoorsReward[iPos], g_esPlayer[tank].g_iBurstDoorsReward[iPos], g_esCache[tank].g_iBurstDoorsReward[iPos], g_esCache[tank].g_iBurstDoorsReward[iPos], 1);
-				g_esCache[tank].g_iCleanKillsReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iCleanKillsReward[iPos], g_esTank[iType].g_iCleanKillsReward[iPos], g_esSpecific.g_iCleanKillsReward[iPos], g_esGeneral.g_iCleanKillsReward[iPos], 1);
-				g_esCache[tank].g_iCleanKillsReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iCleanKillsReward[iPos], g_esPlayer[tank].g_iCleanKillsReward[iPos], g_esCache[tank].g_iCleanKillsReward[iPos], g_esCache[tank].g_iCleanKillsReward[iPos], 1);
-				g_esCache[tank].g_iClusterBombsReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iClusterBombsReward[iPos], g_esTank[iType].g_iClusterBombsReward[iPos], g_esSpecific.g_iClusterBombsReward[iPos], g_esGeneral.g_iClusterBombsReward[iPos], 1);
-				g_esCache[tank].g_iClusterBombsReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iClusterBombsReward[iPos], g_esPlayer[tank].g_iClusterBombsReward[iPos], g_esCache[tank].g_iClusterBombsReward[iPos], g_esCache[tank].g_iClusterBombsReward[iPos], 1);
-				g_esCache[tank].g_flDamageBoostReward[iPos] = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flDamageBoostReward[iPos], g_esTank[iType].g_flDamageBoostReward[iPos], g_esSpecific.g_flDamageBoostReward[iPos], g_esGeneral.g_flDamageBoostReward[iPos], 1);
-				g_esCache[tank].g_flDamageBoostReward[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flDamageBoostReward[iPos], g_esPlayer[tank].g_flDamageBoostReward[iPos], g_esCache[tank].g_flDamageBoostReward[iPos], g_esCache[tank].g_flDamageBoostReward[iPos], 1);
-				g_esCache[tank].g_flDamageResistanceReward[iPos] = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flDamageResistanceReward[iPos], g_esTank[iType].g_flDamageResistanceReward[iPos], g_esSpecific.g_flDamageResistanceReward[iPos], g_esGeneral.g_flDamageResistanceReward[iPos], 1);
-				g_esCache[tank].g_flDamageResistanceReward[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flDamageResistanceReward[iPos], g_esPlayer[tank].g_flDamageResistanceReward[iPos], g_esCache[tank].g_flDamageResistanceReward[iPos], g_esCache[tank].g_flDamageResistanceReward[iPos], 1);
-				g_esCache[tank].g_iFriendlyFireReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iFriendlyFireReward[iPos], g_esTank[iType].g_iFriendlyFireReward[iPos], g_esSpecific.g_iFriendlyFireReward[iPos], g_esGeneral.g_iFriendlyFireReward[iPos], 1);
-				g_esCache[tank].g_iFriendlyFireReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iFriendlyFireReward[iPos], g_esPlayer[tank].g_iFriendlyFireReward[iPos], g_esCache[tank].g_iFriendlyFireReward[iPos], g_esCache[tank].g_iFriendlyFireReward[iPos], 1);
-				g_esCache[tank].g_iGhostBulletsReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iGhostBulletsReward[iPos], g_esTank[iType].g_iGhostBulletsReward[iPos], g_esSpecific.g_iGhostBulletsReward[iPos], g_esGeneral.g_iGhostBulletsReward[iPos], 1);
-				g_esCache[tank].g_iGhostBulletsReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iGhostBulletsReward[iPos], g_esPlayer[tank].g_iGhostBulletsReward[iPos], g_esCache[tank].g_iGhostBulletsReward[iPos], g_esCache[tank].g_iGhostBulletsReward[iPos], 1);
-				g_esCache[tank].g_flHealPercentReward[iPos] = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flHealPercentReward[iPos], g_esTank[iType].g_flHealPercentReward[iPos], g_esSpecific.g_flHealPercentReward[iPos], g_esGeneral.g_flHealPercentReward[iPos], 1);
-				g_esCache[tank].g_flHealPercentReward[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flHealPercentReward[iPos], g_esPlayer[tank].g_flHealPercentReward[iPos], g_esCache[tank].g_flHealPercentReward[iPos], g_esCache[tank].g_flHealPercentReward[iPos], 1);
-				g_esCache[tank].g_iHealthRegenReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iHealthRegenReward[iPos], g_esTank[iType].g_iHealthRegenReward[iPos], g_esSpecific.g_iHealthRegenReward[iPos], g_esGeneral.g_iHealthRegenReward[iPos], 1);
-				g_esCache[tank].g_iHealthRegenReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iHealthRegenReward[iPos], g_esPlayer[tank].g_iHealthRegenReward[iPos], g_esCache[tank].g_iHealthRegenReward[iPos], g_esCache[tank].g_iHealthRegenReward[iPos], 1);
-				g_esCache[tank].g_iHollowpointAmmoReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iHollowpointAmmoReward[iPos], g_esTank[iType].g_iHollowpointAmmoReward[iPos], g_esSpecific.g_iHollowpointAmmoReward[iPos], g_esGeneral.g_iHollowpointAmmoReward[iPos], 1);
-				g_esCache[tank].g_iHollowpointAmmoReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iHollowpointAmmoReward[iPos], g_esPlayer[tank].g_iHollowpointAmmoReward[iPos], g_esCache[tank].g_iHollowpointAmmoReward[iPos], g_esCache[tank].g_iHollowpointAmmoReward[iPos], 1);
-				g_esCache[tank].g_flJumpHeightReward[iPos] = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flJumpHeightReward[iPos], g_esTank[iType].g_flJumpHeightReward[iPos], g_esSpecific.g_flJumpHeightReward[iPos], g_esGeneral.g_flJumpHeightReward[iPos], 1);
-				g_esCache[tank].g_flJumpHeightReward[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flJumpHeightReward[iPos], g_esPlayer[tank].g_flJumpHeightReward[iPos], g_esCache[tank].g_flJumpHeightReward[iPos], g_esCache[tank].g_flJumpHeightReward[iPos], 1);
-				g_esCache[tank].g_iInextinguishableFireReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iInextinguishableFireReward[iPos], g_esTank[iType].g_iInextinguishableFireReward[iPos], g_esSpecific.g_iInextinguishableFireReward[iPos], g_esGeneral.g_iInextinguishableFireReward[iPos], 1);
-				g_esCache[tank].g_iInextinguishableFireReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iInextinguishableFireReward[iPos], g_esPlayer[tank].g_iInextinguishableFireReward[iPos], g_esCache[tank].g_iInextinguishableFireReward[iPos], g_esCache[tank].g_iInextinguishableFireReward[iPos], 1);
-				g_esCache[tank].g_iInfiniteAmmoReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iInfiniteAmmoReward[iPos], g_esTank[iType].g_iInfiniteAmmoReward[iPos], g_esSpecific.g_iInfiniteAmmoReward[iPos], g_esGeneral.g_iInfiniteAmmoReward[iPos], 1);
-				g_esCache[tank].g_iInfiniteAmmoReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iInfiniteAmmoReward[iPos], g_esPlayer[tank].g_iInfiniteAmmoReward[iPos], g_esCache[tank].g_iInfiniteAmmoReward[iPos], g_esCache[tank].g_iInfiniteAmmoReward[iPos], 1);
-				g_esCache[tank].g_iLadderActionsReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iLadderActionsReward[iPos], g_esTank[iType].g_iLadderActionsReward[iPos], g_esSpecific.g_iLadderActionsReward[iPos], g_esGeneral.g_iLadderActionsReward[iPos], 1);
-				g_esCache[tank].g_iLadderActionsReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iLadderActionsReward[iPos], g_esPlayer[tank].g_iLadderActionsReward[iPos], g_esCache[tank].g_iLadderActionsReward[iPos], g_esCache[tank].g_iLadderActionsReward[iPos], 1);
-				g_esCache[tank].g_iLadyKillerReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iLadyKillerReward[iPos], g_esTank[iType].g_iLadyKillerReward[iPos], g_esSpecific.g_iLadyKillerReward[iPos], g_esGeneral.g_iLadyKillerReward[iPos], 1);
-				g_esCache[tank].g_iLadyKillerReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iLadyKillerReward[iPos], g_esPlayer[tank].g_iLadyKillerReward[iPos], g_esCache[tank].g_iLadyKillerReward[iPos], g_esCache[tank].g_iLadyKillerReward[iPos], 1);
-				g_esCache[tank].g_iLifeLeechReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iLifeLeechReward[iPos], g_esTank[iType].g_iLifeLeechReward[iPos], g_esSpecific.g_iLifeLeechReward[iPos], g_esGeneral.g_iLifeLeechReward[iPos], 1);
-				g_esCache[tank].g_iLifeLeechReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iLifeLeechReward[iPos], g_esPlayer[tank].g_iLifeLeechReward[iPos], g_esCache[tank].g_iLifeLeechReward[iPos], g_esCache[tank].g_iLifeLeechReward[iPos], 1);
-				g_esCache[tank].g_flLoopingVoicelineInterval[iPos] = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flLoopingVoicelineInterval[iPos], g_esTank[iType].g_flLoopingVoicelineInterval[iPos], g_esSpecific.g_flLoopingVoicelineInterval[iPos], g_esGeneral.g_flLoopingVoicelineInterval[iPos], 1);
-				g_esCache[tank].g_flLoopingVoicelineInterval[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flLoopingVoicelineInterval[iPos], g_esPlayer[tank].g_flLoopingVoicelineInterval[iPos], g_esCache[tank].g_flLoopingVoicelineInterval[iPos], g_esCache[tank].g_flLoopingVoicelineInterval[iPos], 1);
-				g_esCache[tank].g_iMeleeRangeReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iMeleeRangeReward[iPos], g_esTank[iType].g_iMeleeRangeReward[iPos], g_esSpecific.g_iMeleeRangeReward[iPos], g_esGeneral.g_iMeleeRangeReward[iPos], 1);
-				g_esCache[tank].g_iMeleeRangeReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iMeleeRangeReward[iPos], g_esPlayer[tank].g_iMeleeRangeReward[iPos], g_esCache[tank].g_iMeleeRangeReward[iPos], g_esCache[tank].g_iMeleeRangeReward[iPos], 1);
-				g_esCache[tank].g_iMidairDashesReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iMidairDashesReward[iPos], g_esTank[iType].g_iMidairDashesReward[iPos], g_esSpecific.g_iMidairDashesReward[iPos], g_esGeneral.g_iMidairDashesReward[iPos], 1);
-				g_esCache[tank].g_iMidairDashesReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iMidairDashesReward[iPos], g_esPlayer[tank].g_iMidairDashesReward[iPos], g_esCache[tank].g_iMidairDashesReward[iPos], g_esCache[tank].g_iMidairDashesReward[iPos], 1);
-				g_esCache[tank].g_iParticleEffectVisual[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iParticleEffectVisual[iPos], g_esTank[iType].g_iParticleEffectVisual[iPos], g_esSpecific.g_iParticleEffectVisual[iPos], g_esGeneral.g_iParticleEffectVisual[iPos], 1);
-				g_esCache[tank].g_iParticleEffectVisual[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iParticleEffectVisual[iPos], g_esPlayer[tank].g_iParticleEffectVisual[iPos], g_esCache[tank].g_iParticleEffectVisual[iPos], g_esCache[tank].g_iParticleEffectVisual[iPos], 1);
-				g_esCache[tank].g_flPipeBombDurationReward[iPos] = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flPipeBombDurationReward[iPos], g_esTank[iType].g_flPipeBombDurationReward[iPos], g_esSpecific.g_flPipeBombDurationReward[iPos], g_esGeneral.g_flPipeBombDurationReward[iPos], 1);
-				g_esCache[tank].g_flPipeBombDurationReward[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flPipeBombDurationReward[iPos], g_esPlayer[tank].g_flPipeBombDurationReward[iPos], g_esCache[tank].g_flPipeBombDurationReward[iPos], g_esCache[tank].g_flPipeBombDurationReward[iPos], 1);
-				g_esCache[tank].g_iPrefsNotify[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iPrefsNotify[iPos], g_esTank[iType].g_iPrefsNotify[iPos], g_esSpecific.g_iPrefsNotify[iPos], g_esGeneral.g_iPrefsNotify[iPos], 1);
-				g_esCache[tank].g_iPrefsNotify[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iPrefsNotify[iPos], g_esPlayer[tank].g_iPrefsNotify[iPos], g_esCache[tank].g_iPrefsNotify[iPos], g_esCache[tank].g_iPrefsNotify[iPos], 1);
-				g_esCache[tank].g_flPunchResistanceReward[iPos] = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flPunchResistanceReward[iPos], g_esTank[iType].g_flPunchResistanceReward[iPos], g_esSpecific.g_flPunchResistanceReward[iPos], g_esGeneral.g_flPunchResistanceReward[iPos], 1);
-				g_esCache[tank].g_flPunchResistanceReward[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flPunchResistanceReward[iPos], g_esPlayer[tank].g_flPunchResistanceReward[iPos], g_esCache[tank].g_flPunchResistanceReward[iPos], g_esCache[tank].g_flPunchResistanceReward[iPos], 1);
-				g_esCache[tank].g_flRapidPistolReward[iPos] = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flRapidPistolReward[iPos], g_esTank[iType].g_flRapidPistolReward[iPos], g_esSpecific.g_flRapidPistolReward[iPos], g_esGeneral.g_flRapidPistolReward[iPos], 1);
-				g_esCache[tank].g_flRapidPistolReward[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flRapidPistolReward[iPos], g_esPlayer[tank].g_flRapidPistolReward[iPos], g_esCache[tank].g_flRapidPistolReward[iPos], g_esCache[tank].g_flRapidPistolReward[iPos], 1);
-				g_esCache[tank].g_iRecoilDampenerReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iRecoilDampenerReward[iPos], g_esTank[iType].g_iRecoilDampenerReward[iPos], g_esSpecific.g_iRecoilDampenerReward[iPos], g_esGeneral.g_iRecoilDampenerReward[iPos], 1);
-				g_esCache[tank].g_iRecoilDampenerReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iRecoilDampenerReward[iPos], g_esPlayer[tank].g_iRecoilDampenerReward[iPos], g_esCache[tank].g_iRecoilDampenerReward[iPos], g_esCache[tank].g_iRecoilDampenerReward[iPos], 1);
-				g_esCache[tank].g_flRefillPercentReward[iPos] = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flRefillPercentReward[iPos], g_esTank[iType].g_flRefillPercentReward[iPos], g_esSpecific.g_flRefillPercentReward[iPos], g_esGeneral.g_flRefillPercentReward[iPos], 1);
-				g_esCache[tank].g_flRefillPercentReward[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flRefillPercentReward[iPos], g_esPlayer[tank].g_flRefillPercentReward[iPos], g_esCache[tank].g_flRefillPercentReward[iPos], g_esCache[tank].g_flRefillPercentReward[iPos], 1);
-				g_esCache[tank].g_iRespawnLoadoutReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iRespawnLoadoutReward[iPos], g_esTank[iType].g_iRespawnLoadoutReward[iPos], g_esSpecific.g_iRespawnLoadoutReward[iPos], g_esGeneral.g_iRespawnLoadoutReward[iPos], 1);
-				g_esCache[tank].g_iRespawnLoadoutReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iRespawnLoadoutReward[iPos], g_esPlayer[tank].g_iRespawnLoadoutReward[iPos], g_esCache[tank].g_iRespawnLoadoutReward[iPos], g_esCache[tank].g_iRespawnLoadoutReward[iPos], 1);
-				g_esCache[tank].g_iReviveHealthReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iReviveHealthReward[iPos], g_esTank[iType].g_iReviveHealthReward[iPos], g_esSpecific.g_iReviveHealthReward[iPos], g_esGeneral.g_iReviveHealthReward[iPos], 1);
-				g_esCache[tank].g_iReviveHealthReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iReviveHealthReward[iPos], g_esPlayer[tank].g_iReviveHealthReward[iPos], g_esCache[tank].g_iReviveHealthReward[iPos], g_esCache[tank].g_iReviveHealthReward[iPos], 1);
-				g_esCache[tank].g_iRewardBots[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iRewardBots[iPos], g_esTank[iType].g_iRewardBots[iPos], g_esSpecific.g_iRewardBots[iPos], g_esGeneral.g_iRewardBots[iPos], 1, -1);
-				g_esCache[tank].g_iRewardBots[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iRewardBots[iPos], g_esPlayer[tank].g_iRewardBots[iPos], g_esCache[tank].g_iRewardBots[iPos], g_esCache[tank].g_iRewardBots[iPos], 1, -1);
-				g_esCache[tank].g_flRewardChance[iPos] = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flRewardChance[iPos], g_esTank[iType].g_flRewardChance[iPos], g_esSpecific.g_flRewardChance[iPos], g_esGeneral.g_flRewardChance[iPos], 1);
-				g_esCache[tank].g_flRewardChance[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flRewardChance[iPos], g_esPlayer[tank].g_flRewardChance[iPos], g_esCache[tank].g_flRewardChance[iPos], g_esCache[tank].g_flRewardChance[iPos], 1);
-				g_esCache[tank].g_flRewardDuration[iPos] = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flRewardDuration[iPos], g_esTank[iType].g_flRewardDuration[iPos], g_esSpecific.g_flRewardDuration[iPos], g_esGeneral.g_flRewardDuration[iPos], 1);
-				g_esCache[tank].g_flRewardDuration[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flRewardDuration[iPos], g_esPlayer[tank].g_flRewardDuration[iPos], g_esCache[tank].g_flRewardDuration[iPos], g_esCache[tank].g_flRewardDuration[iPos], 1);
-				g_esCache[tank].g_iRewardEffect[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iRewardEffect[iPos], g_esTank[iType].g_iRewardEffect[iPos], g_esSpecific.g_iRewardEffect[iPos], g_esGeneral.g_iRewardEffect[iPos], 1);
-				g_esCache[tank].g_iRewardEffect[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iRewardEffect[iPos], g_esPlayer[tank].g_iRewardEffect[iPos], g_esCache[tank].g_iRewardEffect[iPos], g_esCache[tank].g_iRewardEffect[iPos], 1);
-				g_esCache[tank].g_iRewardEnabled[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iRewardEnabled[iPos], g_esTank[iType].g_iRewardEnabled[iPos], g_esSpecific.g_iRewardEnabled[iPos], g_esGeneral.g_iRewardEnabled[iPos], 1, -1);
-				g_esCache[tank].g_iRewardEnabled[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iRewardEnabled[iPos], g_esPlayer[tank].g_iRewardEnabled[iPos], g_esCache[tank].g_iRewardEnabled[iPos], g_esCache[tank].g_iRewardEnabled[iPos], 1, -1);
-				g_esCache[tank].g_iRewardNotify[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iRewardNotify[iPos], g_esTank[iType].g_iRewardNotify[iPos], g_esSpecific.g_iRewardNotify[iPos], g_esGeneral.g_iRewardNotify[iPos], 1);
-				g_esCache[tank].g_iRewardNotify[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iRewardNotify[iPos], g_esPlayer[tank].g_iRewardNotify[iPos], g_esCache[tank].g_iRewardNotify[iPos], g_esCache[tank].g_iRewardNotify[iPos], 1);
-				g_esCache[tank].g_flRewardPercentage[iPos] = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flRewardPercentage[iPos], g_esTank[iType].g_flRewardPercentage[iPos], g_esSpecific.g_flRewardPercentage[iPos], g_esGeneral.g_flRewardPercentage[iPos], 1);
-				g_esCache[tank].g_flRewardPercentage[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flRewardPercentage[iPos], g_esPlayer[tank].g_flRewardPercentage[iPos], g_esCache[tank].g_flRewardPercentage[iPos], g_esCache[tank].g_flRewardPercentage[iPos], 1);
-				g_esCache[tank].g_iRewardVisual[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iRewardVisual[iPos], g_esTank[iType].g_iRewardVisual[iPos], g_esSpecific.g_iRewardVisual[iPos], g_esGeneral.g_iRewardVisual[iPos], 1);
-				g_esCache[tank].g_iRewardVisual[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iRewardVisual[iPos], g_esPlayer[tank].g_iRewardVisual[iPos], g_esCache[tank].g_iRewardVisual[iPos], g_esCache[tank].g_iRewardVisual[iPos], 1);
-				g_esCache[tank].g_iShareRewards[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iShareRewards[iPos], g_esTank[iType].g_iShareRewards[iPos], g_esSpecific.g_iShareRewards[iPos], g_esGeneral.g_iShareRewards[iPos], 1);
-				g_esCache[tank].g_iShareRewards[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iShareRewards[iPos], g_esPlayer[tank].g_iShareRewards[iPos], g_esCache[tank].g_iShareRewards[iPos], g_esCache[tank].g_iShareRewards[iPos], 1);
-				g_esCache[tank].g_flShoveDamageReward[iPos] = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flShoveDamageReward[iPos], g_esTank[iType].g_flShoveDamageReward[iPos], g_esSpecific.g_flShoveDamageReward[iPos], g_esGeneral.g_flShoveDamageReward[iPos], 1);
-				g_esCache[tank].g_flShoveDamageReward[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flShoveDamageReward[iPos], g_esPlayer[tank].g_flShoveDamageReward[iPos], g_esCache[tank].g_flShoveDamageReward[iPos], g_esCache[tank].g_flShoveDamageReward[iPos], 1);
-				g_esCache[tank].g_iShovePenaltyReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iShovePenaltyReward[iPos], g_esTank[iType].g_iShovePenaltyReward[iPos], g_esSpecific.g_iShovePenaltyReward[iPos], g_esGeneral.g_iShovePenaltyReward[iPos], 1);
-				g_esCache[tank].g_iShovePenaltyReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iShovePenaltyReward[iPos], g_esPlayer[tank].g_iShovePenaltyReward[iPos], g_esCache[tank].g_iShovePenaltyReward[iPos], g_esCache[tank].g_iShovePenaltyReward[iPos], 1);
-				g_esCache[tank].g_flShoveRateReward[iPos] = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flShoveRateReward[iPos], g_esTank[iType].g_flShoveRateReward[iPos], g_esSpecific.g_flShoveRateReward[iPos], g_esGeneral.g_flShoveRateReward[iPos], 1);
-				g_esCache[tank].g_flShoveRateReward[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flShoveRateReward[iPos], g_esPlayer[tank].g_flShoveRateReward[iPos], g_esCache[tank].g_flShoveRateReward[iPos], g_esCache[tank].g_flShoveRateReward[iPos], 1);
-				g_esCache[tank].g_iSledgehammerRoundsReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iSledgehammerRoundsReward[iPos], g_esTank[iType].g_iSledgehammerRoundsReward[iPos], g_esSpecific.g_iSledgehammerRoundsReward[iPos], g_esGeneral.g_iSledgehammerRoundsReward[iPos], 1);
-				g_esCache[tank].g_iSledgehammerRoundsReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iSledgehammerRoundsReward[iPos], g_esPlayer[tank].g_iSledgehammerRoundsReward[iPos], g_esCache[tank].g_iSledgehammerRoundsReward[iPos], g_esCache[tank].g_iSledgehammerRoundsReward[iPos], 1);
-				g_esCache[tank].g_iSpecialAmmoReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iSpecialAmmoReward[iPos], g_esTank[iType].g_iSpecialAmmoReward[iPos], g_esSpecific.g_iSpecialAmmoReward[iPos], g_esGeneral.g_iSpecialAmmoReward[iPos], 1);
-				g_esCache[tank].g_iSpecialAmmoReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iSpecialAmmoReward[iPos], g_esPlayer[tank].g_iSpecialAmmoReward[iPos], g_esCache[tank].g_iSpecialAmmoReward[iPos], g_esCache[tank].g_iSpecialAmmoReward[iPos], 1);
-				g_esCache[tank].g_flSpeedBoostReward[iPos] = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flSpeedBoostReward[iPos], g_esTank[iType].g_flSpeedBoostReward[iPos], g_esSpecific.g_flSpeedBoostReward[iPos], g_esGeneral.g_flSpeedBoostReward[iPos], 1);
-				g_esCache[tank].g_flSpeedBoostReward[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flSpeedBoostReward[iPos], g_esPlayer[tank].g_flSpeedBoostReward[iPos], g_esCache[tank].g_flSpeedBoostReward[iPos], g_esCache[tank].g_flSpeedBoostReward[iPos], 1);
-				g_esCache[tank].g_iStackRewards[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iStackRewards[iPos], g_esTank[iType].g_iStackRewards[iPos], g_esSpecific.g_iStackRewards[iPos], g_esGeneral.g_iStackRewards[iPos], 1);
-				g_esCache[tank].g_iStackRewards[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iStackRewards[iPos], g_esPlayer[tank].g_iStackRewards[iPos], g_esCache[tank].g_iStackRewards[iPos], g_esCache[tank].g_iStackRewards[iPos], 1);
-				g_esCache[tank].g_iStickyGrenadesReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iStickyGrenadesReward[iPos], g_esTank[iType].g_iStickyGrenadesReward[iPos], g_esSpecific.g_iStickyGrenadesReward[iPos], g_esGeneral.g_iStickyGrenadesReward[iPos], 1);
-				g_esCache[tank].g_iStickyGrenadesReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iStickyGrenadesReward[iPos], g_esPlayer[tank].g_iStickyGrenadesReward[iPos], g_esCache[tank].g_iStickyGrenadesReward[iPos], g_esCache[tank].g_iStickyGrenadesReward[iPos], 1);
-				g_esCache[tank].g_iThornsReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iThornsReward[iPos], g_esTank[iType].g_iThornsReward[iPos], g_esSpecific.g_iThornsReward[iPos], g_esGeneral.g_iThornsReward[iPos], 1);
-				g_esCache[tank].g_iThornsReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iThornsReward[iPos], g_esPlayer[tank].g_iThornsReward[iPos], g_esCache[tank].g_iThornsReward[iPos], g_esCache[tank].g_iThornsReward[iPos], 1);
-				g_esCache[tank].g_iUsefulRewards[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iUsefulRewards[iPos], g_esTank[iType].g_iUsefulRewards[iPos], g_esSpecific.g_iUsefulRewards[iPos], g_esGeneral.g_iUsefulRewards[iPos], 1);
-				g_esCache[tank].g_iUsefulRewards[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iUsefulRewards[iPos], g_esPlayer[tank].g_iUsefulRewards[iPos], g_esCache[tank].g_iUsefulRewards[iPos], g_esCache[tank].g_iUsefulRewards[iPos], 1);
-				g_esCache[tank].g_iVoicePitchVisual[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iVoicePitchVisual[iPos], g_esTank[iType].g_iVoicePitchVisual[iPos], g_esSpecific.g_iVoicePitchVisual[iPos], g_esGeneral.g_iVoicePitchVisual[iPos], 1);
-				g_esCache[tank].g_iVoicePitchVisual[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iVoicePitchVisual[iPos], g_esPlayer[tank].g_iVoicePitchVisual[iPos], g_esCache[tank].g_iVoicePitchVisual[iPos], g_esCache[tank].g_iVoicePitchVisual[iPos], 1);
-			}
+			vGetSubSettingValue(bAccess, bHuman, g_esCache[tank].g_sComboSet, sizeof esCache::g_sComboSet, g_esTeammate[tank].g_sComboSet, g_esPlayer[tank].g_sComboSet, g_esSpecial[iType].g_sComboSet, g_esTank[iType].g_sComboSet);
+			vGetSubSettingValue(bAccess, bHuman, g_esCache[tank].g_sGlowColor, sizeof esCache::g_sGlowColor, g_esTeammate[tank].g_sGlowColor, g_esPlayer[tank].g_sGlowColor, g_esSpecial[iType].g_sGlowColor, g_esTank[iType].g_sGlowColor);
+			vGetSubSettingValue(bAccess, bHuman, g_esCache[tank].g_sHealthCharacters, sizeof esCache::g_sHealthCharacters, g_esSpecial[iType].g_sHealthCharacters, g_esTank[iType].g_sHealthCharacters, g_esSpecific.g_sHealthCharacters, g_esGeneral.g_sHealthCharacters);
+			vGetSubSettingValue(bAccess, bHuman, g_esCache[tank].g_sHealthCharacters, sizeof esCache::g_sHealthCharacters, g_esTeammate[tank].g_sHealthCharacters, g_esPlayer[tank].g_sHealthCharacters, g_esCache[tank].g_sHealthCharacters, g_esCache[tank].g_sHealthCharacters);
+			vGetSubSettingValue(bAccess, bHuman, g_esCache[tank].g_sRockColor, sizeof esCache::g_sRockColor, g_esTeammate[tank].g_sRockColor, g_esPlayer[tank].g_sRockColor, g_esSpecial[iType].g_sRockColor, g_esTank[iType].g_sRockColor);
+			vGetSubSettingValue(bAccess, bHuman, g_esCache[tank].g_sSkinColor, sizeof esCache::g_sSkinColor, g_esTeammate[tank].g_sSkinColor, g_esPlayer[tank].g_sSkinColor, g_esSpecial[iType].g_sSkinColor, g_esTank[iType].g_sSkinColor);
+			vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sSmokerName, sizeof esCache::g_sSmokerName, g_esTeammate[tank].g_sSmokerName, g_esSpecial[iType].g_sSmokerName);
+			vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sBoomerName, sizeof esCache::g_sBoomerName, g_esTeammate[tank].g_sBoomerName, g_esSpecial[iType].g_sBoomerName);
+			vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sHunterName, sizeof esCache::g_sHunterName, g_esTeammate[tank].g_sHunterName, g_esSpecial[iType].g_sHunterName);
+			vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sSpitterName, sizeof esCache::g_sSpitterName, g_esTeammate[tank].g_sSpitterName, g_esSpecial[iType].g_sSpitterName);
+			vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sJockeyName, sizeof esCache::g_sJockeyName, g_esTeammate[tank].g_sJockeyName, g_esSpecial[iType].g_sJockeyName);
+			vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sChargerName, sizeof esCache::g_sChargerName, g_esTeammate[tank].g_sChargerName, g_esSpecial[iType].g_sChargerName);
 
-			if (iPos < (sizeof esCache::g_iStackLimits))
+			for (int iPos = 0; iPos < (sizeof esCache::g_iTransformType); iPos++)
 			{
-				g_esCache[tank].g_iStackLimits[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iStackLimits[iPos], g_esTank[iType].g_iStackLimits[iPos], g_esSpecific.g_iStackLimits[iPos], g_esGeneral.g_iStackLimits[iPos], 1);
-				g_esCache[tank].g_iStackLimits[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iStackLimits[iPos], g_esPlayer[tank].g_iStackLimits[iPos], g_esCache[tank].g_iStackLimits[iPos], g_esCache[tank].g_iStackLimits[iPos], 1);
-			}
+				g_esCache[tank].g_iTransformType[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iTransformType[iPos], g_esPlayer[tank].g_iTransformType[iPos], g_esSpecial[iType].g_iTransformType[iPos], g_esTank[iType].g_iTransformType[iPos], 1);
 
-			if (iPos < (sizeof esCache::g_flComboChance))
-			{
-				g_esCache[tank].g_flComboChance[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flComboChance[iPos], g_esPlayer[tank].g_flComboChance[iPos], g_esSpecial[iType].g_flComboChance[iPos], g_esTank[iType].g_flComboChance[iPos], 1);
-				g_esCache[tank].g_iComboCooldown[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iComboCooldown[iPos], g_esPlayer[tank].g_iComboCooldown[iPos], g_esSpecial[iType].g_iComboCooldown[iPos], g_esTank[iType].g_iComboCooldown[iPos], 1);
-				g_esCache[tank].g_flComboDamage[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flComboDamage[iPos], g_esPlayer[tank].g_flComboDamage[iPos], g_esSpecial[iType].g_flComboDamage[iPos], g_esTank[iType].g_flComboDamage[iPos], 1);
-				g_esCache[tank].g_flComboDeathChance[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flComboDeathChance[iPos], g_esPlayer[tank].g_flComboDeathChance[iPos], g_esSpecial[iType].g_flComboDeathChance[iPos], g_esTank[iType].g_flComboDeathChance[iPos], 1);
-				g_esCache[tank].g_flComboDeathRange[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flComboDeathRange[iPos], g_esPlayer[tank].g_flComboDeathRange[iPos], g_esSpecial[iType].g_flComboDeathRange[iPos], g_esTank[iType].g_flComboDeathRange[iPos], 1);
-				g_esCache[tank].g_flComboDelay[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flComboDelay[iPos], g_esPlayer[tank].g_flComboDelay[iPos], g_esSpecial[iType].g_flComboDelay[iPos], g_esTank[iType].g_flComboDelay[iPos], 1);
-				g_esCache[tank].g_flComboDuration[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flComboDuration[iPos], g_esPlayer[tank].g_flComboDuration[iPos], g_esSpecial[iType].g_flComboDuration[iPos], g_esTank[iType].g_flComboDuration[iPos], 1);
-				g_esCache[tank].g_flComboInterval[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flComboInterval[iPos], g_esPlayer[tank].g_flComboInterval[iPos], g_esSpecial[iType].g_flComboInterval[iPos], g_esTank[iType].g_flComboInterval[iPos], 1);
-				g_esCache[tank].g_flComboMinRadius[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flComboMinRadius[iPos], g_esPlayer[tank].g_flComboMinRadius[iPos], g_esSpecial[iType].g_flComboMinRadius[iPos], g_esTank[iType].g_flComboMinRadius[iPos], 2, 1.0);
-				g_esCache[tank].g_flComboMaxRadius[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flComboMaxRadius[iPos], g_esPlayer[tank].g_flComboMaxRadius[iPos], g_esSpecial[iType].g_flComboMaxRadius[iPos], g_esTank[iType].g_flComboMaxRadius[iPos], 2, -1.0);
-				g_esCache[tank].g_flComboRange[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flComboRange[iPos], g_esPlayer[tank].g_flComboRange[iPos], g_esSpecial[iType].g_flComboRange[iPos], g_esTank[iType].g_flComboRange[iPos], 1);
-				g_esCache[tank].g_flComboRangeChance[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flComboRangeChance[iPos], g_esPlayer[tank].g_flComboRangeChance[iPos], g_esSpecial[iType].g_flComboRangeChance[iPos], g_esTank[iType].g_flComboRangeChance[iPos], 1);
-				g_esCache[tank].g_iComboRangeCooldown[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iComboRangeCooldown[iPos], g_esPlayer[tank].g_iComboRangeCooldown[iPos], g_esSpecial[iType].g_iComboRangeCooldown[iPos], g_esTank[iType].g_iComboRangeCooldown[iPos], 1);
-				g_esCache[tank].g_flComboRockChance[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flComboRockChance[iPos], g_esPlayer[tank].g_flComboRockChance[iPos], g_esSpecial[iType].g_flComboRockChance[iPos], g_esTank[iType].g_flComboRockChance[iPos], 1);
-				g_esCache[tank].g_iComboRockCooldown[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iComboRockCooldown[iPos], g_esPlayer[tank].g_iComboRockCooldown[iPos], g_esSpecial[iType].g_iComboRockCooldown[iPos], g_esTank[iType].g_iComboRockCooldown[iPos], 1);
-				g_esCache[tank].g_flComboSpeed[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flComboSpeed[iPos], g_esPlayer[tank].g_flComboSpeed[iPos], g_esSpecial[iType].g_flComboSpeed[iPos], g_esTank[iType].g_flComboSpeed[iPos], 1);
-			}
+				if (iPos < (sizeof esCache::g_iRewardEnabled))
+				{
+					g_esCache[tank].g_flActionDurationReward[iPos] = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flActionDurationReward[iPos], g_esTank[iType].g_flActionDurationReward[iPos], g_esSpecific.g_flActionDurationReward[iPos], g_esGeneral.g_flActionDurationReward[iPos], 1);
+					g_esCache[tank].g_flActionDurationReward[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flActionDurationReward[iPos], g_esPlayer[tank].g_flActionDurationReward[iPos], g_esCache[tank].g_flActionDurationReward[iPos], g_esCache[tank].g_flActionDurationReward[iPos], 1);
+					g_esCache[tank].g_iAmmoBoostReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iAmmoBoostReward[iPos], g_esTank[iType].g_iAmmoBoostReward[iPos], g_esSpecific.g_iAmmoBoostReward[iPos], g_esGeneral.g_iAmmoBoostReward[iPos], 1);
+					g_esCache[tank].g_iAmmoBoostReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iAmmoBoostReward[iPos], g_esPlayer[tank].g_iAmmoBoostReward[iPos], g_esCache[tank].g_iAmmoBoostReward[iPos], g_esCache[tank].g_iAmmoBoostReward[iPos], 1);
+					g_esCache[tank].g_iAmmoRegenReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iAmmoRegenReward[iPos], g_esTank[iType].g_iAmmoRegenReward[iPos], g_esSpecific.g_iAmmoRegenReward[iPos], g_esGeneral.g_iAmmoRegenReward[iPos], 1);
+					g_esCache[tank].g_iAmmoRegenReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iAmmoRegenReward[iPos], g_esPlayer[tank].g_iAmmoRegenReward[iPos], g_esCache[tank].g_iAmmoRegenReward[iPos], g_esCache[tank].g_iAmmoRegenReward[iPos], 1);
+					g_esCache[tank].g_flAttackBoostReward[iPos] = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flAttackBoostReward[iPos], g_esTank[iType].g_flAttackBoostReward[iPos], g_esSpecific.g_flAttackBoostReward[iPos], g_esGeneral.g_flAttackBoostReward[iPos], 1);
+					g_esCache[tank].g_flAttackBoostReward[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flAttackBoostReward[iPos], g_esPlayer[tank].g_flAttackBoostReward[iPos], g_esCache[tank].g_flAttackBoostReward[iPos], g_esCache[tank].g_flAttackBoostReward[iPos], 1);
+					g_esCache[tank].g_iBlazeHealthReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iBlazeHealthReward[iPos], g_esTank[iType].g_iBlazeHealthReward[iPos], g_esSpecific.g_iBlazeHealthReward[iPos], g_esGeneral.g_iBlazeHealthReward[iPos], 1);
+					g_esCache[tank].g_iBlazeHealthReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iBlazeHealthReward[iPos], g_esPlayer[tank].g_iBlazeHealthReward[iPos], g_esCache[tank].g_iBlazeHealthReward[iPos], g_esCache[tank].g_iBlazeHealthReward[iPos], 1);
+					g_esCache[tank].g_iBunnyHopReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iBunnyHopReward[iPos], g_esTank[iType].g_iBunnyHopReward[iPos], g_esSpecific.g_iBunnyHopReward[iPos], g_esGeneral.g_iBunnyHopReward[iPos], 1);
+					g_esCache[tank].g_iBunnyHopReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iBunnyHopReward[iPos], g_esPlayer[tank].g_iBunnyHopReward[iPos], g_esCache[tank].g_iBunnyHopReward[iPos], g_esCache[tank].g_iBunnyHopReward[iPos], 1);
+					g_esCache[tank].g_iBurstDoorsReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iBurstDoorsReward[iPos], g_esTank[iType].g_iBurstDoorsReward[iPos], g_esSpecific.g_iBurstDoorsReward[iPos], g_esGeneral.g_iBurstDoorsReward[iPos], 1);
+					g_esCache[tank].g_iBurstDoorsReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iBurstDoorsReward[iPos], g_esPlayer[tank].g_iBurstDoorsReward[iPos], g_esCache[tank].g_iBurstDoorsReward[iPos], g_esCache[tank].g_iBurstDoorsReward[iPos], 1);
+					g_esCache[tank].g_iCleanKillsReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iCleanKillsReward[iPos], g_esTank[iType].g_iCleanKillsReward[iPos], g_esSpecific.g_iCleanKillsReward[iPos], g_esGeneral.g_iCleanKillsReward[iPos], 1);
+					g_esCache[tank].g_iCleanKillsReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iCleanKillsReward[iPos], g_esPlayer[tank].g_iCleanKillsReward[iPos], g_esCache[tank].g_iCleanKillsReward[iPos], g_esCache[tank].g_iCleanKillsReward[iPos], 1);
+					g_esCache[tank].g_iClusterBombsReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iClusterBombsReward[iPos], g_esTank[iType].g_iClusterBombsReward[iPos], g_esSpecific.g_iClusterBombsReward[iPos], g_esGeneral.g_iClusterBombsReward[iPos], 1);
+					g_esCache[tank].g_iClusterBombsReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iClusterBombsReward[iPos], g_esPlayer[tank].g_iClusterBombsReward[iPos], g_esCache[tank].g_iClusterBombsReward[iPos], g_esCache[tank].g_iClusterBombsReward[iPos], 1);
+					g_esCache[tank].g_flDamageBoostReward[iPos] = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flDamageBoostReward[iPos], g_esTank[iType].g_flDamageBoostReward[iPos], g_esSpecific.g_flDamageBoostReward[iPos], g_esGeneral.g_flDamageBoostReward[iPos], 1);
+					g_esCache[tank].g_flDamageBoostReward[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flDamageBoostReward[iPos], g_esPlayer[tank].g_flDamageBoostReward[iPos], g_esCache[tank].g_flDamageBoostReward[iPos], g_esCache[tank].g_flDamageBoostReward[iPos], 1);
+					g_esCache[tank].g_flDamageResistanceReward[iPos] = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flDamageResistanceReward[iPos], g_esTank[iType].g_flDamageResistanceReward[iPos], g_esSpecific.g_flDamageResistanceReward[iPos], g_esGeneral.g_flDamageResistanceReward[iPos], 1);
+					g_esCache[tank].g_flDamageResistanceReward[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flDamageResistanceReward[iPos], g_esPlayer[tank].g_flDamageResistanceReward[iPos], g_esCache[tank].g_flDamageResistanceReward[iPos], g_esCache[tank].g_flDamageResistanceReward[iPos], 1);
+					g_esCache[tank].g_iFriendlyFireReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iFriendlyFireReward[iPos], g_esTank[iType].g_iFriendlyFireReward[iPos], g_esSpecific.g_iFriendlyFireReward[iPos], g_esGeneral.g_iFriendlyFireReward[iPos], 1);
+					g_esCache[tank].g_iFriendlyFireReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iFriendlyFireReward[iPos], g_esPlayer[tank].g_iFriendlyFireReward[iPos], g_esCache[tank].g_iFriendlyFireReward[iPos], g_esCache[tank].g_iFriendlyFireReward[iPos], 1);
+					g_esCache[tank].g_iGhostBulletsReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iGhostBulletsReward[iPos], g_esTank[iType].g_iGhostBulletsReward[iPos], g_esSpecific.g_iGhostBulletsReward[iPos], g_esGeneral.g_iGhostBulletsReward[iPos], 1);
+					g_esCache[tank].g_iGhostBulletsReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iGhostBulletsReward[iPos], g_esPlayer[tank].g_iGhostBulletsReward[iPos], g_esCache[tank].g_iGhostBulletsReward[iPos], g_esCache[tank].g_iGhostBulletsReward[iPos], 1);
+					g_esCache[tank].g_flHealPercentReward[iPos] = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flHealPercentReward[iPos], g_esTank[iType].g_flHealPercentReward[iPos], g_esSpecific.g_flHealPercentReward[iPos], g_esGeneral.g_flHealPercentReward[iPos], 1);
+					g_esCache[tank].g_flHealPercentReward[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flHealPercentReward[iPos], g_esPlayer[tank].g_flHealPercentReward[iPos], g_esCache[tank].g_flHealPercentReward[iPos], g_esCache[tank].g_flHealPercentReward[iPos], 1);
+					g_esCache[tank].g_iHealthRegenReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iHealthRegenReward[iPos], g_esTank[iType].g_iHealthRegenReward[iPos], g_esSpecific.g_iHealthRegenReward[iPos], g_esGeneral.g_iHealthRegenReward[iPos], 1);
+					g_esCache[tank].g_iHealthRegenReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iHealthRegenReward[iPos], g_esPlayer[tank].g_iHealthRegenReward[iPos], g_esCache[tank].g_iHealthRegenReward[iPos], g_esCache[tank].g_iHealthRegenReward[iPos], 1);
+					g_esCache[tank].g_iHollowpointAmmoReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iHollowpointAmmoReward[iPos], g_esTank[iType].g_iHollowpointAmmoReward[iPos], g_esSpecific.g_iHollowpointAmmoReward[iPos], g_esGeneral.g_iHollowpointAmmoReward[iPos], 1);
+					g_esCache[tank].g_iHollowpointAmmoReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iHollowpointAmmoReward[iPos], g_esPlayer[tank].g_iHollowpointAmmoReward[iPos], g_esCache[tank].g_iHollowpointAmmoReward[iPos], g_esCache[tank].g_iHollowpointAmmoReward[iPos], 1);
+					g_esCache[tank].g_flJumpHeightReward[iPos] = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flJumpHeightReward[iPos], g_esTank[iType].g_flJumpHeightReward[iPos], g_esSpecific.g_flJumpHeightReward[iPos], g_esGeneral.g_flJumpHeightReward[iPos], 1);
+					g_esCache[tank].g_flJumpHeightReward[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flJumpHeightReward[iPos], g_esPlayer[tank].g_flJumpHeightReward[iPos], g_esCache[tank].g_flJumpHeightReward[iPos], g_esCache[tank].g_flJumpHeightReward[iPos], 1);
+					g_esCache[tank].g_iInextinguishableFireReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iInextinguishableFireReward[iPos], g_esTank[iType].g_iInextinguishableFireReward[iPos], g_esSpecific.g_iInextinguishableFireReward[iPos], g_esGeneral.g_iInextinguishableFireReward[iPos], 1);
+					g_esCache[tank].g_iInextinguishableFireReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iInextinguishableFireReward[iPos], g_esPlayer[tank].g_iInextinguishableFireReward[iPos], g_esCache[tank].g_iInextinguishableFireReward[iPos], g_esCache[tank].g_iInextinguishableFireReward[iPos], 1);
+					g_esCache[tank].g_iInfiniteAmmoReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iInfiniteAmmoReward[iPos], g_esTank[iType].g_iInfiniteAmmoReward[iPos], g_esSpecific.g_iInfiniteAmmoReward[iPos], g_esGeneral.g_iInfiniteAmmoReward[iPos], 1);
+					g_esCache[tank].g_iInfiniteAmmoReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iInfiniteAmmoReward[iPos], g_esPlayer[tank].g_iInfiniteAmmoReward[iPos], g_esCache[tank].g_iInfiniteAmmoReward[iPos], g_esCache[tank].g_iInfiniteAmmoReward[iPos], 1);
+					g_esCache[tank].g_iLadderActionsReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iLadderActionsReward[iPos], g_esTank[iType].g_iLadderActionsReward[iPos], g_esSpecific.g_iLadderActionsReward[iPos], g_esGeneral.g_iLadderActionsReward[iPos], 1);
+					g_esCache[tank].g_iLadderActionsReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iLadderActionsReward[iPos], g_esPlayer[tank].g_iLadderActionsReward[iPos], g_esCache[tank].g_iLadderActionsReward[iPos], g_esCache[tank].g_iLadderActionsReward[iPos], 1);
+					g_esCache[tank].g_iLadyKillerReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iLadyKillerReward[iPos], g_esTank[iType].g_iLadyKillerReward[iPos], g_esSpecific.g_iLadyKillerReward[iPos], g_esGeneral.g_iLadyKillerReward[iPos], 1);
+					g_esCache[tank].g_iLadyKillerReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iLadyKillerReward[iPos], g_esPlayer[tank].g_iLadyKillerReward[iPos], g_esCache[tank].g_iLadyKillerReward[iPos], g_esCache[tank].g_iLadyKillerReward[iPos], 1);
+					g_esCache[tank].g_iLifeLeechReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iLifeLeechReward[iPos], g_esTank[iType].g_iLifeLeechReward[iPos], g_esSpecific.g_iLifeLeechReward[iPos], g_esGeneral.g_iLifeLeechReward[iPos], 1);
+					g_esCache[tank].g_iLifeLeechReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iLifeLeechReward[iPos], g_esPlayer[tank].g_iLifeLeechReward[iPos], g_esCache[tank].g_iLifeLeechReward[iPos], g_esCache[tank].g_iLifeLeechReward[iPos], 1);
+					g_esCache[tank].g_flLoopingVoicelineInterval[iPos] = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flLoopingVoicelineInterval[iPos], g_esTank[iType].g_flLoopingVoicelineInterval[iPos], g_esSpecific.g_flLoopingVoicelineInterval[iPos], g_esGeneral.g_flLoopingVoicelineInterval[iPos], 1);
+					g_esCache[tank].g_flLoopingVoicelineInterval[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flLoopingVoicelineInterval[iPos], g_esPlayer[tank].g_flLoopingVoicelineInterval[iPos], g_esCache[tank].g_flLoopingVoicelineInterval[iPos], g_esCache[tank].g_flLoopingVoicelineInterval[iPos], 1);
+					g_esCache[tank].g_iMeleeRangeReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iMeleeRangeReward[iPos], g_esTank[iType].g_iMeleeRangeReward[iPos], g_esSpecific.g_iMeleeRangeReward[iPos], g_esGeneral.g_iMeleeRangeReward[iPos], 1);
+					g_esCache[tank].g_iMeleeRangeReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iMeleeRangeReward[iPos], g_esPlayer[tank].g_iMeleeRangeReward[iPos], g_esCache[tank].g_iMeleeRangeReward[iPos], g_esCache[tank].g_iMeleeRangeReward[iPos], 1);
+					g_esCache[tank].g_iMidairDashesReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iMidairDashesReward[iPos], g_esTank[iType].g_iMidairDashesReward[iPos], g_esSpecific.g_iMidairDashesReward[iPos], g_esGeneral.g_iMidairDashesReward[iPos], 1);
+					g_esCache[tank].g_iMidairDashesReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iMidairDashesReward[iPos], g_esPlayer[tank].g_iMidairDashesReward[iPos], g_esCache[tank].g_iMidairDashesReward[iPos], g_esCache[tank].g_iMidairDashesReward[iPos], 1);
+					g_esCache[tank].g_iParticleEffectVisual[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iParticleEffectVisual[iPos], g_esTank[iType].g_iParticleEffectVisual[iPos], g_esSpecific.g_iParticleEffectVisual[iPos], g_esGeneral.g_iParticleEffectVisual[iPos], 1);
+					g_esCache[tank].g_iParticleEffectVisual[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iParticleEffectVisual[iPos], g_esPlayer[tank].g_iParticleEffectVisual[iPos], g_esCache[tank].g_iParticleEffectVisual[iPos], g_esCache[tank].g_iParticleEffectVisual[iPos], 1);
+					g_esCache[tank].g_flPipeBombDurationReward[iPos] = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flPipeBombDurationReward[iPos], g_esTank[iType].g_flPipeBombDurationReward[iPos], g_esSpecific.g_flPipeBombDurationReward[iPos], g_esGeneral.g_flPipeBombDurationReward[iPos], 1);
+					g_esCache[tank].g_flPipeBombDurationReward[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flPipeBombDurationReward[iPos], g_esPlayer[tank].g_flPipeBombDurationReward[iPos], g_esCache[tank].g_flPipeBombDurationReward[iPos], g_esCache[tank].g_flPipeBombDurationReward[iPos], 1);
+					g_esCache[tank].g_iPrefsNotify[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iPrefsNotify[iPos], g_esTank[iType].g_iPrefsNotify[iPos], g_esSpecific.g_iPrefsNotify[iPos], g_esGeneral.g_iPrefsNotify[iPos], 1);
+					g_esCache[tank].g_iPrefsNotify[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iPrefsNotify[iPos], g_esPlayer[tank].g_iPrefsNotify[iPos], g_esCache[tank].g_iPrefsNotify[iPos], g_esCache[tank].g_iPrefsNotify[iPos], 1);
+					g_esCache[tank].g_flPunchResistanceReward[iPos] = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flPunchResistanceReward[iPos], g_esTank[iType].g_flPunchResistanceReward[iPos], g_esSpecific.g_flPunchResistanceReward[iPos], g_esGeneral.g_flPunchResistanceReward[iPos], 1);
+					g_esCache[tank].g_flPunchResistanceReward[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flPunchResistanceReward[iPos], g_esPlayer[tank].g_flPunchResistanceReward[iPos], g_esCache[tank].g_flPunchResistanceReward[iPos], g_esCache[tank].g_flPunchResistanceReward[iPos], 1);
+					g_esCache[tank].g_flRapidPistolReward[iPos] = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flRapidPistolReward[iPos], g_esTank[iType].g_flRapidPistolReward[iPos], g_esSpecific.g_flRapidPistolReward[iPos], g_esGeneral.g_flRapidPistolReward[iPos], 1);
+					g_esCache[tank].g_flRapidPistolReward[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flRapidPistolReward[iPos], g_esPlayer[tank].g_flRapidPistolReward[iPos], g_esCache[tank].g_flRapidPistolReward[iPos], g_esCache[tank].g_flRapidPistolReward[iPos], 1);
+					g_esCache[tank].g_iRecoilDampenerReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iRecoilDampenerReward[iPos], g_esTank[iType].g_iRecoilDampenerReward[iPos], g_esSpecific.g_iRecoilDampenerReward[iPos], g_esGeneral.g_iRecoilDampenerReward[iPos], 1);
+					g_esCache[tank].g_iRecoilDampenerReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iRecoilDampenerReward[iPos], g_esPlayer[tank].g_iRecoilDampenerReward[iPos], g_esCache[tank].g_iRecoilDampenerReward[iPos], g_esCache[tank].g_iRecoilDampenerReward[iPos], 1);
+					g_esCache[tank].g_flRefillPercentReward[iPos] = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flRefillPercentReward[iPos], g_esTank[iType].g_flRefillPercentReward[iPos], g_esSpecific.g_flRefillPercentReward[iPos], g_esGeneral.g_flRefillPercentReward[iPos], 1);
+					g_esCache[tank].g_flRefillPercentReward[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flRefillPercentReward[iPos], g_esPlayer[tank].g_flRefillPercentReward[iPos], g_esCache[tank].g_flRefillPercentReward[iPos], g_esCache[tank].g_flRefillPercentReward[iPos], 1);
+					g_esCache[tank].g_iRespawnLoadoutReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iRespawnLoadoutReward[iPos], g_esTank[iType].g_iRespawnLoadoutReward[iPos], g_esSpecific.g_iRespawnLoadoutReward[iPos], g_esGeneral.g_iRespawnLoadoutReward[iPos], 1);
+					g_esCache[tank].g_iRespawnLoadoutReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iRespawnLoadoutReward[iPos], g_esPlayer[tank].g_iRespawnLoadoutReward[iPos], g_esCache[tank].g_iRespawnLoadoutReward[iPos], g_esCache[tank].g_iRespawnLoadoutReward[iPos], 1);
+					g_esCache[tank].g_iReviveHealthReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iReviveHealthReward[iPos], g_esTank[iType].g_iReviveHealthReward[iPos], g_esSpecific.g_iReviveHealthReward[iPos], g_esGeneral.g_iReviveHealthReward[iPos], 1);
+					g_esCache[tank].g_iReviveHealthReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iReviveHealthReward[iPos], g_esPlayer[tank].g_iReviveHealthReward[iPos], g_esCache[tank].g_iReviveHealthReward[iPos], g_esCache[tank].g_iReviveHealthReward[iPos], 1);
+					g_esCache[tank].g_iRewardBots[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iRewardBots[iPos], g_esTank[iType].g_iRewardBots[iPos], g_esSpecific.g_iRewardBots[iPos], g_esGeneral.g_iRewardBots[iPos], 1, -1);
+					g_esCache[tank].g_iRewardBots[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iRewardBots[iPos], g_esPlayer[tank].g_iRewardBots[iPos], g_esCache[tank].g_iRewardBots[iPos], g_esCache[tank].g_iRewardBots[iPos], 1, -1);
+					g_esCache[tank].g_flRewardChance[iPos] = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flRewardChance[iPos], g_esTank[iType].g_flRewardChance[iPos], g_esSpecific.g_flRewardChance[iPos], g_esGeneral.g_flRewardChance[iPos], 1);
+					g_esCache[tank].g_flRewardChance[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flRewardChance[iPos], g_esPlayer[tank].g_flRewardChance[iPos], g_esCache[tank].g_flRewardChance[iPos], g_esCache[tank].g_flRewardChance[iPos], 1);
+					g_esCache[tank].g_flRewardDuration[iPos] = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flRewardDuration[iPos], g_esTank[iType].g_flRewardDuration[iPos], g_esSpecific.g_flRewardDuration[iPos], g_esGeneral.g_flRewardDuration[iPos], 1);
+					g_esCache[tank].g_flRewardDuration[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flRewardDuration[iPos], g_esPlayer[tank].g_flRewardDuration[iPos], g_esCache[tank].g_flRewardDuration[iPos], g_esCache[tank].g_flRewardDuration[iPos], 1);
+					g_esCache[tank].g_iRewardEffect[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iRewardEffect[iPos], g_esTank[iType].g_iRewardEffect[iPos], g_esSpecific.g_iRewardEffect[iPos], g_esGeneral.g_iRewardEffect[iPos], 1);
+					g_esCache[tank].g_iRewardEffect[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iRewardEffect[iPos], g_esPlayer[tank].g_iRewardEffect[iPos], g_esCache[tank].g_iRewardEffect[iPos], g_esCache[tank].g_iRewardEffect[iPos], 1);
+					g_esCache[tank].g_iRewardEnabled[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iRewardEnabled[iPos], g_esTank[iType].g_iRewardEnabled[iPos], g_esSpecific.g_iRewardEnabled[iPos], g_esGeneral.g_iRewardEnabled[iPos], 1, -1);
+					g_esCache[tank].g_iRewardEnabled[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iRewardEnabled[iPos], g_esPlayer[tank].g_iRewardEnabled[iPos], g_esCache[tank].g_iRewardEnabled[iPos], g_esCache[tank].g_iRewardEnabled[iPos], 1, -1);
+					g_esCache[tank].g_iRewardNotify[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iRewardNotify[iPos], g_esTank[iType].g_iRewardNotify[iPos], g_esSpecific.g_iRewardNotify[iPos], g_esGeneral.g_iRewardNotify[iPos], 1);
+					g_esCache[tank].g_iRewardNotify[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iRewardNotify[iPos], g_esPlayer[tank].g_iRewardNotify[iPos], g_esCache[tank].g_iRewardNotify[iPos], g_esCache[tank].g_iRewardNotify[iPos], 1);
+					g_esCache[tank].g_flRewardPercentage[iPos] = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flRewardPercentage[iPos], g_esTank[iType].g_flRewardPercentage[iPos], g_esSpecific.g_flRewardPercentage[iPos], g_esGeneral.g_flRewardPercentage[iPos], 1);
+					g_esCache[tank].g_flRewardPercentage[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flRewardPercentage[iPos], g_esPlayer[tank].g_flRewardPercentage[iPos], g_esCache[tank].g_flRewardPercentage[iPos], g_esCache[tank].g_flRewardPercentage[iPos], 1);
+					g_esCache[tank].g_iRewardVisual[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iRewardVisual[iPos], g_esTank[iType].g_iRewardVisual[iPos], g_esSpecific.g_iRewardVisual[iPos], g_esGeneral.g_iRewardVisual[iPos], 1);
+					g_esCache[tank].g_iRewardVisual[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iRewardVisual[iPos], g_esPlayer[tank].g_iRewardVisual[iPos], g_esCache[tank].g_iRewardVisual[iPos], g_esCache[tank].g_iRewardVisual[iPos], 1);
+					g_esCache[tank].g_iShareRewards[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iShareRewards[iPos], g_esTank[iType].g_iShareRewards[iPos], g_esSpecific.g_iShareRewards[iPos], g_esGeneral.g_iShareRewards[iPos], 1);
+					g_esCache[tank].g_iShareRewards[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iShareRewards[iPos], g_esPlayer[tank].g_iShareRewards[iPos], g_esCache[tank].g_iShareRewards[iPos], g_esCache[tank].g_iShareRewards[iPos], 1);
+					g_esCache[tank].g_flShoveDamageReward[iPos] = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flShoveDamageReward[iPos], g_esTank[iType].g_flShoveDamageReward[iPos], g_esSpecific.g_flShoveDamageReward[iPos], g_esGeneral.g_flShoveDamageReward[iPos], 1);
+					g_esCache[tank].g_flShoveDamageReward[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flShoveDamageReward[iPos], g_esPlayer[tank].g_flShoveDamageReward[iPos], g_esCache[tank].g_flShoveDamageReward[iPos], g_esCache[tank].g_flShoveDamageReward[iPos], 1);
+					g_esCache[tank].g_iShovePenaltyReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iShovePenaltyReward[iPos], g_esTank[iType].g_iShovePenaltyReward[iPos], g_esSpecific.g_iShovePenaltyReward[iPos], g_esGeneral.g_iShovePenaltyReward[iPos], 1);
+					g_esCache[tank].g_iShovePenaltyReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iShovePenaltyReward[iPos], g_esPlayer[tank].g_iShovePenaltyReward[iPos], g_esCache[tank].g_iShovePenaltyReward[iPos], g_esCache[tank].g_iShovePenaltyReward[iPos], 1);
+					g_esCache[tank].g_flShoveRateReward[iPos] = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flShoveRateReward[iPos], g_esTank[iType].g_flShoveRateReward[iPos], g_esSpecific.g_flShoveRateReward[iPos], g_esGeneral.g_flShoveRateReward[iPos], 1);
+					g_esCache[tank].g_flShoveRateReward[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flShoveRateReward[iPos], g_esPlayer[tank].g_flShoveRateReward[iPos], g_esCache[tank].g_flShoveRateReward[iPos], g_esCache[tank].g_flShoveRateReward[iPos], 1);
+					g_esCache[tank].g_iSledgehammerRoundsReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iSledgehammerRoundsReward[iPos], g_esTank[iType].g_iSledgehammerRoundsReward[iPos], g_esSpecific.g_iSledgehammerRoundsReward[iPos], g_esGeneral.g_iSledgehammerRoundsReward[iPos], 1);
+					g_esCache[tank].g_iSledgehammerRoundsReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iSledgehammerRoundsReward[iPos], g_esPlayer[tank].g_iSledgehammerRoundsReward[iPos], g_esCache[tank].g_iSledgehammerRoundsReward[iPos], g_esCache[tank].g_iSledgehammerRoundsReward[iPos], 1);
+					g_esCache[tank].g_iSpecialAmmoReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iSpecialAmmoReward[iPos], g_esTank[iType].g_iSpecialAmmoReward[iPos], g_esSpecific.g_iSpecialAmmoReward[iPos], g_esGeneral.g_iSpecialAmmoReward[iPos], 1);
+					g_esCache[tank].g_iSpecialAmmoReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iSpecialAmmoReward[iPos], g_esPlayer[tank].g_iSpecialAmmoReward[iPos], g_esCache[tank].g_iSpecialAmmoReward[iPos], g_esCache[tank].g_iSpecialAmmoReward[iPos], 1);
+					g_esCache[tank].g_flSpeedBoostReward[iPos] = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flSpeedBoostReward[iPos], g_esTank[iType].g_flSpeedBoostReward[iPos], g_esSpecific.g_flSpeedBoostReward[iPos], g_esGeneral.g_flSpeedBoostReward[iPos], 1);
+					g_esCache[tank].g_flSpeedBoostReward[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flSpeedBoostReward[iPos], g_esPlayer[tank].g_flSpeedBoostReward[iPos], g_esCache[tank].g_flSpeedBoostReward[iPos], g_esCache[tank].g_flSpeedBoostReward[iPos], 1);
+					g_esCache[tank].g_iStackRewards[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iStackRewards[iPos], g_esTank[iType].g_iStackRewards[iPos], g_esSpecific.g_iStackRewards[iPos], g_esGeneral.g_iStackRewards[iPos], 1);
+					g_esCache[tank].g_iStackRewards[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iStackRewards[iPos], g_esPlayer[tank].g_iStackRewards[iPos], g_esCache[tank].g_iStackRewards[iPos], g_esCache[tank].g_iStackRewards[iPos], 1);
+					g_esCache[tank].g_iStickyGrenadesReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iStickyGrenadesReward[iPos], g_esTank[iType].g_iStickyGrenadesReward[iPos], g_esSpecific.g_iStickyGrenadesReward[iPos], g_esGeneral.g_iStickyGrenadesReward[iPos], 1);
+					g_esCache[tank].g_iStickyGrenadesReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iStickyGrenadesReward[iPos], g_esPlayer[tank].g_iStickyGrenadesReward[iPos], g_esCache[tank].g_iStickyGrenadesReward[iPos], g_esCache[tank].g_iStickyGrenadesReward[iPos], 1);
+					g_esCache[tank].g_iThornsReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iThornsReward[iPos], g_esTank[iType].g_iThornsReward[iPos], g_esSpecific.g_iThornsReward[iPos], g_esGeneral.g_iThornsReward[iPos], 1);
+					g_esCache[tank].g_iThornsReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iThornsReward[iPos], g_esPlayer[tank].g_iThornsReward[iPos], g_esCache[tank].g_iThornsReward[iPos], g_esCache[tank].g_iThornsReward[iPos], 1);
+					g_esCache[tank].g_iUsefulRewards[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iUsefulRewards[iPos], g_esTank[iType].g_iUsefulRewards[iPos], g_esSpecific.g_iUsefulRewards[iPos], g_esGeneral.g_iUsefulRewards[iPos], 1);
+					g_esCache[tank].g_iUsefulRewards[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iUsefulRewards[iPos], g_esPlayer[tank].g_iUsefulRewards[iPos], g_esCache[tank].g_iUsefulRewards[iPos], g_esCache[tank].g_iUsefulRewards[iPos], 1);
+					g_esCache[tank].g_iVoicePitchVisual[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iVoicePitchVisual[iPos], g_esTank[iType].g_iVoicePitchVisual[iPos], g_esSpecific.g_iVoicePitchVisual[iPos], g_esGeneral.g_iVoicePitchVisual[iPos], 1);
+					g_esCache[tank].g_iVoicePitchVisual[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iVoicePitchVisual[iPos], g_esPlayer[tank].g_iVoicePitchVisual[iPos], g_esCache[tank].g_iVoicePitchVisual[iPos], g_esCache[tank].g_iVoicePitchVisual[iPos], 1);
+				}
 
-			if (iPos < (sizeof esCache::g_flComboTypeChance))
-			{
-				g_esCache[tank].g_flComboTypeChance[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flComboTypeChance[iPos], g_esPlayer[tank].g_flComboTypeChance[iPos], g_esSpecial[iType].g_flComboTypeChance[iPos], g_esTank[iType].g_flComboTypeChance[iPos], 1);
-			}
+				if (iPos < (sizeof esCache::g_iStackLimits))
+				{
+					g_esCache[tank].g_iStackLimits[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iStackLimits[iPos], g_esTank[iType].g_iStackLimits[iPos], g_esSpecific.g_iStackLimits[iPos], g_esGeneral.g_iStackLimits[iPos], 1);
+					g_esCache[tank].g_iStackLimits[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iStackLimits[iPos], g_esPlayer[tank].g_iStackLimits[iPos], g_esCache[tank].g_iStackLimits[iPos], g_esCache[tank].g_iStackLimits[iPos], 1);
+				}
 
-			if (iPos < (sizeof esCache::g_iSkinColor))
-			{
-				g_esCache[tank].g_iSkinColor[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iSkinColor[iPos], g_esPlayer[tank].g_iSkinColor[iPos], g_esSpecial[iType].g_iSkinColor[iPos], g_esTank[iType].g_iSkinColor[iPos], 1);
-				g_esCache[tank].g_iBossHealth[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iBossHealth[iPos], g_esPlayer[tank].g_iBossHealth[iPos], g_esSpecial[iType].g_iBossHealth[iPos], g_esTank[iType].g_iBossHealth[iPos], 1);
-				g_esCache[tank].g_iBossType[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iBossType[iPos], g_esPlayer[tank].g_iBossType[iPos], g_esSpecial[iType].g_iBossType[iPos], g_esTank[iType].g_iBossType[iPos], 1);
-				g_esCache[tank].g_iRockColor[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iRockColor[iPos], g_esPlayer[tank].g_iRockColor[iPos], g_esSpecial[iType].g_iRockColor[iPos], g_esTank[iType].g_iRockColor[iPos], 1);
-			}
+				if (iPos < (sizeof esCache::g_flComboChance))
+				{
+					g_esCache[tank].g_flComboChance[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flComboChance[iPos], g_esPlayer[tank].g_flComboChance[iPos], g_esSpecial[iType].g_flComboChance[iPos], g_esTank[iType].g_flComboChance[iPos], 1);
+					g_esCache[tank].g_iComboCooldown[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iComboCooldown[iPos], g_esPlayer[tank].g_iComboCooldown[iPos], g_esSpecial[iType].g_iComboCooldown[iPos], g_esTank[iType].g_iComboCooldown[iPos], 1);
+					g_esCache[tank].g_flComboDamage[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flComboDamage[iPos], g_esPlayer[tank].g_flComboDamage[iPos], g_esSpecial[iType].g_flComboDamage[iPos], g_esTank[iType].g_flComboDamage[iPos], 1);
+					g_esCache[tank].g_flComboDeathChance[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flComboDeathChance[iPos], g_esPlayer[tank].g_flComboDeathChance[iPos], g_esSpecial[iType].g_flComboDeathChance[iPos], g_esTank[iType].g_flComboDeathChance[iPos], 1);
+					g_esCache[tank].g_flComboDeathRange[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flComboDeathRange[iPos], g_esPlayer[tank].g_flComboDeathRange[iPos], g_esSpecial[iType].g_flComboDeathRange[iPos], g_esTank[iType].g_flComboDeathRange[iPos], 1);
+					g_esCache[tank].g_flComboDelay[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flComboDelay[iPos], g_esPlayer[tank].g_flComboDelay[iPos], g_esSpecial[iType].g_flComboDelay[iPos], g_esTank[iType].g_flComboDelay[iPos], 1);
+					g_esCache[tank].g_flComboDuration[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flComboDuration[iPos], g_esPlayer[tank].g_flComboDuration[iPos], g_esSpecial[iType].g_flComboDuration[iPos], g_esTank[iType].g_flComboDuration[iPos], 1);
+					g_esCache[tank].g_flComboInterval[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flComboInterval[iPos], g_esPlayer[tank].g_flComboInterval[iPos], g_esSpecial[iType].g_flComboInterval[iPos], g_esTank[iType].g_flComboInterval[iPos], 1);
+					g_esCache[tank].g_flComboMinRadius[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flComboMinRadius[iPos], g_esPlayer[tank].g_flComboMinRadius[iPos], g_esSpecial[iType].g_flComboMinRadius[iPos], g_esTank[iType].g_flComboMinRadius[iPos], 2, 1.0);
+					g_esCache[tank].g_flComboMaxRadius[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flComboMaxRadius[iPos], g_esPlayer[tank].g_flComboMaxRadius[iPos], g_esSpecial[iType].g_flComboMaxRadius[iPos], g_esTank[iType].g_flComboMaxRadius[iPos], 2, -1.0);
+					g_esCache[tank].g_flComboRange[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flComboRange[iPos], g_esPlayer[tank].g_flComboRange[iPos], g_esSpecial[iType].g_flComboRange[iPos], g_esTank[iType].g_flComboRange[iPos], 1);
+					g_esCache[tank].g_flComboRangeChance[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flComboRangeChance[iPos], g_esPlayer[tank].g_flComboRangeChance[iPos], g_esSpecial[iType].g_flComboRangeChance[iPos], g_esTank[iType].g_flComboRangeChance[iPos], 1);
+					g_esCache[tank].g_iComboRangeCooldown[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iComboRangeCooldown[iPos], g_esPlayer[tank].g_iComboRangeCooldown[iPos], g_esSpecial[iType].g_iComboRangeCooldown[iPos], g_esTank[iType].g_iComboRangeCooldown[iPos], 1);
+					g_esCache[tank].g_flComboRockChance[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flComboRockChance[iPos], g_esPlayer[tank].g_flComboRockChance[iPos], g_esSpecial[iType].g_flComboRockChance[iPos], g_esTank[iType].g_flComboRockChance[iPos], 1);
+					g_esCache[tank].g_iComboRockCooldown[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iComboRockCooldown[iPos], g_esPlayer[tank].g_iComboRockCooldown[iPos], g_esSpecial[iType].g_iComboRockCooldown[iPos], g_esTank[iType].g_iComboRockCooldown[iPos], 1);
+					g_esCache[tank].g_flComboSpeed[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flComboSpeed[iPos], g_esPlayer[tank].g_flComboSpeed[iPos], g_esSpecial[iType].g_flComboSpeed[iPos], g_esTank[iType].g_flComboSpeed[iPos], 1);
+				}
 
-			if (iPos < (sizeof esCache::g_iGlowColor))
-			{
-				g_esCache[tank].g_iGlowColor[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iGlowColor[iPos], g_esPlayer[tank].g_iGlowColor[iPos], g_esSpecial[iType].g_iGlowColor[iPos], g_esTank[iType].g_iGlowColor[iPos], 1);
+				if (iPos < (sizeof esCache::g_flComboTypeChance))
+				{
+					g_esCache[tank].g_flComboTypeChance[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flComboTypeChance[iPos], g_esPlayer[tank].g_flComboTypeChance[iPos], g_esSpecial[iType].g_flComboTypeChance[iPos], g_esTank[iType].g_flComboTypeChance[iPos], 1);
+				}
+
+				if (iPos < (sizeof esCache::g_iSkinColor))
+				{
+					g_esCache[tank].g_iSkinColor[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iSkinColor[iPos], g_esPlayer[tank].g_iSkinColor[iPos], g_esSpecial[iType].g_iSkinColor[iPos], g_esTank[iType].g_iSkinColor[iPos], 1);
+					g_esCache[tank].g_iBossHealth[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iBossHealth[iPos], g_esPlayer[tank].g_iBossHealth[iPos], g_esSpecial[iType].g_iBossHealth[iPos], g_esTank[iType].g_iBossHealth[iPos], 1);
+					g_esCache[tank].g_iBossType[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iBossType[iPos], g_esPlayer[tank].g_iBossType[iPos], g_esSpecial[iType].g_iBossType[iPos], g_esTank[iType].g_iBossType[iPos], 1);
+					g_esCache[tank].g_iRockColor[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iRockColor[iPos], g_esPlayer[tank].g_iRockColor[iPos], g_esSpecial[iType].g_iRockColor[iPos], g_esTank[iType].g_iRockColor[iPos], 1);
+				}
+
+				if (iPos < (sizeof esCache::g_iGlowColor))
+				{
+					g_esCache[tank].g_iGlowColor[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iGlowColor[iPos], g_esPlayer[tank].g_iGlowColor[iPos], g_esSpecial[iType].g_iGlowColor[iPos], g_esTank[iType].g_iGlowColor[iPos], 1);
+				}
 			}
 		}
 	}
 	else
 	{
+		g_esCache[tank].g_flArmorDuration = flGetSettingValue(bAccess, true, g_esTank[iType].g_flArmorDuration, g_esGeneral.g_flArmorDuration, 1);
+		g_esCache[tank].g_flArmorDuration = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flArmorDuration, g_esCache[tank].g_flArmorDuration, 1);
+		g_esCache[tank].g_flArmorResistance = flGetSettingValue(bAccess, true, g_esTank[iType].g_flArmorResistance, g_esGeneral.g_flArmorResistance, 1);
+		g_esCache[tank].g_flArmorResistance = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flArmorResistance, g_esCache[tank].g_flArmorResistance, 1);
 		g_esCache[tank].g_flAttackInterval = flGetSettingValue(bAccess, true, g_esTank[iType].g_flAttackInterval, g_esGeneral.g_flAttackInterval, 1);
 		g_esCache[tank].g_flAttackInterval = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flAttackInterval, g_esCache[tank].g_flAttackInterval, 1);
 		g_esCache[tank].g_flBurnDuration = flGetSettingValue(bAccess, true, g_esTank[iType].g_flBurnDuration, g_esGeneral.g_flBurnDuration, 1);
@@ -15079,10 +15188,12 @@ void vCacheSettings(int tank)
 		g_esCache[tank].g_flRockDamage = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flRockDamage, g_esCache[tank].g_flRockDamage, 1, -1.0);
 		g_esCache[tank].g_flRunSpeed = flGetSettingValue(bAccess, true, g_esTank[iType].g_flRunSpeed, g_esGeneral.g_flRunSpeed, 1);
 		g_esCache[tank].g_flRunSpeed = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flRunSpeed, g_esCache[tank].g_flRunSpeed, 1);
+		g_esCache[tank].g_flShieldDuration = flGetSettingValue(bAccess, true, g_esTank[iType].g_flShieldDuration, g_esGeneral.g_flShieldDuration, 1);
+		g_esCache[tank].g_flShieldDuration = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flShieldDuration, g_esCache[tank].g_flShieldDuration, 1);
+		g_esCache[tank].g_flShieldResistance = flGetSettingValue(bAccess, true, g_esTank[iType].g_flShieldResistance, g_esGeneral.g_flShieldResistance, 1);
+		g_esCache[tank].g_flShieldResistance = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flShieldResistance, g_esCache[tank].g_flShieldResistance, 1);
 		g_esCache[tank].g_flThrowInterval = flGetSettingValue(bAccess, true, g_esTank[iType].g_flThrowInterval, g_esGeneral.g_flThrowInterval, 1);
 		g_esCache[tank].g_flThrowInterval = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flThrowInterval, g_esCache[tank].g_flThrowInterval, 1);
-		g_esCache[tank].g_iThrowRock = iGetSettingValue(bAccess, true, g_esTank[iType].g_iThrowRock, g_esGeneral.g_iThrowRock, 1);
-		g_esCache[tank].g_iThrowRock = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iThrowRock, g_esCache[tank].g_iThrowRock, 1);
 		g_esCache[tank].g_flTransformDelay = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flTransformDelay, g_esTank[iType].g_flTransformDelay, 1);
 		g_esCache[tank].g_flTransformDuration = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flTransformDuration, g_esTank[iType].g_flTransformDuration, 1);
 		g_esCache[tank].g_iAnnounceArrival = iGetSettingValue(bAccess, true, g_esTank[iType].g_iAnnounceArrival, g_esGeneral.g_iAnnounceArrival, 1);
@@ -15157,6 +15268,8 @@ void vCacheSettings(int tank)
 		g_esCache[tank].g_iSkipIncap = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iSkipIncap, g_esCache[tank].g_iSkipIncap, 1);
 		g_esCache[tank].g_iSkipTaunt = iGetSettingValue(bAccess, true, g_esTank[iType].g_iSkipTaunt, g_esGeneral.g_iSkipTaunt, 1);
 		g_esCache[tank].g_iSkipTaunt = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iSkipTaunt, g_esCache[tank].g_iSkipTaunt, 1);
+		g_esCache[tank].g_iSpawnProtection = iGetSettingValue(bAccess, true, g_esTank[iType].g_iSpawnProtection, g_esGeneral.g_iSpawnProtection, 1);
+		g_esCache[tank].g_iSpawnProtection = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iSpawnProtection, g_esCache[tank].g_iSpawnProtection, 1);
 		g_esCache[tank].g_iSpawnType = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iSpawnType, g_esTank[iType].g_iSpawnType, 1);
 		g_esCache[tank].g_iSweepFist = iGetSettingValue(bAccess, true, g_esTank[iType].g_iSweepFist, g_esGeneral.g_iSweepFist, 1);
 		g_esCache[tank].g_iSweepFist = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iSweepFist, g_esCache[tank].g_iSweepFist, 1);
@@ -15166,6 +15279,8 @@ void vCacheSettings(int tank)
 		g_esCache[tank].g_iTankNote = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iTankNote, g_esTank[iType].g_iTankNote, 1);
 		g_esCache[tank].g_iTeammateLimit = iGetSettingValue(bAccess, true, g_esTank[iType].g_iTeammateLimit, g_esGeneral.g_iTeammateLimit, 1);
 		g_esCache[tank].g_iTeammateLimit = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iTeammateLimit, g_esCache[tank].g_iTeammateLimit, 1);
+		g_esCache[tank].g_iThrowRock = iGetSettingValue(bAccess, true, g_esTank[iType].g_iThrowRock, g_esGeneral.g_iThrowRock, 1);
+		g_esCache[tank].g_iThrowRock = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iThrowRock, g_esCache[tank].g_iThrowRock, 1);
 		g_esCache[tank].g_iVocalizeArrival = iGetSettingValue(bAccess, true, g_esTank[iType].g_iVocalizeArrival, g_esGeneral.g_iVocalizeArrival, 1);
 		g_esCache[tank].g_iVocalizeArrival = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iVocalizeArrival, g_esCache[tank].g_iVocalizeArrival, 1);
 		g_esCache[tank].g_iVocalizeDeath = iGetSettingValue(bAccess, true, g_esTank[iType].g_iVocalizeDeath, g_esGeneral.g_iVocalizeDeath, 1);
@@ -15683,14 +15798,17 @@ void vReadSpecialSettings(int type, int mode, const char[] subsection, const cha
 		g_esSpecial[iIndex].g_iGlowEnabled = iGetKeyValue(subsection, MT_CONFIG_SECTION_GLOW, MT_CONFIG_SECTION_GLOW, MT_CONFIG_SECTION_GLOW, MT_CONFIG_SECTION_GLOW, key, "GlowEnabled", "Glow Enabled", "Glow_Enabled", "genabled", g_esSpecial[iIndex].g_iGlowEnabled, value, -1, 1);
 		g_esSpecial[iIndex].g_iGlowFlashing = iGetKeyValue(subsection, MT_CONFIG_SECTION_GLOW, MT_CONFIG_SECTION_GLOW, MT_CONFIG_SECTION_GLOW, MT_CONFIG_SECTION_GLOW, key, "GlowFlashing", "Glow Flashing", "Glow_Flashing", "flashing", g_esSpecial[iIndex].g_iGlowFlashing, value, -1, 1);
 		g_esSpecial[iIndex].g_iGlowType = iGetKeyValue(subsection, MT_CONFIG_SECTION_GLOW, MT_CONFIG_SECTION_GLOW, MT_CONFIG_SECTION_GLOW, MT_CONFIG_SECTION_GLOW, key, "GlowType", "Glow Type", "Glow_Type", "type", g_esSpecial[iIndex].g_iGlowType, value, -1, 1);
-		g_esSpecial[iIndex].g_iBaseHealth = iGetKeyValue(subsection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "BaseHealth", "Base Health", "Base_Health", "basehp", g_esSpecial[iIndex].g_iBaseHealth, value, -1, MT_MAXHEALTH);
 		g_esSpecial[iIndex].g_iDisplayHealth = iGetKeyValue(subsection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "DisplayHealth", "Display Health", "Display_Health", "displayhp", g_esSpecial[iIndex].g_iDisplayHealth, value, -1, 11);
 		g_esSpecial[iIndex].g_iDisplayHealthType = iGetKeyValue(subsection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "DisplayHealthType", "Display Health Type", "Display_Health_Type", "displaytype", g_esSpecial[iIndex].g_iDisplayHealthType, value, -1, 2);
-		g_esSpecial[iIndex].g_iExtraHealth = iGetKeyValue(subsection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "ExtraHealth", "Extra Health", "Extra_Health", "extrahp", g_esSpecial[iIndex].g_iExtraHealth, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
 		g_esSpecial[iIndex].g_flHealPercentMultiplier = flGetKeyValue(subsection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "HealthPercentageMultiplier", "Health Percentage Multiplier", "Health_Percentage_Multiplier", "hpmulti", g_esSpecial[iIndex].g_flHealPercentMultiplier, value, -1.0, 99999.0);
 		g_esSpecial[iIndex].g_iHumanMultiplierMode = iGetKeyValue(subsection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "HumanMultiplierMode", "Human Multiplier Mode", "Human_Multiplier_Mode", "humanmultimode", g_esSpecial[iIndex].g_iHumanMultiplierMode, value, -1, 1);
 		g_esSpecial[iIndex].g_iMinimumHumans = iGetKeyValue(subsection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "MinimumHumans", "Minimum Humans", "Minimum_Humans", "minhumans", g_esSpecial[iIndex].g_iMinimumHumans, value, -1, 32);
 		g_esSpecial[iIndex].g_iMultiplyHealth = iGetKeyValue(subsection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "MultiplyHealth", "Multiply Health", "Multiply_Health", "multihp", g_esSpecial[iIndex].g_iMultiplyHealth, value, -1, 3);
+		g_esSpecial[iIndex].g_iSpawnProtection = iGetKeyValue(subsection, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION2, key, "SpawnProtection", "Spawn Protection", "Spawn_Protection", "spawnprotect", g_esSpecial[iIndex].g_iSpawnProtection, value, -1, 3);
+		g_esSpecial[iIndex].g_flArmorDuration = flGetKeyValue(subsection, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION2, key, "ArmorDuration", "Armor Duration", "Armor_Duration", "armorduration", g_esSpecial[iIndex].g_flArmorDuration, value, -1.0, 99999.0);
+		g_esSpecial[iIndex].g_flArmorResistance = flGetKeyValue(subsection, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION2, key, "ArmorResistance", "Armor Resistance", "Armor_Resistance", "armorres", g_esSpecial[iIndex].g_flArmorResistance, value, -1.0, 1.0);
+		g_esSpecial[iIndex].g_flShieldDuration = flGetKeyValue(subsection, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION2, key, "ShieldDuration", "Shield Duration", "Shield_Duration", "shieldduration", g_esSpecial[iIndex].g_flShieldDuration, value, -1.0, 99999.0);
+		g_esSpecial[iIndex].g_flShieldResistance = flGetKeyValue(subsection, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION2, key, "ShieldResistance", "Shield Resistance", "Shield_Resistance", "shieldres", g_esSpecial[iIndex].g_flShieldResistance, value, -1.0, 1.0);
 		g_esSpecial[iIndex].g_iHumanSupport = iGetKeyValue(subsection, MT_CONFIG_SECTION_HUMAN, MT_CONFIG_SECTION_HUMAN2, MT_CONFIG_SECTION_HUMAN3, MT_CONFIG_SECTION_HUMAN4, key, MT_CONFIG_SECTION_HUMAN, MT_CONFIG_SECTION_HUMAN2, MT_CONFIG_SECTION_HUMAN3, MT_CONFIG_SECTION_HUMAN4, g_esSpecial[iIndex].g_iHumanSupport, value, -1, 2);
 		g_esSpecial[iIndex].g_iTypeLimit = iGetKeyValue(subsection, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, key, "TypeLimit", "Type Limit", "Type_Limit", "typelimit", g_esSpecial[iIndex].g_iTypeLimit, value, -1, 32);
 		g_esSpecial[iIndex].g_iFinaleSpecial = iGetKeyValue(subsection, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, key, "FinaleSpecial", "Finale Special", "Finale_Special", "finale", g_esSpecial[iIndex].g_iFinaleSpecial, value, -1, 4);
@@ -15715,7 +15833,7 @@ void vReadSpecialSettings(int type, int mode, const char[] subsection, const cha
 		g_esSpecial[iIndex].g_flIncapDamageMultiplier = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "IncapDamageMultiplier", "Incap Damage Multiplier", "Incap_Damage_Multiplier", "incapdmgmulti", g_esSpecial[iIndex].g_flIncapDamageMultiplier, value, -1.0, 99999.0);
 		g_esSpecial[iIndex].g_iIntangibleBody = iGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "IntangibleBody", "Intangible Body", "Intangible_Body", "intangible", g_esSpecial[iIndex].g_iIntangibleBody, value, -1, 1);
 		g_esSpecial[iIndex].g_flPinDamage = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PinDamage", "Pin Damage", "Pin_Damage", "pindmg", g_esSpecial[iIndex].g_flPinDamage, value, -2.0, 99999.0);
-		g_esSpecial[iIndex].g_flRunSpeed = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_esSpecial[iIndex].g_flRunSpeed, value, -1.0, 3.0);
+		g_esSpecial[iIndex].g_flRunSpeed = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_esSpecial[iIndex].g_flRunSpeed, value, -1.0, 99.0);
 		g_esSpecial[iIndex].g_flSpecialInterval = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "SpecialInterval", "Special Interval", "Special_Interval", "specint", g_esSpecial[iIndex].g_flSpecialInterval, value, -1.0, 99999.0);
 		g_esSpecial[iIndex].g_iThrowRock = iGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "ThrowRock", "Throw Rock", "Throw_Rock", "throwrock", g_esSpecial[iIndex].g_iThrowRock, value, -1, 1);
 		g_esSpecial[iIndex].g_iBulletImmunity = iGetKeyValue(subsection, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE2, key, "BulletImmunity", "Bullet Immunity", "Bullet_Immunity", "bullet", g_esSpecial[iIndex].g_iBulletImmunity, value, -1, 1);
@@ -15855,6 +15973,17 @@ void vReadSpecialSettings(int type, int mode, const char[] subsection, const cha
 				g_esSpecial[iIndex].g_iGlowMaxRange = (sRange[1][0] != '\0') ? iClamp(StringToInt(sRange[1]), -1, 99999) : g_esSpecial[iIndex].g_iGlowMaxRange;
 			}
 		}
+		else if (StrEqual(subsection, MT_CONFIG_SECTION_HEALTH, false))
+		{
+			char sSettings[4][128];
+			for (int iPos = 0; iPos < (sizeof g_sSpecialNames); iPos++)
+			{
+				vGetSpecialSettingNames(sSettings, sizeof sSettings[], "BaseHealth", "Base Health", "Base_Health", "basehp", iPos);
+				g_esSpecial[iIndex].g_iBaseHealth[iPos] = iGetClampedValue(key, sSettings[0], sSettings[1], sSettings[2], sSettings[3], g_esSpecial[iIndex].g_iBaseHealth[iPos], value, -1, MT_MAXHEALTH);
+				vGetSpecialSettingNames(sSettings, sizeof sSettings[], "ExtraHealth", "Extra Health", "Extra_Health", "extrahp", iPos);
+				g_esSpecial[iIndex].g_iExtraHealth[iPos] = iGetClampedValue(key, sSettings[0], sSettings[1], sSettings[2], sSettings[3], g_esSpecial[iIndex].g_iExtraHealth[iPos], value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
+			}
+		}
 		else if (StrEqual(subsection, MT_CONFIG_SECTION_BOSS, false))
 		{
 			char sValue[44], sSet[4][11];
@@ -15974,21 +16103,24 @@ void vReadSpecificSettings(int mode, const char[] section, const char[] subsecti
 		g_esSpecific.g_iKillMessage = iGetKeyValue(subsection, MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE2, key, "KillMessage", "Kill Message", "Kill_Message", "killmsg", g_esSpecific.g_iKillMessage, value, -1, 1023);
 		g_esSpecific.g_iVocalizeArrival = iGetKeyValue(subsection, MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE2, key, "VocalizeArrival", "Vocalize Arrival", "Vocalize_Arrival", "arrivalvoc", g_esSpecific.g_iVocalizeArrival, value, -1, 1);
 		g_esSpecific.g_iVocalizeDeath = iGetKeyValue(subsection, MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE2, key, "VocalizeDeath", "Vocalize Death", "Vocalize_Death", "deathvoc", g_esSpecific.g_iVocalizeDeath, value, -1, 1);
-		g_esSpecific.g_iBaseHealth = iGetKeyValue(subsection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "BaseHealth", "Base Health", "Base_Health", "basehp", g_esSpecific.g_iBaseHealth, value, -1, MT_MAXHEALTH);
 		g_esSpecific.g_iDisplayHealth = iGetKeyValue(subsection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "DisplayHealth", "Display Health", "Display_Health", "displayhp", g_esSpecific.g_iDisplayHealth, value, -1, 11);
 		g_esSpecific.g_iDisplayHealthType = iGetKeyValue(subsection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "DisplayHealthType", "Display Health Type", "Display_Health_Type", "displaytype", g_esSpecific.g_iDisplayHealthType, value, -1, 2);
-		g_esSpecific.g_iExtraHealth = iGetKeyValue(subsection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "ExtraHealth", "Extra Health", "Extra_Health", "extrahp", g_esSpecific.g_iExtraHealth, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
 		g_esSpecific.g_flHealPercentMultiplier = flGetKeyValue(subsection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "HealthPercentageMultiplier", "Health Percentage Multiplier", "Health_Percentage_Multiplier", "hpmulti", g_esSpecific.g_flHealPercentMultiplier, value, -1.0, 99999.0);
 		g_esSpecific.g_iHumanMultiplierMode = iGetKeyValue(subsection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "HumanMultiplierMode", "Human Multiplier Mode", "Human_Multiplier_Mode", "humanmultimode", g_esSpecific.g_iHumanMultiplierMode, value, -1, 1);
 		g_esSpecific.g_iMinimumHumans = iGetKeyValue(subsection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "MinimumHumans", "Minimum Humans", "Minimum_Humans", "minhumans", g_esSpecific.g_iMinimumHumans, value, -1, 32);
 		g_esSpecific.g_iMultiplyHealth = iGetKeyValue(subsection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "MultiplyHealth", "Multiply Health", "Multiply_Health", "multihp", g_esSpecific.g_iMultiplyHealth, value, -1, 3);
+		g_esSpecific.g_iSpawnProtection = iGetKeyValue(subsection, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION2, key, "SpawnProtection", "Spawn Protection", "Spawn_Protection", "spawnprotect", g_esSpecific.g_iSpawnProtection, value, -1, 3);
+		g_esSpecific.g_flArmorDuration = flGetKeyValue(subsection, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION2, key, "ArmorDuration", "Armor Duration", "Armor_Duration", "armorduration", g_esSpecific.g_flArmorDuration, value, -1.0, 99999.0);
+		g_esSpecific.g_flArmorResistance = flGetKeyValue(subsection, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION2, key, "ArmorResistance", "Armor Resistance", "Armor_Resistance", "armorres", g_esSpecific.g_flArmorResistance, value, -1.0, 1.0);
+		g_esSpecific.g_flShieldDuration = flGetKeyValue(subsection, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION2, key, "ShieldDuration", "Shield Duration", "Shield_Duration", "shieldduration", g_esSpecific.g_flShieldDuration, value, -1.0, 99999.0);
+		g_esSpecific.g_flShieldResistance = flGetKeyValue(subsection, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION2, key, "ShieldResistance", "Shield Resistance", "Shield_Resistance", "shieldres", g_esSpecific.g_flShieldResistance, value, -1.0, 1.0);
 		g_esSpecific.g_flAttackInterval = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "AttackInterval", "Attack Interval", "Attack_Interval", "attack", g_esSpecific.g_flAttackInterval, value, -1.0, 99999.0);
 		g_esSpecific.g_flClawDamage = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "ClawDamage", "Claw Damage", "Claw_Damage", "claw", g_esSpecific.g_flClawDamage, value, -2.0, 99999.0);
 		g_esSpecific.g_flHittableDamage = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "HittableDamage", "Hittable Damage", "Hittable_Damage", "hittable", g_esSpecific.g_flHittableDamage, value, -2.0, 99999.0);
 		g_esSpecific.g_flIncapDamageMultiplier = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "IncapDamageMultiplier", "Incap Damage Multiplier", "Incap_Damage_Multiplier", "incapdmgmulti", g_esSpecific.g_flIncapDamageMultiplier, value, -1.0, 99999.0);
 		g_esSpecific.g_iIntangibleBody = iGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "IntangibleBody", "Intangible Body", "Intangible_Body", "intangible", g_esSpecific.g_iIntangibleBody, value, -1, 1);
 		g_esSpecific.g_flPinDamage = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PinDamage", "Pin Damage", "Pin_Damage", "pindmg", g_esSpecific.g_flPinDamage, value, -2.0, 99999.0);
-		g_esSpecific.g_flRunSpeed = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_esSpecific.g_flRunSpeed, value, -1.0, 3.0);
+		g_esSpecific.g_flRunSpeed = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_esSpecific.g_flRunSpeed, value, -1.0, 99.0);
 		g_esSpecific.g_flSpecialInterval = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "SpecialInterval", "Special Interval", "Special_Interval", "specint", g_esSpecific.g_flSpecialInterval, value, -1.0, 99999.0);
 		g_esSpecific.g_iThrowRock = iGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "ThrowRock", "Throw Rock", "Throw_Rock", "throwrock", g_esSpecific.g_iThrowRock, value, -1, 1);
 		g_esSpecific.g_iBulletImmunity = iGetKeyValue(subsection, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE2, key, "BulletImmunity", "Bullet Immunity", "Bullet_Immunity", "bullet", g_esSpecific.g_iBulletImmunity, value, -1, 1);
@@ -16091,6 +16223,17 @@ void vReadSpecificSettings(int mode, const char[] section, const char[] subsecti
 				g_esSpecific.g_iStackLimits[iPos] = iGetClampedValue(key, "StackLimits", "Stack Limits", "Stack_Limits", "limits", g_esSpecific.g_iStackLimits[iPos], sSet[iPos], -1, 99999);
 			}
 		}
+		else if (StrEqual(subsection, MT_CONFIG_SECTION_HEALTH, false))
+		{
+			char sSettings[4][128];
+			for (int iPos = 0; iPos < (sizeof g_sSpecialNames); iPos++)
+			{
+				vGetSpecialSettingNames(sSettings, sizeof sSettings[], "BaseHealth", "Base Health", "Base_Health", "basehp", iPos);
+				g_esSpecific.g_iBaseHealth[iPos] = iGetClampedValue(key, sSettings[0], sSettings[1], sSettings[2], sSettings[3], g_esSpecific.g_iBaseHealth[iPos], value, -1, MT_MAXHEALTH);
+				vGetSpecialSettingNames(sSettings, sizeof sSettings[], "ExtraHealth", "Extra Health", "Extra_Health", "extrahp", iPos);
+				g_esSpecific.g_iExtraHealth[iPos] = iGetClampedValue(key, sSettings[0], sSettings[1], sSettings[2], sSettings[3], g_esSpecific.g_iExtraHealth[iPos], value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
+			}
+		}
 
 		vConfigsLoadedForward(subsection, key, value, -1, -1, mode, true, specsection);
 	}
@@ -16171,6 +16314,11 @@ void vReadTankSettings(int type, int mode, const char[] subsection, const char[]
 		g_esTank[iIndex].g_iHumanMultiplierMode = iGetKeyValue(subsection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "HumanMultiplierMode", "Human Multiplier Mode", "Human_Multiplier_Mode", "humanmultimode", g_esTank[iIndex].g_iHumanMultiplierMode, value, -1, 1);
 		g_esTank[iIndex].g_iMinimumHumans = iGetKeyValue(subsection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "MinimumHumans", "Minimum Humans", "Minimum_Humans", "minhumans", g_esTank[iIndex].g_iMinimumHumans, value, -1, 32);
 		g_esTank[iIndex].g_iMultiplyHealth = iGetKeyValue(subsection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "MultiplyHealth", "Multiply Health", "Multiply_Health", "multihp", g_esTank[iIndex].g_iMultiplyHealth, value, -1, 3);
+		g_esTank[iIndex].g_iSpawnProtection = iGetKeyValue(subsection, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION2, key, "SpawnProtection", "Spawn Protection", "Spawn_Protection", "spawnprotect", g_esTank[iIndex].g_iSpawnProtection, value, -1, 3);
+		g_esTank[iIndex].g_flArmorDuration = flGetKeyValue(subsection, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION2, key, "ArmorDuration", "Armor Duration", "Armor_Duration", "armorduration", g_esTank[iIndex].g_flArmorDuration, value, -1.0, 99999.0);
+		g_esTank[iIndex].g_flArmorResistance = flGetKeyValue(subsection, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION2, key, "ArmorResistance", "Armor Resistance", "Armor_Resistance", "armorres", g_esTank[iIndex].g_flArmorResistance, value, -1.0, 1.0);
+		g_esTank[iIndex].g_flShieldDuration = flGetKeyValue(subsection, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION2, key, "ShieldDuration", "Shield Duration", "Shield_Duration", "shieldduration", g_esTank[iIndex].g_flShieldDuration, value, -1.0, 99999.0);
+		g_esTank[iIndex].g_flShieldResistance = flGetKeyValue(subsection, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION2, key, "ShieldResistance", "Shield Resistance", "Shield_Resistance", "shieldres", g_esTank[iIndex].g_flShieldResistance, value, -1.0, 1.0);
 		g_esTank[iIndex].g_iHumanSupport = iGetKeyValue(subsection, MT_CONFIG_SECTION_HUMAN, MT_CONFIG_SECTION_HUMAN2, MT_CONFIG_SECTION_HUMAN3, MT_CONFIG_SECTION_HUMAN4, key, MT_CONFIG_SECTION_HUMAN, MT_CONFIG_SECTION_HUMAN2, MT_CONFIG_SECTION_HUMAN3, MT_CONFIG_SECTION_HUMAN4, g_esTank[iIndex].g_iHumanSupport, value, -1, 2);
 		g_esTank[iIndex].g_iTypeLimit = iGetKeyValue(subsection, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, key, "TypeLimit", "Type Limit", "Type_Limit", "typelimit", g_esTank[iIndex].g_iTypeLimit, value, -1, 32);
 		g_esTank[iIndex].g_iFinaleTank = iGetKeyValue(subsection, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, key, "FinaleTank", "Finale Tank", "Finale_Tank", "finale", g_esTank[iIndex].g_iFinaleTank, value, -1, 4);
@@ -16201,7 +16349,7 @@ void vReadTankSettings(int type, int mode, const char[] subsection, const char[]
 		g_esTank[iIndex].g_flPunchThrow = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PunchThrow", "Punch Throw", "Punch_Throw", "punchthrow", g_esTank[iIndex].g_flPunchThrow, value, -1.0, 100.0);
 		g_esTank[iIndex].g_flRockDamage = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RockDamage", "Rock Damage", "Rock_Damage", "rockdmg", g_esTank[iIndex].g_flRockDamage, value, -2.0, 99999.0);
 		g_esTank[iIndex].g_iRockSound = iGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RockSound", "Rock Sound", "Rock_Sound", "rocksnd", g_esTank[iIndex].g_iRockSound, value, -1, 1);
-		g_esTank[iIndex].g_flRunSpeed = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_esTank[iIndex].g_flRunSpeed, value, -1.0, 3.0);
+		g_esTank[iIndex].g_flRunSpeed = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_esTank[iIndex].g_flRunSpeed, value, -1.0, 99.0);
 		g_esTank[iIndex].g_iSkipIncap = iGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "SkipIncap", "Skip Incap", "Skip_Incap", "incap", g_esTank[iIndex].g_iSkipIncap, value, -1, 1);
 		g_esTank[iIndex].g_iSkipTaunt = iGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "SkipTaunt", "Skip Taunt", "Skip_Taunt", "taunt", g_esTank[iIndex].g_iSkipTaunt, value, -1, 1);
 		g_esTank[iIndex].g_iSweepFist = iGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "SweepFist", "Sweep Fist", "Sweep_Fist", "sweep", g_esTank[iIndex].g_iSweepFist, value, -1, 1);
@@ -16497,14 +16645,17 @@ void vReadTeammateSettings(int special, int mode, const char[] subsection, const
 	g_esTeammate[special].g_iGlowEnabled = iGetKeyValue(subsection, MT_CONFIG_SECTION_GLOW, MT_CONFIG_SECTION_GLOW, MT_CONFIG_SECTION_GLOW, MT_CONFIG_SECTION_GLOW, key, "GlowEnabled", "Glow Enabled", "Glow_Enabled", "genabled", g_esTeammate[special].g_iGlowEnabled, value, -1, 1);
 	g_esTeammate[special].g_iGlowFlashing = iGetKeyValue(subsection, MT_CONFIG_SECTION_GLOW, MT_CONFIG_SECTION_GLOW, MT_CONFIG_SECTION_GLOW, MT_CONFIG_SECTION_GLOW, key, "GlowFlashing", "Glow Flashing", "Glow_Flashing", "flashing", g_esTeammate[special].g_iGlowFlashing, value, -1, 1);
 	g_esTeammate[special].g_iGlowType = iGetKeyValue(subsection, MT_CONFIG_SECTION_GLOW, MT_CONFIG_SECTION_GLOW, MT_CONFIG_SECTION_GLOW, MT_CONFIG_SECTION_GLOW, key, "GlowType", "Glow Type", "Glow_Type", "type", g_esTeammate[special].g_iGlowType, value, -1, 1);
-	g_esTeammate[special].g_iBaseHealth = iGetKeyValue(subsection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "BaseHealth", "Base Health", "Base_Health", "basehp", g_esTeammate[special].g_iBaseHealth, value, -1, MT_MAXHEALTH);
 	g_esTeammate[special].g_iDisplayHealth = iGetKeyValue(subsection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "DisplayHealth", "Display Health", "Display_Health", "displayhp", g_esTeammate[special].g_iDisplayHealth, value, -1, 11);
 	g_esTeammate[special].g_iDisplayHealthType = iGetKeyValue(subsection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "DisplayHealthType", "Display Health Type", "Display_Health_Type", "displaytype", g_esTeammate[special].g_iDisplayHealthType, value, -1, 2);
-	g_esTeammate[special].g_iExtraHealth = iGetKeyValue(subsection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "ExtraHealth", "Extra Health", "Extra_Health", "extrahp", g_esTeammate[special].g_iExtraHealth, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
 	g_esTeammate[special].g_flHealPercentMultiplier = flGetKeyValue(subsection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "HealthPercentageMultiplier", "Health Percentage Multiplier", "Health_Percentage_Multiplier", "hpmulti", g_esTeammate[special].g_flHealPercentMultiplier, value, -1.0, 99999.0);
 	g_esTeammate[special].g_iHumanMultiplierMode = iGetKeyValue(subsection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "HumanMultiplierMode", "Human Multiplier Mode", "Human_Multiplier_Mode", "humanmultimode", g_esTeammate[special].g_iHumanMultiplierMode, value, -1, 1);
 	g_esTeammate[special].g_iMinimumHumans = iGetKeyValue(subsection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "MinimumHumans", "Minimum Humans", "Minimum_Humans", "minhumans", g_esTeammate[special].g_iMinimumHumans, value, -1, 32);
 	g_esTeammate[special].g_iMultiplyHealth = iGetKeyValue(subsection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "MultiplyHealth", "Multiply Health", "Multiply_Health", "multihp", g_esTeammate[special].g_iMultiplyHealth, value, -1, 3);
+	g_esTeammate[special].g_iSpawnProtection = iGetKeyValue(subsection, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION2, key, "SpawnProtection", "Spawn Protection", "Spawn_Protection", "spawnprotect", g_esTeammate[special].g_iSpawnProtection, value, -1, 3);
+	g_esTeammate[special].g_flArmorDuration = flGetKeyValue(subsection, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION2, key, "ArmorDuration", "Armor Duration", "Armor_Duration", "armorduration", g_esTeammate[special].g_flArmorDuration, value, -1.0, 99999.0);
+	g_esTeammate[special].g_flArmorResistance = flGetKeyValue(subsection, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION2, key, "ArmorResistance", "Armor Resistance", "Armor_Resistance", "armorres", g_esTeammate[special].g_flArmorResistance, value, -1.0, 1.0);
+	g_esTeammate[special].g_flShieldDuration = flGetKeyValue(subsection, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION2, key, "ShieldDuration", "Shield Duration", "Shield_Duration", "shieldduration", g_esTeammate[special].g_flShieldDuration, value, -1.0, 99999.0);
+	g_esTeammate[special].g_flShieldResistance = flGetKeyValue(subsection, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION2, key, "ShieldResistance", "Shield Resistance", "Shield_Resistance", "shieldres", g_esTeammate[special].g_flShieldResistance, value, -1.0, 1.0);
 	g_esTeammate[special].g_iBossEffects = iGetKeyValue(subsection, MT_CONFIG_SECTION_BOSS, MT_CONFIG_SECTION_BOSS, MT_CONFIG_SECTION_BOSS, MT_CONFIG_SECTION_BOSS, key, "BossEffects", "Boss Effects", "Boss_Effects", "bosseffects", g_esTeammate[special].g_iBossEffects, value, -1, 15);
 	g_esTeammate[special].g_iBossStages = iGetKeyValue(subsection, MT_CONFIG_SECTION_BOSS, MT_CONFIG_SECTION_BOSS, MT_CONFIG_SECTION_BOSS, MT_CONFIG_SECTION_BOSS, key, "BossStages", "Boss Stages", "Boss_Stages", "bossstages", g_esTeammate[special].g_iBossStages, value, -1, 4);
 	g_esTeammate[special].g_iRandomSpecial = iGetKeyValue(subsection, MT_CONFIG_SECTION_RANDOM, MT_CONFIG_SECTION_RANDOM, MT_CONFIG_SECTION_RANDOM, MT_CONFIG_SECTION_RANDOM, key, "RandomSpecial", "Random Special", "Random_Special", "random", g_esTeammate[special].g_iRandomSpecial, value, -1, 1);
@@ -16522,7 +16673,7 @@ void vReadTeammateSettings(int special, int mode, const char[] subsection, const
 	g_esTeammate[special].g_flIncapDamageMultiplier = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "IncapDamageMultiplier", "Incap Damage Multiplier", "Incap_Damage_Multiplier", "incapdmgmulti", g_esTeammate[special].g_flIncapDamageMultiplier, value, -1.0, 99999.0);
 	g_esTeammate[special].g_iIntangibleBody = iGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "IntangibleBody", "Intangible Body", "Intangible_Body", "intangible", g_esTeammate[special].g_iIntangibleBody, value, -1, 1);
 	g_esTeammate[special].g_flPinDamage = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PinDamage", "Pin Damage", "Pin_Damage", "pindmg", g_esTeammate[special].g_flPinDamage, value, -2.0, 99999.0);
-	g_esTeammate[special].g_flRunSpeed = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_esTeammate[special].g_flRunSpeed, value, -1.0, 3.0);
+	g_esTeammate[special].g_flRunSpeed = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_esTeammate[special].g_flRunSpeed, value, -1.0, 99.0);
 	g_esTeammate[special].g_flSpecialInterval = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "SpecialInterval", "Special Interval", "Special_Interval", "specint", g_esTeammate[special].g_flSpecialInterval, value, -1.0, 99999.0);
 	g_esTeammate[special].g_iThrowRock = iGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "ThrowRock", "Throw Rock", "Throw_Rock", "throwrock", g_esTeammate[special].g_iThrowRock, value, -1, 1);
 	g_esTeammate[special].g_iBulletImmunity = iGetKeyValue(subsection, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE2, key, "BulletImmunity", "Bullet Immunity", "Bullet_Immunity", "bullet", g_esTeammate[special].g_iBulletImmunity, value, -1, 1);
@@ -16660,6 +16811,17 @@ void vReadTeammateSettings(int special, int mode, const char[] subsection, const
 
 			g_esTeammate[special].g_iGlowMinRange = (sRange[0][0] != '\0') ? iClamp(StringToInt(sRange[0]), -1, 99999) : g_esTeammate[special].g_iGlowMinRange;
 			g_esTeammate[special].g_iGlowMaxRange = (sRange[1][0] != '\0') ? iClamp(StringToInt(sRange[1]), -1, 99999) : g_esTeammate[special].g_iGlowMaxRange;
+		}
+	}
+	else if (StrEqual(subsection, MT_CONFIG_SECTION_HEALTH, false))
+	{
+		char sSettings[4][128];
+		for (int iPos = 0; iPos < (sizeof g_sSpecialNames); iPos++)
+		{
+			vGetSpecialSettingNames(sSettings, sizeof sSettings[], "BaseHealth", "Base Health", "Base_Health", "basehp", iPos);
+			g_esTeammate[special].g_iBaseHealth[iPos] = iGetClampedValue(key, sSettings[0], sSettings[1], sSettings[2], sSettings[3], g_esTeammate[special].g_iBaseHealth[iPos], value, -1, MT_MAXHEALTH);
+			vGetSpecialSettingNames(sSettings, sizeof sSettings[], "ExtraHealth", "Extra Health", "Extra_Health", "extrahp", iPos);
+			g_esTeammate[special].g_iExtraHealth[iPos] = iGetClampedValue(key, sSettings[0], sSettings[1], sSettings[2], sSettings[3], g_esTeammate[special].g_iExtraHealth[iPos], value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
 		}
 	}
 	else if (StrEqual(subsection, MT_CONFIG_SECTION_BOSS, false))
@@ -16836,6 +16998,11 @@ void vSetTankSettings(int mode, const char[] section, const char[] subsection, c
 			g_esGeneral.g_iHumanMultiplierMode = iGetKeyValue(subsection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "HumanMultiplierMode", "Human Multiplier Mode", "Human_Multiplier_Mode", "humanmultimode", g_esGeneral.g_iHumanMultiplierMode, value, -1, 1);
 			g_esGeneral.g_iMinimumHumans = iGetKeyValue(subsection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "MinimumHumans", "Minimum Humans", "Minimum_Humans", "minhumans", g_esGeneral.g_iMinimumHumans, value, -1, 32);
 			g_esGeneral.g_iMultiplyHealth = iGetKeyValue(subsection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "MultiplyHealth", "Multiply Health", "Multiply_Health", "multihp", g_esGeneral.g_iMultiplyHealth, value, -1, 3);
+			g_esGeneral.g_iSpawnProtection = iGetKeyValue(subsection, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION2, key, "SpawnProtection", "Spawn Protection", "Spawn_Protection", "spawnprotect", g_esGeneral.g_iSpawnProtection, value, -1, 3);
+			g_esGeneral.g_flArmorDuration = flGetKeyValue(subsection, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION2, key, "ArmorDuration", "Armor Duration", "Armor_Duration", "armorduration", g_esGeneral.g_flArmorDuration, value, -1.0, 99999.0);
+			g_esGeneral.g_flArmorResistance = flGetKeyValue(subsection, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION2, key, "ArmorResistance", "Armor Resistance", "Armor_Resistance", "armorres", g_esGeneral.g_flArmorResistance, value, -1.0, 1.0);
+			g_esGeneral.g_flShieldDuration = flGetKeyValue(subsection, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION2, key, "ShieldDuration", "Shield Duration", "Shield_Duration", "shieldduration", g_esGeneral.g_flShieldDuration, value, -1.0, 99999.0);
+			g_esGeneral.g_flShieldResistance = flGetKeyValue(subsection, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION2, key, "ShieldResistance", "Shield Resistance", "Shield_Resistance", "shieldres", g_esGeneral.g_flShieldResistance, value, -1.0, 1.0);
 			g_esGeneral.g_flAttackInterval = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "AttackInterval", "Attack Interval", "Attack_Interval", "attack", g_esGeneral.g_flAttackInterval, value, -1.0, 99999.0);
 			g_esGeneral.g_flClawDamage = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "ClawDamage", "Claw Damage", "Claw_Damage", "claw", g_esGeneral.g_flClawDamage, value, -2.0, 99999.0);
 			g_esGeneral.g_iFootstepShake = iGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "FootstepShake", "Footstep Shake", "Footstep_Shake", "shake", g_esGeneral.g_iFootstepShake, value, -1, 1);
@@ -16847,7 +17014,7 @@ void vSetTankSettings(int mode, const char[] section, const char[] subsection, c
 			g_esGeneral.g_flPunchThrow = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PunchThrow", "Punch Throw", "Punch_Throw", "punchthrow", g_esGeneral.g_flPunchThrow, value, -1.0, 100.0);
 			g_esGeneral.g_flRockDamage = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RockDamage", "Rock Damage", "Rock_Damage", "rockdmg", g_esGeneral.g_flRockDamage, value, -2.0, 99999.0);
 			g_esGeneral.g_iRockSound = iGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RockSound", "Rock Sound", "Rock_Sound", "rocksnd", g_esGeneral.g_iRockSound, value, -1, 1);
-			g_esGeneral.g_flRunSpeed = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_esGeneral.g_flRunSpeed, value, -1.0, 3.0);
+			g_esGeneral.g_flRunSpeed = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_esGeneral.g_flRunSpeed, value, -1.0, 99.0);
 			g_esGeneral.g_iSkipIncap = iGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "SkipIncap", "Skip Incap", "Skip_Incap", "incap", g_esGeneral.g_iSkipIncap, value, -1, 1);
 			g_esGeneral.g_iSkipTaunt = iGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "SkipTaunt", "Skip Taunt", "Skip_Taunt", "taunt", g_esGeneral.g_iSkipTaunt, value, -1, 1);
 			g_esGeneral.g_iSweepFist = iGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "SweepFist", "Sweep Fist", "Sweep_Fist", "sweep", g_esGeneral.g_iSweepFist, value, -1, 1);
@@ -17050,6 +17217,7 @@ void vSetTankSettings(int mode, const char[] section, const char[] subsection, c
 				char sKey[128], sValue[PLATFORM_MAX_PATH];
 				strcopy(sKey, sizeof sKey, key);
 				ReplaceString(sKey, sizeof sKey, " ", "");
+
 				strcopy(sValue, sizeof sValue, value);
 				ReplaceString(sValue, sizeof sValue, " ", "");
 
@@ -17163,6 +17331,11 @@ void vSetTankSettings(int mode, const char[] section, const char[] subsection, c
 					g_esPlayer[iPlayer].g_iHumanMultiplierMode = iGetKeyValue(subsection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "HumanMultiplierMode", "Human Multiplier Mode", "Human_Multiplier_Mode", "humanmultimode", g_esPlayer[iPlayer].g_iHumanMultiplierMode, value, -1, 1);
 					g_esPlayer[iPlayer].g_iMinimumHumans = iGetKeyValue(subsection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "MinimumHumans", "Minimum Humans", "Minimum_Humans", "minhumans", g_esPlayer[iPlayer].g_iMinimumHumans, value, -1, 32);
 					g_esPlayer[iPlayer].g_iMultiplyHealth = iGetKeyValue(subsection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "MultiplyHealth", "Multiply Health", "Multiply_Health", "multihp", g_esPlayer[iPlayer].g_iMultiplyHealth, value, -1, 3);
+					g_esPlayer[iPlayer].g_iSpawnProtection = iGetKeyValue(subsection, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION2, key, "SpawnProtection", "Spawn Protection", "Spawn_Protection", "spawnprotect", g_esPlayer[iPlayer].g_iSpawnProtection, value, -1, 4);
+					g_esPlayer[iPlayer].g_flArmorDuration = flGetKeyValue(subsection, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION2, key, "ArmorDuration", "Armor Duration", "Armor_Duration", "armorduration", g_esPlayer[iPlayer].g_flArmorDuration, value, -1.0, 99999.0);
+					g_esPlayer[iPlayer].g_flArmorResistance = flGetKeyValue(subsection, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION2, key, "ArmorResistance", "Armor Resistance", "Armor_Resistance", "armorres", g_esPlayer[iPlayer].g_flArmorResistance, value, -1.0, 1.0);
+					g_esPlayer[iPlayer].g_flShieldDuration = flGetKeyValue(subsection, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION2, key, "ShieldDuration", "Shield Duration", "Shield_Duration", "shieldduration", g_esPlayer[iPlayer].g_flShieldDuration, value, -1.0, 99999.0);
+					g_esPlayer[iPlayer].g_flShieldResistance = flGetKeyValue(subsection, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION, MT_CONFIG_SECTION_PROTECTION2, key, "ShieldResistance", "Shield Resistance", "Shield_Resistance", "shieldres", g_esPlayer[iPlayer].g_flShieldResistance, value, -1.0, 1.0);
 					g_esPlayer[iPlayer].g_iBossEffects = iGetKeyValue(subsection, MT_CONFIG_SECTION_BOSS, MT_CONFIG_SECTION_BOSS, MT_CONFIG_SECTION_BOSS, MT_CONFIG_SECTION_BOSS, key, "BossEffects", "Boss Effects", "Boss_Effects", "bosseffects", g_esPlayer[iPlayer].g_iBossEffects, value, -1, 15);
 					g_esPlayer[iPlayer].g_iBossStages = iGetKeyValue(subsection, MT_CONFIG_SECTION_BOSS, MT_CONFIG_SECTION_BOSS, MT_CONFIG_SECTION_BOSS, MT_CONFIG_SECTION_BOSS, key, "BossStages", "Boss Stages", "Boss_Stages", "bossstages", g_esPlayer[iPlayer].g_iBossStages, value, -1, 4);
 					g_esPlayer[iPlayer].g_iRandomTank = iGetKeyValue(subsection, MT_CONFIG_SECTION_RANDOM, MT_CONFIG_SECTION_RANDOM, MT_CONFIG_SECTION_RANDOM, MT_CONFIG_SECTION_RANDOM, key, "RandomTank", "Random Tank", "Random_Tank", "random", g_esPlayer[iPlayer].g_iRandomTank, value, -1, 1);
@@ -17170,7 +17343,7 @@ void vSetTankSettings(int mode, const char[] section, const char[] subsection, c
 					g_esPlayer[iPlayer].g_flRandomInterval = flGetKeyValue(subsection, MT_CONFIG_SECTION_RANDOM, MT_CONFIG_SECTION_RANDOM, MT_CONFIG_SECTION_RANDOM, MT_CONFIG_SECTION_RANDOM, key, "RandomInterval", "Random Interval", "Random_Interval", "randinterval", g_esPlayer[iPlayer].g_flRandomInterval, value, -1.0, 99999.0);
 					g_esPlayer[iPlayer].g_flTransformDelay = flGetKeyValue(subsection, MT_CONFIG_SECTION_TRANSFORM, MT_CONFIG_SECTION_TRANSFORM, MT_CONFIG_SECTION_TRANSFORM, MT_CONFIG_SECTION_TRANSFORM, key, "TransformDelay", "Transform Delay", "Transform_Delay", "transdelay", g_esPlayer[iPlayer].g_flTransformDelay, value, -1.0, 99999.0);
 					g_esPlayer[iPlayer].g_flTransformDuration = flGetKeyValue(subsection, MT_CONFIG_SECTION_TRANSFORM, MT_CONFIG_SECTION_TRANSFORM, MT_CONFIG_SECTION_TRANSFORM, MT_CONFIG_SECTION_TRANSFORM, key, "TransformDuration", "Transform Duration", "Transform_Duration", "transduration", g_esPlayer[iPlayer].g_flTransformDuration, value, -1.0, 99999.0);
-					g_esPlayer[iPlayer].g_iSpawnType = iGetKeyValue(subsection, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, key, "SpawnType", "Spawn Type", "Spawn_Type", "spawntype", g_esPlayer[iPlayer].g_iSpawnType, value, -1, 4);
+					g_esPlayer[iPlayer].g_iSpawnType = iGetKeyValue(subsection, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, key, "SpawnType", "Spawn Type", "Spawn_Type", "spawntype", g_esPlayer[iPlayer].g_iSpawnType, value, -1, 3);
 					g_esPlayer[iPlayer].g_iRockModel = iGetKeyValue(subsection, MT_CONFIG_SECTION_PROPS, MT_CONFIG_SECTION_PROPS, MT_CONFIG_SECTION_PROPS, MT_CONFIG_SECTION_PROPS, key, "RockModel", "Rock Model", "Rock_Model", "rockmodel", g_esPlayer[iPlayer].g_iRockModel, value, -1, 2);
 					g_esPlayer[iPlayer].g_iPropsAttached = iGetKeyValue(subsection, MT_CONFIG_SECTION_PROPS, MT_CONFIG_SECTION_PROPS, MT_CONFIG_SECTION_PROPS, MT_CONFIG_SECTION_PROPS, key, "PropsAttached", "Props Attached", "Props_Attached", "attached", g_esPlayer[iPlayer].g_iPropsAttached, value, -1, 511);
 					g_esPlayer[iPlayer].g_iBodyEffects = iGetKeyValue(subsection, MT_CONFIG_SECTION_PARTICLES, MT_CONFIG_SECTION_PARTICLES, MT_CONFIG_SECTION_PARTICLES, MT_CONFIG_SECTION_PARTICLES, key, "BodyEffects", "Body Effects", "Body_Effects", "body", g_esPlayer[iPlayer].g_iBodyEffects, value, -1, 127);
@@ -17186,7 +17359,7 @@ void vSetTankSettings(int mode, const char[] section, const char[] subsection, c
 					g_esPlayer[iPlayer].g_flPunchThrow = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PunchThrow", "Punch Throw", "Punch_Throw", "punchthrow", g_esPlayer[iPlayer].g_flPunchThrow, value, -1.0, 100.0);
 					g_esPlayer[iPlayer].g_flRockDamage = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RockDamage", "Rock Damage", "Rock_Damage", "rockdmg", g_esPlayer[iPlayer].g_flRockDamage, value, -2.0, 99999.0);
 					g_esPlayer[iPlayer].g_iRockSound = iGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RockSound", "Rock Sound", "Rock_Sound", "rocksnd", g_esPlayer[iPlayer].g_iRockSound, value, -1, 1);
-					g_esPlayer[iPlayer].g_flRunSpeed = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_esPlayer[iPlayer].g_flRunSpeed, value, -1.0, 3.0);
+					g_esPlayer[iPlayer].g_flRunSpeed = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_esPlayer[iPlayer].g_flRunSpeed, value, -1.0, 99.0);
 					g_esPlayer[iPlayer].g_iSkipIncap = iGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "SkipIncap", "Skip Incap", "Skip_Incap", "incap", g_esPlayer[iPlayer].g_iSkipIncap, value, -1, 1);
 					g_esPlayer[iPlayer].g_iSkipTaunt = iGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "SkipTaunt", "Skip Taunt", "Skip_Taunt", "taunt", g_esPlayer[iPlayer].g_iSkipTaunt, value, -1, 1);
 					g_esPlayer[iPlayer].g_iSweepFist = iGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "SweepFist", "Sweep Fist", "Sweep_Fist", "sweep", g_esPlayer[iPlayer].g_iSweepFist, value, -1, 1);
@@ -18717,6 +18890,186 @@ void SMCParseStart_Main(SMCParser smc)
 
 	if (g_esGeneral.g_iConfigMode == 1)
 	{
+		for (int iTank = 1; iTank <= MaxClients; iTank++)
+		{
+			g_esCache[iTank].g_sComboSet[0] = '\0';
+			g_esCache[iTank].g_sGlowColor[0] = '\0';
+			g_esCache[iTank].g_sHealthCharacters[0] = '\0';
+			g_esCache[iTank].g_sRockColor[0] = '\0';
+			g_esCache[iTank].g_sSkinColor[0] = '\0';
+			g_esCache[iTank].g_sSmokerName[0] = '\0';
+			g_esCache[iTank].g_sBoomerName[0] = '\0';
+			g_esCache[iTank].g_sHunterName[0] = '\0';
+			g_esCache[iTank].g_sSpitterName[0] = '\0';
+			g_esCache[iTank].g_sJockeyName[0] = '\0';
+			g_esCache[iTank].g_sChargerName[0] = '\0';
+			g_esCache[iTank].g_flArmorDuration = 0.0;
+			g_esCache[iTank].g_flArmorResistance = 0.0;
+			g_esCache[iTank].g_flAttackInterval = 0.0;
+			g_esCache[iTank].g_flBurnDuration = 0.0;
+			g_esCache[iTank].g_flBurntSkin = 0.0;
+			g_esCache[iTank].g_flClawDamage = 0.0;
+			g_esCache[iTank].g_flHealPercentMultiplier = 0.0;
+			g_esCache[iTank].g_flHittableDamage = 0.0;
+			g_esCache[iTank].g_flIncapDamageMultiplier = 0.0;
+			g_esCache[iTank].g_flRandomDuration = 0.0;
+			g_esCache[iTank].g_flPinDamage = 0.0;
+			g_esCache[iTank].g_flRunSpeed = 0.0;
+			g_esCache[iTank].g_flShieldDuration = 0.0;
+			g_esCache[iTank].g_flShieldResistance = 0.0;
+			g_esCache[iTank].g_flSpecialInterval = 0.0;
+			g_esCache[iTank].g_flTransformDelay = 0.0;
+			g_esCache[iTank].g_flTransformDuration = 0.0;
+			g_esCache[iTank].g_iAnnounceArrival = 0;
+			g_esCache[iTank].g_iAnnounceDeath = 0;
+			g_esCache[iTank].g_iAnnounceKill = 0;
+			g_esCache[iTank].g_iArrivalMessage = 0;
+			g_esCache[iTank].g_iArrivalSound = 0;
+			g_esCache[iTank].g_iBaseHealth = 0;
+			g_esCache[iTank].g_iBodyEffects = 0;
+			g_esCache[iTank].g_iBossEffects = 0;
+			g_esCache[iTank].g_iBossStages = 0;
+			g_esCache[iTank].g_iBulletImmunity = 0;
+			g_esCache[iTank].g_iDeathDetails = 0;
+			g_esCache[iTank].g_iDeathMessage = 0;
+			g_esCache[iTank].g_iDeathRevert = 0;
+			g_esCache[iTank].g_iDeathSound = 0;
+			g_esCache[iTank].g_iDisplayHealth = 0;
+			g_esCache[iTank].g_iDisplayHealthType = 0;
+			g_esCache[iTank].g_iExplosiveImmunity = 0;
+			g_esCache[iTank].g_iExtraHealth = 0;
+			g_esCache[iTank].g_iFireImmunity = 0;
+			g_esCache[iTank].g_iGlowEnabled = 0;
+			g_esCache[iTank].g_iGlowFlashing = 0;
+			g_esCache[iTank].g_iGlowMaxRange = 0;
+			g_esCache[iTank].g_iGlowMinRange = 0;
+			g_esCache[iTank].g_iGlowType = 0;
+			g_esCache[iTank].g_iHittableImmunity = 0;
+			g_esCache[iTank].g_iHumanMultiplierMode = 0;
+			g_esCache[iTank].g_iIntangibleBody = 0;
+			g_esCache[iTank].g_iKillMessage = 0;
+			g_esCache[iTank].g_iMeleeImmunity = 0;
+			g_esCache[iTank].g_iMinimumHumans = 0;
+			g_esCache[iTank].g_iMultiplyHealth = 0;
+			g_esCache[iTank].g_iRandomSpecial = 0;
+			g_esCache[iTank].g_iRockEffects = 0;
+			g_esCache[iTank].g_iRockModel = 0;
+			g_esCache[iTank].g_iSpawnProtection = 0;
+			g_esCache[iTank].g_iSpawnType = 0;
+			g_esCache[iTank].g_iSpecialModel = 0;
+			g_esCache[iTank].g_iSpecialNote = 0;
+			g_esCache[iTank].g_iThrowRock = 0;
+			g_esCache[iTank].g_iVocalizeArrival = 0;
+			g_esCache[iTank].g_iVocalizeDeath = 0;
+			g_esCache[iTank].g_iVomitImmunity = 0;
+
+			for (int iPos = 0; iPos < (sizeof esCache::g_iTransformType); iPos++)
+			{
+				g_esCache[iTank].g_iTransformType[iPos] = 0;
+
+				if (iPos < (sizeof esCache::g_iRewardEnabled))
+				{
+					g_esCache[iTank].g_flActionDurationReward[iPos] = 0.0;
+					g_esCache[iTank].g_iAmmoBoostReward[iPos] = 0;
+					g_esCache[iTank].g_iAmmoRegenReward[iPos] = 0;
+					g_esCache[iTank].g_flAttackBoostReward[iPos] = 0.0;
+					g_esCache[iTank].g_iBlazeHealthReward[iPos] = 0;
+					g_esCache[iTank].g_iBunnyHopReward[iPos] = 0;
+					g_esCache[iTank].g_iBurstDoorsReward[iPos] = 0;
+					g_esCache[iTank].g_iCleanKillsReward[iPos] = 0;
+					g_esCache[iTank].g_iClusterBombsReward[iPos] = 0;
+					g_esCache[iTank].g_flDamageBoostReward[iPos] = 0.0;
+					g_esCache[iTank].g_flDamageResistanceReward[iPos] = 0.0;
+					g_esCache[iTank].g_iFriendlyFireReward[iPos] = 0;
+					g_esCache[iTank].g_iGhostBulletsReward[iPos] = 0;
+					g_esCache[iTank].g_flHealPercentReward[iPos] = 0.0;
+					g_esCache[iTank].g_iHealthRegenReward[iPos] = 0;
+					g_esCache[iTank].g_iHollowpointAmmoReward[iPos] = 0;
+					g_esCache[iTank].g_flJumpHeightReward[iPos] = 0.0;
+					g_esCache[iTank].g_iInextinguishableFireReward[iPos] = 0;
+					g_esCache[iTank].g_iInfiniteAmmoReward[iPos] = 0;
+					g_esCache[iTank].g_iLadderActionsReward[iPos] = 0;
+					g_esCache[iTank].g_iLadyKillerReward[iPos] = 0;
+					g_esCache[iTank].g_iLifeLeechReward[iPos] = 0;
+					g_esCache[iTank].g_flLoopingVoicelineInterval[iPos] = 0.0;
+					g_esCache[iTank].g_iMeleeRangeReward[iPos] = 0;
+					g_esCache[iTank].g_iMidairDashesReward[iPos] = 0;
+					g_esCache[iTank].g_iParticleEffectVisual[iPos] = 0;
+					g_esCache[iTank].g_flPipeBombDurationReward[iPos] = 0.0;
+					g_esCache[iTank].g_iPrefsNotify[iPos] = 0;
+					g_esCache[iTank].g_flPunchResistanceReward[iPos] = 0.0;
+					g_esCache[iTank].g_flRapidPistolReward[iPos] = 0.0;
+					g_esCache[iTank].g_iRecoilDampenerReward[iPos] = 0;
+					g_esCache[iTank].g_flRefillPercentReward[iPos] = 0.0;
+					g_esCache[iTank].g_iRespawnLoadoutReward[iPos] = 0;
+					g_esCache[iTank].g_iReviveHealthReward[iPos] = 0;
+					g_esCache[iTank].g_iRewardBots[iPos] = 0;
+					g_esCache[iTank].g_flRewardChance[iPos] = 0.0;
+					g_esCache[iTank].g_flRewardDuration[iPos] = 0.0;
+					g_esCache[iTank].g_iRewardEffect[iPos] = 0;
+					g_esCache[iTank].g_iRewardEnabled[iPos] = 0;
+					g_esCache[iTank].g_iRewardNotify[iPos] = 0;
+					g_esCache[iTank].g_flRewardPercentage[iPos] = 0.0;
+					g_esCache[iTank].g_iRewardVisual[iPos] = 0;
+					g_esCache[iTank].g_iShareRewards[iPos] = 0;
+					g_esCache[iTank].g_flShoveDamageReward[iPos] = 0.0;
+					g_esCache[iTank].g_iShovePenaltyReward[iPos] = 0;
+					g_esCache[iTank].g_flShoveRateReward[iPos] = 0.0;
+					g_esCache[iTank].g_iSledgehammerRoundsReward[iPos] = 0;
+					g_esCache[iTank].g_iSpecialAmmoReward[iPos] = 0;
+					g_esCache[iTank].g_flSpeedBoostReward[iPos] = 0.0;
+					g_esCache[iTank].g_iStackRewards[iPos] = 0;
+					g_esCache[iTank].g_iStickyGrenadesReward[iPos] = 0;
+					g_esCache[iTank].g_iThornsReward[iPos] = 0;
+					g_esCache[iTank].g_iUsefulRewards[iPos] = 0;
+					g_esCache[iTank].g_iVoicePitchVisual[iPos] = 0;
+				}
+
+				if (iPos < (sizeof esCache::g_iStackLimits))
+				{
+					g_esCache[iTank].g_iStackLimits[iPos] = 0;
+				}
+
+				if (iPos < (sizeof esCache::g_flComboChance))
+				{
+					g_esCache[iTank].g_flComboChance[iPos] = 0.0;
+					g_esCache[iTank].g_iComboCooldown[iPos] = 0;
+					g_esCache[iTank].g_flComboDamage[iPos] = 0.0;
+					g_esCache[iTank].g_flComboDeathChance[iPos] = 0.0;
+					g_esCache[iTank].g_flComboDeathRange[iPos] = 0.0;
+					g_esCache[iTank].g_flComboDelay[iPos] = 0.0;
+					g_esCache[iTank].g_flComboDuration[iPos] = 0.0;
+					g_esCache[iTank].g_flComboInterval[iPos] = 0.0;
+					g_esCache[iTank].g_flComboMinRadius[iPos] = 0.0;
+					g_esCache[iTank].g_flComboMaxRadius[iPos] = 0.0;
+					g_esCache[iTank].g_flComboRange[iPos] = 0.0;
+					g_esCache[iTank].g_flComboRangeChance[iPos] = 0.0;
+					g_esCache[iTank].g_iComboRangeCooldown[iPos] = 0;
+					g_esCache[iTank].g_flComboRockChance[iPos] = 0.0;
+					g_esCache[iTank].g_iComboRockCooldown[iPos] = 0;
+					g_esCache[iTank].g_flComboSpeed[iPos] = 0.0;
+				}
+
+				if (iPos < (sizeof esCache::g_flComboTypeChance))
+				{
+					g_esCache[iTank].g_flComboTypeChance[iPos] = 0.0;
+				}
+
+				if (iPos < (sizeof esCache::g_iSkinColor))
+				{
+					g_esCache[iTank].g_iSkinColor[iPos] = 255;
+					g_esCache[iTank].g_iBossHealth[iPos] = 0;
+					g_esCache[iTank].g_iBossType[iPos] = 0;
+					g_esCache[iTank].g_iRockColor[iPos] = 255;
+				}
+
+				if (iPos < (sizeof esCache::g_iGlowColor))
+				{
+					g_esCache[iTank].g_iGlowColor[iPos] = 255;
+				}
+			}
+		}
+
 		g_esGeneral.g_iTotalTypes[0] = 0;
 		g_esGeneral.g_iTotalTypes[1] = 0;
 		g_esGeneral.g_iTypeCounter[0] = 0;
@@ -18797,6 +19150,11 @@ void SMCParseStart_Main(SMCParser smc)
 		g_esGeneral.g_iHumanMultiplierMode = 0;
 		g_esGeneral.g_iMinimumHumans = 2;
 		g_esGeneral.g_iMultiplyHealth = 0;
+		g_esGeneral.g_iSpawnProtection = 0;
+		g_esGeneral.g_flArmorDuration = 3.0;
+		g_esGeneral.g_flArmorResistance = 0.75;
+		g_esGeneral.g_flShieldDuration = 1.0;
+		g_esGeneral.g_flShieldResistance = 0.0;
 		g_esGeneral.g_flAttackInterval = 0.0;
 		g_esGeneral.g_flClawDamage = -1.0;
 		g_esGeneral.g_iFootstepShake = 0;
@@ -18950,15 +19308,18 @@ void SMCParseStart_Main(SMCParser smc)
 		g_esSpecific.g_iKillMessage = -1;
 		g_esSpecific.g_iVocalizeArrival = -1;
 		g_esSpecific.g_iVocalizeDeath = -1;
-		g_esSpecific.g_iBaseHealth = -1;
 		g_esSpecific.g_iDisplayHealth = -1;
 		g_esSpecific.g_iDisplayHealthType = -1;
-		g_esSpecific.g_iExtraHealth = -1;
 		g_esSpecific.g_sHealthCharacters[0] = '\0';
 		g_esSpecific.g_flHealPercentMultiplier = -1.0;
 		g_esSpecific.g_iHumanMultiplierMode = -1;
 		g_esSpecific.g_iMinimumHumans = -1;
 		g_esSpecific.g_iMultiplyHealth = -1;
+		g_esSpecific.g_iSpawnProtection = -1;
+		g_esSpecific.g_flArmorDuration = -1.0;
+		g_esSpecific.g_flArmorResistance = -1.0;
+		g_esSpecific.g_flShieldDuration = -1.0;
+		g_esSpecific.g_flShieldResistance = -1.0;
 		g_esSpecific.g_flAttackInterval = -1.0;
 		g_esSpecific.g_flClawDamage = -2.0;
 		g_esSpecific.g_flHittableDamage = -2.0;
@@ -18978,6 +19339,12 @@ void SMCParseStart_Main(SMCParser smc)
 
 		for (int iPos = 0; iPos < (sizeof esSpecific::g_iStackLimits); iPos++)
 		{
+			if (iPos < (sizeof esSpecific::g_iBaseHealth))
+			{
+				g_esSpecific.g_iBaseHealth[iPos] = -1;
+				g_esSpecific.g_iExtraHealth[iPos] = -1;
+			}
+
 			if (iPos < (sizeof esSpecific::g_iRewardEnabled))
 			{
 				g_esSpecific.g_iRewardEnabled[iPos] = -2;
@@ -19122,6 +19489,11 @@ void SMCParseStart_Main(SMCParser smc)
 			g_esTank[iIndex].g_iHumanMultiplierMode = -1;
 			g_esTank[iIndex].g_iMinimumHumans = -1;
 			g_esTank[iIndex].g_iMultiplyHealth = -1;
+			g_esTank[iIndex].g_iSpawnProtection = -1;
+			g_esTank[iIndex].g_flArmorDuration = -1.0;
+			g_esTank[iIndex].g_flArmorResistance = -1.0;
+			g_esTank[iIndex].g_flShieldDuration = -1.0;
+			g_esTank[iIndex].g_flShieldResistance = -1.0;
 			g_esTank[iIndex].g_iHumanSupport = 0;
 			g_esTank[iIndex].g_iRequiresHumans = -1;
 			g_esTank[iIndex].g_iGlowEnabled = 0;
@@ -19322,15 +19694,18 @@ void SMCParseStart_Main(SMCParser smc)
 			g_esSpecial[iIndex].g_iKillMessage = -1;
 			g_esSpecial[iIndex].g_iVocalizeArrival = -1;
 			g_esSpecial[iIndex].g_iVocalizeDeath = -1;
-			g_esSpecial[iIndex].g_iBaseHealth = -1;
 			g_esSpecial[iIndex].g_iDisplayHealth = -1;
 			g_esSpecial[iIndex].g_iDisplayHealthType = -1;
-			g_esSpecial[iIndex].g_iExtraHealth = -1;
 			g_esSpecial[iIndex].g_sHealthCharacters[0] = '\0';
 			g_esSpecial[iIndex].g_flHealPercentMultiplier = -1.0;
 			g_esSpecial[iIndex].g_iHumanMultiplierMode = -1;
 			g_esSpecial[iIndex].g_iMinimumHumans = -1;
 			g_esSpecial[iIndex].g_iMultiplyHealth = -1;
+			g_esSpecial[iIndex].g_iSpawnProtection = -1;
+			g_esSpecial[iIndex].g_flArmorDuration = -1.0;
+			g_esSpecial[iIndex].g_flArmorResistance = -1.0;
+			g_esSpecial[iIndex].g_flShieldDuration = -1.0;
+			g_esSpecial[iIndex].g_flShieldResistance = -1.0;
 			g_esSpecial[iIndex].g_iHumanSupport = -1;
 			g_esSpecial[iIndex].g_iRequiresHumans = -1;
 			g_esSpecial[iIndex].g_iGlowEnabled = -1;
@@ -19375,6 +19750,12 @@ void SMCParseStart_Main(SMCParser smc)
 			for (int iPos = 0; iPos < (sizeof esSpecial::g_iTransformType); iPos++)
 			{
 				g_esSpecial[iIndex].g_iTransformType[iPos] = -1;
+
+				if (iPos < (sizeof esSpecial::g_iBaseHealth))
+				{
+					g_esSpecial[iIndex].g_iBaseHealth[iPos] = -1;
+					g_esSpecial[iIndex].g_iExtraHealth[iPos] = -1;
+				}
 
 				if (iPos < (sizeof esSpecial::g_iRewardEnabled))
 				{
@@ -19547,6 +19928,11 @@ void SMCParseStart_Main(SMCParser smc)
 			g_esPlayer[iPlayer].g_iHumanMultiplierMode = -1;
 			g_esPlayer[iPlayer].g_iMinimumHumans = -1;
 			g_esPlayer[iPlayer].g_iMultiplyHealth = -1;
+			g_esPlayer[iPlayer].g_iSpawnProtection = -1;
+			g_esPlayer[iPlayer].g_flArmorDuration = -1.0;
+			g_esPlayer[iPlayer].g_flArmorResistance = -1.0;
+			g_esPlayer[iPlayer].g_flShieldDuration = -1.0;
+			g_esPlayer[iPlayer].g_flShieldResistance = -1.0;
 			g_esPlayer[iPlayer].g_iGlowEnabled = -1;
 			g_esPlayer[iPlayer].g_iGlowFlashing = -1;
 			g_esPlayer[iPlayer].g_iGlowMinRange = -1;
@@ -19735,15 +20121,18 @@ void SMCParseStart_Main(SMCParser smc)
 			g_esTeammate[iPlayer].g_iKillMessage = -1;
 			g_esTeammate[iPlayer].g_iVocalizeArrival = -1;
 			g_esTeammate[iPlayer].g_iVocalizeDeath = -1;
-			g_esTeammate[iPlayer].g_iBaseHealth = -1;
 			g_esTeammate[iPlayer].g_iDisplayHealth = -1;
 			g_esTeammate[iPlayer].g_iDisplayHealthType = -1;
-			g_esTeammate[iPlayer].g_iExtraHealth = -1;
 			g_esTeammate[iPlayer].g_sHealthCharacters[0] = '\0';
 			g_esTeammate[iPlayer].g_flHealPercentMultiplier = -1.0;
 			g_esTeammate[iPlayer].g_iHumanMultiplierMode = -1;
 			g_esTeammate[iPlayer].g_iMinimumHumans = -1;
 			g_esTeammate[iPlayer].g_iMultiplyHealth = -1;
+			g_esTeammate[iPlayer].g_iSpawnProtection = -1;
+			g_esTeammate[iPlayer].g_flArmorDuration = -1.0;
+			g_esTeammate[iPlayer].g_flArmorResistance = -1.0;
+			g_esTeammate[iPlayer].g_flShieldDuration = -1.0;
+			g_esTeammate[iPlayer].g_flShieldResistance = -1.0;
 			g_esTeammate[iPlayer].g_iGlowEnabled = -1;
 			g_esTeammate[iPlayer].g_iGlowFlashing = -1;
 			g_esTeammate[iPlayer].g_iGlowMinRange = -1;
@@ -19780,6 +20169,12 @@ void SMCParseStart_Main(SMCParser smc)
 			for (int iPos = 0; iPos < (sizeof esTeammate::g_iTransformType); iPos++)
 			{
 				g_esTeammate[iPlayer].g_iTransformType[iPos] = -1;
+
+				if (iPos < (sizeof esTeammate::g_iBaseHealth))
+				{
+					g_esTeammate[iPlayer].g_iBaseHealth[iPos] = -1;
+					g_esTeammate[iPlayer].g_iExtraHealth[iPos] = -1;
+				}
 
 				if (iPos < (sizeof esTeammate::g_iRewardEnabled))
 				{
@@ -20363,7 +20758,7 @@ void vPlayerSpawnFrame(DataPack pack)
 	{
 		if (bIsTank(iPlayer) && g_bSecondGame)
 		{
-			g_esPlayer[iPlayer].g_bStasis = (bIsTankInStasis(iPlayer) || (g_esGeneral.g_hSDKIsInStasis != null && SDKCall(g_esGeneral.g_hSDKIsInStasis, iPlayer)));
+			g_esPlayer[iPlayer].g_bStasis = bIsTankInStasis(iPlayer) || (g_esGeneral.g_hSDKIsInStasis != null && SDKCall(g_esGeneral.g_hSDKIsInStasis, iPlayer));
 
 			if (g_esGeneral.g_flIdleCheck > 0.0)
 			{
@@ -20448,22 +20843,9 @@ void vRockThrowFrame(int ref)
 		int iThrower = GetEntPropEnt(iRock, Prop_Data, "m_hThrower");
 		if (bIsInfectedSupported(iThrower) && bIsInfectedEnabled(iThrower) && bHasCoreAdminAccess(iThrower) && !bIsInfectedIdle(iThrower))
 		{
-			switch (StrEqual(g_esCache[iThrower].g_sRockColor, "rainbow", false))
-			{
-				case true:
-				{
-					g_esPlayer[iThrower].g_iThrownRock[iRock] = ref;
-
-					if (!g_esPlayer[iThrower].g_bRainbowColor)
-					{
-						g_esPlayer[iThrower].g_bRainbowColor = SDKHookEx(iThrower, SDKHook_PreThinkPost, OnRainbowPreThinkPost);
-					}
-				}
-				case false: SetEntityRenderColor(iRock, iGetRandomColor(g_esCache[iThrower].g_iRockColor[0]), iGetRandomColor(g_esCache[iThrower].g_iRockColor[1]), iGetRandomColor(g_esCache[iThrower].g_iRockColor[2]), iGetRandomColor(g_esCache[iThrower].g_iRockColor[3]));
-			}
-
 			vSetRockModel(iThrower, iRock);
 			vSetRockEffects(iThrower, iRock);
+			vSetRockColor(iThrower, iRock);
 			vRockThrowForward(iThrower, iRock);
 			vCombineAbilitiesForward(iThrower, MT_COMBO_ROCKTHROW, .weapon = iRock);
 		}
@@ -20669,38 +21051,60 @@ Action OnInfectedTakeDamage(int victim, int &attacker, int &inflictor, float &da
 
 Action OnPlayerTakeDamageAlive(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (g_esGeneral.g_bPluginEnabled && damage > 0.0 && bIsSurvivor(victim))
+	if (g_esGeneral.g_bPluginEnabled && damage > 0.0)
 	{
-		bool bDeveloper = (bIsDeveloper(victim, 6) || (g_esPlayer[victim].g_iRewardTypes & MT_REWARD_ATTACKBOOST));
-		if (bDeveloper)
+		if (bIsSurvivor(victim))
 		{
-			static int iIndex[2] = {-1, -1};
-			int iReviver = GetClientOfUserId(g_esPlayer[victim].g_iReviver);
-			if (bDeveloper || (bIsSurvivor(iReviver) && (bIsDeveloper(iReviver, 6) || (g_esPlayer[iReviver].g_iRewardTypes & MT_REWARD_ATTACKBOOST))))
+			bool bDeveloper = bIsDeveloper(victim, 6) || (g_esPlayer[victim].g_iRewardTypes & MT_REWARD_ATTACKBOOST);
+			if (bDeveloper)
 			{
-				if (iIndex[0] == -1)
+				static int iIndex[2] = {-1, -1};
+				int iReviver = GetClientOfUserId(g_esPlayer[victim].g_iReviver);
+				bool bDeveloper2 = bIsDeveloper(iReviver, 6) || (g_esPlayer[iReviver].g_iRewardTypes & MT_REWARD_ATTACKBOOST);
+				if (bDeveloper || (bIsSurvivor(iReviver) && bDeveloper2))
 				{
-					iIndex[0] = iGetPatchIndex("MTPatch_ReviveInterrupt");
+					if (iIndex[0] == -1)
+					{
+						iIndex[0] = iGetPatchIndex("MTPatch_ReviveInterrupt");
+					}
+
+					if (iIndex[0] != -1)
+					{
+						vInstallPatch(iIndex[0]);
+					}
 				}
 
-				if (iIndex[0] != -1)
+				if (iIndex[1] == -1)
 				{
-					vInstallPatch(iIndex[0]);
+					iIndex[1] = iGetPatchIndex("MTPatch_PunchAngle");
 				}
-			}
 
-			if (iIndex[1] == -1)
+				if (iIndex[1] != -1)
+				{
+					vInstallPatch(iIndex[1]);
+				}
+
+				SetEntPropFloat(victim, Prop_Send, "m_flVelocityModifier", 1.0);
+				SetEntPropFloat(victim, Prop_Send, "m_jumpSupressedUntil", GetGameTime());
+			}
+		}
+		else if (bIsInfected(victim))
+		{
+			float flResistance = g_esCache[victim].g_flShieldResistance;
+			if (g_esPlayer[victim].g_bProtected[0] && flResistance >= 0.0)
 			{
-				iIndex[1] = iGetPatchIndex("MTPatch_PunchAngle");
+				damage *= flResistance;
+
+				return (flResistance > 0.0) ? Plugin_Changed : Plugin_Handled;
 			}
 
-			if (iIndex[1] != -1)
+			flResistance = g_esCache[victim].g_flArmorResistance;
+			if (g_esPlayer[victim].g_bProtected[1] && flResistance >= 0.0)
 			{
-				vInstallPatch(iIndex[1]);
-			}
+				damage *= flResistance;
 
-			SetEntPropFloat(victim, Prop_Send, "m_flVelocityModifier", 1.0);
-			SetEntPropFloat(victim, Prop_Send, "m_jumpSupressedUntil", GetGameTime());
+				return (flResistance > 0.0) ? Plugin_Changed : Plugin_Handled;
+			}
 		}
 	}
 
@@ -22234,7 +22638,7 @@ MRESReturn mreBaseEntityCreatePost(DHookReturn hReturn, DHookParam hParams)
 	hParams.GetString(1, sClassname, sizeof sClassname);
 	if (StrEqual(sClassname, "tank_rock") && hParams.IsNull(4))
 	{
-		vSetRockColor(hReturn.Value);
+		vSetTankRock(hReturn.Value);
 	}
 
 	return MRES_Ignored;
@@ -22883,7 +23287,7 @@ MRESReturn mreGetMaxClip1Pre(int pThis, DHookReturn hReturn)
 	int iSurvivor = !bIsValidEntity(pThis) ? 0 : GetEntPropEnt(pThis, Prop_Send, "m_hOwner"), iClip = iGetMaxAmmo(iSurvivor, 0, pThis, false);
 	if (bIsSurvivor(iSurvivor) && iClip > 0)
 	{
-		bool bDeveloper = (bIsDeveloper(iSurvivor, 4) || bIsDeveloper(iSurvivor, 6));
+		bool bDeveloper = bIsDeveloper(iSurvivor, 4) || bIsDeveloper(iSurvivor, 6);
 		if (bDeveloper || ((g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_AMMO) && g_esPlayer[iSurvivor].g_iAmmoBoost == 1))
 		{
 			hReturn.Value = iClip;
@@ -23132,7 +23536,7 @@ MRESReturn mreMaxCarryPre(Address pThis, DHookReturn hReturn, DHookParam hParams
 	int iSurvivor = hParams.IsNull(2) ? 0 : hParams.Get(2), iAmmo = iGetMaxAmmo(iSurvivor, hParams.Get(1), 0, true);
 	if (bIsSurvivor(iSurvivor) && iAmmo > 0)
 	{
-		bool bDeveloper = (bIsDeveloper(iSurvivor, 4) || bIsDeveloper(iSurvivor, 6));
+		bool bDeveloper = bIsDeveloper(iSurvivor, 4) || bIsDeveloper(iSurvivor, 6);
 		if (bDeveloper || ((g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_AMMO) && g_esPlayer[iSurvivor].g_iAmmoBoost == 1))
 		{
 			hReturn.Value = iAmmo;
@@ -23808,7 +24212,7 @@ MRESReturn mreTankRockCreatePost(DHookReturn hReturn, DHookParam hParams)
 {
 	if (hParams.IsNull(4))
 	{
-		vSetRockColor(hReturn.Value);
+		vSetTankRock(hReturn.Value);
 	}
 
 	return MRES_Ignored;
@@ -24697,7 +25101,7 @@ public void OnActionCreated(BehaviorAction action, int actor, const char[] name)
 		{
 			if (StrEqual(name, sActionNames[iPos]))
 			{
-				action.Update = OnAttackUpdate;
+				action.Update = AttackUpdate;
 
 				break;
 			}
@@ -24707,7 +25111,7 @@ public void OnActionCreated(BehaviorAction action, int actor, const char[] name)
 	}
 }
 
-Action OnAttackUpdate(BehaviorAction action, int actor, float interval, ActionResult result)
+Action AttackUpdate(BehaviorAction action, int actor, float interval, ActionResult result)
 {
 	any aTarget = action.Get(0x34);
 	if (aTarget == -1)
@@ -25212,6 +25616,29 @@ void vGetConfigColors(char[] buffer, int size, const char[] value, char delimite
 				}
 			}
 		}
+	}
+}
+
+void vGetSpecialSettingNames(char[][] buffers, int maxStringLength, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, int specType)
+{
+	if (specType > 0)
+	{
+		FormatEx(buffers[0], maxStringLength, "%s%s", g_sSpecialNames[specType], setting1);
+		FormatEx(buffers[1], maxStringLength, "%s %s", g_sSpecialNames[specType], setting2);
+		FormatEx(buffers[2], maxStringLength, "%s_%s", g_sSpecialNames[specType], setting3);
+	}
+	else
+	{
+		FormatEx(buffers[0], maxStringLength, "%s", setting1);
+		FormatEx(buffers[1], maxStringLength, "%s", setting2);
+		FormatEx(buffers[2], maxStringLength, "%s", setting3);
+	}
+
+	switch (specType)
+	{
+		case 0: FormatEx(buffers[3], maxStringLength, "%s", setting4);
+		case 2, 3, 5, 6: FormatEx(buffers[3], maxStringLength, "%c%s", g_sSpecialNames[specType][0], setting4);
+		case 1, 4: FormatEx(buffers[3], maxStringLength, "%c%c%s", g_sSpecialNames[specType][0], g_sSpecialNames[specType][1], setting4);
 	}
 }
 
@@ -26920,6 +27347,23 @@ void vClearSectionList()
  * Timer functions & callbacks
  **/
 
+void vResetProtectionTimers(int tank, int type)
+{
+	if (type == 1 || type == 3)
+	{
+		delete g_esPlayer[tank].g_hProtectionTimer[0];
+
+		g_esPlayer[tank].g_hProtectionTimer[0] = CreateTimer(g_esCache[tank].g_flShieldDuration, tTimerRemoveShield, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+	}
+
+	if (type == 2 || type == 3)
+	{
+		delete g_esPlayer[tank].g_hProtectionTimer[1];
+
+		g_esPlayer[tank].g_hProtectionTimer[1] = CreateTimer(g_esCache[tank].g_flArmorDuration, tTimerRemoveArmor, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+	}
+}
+
 void vResetTimers(bool delay = false)
 {
 	switch (delay)
@@ -27360,7 +27804,7 @@ Action tTimerRegenerateAmmoHealth(Handle timer)
 		vLifeLeech(iSurvivor, 7);
 		vNullifyNudge(iSurvivor);
 
-		bDeveloper = (bIsDeveloper(iSurvivor, 4) || bIsDeveloper(iSurvivor, 6));
+		bDeveloper = bIsDeveloper(iSurvivor, 4) || bIsDeveloper(iSurvivor, 6);
 		iRegen = (bDeveloper && g_esDeveloper[iSurvivor].g_iDevAmmoRegen > g_esPlayer[iSurvivor].g_iAmmoRegen) ? g_esDeveloper[iSurvivor].g_iDevAmmoRegen : g_esPlayer[iSurvivor].g_iAmmoRegen;
 		if ((!bDeveloper && (!(g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_AMMO) || g_esPlayer[iSurvivor].g_flRewardTime[4] == -1.0)) || iRegen <= 0)
 		{
@@ -27482,6 +27926,34 @@ Action tTimerReloadConfigs(Handle timer)
 	vCheckConfig(false);
 
 	return Plugin_Continue;
+}
+
+void tTimerRemoveArmor(Handle timer, int userid)
+{
+	int iTank = GetClientOfUserId(userid);
+	if (!bIsValidClient(iTank))
+	{
+		g_esPlayer[iTank].g_hProtectionTimer[1] = null;
+
+		return;
+	}
+
+	g_esPlayer[iTank].g_bProtected[1] = false;
+	g_esPlayer[iTank].g_hProtectionTimer[1] = null;
+}
+
+void tTimerRemoveShield(Handle timer, int userid)
+{
+	int iTank = GetClientOfUserId(userid);
+	if (!bIsValidClient(iTank))
+	{
+		g_esPlayer[iTank].g_hProtectionTimer[0] = null;
+
+		return;
+	}
+
+	g_esPlayer[iTank].g_bProtected[0] = false;
+	g_esPlayer[iTank].g_hProtectionTimer[0] = null;
 }
 
 void tTimerRemoveTimescale(Handle timer, int ref)

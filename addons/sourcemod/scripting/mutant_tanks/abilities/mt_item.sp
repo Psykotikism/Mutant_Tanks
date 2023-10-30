@@ -82,6 +82,7 @@ enum struct esItemPlayer
 	int g_iItemPinataBody;
 	int g_iRequiresHumans;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esItemPlayer g_esItemPlayer[MAXPLAYERS + 1];
@@ -640,41 +641,43 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esItemPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esItemPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esItemPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esItemCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esItemTeammate[tank].g_flCloseAreasOnly, g_esItemPlayer[tank].g_flCloseAreasOnly, g_esItemSpecial[type].g_flCloseAreasOnly, g_esItemAbility[type].g_flCloseAreasOnly, 1);
-		g_esItemCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esItemTeammate[tank].g_iComboAbility, g_esItemPlayer[tank].g_iComboAbility, g_esItemSpecial[type].g_iComboAbility, g_esItemAbility[type].g_iComboAbility, 1);
-		g_esItemCache[tank].g_flItemChance = flGetSubSettingValue(apply, bHuman, g_esItemTeammate[tank].g_flItemChance, g_esItemPlayer[tank].g_flItemChance, g_esItemSpecial[type].g_flItemChance, g_esItemAbility[type].g_flItemChance, 1);
-		g_esItemCache[tank].g_flItemPinataChance = flGetSubSettingValue(apply, bHuman, g_esItemTeammate[tank].g_flItemPinataChance, g_esItemPlayer[tank].g_flItemPinataChance, g_esItemSpecial[type].g_flItemPinataChance, g_esItemAbility[type].g_flItemPinataChance, 1);
-		g_esItemCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esItemTeammate[tank].g_iHumanAbility, g_esItemPlayer[tank].g_iHumanAbility, g_esItemSpecial[type].g_iHumanAbility, g_esItemAbility[type].g_iHumanAbility, 1);
-		g_esItemCache[tank].g_iItemAbility = iGetSubSettingValue(apply, bHuman, g_esItemTeammate[tank].g_iItemAbility, g_esItemPlayer[tank].g_iItemAbility, g_esItemSpecial[type].g_iItemAbility, g_esItemAbility[type].g_iItemAbility, 1);
-		g_esItemCache[tank].g_iItemMessage = iGetSubSettingValue(apply, bHuman, g_esItemTeammate[tank].g_iItemMessage, g_esItemPlayer[tank].g_iItemMessage, g_esItemSpecial[type].g_iItemMessage, g_esItemAbility[type].g_iItemMessage, 1);
-		g_esItemCache[tank].g_iItemMode = iGetSubSettingValue(apply, bHuman, g_esItemTeammate[tank].g_iItemMode, g_esItemPlayer[tank].g_iItemMode, g_esItemSpecial[type].g_iItemMode, g_esItemAbility[type].g_iItemMode, 1);
-		g_esItemCache[tank].g_iItemPinataBody = iGetSubSettingValue(apply, bHuman, g_esItemTeammate[tank].g_iItemPinataBody, g_esItemPlayer[tank].g_iItemPinataBody, g_esItemSpecial[type].g_iItemPinataBody, g_esItemAbility[type].g_iItemPinataBody, 1);
-		g_esItemCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esItemTeammate[tank].g_flOpenAreasOnly, g_esItemPlayer[tank].g_flOpenAreasOnly, g_esItemSpecial[type].g_flOpenAreasOnly, g_esItemAbility[type].g_flOpenAreasOnly, 1);
-		g_esItemCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esItemTeammate[tank].g_iRequiresHumans, g_esItemPlayer[tank].g_iRequiresHumans, g_esItemSpecial[type].g_iRequiresHumans, g_esItemAbility[type].g_iRequiresHumans, 1);
+		g_esItemCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esItemTeammate[tank].g_flCloseAreasOnly, g_esItemPlayer[tank].g_flCloseAreasOnly, g_esItemSpecial[iType].g_flCloseAreasOnly, g_esItemAbility[iType].g_flCloseAreasOnly, 1);
+		g_esItemCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esItemTeammate[tank].g_iComboAbility, g_esItemPlayer[tank].g_iComboAbility, g_esItemSpecial[iType].g_iComboAbility, g_esItemAbility[iType].g_iComboAbility, 1);
+		g_esItemCache[tank].g_flItemChance = flGetSubSettingValue(apply, bHuman, g_esItemTeammate[tank].g_flItemChance, g_esItemPlayer[tank].g_flItemChance, g_esItemSpecial[iType].g_flItemChance, g_esItemAbility[iType].g_flItemChance, 1);
+		g_esItemCache[tank].g_flItemPinataChance = flGetSubSettingValue(apply, bHuman, g_esItemTeammate[tank].g_flItemPinataChance, g_esItemPlayer[tank].g_flItemPinataChance, g_esItemSpecial[iType].g_flItemPinataChance, g_esItemAbility[iType].g_flItemPinataChance, 1);
+		g_esItemCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esItemTeammate[tank].g_iHumanAbility, g_esItemPlayer[tank].g_iHumanAbility, g_esItemSpecial[iType].g_iHumanAbility, g_esItemAbility[iType].g_iHumanAbility, 1);
+		g_esItemCache[tank].g_iItemAbility = iGetSubSettingValue(apply, bHuman, g_esItemTeammate[tank].g_iItemAbility, g_esItemPlayer[tank].g_iItemAbility, g_esItemSpecial[iType].g_iItemAbility, g_esItemAbility[iType].g_iItemAbility, 1);
+		g_esItemCache[tank].g_iItemMessage = iGetSubSettingValue(apply, bHuman, g_esItemTeammate[tank].g_iItemMessage, g_esItemPlayer[tank].g_iItemMessage, g_esItemSpecial[iType].g_iItemMessage, g_esItemAbility[iType].g_iItemMessage, 1);
+		g_esItemCache[tank].g_iItemMode = iGetSubSettingValue(apply, bHuman, g_esItemTeammate[tank].g_iItemMode, g_esItemPlayer[tank].g_iItemMode, g_esItemSpecial[iType].g_iItemMode, g_esItemAbility[iType].g_iItemMode, 1);
+		g_esItemCache[tank].g_iItemPinataBody = iGetSubSettingValue(apply, bHuman, g_esItemTeammate[tank].g_iItemPinataBody, g_esItemPlayer[tank].g_iItemPinataBody, g_esItemSpecial[iType].g_iItemPinataBody, g_esItemAbility[iType].g_iItemPinataBody, 1);
+		g_esItemCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esItemTeammate[tank].g_flOpenAreasOnly, g_esItemPlayer[tank].g_flOpenAreasOnly, g_esItemSpecial[iType].g_flOpenAreasOnly, g_esItemAbility[iType].g_flOpenAreasOnly, 1);
+		g_esItemCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esItemTeammate[tank].g_iRequiresHumans, g_esItemPlayer[tank].g_iRequiresHumans, g_esItemSpecial[iType].g_iRequiresHumans, g_esItemAbility[iType].g_iRequiresHumans, 1);
 
-		vGetSubSettingValue(apply, bHuman, g_esItemCache[tank].g_sItemLoadout, sizeof esItemCache::g_sItemLoadout, g_esItemTeammate[tank].g_sItemLoadout, g_esItemPlayer[tank].g_sItemLoadout, g_esItemSpecial[type].g_sItemLoadout, g_esItemAbility[type].g_sItemLoadout);
-		vGetSubSettingValue(apply, bHuman, g_esItemCache[tank].g_sItemPinata, sizeof esItemCache::g_sItemPinata, g_esItemTeammate[tank].g_sItemPinata, g_esItemPlayer[tank].g_sItemPinata, g_esItemSpecial[type].g_sItemPinata, g_esItemAbility[type].g_sItemPinata);
+		vGetSubSettingValue(apply, bHuman, g_esItemCache[tank].g_sItemLoadout, sizeof esItemCache::g_sItemLoadout, g_esItemTeammate[tank].g_sItemLoadout, g_esItemPlayer[tank].g_sItemLoadout, g_esItemSpecial[iType].g_sItemLoadout, g_esItemAbility[iType].g_sItemLoadout);
+		vGetSubSettingValue(apply, bHuman, g_esItemCache[tank].g_sItemPinata, sizeof esItemCache::g_sItemPinata, g_esItemTeammate[tank].g_sItemPinata, g_esItemPlayer[tank].g_sItemPinata, g_esItemSpecial[iType].g_sItemPinata, g_esItemAbility[iType].g_sItemPinata);
 	}
 	else
 	{
-		g_esItemCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_flCloseAreasOnly, g_esItemAbility[type].g_flCloseAreasOnly, 1);
-		g_esItemCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_iComboAbility, g_esItemAbility[type].g_iComboAbility, 1);
-		g_esItemCache[tank].g_flItemChance = flGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_flItemChance, g_esItemAbility[type].g_flItemChance, 1);
-		g_esItemCache[tank].g_flItemPinataChance = flGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_flItemPinataChance, g_esItemAbility[type].g_flItemPinataChance, 1);
-		g_esItemCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_iHumanAbility, g_esItemAbility[type].g_iHumanAbility, 1);
-		g_esItemCache[tank].g_iItemAbility = iGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_iItemAbility, g_esItemAbility[type].g_iItemAbility, 1);
-		g_esItemCache[tank].g_iItemMessage = iGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_iItemMessage, g_esItemAbility[type].g_iItemMessage, 1);
-		g_esItemCache[tank].g_iItemMode = iGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_iItemMode, g_esItemAbility[type].g_iItemMode, 1);
-		g_esItemCache[tank].g_iItemPinataBody = iGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_iItemPinataBody, g_esItemAbility[type].g_iItemPinataBody, 1);
-		g_esItemCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_flOpenAreasOnly, g_esItemAbility[type].g_flOpenAreasOnly, 1);
-		g_esItemCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_iRequiresHumans, g_esItemAbility[type].g_iRequiresHumans, 1);
+		g_esItemCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_flCloseAreasOnly, g_esItemAbility[iType].g_flCloseAreasOnly, 1);
+		g_esItemCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_iComboAbility, g_esItemAbility[iType].g_iComboAbility, 1);
+		g_esItemCache[tank].g_flItemChance = flGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_flItemChance, g_esItemAbility[iType].g_flItemChance, 1);
+		g_esItemCache[tank].g_flItemPinataChance = flGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_flItemPinataChance, g_esItemAbility[iType].g_flItemPinataChance, 1);
+		g_esItemCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_iHumanAbility, g_esItemAbility[iType].g_iHumanAbility, 1);
+		g_esItemCache[tank].g_iItemAbility = iGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_iItemAbility, g_esItemAbility[iType].g_iItemAbility, 1);
+		g_esItemCache[tank].g_iItemMessage = iGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_iItemMessage, g_esItemAbility[iType].g_iItemMessage, 1);
+		g_esItemCache[tank].g_iItemMode = iGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_iItemMode, g_esItemAbility[iType].g_iItemMode, 1);
+		g_esItemCache[tank].g_iItemPinataBody = iGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_iItemPinataBody, g_esItemAbility[iType].g_iItemPinataBody, 1);
+		g_esItemCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_flOpenAreasOnly, g_esItemAbility[iType].g_flOpenAreasOnly, 1);
+		g_esItemCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_iRequiresHumans, g_esItemAbility[iType].g_iRequiresHumans, 1);
 
-		vGetSettingValue(apply, bHuman, g_esItemCache[tank].g_sItemLoadout, sizeof esItemCache::g_sItemLoadout, g_esItemPlayer[tank].g_sItemLoadout, g_esItemAbility[type].g_sItemLoadout);
-		vGetSettingValue(apply, bHuman, g_esItemCache[tank].g_sItemPinata, sizeof esItemCache::g_sItemPinata, g_esItemPlayer[tank].g_sItemPinata, g_esItemAbility[type].g_sItemPinata);
+		vGetSettingValue(apply, bHuman, g_esItemCache[tank].g_sItemLoadout, sizeof esItemCache::g_sItemLoadout, g_esItemPlayer[tank].g_sItemLoadout, g_esItemAbility[iType].g_sItemLoadout);
+		vGetSettingValue(apply, bHuman, g_esItemCache[tank].g_sItemPinata, sizeof esItemCache::g_sItemPinata, g_esItemPlayer[tank].g_sItemPinata, g_esItemAbility[iType].g_sItemPinata);
 	}
 }
 

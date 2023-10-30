@@ -84,6 +84,7 @@ enum struct esRockPlayer
 	int g_iRockDuration;
 	int g_iRockMessage;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esRockPlayer g_esRockPlayer[MAXPLAYERS + 1];
@@ -398,7 +399,7 @@ Action OnRockTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 						return Plugin_Handled;
 					}
 
-					int iPos = g_esRockAbility[g_esRockPlayer[iTank].g_iTankType].g_iComboPosition;
+					int iPos = g_esRockAbility[g_esRockPlayer[iTank].g_iTankTypeRecorded].g_iComboPosition;
 					float flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 3, iPos) : float(g_esRockCache[iTank].g_iRockDamage);
 					damage = MT_GetScaledDamage(flDamage);
 
@@ -440,12 +441,12 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 {
 	if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esRockCache[tank].g_iHumanAbility != 2)
 	{
-		g_esRockAbility[g_esRockPlayer[tank].g_iTankType].g_iComboPosition = -1;
+		g_esRockAbility[g_esRockPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 		return;
 	}
 
-	g_esRockAbility[g_esRockPlayer[tank].g_iTankType].g_iComboPosition = -1;
+	g_esRockAbility[g_esRockPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 	char sCombo[320], sSet[4][32];
 	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
@@ -466,7 +467,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 			{
 				if (StrEqual(sSubset[iPos], MT_ROCK_SECTION, false) || StrEqual(sSubset[iPos], MT_ROCK_SECTION2, false) || StrEqual(sSubset[iPos], MT_ROCK_SECTION3, false) || StrEqual(sSubset[iPos], MT_ROCK_SECTION4, false))
 				{
-					g_esRockAbility[g_esRockPlayer[tank].g_iTankType].g_iComboPosition = iPos;
+					g_esRockAbility[g_esRockPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = iPos;
 
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
@@ -740,49 +741,51 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esRockPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esRockPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esRockPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esRockCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esRockTeammate[tank].g_flCloseAreasOnly, g_esRockPlayer[tank].g_flCloseAreasOnly, g_esRockSpecial[type].g_flCloseAreasOnly, g_esRockAbility[type].g_flCloseAreasOnly, 1);
-		g_esRockCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esRockTeammate[tank].g_iComboAbility, g_esRockPlayer[tank].g_iComboAbility, g_esRockSpecial[type].g_iComboAbility, g_esRockAbility[type].g_iComboAbility, 1);
-		g_esRockCache[tank].g_flRockChance = flGetSubSettingValue(apply, bHuman, g_esRockTeammate[tank].g_flRockChance, g_esRockPlayer[tank].g_flRockChance, g_esRockSpecial[type].g_flRockChance, g_esRockAbility[type].g_flRockChance, 1);
-		g_esRockCache[tank].g_flRockInterval = flGetSubSettingValue(apply, bHuman, g_esRockTeammate[tank].g_flRockInterval, g_esRockPlayer[tank].g_flRockInterval, g_esRockSpecial[type].g_flRockInterval, g_esRockAbility[type].g_flRockInterval, 1);
-		g_esRockCache[tank].g_flRockRadius[0] = flGetSubSettingValue(apply, bHuman, g_esRockTeammate[tank].g_flRockRadius[0], g_esRockPlayer[tank].g_flRockRadius[0], g_esRockSpecial[type].g_flRockRadius[0], g_esRockAbility[type].g_flRockRadius[0], 2, 1.0);
-		g_esRockCache[tank].g_flRockRadius[1] = flGetSubSettingValue(apply, bHuman, g_esRockTeammate[tank].g_flRockRadius[1], g_esRockPlayer[tank].g_flRockRadius[1], g_esRockSpecial[type].g_flRockRadius[1], g_esRockAbility[type].g_flRockRadius[1], 2, -1.0);
-		g_esRockCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esRockTeammate[tank].g_iHumanAbility, g_esRockPlayer[tank].g_iHumanAbility, g_esRockSpecial[type].g_iHumanAbility, g_esRockAbility[type].g_iHumanAbility, 1);
-		g_esRockCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esRockTeammate[tank].g_iHumanAmmo, g_esRockPlayer[tank].g_iHumanAmmo, g_esRockSpecial[type].g_iHumanAmmo, g_esRockAbility[type].g_iHumanAmmo, 1);
-		g_esRockCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esRockTeammate[tank].g_iHumanCooldown, g_esRockPlayer[tank].g_iHumanCooldown, g_esRockSpecial[type].g_iHumanCooldown, g_esRockAbility[type].g_iHumanCooldown, 1);
-		g_esRockCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esRockTeammate[tank].g_iHumanDuration, g_esRockPlayer[tank].g_iHumanDuration, g_esRockSpecial[type].g_iHumanDuration, g_esRockAbility[type].g_iHumanDuration, 1);
-		g_esRockCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esRockTeammate[tank].g_iHumanMode, g_esRockPlayer[tank].g_iHumanMode, g_esRockSpecial[type].g_iHumanMode, g_esRockAbility[type].g_iHumanMode, 1);
-		g_esRockCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esRockTeammate[tank].g_flOpenAreasOnly, g_esRockPlayer[tank].g_flOpenAreasOnly, g_esRockSpecial[type].g_flOpenAreasOnly, g_esRockAbility[type].g_flOpenAreasOnly, 1);
-		g_esRockCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esRockTeammate[tank].g_iRequiresHumans, g_esRockPlayer[tank].g_iRequiresHumans, g_esRockSpecial[type].g_iRequiresHumans, g_esRockAbility[type].g_iRequiresHumans, 1);
-		g_esRockCache[tank].g_iRockAbility = iGetSubSettingValue(apply, bHuman, g_esRockTeammate[tank].g_iRockAbility, g_esRockPlayer[tank].g_iRockAbility, g_esRockSpecial[type].g_iRockAbility, g_esRockAbility[type].g_iRockAbility, 1);
-		g_esRockCache[tank].g_iRockCooldown = iGetSubSettingValue(apply, bHuman, g_esRockTeammate[tank].g_iRockCooldown, g_esRockPlayer[tank].g_iRockCooldown, g_esRockSpecial[type].g_iRockCooldown, g_esRockAbility[type].g_iRockCooldown, 1);
-		g_esRockCache[tank].g_iRockDamage = iGetSubSettingValue(apply, bHuman, g_esRockTeammate[tank].g_iRockDamage, g_esRockPlayer[tank].g_iRockDamage, g_esRockSpecial[type].g_iRockDamage, g_esRockAbility[type].g_iRockDamage, 1);
-		g_esRockCache[tank].g_iRockDuration = iGetSubSettingValue(apply, bHuman, g_esRockTeammate[tank].g_iRockDuration, g_esRockPlayer[tank].g_iRockDuration, g_esRockSpecial[type].g_iRockDuration, g_esRockAbility[type].g_iRockDuration, 1);
-		g_esRockCache[tank].g_iRockMessage = iGetSubSettingValue(apply, bHuman, g_esRockTeammate[tank].g_iRockMessage, g_esRockPlayer[tank].g_iRockMessage, g_esRockSpecial[type].g_iRockMessage, g_esRockAbility[type].g_iRockMessage, 1);
+		g_esRockCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esRockTeammate[tank].g_flCloseAreasOnly, g_esRockPlayer[tank].g_flCloseAreasOnly, g_esRockSpecial[iType].g_flCloseAreasOnly, g_esRockAbility[iType].g_flCloseAreasOnly, 1);
+		g_esRockCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esRockTeammate[tank].g_iComboAbility, g_esRockPlayer[tank].g_iComboAbility, g_esRockSpecial[iType].g_iComboAbility, g_esRockAbility[iType].g_iComboAbility, 1);
+		g_esRockCache[tank].g_flRockChance = flGetSubSettingValue(apply, bHuman, g_esRockTeammate[tank].g_flRockChance, g_esRockPlayer[tank].g_flRockChance, g_esRockSpecial[iType].g_flRockChance, g_esRockAbility[iType].g_flRockChance, 1);
+		g_esRockCache[tank].g_flRockInterval = flGetSubSettingValue(apply, bHuman, g_esRockTeammate[tank].g_flRockInterval, g_esRockPlayer[tank].g_flRockInterval, g_esRockSpecial[iType].g_flRockInterval, g_esRockAbility[iType].g_flRockInterval, 1);
+		g_esRockCache[tank].g_flRockRadius[0] = flGetSubSettingValue(apply, bHuman, g_esRockTeammate[tank].g_flRockRadius[0], g_esRockPlayer[tank].g_flRockRadius[0], g_esRockSpecial[iType].g_flRockRadius[0], g_esRockAbility[iType].g_flRockRadius[0], 2, 1.0);
+		g_esRockCache[tank].g_flRockRadius[1] = flGetSubSettingValue(apply, bHuman, g_esRockTeammate[tank].g_flRockRadius[1], g_esRockPlayer[tank].g_flRockRadius[1], g_esRockSpecial[iType].g_flRockRadius[1], g_esRockAbility[iType].g_flRockRadius[1], 2, -1.0);
+		g_esRockCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esRockTeammate[tank].g_iHumanAbility, g_esRockPlayer[tank].g_iHumanAbility, g_esRockSpecial[iType].g_iHumanAbility, g_esRockAbility[iType].g_iHumanAbility, 1);
+		g_esRockCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esRockTeammate[tank].g_iHumanAmmo, g_esRockPlayer[tank].g_iHumanAmmo, g_esRockSpecial[iType].g_iHumanAmmo, g_esRockAbility[iType].g_iHumanAmmo, 1);
+		g_esRockCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esRockTeammate[tank].g_iHumanCooldown, g_esRockPlayer[tank].g_iHumanCooldown, g_esRockSpecial[iType].g_iHumanCooldown, g_esRockAbility[iType].g_iHumanCooldown, 1);
+		g_esRockCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esRockTeammate[tank].g_iHumanDuration, g_esRockPlayer[tank].g_iHumanDuration, g_esRockSpecial[iType].g_iHumanDuration, g_esRockAbility[iType].g_iHumanDuration, 1);
+		g_esRockCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esRockTeammate[tank].g_iHumanMode, g_esRockPlayer[tank].g_iHumanMode, g_esRockSpecial[iType].g_iHumanMode, g_esRockAbility[iType].g_iHumanMode, 1);
+		g_esRockCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esRockTeammate[tank].g_flOpenAreasOnly, g_esRockPlayer[tank].g_flOpenAreasOnly, g_esRockSpecial[iType].g_flOpenAreasOnly, g_esRockAbility[iType].g_flOpenAreasOnly, 1);
+		g_esRockCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esRockTeammate[tank].g_iRequiresHumans, g_esRockPlayer[tank].g_iRequiresHumans, g_esRockSpecial[iType].g_iRequiresHumans, g_esRockAbility[iType].g_iRequiresHumans, 1);
+		g_esRockCache[tank].g_iRockAbility = iGetSubSettingValue(apply, bHuman, g_esRockTeammate[tank].g_iRockAbility, g_esRockPlayer[tank].g_iRockAbility, g_esRockSpecial[iType].g_iRockAbility, g_esRockAbility[iType].g_iRockAbility, 1);
+		g_esRockCache[tank].g_iRockCooldown = iGetSubSettingValue(apply, bHuman, g_esRockTeammate[tank].g_iRockCooldown, g_esRockPlayer[tank].g_iRockCooldown, g_esRockSpecial[iType].g_iRockCooldown, g_esRockAbility[iType].g_iRockCooldown, 1);
+		g_esRockCache[tank].g_iRockDamage = iGetSubSettingValue(apply, bHuman, g_esRockTeammate[tank].g_iRockDamage, g_esRockPlayer[tank].g_iRockDamage, g_esRockSpecial[iType].g_iRockDamage, g_esRockAbility[iType].g_iRockDamage, 1);
+		g_esRockCache[tank].g_iRockDuration = iGetSubSettingValue(apply, bHuman, g_esRockTeammate[tank].g_iRockDuration, g_esRockPlayer[tank].g_iRockDuration, g_esRockSpecial[iType].g_iRockDuration, g_esRockAbility[iType].g_iRockDuration, 1);
+		g_esRockCache[tank].g_iRockMessage = iGetSubSettingValue(apply, bHuman, g_esRockTeammate[tank].g_iRockMessage, g_esRockPlayer[tank].g_iRockMessage, g_esRockSpecial[iType].g_iRockMessage, g_esRockAbility[iType].g_iRockMessage, 1);
 	}
 	else
 	{
-		g_esRockCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_flCloseAreasOnly, g_esRockAbility[type].g_flCloseAreasOnly, 1);
-		g_esRockCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_iComboAbility, g_esRockAbility[type].g_iComboAbility, 1);
-		g_esRockCache[tank].g_flRockChance = flGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_flRockChance, g_esRockAbility[type].g_flRockChance, 1);
-		g_esRockCache[tank].g_flRockInterval = flGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_flRockInterval, g_esRockAbility[type].g_flRockInterval, 1);
-		g_esRockCache[tank].g_flRockRadius[0] = flGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_flRockRadius[0], g_esRockAbility[type].g_flRockRadius[0], 2, 1.0);
-		g_esRockCache[tank].g_flRockRadius[1] = flGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_flRockRadius[1], g_esRockAbility[type].g_flRockRadius[1], 2, -1.0);
-		g_esRockCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_iHumanAbility, g_esRockAbility[type].g_iHumanAbility, 1);
-		g_esRockCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_iHumanAmmo, g_esRockAbility[type].g_iHumanAmmo, 1);
-		g_esRockCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_iHumanCooldown, g_esRockAbility[type].g_iHumanCooldown, 1);
-		g_esRockCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_iHumanDuration, g_esRockAbility[type].g_iHumanDuration, 1);
-		g_esRockCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_iHumanMode, g_esRockAbility[type].g_iHumanMode, 1);
-		g_esRockCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_flOpenAreasOnly, g_esRockAbility[type].g_flOpenAreasOnly, 1);
-		g_esRockCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_iRequiresHumans, g_esRockAbility[type].g_iRequiresHumans, 1);
-		g_esRockCache[tank].g_iRockAbility = iGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_iRockAbility, g_esRockAbility[type].g_iRockAbility, 1);
-		g_esRockCache[tank].g_iRockCooldown = iGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_iRockCooldown, g_esRockAbility[type].g_iRockCooldown, 1);
-		g_esRockCache[tank].g_iRockDamage = iGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_iRockDamage, g_esRockAbility[type].g_iRockDamage, 1);
-		g_esRockCache[tank].g_iRockDuration = iGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_iRockDuration, g_esRockAbility[type].g_iRockDuration, 1);
-		g_esRockCache[tank].g_iRockMessage = iGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_iRockMessage, g_esRockAbility[type].g_iRockMessage, 1);
+		g_esRockCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_flCloseAreasOnly, g_esRockAbility[iType].g_flCloseAreasOnly, 1);
+		g_esRockCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_iComboAbility, g_esRockAbility[iType].g_iComboAbility, 1);
+		g_esRockCache[tank].g_flRockChance = flGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_flRockChance, g_esRockAbility[iType].g_flRockChance, 1);
+		g_esRockCache[tank].g_flRockInterval = flGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_flRockInterval, g_esRockAbility[iType].g_flRockInterval, 1);
+		g_esRockCache[tank].g_flRockRadius[0] = flGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_flRockRadius[0], g_esRockAbility[iType].g_flRockRadius[0], 2, 1.0);
+		g_esRockCache[tank].g_flRockRadius[1] = flGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_flRockRadius[1], g_esRockAbility[iType].g_flRockRadius[1], 2, -1.0);
+		g_esRockCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_iHumanAbility, g_esRockAbility[iType].g_iHumanAbility, 1);
+		g_esRockCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_iHumanAmmo, g_esRockAbility[iType].g_iHumanAmmo, 1);
+		g_esRockCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_iHumanCooldown, g_esRockAbility[iType].g_iHumanCooldown, 1);
+		g_esRockCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_iHumanDuration, g_esRockAbility[iType].g_iHumanDuration, 1);
+		g_esRockCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_iHumanMode, g_esRockAbility[iType].g_iHumanMode, 1);
+		g_esRockCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_flOpenAreasOnly, g_esRockAbility[iType].g_flOpenAreasOnly, 1);
+		g_esRockCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_iRequiresHumans, g_esRockAbility[iType].g_iRequiresHumans, 1);
+		g_esRockCache[tank].g_iRockAbility = iGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_iRockAbility, g_esRockAbility[iType].g_iRockAbility, 1);
+		g_esRockCache[tank].g_iRockCooldown = iGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_iRockCooldown, g_esRockAbility[iType].g_iRockCooldown, 1);
+		g_esRockCache[tank].g_iRockDamage = iGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_iRockDamage, g_esRockAbility[iType].g_iRockDamage, 1);
+		g_esRockCache[tank].g_iRockDuration = iGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_iRockDuration, g_esRockAbility[iType].g_iRockDuration, 1);
+		g_esRockCache[tank].g_iRockMessage = iGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_iRockMessage, g_esRockAbility[iType].g_iRockMessage, 1);
 	}
 }
 
@@ -1107,7 +1110,7 @@ void vRockReset2(int tank)
 
 void vRockReset3(int tank)
 {
-	int iTime = GetTime(), iPos = g_esRockAbility[g_esRockPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esRockCache[tank].g_iRockCooldown;
+	int iTime = GetTime(), iPos = g_esRockAbility[g_esRockPlayer[tank].g_iTankTypeRecorded].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esRockCache[tank].g_iRockCooldown;
 	iCooldown = (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esRockCache[tank].g_iHumanAbility == 1 && g_esRockCache[tank].g_iHumanMode == 0 && g_esRockPlayer[tank].g_iAmmoCount < g_esRockCache[tank].g_iHumanAmmo && g_esRockCache[tank].g_iHumanAmmo > 0) ? g_esRockCache[tank].g_iHumanCooldown : iCooldown;
 	g_esRockPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esRockPlayer[tank].g_iCooldown != -1 && g_esRockPlayer[tank].g_iCooldown >= iTime)
@@ -1187,15 +1190,14 @@ Action tTimerRock(Handle timer, DataPack pack)
 	AddVectors(flPos, flVector, flHitPos);
 	if (flDistance > 300.0)
 	{
-		float flAngles2[3];
 		if (bIsValidEntity(iLauncher))
 		{
-			flAngles2[0] = MT_GetRandomFloat(flMinRadius, flMaxRadius);
-			flAngles2[1] = MT_GetRandomFloat(flMinRadius, flMaxRadius);
-			flAngles2[2] = -2.0;
-			GetVectorAngles(flAngles2, flAngles2);
+			flAngles[0] = MT_GetRandomFloat(flMinRadius, flMaxRadius);
+			flAngles[1] = MT_GetRandomFloat(flMinRadius, flMaxRadius);
+			flAngles[2] = -2.0;
+			GetVectorAngles(flAngles, flAngles);
 
-			TeleportEntity(iLauncher, flHitPos, flAngles2);
+			TeleportEntity(iLauncher, flHitPos, flAngles);
 			AcceptEntityInput(iLauncher, "LaunchRock");
 		}
 	}

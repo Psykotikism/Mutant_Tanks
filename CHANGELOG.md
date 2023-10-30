@@ -62,15 +62,43 @@
 	- `Cluster Bombs Reward`
 	- `Rapid Pistol Reward`
 	- `Sticky Grenades Reward`
+- Changed the maximum value of the `Run Speed` setting from `3.0` to `99.0`.
+- Added the following settings under the `Tank #->Protection` and `STEAM_ID->Protection` sections:
+	- `Spawn Protection`
+	- `Armor Duration`
+	- `Armor Resistance`
+	- `Shield Duration`
+	- `Shield Resistance`
+- Added the following settings for Mutant Special Infected:
+	- `Boomer Base Health`
+	- `Charger Base Health`
+	- `Hunter Base Health`
+	- `Jockey Base Health`
+	- `Smoker Base Health`
+	- `Spitter Base Health`
+	- `Boomer Extra Health`
+	- `Charger Extra Health`
+	- `Hunter Extra Health`
+	- `Jockey Extra Health`
+	- `Smoker Extra Health`
+	- `Spitter Extra Health`
+
+#### Natives & Forwards
+- Added the `MT_GetRecordedTankType` native.
+- The `MT_GetTankType` native now has another parameter.
 
 #### Abilities
 - Mutant Infected will now reserve their abilities for engaging with survivors for a more tactical approach. [Requires `Actions`.]
 - Electric: Added visibility check for survivors caught in chain reactions.
+- Fast:
+	- Changed the minimum value of the `Fast Speed` setting from `3.0` to `-1.0`.
+	- Changed the maximum value of the `Fast Speed` setting from `10.0` to `99.0`.
 - Hypno: Changed the default value of the `Hypno View` setting from `1` to `0`.
 - Kamikaze: Added the `Kamikaze Meter` setting.
 - Laser:
 	- The ability now chains to multiple survivors.
 	- Added the `Ability Sight` setting.
+- Meteor: Fixed meteors giving players accelerated velocity when standing on them.
 - Nullify: The ability now blocks the survivors' damage towards everything.
 - Recall: Affected survivors are now teleported back to the team when the Mutant Infected dies.
 - Rocket: Added the `Rocket Countdown` setting.
@@ -83,7 +111,7 @@
 #### General
 - The pre-compiled plugins included in the package are:
 	- Compiled without any of the optional dependencies.
-	- Compiled with the `SourceMod 1.12.0.6985` compiler.
+	- Compiled with the `SourceMod 1.12.0.7066` compiler.
 
 #### Updates
 - Updated config files.

@@ -103,6 +103,7 @@ enum struct esBlindPlayer
 	int g_iRangeCooldown;
 	int g_iRequiresHumans;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esBlindPlayer g_esBlindPlayer[MAXPLAYERS + 1];
@@ -846,59 +847,61 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esBlindPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esBlindPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esBlindPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esBlindCache[tank].g_flBlindChance = flGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_flBlindChance, g_esBlindPlayer[tank].g_flBlindChance, g_esBlindSpecial[type].g_flBlindChance, g_esBlindAbility[type].g_flBlindChance, 1);
-		g_esBlindCache[tank].g_flBlindDuration = flGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_flBlindDuration, g_esBlindPlayer[tank].g_flBlindDuration, g_esBlindSpecial[type].g_flBlindDuration, g_esBlindAbility[type].g_flBlindDuration, 1);
-		g_esBlindCache[tank].g_flBlindRange = flGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_flBlindRange, g_esBlindPlayer[tank].g_flBlindRange, g_esBlindSpecial[type].g_flBlindRange, g_esBlindAbility[type].g_flBlindRange, 1);
-		g_esBlindCache[tank].g_flBlindRangeChance = flGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_flBlindRangeChance, g_esBlindPlayer[tank].g_flBlindRangeChance, g_esBlindSpecial[type].g_flBlindRangeChance, g_esBlindAbility[type].g_flBlindRangeChance, 1);
-		g_esBlindCache[tank].g_iBlindAbility = iGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_iBlindAbility, g_esBlindPlayer[tank].g_iBlindAbility, g_esBlindSpecial[type].g_iBlindAbility, g_esBlindAbility[type].g_iBlindAbility, 1);
-		g_esBlindCache[tank].g_iBlindCooldown = iGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_iBlindCooldown, g_esBlindPlayer[tank].g_iBlindCooldown, g_esBlindSpecial[type].g_iBlindCooldown, g_esBlindAbility[type].g_iBlindCooldown, 1);
-		g_esBlindCache[tank].g_iBlindEffect = iGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_iBlindEffect, g_esBlindPlayer[tank].g_iBlindEffect, g_esBlindSpecial[type].g_iBlindEffect, g_esBlindAbility[type].g_iBlindEffect, 1);
-		g_esBlindCache[tank].g_iBlindHit = iGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_iBlindHit, g_esBlindPlayer[tank].g_iBlindHit, g_esBlindSpecial[type].g_iBlindHit, g_esBlindAbility[type].g_iBlindHit, 1);
-		g_esBlindCache[tank].g_iBlindHitMode = iGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_iBlindHitMode, g_esBlindPlayer[tank].g_iBlindHitMode, g_esBlindSpecial[type].g_iBlindHitMode, g_esBlindAbility[type].g_iBlindHitMode, 1);
-		g_esBlindCache[tank].g_iBlindIntensity = iGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_iBlindIntensity, g_esBlindPlayer[tank].g_iBlindIntensity, g_esBlindSpecial[type].g_iBlindIntensity, g_esBlindAbility[type].g_iBlindIntensity, 1);
-		g_esBlindCache[tank].g_iBlindMessage = iGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_iBlindMessage, g_esBlindPlayer[tank].g_iBlindMessage, g_esBlindSpecial[type].g_iBlindMessage, g_esBlindAbility[type].g_iBlindMessage, 1);
-		g_esBlindCache[tank].g_iBlindMode = iGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_iBlindMode, g_esBlindPlayer[tank].g_iBlindMode, g_esBlindSpecial[type].g_iBlindMode, g_esBlindAbility[type].g_iBlindMode, 1);
-		g_esBlindCache[tank].g_iBlindRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_iBlindRangeCooldown, g_esBlindPlayer[tank].g_iBlindRangeCooldown, g_esBlindSpecial[type].g_iBlindRangeCooldown, g_esBlindAbility[type].g_iBlindRangeCooldown, 1);
-		g_esBlindCache[tank].g_iBlindSight = iGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_iBlindSight, g_esBlindPlayer[tank].g_iBlindSight, g_esBlindSpecial[type].g_iBlindSight, g_esBlindAbility[type].g_iBlindSight, 1);
-		g_esBlindCache[tank].g_iBlindStagger = iGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_iBlindStagger, g_esBlindPlayer[tank].g_iBlindStagger, g_esBlindSpecial[type].g_iBlindStagger, g_esBlindAbility[type].g_iBlindStagger, 1);
-		g_esBlindCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_flCloseAreasOnly, g_esBlindPlayer[tank].g_flCloseAreasOnly, g_esBlindSpecial[type].g_flCloseAreasOnly, g_esBlindAbility[type].g_flCloseAreasOnly, 1);
-		g_esBlindCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_iComboAbility, g_esBlindPlayer[tank].g_iComboAbility, g_esBlindSpecial[type].g_iComboAbility, g_esBlindAbility[type].g_iComboAbility, 1);
-		g_esBlindCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_iHumanAbility, g_esBlindPlayer[tank].g_iHumanAbility, g_esBlindSpecial[type].g_iHumanAbility, g_esBlindAbility[type].g_iHumanAbility, 1);
-		g_esBlindCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_iHumanAmmo, g_esBlindPlayer[tank].g_iHumanAmmo, g_esBlindSpecial[type].g_iHumanAmmo, g_esBlindAbility[type].g_iHumanAmmo, 1);
-		g_esBlindCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_iHumanCooldown, g_esBlindPlayer[tank].g_iHumanCooldown, g_esBlindSpecial[type].g_iHumanCooldown, g_esBlindAbility[type].g_iHumanCooldown, 1);
-		g_esBlindCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_iHumanRangeCooldown, g_esBlindPlayer[tank].g_iHumanRangeCooldown, g_esBlindSpecial[type].g_iHumanRangeCooldown, g_esBlindAbility[type].g_iHumanRangeCooldown, 1);
-		g_esBlindCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_flOpenAreasOnly, g_esBlindPlayer[tank].g_flOpenAreasOnly, g_esBlindSpecial[type].g_flOpenAreasOnly, g_esBlindAbility[type].g_flOpenAreasOnly, 1);
-		g_esBlindCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_iRequiresHumans, g_esBlindPlayer[tank].g_iRequiresHumans, g_esBlindSpecial[type].g_iRequiresHumans, g_esBlindAbility[type].g_iRequiresHumans, 1);
+		g_esBlindCache[tank].g_flBlindChance = flGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_flBlindChance, g_esBlindPlayer[tank].g_flBlindChance, g_esBlindSpecial[iType].g_flBlindChance, g_esBlindAbility[iType].g_flBlindChance, 1);
+		g_esBlindCache[tank].g_flBlindDuration = flGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_flBlindDuration, g_esBlindPlayer[tank].g_flBlindDuration, g_esBlindSpecial[iType].g_flBlindDuration, g_esBlindAbility[iType].g_flBlindDuration, 1);
+		g_esBlindCache[tank].g_flBlindRange = flGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_flBlindRange, g_esBlindPlayer[tank].g_flBlindRange, g_esBlindSpecial[iType].g_flBlindRange, g_esBlindAbility[iType].g_flBlindRange, 1);
+		g_esBlindCache[tank].g_flBlindRangeChance = flGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_flBlindRangeChance, g_esBlindPlayer[tank].g_flBlindRangeChance, g_esBlindSpecial[iType].g_flBlindRangeChance, g_esBlindAbility[iType].g_flBlindRangeChance, 1);
+		g_esBlindCache[tank].g_iBlindAbility = iGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_iBlindAbility, g_esBlindPlayer[tank].g_iBlindAbility, g_esBlindSpecial[iType].g_iBlindAbility, g_esBlindAbility[iType].g_iBlindAbility, 1);
+		g_esBlindCache[tank].g_iBlindCooldown = iGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_iBlindCooldown, g_esBlindPlayer[tank].g_iBlindCooldown, g_esBlindSpecial[iType].g_iBlindCooldown, g_esBlindAbility[iType].g_iBlindCooldown, 1);
+		g_esBlindCache[tank].g_iBlindEffect = iGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_iBlindEffect, g_esBlindPlayer[tank].g_iBlindEffect, g_esBlindSpecial[iType].g_iBlindEffect, g_esBlindAbility[iType].g_iBlindEffect, 1);
+		g_esBlindCache[tank].g_iBlindHit = iGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_iBlindHit, g_esBlindPlayer[tank].g_iBlindHit, g_esBlindSpecial[iType].g_iBlindHit, g_esBlindAbility[iType].g_iBlindHit, 1);
+		g_esBlindCache[tank].g_iBlindHitMode = iGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_iBlindHitMode, g_esBlindPlayer[tank].g_iBlindHitMode, g_esBlindSpecial[iType].g_iBlindHitMode, g_esBlindAbility[iType].g_iBlindHitMode, 1);
+		g_esBlindCache[tank].g_iBlindIntensity = iGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_iBlindIntensity, g_esBlindPlayer[tank].g_iBlindIntensity, g_esBlindSpecial[iType].g_iBlindIntensity, g_esBlindAbility[iType].g_iBlindIntensity, 1);
+		g_esBlindCache[tank].g_iBlindMessage = iGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_iBlindMessage, g_esBlindPlayer[tank].g_iBlindMessage, g_esBlindSpecial[iType].g_iBlindMessage, g_esBlindAbility[iType].g_iBlindMessage, 1);
+		g_esBlindCache[tank].g_iBlindMode = iGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_iBlindMode, g_esBlindPlayer[tank].g_iBlindMode, g_esBlindSpecial[iType].g_iBlindMode, g_esBlindAbility[iType].g_iBlindMode, 1);
+		g_esBlindCache[tank].g_iBlindRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_iBlindRangeCooldown, g_esBlindPlayer[tank].g_iBlindRangeCooldown, g_esBlindSpecial[iType].g_iBlindRangeCooldown, g_esBlindAbility[iType].g_iBlindRangeCooldown, 1);
+		g_esBlindCache[tank].g_iBlindSight = iGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_iBlindSight, g_esBlindPlayer[tank].g_iBlindSight, g_esBlindSpecial[iType].g_iBlindSight, g_esBlindAbility[iType].g_iBlindSight, 1);
+		g_esBlindCache[tank].g_iBlindStagger = iGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_iBlindStagger, g_esBlindPlayer[tank].g_iBlindStagger, g_esBlindSpecial[iType].g_iBlindStagger, g_esBlindAbility[iType].g_iBlindStagger, 1);
+		g_esBlindCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_flCloseAreasOnly, g_esBlindPlayer[tank].g_flCloseAreasOnly, g_esBlindSpecial[iType].g_flCloseAreasOnly, g_esBlindAbility[iType].g_flCloseAreasOnly, 1);
+		g_esBlindCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_iComboAbility, g_esBlindPlayer[tank].g_iComboAbility, g_esBlindSpecial[iType].g_iComboAbility, g_esBlindAbility[iType].g_iComboAbility, 1);
+		g_esBlindCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_iHumanAbility, g_esBlindPlayer[tank].g_iHumanAbility, g_esBlindSpecial[iType].g_iHumanAbility, g_esBlindAbility[iType].g_iHumanAbility, 1);
+		g_esBlindCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_iHumanAmmo, g_esBlindPlayer[tank].g_iHumanAmmo, g_esBlindSpecial[iType].g_iHumanAmmo, g_esBlindAbility[iType].g_iHumanAmmo, 1);
+		g_esBlindCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_iHumanCooldown, g_esBlindPlayer[tank].g_iHumanCooldown, g_esBlindSpecial[iType].g_iHumanCooldown, g_esBlindAbility[iType].g_iHumanCooldown, 1);
+		g_esBlindCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_iHumanRangeCooldown, g_esBlindPlayer[tank].g_iHumanRangeCooldown, g_esBlindSpecial[iType].g_iHumanRangeCooldown, g_esBlindAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esBlindCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_flOpenAreasOnly, g_esBlindPlayer[tank].g_flOpenAreasOnly, g_esBlindSpecial[iType].g_flOpenAreasOnly, g_esBlindAbility[iType].g_flOpenAreasOnly, 1);
+		g_esBlindCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esBlindTeammate[tank].g_iRequiresHumans, g_esBlindPlayer[tank].g_iRequiresHumans, g_esBlindSpecial[iType].g_iRequiresHumans, g_esBlindAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
 	{
-		g_esBlindCache[tank].g_flBlindChance = flGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_flBlindChance, g_esBlindAbility[type].g_flBlindChance, 1);
-		g_esBlindCache[tank].g_flBlindDuration = flGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_flBlindDuration, g_esBlindAbility[type].g_flBlindDuration, 1);
-		g_esBlindCache[tank].g_flBlindRange = flGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_flBlindRange, g_esBlindAbility[type].g_flBlindRange, 1);
-		g_esBlindCache[tank].g_flBlindRangeChance = flGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_flBlindRangeChance, g_esBlindAbility[type].g_flBlindRangeChance, 1);
-		g_esBlindCache[tank].g_iBlindAbility = iGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_iBlindAbility, g_esBlindAbility[type].g_iBlindAbility, 1);
-		g_esBlindCache[tank].g_iBlindCooldown = iGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_iBlindCooldown, g_esBlindAbility[type].g_iBlindCooldown, 1);
-		g_esBlindCache[tank].g_iBlindEffect = iGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_iBlindEffect, g_esBlindAbility[type].g_iBlindEffect, 1);
-		g_esBlindCache[tank].g_iBlindHit = iGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_iBlindHit, g_esBlindAbility[type].g_iBlindHit, 1);
-		g_esBlindCache[tank].g_iBlindHitMode = iGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_iBlindHitMode, g_esBlindAbility[type].g_iBlindHitMode, 1);
-		g_esBlindCache[tank].g_iBlindIntensity = iGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_iBlindIntensity, g_esBlindAbility[type].g_iBlindIntensity, 1);
-		g_esBlindCache[tank].g_iBlindMessage = iGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_iBlindMessage, g_esBlindAbility[type].g_iBlindMessage, 1);
-		g_esBlindCache[tank].g_iBlindMode = iGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_iBlindMode, g_esBlindAbility[type].g_iBlindMode, 1);
-		g_esBlindCache[tank].g_iBlindRangeCooldown = iGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_iBlindRangeCooldown, g_esBlindAbility[type].g_iBlindRangeCooldown, 1);
-		g_esBlindCache[tank].g_iBlindSight = iGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_iBlindSight, g_esBlindAbility[type].g_iBlindSight, 1);
-		g_esBlindCache[tank].g_iBlindStagger = iGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_iBlindStagger, g_esBlindAbility[type].g_iBlindStagger, 1);
-		g_esBlindCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_flCloseAreasOnly, g_esBlindAbility[type].g_flCloseAreasOnly, 1);
-		g_esBlindCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_iComboAbility, g_esBlindAbility[type].g_iComboAbility, 1);
-		g_esBlindCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_iHumanAbility, g_esBlindAbility[type].g_iHumanAbility, 1);
-		g_esBlindCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_iHumanAmmo, g_esBlindAbility[type].g_iHumanAmmo, 1);
-		g_esBlindCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_iHumanCooldown, g_esBlindAbility[type].g_iHumanCooldown, 1);
-		g_esBlindCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_iHumanRangeCooldown, g_esBlindAbility[type].g_iHumanRangeCooldown, 1);
-		g_esBlindCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_flOpenAreasOnly, g_esBlindAbility[type].g_flOpenAreasOnly, 1);
-		g_esBlindCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_iRequiresHumans, g_esBlindAbility[type].g_iRequiresHumans, 1);
+		g_esBlindCache[tank].g_flBlindChance = flGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_flBlindChance, g_esBlindAbility[iType].g_flBlindChance, 1);
+		g_esBlindCache[tank].g_flBlindDuration = flGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_flBlindDuration, g_esBlindAbility[iType].g_flBlindDuration, 1);
+		g_esBlindCache[tank].g_flBlindRange = flGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_flBlindRange, g_esBlindAbility[iType].g_flBlindRange, 1);
+		g_esBlindCache[tank].g_flBlindRangeChance = flGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_flBlindRangeChance, g_esBlindAbility[iType].g_flBlindRangeChance, 1);
+		g_esBlindCache[tank].g_iBlindAbility = iGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_iBlindAbility, g_esBlindAbility[iType].g_iBlindAbility, 1);
+		g_esBlindCache[tank].g_iBlindCooldown = iGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_iBlindCooldown, g_esBlindAbility[iType].g_iBlindCooldown, 1);
+		g_esBlindCache[tank].g_iBlindEffect = iGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_iBlindEffect, g_esBlindAbility[iType].g_iBlindEffect, 1);
+		g_esBlindCache[tank].g_iBlindHit = iGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_iBlindHit, g_esBlindAbility[iType].g_iBlindHit, 1);
+		g_esBlindCache[tank].g_iBlindHitMode = iGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_iBlindHitMode, g_esBlindAbility[iType].g_iBlindHitMode, 1);
+		g_esBlindCache[tank].g_iBlindIntensity = iGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_iBlindIntensity, g_esBlindAbility[iType].g_iBlindIntensity, 1);
+		g_esBlindCache[tank].g_iBlindMessage = iGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_iBlindMessage, g_esBlindAbility[iType].g_iBlindMessage, 1);
+		g_esBlindCache[tank].g_iBlindMode = iGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_iBlindMode, g_esBlindAbility[iType].g_iBlindMode, 1);
+		g_esBlindCache[tank].g_iBlindRangeCooldown = iGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_iBlindRangeCooldown, g_esBlindAbility[iType].g_iBlindRangeCooldown, 1);
+		g_esBlindCache[tank].g_iBlindSight = iGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_iBlindSight, g_esBlindAbility[iType].g_iBlindSight, 1);
+		g_esBlindCache[tank].g_iBlindStagger = iGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_iBlindStagger, g_esBlindAbility[iType].g_iBlindStagger, 1);
+		g_esBlindCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_flCloseAreasOnly, g_esBlindAbility[iType].g_flCloseAreasOnly, 1);
+		g_esBlindCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_iComboAbility, g_esBlindAbility[iType].g_iComboAbility, 1);
+		g_esBlindCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_iHumanAbility, g_esBlindAbility[iType].g_iHumanAbility, 1);
+		g_esBlindCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_iHumanAmmo, g_esBlindAbility[iType].g_iHumanAmmo, 1);
+		g_esBlindCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_iHumanCooldown, g_esBlindAbility[iType].g_iHumanCooldown, 1);
+		g_esBlindCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_iHumanRangeCooldown, g_esBlindAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esBlindCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_flOpenAreasOnly, g_esBlindAbility[iType].g_flOpenAreasOnly, 1);
+		g_esBlindCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esBlindPlayer[tank].g_iRequiresHumans, g_esBlindAbility[iType].g_iRequiresHumans, 1);
 	}
 }
 

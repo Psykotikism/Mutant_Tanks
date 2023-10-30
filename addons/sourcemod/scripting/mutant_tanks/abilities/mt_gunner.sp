@@ -184,6 +184,7 @@ enum struct esGunnerPlayer
 	int g_iSpecialEnemy;
 	int g_iSurvivorEnemy;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esGunnerPlayer g_esGunnerPlayer[MAXPLAYERS + 1];
@@ -589,12 +590,12 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 {
 	if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esGunnerCache[tank].g_iHumanAbility != 2)
 	{
-		g_esGunnerAbility[g_esGunnerPlayer[tank].g_iTankType].g_iComboPosition = -1;
+		g_esGunnerAbility[g_esGunnerPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 		return;
 	}
 
-	g_esGunnerAbility[g_esGunnerPlayer[tank].g_iTankType].g_iComboPosition = -1;
+	g_esGunnerAbility[g_esGunnerPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 	char sCombo[320], sSet[4][32];
 	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
@@ -615,7 +616,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 			{
 				if (StrEqual(sSubset[iPos], MT_GUNNER_SECTION, false) || StrEqual(sSubset[iPos], MT_GUNNER_SECTION2, false) || StrEqual(sSubset[iPos], MT_GUNNER_SECTION3, false) || StrEqual(sSubset[iPos], MT_GUNNER_SECTION4, false))
 				{
-					g_esGunnerAbility[g_esGunnerPlayer[tank].g_iTankType].g_iComboPosition = iPos;
+					g_esGunnerAbility[g_esGunnerPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = iPos;
 
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
@@ -895,61 +896,63 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esGunnerPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esGunnerPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esGunnerPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esGunnerCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_flCloseAreasOnly, g_esGunnerPlayer[tank].g_flCloseAreasOnly, g_esGunnerSpecial[type].g_flCloseAreasOnly, g_esGunnerAbility[type].g_flCloseAreasOnly, 1);
-		g_esGunnerCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iComboAbility, g_esGunnerPlayer[tank].g_iComboAbility, g_esGunnerSpecial[type].g_iComboAbility, g_esGunnerAbility[type].g_iComboAbility, 1);
-		g_esGunnerCache[tank].g_flGunnerAccuracy = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_flGunnerAccuracy, g_esGunnerPlayer[tank].g_flGunnerAccuracy, g_esGunnerSpecial[type].g_flGunnerAccuracy, g_esGunnerAbility[type].g_flGunnerAccuracy, 1);
-		g_esGunnerCache[tank].g_flGunnerChance = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_flGunnerChance, g_esGunnerPlayer[tank].g_flGunnerChance, g_esGunnerSpecial[type].g_flGunnerChance, g_esGunnerAbility[type].g_flGunnerChance, 1);
-		g_esGunnerCache[tank].g_flGunnerDamage = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_flGunnerDamage, g_esGunnerPlayer[tank].g_flGunnerDamage, g_esGunnerSpecial[type].g_flGunnerDamage, g_esGunnerAbility[type].g_flGunnerDamage, 1);
-		g_esGunnerCache[tank].g_flGunnerDuration = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_flGunnerDuration, g_esGunnerPlayer[tank].g_flGunnerDuration, g_esGunnerSpecial[type].g_flGunnerDuration, g_esGunnerAbility[type].g_flGunnerDuration, 1);
-		g_esGunnerCache[tank].g_flGunnerInterval = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_flGunnerInterval, g_esGunnerPlayer[tank].g_flGunnerInterval, g_esGunnerSpecial[type].g_flGunnerInterval, g_esGunnerAbility[type].g_flGunnerInterval, 1);
-		g_esGunnerCache[tank].g_flGunnerLoadTime = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_flGunnerLoadTime, g_esGunnerPlayer[tank].g_flGunnerLoadTime, g_esGunnerSpecial[type].g_flGunnerLoadTime, g_esGunnerAbility[type].g_flGunnerLoadTime, 1);
-		g_esGunnerCache[tank].g_flGunnerRange = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_flGunnerRange, g_esGunnerPlayer[tank].g_flGunnerRange, g_esGunnerSpecial[type].g_flGunnerRange, g_esGunnerAbility[type].g_flGunnerRange, 1);
-		g_esGunnerCache[tank].g_flGunnerReactionTime = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_flGunnerReactionTime, g_esGunnerPlayer[tank].g_flGunnerReactionTime, g_esGunnerSpecial[type].g_flGunnerReactionTime, g_esGunnerAbility[type].g_flGunnerReactionTime, 1);
-		g_esGunnerCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iHumanAbility, g_esGunnerPlayer[tank].g_iHumanAbility, g_esGunnerSpecial[type].g_iHumanAbility, g_esGunnerAbility[type].g_iHumanAbility, 1);
-		g_esGunnerCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iHumanAmmo, g_esGunnerPlayer[tank].g_iHumanAmmo, g_esGunnerSpecial[type].g_iHumanAmmo, g_esGunnerAbility[type].g_iHumanAmmo, 1);
-		g_esGunnerCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iHumanCooldown, g_esGunnerPlayer[tank].g_iHumanCooldown, g_esGunnerSpecial[type].g_iHumanCooldown, g_esGunnerAbility[type].g_iHumanCooldown, 1);
-		g_esGunnerCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iHumanMode, g_esGunnerPlayer[tank].g_iHumanMode, g_esGunnerSpecial[type].g_iHumanMode, g_esGunnerAbility[type].g_iHumanMode, 1);
-		g_esGunnerCache[tank].g_iGunnerAbility = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iGunnerAbility, g_esGunnerPlayer[tank].g_iGunnerAbility, g_esGunnerSpecial[type].g_iGunnerAbility, g_esGunnerAbility[type].g_iGunnerAbility, 1);
-		g_esGunnerCache[tank].g_iGunnerBullets = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iGunnerBullets, g_esGunnerPlayer[tank].g_iGunnerBullets, g_esGunnerSpecial[type].g_iGunnerBullets, g_esGunnerAbility[type].g_iGunnerBullets, 1);
-		g_esGunnerCache[tank].g_iGunnerClipSize = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iGunnerClipSize, g_esGunnerPlayer[tank].g_iGunnerClipSize, g_esGunnerSpecial[type].g_iGunnerClipSize, g_esGunnerAbility[type].g_iGunnerClipSize, 1);
-		g_esGunnerCache[tank].g_iGunnerCooldown = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iGunnerCooldown, g_esGunnerPlayer[tank].g_iGunnerCooldown, g_esGunnerSpecial[type].g_iGunnerCooldown, g_esGunnerAbility[type].g_iGunnerCooldown, 1);
-		g_esGunnerCache[tank].g_iGunnerGlow = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iGunnerGlow, g_esGunnerPlayer[tank].g_iGunnerGlow, g_esGunnerSpecial[type].g_iGunnerGlow, g_esGunnerAbility[type].g_iGunnerGlow, 1);
-		g_esGunnerCache[tank].g_iGunnerGunType = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iGunnerGunType, g_esGunnerPlayer[tank].g_iGunnerGunType, g_esGunnerSpecial[type].g_iGunnerGunType, g_esGunnerAbility[type].g_iGunnerGunType, 1);
-		g_esGunnerCache[tank].g_iGunnerMessage = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iGunnerMessage, g_esGunnerPlayer[tank].g_iGunnerMessage, g_esGunnerSpecial[type].g_iGunnerMessage, g_esGunnerAbility[type].g_iGunnerMessage, 1);
-		g_esGunnerCache[tank].g_iGunnerTargetType = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iGunnerTargetType, g_esGunnerPlayer[tank].g_iGunnerTargetType, g_esGunnerSpecial[type].g_iGunnerTargetType, g_esGunnerAbility[type].g_iGunnerTargetType, 1);
-		g_esGunnerCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_flOpenAreasOnly, g_esGunnerPlayer[tank].g_flOpenAreasOnly, g_esGunnerSpecial[type].g_flOpenAreasOnly, g_esGunnerAbility[type].g_flOpenAreasOnly, 1);
-		g_esGunnerCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iRequiresHumans, g_esGunnerPlayer[tank].g_iRequiresHumans, g_esGunnerSpecial[type].g_iRequiresHumans, g_esGunnerAbility[type].g_iRequiresHumans, 1);
+		g_esGunnerCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_flCloseAreasOnly, g_esGunnerPlayer[tank].g_flCloseAreasOnly, g_esGunnerSpecial[iType].g_flCloseAreasOnly, g_esGunnerAbility[iType].g_flCloseAreasOnly, 1);
+		g_esGunnerCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iComboAbility, g_esGunnerPlayer[tank].g_iComboAbility, g_esGunnerSpecial[iType].g_iComboAbility, g_esGunnerAbility[iType].g_iComboAbility, 1);
+		g_esGunnerCache[tank].g_flGunnerAccuracy = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_flGunnerAccuracy, g_esGunnerPlayer[tank].g_flGunnerAccuracy, g_esGunnerSpecial[iType].g_flGunnerAccuracy, g_esGunnerAbility[iType].g_flGunnerAccuracy, 1);
+		g_esGunnerCache[tank].g_flGunnerChance = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_flGunnerChance, g_esGunnerPlayer[tank].g_flGunnerChance, g_esGunnerSpecial[iType].g_flGunnerChance, g_esGunnerAbility[iType].g_flGunnerChance, 1);
+		g_esGunnerCache[tank].g_flGunnerDamage = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_flGunnerDamage, g_esGunnerPlayer[tank].g_flGunnerDamage, g_esGunnerSpecial[iType].g_flGunnerDamage, g_esGunnerAbility[iType].g_flGunnerDamage, 1);
+		g_esGunnerCache[tank].g_flGunnerDuration = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_flGunnerDuration, g_esGunnerPlayer[tank].g_flGunnerDuration, g_esGunnerSpecial[iType].g_flGunnerDuration, g_esGunnerAbility[iType].g_flGunnerDuration, 1);
+		g_esGunnerCache[tank].g_flGunnerInterval = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_flGunnerInterval, g_esGunnerPlayer[tank].g_flGunnerInterval, g_esGunnerSpecial[iType].g_flGunnerInterval, g_esGunnerAbility[iType].g_flGunnerInterval, 1);
+		g_esGunnerCache[tank].g_flGunnerLoadTime = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_flGunnerLoadTime, g_esGunnerPlayer[tank].g_flGunnerLoadTime, g_esGunnerSpecial[iType].g_flGunnerLoadTime, g_esGunnerAbility[iType].g_flGunnerLoadTime, 1);
+		g_esGunnerCache[tank].g_flGunnerRange = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_flGunnerRange, g_esGunnerPlayer[tank].g_flGunnerRange, g_esGunnerSpecial[iType].g_flGunnerRange, g_esGunnerAbility[iType].g_flGunnerRange, 1);
+		g_esGunnerCache[tank].g_flGunnerReactionTime = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_flGunnerReactionTime, g_esGunnerPlayer[tank].g_flGunnerReactionTime, g_esGunnerSpecial[iType].g_flGunnerReactionTime, g_esGunnerAbility[iType].g_flGunnerReactionTime, 1);
+		g_esGunnerCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iHumanAbility, g_esGunnerPlayer[tank].g_iHumanAbility, g_esGunnerSpecial[iType].g_iHumanAbility, g_esGunnerAbility[iType].g_iHumanAbility, 1);
+		g_esGunnerCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iHumanAmmo, g_esGunnerPlayer[tank].g_iHumanAmmo, g_esGunnerSpecial[iType].g_iHumanAmmo, g_esGunnerAbility[iType].g_iHumanAmmo, 1);
+		g_esGunnerCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iHumanCooldown, g_esGunnerPlayer[tank].g_iHumanCooldown, g_esGunnerSpecial[iType].g_iHumanCooldown, g_esGunnerAbility[iType].g_iHumanCooldown, 1);
+		g_esGunnerCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iHumanMode, g_esGunnerPlayer[tank].g_iHumanMode, g_esGunnerSpecial[iType].g_iHumanMode, g_esGunnerAbility[iType].g_iHumanMode, 1);
+		g_esGunnerCache[tank].g_iGunnerAbility = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iGunnerAbility, g_esGunnerPlayer[tank].g_iGunnerAbility, g_esGunnerSpecial[iType].g_iGunnerAbility, g_esGunnerAbility[iType].g_iGunnerAbility, 1);
+		g_esGunnerCache[tank].g_iGunnerBullets = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iGunnerBullets, g_esGunnerPlayer[tank].g_iGunnerBullets, g_esGunnerSpecial[iType].g_iGunnerBullets, g_esGunnerAbility[iType].g_iGunnerBullets, 1);
+		g_esGunnerCache[tank].g_iGunnerClipSize = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iGunnerClipSize, g_esGunnerPlayer[tank].g_iGunnerClipSize, g_esGunnerSpecial[iType].g_iGunnerClipSize, g_esGunnerAbility[iType].g_iGunnerClipSize, 1);
+		g_esGunnerCache[tank].g_iGunnerCooldown = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iGunnerCooldown, g_esGunnerPlayer[tank].g_iGunnerCooldown, g_esGunnerSpecial[iType].g_iGunnerCooldown, g_esGunnerAbility[iType].g_iGunnerCooldown, 1);
+		g_esGunnerCache[tank].g_iGunnerGlow = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iGunnerGlow, g_esGunnerPlayer[tank].g_iGunnerGlow, g_esGunnerSpecial[iType].g_iGunnerGlow, g_esGunnerAbility[iType].g_iGunnerGlow, 1);
+		g_esGunnerCache[tank].g_iGunnerGunType = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iGunnerGunType, g_esGunnerPlayer[tank].g_iGunnerGunType, g_esGunnerSpecial[iType].g_iGunnerGunType, g_esGunnerAbility[iType].g_iGunnerGunType, 1);
+		g_esGunnerCache[tank].g_iGunnerMessage = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iGunnerMessage, g_esGunnerPlayer[tank].g_iGunnerMessage, g_esGunnerSpecial[iType].g_iGunnerMessage, g_esGunnerAbility[iType].g_iGunnerMessage, 1);
+		g_esGunnerCache[tank].g_iGunnerTargetType = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iGunnerTargetType, g_esGunnerPlayer[tank].g_iGunnerTargetType, g_esGunnerSpecial[iType].g_iGunnerTargetType, g_esGunnerAbility[iType].g_iGunnerTargetType, 1);
+		g_esGunnerCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_flOpenAreasOnly, g_esGunnerPlayer[tank].g_flOpenAreasOnly, g_esGunnerSpecial[iType].g_flOpenAreasOnly, g_esGunnerAbility[iType].g_flOpenAreasOnly, 1);
+		g_esGunnerCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iRequiresHumans, g_esGunnerPlayer[tank].g_iRequiresHumans, g_esGunnerSpecial[iType].g_iRequiresHumans, g_esGunnerAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
 	{
-		g_esGunnerCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_flCloseAreasOnly, g_esGunnerAbility[type].g_flCloseAreasOnly, 1);
-		g_esGunnerCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iComboAbility, g_esGunnerAbility[type].g_iComboAbility, 1);
-		g_esGunnerCache[tank].g_flGunnerAccuracy = flGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_flGunnerAccuracy, g_esGunnerAbility[type].g_flGunnerAccuracy, 1);
-		g_esGunnerCache[tank].g_flGunnerChance = flGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_flGunnerChance, g_esGunnerAbility[type].g_flGunnerChance, 1);
-		g_esGunnerCache[tank].g_flGunnerDamage = flGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_flGunnerDamage, g_esGunnerAbility[type].g_flGunnerDamage, 1);
-		g_esGunnerCache[tank].g_flGunnerDuration = flGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_flGunnerDuration, g_esGunnerAbility[type].g_flGunnerDuration, 1);
-		g_esGunnerCache[tank].g_flGunnerInterval = flGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_flGunnerInterval, g_esGunnerAbility[type].g_flGunnerInterval, 1);
-		g_esGunnerCache[tank].g_flGunnerLoadTime = flGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_flGunnerLoadTime, g_esGunnerAbility[type].g_flGunnerLoadTime, 1);
-		g_esGunnerCache[tank].g_flGunnerRange = flGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_flGunnerRange, g_esGunnerAbility[type].g_flGunnerRange, 1);
-		g_esGunnerCache[tank].g_flGunnerReactionTime = flGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_flGunnerReactionTime, g_esGunnerAbility[type].g_flGunnerReactionTime, 1);
-		g_esGunnerCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iHumanAbility, g_esGunnerAbility[type].g_iHumanAbility, 1);
-		g_esGunnerCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iHumanAmmo, g_esGunnerAbility[type].g_iHumanAmmo, 1);
-		g_esGunnerCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iHumanCooldown, g_esGunnerAbility[type].g_iHumanCooldown, 1);
-		g_esGunnerCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iHumanMode, g_esGunnerAbility[type].g_iHumanMode, 1);
-		g_esGunnerCache[tank].g_iGunnerAbility = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iGunnerAbility, g_esGunnerAbility[type].g_iGunnerAbility, 1);
-		g_esGunnerCache[tank].g_iGunnerBullets = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iGunnerBullets, g_esGunnerAbility[type].g_iGunnerBullets, 1);
-		g_esGunnerCache[tank].g_iGunnerClipSize = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iGunnerClipSize, g_esGunnerAbility[type].g_iGunnerClipSize, 1);
-		g_esGunnerCache[tank].g_iGunnerCooldown = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iGunnerCooldown, g_esGunnerAbility[type].g_iGunnerCooldown, 1);
-		g_esGunnerCache[tank].g_iGunnerGlow = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iGunnerGlow, g_esGunnerAbility[type].g_iGunnerGlow, 1);
-		g_esGunnerCache[tank].g_iGunnerGunType = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iGunnerGunType, g_esGunnerAbility[type].g_iGunnerGunType, 1);
-		g_esGunnerCache[tank].g_iGunnerMessage = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iGunnerMessage, g_esGunnerAbility[type].g_iGunnerMessage, 1);
-		g_esGunnerCache[tank].g_iGunnerTargetType = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iGunnerTargetType, g_esGunnerAbility[type].g_iGunnerTargetType, 1);
-		g_esGunnerCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_flOpenAreasOnly, g_esGunnerAbility[type].g_flOpenAreasOnly, 1);
-		g_esGunnerCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iRequiresHumans, g_esGunnerAbility[type].g_iRequiresHumans, 1);
+		g_esGunnerCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_flCloseAreasOnly, g_esGunnerAbility[iType].g_flCloseAreasOnly, 1);
+		g_esGunnerCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iComboAbility, g_esGunnerAbility[iType].g_iComboAbility, 1);
+		g_esGunnerCache[tank].g_flGunnerAccuracy = flGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_flGunnerAccuracy, g_esGunnerAbility[iType].g_flGunnerAccuracy, 1);
+		g_esGunnerCache[tank].g_flGunnerChance = flGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_flGunnerChance, g_esGunnerAbility[iType].g_flGunnerChance, 1);
+		g_esGunnerCache[tank].g_flGunnerDamage = flGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_flGunnerDamage, g_esGunnerAbility[iType].g_flGunnerDamage, 1);
+		g_esGunnerCache[tank].g_flGunnerDuration = flGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_flGunnerDuration, g_esGunnerAbility[iType].g_flGunnerDuration, 1);
+		g_esGunnerCache[tank].g_flGunnerInterval = flGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_flGunnerInterval, g_esGunnerAbility[iType].g_flGunnerInterval, 1);
+		g_esGunnerCache[tank].g_flGunnerLoadTime = flGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_flGunnerLoadTime, g_esGunnerAbility[iType].g_flGunnerLoadTime, 1);
+		g_esGunnerCache[tank].g_flGunnerRange = flGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_flGunnerRange, g_esGunnerAbility[iType].g_flGunnerRange, 1);
+		g_esGunnerCache[tank].g_flGunnerReactionTime = flGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_flGunnerReactionTime, g_esGunnerAbility[iType].g_flGunnerReactionTime, 1);
+		g_esGunnerCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iHumanAbility, g_esGunnerAbility[iType].g_iHumanAbility, 1);
+		g_esGunnerCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iHumanAmmo, g_esGunnerAbility[iType].g_iHumanAmmo, 1);
+		g_esGunnerCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iHumanCooldown, g_esGunnerAbility[iType].g_iHumanCooldown, 1);
+		g_esGunnerCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iHumanMode, g_esGunnerAbility[iType].g_iHumanMode, 1);
+		g_esGunnerCache[tank].g_iGunnerAbility = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iGunnerAbility, g_esGunnerAbility[iType].g_iGunnerAbility, 1);
+		g_esGunnerCache[tank].g_iGunnerBullets = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iGunnerBullets, g_esGunnerAbility[iType].g_iGunnerBullets, 1);
+		g_esGunnerCache[tank].g_iGunnerClipSize = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iGunnerClipSize, g_esGunnerAbility[iType].g_iGunnerClipSize, 1);
+		g_esGunnerCache[tank].g_iGunnerCooldown = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iGunnerCooldown, g_esGunnerAbility[iType].g_iGunnerCooldown, 1);
+		g_esGunnerCache[tank].g_iGunnerGlow = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iGunnerGlow, g_esGunnerAbility[iType].g_iGunnerGlow, 1);
+		g_esGunnerCache[tank].g_iGunnerGunType = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iGunnerGunType, g_esGunnerAbility[iType].g_iGunnerGunType, 1);
+		g_esGunnerCache[tank].g_iGunnerMessage = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iGunnerMessage, g_esGunnerAbility[iType].g_iGunnerMessage, 1);
+		g_esGunnerCache[tank].g_iGunnerTargetType = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iGunnerTargetType, g_esGunnerAbility[iType].g_iGunnerTargetType, 1);
+		g_esGunnerCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_flOpenAreasOnly, g_esGunnerAbility[iType].g_flOpenAreasOnly, 1);
+		g_esGunnerCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iRequiresHumans, g_esGunnerAbility[iType].g_iRequiresHumans, 1);
 	}
 }
 
@@ -1274,7 +1277,7 @@ void vGunner3(int tank, float time, float duration)
 		{
 			g_esGunnerPlayer[tank].g_flDroneLifetime += duration;
 
-			int iPos = g_esGunnerAbility[g_esGunnerPlayer[tank].g_iTankType].g_iComboPosition;
+			int iPos = g_esGunnerAbility[g_esGunnerPlayer[tank].g_iTankTypeRecorded].g_iComboPosition;
 			float flDuration = (iPos != -1) ? MT_GetCombinationSetting(tank, 5, iPos) : g_esGunnerCache[tank].g_flGunnerDuration;
 			if (-1.0 < flDuration < g_esGunnerPlayer[tank].g_flDroneLifetime)
 			{
@@ -1476,7 +1479,7 @@ void vGunner4(int tank, int target, int drone, float pos[3], float origin[3])
 	SubtractVectors(pos, origin, pos);
 	GetVectorAngles(pos, flAngles);
 
-	int iPos = g_esGunnerAbility[g_esGunnerPlayer[tank].g_iTankType].g_iComboPosition;
+	int iPos = g_esGunnerAbility[g_esGunnerPlayer[tank].g_iTankTypeRecorded].g_iComboPosition;
 	float flDamage = (iPos != -1) ? MT_GetCombinationSetting(tank, 3, iPos) : g_esGunnerCache[tank].g_flGunnerDamage;
 	if (flDamage > 0.0)
 	{
@@ -1663,7 +1666,7 @@ void vGunnerReset2(int tank)
 
 void vGunnerReset3(int tank)
 {
-	int iTime = GetTime(), iPos = g_esGunnerAbility[g_esGunnerPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esGunnerCache[tank].g_iGunnerCooldown;
+	int iTime = GetTime(), iPos = g_esGunnerAbility[g_esGunnerPlayer[tank].g_iTankTypeRecorded].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esGunnerCache[tank].g_iGunnerCooldown;
 	iCooldown = (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esGunnerCache[tank].g_iHumanAbility == 1 && g_esGunnerCache[tank].g_iHumanMode == 0 && g_esGunnerPlayer[tank].g_iAmmoCount < g_esGunnerCache[tank].g_iHumanAmmo && g_esGunnerCache[tank].g_iHumanAmmo > 0) ? g_esGunnerCache[tank].g_iHumanCooldown : iCooldown;
 	g_esGunnerPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esGunnerPlayer[tank].g_iCooldown != -1 && g_esGunnerPlayer[tank].g_iCooldown >= iTime)

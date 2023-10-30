@@ -91,6 +91,7 @@ enum struct esFlyPlayer
 	int g_iImmunityFlags;
 	int g_iRequiresHumans;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esFlyPlayer g_esFlyPlayer[MAXPLAYERS + 1];
@@ -512,12 +513,12 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 {
 	if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esFlyCache[tank].g_iHumanAbility != 2)
 	{
-		g_esFlyAbility[g_esFlyPlayer[tank].g_iTankType].g_iComboPosition = -1;
+		g_esFlyAbility[g_esFlyPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 		return;
 	}
 
-	g_esFlyAbility[g_esFlyPlayer[tank].g_iTankType].g_iComboPosition = -1;
+	g_esFlyAbility[g_esFlyPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 	char sCombo[320], sSet[4][32];
 	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
@@ -538,7 +539,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 			{
 				if (StrEqual(sSubset[iPos], MT_FLY_SECTION, false) || StrEqual(sSubset[iPos], MT_FLY_SECTION2, false) || StrEqual(sSubset[iPos], MT_FLY_SECTION3, false) || StrEqual(sSubset[iPos], MT_FLY_SECTION4, false))
 				{
-					g_esFlyAbility[g_esFlyPlayer[tank].g_iTankType].g_iComboPosition = iPos;
+					g_esFlyAbility[g_esFlyPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = iPos;
 
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
@@ -760,43 +761,45 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esFlyPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esFlyPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esFlyPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esFlyCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_flCloseAreasOnly, g_esFlyPlayer[tank].g_flCloseAreasOnly, g_esFlySpecial[type].g_flCloseAreasOnly, g_esFlyAbility[type].g_flCloseAreasOnly, 1);
-		g_esFlyCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iComboAbility, g_esFlyPlayer[tank].g_iComboAbility, g_esFlySpecial[type].g_iComboAbility, g_esFlyAbility[type].g_iComboAbility, 1);
-		g_esFlyCache[tank].g_flFlyChance = flGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_flFlyChance, g_esFlyPlayer[tank].g_flFlyChance, g_esFlySpecial[type].g_flFlyChance, g_esFlyAbility[type].g_flFlyChance, 1);
-		g_esFlyCache[tank].g_flFlySpeed = flGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_flFlySpeed, g_esFlyPlayer[tank].g_flFlySpeed, g_esFlySpecial[type].g_flFlySpeed, g_esFlyAbility[type].g_flFlySpeed, 1);
-		g_esFlyCache[tank].g_iFlyAbility = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iFlyAbility, g_esFlyPlayer[tank].g_iFlyAbility, g_esFlySpecial[type].g_iFlyAbility, g_esFlyAbility[type].g_iFlyAbility, 1);
-		g_esFlyCache[tank].g_iFlyCooldown = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iFlyCooldown, g_esFlyPlayer[tank].g_iFlyCooldown, g_esFlySpecial[type].g_iFlyCooldown, g_esFlyAbility[type].g_iFlyCooldown, 1);
-		g_esFlyCache[tank].g_iFlyDuration = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iFlyDuration, g_esFlyPlayer[tank].g_iFlyDuration, g_esFlySpecial[type].g_iFlyDuration, g_esFlyAbility[type].g_iFlyDuration, 1);
-		g_esFlyCache[tank].g_iFlyType = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iFlyType, g_esFlyPlayer[tank].g_iFlyType, g_esFlySpecial[type].g_iFlyType, g_esFlyAbility[type].g_iFlyType, 1);
-		g_esFlyCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iHumanAbility, g_esFlyPlayer[tank].g_iHumanAbility, g_esFlySpecial[type].g_iHumanAbility, g_esFlyAbility[type].g_iHumanAbility, 1);
-		g_esFlyCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iHumanAmmo, g_esFlyPlayer[tank].g_iHumanAmmo, g_esFlySpecial[type].g_iHumanAmmo, g_esFlyAbility[type].g_iHumanAmmo, 1);
-		g_esFlyCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iHumanCooldown, g_esFlyPlayer[tank].g_iHumanCooldown, g_esFlySpecial[type].g_iHumanCooldown, g_esFlyAbility[type].g_iHumanCooldown, 1);
-		g_esFlyCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iHumanDuration, g_esFlyPlayer[tank].g_iHumanDuration, g_esFlySpecial[type].g_iHumanDuration, g_esFlyAbility[type].g_iHumanDuration, 1);
-		g_esFlyCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iHumanMode, g_esFlyPlayer[tank].g_iHumanMode, g_esFlySpecial[type].g_iHumanMode, g_esFlyAbility[type].g_iHumanMode, 1);
-		g_esFlyCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_flOpenAreasOnly, g_esFlyPlayer[tank].g_flOpenAreasOnly, g_esFlySpecial[type].g_flOpenAreasOnly, g_esFlyAbility[type].g_flOpenAreasOnly, 1);
-		g_esFlyCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iRequiresHumans, g_esFlyPlayer[tank].g_iRequiresHumans, g_esFlySpecial[type].g_iRequiresHumans, g_esFlyAbility[type].g_iRequiresHumans, 1);
+		g_esFlyCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_flCloseAreasOnly, g_esFlyPlayer[tank].g_flCloseAreasOnly, g_esFlySpecial[iType].g_flCloseAreasOnly, g_esFlyAbility[iType].g_flCloseAreasOnly, 1);
+		g_esFlyCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iComboAbility, g_esFlyPlayer[tank].g_iComboAbility, g_esFlySpecial[iType].g_iComboAbility, g_esFlyAbility[iType].g_iComboAbility, 1);
+		g_esFlyCache[tank].g_flFlyChance = flGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_flFlyChance, g_esFlyPlayer[tank].g_flFlyChance, g_esFlySpecial[iType].g_flFlyChance, g_esFlyAbility[iType].g_flFlyChance, 1);
+		g_esFlyCache[tank].g_flFlySpeed = flGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_flFlySpeed, g_esFlyPlayer[tank].g_flFlySpeed, g_esFlySpecial[iType].g_flFlySpeed, g_esFlyAbility[iType].g_flFlySpeed, 1);
+		g_esFlyCache[tank].g_iFlyAbility = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iFlyAbility, g_esFlyPlayer[tank].g_iFlyAbility, g_esFlySpecial[iType].g_iFlyAbility, g_esFlyAbility[iType].g_iFlyAbility, 1);
+		g_esFlyCache[tank].g_iFlyCooldown = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iFlyCooldown, g_esFlyPlayer[tank].g_iFlyCooldown, g_esFlySpecial[iType].g_iFlyCooldown, g_esFlyAbility[iType].g_iFlyCooldown, 1);
+		g_esFlyCache[tank].g_iFlyDuration = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iFlyDuration, g_esFlyPlayer[tank].g_iFlyDuration, g_esFlySpecial[iType].g_iFlyDuration, g_esFlyAbility[iType].g_iFlyDuration, 1);
+		g_esFlyCache[tank].g_iFlyType = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iFlyType, g_esFlyPlayer[tank].g_iFlyType, g_esFlySpecial[iType].g_iFlyType, g_esFlyAbility[iType].g_iFlyType, 1);
+		g_esFlyCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iHumanAbility, g_esFlyPlayer[tank].g_iHumanAbility, g_esFlySpecial[iType].g_iHumanAbility, g_esFlyAbility[iType].g_iHumanAbility, 1);
+		g_esFlyCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iHumanAmmo, g_esFlyPlayer[tank].g_iHumanAmmo, g_esFlySpecial[iType].g_iHumanAmmo, g_esFlyAbility[iType].g_iHumanAmmo, 1);
+		g_esFlyCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iHumanCooldown, g_esFlyPlayer[tank].g_iHumanCooldown, g_esFlySpecial[iType].g_iHumanCooldown, g_esFlyAbility[iType].g_iHumanCooldown, 1);
+		g_esFlyCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iHumanDuration, g_esFlyPlayer[tank].g_iHumanDuration, g_esFlySpecial[iType].g_iHumanDuration, g_esFlyAbility[iType].g_iHumanDuration, 1);
+		g_esFlyCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iHumanMode, g_esFlyPlayer[tank].g_iHumanMode, g_esFlySpecial[iType].g_iHumanMode, g_esFlyAbility[iType].g_iHumanMode, 1);
+		g_esFlyCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_flOpenAreasOnly, g_esFlyPlayer[tank].g_flOpenAreasOnly, g_esFlySpecial[iType].g_flOpenAreasOnly, g_esFlyAbility[iType].g_flOpenAreasOnly, 1);
+		g_esFlyCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iRequiresHumans, g_esFlyPlayer[tank].g_iRequiresHumans, g_esFlySpecial[iType].g_iRequiresHumans, g_esFlyAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
 	{
-		g_esFlyCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_flCloseAreasOnly, g_esFlyAbility[type].g_flCloseAreasOnly, 1);
-		g_esFlyCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iComboAbility, g_esFlyAbility[type].g_iComboAbility, 1);
-		g_esFlyCache[tank].g_flFlyChance = flGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_flFlyChance, g_esFlyAbility[type].g_flFlyChance, 1);
-		g_esFlyCache[tank].g_flFlySpeed = flGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_flFlySpeed, g_esFlyAbility[type].g_flFlySpeed, 1);
-		g_esFlyCache[tank].g_iFlyAbility = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iFlyAbility, g_esFlyAbility[type].g_iFlyAbility, 1);
-		g_esFlyCache[tank].g_iFlyCooldown = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iFlyCooldown, g_esFlyAbility[type].g_iFlyCooldown, 1);
-		g_esFlyCache[tank].g_iFlyDuration = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iFlyDuration, g_esFlyAbility[type].g_iFlyDuration, 1);
-		g_esFlyCache[tank].g_iFlyType = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iFlyType, g_esFlyAbility[type].g_iFlyType, 1);
-		g_esFlyCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iHumanAbility, g_esFlyAbility[type].g_iHumanAbility, 1);
-		g_esFlyCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iHumanAmmo, g_esFlyAbility[type].g_iHumanAmmo, 1);
-		g_esFlyCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iHumanCooldown, g_esFlyAbility[type].g_iHumanCooldown, 1);
-		g_esFlyCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iHumanDuration, g_esFlyAbility[type].g_iHumanDuration, 1);
-		g_esFlyCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iHumanMode, g_esFlyAbility[type].g_iHumanMode, 1);
-		g_esFlyCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_flOpenAreasOnly, g_esFlyAbility[type].g_flOpenAreasOnly, 1);
-		g_esFlyCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iRequiresHumans, g_esFlyAbility[type].g_iRequiresHumans, 1);
+		g_esFlyCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_flCloseAreasOnly, g_esFlyAbility[iType].g_flCloseAreasOnly, 1);
+		g_esFlyCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iComboAbility, g_esFlyAbility[iType].g_iComboAbility, 1);
+		g_esFlyCache[tank].g_flFlyChance = flGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_flFlyChance, g_esFlyAbility[iType].g_flFlyChance, 1);
+		g_esFlyCache[tank].g_flFlySpeed = flGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_flFlySpeed, g_esFlyAbility[iType].g_flFlySpeed, 1);
+		g_esFlyCache[tank].g_iFlyAbility = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iFlyAbility, g_esFlyAbility[iType].g_iFlyAbility, 1);
+		g_esFlyCache[tank].g_iFlyCooldown = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iFlyCooldown, g_esFlyAbility[iType].g_iFlyCooldown, 1);
+		g_esFlyCache[tank].g_iFlyDuration = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iFlyDuration, g_esFlyAbility[iType].g_iFlyDuration, 1);
+		g_esFlyCache[tank].g_iFlyType = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iFlyType, g_esFlyAbility[iType].g_iFlyType, 1);
+		g_esFlyCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iHumanAbility, g_esFlyAbility[iType].g_iHumanAbility, 1);
+		g_esFlyCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iHumanAmmo, g_esFlyAbility[iType].g_iHumanAmmo, 1);
+		g_esFlyCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iHumanCooldown, g_esFlyAbility[iType].g_iHumanCooldown, 1);
+		g_esFlyCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iHumanDuration, g_esFlyAbility[iType].g_iHumanDuration, 1);
+		g_esFlyCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iHumanMode, g_esFlyAbility[iType].g_iHumanMode, 1);
+		g_esFlyCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_flOpenAreasOnly, g_esFlyAbility[iType].g_flOpenAreasOnly, 1);
+		g_esFlyCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iRequiresHumans, g_esFlyAbility[iType].g_iRequiresHumans, 1);
 	}
 }
 
@@ -1109,7 +1112,7 @@ void vFlyThink(int tank, int buttons, float duration)
 		return;
 	}
 
-	int iPos = g_esFlyAbility[g_esFlyPlayer[tank].g_iTankType].g_iComboPosition;
+	int iPos = g_esFlyAbility[g_esFlyPlayer[tank].g_iTankTypeRecorded].g_iComboPosition;
 	float flSpeed = (iPos != -1) ? MT_GetCombinationSetting(tank, 16, iPos) : g_esFlyCache[tank].g_flFlySpeed;
 	if (bIsInfected(tank, MT_CHECK_FAKECLIENT))
 	{
@@ -1567,7 +1570,7 @@ void vFlyReset2(int tank)
 
 void vFlyReset3(int tank)
 {
-	int iTime = GetTime(), iPos = g_esFlyAbility[g_esFlyPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esFlyCache[tank].g_iFlyCooldown;
+	int iTime = GetTime(), iPos = g_esFlyAbility[g_esFlyPlayer[tank].g_iTankTypeRecorded].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esFlyCache[tank].g_iFlyCooldown;
 	iCooldown = (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esFlyCache[tank].g_iHumanAbility == 1 && g_esFlyCache[tank].g_iHumanMode == 0 && g_esFlyPlayer[tank].g_iAmmoCount < g_esFlyCache[tank].g_iHumanAmmo && g_esFlyCache[tank].g_iHumanAmmo > 0) ? g_esFlyCache[tank].g_iHumanCooldown : iCooldown;
 	g_esFlyPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esFlyPlayer[tank].g_iCooldown != -1 && g_esFlyPlayer[tank].g_iCooldown >= iTime)

@@ -100,6 +100,7 @@ enum struct esRocketPlayer
 	int g_iRocketRangeCooldown;
 	int g_iRocketSight;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esRocketPlayer g_esRocketPlayer[MAXPLAYERS + 1];
@@ -862,59 +863,61 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esRocketPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esRocketPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esRocketPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esRocketCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_flCloseAreasOnly, g_esRocketPlayer[tank].g_flCloseAreasOnly, g_esRocketSpecial[type].g_flCloseAreasOnly, g_esRocketAbility[type].g_flCloseAreasOnly, 1);
-		g_esRocketCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iComboAbility, g_esRocketPlayer[tank].g_iComboAbility, g_esRocketSpecial[type].g_iComboAbility, g_esRocketAbility[type].g_iComboAbility, 1);
-		g_esRocketCache[tank].g_flRocketChance = flGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_flRocketChance, g_esRocketPlayer[tank].g_flRocketChance, g_esRocketSpecial[type].g_flRocketChance, g_esRocketAbility[type].g_flRocketChance, 1);
-		g_esRocketCache[tank].g_flRocketCountdown = flGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_flRocketCountdown, g_esRocketPlayer[tank].g_flRocketCountdown, g_esRocketSpecial[type].g_flRocketCountdown, g_esRocketAbility[type].g_flRocketCountdown, 1);
-		g_esRocketCache[tank].g_flRocketDelay = flGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_flRocketDelay, g_esRocketPlayer[tank].g_flRocketDelay, g_esRocketSpecial[type].g_flRocketDelay, g_esRocketAbility[type].g_flRocketDelay, 1);
-		g_esRocketCache[tank].g_flRocketRange = flGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_flRocketRange, g_esRocketPlayer[tank].g_flRocketRange, g_esRocketSpecial[type].g_flRocketRange, g_esRocketAbility[type].g_flRocketRange, 1);
-		g_esRocketCache[tank].g_flRocketRangeChance = flGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_flRocketRangeChance, g_esRocketPlayer[tank].g_flRocketRangeChance, g_esRocketSpecial[type].g_flRocketRangeChance, g_esRocketAbility[type].g_flRocketRangeChance, 1);
-		g_esRocketCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iHumanAbility, g_esRocketPlayer[tank].g_iHumanAbility, g_esRocketSpecial[type].g_iHumanAbility, g_esRocketAbility[type].g_iHumanAbility, 1);
-		g_esRocketCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iHumanAmmo, g_esRocketPlayer[tank].g_iHumanAmmo, g_esRocketSpecial[type].g_iHumanAmmo, g_esRocketAbility[type].g_iHumanAmmo, 1);
-		g_esRocketCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iHumanCooldown, g_esRocketPlayer[tank].g_iHumanCooldown, g_esRocketSpecial[type].g_iHumanCooldown, g_esRocketAbility[type].g_iHumanCooldown, 1);
-		g_esRocketCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iHumanRangeCooldown, g_esRocketPlayer[tank].g_iHumanRangeCooldown, g_esRocketSpecial[type].g_iHumanRangeCooldown, g_esRocketAbility[type].g_iHumanRangeCooldown, 1);
-		g_esRocketCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_flOpenAreasOnly, g_esRocketPlayer[tank].g_flOpenAreasOnly, g_esRocketSpecial[type].g_flOpenAreasOnly, g_esRocketAbility[type].g_flOpenAreasOnly, 1);
-		g_esRocketCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iRequiresHumans, g_esRocketPlayer[tank].g_iRequiresHumans, g_esRocketSpecial[type].g_iRequiresHumans, g_esRocketAbility[type].g_iRequiresHumans, 1);
-		g_esRocketCache[tank].g_iRocketAbility = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iRocketAbility, g_esRocketPlayer[tank].g_iRocketAbility, g_esRocketSpecial[type].g_iRocketAbility, g_esRocketAbility[type].g_iRocketAbility, 1);
-		g_esRocketCache[tank].g_iRocketBody = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iRocketBody, g_esRocketPlayer[tank].g_iRocketBody, g_esRocketSpecial[type].g_iRocketBody, g_esRocketAbility[type].g_iRocketBody, 1);
-		g_esRocketCache[tank].g_iRocketCooldown = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iRocketCooldown, g_esRocketPlayer[tank].g_iRocketCooldown, g_esRocketSpecial[type].g_iRocketCooldown, g_esRocketAbility[type].g_iRocketCooldown, 1);
-		g_esRocketCache[tank].g_iRocketEffect = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iRocketEffect, g_esRocketPlayer[tank].g_iRocketEffect, g_esRocketSpecial[type].g_iRocketEffect, g_esRocketAbility[type].g_iRocketEffect, 1);
-		g_esRocketCache[tank].g_iRocketHit = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iRocketHit, g_esRocketPlayer[tank].g_iRocketHit, g_esRocketSpecial[type].g_iRocketHit, g_esRocketAbility[type].g_iRocketHit, 1);
-		g_esRocketCache[tank].g_iRocketHitMode = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iRocketHitMode, g_esRocketPlayer[tank].g_iRocketHitMode, g_esRocketSpecial[type].g_iRocketHitMode, g_esRocketAbility[type].g_iRocketHitMode, 1);
-		g_esRocketCache[tank].g_iRocketMessage = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iRocketMessage, g_esRocketPlayer[tank].g_iRocketMessage, g_esRocketSpecial[type].g_iRocketMessage, g_esRocketAbility[type].g_iRocketMessage, 1);
-		g_esRocketCache[tank].g_iRocketMode = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iRocketMode, g_esRocketPlayer[tank].g_iRocketMode, g_esRocketSpecial[type].g_iRocketMode, g_esRocketAbility[type].g_iRocketMode, 1);
-		g_esRocketCache[tank].g_iRocketRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iRocketRangeCooldown, g_esRocketPlayer[tank].g_iRocketRangeCooldown, g_esRocketSpecial[type].g_iRocketRangeCooldown, g_esRocketAbility[type].g_iRocketRangeCooldown, 1);
-		g_esRocketCache[tank].g_iRocketSight = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iRocketSight, g_esRocketPlayer[tank].g_iRocketSight, g_esRocketSpecial[type].g_iRocketSight, g_esRocketAbility[type].g_iRocketSight, 1);
+		g_esRocketCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_flCloseAreasOnly, g_esRocketPlayer[tank].g_flCloseAreasOnly, g_esRocketSpecial[iType].g_flCloseAreasOnly, g_esRocketAbility[iType].g_flCloseAreasOnly, 1);
+		g_esRocketCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iComboAbility, g_esRocketPlayer[tank].g_iComboAbility, g_esRocketSpecial[iType].g_iComboAbility, g_esRocketAbility[iType].g_iComboAbility, 1);
+		g_esRocketCache[tank].g_flRocketChance = flGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_flRocketChance, g_esRocketPlayer[tank].g_flRocketChance, g_esRocketSpecial[iType].g_flRocketChance, g_esRocketAbility[iType].g_flRocketChance, 1);
+		g_esRocketCache[tank].g_flRocketCountdown = flGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_flRocketCountdown, g_esRocketPlayer[tank].g_flRocketCountdown, g_esRocketSpecial[iType].g_flRocketCountdown, g_esRocketAbility[iType].g_flRocketCountdown, 1);
+		g_esRocketCache[tank].g_flRocketDelay = flGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_flRocketDelay, g_esRocketPlayer[tank].g_flRocketDelay, g_esRocketSpecial[iType].g_flRocketDelay, g_esRocketAbility[iType].g_flRocketDelay, 1);
+		g_esRocketCache[tank].g_flRocketRange = flGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_flRocketRange, g_esRocketPlayer[tank].g_flRocketRange, g_esRocketSpecial[iType].g_flRocketRange, g_esRocketAbility[iType].g_flRocketRange, 1);
+		g_esRocketCache[tank].g_flRocketRangeChance = flGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_flRocketRangeChance, g_esRocketPlayer[tank].g_flRocketRangeChance, g_esRocketSpecial[iType].g_flRocketRangeChance, g_esRocketAbility[iType].g_flRocketRangeChance, 1);
+		g_esRocketCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iHumanAbility, g_esRocketPlayer[tank].g_iHumanAbility, g_esRocketSpecial[iType].g_iHumanAbility, g_esRocketAbility[iType].g_iHumanAbility, 1);
+		g_esRocketCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iHumanAmmo, g_esRocketPlayer[tank].g_iHumanAmmo, g_esRocketSpecial[iType].g_iHumanAmmo, g_esRocketAbility[iType].g_iHumanAmmo, 1);
+		g_esRocketCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iHumanCooldown, g_esRocketPlayer[tank].g_iHumanCooldown, g_esRocketSpecial[iType].g_iHumanCooldown, g_esRocketAbility[iType].g_iHumanCooldown, 1);
+		g_esRocketCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iHumanRangeCooldown, g_esRocketPlayer[tank].g_iHumanRangeCooldown, g_esRocketSpecial[iType].g_iHumanRangeCooldown, g_esRocketAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esRocketCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_flOpenAreasOnly, g_esRocketPlayer[tank].g_flOpenAreasOnly, g_esRocketSpecial[iType].g_flOpenAreasOnly, g_esRocketAbility[iType].g_flOpenAreasOnly, 1);
+		g_esRocketCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iRequiresHumans, g_esRocketPlayer[tank].g_iRequiresHumans, g_esRocketSpecial[iType].g_iRequiresHumans, g_esRocketAbility[iType].g_iRequiresHumans, 1);
+		g_esRocketCache[tank].g_iRocketAbility = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iRocketAbility, g_esRocketPlayer[tank].g_iRocketAbility, g_esRocketSpecial[iType].g_iRocketAbility, g_esRocketAbility[iType].g_iRocketAbility, 1);
+		g_esRocketCache[tank].g_iRocketBody = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iRocketBody, g_esRocketPlayer[tank].g_iRocketBody, g_esRocketSpecial[iType].g_iRocketBody, g_esRocketAbility[iType].g_iRocketBody, 1);
+		g_esRocketCache[tank].g_iRocketCooldown = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iRocketCooldown, g_esRocketPlayer[tank].g_iRocketCooldown, g_esRocketSpecial[iType].g_iRocketCooldown, g_esRocketAbility[iType].g_iRocketCooldown, 1);
+		g_esRocketCache[tank].g_iRocketEffect = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iRocketEffect, g_esRocketPlayer[tank].g_iRocketEffect, g_esRocketSpecial[iType].g_iRocketEffect, g_esRocketAbility[iType].g_iRocketEffect, 1);
+		g_esRocketCache[tank].g_iRocketHit = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iRocketHit, g_esRocketPlayer[tank].g_iRocketHit, g_esRocketSpecial[iType].g_iRocketHit, g_esRocketAbility[iType].g_iRocketHit, 1);
+		g_esRocketCache[tank].g_iRocketHitMode = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iRocketHitMode, g_esRocketPlayer[tank].g_iRocketHitMode, g_esRocketSpecial[iType].g_iRocketHitMode, g_esRocketAbility[iType].g_iRocketHitMode, 1);
+		g_esRocketCache[tank].g_iRocketMessage = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iRocketMessage, g_esRocketPlayer[tank].g_iRocketMessage, g_esRocketSpecial[iType].g_iRocketMessage, g_esRocketAbility[iType].g_iRocketMessage, 1);
+		g_esRocketCache[tank].g_iRocketMode = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iRocketMode, g_esRocketPlayer[tank].g_iRocketMode, g_esRocketSpecial[iType].g_iRocketMode, g_esRocketAbility[iType].g_iRocketMode, 1);
+		g_esRocketCache[tank].g_iRocketRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iRocketRangeCooldown, g_esRocketPlayer[tank].g_iRocketRangeCooldown, g_esRocketSpecial[iType].g_iRocketRangeCooldown, g_esRocketAbility[iType].g_iRocketRangeCooldown, 1);
+		g_esRocketCache[tank].g_iRocketSight = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iRocketSight, g_esRocketPlayer[tank].g_iRocketSight, g_esRocketSpecial[iType].g_iRocketSight, g_esRocketAbility[iType].g_iRocketSight, 1);
 	}
 	else
 	{
-		g_esRocketCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_flCloseAreasOnly, g_esRocketAbility[type].g_flCloseAreasOnly, 1);
-		g_esRocketCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_iComboAbility, g_esRocketAbility[type].g_iComboAbility, 1);
-		g_esRocketCache[tank].g_flRocketChance = flGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_flRocketChance, g_esRocketAbility[type].g_flRocketChance, 1);
-		g_esRocketCache[tank].g_flRocketCountdown = flGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_flRocketCountdown, g_esRocketAbility[type].g_flRocketCountdown, 1);
-		g_esRocketCache[tank].g_flRocketDelay = flGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_flRocketDelay, g_esRocketAbility[type].g_flRocketDelay, 1);
-		g_esRocketCache[tank].g_flRocketRange = flGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_flRocketRange, g_esRocketAbility[type].g_flRocketRange, 1);
-		g_esRocketCache[tank].g_flRocketRangeChance = flGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_flRocketRangeChance, g_esRocketAbility[type].g_flRocketRangeChance, 1);
-		g_esRocketCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_iHumanAbility, g_esRocketAbility[type].g_iHumanAbility, 1);
-		g_esRocketCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_iHumanAmmo, g_esRocketAbility[type].g_iHumanAmmo, 1);
-		g_esRocketCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_iHumanCooldown, g_esRocketAbility[type].g_iHumanCooldown, 1);
-		g_esRocketCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_iHumanRangeCooldown, g_esRocketAbility[type].g_iHumanRangeCooldown, 1);
-		g_esRocketCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_flOpenAreasOnly, g_esRocketAbility[type].g_flOpenAreasOnly, 1);
-		g_esRocketCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_iRequiresHumans, g_esRocketAbility[type].g_iRequiresHumans, 1);
-		g_esRocketCache[tank].g_iRocketAbility = iGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_iRocketAbility, g_esRocketAbility[type].g_iRocketAbility, 1);
-		g_esRocketCache[tank].g_iRocketBody = iGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_iRocketBody, g_esRocketAbility[type].g_iRocketBody, 1);
-		g_esRocketCache[tank].g_iRocketCooldown = iGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_iRocketCooldown, g_esRocketAbility[type].g_iRocketCooldown, 1);
-		g_esRocketCache[tank].g_iRocketEffect = iGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_iRocketEffect, g_esRocketAbility[type].g_iRocketEffect, 1);
-		g_esRocketCache[tank].g_iRocketHit = iGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_iRocketHit, g_esRocketAbility[type].g_iRocketHit, 1);
-		g_esRocketCache[tank].g_iRocketHitMode = iGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_iRocketHitMode, g_esRocketAbility[type].g_iRocketHitMode, 1);
-		g_esRocketCache[tank].g_iRocketMessage = iGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_iRocketMessage, g_esRocketAbility[type].g_iRocketMessage, 1);
-		g_esRocketCache[tank].g_iRocketMode = iGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_iRocketMode, g_esRocketAbility[type].g_iRocketMode, 1);
-		g_esRocketCache[tank].g_iRocketRangeCooldown = iGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_iRocketRangeCooldown, g_esRocketAbility[type].g_iRocketRangeCooldown, 1);
-		g_esRocketCache[tank].g_iRocketSight = iGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_iRocketSight, g_esRocketAbility[type].g_iRocketSight, 1);
+		g_esRocketCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_flCloseAreasOnly, g_esRocketAbility[iType].g_flCloseAreasOnly, 1);
+		g_esRocketCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_iComboAbility, g_esRocketAbility[iType].g_iComboAbility, 1);
+		g_esRocketCache[tank].g_flRocketChance = flGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_flRocketChance, g_esRocketAbility[iType].g_flRocketChance, 1);
+		g_esRocketCache[tank].g_flRocketCountdown = flGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_flRocketCountdown, g_esRocketAbility[iType].g_flRocketCountdown, 1);
+		g_esRocketCache[tank].g_flRocketDelay = flGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_flRocketDelay, g_esRocketAbility[iType].g_flRocketDelay, 1);
+		g_esRocketCache[tank].g_flRocketRange = flGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_flRocketRange, g_esRocketAbility[iType].g_flRocketRange, 1);
+		g_esRocketCache[tank].g_flRocketRangeChance = flGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_flRocketRangeChance, g_esRocketAbility[iType].g_flRocketRangeChance, 1);
+		g_esRocketCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_iHumanAbility, g_esRocketAbility[iType].g_iHumanAbility, 1);
+		g_esRocketCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_iHumanAmmo, g_esRocketAbility[iType].g_iHumanAmmo, 1);
+		g_esRocketCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_iHumanCooldown, g_esRocketAbility[iType].g_iHumanCooldown, 1);
+		g_esRocketCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_iHumanRangeCooldown, g_esRocketAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esRocketCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_flOpenAreasOnly, g_esRocketAbility[iType].g_flOpenAreasOnly, 1);
+		g_esRocketCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_iRequiresHumans, g_esRocketAbility[iType].g_iRequiresHumans, 1);
+		g_esRocketCache[tank].g_iRocketAbility = iGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_iRocketAbility, g_esRocketAbility[iType].g_iRocketAbility, 1);
+		g_esRocketCache[tank].g_iRocketBody = iGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_iRocketBody, g_esRocketAbility[iType].g_iRocketBody, 1);
+		g_esRocketCache[tank].g_iRocketCooldown = iGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_iRocketCooldown, g_esRocketAbility[iType].g_iRocketCooldown, 1);
+		g_esRocketCache[tank].g_iRocketEffect = iGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_iRocketEffect, g_esRocketAbility[iType].g_iRocketEffect, 1);
+		g_esRocketCache[tank].g_iRocketHit = iGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_iRocketHit, g_esRocketAbility[iType].g_iRocketHit, 1);
+		g_esRocketCache[tank].g_iRocketHitMode = iGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_iRocketHitMode, g_esRocketAbility[iType].g_iRocketHitMode, 1);
+		g_esRocketCache[tank].g_iRocketMessage = iGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_iRocketMessage, g_esRocketAbility[iType].g_iRocketMessage, 1);
+		g_esRocketCache[tank].g_iRocketMode = iGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_iRocketMode, g_esRocketAbility[iType].g_iRocketMode, 1);
+		g_esRocketCache[tank].g_iRocketRangeCooldown = iGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_iRocketRangeCooldown, g_esRocketAbility[iType].g_iRocketRangeCooldown, 1);
+		g_esRocketCache[tank].g_iRocketSight = iGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_iRocketSight, g_esRocketAbility[iType].g_iRocketSight, 1);
 	}
 }
 

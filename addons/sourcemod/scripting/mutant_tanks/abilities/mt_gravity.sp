@@ -109,6 +109,7 @@ enum struct esGravityPlayer
 	int g_iRequiresHumans;
 	int g_iRockCooldown;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esGravityPlayer g_esGravityPlayer[MAXPLAYERS + 1];
@@ -580,12 +581,12 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 {
 	if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esGravityCache[tank].g_iHumanAbility != 2)
 	{
-		g_esGravityAbility[g_esGravityPlayer[tank].g_iTankType].g_iComboPosition = -1;
+		g_esGravityAbility[g_esGravityPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 		return;
 	}
 
-	g_esGravityAbility[g_esGravityPlayer[tank].g_iTankType].g_iComboPosition = -1;
+	g_esGravityAbility[g_esGravityPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = -1;
 
 	char sCombo[320], sSet[4][32];
 	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
@@ -604,7 +605,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		{
 			if (StrEqual(sSubset[iPos], MT_GRAVITY_SECTION, false) || StrEqual(sSubset[iPos], MT_GRAVITY_SECTION2, false) || StrEqual(sSubset[iPos], MT_GRAVITY_SECTION3, false) || StrEqual(sSubset[iPos], MT_GRAVITY_SECTION4, false))
 			{
-				g_esGravityAbility[g_esGravityPlayer[tank].g_iTankType].g_iComboPosition = iPos;
+				g_esGravityAbility[g_esGravityPlayer[tank].g_iTankTypeRecorded].g_iComboPosition = iPos;
 				flDelay = MT_GetCombinationSetting(tank, 4, iPos);
 
 				switch (type)
@@ -995,73 +996,75 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esGravityPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esGravityPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esGravityPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esGravityCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_flCloseAreasOnly, g_esGravityPlayer[tank].g_flCloseAreasOnly, g_esGravitySpecial[type].g_flCloseAreasOnly, g_esGravityAbility[type].g_flCloseAreasOnly, 1);
-		g_esGravityCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iComboAbility, g_esGravityPlayer[tank].g_iComboAbility, g_esGravitySpecial[type].g_iComboAbility, g_esGravityAbility[type].g_iComboAbility, 1);
-		g_esGravityCache[tank].g_flGravityChance = flGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_flGravityChance, g_esGravityPlayer[tank].g_flGravityChance, g_esGravitySpecial[type].g_flGravityChance, g_esGravityAbility[type].g_flGravityChance, 1);
-		g_esGravityCache[tank].g_flGravityForce = flGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_flGravityForce, g_esGravityPlayer[tank].g_flGravityForce, g_esGravitySpecial[type].g_flGravityForce, g_esGravityAbility[type].g_flGravityForce, 2, -1.0);
-		g_esGravityCache[tank].g_flGravityRadius = flGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_flGravityRadius, g_esGravityPlayer[tank].g_flGravityRadius, g_esGravitySpecial[type].g_flGravityRadius, g_esGravityAbility[type].g_flGravityRadius, 1);
-		g_esGravityCache[tank].g_flGravityRange = flGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_flGravityRange, g_esGravityPlayer[tank].g_flGravityRange, g_esGravitySpecial[type].g_flGravityRange, g_esGravityAbility[type].g_flGravityRange, 1);
-		g_esGravityCache[tank].g_flGravityRangeChance = flGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_flGravityRangeChance, g_esGravityPlayer[tank].g_flGravityRangeChance, g_esGravitySpecial[type].g_flGravityRangeChance, g_esGravityAbility[type].g_flGravityRangeChance, 1);
-		g_esGravityCache[tank].g_flGravityRockChance = flGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_flGravityRockChance, g_esGravityPlayer[tank].g_flGravityRockChance, g_esGravitySpecial[type].g_flGravityRockChance, g_esGravityAbility[type].g_flGravityRockChance, 1);
-		g_esGravityCache[tank].g_flGravityValue = flGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_flGravityValue, g_esGravityPlayer[tank].g_flGravityValue, g_esGravitySpecial[type].g_flGravityValue, g_esGravityAbility[type].g_flGravityValue, 1);
-		g_esGravityCache[tank].g_iGravityAbility = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iGravityAbility, g_esGravityPlayer[tank].g_iGravityAbility, g_esGravitySpecial[type].g_iGravityAbility, g_esGravityAbility[type].g_iGravityAbility, 1);
-		g_esGravityCache[tank].g_iGravityCooldown = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iGravityCooldown, g_esGravityPlayer[tank].g_iGravityCooldown, g_esGravitySpecial[type].g_iGravityCooldown, g_esGravityAbility[type].g_iGravityCooldown, 1);
-		g_esGravityCache[tank].g_iGravityDuration = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iGravityDuration, g_esGravityPlayer[tank].g_iGravityDuration, g_esGravitySpecial[type].g_iGravityDuration, g_esGravityAbility[type].g_iGravityDuration, 1);
-		g_esGravityCache[tank].g_iGravityEffect = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iGravityEffect, g_esGravityPlayer[tank].g_iGravityEffect, g_esGravitySpecial[type].g_iGravityEffect, g_esGravityAbility[type].g_iGravityEffect, 1);
-		g_esGravityCache[tank].g_iGravityFlags = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iGravityFlags, g_esGravityPlayer[tank].g_iGravityFlags, g_esGravitySpecial[type].g_iGravityFlags, g_esGravityAbility[type].g_iGravityFlags, 1);
-		g_esGravityCache[tank].g_iGravityHit = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iGravityHit, g_esGravityPlayer[tank].g_iGravityHit, g_esGravitySpecial[type].g_iGravityHit, g_esGravityAbility[type].g_iGravityHit, 1);
-		g_esGravityCache[tank].g_iGravityHitMode = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iGravityHitMode, g_esGravityPlayer[tank].g_iGravityHitMode, g_esGravitySpecial[type].g_iGravityHitMode, g_esGravityAbility[type].g_iGravityHitMode, 1);
-		g_esGravityCache[tank].g_iGravityMessage = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iGravityMessage, g_esGravityPlayer[tank].g_iGravityMessage, g_esGravitySpecial[type].g_iGravityMessage, g_esGravityAbility[type].g_iGravityMessage, 1);
-		g_esGravityCache[tank].g_iGravityRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iGravityRangeCooldown, g_esGravityPlayer[tank].g_iGravityRangeCooldown, g_esGravitySpecial[type].g_iGravityRangeCooldown, g_esGravityAbility[type].g_iGravityRangeCooldown, 1);
-		g_esGravityCache[tank].g_iGravityRockBreak = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iGravityRockBreak, g_esGravityPlayer[tank].g_iGravityRockBreak, g_esGravitySpecial[type].g_iGravityRockBreak, g_esGravityAbility[type].g_iGravityRockBreak, 1);
-		g_esGravityCache[tank].g_iGravityRockCooldown = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iGravityRockCooldown, g_esGravityPlayer[tank].g_iGravityRockCooldown, g_esGravitySpecial[type].g_iGravityRockCooldown, g_esGravityAbility[type].g_iGravityRockCooldown, 1);
-		g_esGravityCache[tank].g_iGravitySight = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iGravitySight, g_esGravityPlayer[tank].g_iGravitySight, g_esGravitySpecial[type].g_iGravitySight, g_esGravityAbility[type].g_iGravitySight, 1);
-		g_esGravityCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iHumanAbility, g_esGravityPlayer[tank].g_iHumanAbility, g_esGravitySpecial[type].g_iHumanAbility, g_esGravityAbility[type].g_iHumanAbility, 1);
-		g_esGravityCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iHumanAmmo, g_esGravityPlayer[tank].g_iHumanAmmo, g_esGravitySpecial[type].g_iHumanAmmo, g_esGravityAbility[type].g_iHumanAmmo, 1);
-		g_esGravityCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iHumanCooldown, g_esGravityPlayer[tank].g_iHumanCooldown, g_esGravitySpecial[type].g_iHumanCooldown, g_esGravityAbility[type].g_iHumanCooldown, 1);
-		g_esGravityCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iHumanDuration, g_esGravityPlayer[tank].g_iHumanDuration, g_esGravitySpecial[type].g_iHumanDuration, g_esGravityAbility[type].g_iHumanDuration, 1);
-		g_esGravityCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iHumanMode, g_esGravityPlayer[tank].g_iHumanMode, g_esGravitySpecial[type].g_iHumanMode, g_esGravityAbility[type].g_iHumanMode, 1);
-		g_esGravityCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iHumanRangeCooldown, g_esGravityPlayer[tank].g_iHumanRangeCooldown, g_esGravitySpecial[type].g_iHumanRangeCooldown, g_esGravityAbility[type].g_iHumanRangeCooldown, 1);
-		g_esGravityCache[tank].g_iHumanRockCooldown = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iHumanRockCooldown, g_esGravityPlayer[tank].g_iHumanRockCooldown, g_esGravitySpecial[type].g_iHumanRockCooldown, g_esGravityAbility[type].g_iHumanRockCooldown, 1);
-		g_esGravityCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_flOpenAreasOnly, g_esGravityPlayer[tank].g_flOpenAreasOnly, g_esGravitySpecial[type].g_flOpenAreasOnly, g_esGravityAbility[type].g_flOpenAreasOnly, 1);
-		g_esGravityCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iRequiresHumans, g_esGravityPlayer[tank].g_iRequiresHumans, g_esGravitySpecial[type].g_iRequiresHumans, g_esGravityAbility[type].g_iRequiresHumans, 1);
+		g_esGravityCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_flCloseAreasOnly, g_esGravityPlayer[tank].g_flCloseAreasOnly, g_esGravitySpecial[iType].g_flCloseAreasOnly, g_esGravityAbility[iType].g_flCloseAreasOnly, 1);
+		g_esGravityCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iComboAbility, g_esGravityPlayer[tank].g_iComboAbility, g_esGravitySpecial[iType].g_iComboAbility, g_esGravityAbility[iType].g_iComboAbility, 1);
+		g_esGravityCache[tank].g_flGravityChance = flGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_flGravityChance, g_esGravityPlayer[tank].g_flGravityChance, g_esGravitySpecial[iType].g_flGravityChance, g_esGravityAbility[iType].g_flGravityChance, 1);
+		g_esGravityCache[tank].g_flGravityForce = flGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_flGravityForce, g_esGravityPlayer[tank].g_flGravityForce, g_esGravitySpecial[iType].g_flGravityForce, g_esGravityAbility[iType].g_flGravityForce, 2, -1.0);
+		g_esGravityCache[tank].g_flGravityRadius = flGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_flGravityRadius, g_esGravityPlayer[tank].g_flGravityRadius, g_esGravitySpecial[iType].g_flGravityRadius, g_esGravityAbility[iType].g_flGravityRadius, 1);
+		g_esGravityCache[tank].g_flGravityRange = flGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_flGravityRange, g_esGravityPlayer[tank].g_flGravityRange, g_esGravitySpecial[iType].g_flGravityRange, g_esGravityAbility[iType].g_flGravityRange, 1);
+		g_esGravityCache[tank].g_flGravityRangeChance = flGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_flGravityRangeChance, g_esGravityPlayer[tank].g_flGravityRangeChance, g_esGravitySpecial[iType].g_flGravityRangeChance, g_esGravityAbility[iType].g_flGravityRangeChance, 1);
+		g_esGravityCache[tank].g_flGravityRockChance = flGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_flGravityRockChance, g_esGravityPlayer[tank].g_flGravityRockChance, g_esGravitySpecial[iType].g_flGravityRockChance, g_esGravityAbility[iType].g_flGravityRockChance, 1);
+		g_esGravityCache[tank].g_flGravityValue = flGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_flGravityValue, g_esGravityPlayer[tank].g_flGravityValue, g_esGravitySpecial[iType].g_flGravityValue, g_esGravityAbility[iType].g_flGravityValue, 1);
+		g_esGravityCache[tank].g_iGravityAbility = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iGravityAbility, g_esGravityPlayer[tank].g_iGravityAbility, g_esGravitySpecial[iType].g_iGravityAbility, g_esGravityAbility[iType].g_iGravityAbility, 1);
+		g_esGravityCache[tank].g_iGravityCooldown = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iGravityCooldown, g_esGravityPlayer[tank].g_iGravityCooldown, g_esGravitySpecial[iType].g_iGravityCooldown, g_esGravityAbility[iType].g_iGravityCooldown, 1);
+		g_esGravityCache[tank].g_iGravityDuration = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iGravityDuration, g_esGravityPlayer[tank].g_iGravityDuration, g_esGravitySpecial[iType].g_iGravityDuration, g_esGravityAbility[iType].g_iGravityDuration, 1);
+		g_esGravityCache[tank].g_iGravityEffect = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iGravityEffect, g_esGravityPlayer[tank].g_iGravityEffect, g_esGravitySpecial[iType].g_iGravityEffect, g_esGravityAbility[iType].g_iGravityEffect, 1);
+		g_esGravityCache[tank].g_iGravityFlags = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iGravityFlags, g_esGravityPlayer[tank].g_iGravityFlags, g_esGravitySpecial[iType].g_iGravityFlags, g_esGravityAbility[iType].g_iGravityFlags, 1);
+		g_esGravityCache[tank].g_iGravityHit = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iGravityHit, g_esGravityPlayer[tank].g_iGravityHit, g_esGravitySpecial[iType].g_iGravityHit, g_esGravityAbility[iType].g_iGravityHit, 1);
+		g_esGravityCache[tank].g_iGravityHitMode = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iGravityHitMode, g_esGravityPlayer[tank].g_iGravityHitMode, g_esGravitySpecial[iType].g_iGravityHitMode, g_esGravityAbility[iType].g_iGravityHitMode, 1);
+		g_esGravityCache[tank].g_iGravityMessage = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iGravityMessage, g_esGravityPlayer[tank].g_iGravityMessage, g_esGravitySpecial[iType].g_iGravityMessage, g_esGravityAbility[iType].g_iGravityMessage, 1);
+		g_esGravityCache[tank].g_iGravityRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iGravityRangeCooldown, g_esGravityPlayer[tank].g_iGravityRangeCooldown, g_esGravitySpecial[iType].g_iGravityRangeCooldown, g_esGravityAbility[iType].g_iGravityRangeCooldown, 1);
+		g_esGravityCache[tank].g_iGravityRockBreak = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iGravityRockBreak, g_esGravityPlayer[tank].g_iGravityRockBreak, g_esGravitySpecial[iType].g_iGravityRockBreak, g_esGravityAbility[iType].g_iGravityRockBreak, 1);
+		g_esGravityCache[tank].g_iGravityRockCooldown = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iGravityRockCooldown, g_esGravityPlayer[tank].g_iGravityRockCooldown, g_esGravitySpecial[iType].g_iGravityRockCooldown, g_esGravityAbility[iType].g_iGravityRockCooldown, 1);
+		g_esGravityCache[tank].g_iGravitySight = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iGravitySight, g_esGravityPlayer[tank].g_iGravitySight, g_esGravitySpecial[iType].g_iGravitySight, g_esGravityAbility[iType].g_iGravitySight, 1);
+		g_esGravityCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iHumanAbility, g_esGravityPlayer[tank].g_iHumanAbility, g_esGravitySpecial[iType].g_iHumanAbility, g_esGravityAbility[iType].g_iHumanAbility, 1);
+		g_esGravityCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iHumanAmmo, g_esGravityPlayer[tank].g_iHumanAmmo, g_esGravitySpecial[iType].g_iHumanAmmo, g_esGravityAbility[iType].g_iHumanAmmo, 1);
+		g_esGravityCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iHumanCooldown, g_esGravityPlayer[tank].g_iHumanCooldown, g_esGravitySpecial[iType].g_iHumanCooldown, g_esGravityAbility[iType].g_iHumanCooldown, 1);
+		g_esGravityCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iHumanDuration, g_esGravityPlayer[tank].g_iHumanDuration, g_esGravitySpecial[iType].g_iHumanDuration, g_esGravityAbility[iType].g_iHumanDuration, 1);
+		g_esGravityCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iHumanMode, g_esGravityPlayer[tank].g_iHumanMode, g_esGravitySpecial[iType].g_iHumanMode, g_esGravityAbility[iType].g_iHumanMode, 1);
+		g_esGravityCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iHumanRangeCooldown, g_esGravityPlayer[tank].g_iHumanRangeCooldown, g_esGravitySpecial[iType].g_iHumanRangeCooldown, g_esGravityAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esGravityCache[tank].g_iHumanRockCooldown = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iHumanRockCooldown, g_esGravityPlayer[tank].g_iHumanRockCooldown, g_esGravitySpecial[iType].g_iHumanRockCooldown, g_esGravityAbility[iType].g_iHumanRockCooldown, 1);
+		g_esGravityCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_flOpenAreasOnly, g_esGravityPlayer[tank].g_flOpenAreasOnly, g_esGravitySpecial[iType].g_flOpenAreasOnly, g_esGravityAbility[iType].g_flOpenAreasOnly, 1);
+		g_esGravityCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iRequiresHumans, g_esGravityPlayer[tank].g_iRequiresHumans, g_esGravitySpecial[iType].g_iRequiresHumans, g_esGravityAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
 	{
-		g_esGravityCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_flCloseAreasOnly, g_esGravityAbility[type].g_flCloseAreasOnly, 1);
-		g_esGravityCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iComboAbility, g_esGravityAbility[type].g_iComboAbility, 1);
-		g_esGravityCache[tank].g_flGravityChance = flGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_flGravityChance, g_esGravityAbility[type].g_flGravityChance, 1);
-		g_esGravityCache[tank].g_flGravityForce = flGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_flGravityForce, g_esGravityAbility[type].g_flGravityForce, 2, -1.0);
-		g_esGravityCache[tank].g_flGravityRadius = flGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_flGravityRadius, g_esGravityAbility[type].g_flGravityRadius, 1);
-		g_esGravityCache[tank].g_flGravityRange = flGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_flGravityRange, g_esGravityAbility[type].g_flGravityRange, 1);
-		g_esGravityCache[tank].g_flGravityRangeChance = flGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_flGravityRangeChance, g_esGravityAbility[type].g_flGravityRangeChance, 1);
-		g_esGravityCache[tank].g_flGravityRockChance = flGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_flGravityRockChance, g_esGravityAbility[type].g_flGravityRockChance, 1);
-		g_esGravityCache[tank].g_flGravityValue = flGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_flGravityValue, g_esGravityAbility[type].g_flGravityValue, 1);
-		g_esGravityCache[tank].g_iGravityAbility = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iGravityAbility, g_esGravityAbility[type].g_iGravityAbility, 1);
-		g_esGravityCache[tank].g_iGravityCooldown = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iGravityCooldown, g_esGravityAbility[type].g_iGravityCooldown, 1);
-		g_esGravityCache[tank].g_iGravityDuration = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iGravityDuration, g_esGravityAbility[type].g_iGravityDuration, 1);
-		g_esGravityCache[tank].g_iGravityEffect = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iGravityEffect, g_esGravityAbility[type].g_iGravityEffect, 1);
-		g_esGravityCache[tank].g_iGravityFlags = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iGravityFlags, g_esGravityAbility[type].g_iGravityFlags, 1);
-		g_esGravityCache[tank].g_iGravityHit = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iGravityHit, g_esGravityAbility[type].g_iGravityHit, 1);
-		g_esGravityCache[tank].g_iGravityHitMode = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iGravityHitMode, g_esGravityAbility[type].g_iGravityHitMode, 1);
-		g_esGravityCache[tank].g_iGravityMessage = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iGravityMessage, g_esGravityAbility[type].g_iGravityMessage, 1);
-		g_esGravityCache[tank].g_iGravityRangeCooldown = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iGravityRangeCooldown, g_esGravityAbility[type].g_iGravityRangeCooldown, 1);
-		g_esGravityCache[tank].g_iGravityRockBreak = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iGravityRockBreak, g_esGravityAbility[type].g_iGravityRockBreak, 1);
-		g_esGravityCache[tank].g_iGravityRockCooldown = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iGravityRockCooldown, g_esGravityAbility[type].g_iGravityRockCooldown, 1);
-		g_esGravityCache[tank].g_iGravitySight = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iGravitySight, g_esGravityAbility[type].g_iGravitySight, 1);
-		g_esGravityCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iHumanAbility, g_esGravityAbility[type].g_iHumanAbility, 1);
-		g_esGravityCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iHumanAmmo, g_esGravityAbility[type].g_iHumanAmmo, 1);
-		g_esGravityCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iHumanCooldown, g_esGravityAbility[type].g_iHumanCooldown, 1);
-		g_esGravityCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iHumanDuration, g_esGravityAbility[type].g_iHumanDuration, 1);
-		g_esGravityCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iHumanMode, g_esGravityAbility[type].g_iHumanMode, 1);
-		g_esGravityCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iHumanRangeCooldown, g_esGravityAbility[type].g_iHumanRangeCooldown, 1);
-		g_esGravityCache[tank].g_iHumanRockCooldown = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iHumanRockCooldown, g_esGravityAbility[type].g_iHumanRockCooldown, 1);
-		g_esGravityCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_flOpenAreasOnly, g_esGravityAbility[type].g_flOpenAreasOnly, 1);
-		g_esGravityCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iRequiresHumans, g_esGravityAbility[type].g_iRequiresHumans, 1);
+		g_esGravityCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_flCloseAreasOnly, g_esGravityAbility[iType].g_flCloseAreasOnly, 1);
+		g_esGravityCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iComboAbility, g_esGravityAbility[iType].g_iComboAbility, 1);
+		g_esGravityCache[tank].g_flGravityChance = flGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_flGravityChance, g_esGravityAbility[iType].g_flGravityChance, 1);
+		g_esGravityCache[tank].g_flGravityForce = flGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_flGravityForce, g_esGravityAbility[iType].g_flGravityForce, 2, -1.0);
+		g_esGravityCache[tank].g_flGravityRadius = flGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_flGravityRadius, g_esGravityAbility[iType].g_flGravityRadius, 1);
+		g_esGravityCache[tank].g_flGravityRange = flGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_flGravityRange, g_esGravityAbility[iType].g_flGravityRange, 1);
+		g_esGravityCache[tank].g_flGravityRangeChance = flGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_flGravityRangeChance, g_esGravityAbility[iType].g_flGravityRangeChance, 1);
+		g_esGravityCache[tank].g_flGravityRockChance = flGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_flGravityRockChance, g_esGravityAbility[iType].g_flGravityRockChance, 1);
+		g_esGravityCache[tank].g_flGravityValue = flGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_flGravityValue, g_esGravityAbility[iType].g_flGravityValue, 1);
+		g_esGravityCache[tank].g_iGravityAbility = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iGravityAbility, g_esGravityAbility[iType].g_iGravityAbility, 1);
+		g_esGravityCache[tank].g_iGravityCooldown = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iGravityCooldown, g_esGravityAbility[iType].g_iGravityCooldown, 1);
+		g_esGravityCache[tank].g_iGravityDuration = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iGravityDuration, g_esGravityAbility[iType].g_iGravityDuration, 1);
+		g_esGravityCache[tank].g_iGravityEffect = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iGravityEffect, g_esGravityAbility[iType].g_iGravityEffect, 1);
+		g_esGravityCache[tank].g_iGravityFlags = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iGravityFlags, g_esGravityAbility[iType].g_iGravityFlags, 1);
+		g_esGravityCache[tank].g_iGravityHit = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iGravityHit, g_esGravityAbility[iType].g_iGravityHit, 1);
+		g_esGravityCache[tank].g_iGravityHitMode = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iGravityHitMode, g_esGravityAbility[iType].g_iGravityHitMode, 1);
+		g_esGravityCache[tank].g_iGravityMessage = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iGravityMessage, g_esGravityAbility[iType].g_iGravityMessage, 1);
+		g_esGravityCache[tank].g_iGravityRangeCooldown = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iGravityRangeCooldown, g_esGravityAbility[iType].g_iGravityRangeCooldown, 1);
+		g_esGravityCache[tank].g_iGravityRockBreak = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iGravityRockBreak, g_esGravityAbility[iType].g_iGravityRockBreak, 1);
+		g_esGravityCache[tank].g_iGravityRockCooldown = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iGravityRockCooldown, g_esGravityAbility[iType].g_iGravityRockCooldown, 1);
+		g_esGravityCache[tank].g_iGravitySight = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iGravitySight, g_esGravityAbility[iType].g_iGravitySight, 1);
+		g_esGravityCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iHumanAbility, g_esGravityAbility[iType].g_iHumanAbility, 1);
+		g_esGravityCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iHumanAmmo, g_esGravityAbility[iType].g_iHumanAmmo, 1);
+		g_esGravityCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iHumanCooldown, g_esGravityAbility[iType].g_iHumanCooldown, 1);
+		g_esGravityCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iHumanDuration, g_esGravityAbility[iType].g_iHumanDuration, 1);
+		g_esGravityCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iHumanMode, g_esGravityAbility[iType].g_iHumanMode, 1);
+		g_esGravityCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iHumanRangeCooldown, g_esGravityAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esGravityCache[tank].g_iHumanRockCooldown = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iHumanRockCooldown, g_esGravityAbility[iType].g_iHumanRockCooldown, 1);
+		g_esGravityCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_flOpenAreasOnly, g_esGravityAbility[iType].g_flOpenAreasOnly, 1);
+		g_esGravityCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iRequiresHumans, g_esGravityAbility[iType].g_iRequiresHumans, 1);
 	}
 }
 
@@ -1665,7 +1668,7 @@ void vGravityReset3(int tank)
 
 void vGravityReset4(int tank)
 {
-	int iTime = GetTime(), iPos = g_esGravityAbility[g_esGravityPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esGravityCache[tank].g_iGravityCooldown;
+	int iTime = GetTime(), iPos = g_esGravityAbility[g_esGravityPlayer[tank].g_iTankTypeRecorded].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esGravityCache[tank].g_iGravityCooldown;
 	iCooldown = (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esGravityCache[tank].g_iHumanAbility == 1 && g_esGravityCache[tank].g_iHumanMode == 0 && g_esGravityPlayer[tank].g_iAmmoCount < g_esGravityCache[tank].g_iHumanAmmo && g_esGravityCache[tank].g_iHumanAmmo > 0) ? g_esGravityCache[tank].g_iHumanCooldown : iCooldown;
 	g_esGravityPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esGravityPlayer[tank].g_iCooldown != -1 && g_esGravityPlayer[tank].g_iCooldown >= iTime)

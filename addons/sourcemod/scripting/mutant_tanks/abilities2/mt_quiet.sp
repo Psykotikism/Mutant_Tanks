@@ -117,6 +117,7 @@ enum struct esQuietPlayer
 	int g_iRangeCooldown;
 	int g_iRequiresHumans;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esQuietPlayer g_esQuietPlayer[MAXPLAYERS + 1];
@@ -859,55 +860,57 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esQuietPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esQuietPlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esQuietPlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esQuietCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_flCloseAreasOnly, g_esQuietPlayer[tank].g_flCloseAreasOnly, g_esQuietSpecial[type].g_flCloseAreasOnly, g_esQuietAbility[type].g_flCloseAreasOnly, 1);
-		g_esQuietCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_iComboAbility, g_esQuietPlayer[tank].g_iComboAbility, g_esQuietSpecial[type].g_iComboAbility, g_esQuietAbility[type].g_iComboAbility, 1);
-		g_esQuietCache[tank].g_flQuietChance = flGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_flQuietChance, g_esQuietPlayer[tank].g_flQuietChance, g_esQuietSpecial[type].g_flQuietChance, g_esQuietAbility[type].g_flQuietChance, 1);
-		g_esQuietCache[tank].g_flQuietDuration = flGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_flQuietDuration, g_esQuietPlayer[tank].g_flQuietDuration, g_esQuietSpecial[type].g_flQuietDuration, g_esQuietAbility[type].g_flQuietDuration, 1);
-		g_esQuietCache[tank].g_flQuietRange = flGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_flQuietRange, g_esQuietPlayer[tank].g_flQuietRange, g_esQuietSpecial[type].g_flQuietRange, g_esQuietAbility[type].g_flQuietRange, 1);
-		g_esQuietCache[tank].g_flQuietRangeChance = flGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_flQuietRangeChance, g_esQuietPlayer[tank].g_flQuietRangeChance, g_esQuietSpecial[type].g_flQuietRangeChance, g_esQuietAbility[type].g_flQuietRangeChance, 1);
-		g_esQuietCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_iHumanAbility, g_esQuietPlayer[tank].g_iHumanAbility, g_esQuietSpecial[type].g_iHumanAbility, g_esQuietAbility[type].g_iHumanAbility, 1);
-		g_esQuietCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_iHumanAmmo, g_esQuietPlayer[tank].g_iHumanAmmo, g_esQuietSpecial[type].g_iHumanAmmo, g_esQuietAbility[type].g_iHumanAmmo, 1);
-		g_esQuietCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_iHumanCooldown, g_esQuietPlayer[tank].g_iHumanCooldown, g_esQuietSpecial[type].g_iHumanCooldown, g_esQuietAbility[type].g_iHumanCooldown, 1);
-		g_esQuietCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_iHumanRangeCooldown, g_esQuietPlayer[tank].g_iHumanRangeCooldown, g_esQuietSpecial[type].g_iHumanRangeCooldown, g_esQuietAbility[type].g_iHumanRangeCooldown, 1);
-		g_esQuietCache[tank].g_iQuietAbility = iGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_iQuietAbility, g_esQuietPlayer[tank].g_iQuietAbility, g_esQuietSpecial[type].g_iQuietAbility, g_esQuietAbility[type].g_iQuietAbility, 1);
-		g_esQuietCache[tank].g_iQuietCooldown = iGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_iQuietCooldown, g_esQuietPlayer[tank].g_iQuietCooldown, g_esQuietSpecial[type].g_iQuietCooldown, g_esQuietAbility[type].g_iQuietCooldown, 1);
-		g_esQuietCache[tank].g_iQuietEffect = iGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_iQuietEffect, g_esQuietPlayer[tank].g_iQuietEffect, g_esQuietSpecial[type].g_iQuietEffect, g_esQuietAbility[type].g_iQuietEffect, 1);
-		g_esQuietCache[tank].g_iQuietFilter = iGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_iQuietFilter, g_esQuietPlayer[tank].g_iQuietFilter, g_esQuietSpecial[type].g_iQuietFilter, g_esQuietAbility[type].g_iQuietFilter, 1);
-		g_esQuietCache[tank].g_iQuietHit = iGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_iQuietHit, g_esQuietPlayer[tank].g_iQuietHit, g_esQuietSpecial[type].g_iQuietHit, g_esQuietAbility[type].g_iQuietHit, 1);
-		g_esQuietCache[tank].g_iQuietHitMode = iGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_iQuietHitMode, g_esQuietPlayer[tank].g_iQuietHitMode, g_esQuietSpecial[type].g_iQuietHitMode, g_esQuietAbility[type].g_iQuietHitMode, 1);
-		g_esQuietCache[tank].g_iQuietMessage = iGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_iQuietMessage, g_esQuietPlayer[tank].g_iQuietMessage, g_esQuietSpecial[type].g_iQuietMessage, g_esQuietAbility[type].g_iQuietMessage, 1);
-		g_esQuietCache[tank].g_iQuietRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_iQuietRangeCooldown, g_esQuietPlayer[tank].g_iQuietRangeCooldown, g_esQuietSpecial[type].g_iQuietRangeCooldown, g_esQuietAbility[type].g_iQuietRangeCooldown, 1);
-		g_esQuietCache[tank].g_iQuietSight = iGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_iQuietSight, g_esQuietPlayer[tank].g_iQuietSight, g_esQuietSpecial[type].g_iQuietSight, g_esQuietAbility[type].g_iQuietSight, 1);
-		g_esQuietCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_flOpenAreasOnly, g_esQuietPlayer[tank].g_flOpenAreasOnly, g_esQuietSpecial[type].g_flOpenAreasOnly, g_esQuietAbility[type].g_flOpenAreasOnly, 1);
-		g_esQuietCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_iRequiresHumans, g_esQuietPlayer[tank].g_iRequiresHumans, g_esQuietSpecial[type].g_iRequiresHumans, g_esQuietAbility[type].g_iRequiresHumans, 1);
+		g_esQuietCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_flCloseAreasOnly, g_esQuietPlayer[tank].g_flCloseAreasOnly, g_esQuietSpecial[iType].g_flCloseAreasOnly, g_esQuietAbility[iType].g_flCloseAreasOnly, 1);
+		g_esQuietCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_iComboAbility, g_esQuietPlayer[tank].g_iComboAbility, g_esQuietSpecial[iType].g_iComboAbility, g_esQuietAbility[iType].g_iComboAbility, 1);
+		g_esQuietCache[tank].g_flQuietChance = flGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_flQuietChance, g_esQuietPlayer[tank].g_flQuietChance, g_esQuietSpecial[iType].g_flQuietChance, g_esQuietAbility[iType].g_flQuietChance, 1);
+		g_esQuietCache[tank].g_flQuietDuration = flGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_flQuietDuration, g_esQuietPlayer[tank].g_flQuietDuration, g_esQuietSpecial[iType].g_flQuietDuration, g_esQuietAbility[iType].g_flQuietDuration, 1);
+		g_esQuietCache[tank].g_flQuietRange = flGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_flQuietRange, g_esQuietPlayer[tank].g_flQuietRange, g_esQuietSpecial[iType].g_flQuietRange, g_esQuietAbility[iType].g_flQuietRange, 1);
+		g_esQuietCache[tank].g_flQuietRangeChance = flGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_flQuietRangeChance, g_esQuietPlayer[tank].g_flQuietRangeChance, g_esQuietSpecial[iType].g_flQuietRangeChance, g_esQuietAbility[iType].g_flQuietRangeChance, 1);
+		g_esQuietCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_iHumanAbility, g_esQuietPlayer[tank].g_iHumanAbility, g_esQuietSpecial[iType].g_iHumanAbility, g_esQuietAbility[iType].g_iHumanAbility, 1);
+		g_esQuietCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_iHumanAmmo, g_esQuietPlayer[tank].g_iHumanAmmo, g_esQuietSpecial[iType].g_iHumanAmmo, g_esQuietAbility[iType].g_iHumanAmmo, 1);
+		g_esQuietCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_iHumanCooldown, g_esQuietPlayer[tank].g_iHumanCooldown, g_esQuietSpecial[iType].g_iHumanCooldown, g_esQuietAbility[iType].g_iHumanCooldown, 1);
+		g_esQuietCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_iHumanRangeCooldown, g_esQuietPlayer[tank].g_iHumanRangeCooldown, g_esQuietSpecial[iType].g_iHumanRangeCooldown, g_esQuietAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esQuietCache[tank].g_iQuietAbility = iGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_iQuietAbility, g_esQuietPlayer[tank].g_iQuietAbility, g_esQuietSpecial[iType].g_iQuietAbility, g_esQuietAbility[iType].g_iQuietAbility, 1);
+		g_esQuietCache[tank].g_iQuietCooldown = iGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_iQuietCooldown, g_esQuietPlayer[tank].g_iQuietCooldown, g_esQuietSpecial[iType].g_iQuietCooldown, g_esQuietAbility[iType].g_iQuietCooldown, 1);
+		g_esQuietCache[tank].g_iQuietEffect = iGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_iQuietEffect, g_esQuietPlayer[tank].g_iQuietEffect, g_esQuietSpecial[iType].g_iQuietEffect, g_esQuietAbility[iType].g_iQuietEffect, 1);
+		g_esQuietCache[tank].g_iQuietFilter = iGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_iQuietFilter, g_esQuietPlayer[tank].g_iQuietFilter, g_esQuietSpecial[iType].g_iQuietFilter, g_esQuietAbility[iType].g_iQuietFilter, 1);
+		g_esQuietCache[tank].g_iQuietHit = iGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_iQuietHit, g_esQuietPlayer[tank].g_iQuietHit, g_esQuietSpecial[iType].g_iQuietHit, g_esQuietAbility[iType].g_iQuietHit, 1);
+		g_esQuietCache[tank].g_iQuietHitMode = iGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_iQuietHitMode, g_esQuietPlayer[tank].g_iQuietHitMode, g_esQuietSpecial[iType].g_iQuietHitMode, g_esQuietAbility[iType].g_iQuietHitMode, 1);
+		g_esQuietCache[tank].g_iQuietMessage = iGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_iQuietMessage, g_esQuietPlayer[tank].g_iQuietMessage, g_esQuietSpecial[iType].g_iQuietMessage, g_esQuietAbility[iType].g_iQuietMessage, 1);
+		g_esQuietCache[tank].g_iQuietRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_iQuietRangeCooldown, g_esQuietPlayer[tank].g_iQuietRangeCooldown, g_esQuietSpecial[iType].g_iQuietRangeCooldown, g_esQuietAbility[iType].g_iQuietRangeCooldown, 1);
+		g_esQuietCache[tank].g_iQuietSight = iGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_iQuietSight, g_esQuietPlayer[tank].g_iQuietSight, g_esQuietSpecial[iType].g_iQuietSight, g_esQuietAbility[iType].g_iQuietSight, 1);
+		g_esQuietCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_flOpenAreasOnly, g_esQuietPlayer[tank].g_flOpenAreasOnly, g_esQuietSpecial[iType].g_flOpenAreasOnly, g_esQuietAbility[iType].g_flOpenAreasOnly, 1);
+		g_esQuietCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_iRequiresHumans, g_esQuietPlayer[tank].g_iRequiresHumans, g_esQuietSpecial[iType].g_iRequiresHumans, g_esQuietAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
 	{
-		g_esQuietCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_flCloseAreasOnly, g_esQuietAbility[type].g_flCloseAreasOnly, 1);
-		g_esQuietCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_iComboAbility, g_esQuietAbility[type].g_iComboAbility, 1);
-		g_esQuietCache[tank].g_flQuietChance = flGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_flQuietChance, g_esQuietAbility[type].g_flQuietChance, 1);
-		g_esQuietCache[tank].g_flQuietDuration = flGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_flQuietDuration, g_esQuietAbility[type].g_flQuietDuration, 1);
-		g_esQuietCache[tank].g_flQuietRange = flGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_flQuietRange, g_esQuietAbility[type].g_flQuietRange, 1);
-		g_esQuietCache[tank].g_flQuietRangeChance = flGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_flQuietRangeChance, g_esQuietAbility[type].g_flQuietRangeChance, 1);
-		g_esQuietCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_iHumanAbility, g_esQuietAbility[type].g_iHumanAbility, 1);
-		g_esQuietCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_iHumanAmmo, g_esQuietAbility[type].g_iHumanAmmo, 1);
-		g_esQuietCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_iHumanCooldown, g_esQuietAbility[type].g_iHumanCooldown, 1);
-		g_esQuietCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_iHumanRangeCooldown, g_esQuietAbility[type].g_iHumanRangeCooldown, 1);
-		g_esQuietCache[tank].g_iQuietAbility = iGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_iQuietAbility, g_esQuietAbility[type].g_iQuietAbility, 1);
-		g_esQuietCache[tank].g_iQuietCooldown = iGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_iQuietCooldown, g_esQuietAbility[type].g_iQuietCooldown, 1);
-		g_esQuietCache[tank].g_iQuietEffect = iGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_iQuietEffect, g_esQuietAbility[type].g_iQuietEffect, 1);
-		g_esQuietCache[tank].g_iQuietFilter = iGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_iQuietFilter, g_esQuietAbility[type].g_iQuietFilter, 1);
-		g_esQuietCache[tank].g_iQuietHit = iGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_iQuietHit, g_esQuietAbility[type].g_iQuietHit, 1);
-		g_esQuietCache[tank].g_iQuietHitMode = iGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_iQuietHitMode, g_esQuietAbility[type].g_iQuietHitMode, 1);
-		g_esQuietCache[tank].g_iQuietMessage = iGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_iQuietMessage, g_esQuietAbility[type].g_iQuietMessage, 1);
-		g_esQuietCache[tank].g_iQuietRangeCooldown = iGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_iQuietRangeCooldown, g_esQuietAbility[type].g_iQuietRangeCooldown, 1);
-		g_esQuietCache[tank].g_iQuietSight = iGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_iQuietSight, g_esQuietAbility[type].g_iQuietSight, 1);
-		g_esQuietCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_flOpenAreasOnly, g_esQuietAbility[type].g_flOpenAreasOnly, 1);
-		g_esQuietCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_iRequiresHumans, g_esQuietAbility[type].g_iRequiresHumans, 1);
+		g_esQuietCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_flCloseAreasOnly, g_esQuietAbility[iType].g_flCloseAreasOnly, 1);
+		g_esQuietCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_iComboAbility, g_esQuietAbility[iType].g_iComboAbility, 1);
+		g_esQuietCache[tank].g_flQuietChance = flGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_flQuietChance, g_esQuietAbility[iType].g_flQuietChance, 1);
+		g_esQuietCache[tank].g_flQuietDuration = flGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_flQuietDuration, g_esQuietAbility[iType].g_flQuietDuration, 1);
+		g_esQuietCache[tank].g_flQuietRange = flGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_flQuietRange, g_esQuietAbility[iType].g_flQuietRange, 1);
+		g_esQuietCache[tank].g_flQuietRangeChance = flGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_flQuietRangeChance, g_esQuietAbility[iType].g_flQuietRangeChance, 1);
+		g_esQuietCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_iHumanAbility, g_esQuietAbility[iType].g_iHumanAbility, 1);
+		g_esQuietCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_iHumanAmmo, g_esQuietAbility[iType].g_iHumanAmmo, 1);
+		g_esQuietCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_iHumanCooldown, g_esQuietAbility[iType].g_iHumanCooldown, 1);
+		g_esQuietCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_iHumanRangeCooldown, g_esQuietAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esQuietCache[tank].g_iQuietAbility = iGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_iQuietAbility, g_esQuietAbility[iType].g_iQuietAbility, 1);
+		g_esQuietCache[tank].g_iQuietCooldown = iGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_iQuietCooldown, g_esQuietAbility[iType].g_iQuietCooldown, 1);
+		g_esQuietCache[tank].g_iQuietEffect = iGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_iQuietEffect, g_esQuietAbility[iType].g_iQuietEffect, 1);
+		g_esQuietCache[tank].g_iQuietFilter = iGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_iQuietFilter, g_esQuietAbility[iType].g_iQuietFilter, 1);
+		g_esQuietCache[tank].g_iQuietHit = iGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_iQuietHit, g_esQuietAbility[iType].g_iQuietHit, 1);
+		g_esQuietCache[tank].g_iQuietHitMode = iGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_iQuietHitMode, g_esQuietAbility[iType].g_iQuietHitMode, 1);
+		g_esQuietCache[tank].g_iQuietMessage = iGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_iQuietMessage, g_esQuietAbility[iType].g_iQuietMessage, 1);
+		g_esQuietCache[tank].g_iQuietRangeCooldown = iGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_iQuietRangeCooldown, g_esQuietAbility[iType].g_iQuietRangeCooldown, 1);
+		g_esQuietCache[tank].g_iQuietSight = iGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_iQuietSight, g_esQuietAbility[iType].g_iQuietSight, 1);
+		g_esQuietCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_flOpenAreasOnly, g_esQuietAbility[iType].g_flOpenAreasOnly, 1);
+		g_esQuietCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_iRequiresHumans, g_esQuietAbility[iType].g_iRequiresHumans, 1);
 	}
 }
 

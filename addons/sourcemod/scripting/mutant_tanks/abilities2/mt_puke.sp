@@ -94,6 +94,7 @@ enum struct esPukePlayer
 	int g_iRangeCooldown;
 	int g_iRequiresHumans;
 	int g_iTankType;
+	int g_iTankTypeRecorded;
 }
 
 esPukePlayer g_esPukePlayer[MAXPLAYERS + 1];
@@ -810,57 +811,59 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esPukePlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esPukePlayer[tank].g_iTankType = apply ? type : 0;
+	int iType = g_esPukePlayer[tank].g_iTankTypeRecorded;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esPukeCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_flCloseAreasOnly, g_esPukePlayer[tank].g_flCloseAreasOnly, g_esPukeSpecial[type].g_flCloseAreasOnly, g_esPukeAbility[type].g_flCloseAreasOnly, 1);
-		g_esPukeCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_iComboAbility, g_esPukePlayer[tank].g_iComboAbility, g_esPukeSpecial[type].g_iComboAbility, g_esPukeAbility[type].g_iComboAbility, 1);
-		g_esPukeCache[tank].g_flPukeChance = flGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_flPukeChance, g_esPukePlayer[tank].g_flPukeChance, g_esPukeSpecial[type].g_flPukeChance, g_esPukeAbility[type].g_flPukeChance, 1);
-		g_esPukeCache[tank].g_flPukeDeathChance = flGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_flPukeDeathChance, g_esPukePlayer[tank].g_flPukeDeathChance, g_esPukeSpecial[type].g_flPukeDeathChance, g_esPukeAbility[type].g_flPukeDeathChance, 1);
-		g_esPukeCache[tank].g_flPukeDeathRange = flGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_flPukeDeathRange, g_esPukePlayer[tank].g_flPukeDeathRange, g_esPukeSpecial[type].g_flPukeDeathRange, g_esPukeAbility[type].g_flPukeDeathRange, 1);
-		g_esPukeCache[tank].g_flPukeRange = flGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_flPukeRange, g_esPukePlayer[tank].g_flPukeRange, g_esPukeSpecial[type].g_flPukeRange, g_esPukeAbility[type].g_flPukeRange, 1);
-		g_esPukeCache[tank].g_flPukeRangeChance = flGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_flPukeRangeChance, g_esPukePlayer[tank].g_flPukeRangeChance, g_esPukeSpecial[type].g_flPukeRangeChance, g_esPukeAbility[type].g_flPukeRangeChance, 1);
-		g_esPukeCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_iHumanAbility, g_esPukePlayer[tank].g_iHumanAbility, g_esPukeSpecial[type].g_iHumanAbility, g_esPukeAbility[type].g_iHumanAbility, 1);
-		g_esPukeCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_iHumanAmmo, g_esPukePlayer[tank].g_iHumanAmmo, g_esPukeSpecial[type].g_iHumanAmmo, g_esPukeAbility[type].g_iHumanAmmo, 1);
-		g_esPukeCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_iHumanCooldown, g_esPukePlayer[tank].g_iHumanCooldown, g_esPukeSpecial[type].g_iHumanCooldown, g_esPukeAbility[type].g_iHumanCooldown, 1);
-		g_esPukeCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_iHumanRangeCooldown, g_esPukePlayer[tank].g_iHumanRangeCooldown, g_esPukeSpecial[type].g_iHumanRangeCooldown, g_esPukeAbility[type].g_iHumanRangeCooldown, 1);
-		g_esPukeCache[tank].g_iPukeAbility = iGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_iPukeAbility, g_esPukePlayer[tank].g_iPukeAbility, g_esPukeSpecial[type].g_iPukeAbility, g_esPukeAbility[type].g_iPukeAbility, 1);
-		g_esPukeCache[tank].g_iPukeCooldown = iGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_iPukeCooldown, g_esPukePlayer[tank].g_iPukeCooldown, g_esPukeSpecial[type].g_iPukeCooldown, g_esPukeAbility[type].g_iPukeCooldown, 1);
-		g_esPukeCache[tank].g_iPukeDeath = iGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_iPukeDeath, g_esPukePlayer[tank].g_iPukeDeath, g_esPukeSpecial[type].g_iPukeDeath, g_esPukeAbility[type].g_iPukeDeath, 1);
-		g_esPukeCache[tank].g_iPukeEffect = iGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_iPukeEffect, g_esPukePlayer[tank].g_iPukeEffect, g_esPukeSpecial[type].g_iPukeEffect, g_esPukeAbility[type].g_iPukeEffect, 1);
-		g_esPukeCache[tank].g_iPukeHit = iGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_iPukeHit, g_esPukePlayer[tank].g_iPukeHit, g_esPukeSpecial[type].g_iPukeHit, g_esPukeAbility[type].g_iPukeHit, 1);
-		g_esPukeCache[tank].g_iPukeHitMode = iGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_iPukeHitMode, g_esPukePlayer[tank].g_iPukeHitMode, g_esPukeSpecial[type].g_iPukeHitMode, g_esPukeAbility[type].g_iPukeHitMode, 1);
-		g_esPukeCache[tank].g_iPukeMessage = iGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_iPukeMessage, g_esPukePlayer[tank].g_iPukeMessage, g_esPukeSpecial[type].g_iPukeMessage, g_esPukeAbility[type].g_iPukeMessage, 1);
-		g_esPukeCache[tank].g_iPukeRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_iPukeRangeCooldown, g_esPukePlayer[tank].g_iPukeRangeCooldown, g_esPukeSpecial[type].g_iPukeRangeCooldown, g_esPukeAbility[type].g_iPukeRangeCooldown, 1);
-		g_esPukeCache[tank].g_iPukeSight = iGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_iPukeSight, g_esPukePlayer[tank].g_iPukeSight, g_esPukeSpecial[type].g_iPukeSight, g_esPukeAbility[type].g_iPukeSight, 1);
-		g_esPukeCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_flOpenAreasOnly, g_esPukePlayer[tank].g_flOpenAreasOnly, g_esPukeSpecial[type].g_flOpenAreasOnly, g_esPukeAbility[type].g_flOpenAreasOnly, 1);
-		g_esPukeCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_iRequiresHumans, g_esPukePlayer[tank].g_iRequiresHumans, g_esPukeSpecial[type].g_iRequiresHumans, g_esPukeAbility[type].g_iRequiresHumans, 1);
+		g_esPukeCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_flCloseAreasOnly, g_esPukePlayer[tank].g_flCloseAreasOnly, g_esPukeSpecial[iType].g_flCloseAreasOnly, g_esPukeAbility[iType].g_flCloseAreasOnly, 1);
+		g_esPukeCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_iComboAbility, g_esPukePlayer[tank].g_iComboAbility, g_esPukeSpecial[iType].g_iComboAbility, g_esPukeAbility[iType].g_iComboAbility, 1);
+		g_esPukeCache[tank].g_flPukeChance = flGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_flPukeChance, g_esPukePlayer[tank].g_flPukeChance, g_esPukeSpecial[iType].g_flPukeChance, g_esPukeAbility[iType].g_flPukeChance, 1);
+		g_esPukeCache[tank].g_flPukeDeathChance = flGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_flPukeDeathChance, g_esPukePlayer[tank].g_flPukeDeathChance, g_esPukeSpecial[iType].g_flPukeDeathChance, g_esPukeAbility[iType].g_flPukeDeathChance, 1);
+		g_esPukeCache[tank].g_flPukeDeathRange = flGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_flPukeDeathRange, g_esPukePlayer[tank].g_flPukeDeathRange, g_esPukeSpecial[iType].g_flPukeDeathRange, g_esPukeAbility[iType].g_flPukeDeathRange, 1);
+		g_esPukeCache[tank].g_flPukeRange = flGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_flPukeRange, g_esPukePlayer[tank].g_flPukeRange, g_esPukeSpecial[iType].g_flPukeRange, g_esPukeAbility[iType].g_flPukeRange, 1);
+		g_esPukeCache[tank].g_flPukeRangeChance = flGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_flPukeRangeChance, g_esPukePlayer[tank].g_flPukeRangeChance, g_esPukeSpecial[iType].g_flPukeRangeChance, g_esPukeAbility[iType].g_flPukeRangeChance, 1);
+		g_esPukeCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_iHumanAbility, g_esPukePlayer[tank].g_iHumanAbility, g_esPukeSpecial[iType].g_iHumanAbility, g_esPukeAbility[iType].g_iHumanAbility, 1);
+		g_esPukeCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_iHumanAmmo, g_esPukePlayer[tank].g_iHumanAmmo, g_esPukeSpecial[iType].g_iHumanAmmo, g_esPukeAbility[iType].g_iHumanAmmo, 1);
+		g_esPukeCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_iHumanCooldown, g_esPukePlayer[tank].g_iHumanCooldown, g_esPukeSpecial[iType].g_iHumanCooldown, g_esPukeAbility[iType].g_iHumanCooldown, 1);
+		g_esPukeCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_iHumanRangeCooldown, g_esPukePlayer[tank].g_iHumanRangeCooldown, g_esPukeSpecial[iType].g_iHumanRangeCooldown, g_esPukeAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esPukeCache[tank].g_iPukeAbility = iGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_iPukeAbility, g_esPukePlayer[tank].g_iPukeAbility, g_esPukeSpecial[iType].g_iPukeAbility, g_esPukeAbility[iType].g_iPukeAbility, 1);
+		g_esPukeCache[tank].g_iPukeCooldown = iGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_iPukeCooldown, g_esPukePlayer[tank].g_iPukeCooldown, g_esPukeSpecial[iType].g_iPukeCooldown, g_esPukeAbility[iType].g_iPukeCooldown, 1);
+		g_esPukeCache[tank].g_iPukeDeath = iGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_iPukeDeath, g_esPukePlayer[tank].g_iPukeDeath, g_esPukeSpecial[iType].g_iPukeDeath, g_esPukeAbility[iType].g_iPukeDeath, 1);
+		g_esPukeCache[tank].g_iPukeEffect = iGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_iPukeEffect, g_esPukePlayer[tank].g_iPukeEffect, g_esPukeSpecial[iType].g_iPukeEffect, g_esPukeAbility[iType].g_iPukeEffect, 1);
+		g_esPukeCache[tank].g_iPukeHit = iGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_iPukeHit, g_esPukePlayer[tank].g_iPukeHit, g_esPukeSpecial[iType].g_iPukeHit, g_esPukeAbility[iType].g_iPukeHit, 1);
+		g_esPukeCache[tank].g_iPukeHitMode = iGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_iPukeHitMode, g_esPukePlayer[tank].g_iPukeHitMode, g_esPukeSpecial[iType].g_iPukeHitMode, g_esPukeAbility[iType].g_iPukeHitMode, 1);
+		g_esPukeCache[tank].g_iPukeMessage = iGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_iPukeMessage, g_esPukePlayer[tank].g_iPukeMessage, g_esPukeSpecial[iType].g_iPukeMessage, g_esPukeAbility[iType].g_iPukeMessage, 1);
+		g_esPukeCache[tank].g_iPukeRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_iPukeRangeCooldown, g_esPukePlayer[tank].g_iPukeRangeCooldown, g_esPukeSpecial[iType].g_iPukeRangeCooldown, g_esPukeAbility[iType].g_iPukeRangeCooldown, 1);
+		g_esPukeCache[tank].g_iPukeSight = iGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_iPukeSight, g_esPukePlayer[tank].g_iPukeSight, g_esPukeSpecial[iType].g_iPukeSight, g_esPukeAbility[iType].g_iPukeSight, 1);
+		g_esPukeCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_flOpenAreasOnly, g_esPukePlayer[tank].g_flOpenAreasOnly, g_esPukeSpecial[iType].g_flOpenAreasOnly, g_esPukeAbility[iType].g_flOpenAreasOnly, 1);
+		g_esPukeCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_iRequiresHumans, g_esPukePlayer[tank].g_iRequiresHumans, g_esPukeSpecial[iType].g_iRequiresHumans, g_esPukeAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
 	{
-		g_esPukeCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_flCloseAreasOnly, g_esPukeAbility[type].g_flCloseAreasOnly, 1);
-		g_esPukeCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_iComboAbility, g_esPukeAbility[type].g_iComboAbility, 1);
-		g_esPukeCache[tank].g_flPukeChance = flGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_flPukeChance, g_esPukeAbility[type].g_flPukeChance, 1);
-		g_esPukeCache[tank].g_flPukeDeathChance = flGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_flPukeDeathChance, g_esPukeAbility[type].g_flPukeDeathChance, 1);
-		g_esPukeCache[tank].g_flPukeDeathRange = flGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_flPukeDeathRange, g_esPukeAbility[type].g_flPukeDeathRange, 1);
-		g_esPukeCache[tank].g_flPukeRange = flGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_flPukeRange, g_esPukeAbility[type].g_flPukeRange, 1);
-		g_esPukeCache[tank].g_flPukeRangeChance = flGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_flPukeRangeChance, g_esPukeAbility[type].g_flPukeRangeChance, 1);
-		g_esPukeCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_iHumanAbility, g_esPukeAbility[type].g_iHumanAbility, 1);
-		g_esPukeCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_iHumanAmmo, g_esPukeAbility[type].g_iHumanAmmo, 1);
-		g_esPukeCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_iHumanCooldown, g_esPukeAbility[type].g_iHumanCooldown, 1);
-		g_esPukeCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_iHumanRangeCooldown, g_esPukeAbility[type].g_iHumanRangeCooldown, 1);
-		g_esPukeCache[tank].g_iPukeAbility = iGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_iPukeAbility, g_esPukeAbility[type].g_iPukeAbility, 1);
-		g_esPukeCache[tank].g_iPukeCooldown = iGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_iPukeCooldown, g_esPukeAbility[type].g_iPukeCooldown, 1);
-		g_esPukeCache[tank].g_iPukeDeath = iGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_iPukeDeath, g_esPukeAbility[type].g_iPukeDeath, 1);
-		g_esPukeCache[tank].g_iPukeEffect = iGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_iPukeEffect, g_esPukeAbility[type].g_iPukeEffect, 1);
-		g_esPukeCache[tank].g_iPukeHit = iGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_iPukeHit, g_esPukeAbility[type].g_iPukeHit, 1);
-		g_esPukeCache[tank].g_iPukeHitMode = iGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_iPukeHitMode, g_esPukeAbility[type].g_iPukeHitMode, 1);
-		g_esPukeCache[tank].g_iPukeMessage = iGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_iPukeMessage, g_esPukeAbility[type].g_iPukeMessage, 1);
-		g_esPukeCache[tank].g_iPukeRangeCooldown = iGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_iPukeRangeCooldown, g_esPukeAbility[type].g_iPukeRangeCooldown, 1);
-		g_esPukeCache[tank].g_iPukeSight = iGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_iPukeSight, g_esPukeAbility[type].g_iPukeSight, 1);
-		g_esPukeCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_flOpenAreasOnly, g_esPukeAbility[type].g_flOpenAreasOnly, 1);
-		g_esPukeCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_iRequiresHumans, g_esPukeAbility[type].g_iRequiresHumans, 1);
+		g_esPukeCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_flCloseAreasOnly, g_esPukeAbility[iType].g_flCloseAreasOnly, 1);
+		g_esPukeCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_iComboAbility, g_esPukeAbility[iType].g_iComboAbility, 1);
+		g_esPukeCache[tank].g_flPukeChance = flGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_flPukeChance, g_esPukeAbility[iType].g_flPukeChance, 1);
+		g_esPukeCache[tank].g_flPukeDeathChance = flGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_flPukeDeathChance, g_esPukeAbility[iType].g_flPukeDeathChance, 1);
+		g_esPukeCache[tank].g_flPukeDeathRange = flGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_flPukeDeathRange, g_esPukeAbility[iType].g_flPukeDeathRange, 1);
+		g_esPukeCache[tank].g_flPukeRange = flGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_flPukeRange, g_esPukeAbility[iType].g_flPukeRange, 1);
+		g_esPukeCache[tank].g_flPukeRangeChance = flGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_flPukeRangeChance, g_esPukeAbility[iType].g_flPukeRangeChance, 1);
+		g_esPukeCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_iHumanAbility, g_esPukeAbility[iType].g_iHumanAbility, 1);
+		g_esPukeCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_iHumanAmmo, g_esPukeAbility[iType].g_iHumanAmmo, 1);
+		g_esPukeCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_iHumanCooldown, g_esPukeAbility[iType].g_iHumanCooldown, 1);
+		g_esPukeCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_iHumanRangeCooldown, g_esPukeAbility[iType].g_iHumanRangeCooldown, 1);
+		g_esPukeCache[tank].g_iPukeAbility = iGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_iPukeAbility, g_esPukeAbility[iType].g_iPukeAbility, 1);
+		g_esPukeCache[tank].g_iPukeCooldown = iGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_iPukeCooldown, g_esPukeAbility[iType].g_iPukeCooldown, 1);
+		g_esPukeCache[tank].g_iPukeDeath = iGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_iPukeDeath, g_esPukeAbility[iType].g_iPukeDeath, 1);
+		g_esPukeCache[tank].g_iPukeEffect = iGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_iPukeEffect, g_esPukeAbility[iType].g_iPukeEffect, 1);
+		g_esPukeCache[tank].g_iPukeHit = iGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_iPukeHit, g_esPukeAbility[iType].g_iPukeHit, 1);
+		g_esPukeCache[tank].g_iPukeHitMode = iGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_iPukeHitMode, g_esPukeAbility[iType].g_iPukeHitMode, 1);
+		g_esPukeCache[tank].g_iPukeMessage = iGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_iPukeMessage, g_esPukeAbility[iType].g_iPukeMessage, 1);
+		g_esPukeCache[tank].g_iPukeRangeCooldown = iGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_iPukeRangeCooldown, g_esPukeAbility[iType].g_iPukeRangeCooldown, 1);
+		g_esPukeCache[tank].g_iPukeSight = iGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_iPukeSight, g_esPukeAbility[iType].g_iPukeSight, 1);
+		g_esPukeCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_flOpenAreasOnly, g_esPukeAbility[iType].g_flOpenAreasOnly, 1);
+		g_esPukeCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_iRequiresHumans, g_esPukeAbility[iType].g_iRequiresHumans, 1);
 	}
 }
 
