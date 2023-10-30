@@ -85,10 +85,10 @@ enum struct esRestartPlayer
 
 	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
-	float g_flPosition[3];
 	float g_flRestartChance;
 	float g_flRestartRange;
 	float g_flRestartRangeChance;
+	float g_flSpawnPosition[3];
 
 	int g_iAccessFlags;
 	int g_iAmmoCount;
@@ -1056,7 +1056,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		{
 			g_esRestartPlayer[iPlayer].g_bRecorded = true;
 
-			GetClientAbsOrigin(iPlayer, g_esRestartPlayer[iPlayer].g_flPosition);
+			GetClientAbsOrigin(iPlayer, g_esRestartPlayer[iPlayer].g_flSpawnPosition);
 		}
 	}
 	else if (StrEqual(name, "player_left_checkpoint"))
@@ -1249,26 +1249,7 @@ void vRestartHit(int survivor, int tank, float random, float chance, int enabled
 				}
 
 				bool bTeleport = true;
-				if (g_esRestartPlayer[survivor].g_bRecorded && g_esRestartCache[tank].g_iRestartMode == 0)
-				{
-					for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-					{
-						if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esRestartPlayer[iSurvivor].g_bRecorded)
-						{
-							bTeleport = false;
-
-							TeleportEntity(survivor, g_esRestartPlayer[iSurvivor].g_flPosition);
-
-							break;
-						}
-					}
-
-					if (bTeleport)
-					{
-						TeleportEntity(survivor, g_esRestartPlayer[survivor].g_flPosition);
-					}
-				}
-				else
+				if (bIsFinalMap() || !g_esRestartPlayer[survivor].g_bRecorded || g_esRestartCache[tank].g_iRestartMode == 1)
 				{
 					float flOrigin[3], flAngles[3];
 					for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
@@ -1287,7 +1268,26 @@ void vRestartHit(int survivor, int tank, float random, float chance, int enabled
 
 					if (bTeleport)
 					{
-						TeleportEntity(survivor, g_esRestartPlayer[survivor].g_flPosition);
+						TeleportEntity(survivor, g_esRestartPlayer[survivor].g_flSpawnPosition);
+					}
+				}
+				else
+				{
+					for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+					{
+						if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esRestartPlayer[iSurvivor].g_bRecorded)
+						{
+							bTeleport = false;
+
+							TeleportEntity(survivor, g_esRestartPlayer[iSurvivor].g_flSpawnPosition);
+
+							break;
+						}
+					}
+
+					if (bTeleport)
+					{
+						TeleportEntity(survivor, g_esRestartPlayer[survivor].g_flSpawnPosition);
 					}
 				}
 
