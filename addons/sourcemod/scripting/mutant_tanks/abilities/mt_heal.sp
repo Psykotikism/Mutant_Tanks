@@ -1528,13 +1528,13 @@ void vHealResetGlow(int tank)
 		{
 			int iGlowColor[4];
 			MT_GetTankColors(tank, 2, iGlowColor[0], iGlowColor[1], iGlowColor[2], iGlowColor[3]);
-			vSetHealGlow(tank, iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]), !!MT_IsGlowFlashing(tank), MT_GetGlowRange(tank, false), MT_GetGlowRange(tank, true), ((MT_GetGlowType(tank) == 1) ? 3 : 2));
+			vSetHealGlow(tank, iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]), MT_IsGlowFlashing(tank), MT_GetGlowRange(tank, false), MT_GetGlowRange(tank, true), ((MT_GetGlowType(tank) == 1) ? 3 : 2));
 		}
-		case false: vSetHealGlow(tank, 0, 0, 0, 0, 0);
+		case false: vSetHealGlow(tank, 0, false, 0, 0, 0);
 	}
 }
 
-void vSetHealGlow(int tank, int color, int flashing, int min, int max, int type)
+void vSetHealGlow(int tank, int color, bool flashing, int min, int max, int type)
 {
 	if (!g_bSecondGame)
 	{
@@ -1706,7 +1706,7 @@ Action tTimerHeal(Handle timer, DataPack pack)
 			if (!(iColor[0] == -2 && iColor[1] == -2 && iColor[2] == -2))
 			{
 				MT_TankMaxHealth(iTank, 3, (iMaxHealth + iTotalHealth));
-				vSetHealGlow(iTank, iGetRGBColor(0, iGreen, 0), !!MT_IsGlowFlashing(iTank), MT_GetGlowRange(iTank, false), MT_GetGlowRange(iTank, true), ((MT_GetGlowType(iTank) == 1) ? 3 : 2));
+				vSetHealGlow(iTank, iGetRGBColor(0, iGreen, 0), MT_IsGlowFlashing(iTank), MT_GetGlowRange(iTank, false), MT_GetGlowRange(iTank, true), ((MT_GetGlowType(iTank) == 1) ? 3 : 2));
 			}
 		}
 	}

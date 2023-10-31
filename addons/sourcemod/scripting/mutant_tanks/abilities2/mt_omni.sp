@@ -1031,7 +1031,7 @@ void vOmni2(int tank, int pos = -1)
 
 	if (iTypeCount > 0)
 	{
-		MT_SetTankType(tank, iTypes[MT_GetRandomInt(1, iTypeCount)], !!g_esOmni[tank].g_iOmniMode);
+		MT_SetTankType(tank, iTypes[MT_GetRandomInt(1, iTypeCount)], (g_esOmni[tank].g_iOmniMode == 1));
 		vAttachParticle(tank, PARTICLE_ELECTRICITY, 1.0);
 		EmitSoundToAll(SOUND_ELECTRICITY, tank);
 	}
@@ -1052,7 +1052,7 @@ void vOmni2(int tank, int pos = -1)
 
 		if (iTypeCount > 0)
 		{
-			MT_SetTankType(tank, iTypes[MT_GetRandomInt(1, iTypeCount)], !!g_esOmni[tank].g_iOmniMode);
+			MT_SetTankType(tank, iTypes[MT_GetRandomInt(1, iTypeCount)], (g_esOmni[tank].g_iOmniMode == 1));
 			vAttachParticle(tank, PARTICLE_ELECTRICITY, 1.0);
 			EmitSoundToAll(SOUND_ELECTRICITY, tank);
 		}
@@ -1130,7 +1130,7 @@ void vOmniReset2(int tank)
 	g_esOmniPlayer[tank].g_bActivated = false;
 	g_esOmniPlayer[tank].g_iDuration = -1;
 
-	MT_SetTankType(tank, g_esOmniPlayer[tank].g_iOmniType, !!g_esOmni[tank].g_iOmniMode);
+	MT_SetTankType(tank, g_esOmniPlayer[tank].g_iOmniType, (g_esOmni[tank].g_iOmniMode == 1));
 	vAttachParticle(tank, PARTICLE_ELECTRICITY, 1.0);
 	EmitSoundToAll(SOUND_ELECTRICITY, tank);
 	g_esOmniPlayer[tank].g_iOmniType = 0;

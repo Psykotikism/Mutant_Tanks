@@ -1434,7 +1434,7 @@ public void MT_OnRockThrow(int tank, int rock)
 	}
 }
 
-void vSetShieldGlow(int entity, int color, int flashing, int min, int max, int type)
+void vSetShieldGlow(int entity, int color, bool flashing, int min, int max, int type)
 {
 	if (!g_bSecondGame)
 	{
@@ -1482,7 +1482,7 @@ void vShield(int tank)
 
 	if (g_esShieldCache[tank].g_iShieldGlow == 1)
 	{
-		vSetShieldGlow(tank, 0, 0, 0, 0, 0);
+		vSetShieldGlow(tank, 0, false, 0, 0, 0);
 		int iGlowColor[4];
 		MT_GetTankColors(tank, 2, iGlowColor[0], iGlowColor[1], iGlowColor[2], iGlowColor[3]);
 
@@ -1495,7 +1495,7 @@ void vShield(int tank)
 					g_esShieldPlayer[tank].g_bRainbowColor = SDKHookEx(tank, SDKHook_PreThinkPost, OnShieldPreThinkPost);
 				}
 			}
-			case false: vSetShieldGlow(g_esShieldPlayer[tank].g_iShield, iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]), !!MT_IsGlowFlashing(tank), MT_GetGlowRange(tank, false), MT_GetGlowRange(tank, true), ((MT_GetGlowType(tank) == 1) ? 3 : 2));
+			case false: vSetShieldGlow(g_esShieldPlayer[tank].g_iShield, iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]), MT_IsGlowFlashing(tank), MT_GetGlowRange(tank, false), MT_GetGlowRange(tank, true), ((MT_GetGlowType(tank) == 1) ? 3 : 2));
 		}
 	}
 
@@ -1635,8 +1635,8 @@ void OnShieldPreThinkPost(int tank)
 		{
 			bHook = true;
 
-			vSetShieldGlow(tank, 0, 0, 0, 0, 0);
-			vSetShieldGlow(iShield, iGetRGBColor(iColor[0], iColor[1], iColor[2]), !!MT_IsGlowFlashing(tank), MT_GetGlowRange(tank, false), MT_GetGlowRange(tank, true), ((MT_GetGlowType(tank) == 1) ? 3 : 2));
+			vSetShieldGlow(tank, 0, false, 0, 0, 0);
+			vSetShieldGlow(iShield, iGetRGBColor(iColor[0], iColor[1], iColor[2]), MT_IsGlowFlashing(tank), MT_GetGlowRange(tank, false), MT_GetGlowRange(tank, true), ((MT_GetGlowType(tank) == 1) ? 3 : 2));
 		}
 	}
 
@@ -1662,13 +1662,13 @@ void vRemoveShield(int tank)
 		g_esShieldPlayer[tank].g_iShield = EntRefToEntIndex(g_esShieldPlayer[tank].g_iShield);
 		if (bIsValidEntity(g_esShieldPlayer[tank].g_iShield))
 		{
-			vSetShieldGlow(g_esShieldPlayer[tank].g_iShield, 0, 0, 0, 0, 0);
+			vSetShieldGlow(g_esShieldPlayer[tank].g_iShield, 0, false, 0, 0, 0);
 
 			if (bIsValidClient(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && MT_IsGlowEnabled(tank))
 			{
 				int iGlowColor[4];
 				MT_GetTankColors(tank, 2, iGlowColor[0], iGlowColor[1], iGlowColor[2], iGlowColor[3]);
-				vSetShieldGlow(tank, iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]), !!MT_IsGlowFlashing(tank), MT_GetGlowRange(tank, false), MT_GetGlowRange(tank, true), ((MT_GetGlowType(tank) == 1) ? 3 : 2));
+				vSetShieldGlow(tank, iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]), MT_IsGlowFlashing(tank), MT_GetGlowRange(tank, false), MT_GetGlowRange(tank, true), ((MT_GetGlowType(tank) == 1) ? 3 : 2));
 			}
 
 			MT_HideEntity(g_esShieldPlayer[tank].g_iShield, false);

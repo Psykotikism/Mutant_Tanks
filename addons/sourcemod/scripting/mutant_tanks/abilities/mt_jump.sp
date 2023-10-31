@@ -87,6 +87,7 @@ enum struct esJumpPlayer
 	int g_iHumanMode;
 	int g_iHumanRangeCooldown;
 	int g_iImmunityFlags;
+	int g_iInfectedType;
 	int g_iJumpAbility;
 	int g_iJumpCooldown;
 	int g_iJumpDuration;
@@ -909,6 +910,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esJumpPlayer[tank].g_iInfectedType = iGetInfectedType(tank);
 	g_esJumpPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esJumpPlayer[tank].g_iTankType = apply ? type : 0;
 	int iType = g_esJumpPlayer[tank].g_iTankTypeRecorded;
@@ -1634,6 +1636,14 @@ Action tTimerJump2(Handle timer, DataPack pack)
 		}
 
 		flVelocity[2] += g_esJumpCache[iTank].g_flJumpSporadicHeight;
+
+		int iVictim = iGetInfectedVictim(iTank, g_esJumpPlayer[iTank].g_iInfectedType);
+		iVictim = (iVictim <= 0) ? iTank : iVictim;
+		if (bIsSurvivor(iVictim))
+		{
+			TeleportEntity(iVictim, .velocity = flVelocity);
+		}
+
 		TeleportEntity(iTank, .velocity = flVelocity);
 	}
 

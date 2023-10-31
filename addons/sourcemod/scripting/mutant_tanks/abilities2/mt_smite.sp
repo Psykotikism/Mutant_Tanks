@@ -1061,11 +1061,19 @@ void vSmite(int tank, int survivor, int messages, int flags)
 		{
 			switch (MT_GetRandomInt(1, 2))
 			{
-				case 1: ForcePlayerSuicide(survivor);
+				case 1:
+				{
+					vDamagePlayer(survivor, tank, float(GetEntProp(survivor, Prop_Data, "m_iHealth")));
+					vDamagePlayer(survivor, tank, float(GetEntProp(survivor, Prop_Data, "m_iHealth")));
+				}
 				case 2: vDamagePlayer(survivor, tank, float(GetEntProp(survivor, Prop_Data, "m_iHealth")));
 			}
 		}
-		case 1: ForcePlayerSuicide(survivor);
+		case 1:
+		{
+			vDamagePlayer(survivor, tank, float(GetEntProp(survivor, Prop_Data, "m_iHealth")));
+			vDamagePlayer(survivor, tank, float(GetEntProp(survivor, Prop_Data, "m_iHealth")));
+		}
 		case 2: vDamagePlayer(survivor, tank, float(GetEntProp(survivor, Prop_Data, "m_iHealth")));
 	}
 
