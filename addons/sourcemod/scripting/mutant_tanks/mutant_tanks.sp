@@ -14882,9 +14882,8 @@ void vCacheSettings(int tank)
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esCache[tank].g_iSpecialTypes = iGetSettingValue(bAccess, true, g_esSpecial[iType].g_iSpecialTypes, g_esSpecific.g_iSpecialTypes, 1);
-
 		int iSpecType = g_esPlayer[tank].g_iInfectedType - 1;
+		g_esCache[tank].g_iSpecialTypes = iGetSettingValue(bAccess, true, g_esSpecial[iType].g_iSpecialTypes, g_esSpecific.g_iSpecialTypes, 1);
 		if (g_esCache[tank].g_iSpecialTypes > 0 && g_esCache[tank].g_iSpecialTypes & (1 << iSpecType))
 		{
 			g_esCache[tank].g_flArmorDuration = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flArmorDuration, g_esTank[iType].g_flArmorDuration, g_esSpecific.g_flArmorDuration, g_esGeneral.g_flArmorDuration, 1);
@@ -15164,6 +15163,185 @@ void vCacheSettings(int tank)
 				if (iPos < (sizeof esCache::g_iGlowColor))
 				{
 					g_esCache[tank].g_iGlowColor[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iGlowColor[iPos], g_esPlayer[tank].g_iGlowColor[iPos], g_esSpecial[iType].g_iGlowColor[iPos], g_esTank[iType].g_iGlowColor[iPos], 1);
+				}
+			}
+		}
+		else
+		{
+			g_esCache[tank].g_sComboSet[0] = '\0';
+			g_esCache[tank].g_sGlowColor[0] = '\0';
+			g_esCache[tank].g_sHealthCharacters[0] = '\0';
+			g_esCache[tank].g_sRockColor[0] = '\0';
+			g_esCache[tank].g_sSkinColor[0] = '\0';
+			g_esCache[tank].g_sSmokerName[0] = '\0';
+			g_esCache[tank].g_sBoomerName[0] = '\0';
+			g_esCache[tank].g_sHunterName[0] = '\0';
+			g_esCache[tank].g_sSpitterName[0] = '\0';
+			g_esCache[tank].g_sJockeyName[0] = '\0';
+			g_esCache[tank].g_sChargerName[0] = '\0';
+			g_esCache[tank].g_flArmorDuration = 0.0;
+			g_esCache[tank].g_flArmorResistance = 0.0;
+			g_esCache[tank].g_flAttackInterval = 0.0;
+			g_esCache[tank].g_flBurnDuration = 0.0;
+			g_esCache[tank].g_flBurntSkin = 0.0;
+			g_esCache[tank].g_flClawDamage = 0.0;
+			g_esCache[tank].g_flHealPercentMultiplier = 0.0;
+			g_esCache[tank].g_flHittableDamage = 0.0;
+			g_esCache[tank].g_flIncapDamageMultiplier = 0.0;
+			g_esCache[tank].g_flRandomDuration = 0.0;
+			g_esCache[tank].g_flPinDamage = 0.0;
+			g_esCache[tank].g_flRunSpeed = 0.0;
+			g_esCache[tank].g_flShieldDuration = 0.0;
+			g_esCache[tank].g_flShieldResistance = 0.0;
+			g_esCache[tank].g_flSpecialInterval = 0.0;
+			g_esCache[tank].g_flTransformDelay = 0.0;
+			g_esCache[tank].g_flTransformDuration = 0.0;
+			g_esCache[tank].g_iAnnounceArrival = 0;
+			g_esCache[tank].g_iAnnounceDeath = 0;
+			g_esCache[tank].g_iAnnounceKill = 0;
+			g_esCache[tank].g_iArrivalMessage = 0;
+			g_esCache[tank].g_iArrivalSound = 0;
+			g_esCache[tank].g_iBaseHealth = 0;
+			g_esCache[tank].g_iBodyEffects = 0;
+			g_esCache[tank].g_iBossEffects = 0;
+			g_esCache[tank].g_iBossStages = 0;
+			g_esCache[tank].g_iBulletImmunity = 0;
+			g_esCache[tank].g_iDeathDetails = 0;
+			g_esCache[tank].g_iDeathMessage = 0;
+			g_esCache[tank].g_iDeathRevert = 0;
+			g_esCache[tank].g_iDeathSound = 0;
+			g_esCache[tank].g_iDisplayHealth = 0;
+			g_esCache[tank].g_iDisplayHealthType = 0;
+			g_esCache[tank].g_iExplosiveImmunity = 0;
+			g_esCache[tank].g_iExtraHealth = 0;
+			g_esCache[tank].g_iFireImmunity = 0;
+			g_esCache[tank].g_iGlowEnabled = 0;
+			g_esCache[tank].g_iGlowFlashing = 0;
+			g_esCache[tank].g_iGlowMaxRange = 0;
+			g_esCache[tank].g_iGlowMinRange = 0;
+			g_esCache[tank].g_iGlowType = 0;
+			g_esCache[tank].g_iHittableImmunity = 0;
+			g_esCache[tank].g_iHumanMultiplierMode = 0;
+			g_esCache[tank].g_iIntangibleBody = 0;
+			g_esCache[tank].g_iKillMessage = 0;
+			g_esCache[tank].g_iMeleeImmunity = 0;
+			g_esCache[tank].g_iMinimumHumans = 0;
+			g_esCache[tank].g_iMultiplyHealth = 0;
+			g_esCache[tank].g_iRandomSpecial = 0;
+			g_esCache[tank].g_iRockEffects = 0;
+			g_esCache[tank].g_iRockModel = 0;
+			g_esCache[tank].g_iSpawnProtection = 0;
+			g_esCache[tank].g_iSpawnType = 0;
+			g_esCache[tank].g_iSpecialModel = 0;
+			g_esCache[tank].g_iSpecialNote = 0;
+			g_esCache[tank].g_iThrowRock = 0;
+			g_esCache[tank].g_iVocalizeArrival = 0;
+			g_esCache[tank].g_iVocalizeDeath = 0;
+			g_esCache[tank].g_iVomitImmunity = 0;
+
+			for (int iPos = 0; iPos < (sizeof esCache::g_iTransformType); iPos++)
+			{
+				g_esCache[tank].g_iTransformType[iPos] = 0;
+
+				if (iPos < (sizeof esCache::g_iRewardEnabled))
+				{
+					g_esCache[tank].g_flActionDurationReward[iPos] = 0.0;
+					g_esCache[tank].g_iAmmoBoostReward[iPos] = 0;
+					g_esCache[tank].g_iAmmoRegenReward[iPos] = 0;
+					g_esCache[tank].g_flAttackBoostReward[iPos] = 0.0;
+					g_esCache[tank].g_iBlazeHealthReward[iPos] = 0;
+					g_esCache[tank].g_iBunnyHopReward[iPos] = 0;
+					g_esCache[tank].g_iBurstDoorsReward[iPos] = 0;
+					g_esCache[tank].g_iCleanKillsReward[iPos] = 0;
+					g_esCache[tank].g_iClusterBombsReward[iPos] = 0;
+					g_esCache[tank].g_flDamageBoostReward[iPos] = 0.0;
+					g_esCache[tank].g_flDamageResistanceReward[iPos] = 0.0;
+					g_esCache[tank].g_iFriendlyFireReward[iPos] = 0;
+					g_esCache[tank].g_iGhostBulletsReward[iPos] = 0;
+					g_esCache[tank].g_flHealPercentReward[iPos] = 0.0;
+					g_esCache[tank].g_iHealthRegenReward[iPos] = 0;
+					g_esCache[tank].g_iHollowpointAmmoReward[iPos] = 0;
+					g_esCache[tank].g_flJumpHeightReward[iPos] = 0.0;
+					g_esCache[tank].g_iInextinguishableFireReward[iPos] = 0;
+					g_esCache[tank].g_iInfiniteAmmoReward[iPos] = 0;
+					g_esCache[tank].g_iLadderActionsReward[iPos] = 0;
+					g_esCache[tank].g_iLadyKillerReward[iPos] = 0;
+					g_esCache[tank].g_iLifeLeechReward[iPos] = 0;
+					g_esCache[tank].g_flLoopingVoicelineInterval[iPos] = 0.0;
+					g_esCache[tank].g_iMeleeRangeReward[iPos] = 0;
+					g_esCache[tank].g_iMidairDashesReward[iPos] = 0;
+					g_esCache[tank].g_iParticleEffectVisual[iPos] = 0;
+					g_esCache[tank].g_flPipeBombDurationReward[iPos] = 0.0;
+					g_esCache[tank].g_iPrefsNotify[iPos] = 0;
+					g_esCache[tank].g_flPunchResistanceReward[iPos] = 0.0;
+					g_esCache[tank].g_flRapidPistolReward[iPos] = 0.0;
+					g_esCache[tank].g_iRecoilDampenerReward[iPos] = 0;
+					g_esCache[tank].g_flRefillPercentReward[iPos] = 0.0;
+					g_esCache[tank].g_iRespawnLoadoutReward[iPos] = 0;
+					g_esCache[tank].g_iReviveHealthReward[iPos] = 0;
+					g_esCache[tank].g_iRewardBots[iPos] = 0;
+					g_esCache[tank].g_flRewardChance[iPos] = 0.0;
+					g_esCache[tank].g_flRewardDuration[iPos] = 0.0;
+					g_esCache[tank].g_iRewardEffect[iPos] = 0;
+					g_esCache[tank].g_iRewardEnabled[iPos] = 0;
+					g_esCache[tank].g_iRewardNotify[iPos] = 0;
+					g_esCache[tank].g_flRewardPercentage[iPos] = 0.0;
+					g_esCache[tank].g_iRewardVisual[iPos] = 0;
+					g_esCache[tank].g_iShareRewards[iPos] = 0;
+					g_esCache[tank].g_flShoveDamageReward[iPos] = 0.0;
+					g_esCache[tank].g_iShovePenaltyReward[iPos] = 0;
+					g_esCache[tank].g_flShoveRateReward[iPos] = 0.0;
+					g_esCache[tank].g_iSledgehammerRoundsReward[iPos] = 0;
+					g_esCache[tank].g_iSpecialAmmoReward[iPos] = 0;
+					g_esCache[tank].g_flSpeedBoostReward[iPos] = 0.0;
+					g_esCache[tank].g_iStackRewards[iPos] = 0;
+					g_esCache[tank].g_iStickyGrenadesReward[iPos] = 0;
+					g_esCache[tank].g_iThornsReward[iPos] = 0;
+					g_esCache[tank].g_iUsefulRewards[iPos] = 0;
+					g_esCache[tank].g_iVoicePitchVisual[iPos] = 0;
+				}
+
+				if (iPos < (sizeof esCache::g_iStackLimits))
+				{
+					g_esCache[tank].g_iStackLimits[iPos] = 0;
+				}
+
+				if (iPos < (sizeof esCache::g_flComboChance))
+				{
+					g_esCache[tank].g_flComboChance[iPos] = 0.0;
+					g_esCache[tank].g_iComboCooldown[iPos] = 0;
+					g_esCache[tank].g_flComboDamage[iPos] = 0.0;
+					g_esCache[tank].g_flComboDeathChance[iPos] = 0.0;
+					g_esCache[tank].g_flComboDeathRange[iPos] = 0.0;
+					g_esCache[tank].g_flComboDelay[iPos] = 0.0;
+					g_esCache[tank].g_flComboDuration[iPos] = 0.0;
+					g_esCache[tank].g_flComboInterval[iPos] = 0.0;
+					g_esCache[tank].g_flComboMinRadius[iPos] = 0.0;
+					g_esCache[tank].g_flComboMaxRadius[iPos] = 0.0;
+					g_esCache[tank].g_flComboRange[iPos] = 0.0;
+					g_esCache[tank].g_flComboRangeChance[iPos] = 0.0;
+					g_esCache[tank].g_iComboRangeCooldown[iPos] = 0;
+					g_esCache[tank].g_flComboRockChance[iPos] = 0.0;
+					g_esCache[tank].g_iComboRockCooldown[iPos] = 0;
+					g_esCache[tank].g_flComboSpeed[iPos] = 0.0;
+				}
+
+				if (iPos < (sizeof esCache::g_flComboTypeChance))
+				{
+					g_esCache[tank].g_flComboTypeChance[iPos] = 0.0;
+				}
+
+				if (iPos < (sizeof esCache::g_iSkinColor))
+				{
+					g_esCache[tank].g_iSkinColor[iPos] = 255;
+					g_esCache[tank].g_iBossHealth[iPos] = 0;
+					g_esCache[tank].g_iBossType[iPos] = 0;
+					g_esCache[tank].g_iRockColor[iPos] = 255;
+				}
+
+				if (iPos < (sizeof esCache::g_iGlowColor))
+				{
+					g_esCache[tank].g_iGlowColor[iPos] = 255;
 				}
 			}
 		}
@@ -18899,186 +19077,6 @@ void SMCParseStart_Main(SMCParser smc)
 
 	if (g_esGeneral.g_iConfigMode == 1)
 	{
-		for (int iTank = 1; iTank <= MaxClients; iTank++)
-		{
-			g_esCache[iTank].g_sComboSet[0] = '\0';
-			g_esCache[iTank].g_sGlowColor[0] = '\0';
-			g_esCache[iTank].g_sHealthCharacters[0] = '\0';
-			g_esCache[iTank].g_sRockColor[0] = '\0';
-			g_esCache[iTank].g_sSkinColor[0] = '\0';
-			g_esCache[iTank].g_sSmokerName[0] = '\0';
-			g_esCache[iTank].g_sBoomerName[0] = '\0';
-			g_esCache[iTank].g_sHunterName[0] = '\0';
-			g_esCache[iTank].g_sSpitterName[0] = '\0';
-			g_esCache[iTank].g_sJockeyName[0] = '\0';
-			g_esCache[iTank].g_sChargerName[0] = '\0';
-			g_esCache[iTank].g_flArmorDuration = 0.0;
-			g_esCache[iTank].g_flArmorResistance = 0.0;
-			g_esCache[iTank].g_flAttackInterval = 0.0;
-			g_esCache[iTank].g_flBurnDuration = 0.0;
-			g_esCache[iTank].g_flBurntSkin = 0.0;
-			g_esCache[iTank].g_flClawDamage = 0.0;
-			g_esCache[iTank].g_flHealPercentMultiplier = 0.0;
-			g_esCache[iTank].g_flHittableDamage = 0.0;
-			g_esCache[iTank].g_flIncapDamageMultiplier = 0.0;
-			g_esCache[iTank].g_flRandomDuration = 0.0;
-			g_esCache[iTank].g_flPinDamage = 0.0;
-			g_esCache[iTank].g_flRunSpeed = 0.0;
-			g_esCache[iTank].g_flShieldDuration = 0.0;
-			g_esCache[iTank].g_flShieldResistance = 0.0;
-			g_esCache[iTank].g_flSpecialInterval = 0.0;
-			g_esCache[iTank].g_flTransformDelay = 0.0;
-			g_esCache[iTank].g_flTransformDuration = 0.0;
-			g_esCache[iTank].g_iAnnounceArrival = 0;
-			g_esCache[iTank].g_iAnnounceDeath = 0;
-			g_esCache[iTank].g_iAnnounceKill = 0;
-			g_esCache[iTank].g_iArrivalMessage = 0;
-			g_esCache[iTank].g_iArrivalSound = 0;
-			g_esCache[iTank].g_iBaseHealth = 0;
-			g_esCache[iTank].g_iBodyEffects = 0;
-			g_esCache[iTank].g_iBossEffects = 0;
-			g_esCache[iTank].g_iBossStages = 0;
-			g_esCache[iTank].g_iBulletImmunity = 0;
-			g_esCache[iTank].g_iDeathDetails = 0;
-			g_esCache[iTank].g_iDeathMessage = 0;
-			g_esCache[iTank].g_iDeathRevert = 0;
-			g_esCache[iTank].g_iDeathSound = 0;
-			g_esCache[iTank].g_iDisplayHealth = 0;
-			g_esCache[iTank].g_iDisplayHealthType = 0;
-			g_esCache[iTank].g_iExplosiveImmunity = 0;
-			g_esCache[iTank].g_iExtraHealth = 0;
-			g_esCache[iTank].g_iFireImmunity = 0;
-			g_esCache[iTank].g_iGlowEnabled = 0;
-			g_esCache[iTank].g_iGlowFlashing = 0;
-			g_esCache[iTank].g_iGlowMaxRange = 0;
-			g_esCache[iTank].g_iGlowMinRange = 0;
-			g_esCache[iTank].g_iGlowType = 0;
-			g_esCache[iTank].g_iHittableImmunity = 0;
-			g_esCache[iTank].g_iHumanMultiplierMode = 0;
-			g_esCache[iTank].g_iIntangibleBody = 0;
-			g_esCache[iTank].g_iKillMessage = 0;
-			g_esCache[iTank].g_iMeleeImmunity = 0;
-			g_esCache[iTank].g_iMinimumHumans = 0;
-			g_esCache[iTank].g_iMultiplyHealth = 0;
-			g_esCache[iTank].g_iRandomSpecial = 0;
-			g_esCache[iTank].g_iRockEffects = 0;
-			g_esCache[iTank].g_iRockModel = 0;
-			g_esCache[iTank].g_iSpawnProtection = 0;
-			g_esCache[iTank].g_iSpawnType = 0;
-			g_esCache[iTank].g_iSpecialModel = 0;
-			g_esCache[iTank].g_iSpecialNote = 0;
-			g_esCache[iTank].g_iThrowRock = 0;
-			g_esCache[iTank].g_iVocalizeArrival = 0;
-			g_esCache[iTank].g_iVocalizeDeath = 0;
-			g_esCache[iTank].g_iVomitImmunity = 0;
-
-			for (int iPos = 0; iPos < (sizeof esCache::g_iTransformType); iPos++)
-			{
-				g_esCache[iTank].g_iTransformType[iPos] = 0;
-
-				if (iPos < (sizeof esCache::g_iRewardEnabled))
-				{
-					g_esCache[iTank].g_flActionDurationReward[iPos] = 0.0;
-					g_esCache[iTank].g_iAmmoBoostReward[iPos] = 0;
-					g_esCache[iTank].g_iAmmoRegenReward[iPos] = 0;
-					g_esCache[iTank].g_flAttackBoostReward[iPos] = 0.0;
-					g_esCache[iTank].g_iBlazeHealthReward[iPos] = 0;
-					g_esCache[iTank].g_iBunnyHopReward[iPos] = 0;
-					g_esCache[iTank].g_iBurstDoorsReward[iPos] = 0;
-					g_esCache[iTank].g_iCleanKillsReward[iPos] = 0;
-					g_esCache[iTank].g_iClusterBombsReward[iPos] = 0;
-					g_esCache[iTank].g_flDamageBoostReward[iPos] = 0.0;
-					g_esCache[iTank].g_flDamageResistanceReward[iPos] = 0.0;
-					g_esCache[iTank].g_iFriendlyFireReward[iPos] = 0;
-					g_esCache[iTank].g_iGhostBulletsReward[iPos] = 0;
-					g_esCache[iTank].g_flHealPercentReward[iPos] = 0.0;
-					g_esCache[iTank].g_iHealthRegenReward[iPos] = 0;
-					g_esCache[iTank].g_iHollowpointAmmoReward[iPos] = 0;
-					g_esCache[iTank].g_flJumpHeightReward[iPos] = 0.0;
-					g_esCache[iTank].g_iInextinguishableFireReward[iPos] = 0;
-					g_esCache[iTank].g_iInfiniteAmmoReward[iPos] = 0;
-					g_esCache[iTank].g_iLadderActionsReward[iPos] = 0;
-					g_esCache[iTank].g_iLadyKillerReward[iPos] = 0;
-					g_esCache[iTank].g_iLifeLeechReward[iPos] = 0;
-					g_esCache[iTank].g_flLoopingVoicelineInterval[iPos] = 0.0;
-					g_esCache[iTank].g_iMeleeRangeReward[iPos] = 0;
-					g_esCache[iTank].g_iMidairDashesReward[iPos] = 0;
-					g_esCache[iTank].g_iParticleEffectVisual[iPos] = 0;
-					g_esCache[iTank].g_flPipeBombDurationReward[iPos] = 0.0;
-					g_esCache[iTank].g_iPrefsNotify[iPos] = 0;
-					g_esCache[iTank].g_flPunchResistanceReward[iPos] = 0.0;
-					g_esCache[iTank].g_flRapidPistolReward[iPos] = 0.0;
-					g_esCache[iTank].g_iRecoilDampenerReward[iPos] = 0;
-					g_esCache[iTank].g_flRefillPercentReward[iPos] = 0.0;
-					g_esCache[iTank].g_iRespawnLoadoutReward[iPos] = 0;
-					g_esCache[iTank].g_iReviveHealthReward[iPos] = 0;
-					g_esCache[iTank].g_iRewardBots[iPos] = 0;
-					g_esCache[iTank].g_flRewardChance[iPos] = 0.0;
-					g_esCache[iTank].g_flRewardDuration[iPos] = 0.0;
-					g_esCache[iTank].g_iRewardEffect[iPos] = 0;
-					g_esCache[iTank].g_iRewardEnabled[iPos] = 0;
-					g_esCache[iTank].g_iRewardNotify[iPos] = 0;
-					g_esCache[iTank].g_flRewardPercentage[iPos] = 0.0;
-					g_esCache[iTank].g_iRewardVisual[iPos] = 0;
-					g_esCache[iTank].g_iShareRewards[iPos] = 0;
-					g_esCache[iTank].g_flShoveDamageReward[iPos] = 0.0;
-					g_esCache[iTank].g_iShovePenaltyReward[iPos] = 0;
-					g_esCache[iTank].g_flShoveRateReward[iPos] = 0.0;
-					g_esCache[iTank].g_iSledgehammerRoundsReward[iPos] = 0;
-					g_esCache[iTank].g_iSpecialAmmoReward[iPos] = 0;
-					g_esCache[iTank].g_flSpeedBoostReward[iPos] = 0.0;
-					g_esCache[iTank].g_iStackRewards[iPos] = 0;
-					g_esCache[iTank].g_iStickyGrenadesReward[iPos] = 0;
-					g_esCache[iTank].g_iThornsReward[iPos] = 0;
-					g_esCache[iTank].g_iUsefulRewards[iPos] = 0;
-					g_esCache[iTank].g_iVoicePitchVisual[iPos] = 0;
-				}
-
-				if (iPos < (sizeof esCache::g_iStackLimits))
-				{
-					g_esCache[iTank].g_iStackLimits[iPos] = 0;
-				}
-
-				if (iPos < (sizeof esCache::g_flComboChance))
-				{
-					g_esCache[iTank].g_flComboChance[iPos] = 0.0;
-					g_esCache[iTank].g_iComboCooldown[iPos] = 0;
-					g_esCache[iTank].g_flComboDamage[iPos] = 0.0;
-					g_esCache[iTank].g_flComboDeathChance[iPos] = 0.0;
-					g_esCache[iTank].g_flComboDeathRange[iPos] = 0.0;
-					g_esCache[iTank].g_flComboDelay[iPos] = 0.0;
-					g_esCache[iTank].g_flComboDuration[iPos] = 0.0;
-					g_esCache[iTank].g_flComboInterval[iPos] = 0.0;
-					g_esCache[iTank].g_flComboMinRadius[iPos] = 0.0;
-					g_esCache[iTank].g_flComboMaxRadius[iPos] = 0.0;
-					g_esCache[iTank].g_flComboRange[iPos] = 0.0;
-					g_esCache[iTank].g_flComboRangeChance[iPos] = 0.0;
-					g_esCache[iTank].g_iComboRangeCooldown[iPos] = 0;
-					g_esCache[iTank].g_flComboRockChance[iPos] = 0.0;
-					g_esCache[iTank].g_iComboRockCooldown[iPos] = 0;
-					g_esCache[iTank].g_flComboSpeed[iPos] = 0.0;
-				}
-
-				if (iPos < (sizeof esCache::g_flComboTypeChance))
-				{
-					g_esCache[iTank].g_flComboTypeChance[iPos] = 0.0;
-				}
-
-				if (iPos < (sizeof esCache::g_iSkinColor))
-				{
-					g_esCache[iTank].g_iSkinColor[iPos] = 255;
-					g_esCache[iTank].g_iBossHealth[iPos] = 0;
-					g_esCache[iTank].g_iBossType[iPos] = 0;
-					g_esCache[iTank].g_iRockColor[iPos] = 255;
-				}
-
-				if (iPos < (sizeof esCache::g_iGlowColor))
-				{
-					g_esCache[iTank].g_iGlowColor[iPos] = 255;
-				}
-			}
-		}
-
 		g_esGeneral.g_iTotalTypes[0] = 0;
 		g_esGeneral.g_iTotalTypes[1] = 0;
 		g_esGeneral.g_iTypeCounter[0] = 0;
