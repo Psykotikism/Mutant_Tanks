@@ -102,6 +102,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MODEL_SMOKER_L4D1 "models/infected/smoker_l4d1.mdl" // Only available in L4D2
 #define MODEL_BOOMER_MAIN "models/infected/boomer.mdl"
 #define MODEL_BOOMER_L4D1 "models/infected/boomer_l4d1.mdl" // Only available in L4D2
+#define MODEL_BOOMETTE "models/infected/boomette.mdl" // Only available in L4D2
 #define MODEL_HUNTER_MAIN "models/infected/hunter.mdl"
 #define MODEL_HUNTER_L4D1 "models/infected/hunter_l4d1.mdl" // Only available in L4D2
 #define MODEL_TIRES "models/props_vehicles/tire001c_car.mdl"
@@ -140,13 +141,20 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define SPRITE_LASER "sprites/laser.vmt"
 #define SPRITE_LASERBEAM "sprites/laserbeam.vmt"
 
-#define MT_ACT_TERROR_HIT_BY_TANKPUNCH 1077 // ACT_TERROR_HIT_BY_TANKPUNCH
-#define MT_ACT_TERROR_HULK_VICTORY 792 // ACT_TERROR_HULK_VICTORY
-#define MT_ACT_TERROR_RAGE_AT_KNOCKDOWN 795 // ACT_TERROR_RAGE_AT_KNOCKDOWN
-#define MT_ACT_TERROR_IDLE_FALL_FROM_TANKPUNCH 1078 // ACT_TERROR_IDLE_FALL_FROM_TANKPUNCH
-#define MT_ACT_TERROR_POUNCED_TO_STAND 1263 // ACT_TERROR_POUNCED_TO_STAND
-#define MT_ACT_TERROR_TANKPUNCH_LAND 1079 // ACT_TERROR_TANKPUNCH_LAND
-#define MT_ACT_TERROR_TANKROCK_TO_STAND 1283 // ACT_TERROR_TANKROCK_TO_STAND
+#define MT_L4D1_ACT_TERROR_HIT_BY_TANKPUNCH 1077 // ACT_TERROR_HIT_BY_TANKPUNCH
+#define MT_L4D2_ACT_TERROR_HIT_BY_TANKPUNCH 521 // ACT_TERROR_HIT_BY_TANKPUNCH
+#define MT_L4D1_ACT_TERROR_HULK_VICTORY 1284 // ACT_TERROR_HULK_VICTORY
+#define MT_L4D2_ACT_TERROR_HULK_VICTORY 792 // ACT_TERROR_HULK_VICTORY
+#define MT_L4D1_ACT_TERROR_RAGE_AT_KNOCKDOWN 1287 // ACT_TERROR_RAGE_AT_KNOCKDOWN
+#define MT_L4D2_ACT_TERROR_RAGE_AT_KNOCKDOWN 795 // ACT_TERROR_RAGE_AT_KNOCKDOWN
+#define MT_L4D1_ACT_TERROR_IDLE_FALL_FROM_TANKPUNCH 1078 // ACT_TERROR_IDLE_FALL_FROM_TANKPUNCH
+#define MT_L4D2_ACT_TERROR_IDLE_FALL_FROM_TANKPUNCH 522 // ACT_TERROR_IDLE_FALL_FROM_TANKPUNCH
+#define MT_L4D1_ACT_TERROR_POUNCED_TO_STAND 1263 // ACT_TERROR_POUNCED_TO_STAND
+#define MT_L4D2_ACT_TERROR_POUNCED_TO_STAND 771 // ACT_TERROR_POUNCED_TO_STAND
+#define MT_L4D1_ACT_TERROR_TANKPUNCH_LAND 1079 // ACT_TERROR_TANKPUNCH_LAND
+#define MT_L4D2_ACT_TERROR_TANKPUNCH_LAND 523 // ACT_TERROR_TANKPUNCH_LAND
+#define MT_L4D1_ACT_TERROR_TANKROCK_TO_STAND 1283 // ACT_TERROR_TANKROCK_TO_STAND
+#define MT_L4D2_ACT_TERROR_TANKROCK_TO_STAND 791 // ACT_TERROR_TANKROCK_TO_STAND
 
 #define MT_ANIM_ACTIVESTATE 65 // active/standing state
 #define MT_ANIM_LANDING 96 // landing on something
@@ -627,7 +635,6 @@ enum struct esGeneral
 	DynamicDetour g_ddSecondaryAttackDetour;
 	DynamicDetour g_ddSecondaryAttackDetour2;
 	DynamicDetour g_ddSelectWeightedSequenceDetour;
-	DynamicDetour g_ddSetMainActivityDetour;
 	DynamicDetour g_ddShovedByPounceLandingDetour;
 	DynamicDetour g_ddShovedBySurvivorDetour;
 	DynamicDetour g_ddSpawnBoomerDetour;
@@ -2593,6 +2600,7 @@ public void OnMapStart()
 			PrecacheModel(MODEL_TANK_L4D1, true);
 			PrecacheModel(MODEL_SMOKER_L4D1, true);
 			PrecacheModel(MODEL_BOOMER_L4D1, true);
+			PrecacheModel(MODEL_BOOMETTE, true);
 			PrecacheModel(MODEL_HUNTER_L4D1, true);
 			PrecacheModel(MODEL_WITCHBRIDE, true);
 
@@ -3129,7 +3137,7 @@ void vLateLoad()
 					OnClientCookiesCached(iPlayer);
 				}
 #endif
-				if (bIsTank(iPlayer, MT_CHECK_ALIVE))
+				if (bIsInfected(iPlayer, MT_CHECK_ALIVE))
 				{
 					SDKHook(iPlayer, SDKHook_PostThinkPost, OnTankPostThinkPost);
 				}
@@ -3835,7 +3843,7 @@ any aNative_IsNonFinaleType(Handle plugin, int numParams)
 any aNative_IsTankIdle(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1), iType = iClamp(GetNativeCell(2), 0, 2);
-	return bIsTank(iTank) && bIsInfectedIdle(iTank, iType);
+	return bIsInfected(iTank) && bIsInfectedIdle(iTank, iType);
 }
 
 any aNative_IsTankSupported(Handle plugin, int numParams)
@@ -7467,7 +7475,7 @@ int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 		{
 			char sInfo[33];
 			menu.GetItem(param2, sInfo, sizeof sInfo);
-			int iIndex = StringToInt(sInfo), iType = g_esTank[iIndex].g_iRecordedType[0], iSpecType = 8;
+			int iIndex = StringToInt(sInfo), iType = (iIndex > 0) ? g_esTank[iIndex].g_iRecordedType[0] : 0, iSpecType = 8;
 			if (StrEqual(sInfo, "Default", false) && bIsTank(param1))
 			{
 				vQueueTank(param1, iSpecType, g_esTank[g_esPlayer[param1].g_iTankType].g_iRealType[0], false);
@@ -7523,7 +7531,7 @@ int iSmokerMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 		{
 			char sInfo[33];
 			menu.GetItem(param2, sInfo, sizeof sInfo);
-			int iIndex = StringToInt(sInfo), iType = g_esTank[iIndex].g_iRecordedType[0], iSpecType = 1;
+			int iIndex = StringToInt(sInfo), iType = (iIndex > 0) ? g_esTank[iIndex].g_iRecordedType[0] : 0, iSpecType = 1;
 			if (StrEqual(sInfo, "Default", false) && bIsSmoker(param1))
 			{
 				vQueueTank(param1, iSpecType, g_esTank[g_esPlayer[param1].g_iTankType].g_iRealType[0], false);
@@ -7579,7 +7587,7 @@ int iBoomerMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 		{
 			char sInfo[33];
 			menu.GetItem(param2, sInfo, sizeof sInfo);
-			int iIndex = StringToInt(sInfo), iType = g_esTank[iIndex].g_iRecordedType[0], iSpecType = 2;
+			int iIndex = StringToInt(sInfo), iType = (iIndex > 0) ? g_esTank[iIndex].g_iRecordedType[0] : 0, iSpecType = 2;
 			if (StrEqual(sInfo, "Default", false) && bIsBoomer(param1))
 			{
 				vQueueTank(param1, iSpecType, g_esTank[g_esPlayer[param1].g_iTankType].g_iRealType[0], false);
@@ -7635,7 +7643,7 @@ int iHunterMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 		{
 			char sInfo[33];
 			menu.GetItem(param2, sInfo, sizeof sInfo);
-			int iIndex = StringToInt(sInfo), iType = g_esTank[iIndex].g_iRecordedType[0], iSpecType = 3;
+			int iIndex = StringToInt(sInfo), iType = (iIndex > 0) ? g_esTank[iIndex].g_iRecordedType[0] : 0, iSpecType = 3;
 			if (StrEqual(sInfo, "Default", false) && bIsHunter(param1))
 			{
 				vQueueTank(param1, iSpecType, g_esTank[g_esPlayer[param1].g_iTankType].g_iRealType[0], false);
@@ -7691,7 +7699,7 @@ int iSpitterMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 		{
 			char sInfo[33];
 			menu.GetItem(param2, sInfo, sizeof sInfo);
-			int iIndex = StringToInt(sInfo), iType = g_esTank[iIndex].g_iRecordedType[0], iSpecType = 4;
+			int iIndex = StringToInt(sInfo), iType = (iIndex > 0) ? g_esTank[iIndex].g_iRecordedType[0] : 0, iSpecType = 4;
 			if (StrEqual(sInfo, "Default", false) && bIsSpitter(param1))
 			{
 				vQueueTank(param1, iSpecType, g_esTank[g_esPlayer[param1].g_iTankType].g_iRealType[0], false);
@@ -7747,7 +7755,7 @@ int iJockeyMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 		{
 			char sInfo[33];
 			menu.GetItem(param2, sInfo, sizeof sInfo);
-			int iIndex = StringToInt(sInfo), iType = g_esTank[iIndex].g_iRecordedType[0], iSpecType = 5;
+			int iIndex = StringToInt(sInfo), iType = (iIndex > 0) ? g_esTank[iIndex].g_iRecordedType[0] : 0, iSpecType = 5;
 			if (StrEqual(sInfo, "Default", false) && bIsJockey(param1))
 			{
 				vQueueTank(param1, iSpecType, g_esTank[g_esPlayer[param1].g_iTankType].g_iRealType[0], false);
@@ -7803,7 +7811,7 @@ int iChargerMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 		{
 			char sInfo[33];
 			menu.GetItem(param2, sInfo, sizeof sInfo);
-			int iIndex = StringToInt(sInfo), iType = g_esTank[iIndex].g_iRecordedType[0], iSpecType = 6;
+			int iIndex = StringToInt(sInfo), iType = (iIndex > 0) ? g_esTank[iIndex].g_iRecordedType[0] : 0, iSpecType = 6;
 			if (StrEqual(sInfo, "Default", false) && bIsCharger(param1))
 			{
 				vQueueTank(param1, iSpecType, g_esTank[g_esPlayer[param1].g_iTankType].g_iRealType[0], false);
@@ -13311,6 +13319,7 @@ void vMutateTank(int tank, int specType, int type, bool blind)
 			vSetTankHealth(tank);
 			vResetTankSpeed(tank, false);
 			vSetTankThrowInterval(tank);
+			SDKHook(tank, SDKHook_PostThinkPost, OnTankPostThinkPost);
 
 			DataPack dpAnnounce;
 			CreateDataTimer(0.1, tTimerAnnounce2, dpAnnounce, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
@@ -13322,7 +13331,6 @@ void vMutateTank(int tank, int specType, int type, bool blind)
 
 			if (bTank)
 			{
-				SDKHook(tank, SDKHook_PostThinkPost, OnTankPostThinkPost);
 				g_esGeneral.g_iTankCount++;
 			}
 			else if (bSpecial)
@@ -13724,7 +13732,7 @@ void vSetSpecialModel(int special, bool main)
 			switch (g_esPlayer[special].g_iInfectedType)
 			{
 				case 1: SetEntityModel(special, MODEL_SMOKER_MAIN);
-				case 2: SetEntityModel(special, MODEL_BOOMER_MAIN);
+				case 2: SetEntityModel(special, (!!MT_GetRandomInt(0, 1) ? MODEL_BOOMER_MAIN : MODEL_BOOMETTE));
 				case 3: SetEntityModel(special, MODEL_HUNTER_MAIN);
 			}
 		}
@@ -14921,8 +14929,9 @@ void vCacheSettings(int tank)
 			g_esCache[tank].g_iArrivalMessage = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iArrivalMessage, g_esPlayer[tank].g_iArrivalMessage, g_esCache[tank].g_iArrivalMessage, g_esCache[tank].g_iArrivalMessage, 1);
 			g_esCache[tank].g_iArrivalSound = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iArrivalSound, g_esTank[iType].g_iArrivalSound, g_esSpecific.g_iArrivalSound, g_esGeneral.g_iArrivalSound, 1);
 			g_esCache[tank].g_iArrivalSound = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iArrivalSound, g_esPlayer[tank].g_iArrivalSound, g_esCache[tank].g_iArrivalSound, g_esCache[tank].g_iArrivalSound, 1);
-			g_esCache[tank].g_iBaseHealth = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iBaseHealth[iSpecType + 1], g_esTank[iType].g_iBaseHealth, g_esSpecific.g_iBaseHealth[iSpecType + 1], g_esGeneral.g_iBaseHealth, 1);
-			g_esCache[tank].g_iBaseHealth = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iBaseHealth[iSpecType + 1], g_esPlayer[tank].g_iBaseHealth, g_esCache[tank].g_iBaseHealth, g_esCache[tank].g_iBaseHealth, 1);
+			g_esCache[tank].g_iBaseHealth = iGetSubSettingValue(bAccess, true, g_esTank[iType].g_iBaseHealth, g_esSpecific.g_iBaseHealth[0], g_esSpecific.g_iBaseHealth[iSpecType + 1], g_esGeneral.g_iBaseHealth, 1);
+			g_esCache[tank].g_iBaseHealth = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iBaseHealth[iSpecType + 1], g_esPlayer[tank].g_iBaseHealth, g_esSpecial[iType].g_iBaseHealth[0], g_esSpecial[iType].g_iBaseHealth[iSpecType + 1], 1);
+			g_esCache[tank].g_iBaseHealth = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iBaseHealth[0], g_esCache[tank].g_iBaseHealth, g_esCache[tank].g_iBaseHealth, g_esCache[tank].g_iBaseHealth, 1);
 			g_esCache[tank].g_iBodyEffects = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iBodyEffects, g_esPlayer[tank].g_iBodyEffects, g_esSpecial[iType].g_iBodyEffects, g_esTank[iType].g_iBodyEffects, 1);
 			g_esCache[tank].g_iBossEffects = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iBossEffects, g_esPlayer[tank].g_iBossEffects, g_esSpecial[iType].g_iBossEffects, g_esTank[iType].g_iBossEffects, 1);
 			g_esCache[tank].g_iBossStages = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iBossStages, g_esPlayer[tank].g_iBossStages, g_esSpecial[iType].g_iBossStages, g_esTank[iType].g_iBossStages, 1);
@@ -14942,8 +14951,9 @@ void vCacheSettings(int tank)
 			g_esCache[tank].g_iDisplayHealthType = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iDisplayHealthType, g_esPlayer[tank].g_iDisplayHealthType, g_esCache[tank].g_iDisplayHealthType, g_esCache[tank].g_iDisplayHealthType, 1);
 			g_esCache[tank].g_iExplosiveImmunity = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iExplosiveImmunity, g_esTank[iType].g_iExplosiveImmunity, g_esSpecific.g_iExplosiveImmunity, g_esGeneral.g_iExplosiveImmunity, 1);
 			g_esCache[tank].g_iExplosiveImmunity = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iExplosiveImmunity, g_esPlayer[tank].g_iExplosiveImmunity, g_esCache[tank].g_iExplosiveImmunity, g_esCache[tank].g_iExplosiveImmunity, 1);
-			g_esCache[tank].g_iExtraHealth = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iExtraHealth[iSpecType + 1], g_esTank[iType].g_iExtraHealth, g_esSpecific.g_iExtraHealth[iSpecType + 1], g_esGeneral.g_iExtraHealth, 2);
-			g_esCache[tank].g_iExtraHealth = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iExtraHealth[iSpecType + 1], g_esPlayer[tank].g_iExtraHealth, g_esCache[tank].g_iExtraHealth, g_esCache[tank].g_iExtraHealth, 2);
+			g_esCache[tank].g_iExtraHealth = iGetSubSettingValue(bAccess, true, g_esTank[iType].g_iExtraHealth, g_esSpecific.g_iExtraHealth[0], g_esSpecific.g_iExtraHealth[iSpecType + 1], g_esGeneral.g_iExtraHealth, 2, -1);
+			g_esCache[tank].g_iExtraHealth = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iExtraHealth[iSpecType + 1], g_esPlayer[tank].g_iExtraHealth, g_esSpecial[iType].g_iExtraHealth[0], g_esSpecial[iType].g_iExtraHealth[iSpecType + 1], 2, -1);
+			g_esCache[tank].g_iExtraHealth = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iExtraHealth[0], g_esCache[tank].g_iExtraHealth, g_esCache[tank].g_iExtraHealth, g_esCache[tank].g_iExtraHealth, 2, -1);
 			g_esCache[tank].g_iFireImmunity = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iFireImmunity, g_esTank[iType].g_iFireImmunity, g_esSpecific.g_iFireImmunity, g_esGeneral.g_iFireImmunity, 1);
 			g_esCache[tank].g_iFireImmunity = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iFireImmunity, g_esPlayer[tank].g_iFireImmunity, g_esCache[tank].g_iFireImmunity, g_esCache[tank].g_iFireImmunity, 1);
 			g_esCache[tank].g_iGlowEnabled = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iGlowEnabled, g_esPlayer[tank].g_iGlowEnabled, g_esSpecial[iType].g_iGlowEnabled, g_esTank[iType].g_iGlowEnabled, 1);
@@ -15230,8 +15240,8 @@ void vCacheSettings(int tank)
 		g_esCache[tank].g_iDisplayHealthType = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iDisplayHealthType, g_esCache[tank].g_iDisplayHealthType, 1);
 		g_esCache[tank].g_iExplosiveImmunity = iGetSettingValue(bAccess, true, g_esTank[iType].g_iExplosiveImmunity, g_esGeneral.g_iExplosiveImmunity, 1);
 		g_esCache[tank].g_iExplosiveImmunity = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iExplosiveImmunity, g_esCache[tank].g_iExplosiveImmunity, 1);
-		g_esCache[tank].g_iExtraHealth = iGetSettingValue(bAccess, true, g_esTank[iType].g_iExtraHealth, g_esGeneral.g_iExtraHealth, 2);
-		g_esCache[tank].g_iExtraHealth = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iExtraHealth, g_esCache[tank].g_iExtraHealth, 2);
+		g_esCache[tank].g_iExtraHealth = iGetSettingValue(bAccess, true, g_esTank[iType].g_iExtraHealth, g_esGeneral.g_iExtraHealth, 2, -1);
+		g_esCache[tank].g_iExtraHealth = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iExtraHealth, g_esCache[tank].g_iExtraHealth, 2, -1);
 		g_esCache[tank].g_iFireImmunity = iGetSettingValue(bAccess, true, g_esTank[iType].g_iFireImmunity, g_esGeneral.g_iFireImmunity, 1);
 		g_esCache[tank].g_iFireImmunity = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iFireImmunity, g_esCache[tank].g_iFireImmunity, 1);
 		g_esCache[tank].g_iFootstepShake = iGetSettingValue(bAccess, true, g_esTank[iType].g_iFootstepShake, g_esGeneral.g_iFootstepShake, 1);
@@ -17217,7 +17227,6 @@ void vSetTankSettings(int mode, const char[] section, const char[] subsection, c
 				char sKey[128], sValue[PLATFORM_MAX_PATH];
 				strcopy(sKey, sizeof sKey, key);
 				ReplaceString(sKey, sizeof sKey, " ", "");
-
 				strcopy(sValue, sizeof sValue, value);
 				ReplaceString(sValue, sizeof sValue, " ", "");
 
@@ -21902,14 +21911,14 @@ void OnSurvivorPostThinkPost(int survivor)
 
 					switch (sModel[29])
 					{
-						case 'b': bFast = (iSequence == 620 || (627 <= iSequence <= 630) || iSequence == 667 || iSequence == 671 || iSequence == 672 || iSequence == 680);
-						case 'd': bFast = (iSequence == 629 || (635 <= iSequence <= 638) || iSequence == 664 || iSequence == 678 || iSequence == 679 || iSequence == 687);
-						case 'c': bFast = (iSequence == 621 || (627 <= iSequence <= 630) || iSequence == 656 || iSequence == 660 || iSequence == 661 || iSequence == 669);
-						case 'h': bFast = (iSequence == 625 || (632 <= iSequence <= 635) || iSequence == 671 || iSequence == 675 || iSequence == 676 || iSequence == 684);
-						case 'v': bFast = (iSequence == 528 || (535 <= iSequence <= 538) || iSequence == 759 || iSequence == 763 || iSequence == 764 || iSequence == 772);
-						case 'n': bFast = (iSequence == 537 || (544 <= iSequence <= 547) || iSequence == 809 || iSequence == 819 || iSequence == 823 || iSequence == 824);
-						case 'e': bFast = (iSequence == 531 || (539 <= iSequence <= 541) || iSequence == 762 || iSequence == 766 || iSequence == 767 || iSequence == 775);
-						case 'a': bFast = (iSequence == 528 || (535 <= iSequence <= 538) || iSequence == 759 || iSequence == 763 || iSequence == 764 || iSequence == 772);
+						case 'b': bFast = iSequence == 620 || (627 <= iSequence <= 630) || iSequence == 667 || iSequence == 671 || iSequence == 672 || iSequence == 680;
+						case 'd': bFast = iSequence == 629 || (635 <= iSequence <= 638) || iSequence == 664 || iSequence == 678 || iSequence == 679 || iSequence == 687;
+						case 'c': bFast = iSequence == 621 || (627 <= iSequence <= 630) || iSequence == 656 || iSequence == 660 || iSequence == 661 || iSequence == 669;
+						case 'h': bFast = iSequence == 625 || (632 <= iSequence <= 635) || iSequence == 671 || iSequence == 675 || iSequence == 676 || iSequence == 684;
+						case 'v': bFast = iSequence == 528 || (535 <= iSequence <= 538) || iSequence == 759 || iSequence == 763 || iSequence == 764 || iSequence == 772;
+						case 'n': bFast = iSequence == 537 || (544 <= iSequence <= 547) || iSequence == 809 || iSequence == 819 || iSequence == 823 || iSequence == 824;
+						case 'e': bFast = iSequence == 531 || (539 <= iSequence <= 541) || iSequence == 762 || iSequence == 766 || iSequence == 767 || iSequence == 775;
+						case 'a': bFast = iSequence == 528 || (535 <= iSequence <= 538) || iSequence == 759 || iSequence == 763 || iSequence == 764 || iSequence == 772;
 					}
 				}
 
@@ -21947,11 +21956,50 @@ void OnSurvivorPostThinkPost(int survivor)
 
 void OnTankPostThinkPost(int tank)
 {
-	if (bIsTank(tank) && g_bSecondGame && g_esCache[tank].g_iSkipTaunt == 1)
+	if (bIsInfected(tank) && g_esCache[tank].g_iSkipTaunt == 1)
 	{
-		switch (GetEntProp(tank, Prop_Send, "m_nSequence"))
+		bool bFast = false;
+		char sModel[40];
+		int iSequence = GetEntProp(tank, Prop_Send, "m_nSequence");
+		GetEntPropString(tank, Prop_Data, "m_ModelName", sModel, sizeof sModel);
+
+		switch (g_bSecondGame)
 		{
-			case 16, 17, 18, 19, 20, 21, 22, 23: SetEntPropFloat(tank, Prop_Send, "m_flPlaybackRate", 10.0);
+			case true:
+			{
+				switch (g_esPlayer[tank].g_iInfectedType)
+				{
+					case 1: bFast = iSequence == 34 || iSequence == 35;
+					case 2:
+					{
+						switch (sModel[21])
+						{
+							case 'r': bFast = iSequence == 35 || iSequence == 36;
+							case 't': bFast = iSequence == 34 || iSequence == 35;
+						}
+					}
+					case 3: bFast = iSequence == 77 || iSequence == 78;
+					case 4: bFast = iSequence == 14 || iSequence == 15;
+					case 5: bFast = iSequence == 12 || iSequence == 13;
+					case 6: bFast = iSequence == 37 || iSequence == 38;
+					case 8: bFast = 16 <= iSequence <= 27 || 54 <= iSequence <= 60;
+				}
+			}
+			case false:
+			{
+				switch (g_esPlayer[tank].g_iInfectedType)
+				{
+					case 1: bFast = iSequence == 34 || iSequence == 35;
+					case 2: bFast = iSequence == 32 || iSequence == 33;
+					case 3: bFast = iSequence == 77 || iSequence == 78;
+					case 8: bFast = 16 <= iSequence <= 25 || 52 <= iSequence <= 58;
+				}
+			}
+		}
+
+		if (bFast)
+		{
+			SetEntPropFloat(tank, Prop_Send, "m_flPlaybackRate", 10.0);
 		}
 	}
 }
@@ -22350,8 +22398,7 @@ void vSetupDetours()
 	vSetupDetour(g_esGeneral.g_ddRevivedDetour, "MTDetour_CTerrorPlayer::OnRevived");
 	vSetupDetour(g_esGeneral.g_ddSecondaryAttackDetour, "MTDetour_CTerrorWeapon::SecondaryAttack");
 	vSetupDetour(g_esGeneral.g_ddSecondaryAttackDetour2, "MTDetour_CTerrorMeleeWeapon::SecondaryAttack");
-	vSetupDetour(g_esGeneral.g_ddSelectWeightedSequenceDetour, "MTDetour_CTerrorPlayer::SelectWeightedSequence");
-	vSetupDetour(g_esGeneral.g_ddSetMainActivityDetour, "MTDetour_CTerrorPlayer::SetMainActivity");
+	vSetupDetour(g_esGeneral.g_ddSelectWeightedSequenceDetour, "MTDetour_CBaseAnimating::SelectWeightedSequence");
 	vSetupDetour(g_esGeneral.g_ddShovedByPounceLandingDetour, "MTDetour_CTerrorPlayer::OnShovedByPounceLanding");
 	vSetupDetour(g_esGeneral.g_ddShovedBySurvivorDetour, "MTDetour_CTerrorPlayer::OnShovedBySurvivor");
 	vSetupDetour(g_esGeneral.g_ddSpawnBoomerDetour, "MTDetour_ZombieManager::SpawnBoomer");
@@ -22431,7 +22478,6 @@ void vToggleDetours(bool toggle)
 	vToggleDetour(g_esGeneral.g_ddBaseEntityCreateDetour, "MTDetour_CBaseEntity::Create", Hook_Post, mreBaseEntityCreatePost, toggle, 1);
 	vToggleDetour(g_esGeneral.g_ddFinishHealingDetour, "MTDetour_CFirstAidKit::FinishHealing", Hook_Pre, mreFinishHealingPre, toggle, 1);
 	vToggleDetour(g_esGeneral.g_ddFinishHealingDetour, "MTDetour_CFirstAidKit::FinishHealing", Hook_Post, mreFinishHealingPost, toggle, 1);
-	vToggleDetour(g_esGeneral.g_ddSetMainActivityDetour, "MTDetour_CTerrorPlayer::SetMainActivity", Hook_Pre, mreSetMainActivityPre, toggle, 1);
 	vToggleDetour(g_esGeneral.g_ddSpawnBoomerDetour, "MTDetour_ZombieManager::SpawnBoomer", Hook_Pre, mreSpawnBoomerPre, toggle, 1);
 	vToggleDetour(g_esGeneral.g_ddSpawnHunterDetour, "MTDetour_ZombieManager::SpawnHunter", Hook_Pre, mreSpawnHunterPre, toggle, 1);
 	vToggleDetour(g_esGeneral.g_ddSpawnSmokerDetour, "MTDetour_ZombieManager::SpawnSmoker", Hook_Pre, mreSpawnSmokerPre, toggle, 1);
@@ -22446,7 +22492,6 @@ void vToggleDetours(bool toggle)
 	vToggleDetour(g_esGeneral.g_ddQueuePummelVictimDetour, "MTDetour_CTerrorPlayer::QueuePummelVictim", Hook_Pre, mreQueuePummelVictimPre, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddSecondaryAttackDetour2, "MTDetour_CTerrorMeleeWeapon::SecondaryAttack", Hook_Pre, mreSecondaryAttackPre, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddSecondaryAttackDetour2, "MTDetour_CTerrorMeleeWeapon::SecondaryAttack", Hook_Post, mreSecondaryAttackPost, toggle, 2);
-	vToggleDetour(g_esGeneral.g_ddSelectWeightedSequenceDetour, "MTDetour_CTerrorPlayer::SelectWeightedSequence", Hook_Pre, mreSelectWeightedSequencePre, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddSpawnSpecialDetour, "MTDetour_ZombieManager::SpawnSpecial", Hook_Pre, mreSpawnSpecialPre, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddStartActionDetour, "MTDetour_CBaseBackpackItem::StartAction", Hook_Pre, mreStartActionPre, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddStartActionDetour, "MTDetour_CBaseBackpackItem::StartAction", Hook_Post, mreStartActionPost, toggle, 2);
@@ -22502,6 +22547,7 @@ void vToggleDetours(bool toggle)
 	vToggleDetour(g_esGeneral.g_ddRevivedDetour, "MTDetour_CTerrorPlayer::OnRevived", Hook_Post, mreRevivedPost, toggle);
 	vToggleDetour(g_esGeneral.g_ddSecondaryAttackDetour, "MTDetour_CTerrorWeapon::SecondaryAttack", Hook_Pre, mreSecondaryAttackPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddSecondaryAttackDetour, "MTDetour_CTerrorWeapon::SecondaryAttack", Hook_Post, mreSecondaryAttackPost, toggle);
+	vToggleDetour(g_esGeneral.g_ddSelectWeightedSequenceDetour, "MTDetour_CBaseAnimating::SelectWeightedSequence", Hook_Pre, mreSelectWeightedSequencePre, toggle);
 	vToggleDetour(g_esGeneral.g_ddShovedByPounceLandingDetour, "MTDetour_CTerrorPlayer::OnShovedByPounceLanding", Hook_Pre, mreShovedByPounceLandingPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddShovedBySurvivorDetour, "MTDetour_CTerrorPlayer::OnShovedBySurvivor", Hook_Pre, mreShovedBySurvivorPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddSpawnTankDetour, "MTDetour_ZombieManager::SpawnTank", Hook_Pre, mreSpawnTankPre, toggle);
@@ -23748,13 +23794,39 @@ MRESReturn mreSecondaryAttackPost(int pThis)
 
 MRESReturn mreSelectWeightedSequencePre(int pThis, DHookReturn hReturn, DHookParam hParams)
 {
-	if (bIsTank(pThis) && g_esCache[pThis].g_iSkipTaunt == 1 && MT_ACT_TERROR_HULK_VICTORY <= hParams.Get(1) <= MT_ACT_TERROR_RAGE_AT_KNOCKDOWN)
+	bool bFast = false;
+	int iActivity = hParams.Get(1);
+	if (bIsTank(pThis) && g_esCache[pThis].g_iSkipTaunt == 1)
 	{
-		hReturn.Value = 0;
+		switch (g_bSecondGame)
+		{
+			case true: bFast = MT_L4D2_ACT_TERROR_HULK_VICTORY <= iActivity <= MT_L4D2_ACT_TERROR_RAGE_AT_KNOCKDOWN;
+			case false: bFast = MT_L4D1_ACT_TERROR_HULK_VICTORY <= iActivity <= MT_L4D1_ACT_TERROR_RAGE_AT_KNOCKDOWN;
+		}
 
-		SetEntPropFloat(pThis, Prop_Send, "m_flCycle", 1000.0);
+		if (bFast)
+		{
+			hReturn.Value = 0;
 
-		return MRES_ChangedOverride;
+			SetEntPropFloat(pThis, Prop_Send, "m_flCycle", 1000.0);
+
+			return MRES_ChangedOverride;
+		}
+	}
+	else if (bIsSurvivor(pThis) && (bIsDeveloper(pThis, 6) || (g_esPlayer[pThis].g_iRewardTypes & MT_REWARD_ATTACKBOOST)))
+	{
+		switch (g_bSecondGame)
+		{
+			case true: bFast = iActivity == MT_L4D2_ACT_TERROR_HIT_BY_TANKPUNCH || iActivity == MT_L4D2_ACT_TERROR_IDLE_FALL_FROM_TANKPUNCH || iActivity == MT_L4D2_ACT_TERROR_POUNCED_TO_STAND || iActivity == MT_L4D2_ACT_TERROR_TANKROCK_TO_STAND;
+			case false: bFast = iActivity == MT_L4D1_ACT_TERROR_HIT_BY_TANKPUNCH || iActivity == MT_L4D1_ACT_TERROR_IDLE_FALL_FROM_TANKPUNCH || iActivity == MT_L4D1_ACT_TERROR_POUNCED_TO_STAND || iActivity == MT_L4D1_ACT_TERROR_TANKROCK_TO_STAND;
+		}
+
+		if (bFast)
+		{
+			hParams.Set(1, (g_bSecondGame ? MT_L4D2_ACT_TERROR_TANKPUNCH_LAND : MT_L4D1_ACT_TERROR_TANKPUNCH_LAND));
+
+			return MRES_ChangedHandled;
+		}
 	}
 
 	return MRES_Ignored;
@@ -23784,22 +23856,6 @@ MRESReturn mreShovedBySurvivorPre(int pThis, DHookParam hParams)
 	Call_Finish(aResult);
 
 	return (aResult == Plugin_Handled) ? MRES_Supercede : MRES_Ignored;
-}
-
-MRESReturn mreSetMainActivityPre(int pThis, DHookParam hParams)
-{
-	if (bIsSurvivor(pThis) && (bIsDeveloper(pThis, 6) || (g_esPlayer[pThis].g_iRewardTypes & MT_REWARD_ATTACKBOOST)))
-	{
-		int iActivity = hParams.Get(1);
-		if (iActivity == MT_ACT_TERROR_HIT_BY_TANKPUNCH || iActivity == MT_ACT_TERROR_IDLE_FALL_FROM_TANKPUNCH || iActivity == MT_ACT_TERROR_POUNCED_TO_STAND || iActivity == MT_ACT_TERROR_TANKROCK_TO_STAND)
-		{
-			hParams.Set(1, MT_ACT_TERROR_TANKPUNCH_LAND);
-
-			return MRES_ChangedHandled;
-		}
-	}
-
-	return MRES_Ignored;
 }
 
 MRESReturn mreSpawnBoomerPre(DHookReturn hReturn, DHookParam hParams)
@@ -25355,7 +25411,7 @@ void vChangeInfectedToRandom(int special)
 	if (bIsHumanInfected(special) && g_esGeneral.g_hSDKSetClass != null)
 	{
 		int iLimit = g_bSecondGame ? 6 : 3;
-		SDKCall(g_esGeneral.g_hSDKSetClass, special, GetRandomInt(1, iLimit));
+		SDKCall(g_esGeneral.g_hSDKSetClass, special, MT_GetRandomInt(1, iLimit));
 	}
 }
 
@@ -25371,7 +25427,7 @@ void vChangeInfectedToRandoms()
 	{
 		if (bIsHumanInfected(iSpecial, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 		{
-			SDKCall(g_esGeneral.g_hSDKSetClass, iSpecial, GetRandomInt(1, iLimit));
+			SDKCall(g_esGeneral.g_hSDKSetClass, iSpecial, MT_GetRandomInt(1, iLimit));
 		}
 	}
 }
@@ -26697,8 +26753,8 @@ int iChooseType(int exclude, int tank = 0, int min = -1, int max = -1)
 		iTypeCount++;
 	}
 
-	int iBackup = (iBackupCount > 0) ? iBackupTypes[GetRandomInt(1, iBackupCount)] : 0;
-	return (iTypeCount > 0) ? iTankTypes[GetRandomInt(1, iTypeCount)] : iBackup;
+	int iBackup = (iBackupCount > 0) ? iBackupTypes[MT_GetRandomInt(1, iBackupCount)] : 0;
+	return (iTypeCount > 0) ? iTankTypes[MT_GetRandomInt(1, iTypeCount)] : iBackup;
 }
 
 int iFindSectionType(const char[] section, int type)
@@ -27056,7 +27112,7 @@ int iGetRandomRushType()
 
 	if (iRushCount > 0)
 	{
-		int iType = iRushTypes[GetRandomInt(0, (iRushCount - 1))];
+		int iType = iRushTypes[MT_GetRandomInt(0, (iRushCount - 1))];
 
 		switch (iType)
 		{

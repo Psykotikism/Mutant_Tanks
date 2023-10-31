@@ -54,9 +54,13 @@
 - Added signatures for the following functions:
 	- `CTerrorPlayer::AddUpgrade`
 	- `CTerrorPlayer::RemoveUpgrade`
+- Replaced the following functions with the `CBaseAnimating::SelectWeightedSequence` function:
+	- `CTerrorPlayer::SetMainActivity` (L4D1)
+	- `CTerrorPlayer::SelectWeightedSequence` (L4D2)
 
 #### Settings
 - The `Attack Interval` setting now properly modifies the cooldown and frequency of Mutant Infected claw swings. (Thanks to `epzminion` for helping!)
+- The `Skip Taunt` setting now works in L4D1 and for Mutant Special Infected.
 - Added the following settings under the `Plugin Settings->Rewards`, `Tank #->Rewards`, and `STEAM_ID->Rewards` sections:
 	- `Blaze Health Reward`
 	- `Cluster Bombs Reward`
@@ -82,6 +86,7 @@
 	- `Jockey Extra Health`
 	- `Smoker Extra Health`
 	- `Spitter Extra Health`
+- Added the Boomette as a random option for the `Special Model` setting.
 
 #### Natives & Forwards
 - Added the `MT_GetRecordedTankType` native.
