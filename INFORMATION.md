@@ -9,6 +9,8 @@
 - Maximum Tank health: `1,000,000` (Increase/decrease the value in the `mutant_tanks.inc` file on lines `97-98` and recompile all the plugins, but expect game-breaking bugs with higher values.) [Default: `65,535`]
 - Maximum types: `500` (Increase/decrease the value in the `mutant_tanks.inc` file on line `96` and recompile all the plugins, but expect server lag with higher values.)
 - Most of these settings can be overridden for each player via their Steam IDs.
+- Almost every setting can be set to `-1/-1.0` to allow settings with the same name to override it.
+- Almost every setting can be set to `0/0.0` to disable it and prevent overrides.
 </details>
 
 ## List of Contents
@@ -2725,8 +2727,7 @@
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Skip Incap"				"0"
 
-			// Skip every Mutant Tank's taunting animation after incapacitating survivors.
-			// Note: Only available in Left 4 Dead 2.
+			// Skip every Mutant Tank's taunting animation after incapacitating survivors and when climbing.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
 			// --
@@ -6853,8 +6854,7 @@
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Skip Incap"				"0"
 
-			// Skip the Mutant Tank's taunting animation after incapacitating survivors.
-			// Note: Only available in Left 4 Dead 2.
+			// Skip the Mutant Tank's taunting animation after incapacitating survivors and when climbing.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Enhancements" section.
 			// Note: This setting can be overridden for specific players.
 			// --
