@@ -769,7 +769,7 @@ void vTrackRockBreak(int rock)
 public void MT_OnRockBreak(int tank, int rock)
 #endif
 {
-	vSetTrackGlow(rock, 0, 0, 0, 0, 0);
+	vSetTrackGlow(rock, 0, false, 0, 0, 0);
 }
 
 #if defined MT_ABILITIES_MAIN2
@@ -789,7 +789,7 @@ public void MT_OnRockThrow(int tank, int rock)
 	}
 }
 
-void vSetTrackGlow(int rock, int color, int flashing, int min, int max, int type)
+void vSetTrackGlow(int rock, int color, bool flashing, int min, int max, int type)
 {
 	if (!g_bSecondGame)
 	{
@@ -1108,7 +1108,7 @@ void vTrackThink(int rock)
 								g_esTrackPlayer[iTank].g_bRainbowColor = SDKHookEx(iTank, SDKHook_PreThinkPost, OnTrackPreThinkPost);
 							}
 						}
-						case false: vSetTrackGlow(rock, iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]), !!MT_IsGlowFlashing(iTank), MT_GetGlowRange(iTank, false), MT_GetGlowRange(iTank, true), ((MT_GetGlowType(iTank) == 1) ? 3 : 2));
+						case false: vSetTrackGlow(rock, iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]), MT_IsGlowFlashing(iTank), MT_GetGlowRange(iTank, false), MT_GetGlowRange(iTank, true), ((MT_GetGlowType(iTank) == 1) ? 3 : 2));
 					}
 				}
 			}
@@ -1151,7 +1151,7 @@ void OnTrackPreThinkPost(int tank)
 	{
 		bHook = true;
 
-		vSetTrackGlow(iRock, iGetRGBColor(iColor[0], iColor[1], iColor[2]), !!MT_IsGlowFlashing(tank), MT_GetGlowRange(tank, false), MT_GetGlowRange(tank, true), ((MT_GetGlowType(tank) == 1) ? 3 : 2));
+		vSetTrackGlow(iRock, iGetRGBColor(iColor[0], iColor[1], iColor[2]), MT_IsGlowFlashing(tank), MT_GetGlowRange(tank, false), MT_GetGlowRange(tank, true), ((MT_GetGlowType(tank) == 1) ? 3 : 2));
 	}
 
 	if (!bHook)

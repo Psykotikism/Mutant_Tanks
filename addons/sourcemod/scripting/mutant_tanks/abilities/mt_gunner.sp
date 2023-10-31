@@ -1231,7 +1231,7 @@ void vGunner2(int tank)
 						g_esGunnerPlayer[tank].g_bRainbowColor = SDKHookEx(tank, SDKHook_PreThinkPost, OnGunnerPreThinkPost);
 					}
 				}
-				case false: vSetGunnerGlow(iDrone, iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]), !!MT_IsGlowFlashing(tank), MT_GetGlowRange(tank, false), MT_GetGlowRange(tank, true), ((MT_GetGlowType(tank) == 1) ? 3 : 2));
+				case false: vSetGunnerGlow(iDrone, iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]), MT_IsGlowFlashing(tank), MT_GetGlowRange(tank, false), MT_GetGlowRange(tank, true), ((MT_GetGlowType(tank) == 1) ? 3 : 2));
 			}
 		}
 
@@ -1594,7 +1594,7 @@ void OnGunnerPreThinkPost(int tank)
 	{
 		bHook = true;
 
-		vSetGunnerGlow(iDrone, iGetRGBColor(iColor[0], iColor[1], iColor[2]), !!MT_IsGlowFlashing(tank), MT_GetGlowRange(tank, false), MT_GetGlowRange(tank, true), ((MT_GetGlowType(tank) == 1) ? 3 : 2));
+		vSetGunnerGlow(iDrone, iGetRGBColor(iColor[0], iColor[1], iColor[2]), MT_IsGlowFlashing(tank), MT_GetGlowRange(tank, false), MT_GetGlowRange(tank, true), ((MT_GetGlowType(tank) == 1) ? 3 : 2));
 	}
 
 	if (!bHook)
@@ -1632,7 +1632,7 @@ void vRemoveGunner(int tank)
 	int iDrone = EntRefToEntIndex(g_esGunnerPlayer[tank].g_iDrone);
 	if (bIsValidEntity(iDrone))
 	{
-		vSetGunnerGlow(iDrone, 0, 0, 0, 0, 0);
+		vSetGunnerGlow(iDrone, 0, false, 0, 0, 0);
 		MT_HideEntity(iDrone, false);
 		RemoveEntity(iDrone);
 	}
@@ -1675,7 +1675,7 @@ void vGunnerReset3(int tank)
 	}
 }
 
-void vSetGunnerGlow(int drone, int color, int flashing, int min, int max, int type)
+void vSetGunnerGlow(int drone, int color, bool flashing, int min, int max, int type)
 {
 	if (!g_bSecondGame)
 	{

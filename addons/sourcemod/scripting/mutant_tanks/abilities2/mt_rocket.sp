@@ -1445,7 +1445,7 @@ void tTimerRocketDetonate(Handle timer, DataPack pack)
 	TE_SendToAll();
 	SetEntityGravity(iSurvivor, 1.0);
 
-	if (g_esRocketCache[iTank].g_flRocketCountdown <= 0.0 || bIsAreaNarrow(iSurvivor, 150.0))
+	if (g_esRocketCache[iTank].g_flRocketCountdown <= 0.0 || !bIsAreaNarrow(iSurvivor))
 	{
 		switch (g_esRocketCache[iTank].g_iRocketMode)
 		{
@@ -1453,11 +1453,19 @@ void tTimerRocketDetonate(Handle timer, DataPack pack)
 			{
 				switch (MT_GetRandomInt(1, 2))
 				{
-					case 1: ForcePlayerSuicide(iSurvivor);
+					case 1:
+					{
+						vDamagePlayer(iSurvivor, iTank, float(GetEntProp(iSurvivor, Prop_Data, "m_iHealth")));
+						vDamagePlayer(iSurvivor, iTank, float(GetEntProp(iSurvivor, Prop_Data, "m_iHealth")));
+					}
 					case 2: vDamagePlayer(iSurvivor, iTank, float(GetEntProp(iSurvivor, Prop_Data, "m_iHealth")));
 				}
 			}
-			case 1: ForcePlayerSuicide(iSurvivor);
+			case 1:
+			{
+				vDamagePlayer(iSurvivor, iTank, float(GetEntProp(iSurvivor, Prop_Data, "m_iHealth")));
+				vDamagePlayer(iSurvivor, iTank, float(GetEntProp(iSurvivor, Prop_Data, "m_iHealth")));
+			}
 			case 2: vDamagePlayer(iSurvivor, iTank, float(GetEntProp(iSurvivor, Prop_Data, "m_iHealth")));
 		}
 

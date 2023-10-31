@@ -67,8 +67,8 @@ enum struct esLagPlayer
 	float g_flLagChance;
 	float g_flLagRange;
 	float g_flLagRangeChance;
+	float g_flLastPosition[3];
 	float g_flOpenAreasOnly;
-	float g_flPosition[3];
 
 	int g_iAccessFlags;
 	int g_iAmmoCount;
@@ -1021,7 +1021,7 @@ void vLagHit(int survivor, int tank, float random, float chance, int enabled, in
 		return;
 	}
 
-	if (enabled == 1 && bIsSurvivor(survivor))
+	if (enabled == 1 && bIsSurvivor(survivor) && !bIsSurvivorCaught(survivor) && !bIsSurvivorDisabled(survivor))
 	{
 		if (!bIsInfected(tank, MT_CHECK_FAKECLIENT) || (flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE) || (g_esLagPlayer[tank].g_iAmmoCount < g_esLagCache[tank].g_iHumanAmmo && g_esLagCache[tank].g_iHumanAmmo > 0))
 		{
@@ -1059,7 +1059,7 @@ void vLagHit(int survivor, int tank, float random, float chance, int enabled, in
 					}
 				}
 
-				GetClientAbsOrigin(survivor, g_esLagPlayer[survivor].g_flPosition);
+				GetClientAbsOrigin(survivor, g_esLagPlayer[survivor].g_flLastPosition);
 
 				int iSurvivorId = GetClientUserId(survivor), iTankId = GetClientUserId(tank);
 				DataPack dpLagTeleport;
@@ -1242,7 +1242,7 @@ Action tTimerLagTeleport(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	TeleportEntity(iSurvivor, g_esLagPlayer[iSurvivor].g_flPosition);
+	TeleportEntity(iSurvivor, g_esLagPlayer[iSurvivor].g_flLastPosition);
 
 	return Plugin_Continue;
 }
@@ -1271,7 +1271,7 @@ Action tTimerLagPosition(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	GetClientAbsOrigin(iSurvivor, g_esLagPlayer[iSurvivor].g_flPosition);
+	GetClientAbsOrigin(iSurvivor, g_esLagPlayer[iSurvivor].g_flLastPosition);
 
 	return Plugin_Continue;
 }

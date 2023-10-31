@@ -23,6 +23,7 @@
 - Fly: Fixed the ability not resetting when Infected with the ability change their Mutant types.
 - Hypno: Fixed shield not spawning all the time.
 - Ice: Fixed survivors not reverting back to their original colors when the ability ends.
+- Jump: Fixed the survivor victims of Smokers, Hunters, Jockeys, and Chargers not jumping with them.
 - Minion: Fixed array index errors. (Thanks to `Slaven555` for reporting!)
 - Necro: Fixed sound being precached for every player that leaves.
 - Recall: Fixed the survivor victims of Smokers, Hunters, Jockeys, and Chargers not teleporting with them.
@@ -94,21 +95,33 @@
 
 #### Abilities
 - Mutant Infected will now reserve their abilities for engaging with survivors for a more tactical approach. [Requires `Actions`.]
+- Bury: The ability no longer affects pinned survivors.
+- Choke: The ability no longer affects pinned survivors.
 - Electric: Added visibility check for survivors caught in chain reactions.
 - Fast:
 	- Changed the minimum value of the `Fast Speed` setting from `3.0` to `-1.0`.
 	- Changed the maximum value of the `Fast Speed` setting from `10.0` to `99.0`.
 - Hypno: Changed the default value of the `Hypno View` setting from `1` to `0`.
-- Kamikaze: Added the `Kamikaze Meter` setting.
+- Kamikaze:
+	- Added the `Kamikaze Meter` setting.
+	- The ability now credits Mutants for killing survivor victims.
+- Lag: The ability no longer affects pinned or incapacitated survivors.
 - Laser:
 	- The ability now chains to multiple survivors.
 	- Added the `Ability Sight` setting.
 - Meteor: Fixed meteors giving players accelerated velocity when standing on them.
 - Nullify: The ability now blocks the survivors' damage towards everything.
 - Recall: Affected survivors are now teleported back to the team when the Mutant Infected dies.
-- Rocket: Added the `Rocket Countdown` setting.
-- Smash: Added the `Smash Meter` setting.
-- Smite: Added the `Smite Countdown` setting.
+- Restart: The ability no longer affects incapacitated survivors.
+- Rocket:
+	- Added the `Rocket Countdown` setting.
+	- The ability now credits Mutants for killing survivor victims.
+- Smash:
+	- Added the `Smash Meter` setting.
+	- The ability now credits Mutants for killing survivor victims.
+- Smite:
+	- Added the `Smite Countdown` setting.
+	- The ability now credits Mutants for killing survivor victims.
 - Warp: Affected survivors are now teleported back to the team when the Mutant Infected dies.
 
 ### Files

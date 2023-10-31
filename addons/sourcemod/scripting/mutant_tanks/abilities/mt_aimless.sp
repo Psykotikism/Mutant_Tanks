@@ -1115,7 +1115,7 @@ void vAimlessHit(int survivor, int tank, float random, float chance, int enabled
 			if (random <= chance && !g_esAimlessPlayer[survivor].g_bAffected)
 			{
 				g_esAimlessPlayer[survivor].g_bAffected = true;
-				g_esAimlessPlayer[survivor].g_bForced = !!g_esAimlessCache[tank].g_iAimlessGunshots;
+				g_esAimlessPlayer[survivor].g_bForced = g_esAimlessCache[tank].g_iAimlessGunshots == 1;
 				g_esAimlessPlayer[survivor].g_iOwner = tank;
 
 				int iCooldown = -1;

@@ -2665,7 +2665,7 @@ public void OnClientPostAdminCheck(int client)
 			if (g_esGeneral.g_iRushTypes > 0)
 			{
 				vAnnounceRush(client);
-				MT_PrintToChat(client, "%s %t", MT_TAG3, (!!g_esGeneral.g_iHardcoreMode ? "HardcoreModeOn" : "HardcoreModeOff"));
+				MT_PrintToChat(client, "%s %t", MT_TAG3, ((g_esGeneral.g_iHardcoreMode == 1) ? "HardcoreModeOn" : "HardcoreModeOff"));
 
 				if (bIsCoopMode() && g_esGeneral.g_bRushCoop)
 				{
@@ -8165,7 +8165,7 @@ void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 						g_esPlayer[iVictim].g_iTankType = iType;
 					}
 
-					vResetTank(iVictim, !!g_esCache[iVictim].g_iDeathRevert);
+					vResetTank(iVictim, (g_esCache[iVictim].g_iDeathRevert == 1));
 					CreateTimer(1.0, tTimerResetType, iVictimId, TIMER_FLAG_NO_MAPCHANGE);
 				}
 
@@ -22275,10 +22275,10 @@ Action umUpgradeDescription(UserMsg msg_id, BfRead msg, const int[] players, int
 void vReadDetourSettings(const char[] key, const char[] value)
 {
 	int iIndex = g_esGeneral.g_iDetourCount;
-	g_esDetour[iIndex].g_bLog = !!iGetKeyValueEx(key, "Log", "Log", "Log", "Log", g_esDetour[iIndex].g_bLog, value, -1, 1);
-	g_esDetour[iIndex].g_iType = iGetKeyValueEx(key, "Type", "Type", "Type", "Type", g_esDetour[iIndex].g_iType, value, -1, 4);
-	g_esDetour[iIndex].g_iPreHook = iGetKeyValueEx(key, "PreHook", "Pre-Hook", "Pre_Hook", "pre", g_esDetour[iIndex].g_iPreHook, value, -1, 2);
-	g_esDetour[iIndex].g_iPostHook = iGetKeyValueEx(key, "PostHook", "Post-Hook", "Post_Hook", "post", g_esDetour[iIndex].g_iPostHook, value, -1, 2);
+	g_esDetour[iIndex].g_bLog = !!iGetKeyValueEx(key, "Log", "Log", "Log", "Log", g_esDetour[iIndex].g_bLog, value, 0, 1);
+	g_esDetour[iIndex].g_iType = iGetKeyValueEx(key, "Type", "Type", "Type", "Type", g_esDetour[iIndex].g_iType, value, 0, 4);
+	g_esDetour[iIndex].g_iPreHook = iGetKeyValueEx(key, "PreHook", "Pre-Hook", "Pre_Hook", "pre", g_esDetour[iIndex].g_iPreHook, value, 0, 2);
+	g_esDetour[iIndex].g_iPostHook = iGetKeyValueEx(key, "PostHook", "Post-Hook", "Post_Hook", "post", g_esDetour[iIndex].g_iPostHook, value, 0, 2);
 
 	vGetKeyValueEx(key, "CvarCheck", "Cvar Check", "Cvar_Check", "cvars", g_esDetour[iIndex].g_sCvars, sizeof esDetour::g_sCvars, value);
 }
@@ -24614,8 +24614,8 @@ void vInstallPermanentPatches()
 void vReadPatchSettings(const char[] key, const char[] value)
 {
 	int iIndex = g_esGeneral.g_iPatchCount;
-	g_esPatch[iIndex].g_bLog = !!iGetKeyValueEx(key, "Log", "Log", "Log", "Log", g_esPatch[iIndex].g_bLog, value, -1, 1);
-	g_esPatch[iIndex].g_iType = iGetKeyValueEx(key, "Type", "Type", "Type", "Type", g_esPatch[iIndex].g_iType, value, -1, 2);
+	g_esPatch[iIndex].g_bLog = !!iGetKeyValueEx(key, "Log", "Log", "Log", "Log", g_esPatch[iIndex].g_bLog, value, 0, 1);
+	g_esPatch[iIndex].g_iType = iGetKeyValueEx(key, "Type", "Type", "Type", "Type", g_esPatch[iIndex].g_iType, value, 0, 2);
 
 	vGetKeyValueEx(key, "CvarCheck", "Cvar Check", "Cvar_Check", "cvars", g_esPatch[iIndex].g_sCvars, sizeof esPatch::g_sCvars, value);
 	vGetKeyValueEx(key, "Signature", "Signature", "Signature", "Signature", g_esPatch[iIndex].g_sSignature, sizeof esPatch::g_sSignature, value);
@@ -24897,7 +24897,7 @@ int iGetPatchIndex(const char[] name)
 void vReadSignatureSettings(const char[] key, const char[] value)
 {
 	int iIndex = g_esGeneral.g_iSignatureCount;
-	g_esSignature[iIndex].g_bLog = !!iGetKeyValueEx(key, "Log", "Log", "Log", "Log", g_esSignature[iIndex].g_bLog, value, -1, 1);
+	g_esSignature[iIndex].g_bLog = !!iGetKeyValueEx(key, "Log", "Log", "Log", "Log", g_esSignature[iIndex].g_bLog, value, 0, 1);
 
 	vGetKeyValueEx(key, "Library", "Library", "Library", "Library", g_esSignature[iIndex].g_sLibrary, sizeof esSignature::g_sLibrary, value);
 	vGetKeyValueEx(key, "Signature", "Signature", "Signature", "Signature", g_esSignature[iIndex].g_sSignature, sizeof esSignature::g_sSignature, value);
@@ -26399,10 +26399,10 @@ bool bIsSpawnEnabled(int type, int specType)
 {
 	if (specType > 0 && specType != 8)
 	{
-		return !!iGetSubSettingValue(true, true, g_esSpecial[type].g_iSpawnEnabled, g_esTank[type].g_iSpawnEnabled, g_esSpecific.g_iSpawnEnabled, g_esGeneral.g_iSpawnEnabled, 1);
+		return iGetSubSettingValue(true, true, g_esSpecial[type].g_iSpawnEnabled, g_esTank[type].g_iSpawnEnabled, g_esSpecific.g_iSpawnEnabled, g_esGeneral.g_iSpawnEnabled, 1) == 1;
 	}
 
-	return !!iGetSettingValue(true, true, g_esTank[type].g_iSpawnEnabled, g_esGeneral.g_iSpawnEnabled, 1);
+	return iGetSettingValue(true, true, g_esTank[type].g_iSpawnEnabled, g_esGeneral.g_iSpawnEnabled, 1) == 1;
 }
 
 bool bIsSpecialEnabled(int type)
@@ -26423,7 +26423,7 @@ bool bIsSurvivalMode()
 
 bool bIsTankEnabled(int type)
 {
-	return !!iGetSettingValue(true, true, g_esTank[type].g_iTankEnabled, g_esGeneral.g_iTankEnabled, 1);
+	return iGetSettingValue(true, true, g_esTank[type].g_iTankEnabled, g_esGeneral.g_iTankEnabled, 1) == 1;
 }
 
 #if defined _actions_included
