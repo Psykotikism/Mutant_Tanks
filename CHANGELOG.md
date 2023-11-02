@@ -20,6 +20,9 @@
 #### Settings
 - Fixed several settings not being cached.
 
+#### Natives & Forwards
+- Fixed the `MT_GetSpawnType` native only working for human-controlled Mutants.
+
 #### Abilities
 - Fixed all the `Ability Sight` settings not working.
 - Clone: Fixed array index errors.
@@ -29,6 +32,7 @@
 - Jump: Fixed the survivor victims of Smokers, Hunters, Jockeys, and Chargers not jumping with them.
 - Minion: Fixed array index errors. (Thanks to `Slaven555` for reporting!)
 - Necro: Fixed sound being precached for every player that leaves.
+- Omni: Fixed the ability overlapping with the `Boss`, `Randomize`, `Transform`, and `Combo` features. (Thanks to `Mi.Cura` for reporting!)
 - Recall: Fixed the survivor victims of Smokers, Hunters, Jockeys, and Chargers not teleporting with them.
 - Shield: Fixed shield spawning in some cases.
 - Warp:
@@ -63,6 +67,7 @@
 	- `CTerrorPlayer::SelectWeightedSequence` (L4D2)
 
 #### Settings
+- Added the `Cycle Types` setting under the `Plugin Settings->General` section.
 - The `Attack Interval` setting now properly modifies the cooldown and frequency of Mutant Infected claw swings. (Thanks to `epzminion` for helping!)
 - The `Skip Taunt` setting now works in L4D1 and for Mutant Special Infected.
 - Added the following settings under the `Plugin Settings->Rewards`, `Tank #->Rewards`, and `STEAM_ID->Rewards` sections:
@@ -95,6 +100,7 @@
 #### Natives & Forwards
 - Added the `MT_GetRecordedTankType` native.
 - The `MT_GetTankType` native now has another parameter.
+- The `MT_GetSpawnType` native now has two more parameters.
 
 #### Abilities
 - Mutant Infected will now reserve their abilities for engaging with survivors for a more tactical approach. [Requires `Actions`.]

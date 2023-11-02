@@ -1446,12 +1446,14 @@ native float MT_GetScaledDamage(float damage);
  * Возвращает тип возрождения танка-мутанта.
  *
  * @param tank			Клиентский индекс танка.
+ * @param type			Тип танка-мутанта.
+ * @param specType		Тип особого заражённого.
  *
  * @return			Тип возрождения танка.
  * 					0 = Обычный, 1 = Босс, 2 = Случайно, 3 = Трансформация, 4 = Комбинированные способности
  * @error			Неверный индекс клиента, клиент не в игре или клиент - игрок.
  **/
-native int MT_GetSpawnType(int tank);
+native int MT_GetSpawnType(int tank, int type = 0, int specType = 0);
 
 /**
  * Возвращает RGB цвет, данные танку-мутанту.

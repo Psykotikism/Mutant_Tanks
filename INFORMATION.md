@@ -348,6 +348,14 @@
 			// 0.01-1.0: Burn percentage
 			"Burnt Skin"				"-1.0"
 
+			// Attempt to spawn different Mutant Tank types before spawning the same ones on the same maps.
+			// Note: The cycle resets when there are no unique Mutant Tank types left to choose from.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Cycle Types"				"0"
+
 			// All Mutant Tanks can spawn.
 			// Note: Mutant Tanks will still appear on the Mutant Tanks menu and other Mutant Tanks can still transform into each other.
 			// Note: Do not change this setting if you are unsure of how it works.
@@ -436,6 +444,7 @@
 				"Special Model"				"0"
 				"Burn Duration"				"0.0"
 				"Burnt Skin"				"-1.0"
+				"Cycle Types"				"0"
 				"Spawn Enabled"				"-1"
 				"Type Range"				"1-500"
 			}
@@ -3153,7 +3162,7 @@
 			// "forever" - 99999 seconds
 			"Finale Cooldown"			"30.0"
 
-			// Enable hard core mode.
+			// Enable hardcore mode.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON

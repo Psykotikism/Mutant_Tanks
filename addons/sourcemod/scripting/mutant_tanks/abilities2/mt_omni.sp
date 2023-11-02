@@ -79,6 +79,7 @@ enum struct esOmniPlayer
 	int g_iHumanCooldown;
 	int g_iHumanDuration;
 	int g_iHumanMode;
+	int g_iInfectedType;
 	int g_iOmniAbility;
 	int g_iOmniCooldown;
 	int g_iOmniDuration;
@@ -712,6 +713,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esOmniPlayer[tank].g_iInfectedType = iGetInfectedType(tank);
 	g_esOmniPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esOmniPlayer[tank].g_iTankType = apply ? type : 0;
 	int iType = g_esOmniPlayer[tank].g_iTankTypeRecorded;
@@ -873,7 +875,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!bIsInfected(tank, MT_CHECK_FAKECLIENT) || g_esOmni[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esOmni[tank].g_iOmniAbility == 1 && g_esOmniCache[tank].g_iComboAbility == 0 && !g_esOmniPlayer[tank].g_bActivated)
+	if (MT_IsTankSupported(tank) && (!bIsInfected(tank, MT_CHECK_FAKECLIENT) || g_esOmni[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esOmni[tank].g_iOmniAbility == 1 && g_esOmniCache[tank].g_iComboAbility == 0 && MT_GetSpawnType(tank, g_esOmniPlayer[tank].g_iTankType, g_esOmniPlayer[tank].g_iInfectedType) <= 0 && !g_esOmniPlayer[tank].g_bActivated)
 	{
 		vOmniAbility(tank);
 	}
@@ -1015,13 +1017,13 @@ void vOmni2(int tank, int pos = -1)
 	float flTankPos[3], flTankPos2[3];
 	GetClientAbsOrigin(tank, flTankPos);
 	float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esOmni[tank].g_flOmniRange;
-	int iTypeCount = 0, iTypes[MT_MAXTYPES + 1];
+	int iSpecType = g_esOmniPlayer[tank].g_iInfectedType, iTypeCount = 0, iTypes[MT_MAXTYPES + 1];
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
 		if (MT_IsTankSupported(iTank, MT_CHECK_INGAME) && MT_IsCustomTankSupported(iTank) && iTank != tank)
 		{
 			GetClientAbsOrigin(iTank, flTankPos2);
-			if (GetVectorDistance(flTankPos, flTankPos2) <= flRange && bIsVisibleToPlayer(tank, iTank, g_esOmni[tank].g_iOmniSight, .range = flRange) && g_esOmniCache[iTank].g_iOmniAbility == 0)
+			if (GetVectorDistance(flTankPos, flTankPos2) <= flRange && bIsVisibleToPlayer(tank, iTank, g_esOmni[tank].g_iOmniSight, .range = flRange) && !bIsOmniType(iTank, g_esOmniPlayer[iTank].g_iTankType, iSpecType))
 			{
 				iTypes[iTypeCount + 1] = MT_GetTankType(iTank);
 				iTypeCount++;
@@ -1037,11 +1039,10 @@ void vOmni2(int tank, int pos = -1)
 	}
 	else
 	{
-		int iSpecType = iGetInfectedType(tank);
 		iTypeCount = 0;
 		for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
 		{
-			if (!MT_IsTypeEnabled(iIndex, tank) || !MT_CanTypeSpawn(iIndex, iSpecType) || MT_DoesTypeRequireHumans(iIndex, tank) || g_esOmniPlayer[tank].g_iOmniType == iIndex)
+			if (!MT_IsTypeEnabled(iIndex, tank) || !MT_CanTypeSpawn(iIndex, iSpecType) || MT_DoesTypeRequireHumans(iIndex, tank) || bIsOmniType(tank, iIndex, iSpecType) || g_esOmniPlayer[tank].g_iOmniType == iIndex)
 			{
 				continue;
 			}
@@ -1153,6 +1154,20 @@ void vOmniReset3(int tank)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "OmniHuman5", (g_esOmniPlayer[tank].g_iCooldown - iTime));
 	}
+}
+
+bool bIsOmniType(int tank, int type, int specType)
+{
+	bool bReturn = MT_GetSpawnType(tank, type, specType) > 0;
+	int iType = MT_GetRecordedTankType(tank, type);
+
+	switch (specType)
+	{
+		case 1, 2, 3, 4, 5, 6: return bReturn || iGetSettingValue(true, true, g_esOmniSpecial[iType].g_iOmniAbility, g_esOmniAbility[iType].g_iOmniAbility, 1) == 1;
+		case 8: return bReturn || g_esOmniAbility[iType].g_iOmniAbility == 1;
+	}
+
+	return bReturn;
 }
 
 void tTimerOmniCombo(Handle timer, DataPack pack)

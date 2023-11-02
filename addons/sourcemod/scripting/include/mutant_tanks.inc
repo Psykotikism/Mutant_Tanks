@@ -655,12 +655,14 @@ native float MT_GetScaledDamage(float damage);
  * Returns a Mutant Tank's spawn type.
  *
  * @param tank			Client index of the Tank.
+ * @param type			Mutant Tank type.
+ * @param specType		Special Infected type.
  *
  * @return			The spawn type of the Tank.
  * 					0 = Normal, 1 = Boss, 2 = Randomized, 3 = Transformation, 4 = Combined abilities
  * @error			Invalid client index, client is not in-game, or client is human.
  **/
-native int MT_GetSpawnType(int tank);
+native int MT_GetSpawnType(int tank, int type = 0, int specType = 0);
 
 /**
  * Returns the RGB colors given to a Mutant Tank.
