@@ -14,6 +14,7 @@
 		"Notes"		"Changes in v8.99:"
 		"Notes"		"Bug Fixes:"
 		"Notes"		"Core Plugin:"
+		"Notes"		"- Fixed the issue with unkillable zombies when the plugin is disabled. (Thanks to \"bedildewo\" for reporting!)"
 		"Notes"		"- Fixed the following settings not being overridden properly for special infected:"
 		"Notes"		"	- \"Reward Enabled\""
 		"Notes"		"	- \"Reward Bots\""
