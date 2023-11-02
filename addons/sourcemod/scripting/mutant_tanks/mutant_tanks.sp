@@ -24925,9 +24925,9 @@ MRESReturn mreVomitedUponPost(int pThis, DHookParam hParams)
  * DHooks Hook callbacks
  **/
 
-public MRESReturn mreWeaponShootPositionPost(int pThis, DHookReturn hReturn)
+MRESReturn mreWeaponShootPositionPost(int pThis, DHookReturn hReturn)
 {
-	if (bIsSurvivor(pThis) && g_esGeneral.g_iBulletFix == 1 && !g_esGeneral.g_bIgnoreWeaponShotPosition)
+	if (g_esGeneral.g_bPluginEnabled && bIsSurvivor(pThis) && g_esGeneral.g_iBulletFix == 1 && !g_esGeneral.g_bIgnoreWeaponShotPosition)
 	{
 		hReturn.SetVector(g_esPlayer[pThis].g_flLastWeaponShotPosition);
 

@@ -5,6 +5,7 @@
 ### Bug Fixes
 
 #### Core Plugin
+- Fixed the issue with unkillable zombies when the plugin is disabled. (Thanks to `bedildewo` for reporting!)
 - Fixed the following settings not being overridden properly for special infected:
 	- `Reward Enabled`
 	- `Reward Bots`
