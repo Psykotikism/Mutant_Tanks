@@ -475,6 +475,7 @@ enum struct esGeneral
 	bool g_bPatchJumpHeight;
 	bool g_bPatchVerticalPunch;
 	bool g_bPluginEnabled;
+	bool g_bRecycleTypes[2];
 	bool g_bRushCooldown;
 	bool g_bRushCoop;
 	bool g_bRushCountdown;
@@ -831,6 +832,7 @@ enum struct esGeneral
 	int g_iCreditIgniters;
 	int g_iCurrentLine;
 	int g_iCurrentMode;
+	int g_iCycleTypes;
 	int g_iDeathDetails;
 	int g_iDeathMessage;
 	int g_iDeathRevert;
@@ -977,6 +979,8 @@ esGeneral g_esGeneral;
 
 enum struct esSpecific
 {
+	bool g_bRecycleTypes[2];
+
 	char g_sBodyColorVisual[64];
 	char g_sBodyColorVisual2[64];
 	char g_sBodyColorVisual3[64];
@@ -1053,6 +1057,7 @@ enum struct esSpecific
 	int g_iBurstDoorsReward[4];
 	int g_iCleanKillsReward[4];
 	int g_iClusterBombsReward[4];
+	int g_iCycleTypes;
 	int g_iDeathDetails;
 	int g_iDeathMessage;
 	int g_iDeathRevert;
@@ -1740,8 +1745,9 @@ esTeammate g_esTeammate[MAXPLAYERS + 1];
 
 enum struct esTank
 {
-	bool g_bDuplicate[2];
-	bool g_bRecorded[2];
+	bool g_bDuplicateType[2];
+	bool g_bRecordedType[2];
+	bool g_bTypeCycled[2];
 
 	char g_sBodyColorVisual[64];
 	char g_sBodyColorVisual2[64];
@@ -1968,6 +1974,8 @@ esTank g_esTank[MT_MAXTYPES + 1];
 
 enum struct esSpecial
 {
+	bool g_bTypeCycled[2];
+
 	char g_sBodyColorVisual[64];
 	char g_sBodyColorVisual2[64];
 	char g_sBodyColorVisual3[64];
@@ -3713,8 +3721,11 @@ any aNative_GetScaledDamage(Handle plugin, int numParams)
 
 any aNative_GetSpawnType(Handle plugin, int numParams)
 {
-	int iTank = GetNativeCell(1);
-	return (bIsInfectedSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) && !bIsInfected(iTank, MT_CHECK_FAKECLIENT)) ? g_esCache[iTank].g_iSpawnType : 0;
+	int iTank = GetNativeCell(1), iType = GetNativeCell(2), iSpecType = GetNativeCell(3);
+	iType = g_esTank[iType].g_iRecordedType[0];
+	int iSetting = (iSpecType > 0 && iSpecType != 8) ? iGetSettingValue(true, true, g_esSpecial[iType].g_iSpawnType, g_esTank[iType].g_iSpawnType, 1) : g_esTank[iType].g_iSpawnType,
+		iSpawnType = (iType > 0) ? iSetting : g_esCache[iTank].g_iSpawnType;
+	return bIsInfectedSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) ? iSpawnType : 0;
 }
 
 any aNative_GetTankColors(Handle plugin, int numParams)
@@ -14567,7 +14578,7 @@ void vSetupTankSpawn(int admin, int specType, char[] type, bool spawn = false, b
 			{
 				bool bCheck = true, bMenu = true;
 				char sPhrase[32], sTankName[33];
-				int iClass = 8, iMin = iGetMinType(specType, (specType == iClass)), iMax = iGetMaxType(specType, (specType == iClass)), iRealType = 0, iTypeCount = 0, iTankTypes[MT_MAXTYPES + 1];
+				int iClass = 8, iCycleCount = 0, iCycleTypes[MT_MAXTYPES + 1], iMin = iGetMinType(specType, (specType == iClass)), iMax = iGetMaxType(specType, (specType == iClass)), iRealType = 0, iTypeCount = 0, iTankTypes[MT_MAXTYPES + 1];
 				for (int iIndex = iMin; iIndex <= iMax; iIndex++)
 				{
 					if (iIndex <= 0)
@@ -14577,6 +14588,8 @@ void vSetupTankSpawn(int admin, int specType, char[] type, bool spawn = false, b
 
 					iRealType = g_esTank[iIndex].g_iRecordedType[0];
 					bMenu = bIsMenuEnabled(iRealType, specType);
+
+					vRecycleType(specType, iRealType, 1);
 
 					switch (specType)
 					{
@@ -14597,12 +14610,24 @@ void vSetupTankSpawn(int admin, int specType, char[] type, bool spawn = false, b
 						continue;
 					}
 
+					iCycleTypes[iCycleCount + 1] = iRealType;
+					iCycleCount++;
+
+					if (bIsTypeCycled(specType, iRealType, 1))
+					{
+						continue;
+					}
+
 					g_esGeneral.g_iChosenType = iRealType;
 					iTankTypes[iTypeCount + 1] = iRealType;
 					iTypeCount++;
 				}
 
-				switch (iTypeCount)
+				g_esGeneral.g_bRecycleTypes[1] = false;
+				g_esSpecific.g_bRecycleTypes[1] = false;
+				int iFinalCount = (iTypeCount > 0) ? iTypeCount : iCycleCount;
+
+				switch (iFinalCount)
 				{
 					case 0:
 					{
@@ -14612,7 +14637,11 @@ void vSetupTankSpawn(int admin, int specType, char[] type, bool spawn = false, b
 					}
 					case 1:
 					{
+						g_esGeneral.g_bRecycleTypes[1] = specType == iClass && iTypeCount <= 0 && iCycleCount > 0;
+						g_esSpecific.g_bRecycleTypes[1] = specType != iClass && iTypeCount <= 0 && iCycleCount > 0;
 						int iChosen = g_esGeneral.g_iChosenType;
+						g_esTank[iChosen].g_bTypeCycled[1] = specType == iClass;
+						g_esSpecial[iChosen].g_bTypeCycled[1] = specType != iClass;
 
 						switch (specType)
 						{
@@ -14627,8 +14656,12 @@ void vSetupTankSpawn(int admin, int specType, char[] type, bool spawn = false, b
 					}
 					default:
 					{
-						g_esGeneral.g_iChosenType = iTankTypes[MT_GetRandomInt(1, iTypeCount)];
+						g_esGeneral.g_iChosenType = (iTypeCount > 0) ? iTankTypes[MT_GetRandomInt(1, iTypeCount)] : iCycleTypes[MT_GetRandomInt(1, iCycleCount)];
+						g_esGeneral.g_bRecycleTypes[1] = specType == iClass && iTypeCount <= 0 && iCycleCount > 0;
+						g_esSpecific.g_bRecycleTypes[1] = specType != iClass && iTypeCount <= 0 && iCycleCount > 0;
 						int iChosen = g_esGeneral.g_iChosenType;
+						g_esTank[iChosen].g_bTypeCycled[1] = specType == iClass;
+						g_esSpecial[iChosen].g_bTypeCycled[1] = specType != iClass;
 
 						switch (specType)
 						{
@@ -16593,6 +16626,7 @@ void vReadSpecificSettings(int mode, const char[] section, const char[] subsecti
 		g_esSpecific.g_iSpecialModel = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "SpecialModel", "Special Model", "Special_Model", "model", g_esSpecific.g_iSpecialModel, value, -1, 3);
 		g_esSpecific.g_flBurnDuration = flGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "BurnDuration", "Burn Duration", "Burn_Duration", "burndur", g_esSpecific.g_flBurnDuration, value, -1.0, 99999.0);
 		g_esSpecific.g_flBurntSkin = flGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "BurntSkin", "Burnt Skin", "Burnt_Skin", "burnt", g_esSpecific.g_flBurntSkin, value, -2.0, 1.0);
+		g_esSpecific.g_iCycleTypes = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "CycleTypes", "Cycle Types", "Cycle_Types", "cycle", g_esSpecific.g_iCycleTypes, value, -1, 1);
 		g_esSpecific.g_iSpawnEnabled = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "SpawnEnabled", "Spawn Enabled", "Spawn_Enabled", "spawn", g_esSpecific.g_iSpawnEnabled, value, -1, 1);
 		g_esSpecific.g_iAnnounceArrival = iGetKeyValue(subsection, MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE2, key, "AnnounceArrival", "Announce Arrival", "Announce_Arrival", "arrival", g_esSpecific.g_iAnnounceArrival, value, -1, 31);
 		g_esSpecific.g_iAnnounceDeath = iGetKeyValue(subsection, MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE2, key, "AnnounceDeath", "Announce Death", "Announce_Death", "death", g_esSpecific.g_iAnnounceDeath, value, -1, 2);
@@ -17420,6 +17454,19 @@ void vReadTeammateSettings(int special, int mode, const char[] subsection, const
 	vConfigsLoadedForward(subsection, key, value, -1, special, mode, true, specsection);
 }
 
+void vRecycleType(int specType, int type, int mode)
+{
+	int iClass = 8;
+	if (specType != iClass && g_esSpecific.g_bRecycleTypes[mode])
+	{
+		g_esSpecial[type].g_bTypeCycled[mode] = false;
+	}
+	else if (specType == iClass && g_esGeneral.g_bRecycleTypes[mode])
+	{
+		g_esTank[type].g_bTypeCycled[mode] = false;
+	}
+}
+
 void vSaveConfigColors(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, char[] buffer, int size, const char[] value)
 {
 	if (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false))
@@ -17471,6 +17518,7 @@ void vSetTankSettings(int mode, const char[] section, const char[] subsection, c
 			g_esGeneral.g_iTankModel = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "TankModel", "Tank Model", "Tank_Model", "model", g_esGeneral.g_iTankModel, value, -1, 7);
 			g_esGeneral.g_flBurnDuration = flGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "BurnDuration", "Burn Duration", "Burn_Duration", "burndur", g_esGeneral.g_flBurnDuration, value, -1.0, 99999.0);
 			g_esGeneral.g_flBurntSkin = flGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "BurntSkin", "Burnt Skin", "Burnt_Skin", "burnt", g_esGeneral.g_flBurntSkin, value, -2.0, 1.0);
+			g_esGeneral.g_iCycleTypes = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "CycleTypes", "Cycle Types", "Cycle_Types", "cycle", g_esGeneral.g_iCycleTypes, value, -1, 1);
 			g_esGeneral.g_iSpawnEnabled = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "SpawnEnabled", "Spawn Enabled", "Spawn_Enabled", "spawn", g_esGeneral.g_iSpawnEnabled, value, -1, 1);
 			g_esGeneral.g_iSpawnLimit = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "SpawnLimit", "Spawn Limit", "Spawn_Limit", "limit", g_esGeneral.g_iSpawnLimit, value, -1, 32);
 			g_esGeneral.g_iAnnounceArrival = iGetKeyValue(subsection, MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE2, key, "AnnounceArrival", "Announce Arrival", "Announce_Arrival", "arrival", g_esGeneral.g_iAnnounceArrival, value, -1, 31);
@@ -19391,6 +19439,8 @@ void SMCParseStart_Main(SMCParser smc)
 
 	if (g_esGeneral.g_iConfigMode == 1)
 	{
+		g_esGeneral.g_bRecycleTypes[0] = false;
+		g_esGeneral.g_bRecycleTypes[1] = false;
 		g_esGeneral.g_iTotalTypes[0] = 0;
 		g_esGeneral.g_iTotalTypes[1] = 0;
 		g_esGeneral.g_iTypeCounter[0] = 0;
@@ -19410,6 +19460,7 @@ void SMCParseStart_Main(SMCParser smc)
 		g_esGeneral.g_iTankModel = 0;
 		g_esGeneral.g_flBurnDuration = 0.0;
 		g_esGeneral.g_flBurntSkin = -1.0;
+		g_esGeneral.g_iCycleTypes = 0;
 		g_esGeneral.g_iSpawnEnabled = -1;
 		g_esGeneral.g_iSpawnLimit = 0;
 		g_esGeneral.g_iMinType = 1;
@@ -19608,12 +19659,15 @@ void SMCParseStart_Main(SMCParser smc)
 			}
 		}
 
+		g_esSpecific.g_bRecycleTypes[0] = false;
+		g_esSpecific.g_bRecycleTypes[1] = false;
 		g_esSpecific.g_iDeathRevert = -1;
 		g_esSpecific.g_iFinalesOnly = -1;
 		g_esSpecific.g_iSpecialTypes = -1;
 		g_esSpecific.g_iSpecialModel = -1;
 		g_esSpecific.g_flBurnDuration = -1.0;
 		g_esSpecific.g_flBurntSkin = -2.0;
+		g_esSpecific.g_iCycleTypes = -1;
 		g_esSpecific.g_iSpawnEnabled = -1;
 		g_esSpecific.g_iMinType = -1;
 		g_esSpecific.g_iMaxType = -1;
@@ -19732,10 +19786,12 @@ void SMCParseStart_Main(SMCParser smc)
 
 		for (int iIndex = 0; iIndex <= MT_MAXTYPES; iIndex++)
 		{
-			g_esTank[iIndex].g_bDuplicate[0] = false;
-			g_esTank[iIndex].g_bDuplicate[1] = false;
-			g_esTank[iIndex].g_bRecorded[0] = false;
-			g_esTank[iIndex].g_bRecorded[1] = false;
+			g_esTank[iIndex].g_bDuplicateType[0] = false;
+			g_esTank[iIndex].g_bDuplicateType[1] = false;
+			g_esTank[iIndex].g_bRecordedType[0] = false;
+			g_esTank[iIndex].g_bRecordedType[1] = false;
+			g_esTank[iIndex].g_bTypeCycled[0] = false;
+			g_esTank[iIndex].g_bTypeCycled[1] = false;
 			g_esTank[iIndex].g_iRealType[0] = 0;
 			g_esTank[iIndex].g_iRealType[1] = 0;
 			g_esTank[iIndex].g_iAbilityCount = -1;
@@ -19985,6 +20041,8 @@ void SMCParseStart_Main(SMCParser smc)
 				}
 			}
 
+			g_esSpecial[iIndex].g_bTypeCycled[0] = false;
+			g_esSpecial[iIndex].g_bTypeCycled[1] = false;
 			g_esSpecial[iIndex].g_sBoomerName = "Boomer";
 			g_esSpecial[iIndex].g_sChargerName = "Charger";
 			g_esSpecial[iIndex].g_sGlowColor[0] = '\0';
@@ -20653,7 +20711,7 @@ SMCResult SMCNewSection_Main(SMCParser smc, const char[] name, bool opt_quotes)
 						continue;
 					}
 
-					g_esTank[iIndex].g_bDuplicate[0] = true;
+					g_esTank[iIndex].g_bDuplicateType[0] = true;
 
 					vLogMessage(MT_LOG_SERVER, _, "%s A duplicate entry was found for \"%s\".", MT_TAG, g_esGeneral.g_sCurrentSection);
 				}
@@ -20663,11 +20721,11 @@ SMCResult SMCNewSection_Main(SMCParser smc, const char[] name, bool opt_quotes)
 					vLogMessage(MT_LOG_SERVER, _, "%s An entry (%s) was found that exceeds the limit (%i).", MT_TAG, g_esGeneral.g_sCurrentSection, MT_MAXTYPES);
 				}
 
-				if (!g_esTank[iIndex].g_bRecorded[0])
+				if (!g_esTank[iIndex].g_bRecordedType[0])
 				{
-					if (!g_esTank[iIndex].g_bDuplicate[0])
+					if (!g_esTank[iIndex].g_bDuplicateType[0])
 					{
-						g_esTank[iIndex].g_bRecorded[0] = true;
+						g_esTank[iIndex].g_bRecordedType[0] = true;
 						g_esGeneral.g_iTypeCounter[0]++;
 
 						if (g_esGeneral.g_iTypeCounter[0] <= MT_MAXTYPES)
@@ -20711,7 +20769,7 @@ SMCResult SMCNewSection_Main(SMCParser smc, const char[] name, bool opt_quotes)
 					continue;
 				}
 
-				g_esTank[iIndex].g_bDuplicate[1] = true;
+				g_esTank[iIndex].g_bDuplicateType[1] = true;
 
 				vLogMessage(MT_LOG_SERVER, _, "%s A duplicate entry was found for \"%s\".", MT_TAG, g_esGeneral.g_sCurrentSubSection);
 			}
@@ -20721,11 +20779,11 @@ SMCResult SMCNewSection_Main(SMCParser smc, const char[] name, bool opt_quotes)
 				vLogMessage(MT_LOG_SERVER, _, "%s An entry (%s) was found that exceeds the limit (%i).", MT_TAG, g_esGeneral.g_sCurrentSubSection, MT_MAXTYPES);
 			}
 
-			if (!g_esTank[iIndex].g_bRecorded[1])
+			if (!g_esTank[iIndex].g_bRecordedType[1])
 			{
-				if (!g_esTank[iIndex].g_bDuplicate[1])
+				if (!g_esTank[iIndex].g_bDuplicateType[1])
 				{
-					g_esTank[iIndex].g_bRecorded[1] = true;
+					g_esTank[iIndex].g_bRecordedType[1] = true;
 					g_esGeneral.g_iTypeCounter[1]++;
 
 					if (g_esGeneral.g_iTypeCounter[1] <= MT_MAXTYPES)
@@ -26788,6 +26846,16 @@ bool bIsTypeAvailable(int type, int tank = 0)
 	return g_esTank[type].g_iAbilityCount == -1 || (g_esTank[type].g_iAbilityCount > 0 && iPluginCount > 0);
 }
 
+bool bIsTypeCycled(int specType, int type, int mode)
+{
+	if (specType > 0 && specType != 8)
+	{
+		return iGetSettingValue(true, true, g_esSpecific.g_iCycleTypes, g_esGeneral.g_iCycleTypes, 1) == 1 && g_esSpecial[type].g_bTypeCycled[mode];
+	}
+
+	return g_esGeneral.g_iCycleTypes == 1 && g_esTank[type].g_bTypeCycled[mode];
+}
+
 bool bIsTypeShown(int admin, int type, int specType)
 {
 	bool bReturn = false;
@@ -26991,7 +27059,7 @@ int iChooseInfected(int tank, int exclude, int min = -1, int max = -1, bool muta
 int iChooseType(int exclude, int tank = 0, int min = -1, int max = -1)
 {
 	bool bCondition = false, bTank = bIsTank(tank);
-	int iSpecType = g_esPlayer[tank].g_iInfectedType, iMin = iGetMinType(iSpecType, bTank), iMax = iGetMaxType(iSpecType, bTank);
+	int iClass = 8, iSpecType = g_esPlayer[tank].g_iInfectedType, iMin = iGetMinType(iSpecType, bTank), iMax = iGetMaxType(iSpecType, bTank);
 	iMin = (min >= 0) ? min : iMin;
 	iMax = (max >= 0) ? max : iMax;
 	if (iMax < iMin || (bIsSurvivalMode() && g_esGeneral.g_iSurvivalBlock != 2))
@@ -27000,8 +27068,8 @@ int iChooseType(int exclude, int tank = 0, int min = -1, int max = -1)
 	}
 
 	float flClose = 0.0, flOpen = 0.0, flRandom = GetRandomFloat(0.1, 100.0), flChance = 0.0;
-	int iBackupCount = 0, iBackupTypes[MT_MAXTYPES + 1], iCount = iGetTypeCount(tank),
-		iType = 0, iTypeCount = 0, iTypeLimit = 0, iTankTypes[MT_MAXTYPES + 1];
+	int iBackupCount = 0, iBackupTypes[MT_MAXTYPES + 1], iCycleCount = 0, iCycleTypes[MT_MAXTYPES + 1],
+		iCount = iGetTypeCount(tank), iType = 0, iTypeCount = 0, iTypeLimit = 0, iTankTypes[MT_MAXTYPES + 1];
 	for (int iIndex = iMin; iIndex <= iMax; iIndex++)
 	{
 		if (iIndex <= 0)
@@ -27011,12 +27079,14 @@ int iChooseType(int exclude, int tank = 0, int min = -1, int max = -1)
 
 		iType = g_esTank[iIndex].g_iRecordedType[0];
 		flChance = flGetTypeChance(tank, iType, iSpecType);
-		if (iSpecType > 0 && iSpecType != 8)
+		if (iSpecType > 0 && iSpecType != iClass)
 		{
 			flClose = g_esSpecial[iType].g_flCloseAreasOnly;
 			flOpen = g_esSpecial[iType].g_flOpenAreasOnly;
 			iTypeLimit = g_esSpecial[iType].g_iTypeLimit;
 		}
+
+		vRecycleType(iSpecType, iType, 0);
 
 		switch (exclude)
 		{
@@ -27061,12 +27131,25 @@ int iChooseType(int exclude, int tank = 0, int min = -1, int max = -1)
 			continue;
 		}
 
+		iCycleTypes[iCycleCount + 1] = iType;
+		iCycleCount++;
+
+		if (bIsTypeCycled(iSpecType, iType, 0))
+		{
+			continue;
+		}
+
 		iTankTypes[iTypeCount + 1] = iType;
 		iTypeCount++;
 	}
 
-	int iBackup = (iBackupCount > 0) ? iBackupTypes[MT_GetRandomInt(1, iBackupCount)] : 0;
-	return (iTypeCount > 0) ? iTankTypes[MT_GetRandomInt(1, iTypeCount)] : iBackup;
+	g_esGeneral.g_bRecycleTypes[0] = iSpecType == iClass && iTypeCount <= 0 && iCycleCount > 0;
+	g_esSpecific.g_bRecycleTypes[0] = iSpecType == iClass && iTypeCount <= 0 && iCycleCount > 0;
+	int iFinalCount = (iTypeCount > 0) ? iTypeCount : iCycleCount, iBackup = (iBackupCount > 0) ? iBackupTypes[MT_GetRandomInt(1, iBackupCount)] : 0, iChosen = (iFinalCount > 0) ? iTankTypes[MT_GetRandomInt(1, iFinalCount)] : iBackup;
+	g_esTank[iChosen].g_bTypeCycled[0] = iSpecType == iClass;
+	g_esSpecial[iChosen].g_bTypeCycled[0] = iSpecType != iClass;
+
+	return iChosen;
 }
 
 int iFindSectionType(const char[] section, int type)
