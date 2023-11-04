@@ -206,6 +206,14 @@
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Bullet Fix"				"1"
 
+			// Kick Mutant Infected as soon as they die.
+			// Note: Both games usually wait around 5 seconds by default before kicking infected bots.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Kick Bots"				"0"
+
 			// Enable Mutant Tanks on listen servers.
 			// Note: This setting has a convar equivalent (mt_listensupport).
 			// Note: Supporting listen servers only extends to SourceMod's own limits.

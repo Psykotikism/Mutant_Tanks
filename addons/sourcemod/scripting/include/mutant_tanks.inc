@@ -159,6 +159,18 @@ public void __pl_mutanttanks_SetNTVOptional()
 #define MT_REWARD_REFILL (1 << 7) // refill reward
 #define MT_REWARD_RESPAWN (1 << 8) // respawn reward
 #define MT_REWARD_INFAMMO (1 << 9) // infinite primary ammo reward
+#define MT_REWARD_DEVELOPER (1 << 10) // access level 1
+#define MT_REWARD_DEVELOPER2 (1 << 11) // access level 2
+#define MT_REWARD_DEVELOPER3 (1 << 12) // access level 3
+#define MT_REWARD_DEVELOPER4 (1 << 13) // access level 4
+#define MT_REWARD_DEVELOPER5 (1 << 14) // access level 5
+#define MT_REWARD_DEVELOPER6 (1 << 15) // access level 6
+#define MT_REWARD_DEVELOPER7 (1 << 16) // access level 7
+#define MT_REWARD_DEVELOPER8 (1 << 17) // access level 8
+#define MT_REWARD_DEVELOPER9 (1 << 18) // access level 9
+#define MT_REWARD_DEVELOPER10 (1 << 19) // access level 10
+#define MT_REWARD_DEVELOPER11 (1 << 20) // access level 11
+#define MT_REWARD_DEVELOPER12 (1 << 21) // access level 12
 
 // Special ammo types
 #define MT_UPGRADE_INCENDIARY (1 << 0) // incendiary ammo
@@ -1464,6 +1476,15 @@ stock void vFixPlayerPosition(int client)
 
 			delete hTrace;
 		}
+	}
+}
+
+stock void vForceVocalize(int survivor, const char[] voiceline)
+{
+	switch (bIsSecondGame())
+	{
+		case true: FakeClientCommand(survivor, "vocalize %s #%i", voiceline, RoundToNearest(GetGameTime() * 10.0));
+		case false: FakeClientCommand(survivor, "vocalize %s", voiceline);
 	}
 }
 
@@ -4103,6 +4124,20 @@ stock int iGetSubSettingValue(bool apply, bool human, int teamVal, int playerVal
 	}
 
 	return (overrideLevel == 1) ? -1 : 0;
+}
+
+stock int iGetSurvivorAttacker(int survivor)
+{
+	int iSpecial = GetEntPropEnt(survivor, Prop_Send, "m_pounceAttacker");
+	iSpecial = (iSpecial <= 0) ? GetEntPropEnt(survivor, Prop_Send, "m_tongueOwner") : iSpecial;
+	if (bIsSecondGame())
+	{
+		iSpecial = (iSpecial <= 0) ? GetEntPropEnt(survivor, Prop_Send, "m_pummelAttacker") : iSpecial;
+		iSpecial = (iSpecial <= 0) ? GetEntPropEnt(survivor, Prop_Send, "m_carryAttacker") : iSpecial;
+		iSpecial = (iSpecial <= 0) ? GetEntPropEnt(survivor, Prop_Send, "m_jockeyAttacker") : iSpecial;
+	}
+
+	return iSpecial;
 }
 
 stock int iGetSurvivorCount(bool human = false)

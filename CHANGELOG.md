@@ -4,6 +4,9 @@
 
 ### Bug Fixes
 
+#### General
+- Fixed translation phrase errors. (Thanks to `SpannerV2` for reporting!)
+
 #### Core Plugin
 - Fixed the issue with unkillable zombies when the plugin is disabled. (Thanks to `bedildewo` for reporting!)
 - Fixed the following settings not being overridden properly for special infected:
@@ -17,6 +20,7 @@
 - Fixed the issue with Tanks being assigned the wrong Mutant types. (Thanks to `thewintersoldier97` for reporting!)
 - Fixed the issue with no Mutant types being chosen when the `Tank Chance`/`Special Chance` setting is less than `100.0%`. (Thanks to `SpannerV2` for reporting!)
 - Fixed the issue with some Mutant types not showing up due to the `Check Abilities` setting. (Thanks to `SpannerV2` for reporting!)
+- Fixed the `Reward` system giving rewards in some cases while disabled.
 
 #### Settings
 - Fixed several settings not being cached.
@@ -68,7 +72,9 @@
 	- `CTerrorPlayer::SelectWeightedSequence` (L4D2)
 
 #### Settings
-- Added the `Cycle Types` setting under the `Plugin Settings->General` section.
+- Added the following settings under the `Plugin Settings->General` section:
+	- `Cycle Types`
+	- `Kick Bots` (Thanks to `Marttt` for the idea!)
 - The `Attack Interval` setting now properly modifies the cooldown and frequency of Mutant Infected claw swings. (Thanks to `epzminion` for helping!)
 - The `Skip Taunt` setting now works in L4D1 and for Mutant Special Infected.
 - Added the following settings under the `Plugin Settings->Rewards`, `Tank #->Rewards`, and `STEAM_ID->Rewards` sections:

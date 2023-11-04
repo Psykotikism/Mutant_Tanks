@@ -1063,7 +1063,8 @@ void vSmite(int tank, int survivor, int messages, int flags)
 			{
 				case 1:
 				{
-					vDamagePlayer(survivor, tank, float(GetEntProp(survivor, Prop_Data, "m_iHealth")));
+					SetEntProp(survivor, Prop_Send, "m_isIncapacitated", 1);
+					SetEntPropFloat(survivor, Prop_Send, "m_healthBuffer", 1.0);
 					vDamagePlayer(survivor, tank, float(GetEntProp(survivor, Prop_Data, "m_iHealth")));
 				}
 				case 2: vDamagePlayer(survivor, tank, float(GetEntProp(survivor, Prop_Data, "m_iHealth")));
@@ -1071,7 +1072,8 @@ void vSmite(int tank, int survivor, int messages, int flags)
 		}
 		case 1:
 		{
-			vDamagePlayer(survivor, tank, float(GetEntProp(survivor, Prop_Data, "m_iHealth")));
+			SetEntProp(survivor, Prop_Send, "m_isIncapacitated", 1);
+			SetEntPropFloat(survivor, Prop_Send, "m_healthBuffer", 1.0);
 			vDamagePlayer(survivor, tank, float(GetEntProp(survivor, Prop_Data, "m_iHealth")));
 		}
 		case 2: vDamagePlayer(survivor, tank, float(GetEntProp(survivor, Prop_Data, "m_iHealth")));

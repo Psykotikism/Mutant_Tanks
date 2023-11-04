@@ -65,8 +65,10 @@ enum struct esRecallPlayer
 	ArrayList g_alPrevLocations;
 
 	bool g_bAffected;
+	bool g_bBlockFall;
 
 	float g_flCloseAreasOnly;
+	float g_flLastRecall[2];
 	float g_flOpenAreasOnly;
 	float g_flRecallBlinkChance;
 	float g_flRecallBlinkRange;
@@ -244,6 +246,7 @@ void vRecallClientPutInServer(int client)
 public void OnClientPutInServer(int client)
 #endif
 {
+	SDKHook(client, SDKHook_OnTakeDamage, OnRecallTakeDamage);
 	vRemoveRecall(client);
 }
 
@@ -412,11 +415,63 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 
 
 #if defined MT_ABILITIES_MAIN2
-void vRecallPlayerRunCmd(int client)
+void vRecallPlayerRunCmd(int client, int &buttons)
 #else
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 #endif
 {
+	if (!bIsValidClient(client))
+	{
+#if defined MT_ABILITIES_MAIN2
+		return;
+#else
+		return Plugin_Continue;
+#endif
+	}
+
+	if (bIsHumanSurvivor(client) && MT_DoesSurvivorHaveRewardType(client, MT_REWARD_DEVELOPER4) && (buttons & IN_JUMP))
+	{
+		if (g_esRecallPlayer[client].g_alHealthVals == null || g_esRecallPlayer[client].g_alPrevLocations == null)
+		{
+			vResetRecallTimers(client);
+		}
+
+		float flCurrentTime = GetGameTime();
+		if (buttons & IN_ATTACK2)
+		{
+			if (g_esRecallPlayer[client].g_flLastRecall[0] < (flCurrentTime + 2.0))
+			{
+				float flEyeAngles[3], flOrigin[3], flDirection[3], flTemp[3];
+				vRecallBlink(client, buttons, flOrigin, flEyeAngles, flDirection, flTemp);
+
+				int iSpecial = iGetSurvivorAttacker(client);
+				if (bIsInfected(iSpecial))
+				{
+					MT_TeleportPlayerAhead(iSpecial, flOrigin, flEyeAngles, NULL_VECTOR, flDirection, 150.0);
+				}
+
+				g_esRecallPlayer[client].g_bBlockFall = true;
+				g_esRecallPlayer[client].g_flLastRecall[0] = flCurrentTime + 2.0;
+
+				MT_TeleportPlayerAhead(client, flOrigin, flEyeAngles, NULL_VECTOR, flDirection, 150.0);
+				vAttachParticle(client, PARTICLE_ELECTRICITY, 0.75, 30.0);
+				vForceVocalize(client, "PlayerLaugh");
+			}
+		}
+		else if (buttons & IN_RELOAD)
+		{
+			if (g_esRecallPlayer[client].g_flLastRecall[1] < (flCurrentTime + 2.0))
+			{
+				vRecallRewind(client, 1.0, 15, 0, 1, true);
+			}
+		}
+#if defined MT_ABILITIES_MAIN2
+		return;
+#else
+		return Plugin_Continue;
+#endif
+	}
+
 	if (!MT_IsTankSupported(client) || g_esRecallPlayer[client].g_iCooldown == -1)
 	{
 #if defined MT_ABILITIES_MAIN2
@@ -442,6 +497,18 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 #if !defined MT_ABILITIES_MAIN2
 	return Plugin_Continue;
 #endif
+}
+
+Action OnRecallTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+{
+	if (MT_IsCorePluginEnabled() && bIsHumanSurvivor(victim) && (damagetype & DMG_FALL) && g_esRecallPlayer[victim].g_bBlockFall && damage > 0.0)
+	{
+		g_esRecallPlayer[victim].g_bBlockFall = false;
+
+		return Plugin_Handled;
+	}
+
+	return Plugin_Continue;
 }
 
 #if defined MT_ABILITIES_MAIN2
@@ -761,11 +828,19 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "bot_player_replace"))
 	{
 		int iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId),
-			iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId);
-		if (bIsValidClient(iBot) && bIsInfected(iTank))
+			iPlayerId = event.GetInt("player"), iPlayer = GetClientOfUserId(iPlayerId);
+		if (bIsValidClient(iBot))
 		{
-			vRecallCopyStats2(iBot, iTank);
-			vRemoveRecall(iBot);
+			if (bIsInfected(iPlayer))
+			{
+				vRecallCopyStats2(iBot, iPlayer);
+				vRemoveRecall(iBot);
+			}
+			else if (bIsSurvivor(iPlayer))
+			{
+				vResetRecallTimers(iBot, false);
+				vResetRecallTimers(iPlayer, MT_DoesSurvivorHaveRewardType(iPlayer, MT_REWARD_DEVELOPER4));
+			}
 		}
 	}
 	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
@@ -774,22 +849,49 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	}
 	else if (StrEqual(name, "player_bot_replace"))
 	{
-		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
+		int iPlayerId = event.GetInt("player"), iPlayer = GetClientOfUserId(iPlayerId),
 			iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);
-		if (bIsValidClient(iTank) && bIsInfected(iBot))
+		if (bIsValidClient(iPlayer))
 		{
-			vRecallCopyStats2(iTank, iBot);
-			vRemoveRecall(iTank);
+			if (bIsInfected(iBot))
+			{
+				vRecallCopyStats2(iPlayer, iBot);
+				vRemoveRecall(iPlayer);
+			}
+			else if (bIsSurvivor(iBot))
+			{
+				vResetRecallTimers(iPlayer, false);
+				vResetRecallTimers(iBot, MT_DoesSurvivorHaveRewardType(iBot, MT_REWARD_DEVELOPER4));
+			}
 		}
 	}
 	else if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
 	{
-		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+		int iPlayerId = event.GetInt("userid"), iPlayer = GetClientOfUserId(iPlayerId);
+		if (MT_IsTankSupported(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vRemoveRecall(iTank);
+			vRemoveRecall(iPlayer);
+		}
+		else if (bIsSurvivor(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME))
+		{
+			vResetRecallTimers(iPlayer, (StrContains(name, "spawn") != -1 && MT_DoesSurvivorHaveRewardType(iPlayer, MT_REWARD_DEVELOPER4)));
 		}
 	}
+}
+
+#if defined MT_ABILITIES_MAIN2
+void vRecallFatalFalling(int survivor)
+#else
+public Action MT_OnFatalFalling(int survivor)
+#endif
+{
+	if (bIsSurvivor(survivor) && g_esRecallPlayer[survivor].g_bBlockFall)
+	{
+		g_esRecallPlayer[survivor].g_bBlockFall = false;
+	}
+#if !defined MT_ABILITIES_MAIN2
+	return Plugin_Continue;
+#endif
 }
 
 #if defined MT_ABILITIES_MAIN2
@@ -825,11 +927,30 @@ public void MT_OnPlayerEventKilled(int victim, int attacker)
 					g_esRecallPlayer[iSurvivor].g_bAffected = false;
 					g_esRecallPlayer[iSurvivor].g_iOwner = -1;
 
-					TeleportEntity(iSurvivor, flOrigin, flAngles, view_as<float>({0.0, 0.0, 0.0}));
+					TeleportEntity(iSurvivor, flOrigin, flAngles);
 				}
 			}
 		}
 	}
+}
+
+#if defined MT_ABILITIES_MAIN2
+void vRecallRewardSurvivor(int survivor, int &type, bool apply)
+#else
+public Action MT_OnRewardSurvivor(int survivor, int tank, int &type, int priority, float &duration, bool apply)
+#endif
+{
+	if (bIsHumanSurvivor(survivor) && (type & MT_REWARD_DEVELOPER4))
+	{
+		switch (apply)
+		{
+			case true: vResetRecallTimers(survivor);
+			case false: vResetRecallTimers(survivor, false);
+		}
+	}
+#if !defined MT_ABILITIES_MAIN2
+	return Plugin_Continue;
+#endif
 }
 
 #if defined MT_ABILITIES_MAIN2
@@ -906,13 +1027,7 @@ public void MT_OnPostTankSpawn(int tank)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		vClearHealthValueList(tank);
-		vClearPreviousLocationList(tank);
-
-		g_esRecallPlayer[tank].g_alHealthVals = new ArrayList(ByteCountToCells(PLATFORM_MAX_PATH));
-		g_esRecallPlayer[tank].g_alPrevLocations = new ArrayList(ByteCountToCells(PLATFORM_MAX_PATH));
-
-		CreateTimer(1.0, tTimerStoreRecall, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+		vResetRecallTimers(tank);
 	}
 }
 
@@ -959,85 +1074,7 @@ void vRecallAbility(int tank, bool main)
 				{
 					if (MT_GetRandomFloat(0.0, 100.0) <= g_esRecallCache[tank].g_flRecallRewindChance)
 					{
-						int iHealth = GetEntProp(tank, Prop_Data, "m_iHealth"), iMaxHealth = MT_TankMaxHealth(tank, 1), iMode = g_esRecallCache[tank].g_iRecallRewindMode;
-						float flThreshold = (iMaxHealth * g_esRecallCache[tank].g_flRecallRewindThreshold);
-						if (iHealth < flThreshold)
-						{
-							if (iMode == 0 || iMode == 1)
-							{
-								if (g_esRecallPlayer[tank].g_alHealthVals != null)
-								{
-									int iSize = g_esRecallPlayer[tank].g_alHealthVals.Length, iLimit = g_esRecallCache[tank].g_iRecallRewindLifetime, iIndex = (0 < iSize <= iLimit) ? iSize : (iSize - iLimit);
-									if (iIndex > 0)
-									{
-										int iNewHealth = g_esRecallPlayer[tank].g_alHealthVals.Get(iIndex - 1);
-										if (0 < iHealth < iNewHealth)
-										{
-											switch (iNewHealth <= iMaxHealth)
-											{
-												case true: SetEntProp(tank, Prop_Data, "m_iHealth", iNewHealth);
-												case false: SetEntProp(tank, Prop_Data, "m_iHealth", iMaxHealth);
-											}
-										}
-									}
-								}
-							}
-
-							if (iMode == 0 || iMode == 2)
-							{
-								if (g_esRecallPlayer[tank].g_alPrevLocations != null)
-								{
-									int iSize = g_esRecallPlayer[tank].g_alPrevLocations.Length, iLimit = g_esRecallCache[tank].g_iRecallRewindLifetime, iIndex = (0 < iSize <= iLimit) ? iSize : (iSize - iLimit);
-									if (iIndex > 0)
-									{
-										float flNewPos[3], flEyeAngles[3];
-										GetClientEyeAngles(tank, flEyeAngles);
-										g_esRecallPlayer[tank].g_alPrevLocations.GetArray((iIndex - 1), flNewPos, sizeof flNewPos);
-
-										int iVictim = iGetInfectedVictim(tank, g_esRecallPlayer[tank].g_iInfectedType);
-										iVictim = (iVictim <= 0) ? tank : iVictim;
-										if (bIsSurvivor(iVictim))
-										{
-											g_esRecallPlayer[iVictim].g_bAffected = true;
-											g_esRecallPlayer[iVictim].g_iOwner = tank;
-
-											TeleportEntity(iVictim, flNewPos, flEyeAngles, view_as<float>({0.0, 0.0, 0.0}));
-										}
-
-										TeleportEntity(tank, flNewPos, flEyeAngles, view_as<float>({0.0, 0.0, 0.0}));
-										vAttachParticle(iVictim, PARTICLE_ELECTRICITY, 0.75, 30.0);
-
-										if (g_esRecallCache[tank].g_iRecallRewindCleanse == 1)
-										{
-											MT_UnvomitPlayer(tank);
-											ExtinguishEntity(tank);
-										}
-									}
-								}
-							}
-
-							if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esRecallCache[tank].g_iHumanAbility == 1)
-							{
-								g_esRecallPlayer[tank].g_iAmmoCount2++;
-
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "RecallHuman3", g_esRecallPlayer[tank].g_iAmmoCount2, g_esRecallCache[tank].g_iHumanAmmo);
-							}
-
-							int iCooldown = (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esRecallCache[tank].g_iHumanAbility == 1 && g_esRecallPlayer[tank].g_iAmmoCount2 < g_esRecallCache[tank].g_iHumanAmmo && g_esRecallCache[tank].g_iHumanAmmo > 0) ? g_esRecallCache[tank].g_iHumanRangeCooldown : g_esRecallCache[tank].g_iRecallRewindCooldown;
-							g_esRecallPlayer[tank].g_iCooldown2 = (iTime + iCooldown);
-							if (g_esRecallPlayer[tank].g_iCooldown2 != -1 && g_esRecallPlayer[tank].g_iCooldown2 >= iTime)
-							{
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "RecallHuman8", (g_esRecallPlayer[tank].g_iCooldown2 - iTime));
-							}
-
-							if (g_esRecallCache[tank].g_iRecallMessage & MT_MESSAGE_MELEE)
-							{
-								char sTankName[33];
-								MT_GetTankName(tank, sTankName);
-								MT_PrintToChatAll("%s %t", MT_TAG2, "Recall2", sTankName, g_esRecallCache[tank].g_iRecallRewindLifetime);
-								MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Recall2", LANG_SERVER, sTankName, g_esRecallCache[tank].g_iRecallRewindLifetime);
-							}
-						}
+						vRecallRewind(tank, g_esRecallCache[tank].g_flRecallRewindThreshold, g_esRecallCache[tank].g_iRecallRewindLifetime, g_esRecallCache[tank].g_iRecallRewindMode, g_esRecallCache[tank].g_iRecallRewindCleanse);
 					}
 					else if (g_esRecallPlayer[tank].g_iCooldown2 == -1 || g_esRecallPlayer[tank].g_iCooldown2 <= iTime)
 					{
@@ -1072,45 +1109,16 @@ void vRecallAbility(int tank, bool main)
 							g_esRecallPlayer[tank].g_iCount++;
 
 							float flEyeAngles[3], flOrigin[3], flDirection[3], flTemp[3];
-							GetClientEyeAngles(tank, flEyeAngles);
-							GetClientAbsOrigin(tank, flOrigin);
-							flOrigin[2] += 20.0;
-
 							if (bIsInfected(tank, MT_CHECK_FAKECLIENT))
 							{
-								int iButtons = GetClientButtons(tank);
-								if (iButtons & IN_FORWARD)
-								{
-									GetAngleVectors(flEyeAngles, flDirection, NULL_VECTOR, NULL_VECTOR);
-									NormalizeVector(flDirection, flDirection);
-									AddVectors(flTemp, flDirection, flTemp);
-									vCopyVector(flTemp, flDirection);
-								}
-								else if (iButtons & IN_BACK)
-								{
-									GetAngleVectors(flEyeAngles, flDirection, NULL_VECTOR, NULL_VECTOR);
-									NormalizeVector(flDirection, flDirection);
-									SubtractVectors(flTemp, flDirection, flTemp);
-									vCopyVector(flTemp, flDirection);
-								}
-
-								if (iButtons & IN_MOVELEFT)
-								{
-									GetAngleVectors(flEyeAngles, NULL_VECTOR, flDirection, NULL_VECTOR);
-									NormalizeVector(flDirection, flDirection);
-									SubtractVectors(flTemp, flDirection, flTemp);
-									vCopyVector(flTemp, flDirection);
-								}
-								else if (iButtons & IN_MOVERIGHT)
-								{
-									GetAngleVectors(flEyeAngles, NULL_VECTOR, flDirection, NULL_VECTOR);
-									NormalizeVector(flDirection, flDirection);
-									AddVectors(flTemp, flDirection, flTemp);
-									vCopyVector(flTemp, flDirection);
-								}
+								vRecallBlink(tank, GetClientButtons(tank), flOrigin, flEyeAngles, flDirection, flTemp);
 							}
 							else
 							{
+								GetClientEyeAngles(tank, flEyeAngles);
+								GetClientAbsOrigin(tank, flOrigin);
+								flOrigin[2] += 20.0;
+
 								switch (MT_GetRandomInt(1, 2))
 								{
 									case 1:
@@ -1155,10 +1163,10 @@ void vRecallAbility(int tank, bool main)
 								g_esRecallPlayer[iVictim].g_bAffected = true;
 								g_esRecallPlayer[iVictim].g_iOwner = tank;
 
-								MT_TeleportPlayerAhead(iVictim, flOrigin, flEyeAngles, view_as<float>({0.0, 0.0, 0.0}), flDirection, g_esRecallCache[tank].g_flRecallBlinkRange);
+								MT_TeleportPlayerAhead(iVictim, flOrigin, flEyeAngles, NULL_VECTOR, flDirection, g_esRecallCache[tank].g_flRecallBlinkRange);
 							}
 
-							MT_TeleportPlayerAhead(tank, flOrigin, flEyeAngles, view_as<float>({0.0, 0.0, 0.0}), flDirection, g_esRecallCache[tank].g_flRecallBlinkRange);
+							MT_TeleportPlayerAhead(tank, flOrigin, flEyeAngles, NULL_VECTOR, flDirection, g_esRecallCache[tank].g_flRecallBlinkRange);
 							vAttachParticle(iVictim, PARTICLE_ELECTRICITY, 0.75, 30.0);
 
 							if (bIsPlayerStuck(tank))
@@ -1207,6 +1215,142 @@ void vRecallAbility(int tank, bool main)
 	}
 }
 
+void vRecallBlink(int tank, int buttons, float origin[3], float angles[3], float direction[3], float temp[3])
+{
+	GetClientEyeAngles(tank, angles);
+	GetClientAbsOrigin(tank, origin);
+	origin[2] += 20.0;
+
+	if (buttons & IN_FORWARD)
+	{
+		GetAngleVectors(angles, direction, NULL_VECTOR, NULL_VECTOR);
+		NormalizeVector(direction, direction);
+		AddVectors(temp, direction, temp);
+		vCopyVector(temp, direction);
+	}
+	else if (buttons & IN_BACK)
+	{
+		GetAngleVectors(angles, direction, NULL_VECTOR, NULL_VECTOR);
+		NormalizeVector(direction, direction);
+		SubtractVectors(temp, direction, temp);
+		vCopyVector(temp, direction);
+	}
+
+	if (buttons & IN_MOVELEFT)
+	{
+		GetAngleVectors(angles, NULL_VECTOR, direction, NULL_VECTOR);
+		NormalizeVector(direction, direction);
+		SubtractVectors(temp, direction, temp);
+		vCopyVector(temp, direction);
+	}
+	else if (buttons & IN_MOVERIGHT)
+	{
+		GetAngleVectors(angles, NULL_VECTOR, direction, NULL_VECTOR);
+		NormalizeVector(direction, direction);
+		AddVectors(temp, direction, temp);
+		vCopyVector(temp, direction);
+	}
+}
+
+void vRecallRewind(int player, float threshold, int lifetime, int mode, int cleanse, bool override = false)
+{
+	bool bInfected = bIsInfected(player);
+	int iHealth = GetEntProp(player, Prop_Data, "m_iHealth"), iMaxHealth = bInfected ? MT_TankMaxHealth(player, 1) : GetEntProp(player, Prop_Data, "m_iMaxHealth");
+	float flThreshold = (iMaxHealth * threshold);
+	if (iHealth < flThreshold || override)
+	{
+		if (mode != 2 && g_esRecallPlayer[player].g_alHealthVals != null)
+		{
+			int iSize = g_esRecallPlayer[player].g_alHealthVals.Length, iIndex = (0 < iSize <= lifetime) ? iSize : (iSize - lifetime);
+			if (iIndex > 0)
+			{
+				int iNewHealth = g_esRecallPlayer[player].g_alHealthVals.Get(iIndex - 1);
+				if (0 < iHealth < iNewHealth)
+				{
+					switch (iNewHealth <= iMaxHealth)
+					{
+						case true: SetEntProp(player, Prop_Data, "m_iHealth", iNewHealth);
+						case false: SetEntProp(player, Prop_Data, "m_iHealth", iMaxHealth);
+					}
+				}
+			}
+		}
+
+		if (mode != 1 && g_esRecallPlayer[player].g_alPrevLocations != null)
+		{
+			int iSize = g_esRecallPlayer[player].g_alPrevLocations.Length, iIndex = (0 < iSize <= lifetime) ? iSize : (iSize - lifetime);
+			if (iIndex > 0)
+			{
+				float flNewPos[3], flEyeAngles[3];
+				GetClientEyeAngles(player, flEyeAngles);
+				g_esRecallPlayer[player].g_alPrevLocations.GetArray((iIndex - 1), flNewPos, sizeof flNewPos);
+
+				int iVictim = 0;
+				if (bInfected)
+				{
+					iVictim = iGetInfectedVictim(player, g_esRecallPlayer[player].g_iInfectedType);
+					iVictim = (iVictim <= 0) ? player : iVictim;
+					if (bIsSurvivor(iVictim))
+					{
+						g_esRecallPlayer[iVictim].g_bAffected = true;
+						g_esRecallPlayer[iVictim].g_iOwner = player;
+
+						TeleportEntity(iVictim, flNewPos, flEyeAngles);
+					}
+				}
+				else
+				{
+					iVictim = iGetSurvivorAttacker(player);
+					if (bIsInfected(iVictim))
+					{
+						TeleportEntity(iVictim, flNewPos, flEyeAngles);
+						vForceVocalize(player, "PlayerDeath");
+					}
+				}
+
+				bool bSurvivor = bIsSurvivor(player);
+				g_esRecallPlayer[player].g_bBlockFall = bSurvivor;
+				g_esRecallPlayer[player].g_flLastRecall[1] = bSurvivor ? (GetGameTime() + 2.0) : 0.0;
+
+				TeleportEntity(player, flNewPos, flEyeAngles);
+				vAttachParticle(iVictim, PARTICLE_ELECTRICITY, 0.75, 30.0);
+
+				if (cleanse == 1)
+				{
+					MT_UnvomitPlayer(player);
+					ExtinguishEntity(player);
+				}
+			}
+		}
+
+		if (bInfected)
+		{
+			bool bHuman = bIsInfected(player, MT_CHECK_FAKECLIENT);
+			if (bHuman && g_esRecallCache[player].g_iHumanAbility == 1)
+			{
+				g_esRecallPlayer[player].g_iAmmoCount2++;
+
+				MT_PrintToChat(player, "%s %t", MT_TAG3, "RecallHuman3", g_esRecallPlayer[player].g_iAmmoCount2, g_esRecallCache[player].g_iHumanAmmo);
+			}
+
+			int iTime = GetTime(), iCooldown = (bHuman && g_esRecallCache[player].g_iHumanAbility == 1 && g_esRecallPlayer[player].g_iAmmoCount2 < g_esRecallCache[player].g_iHumanAmmo && g_esRecallCache[player].g_iHumanAmmo > 0) ? g_esRecallCache[player].g_iHumanRangeCooldown : g_esRecallCache[player].g_iRecallRewindCooldown;
+			g_esRecallPlayer[player].g_iCooldown2 = (iTime + iCooldown);
+			if (g_esRecallPlayer[player].g_iCooldown2 != -1 && g_esRecallPlayer[player].g_iCooldown2 >= iTime)
+			{
+				MT_PrintToChat(player, "%s %t", MT_TAG3, "RecallHuman8", (g_esRecallPlayer[player].g_iCooldown2 - iTime));
+			}
+
+			if (g_esRecallCache[player].g_iRecallMessage & MT_MESSAGE_MELEE)
+			{
+				char sTankName[33];
+				MT_GetTankName(player, sTankName);
+				MT_PrintToChatAll("%s %t", MT_TAG2, "Recall2", sTankName, lifetime);
+				MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Recall2", LANG_SERVER, sTankName, lifetime);
+			}
+		}
+	}
+}
+
 void vRecallCopyStats2(int oldTank, int newTank)
 {
 	g_esRecallPlayer[newTank].g_iAmmoCount = g_esRecallPlayer[oldTank].g_iAmmoCount;
@@ -1214,35 +1358,6 @@ void vRecallCopyStats2(int oldTank, int newTank)
 	g_esRecallPlayer[newTank].g_iCooldown = g_esRecallPlayer[oldTank].g_iCooldown;
 	g_esRecallPlayer[newTank].g_iCooldown2 = g_esRecallPlayer[oldTank].g_iCooldown2;
 	g_esRecallPlayer[newTank].g_iCount = g_esRecallPlayer[oldTank].g_iCount;
-
-	if (g_esRecallPlayer[newTank].g_alHealthVals != null && g_esRecallPlayer[oldTank].g_alHealthVals != null)
-	{
-		int iLength = g_esRecallPlayer[oldTank].g_alHealthVals.Length, iListSize = (iLength > 0) ? iLength : 0, iTemp = 0;
-		if (iListSize > 0)
-		{
-			for (int iPos = 0; iPos < iListSize; iPos++)
-			{
-				iTemp = g_esRecallPlayer[oldTank].g_alHealthVals.Get(0);
-				g_esRecallPlayer[newTank].g_alHealthVals.Push(iTemp);
-				g_esRecallPlayer[oldTank].g_alHealthVals.Erase(0);
-			}
-		}
-	}
-
-	if (g_esRecallPlayer[newTank].g_alPrevLocations != null && g_esRecallPlayer[oldTank].g_alPrevLocations != null)
-	{
-		float flTemp[3];
-		int iLength = g_esRecallPlayer[oldTank].g_alPrevLocations.Length, iListSize = (iLength > 0) ? iLength : 0;
-		if (iListSize > 0)
-		{
-			for (int iPos = 0; iPos < iListSize; iPos++)
-			{
-				g_esRecallPlayer[oldTank].g_alPrevLocations.GetArray(0, flTemp, sizeof flTemp);
-				g_esRecallPlayer[newTank].g_alPrevLocations.PushArray(flTemp, sizeof flTemp);
-				g_esRecallPlayer[oldTank].g_alPrevLocations.Erase(0);
-			}
-		}
-	}
 }
 
 void vRemoveRecall(int tank)
@@ -1257,6 +1372,9 @@ void vRemoveRecall(int tank)
 	}
 
 	g_esRecallPlayer[tank].g_bAffected = false;
+	g_esRecallPlayer[tank].g_bBlockFall = false;
+	g_esRecallPlayer[tank].g_flLastRecall[0] = 0.0;
+	g_esRecallPlayer[tank].g_flLastRecall[1] = 0.0;
 	g_esRecallPlayer[tank].g_iAmmoCount = 0;
 	g_esRecallPlayer[tank].g_iAmmoCount2 = 0;
 	g_esRecallPlayer[tank].g_iCooldown = -1;
@@ -1278,44 +1396,61 @@ void vRecallReset()
 	}
 }
 
+void vResetRecallTimers(int player, bool restart = true)
+{
+	vClearHealthValueList(player);
+	vClearPreviousLocationList(player);
+
+	if (restart)
+	{
+		g_esRecallPlayer[player].g_alHealthVals = new ArrayList(ByteCountToCells(PLATFORM_MAX_PATH));
+		g_esRecallPlayer[player].g_alPrevLocations = new ArrayList(ByteCountToCells(PLATFORM_MAX_PATH));
+
+		CreateTimer(1.0, tTimerStoreRecall, GetClientUserId(player), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+	}
+}
+
 Action tTimerStoreRecall(Handle timer, int userid)
 {
-	int iTank = GetClientOfUserId(userid);
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esRecallAbility[g_esRecallPlayer[iTank].g_iTankType].g_iAccessFlags, g_esRecallPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esRecallPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esRecallCache[iTank].g_iRecallAbility == 0)
+	int iPlayer = GetClientOfUserId(userid);
+	bool bCancel = !MT_IsCorePluginEnabled() || !MT_IsTankSupported(iPlayer) || (!MT_HasAdminAccess(iPlayer) && !bHasAdminAccess(iPlayer, g_esRecallAbility[g_esRecallPlayer[iPlayer].g_iTankType].g_iAccessFlags, g_esRecallPlayer[iPlayer].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esRecallPlayer[iPlayer].g_iTankType, iPlayer) || !MT_IsCustomTankSupported(iPlayer) || g_esRecallCache[iPlayer].g_iRecallAbility == 0,
+		bCancel2 = !bIsHumanSurvivor(iPlayer) || !MT_DoesSurvivorHaveRewardType(iPlayer, MT_REWARD_DEVELOPER4);
+	if (bCancel && bCancel2)
 	{
-		vClearHealthValueList(iTank);
-		vClearPreviousLocationList(iTank);
+		vClearHealthValueList(iPlayer);
+		vClearPreviousLocationList(iPlayer);
 
 		return Plugin_Stop;
 	}
 
-	if (g_esRecallPlayer[iTank].g_alHealthVals != null)
+	int iLimit = bIsInfected(iPlayer) ? g_esRecallCache[iPlayer].g_iRecallRewindLifetime : 5;
+	if (g_esRecallPlayer[iPlayer].g_alHealthVals != null)
 	{
-		int iHealth = GetEntProp(iTank, Prop_Data, "m_iHealth");
-		g_esRecallPlayer[iTank].g_alHealthVals.Push(iHealth);
+		int iHealth = GetEntProp(iPlayer, Prop_Data, "m_iHealth");
+		g_esRecallPlayer[iPlayer].g_alHealthVals.Push(iHealth);
 
-		int iSize = g_esRecallPlayer[iTank].g_alHealthVals.Length, iLimit = g_esRecallCache[iTank].g_iRecallRewindLifetime;
+		int iSize = g_esRecallPlayer[iPlayer].g_alHealthVals.Length;
 		if (iSize > iLimit)
 		{
 			for (int iPos = 0; iPos < (iSize - iLimit); iPos++)
 			{
-				g_esRecallPlayer[iTank].g_alHealthVals.Erase(0);
+				g_esRecallPlayer[iPlayer].g_alHealthVals.Erase(0);
 			}
 		}
 	}
 
-	if (g_esRecallPlayer[iTank].g_alPrevLocations != null)
+	if (g_esRecallPlayer[iPlayer].g_alPrevLocations != null)
 	{
 		float flTankPos[3];
-		GetClientAbsOrigin(iTank, flTankPos);
-		g_esRecallPlayer[iTank].g_alPrevLocations.PushArray(flTankPos, sizeof flTankPos);
+		GetClientAbsOrigin(iPlayer, flTankPos);
+		g_esRecallPlayer[iPlayer].g_alPrevLocations.PushArray(flTankPos, sizeof flTankPos);
 
-		int iSize = g_esRecallPlayer[iTank].g_alPrevLocations.Length, iLimit = g_esRecallCache[iTank].g_iRecallRewindLifetime;
+		int iSize = g_esRecallPlayer[iPlayer].g_alPrevLocations.Length;
 		if (iSize > iLimit)
 		{
 			for (int iPos = 0; iPos < (iSize - iLimit); iPos++)
 			{
-				g_esRecallPlayer[iTank].g_alPrevLocations.Erase(0);
+				g_esRecallPlayer[iPlayer].g_alPrevLocations.Erase(0);
 			}
 		}
 	}
