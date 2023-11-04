@@ -1194,7 +1194,8 @@ void vSmashHit(int survivor, int tank, float random, float chance, int enabled, 
 							{
 								case 1:
 								{
-									vDamagePlayer(survivor, tank, float(GetEntProp(survivor, Prop_Data, "m_iHealth")));
+									SetEntProp(survivor, Prop_Send, "m_isIncapacitated", 1);
+									SetEntPropFloat(survivor, Prop_Send, "m_healthBuffer", 1.0);
 									vDamagePlayer(survivor, tank, float(GetEntProp(survivor, Prop_Data, "m_iHealth")));
 								}
 								case 2: vDamagePlayer(survivor, tank, float(GetEntProp(survivor, Prop_Data, "m_iHealth")));
@@ -1202,7 +1203,8 @@ void vSmashHit(int survivor, int tank, float random, float chance, int enabled, 
 						}
 						case 1:
 						{
-							vDamagePlayer(survivor, tank, float(GetEntProp(survivor, Prop_Data, "m_iHealth")));
+							SetEntProp(survivor, Prop_Send, "m_isIncapacitated", 1);
+							SetEntPropFloat(survivor, Prop_Send, "m_healthBuffer", 1.0);
 							vDamagePlayer(survivor, tank, float(GetEntProp(survivor, Prop_Data, "m_iHealth")));
 						}
 						case 2: vDamagePlayer(survivor, tank, float(GetEntProp(survivor, Prop_Data, "m_iHealth")));

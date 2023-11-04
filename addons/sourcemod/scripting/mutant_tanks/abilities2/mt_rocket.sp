@@ -1455,7 +1455,8 @@ void tTimerRocketDetonate(Handle timer, DataPack pack)
 				{
 					case 1:
 					{
-						vDamagePlayer(iSurvivor, iTank, float(GetEntProp(iSurvivor, Prop_Data, "m_iHealth")));
+						SetEntProp(iSurvivor, Prop_Send, "m_isIncapacitated", 1);
+						SetEntPropFloat(iSurvivor, Prop_Send, "m_healthBuffer", 1.0);
 						vDamagePlayer(iSurvivor, iTank, float(GetEntProp(iSurvivor, Prop_Data, "m_iHealth")));
 					}
 					case 2: vDamagePlayer(iSurvivor, iTank, float(GetEntProp(iSurvivor, Prop_Data, "m_iHealth")));
@@ -1463,7 +1464,8 @@ void tTimerRocketDetonate(Handle timer, DataPack pack)
 			}
 			case 1:
 			{
-				vDamagePlayer(iSurvivor, iTank, float(GetEntProp(iSurvivor, Prop_Data, "m_iHealth")));
+				SetEntProp(iSurvivor, Prop_Send, "m_isIncapacitated", 1);
+				SetEntPropFloat(iSurvivor, Prop_Send, "m_healthBuffer", 1.0);
 				vDamagePlayer(iSurvivor, iTank, float(GetEntProp(iSurvivor, Prop_Data, "m_iHealth")));
 			}
 			case 2: vDamagePlayer(iSurvivor, iTank, float(GetEntProp(iSurvivor, Prop_Data, "m_iHealth")));

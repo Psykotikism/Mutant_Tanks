@@ -1039,7 +1039,8 @@ void vKamikazeHit(int survivor, int tank, float random, float chance, int enable
 						{
 							case 1:
 							{
-								vDamagePlayer(survivor, tank, float(GetEntProp(survivor, Prop_Data, "m_iHealth")));
+								SetEntProp(survivor, Prop_Send, "m_isIncapacitated", 1);
+								SetEntPropFloat(survivor, Prop_Send, "m_healthBuffer", 1.0);
 								vDamagePlayer(survivor, tank, float(GetEntProp(survivor, Prop_Data, "m_iHealth")));
 							}
 							case 2: vDamagePlayer(survivor, tank, float(GetEntProp(survivor, Prop_Data, "m_iHealth")));
@@ -1047,7 +1048,8 @@ void vKamikazeHit(int survivor, int tank, float random, float chance, int enable
 					}
 					case 1:
 					{
-						vDamagePlayer(survivor, tank, float(GetEntProp(survivor, Prop_Data, "m_iHealth")));
+						SetEntProp(survivor, Prop_Send, "m_isIncapacitated", 1);
+						SetEntPropFloat(survivor, Prop_Send, "m_healthBuffer", 1.0);
 						vDamagePlayer(survivor, tank, float(GetEntProp(survivor, Prop_Data, "m_iHealth")));
 					}
 					case 2: vDamagePlayer(survivor, tank, float(GetEntProp(survivor, Prop_Data, "m_iHealth")));
@@ -1055,7 +1057,7 @@ void vKamikazeHit(int survivor, int tank, float random, float chance, int enable
 
 				vAttachParticle(tank, PARTICLE_BLOOD, 0.1);
 				EmitSoundToAll((g_bSecondGame ? SOUND_GROWL2 : SOUND_GROWL1), tank);
-				ForcePlayerSuicide(tank);
+				vDamagePlayer(tank, survivor, float(GetEntProp(tank, Prop_Data, "m_iHealth")));
 				vScreenEffect(survivor, tank, g_esKamikazeCache[tank].g_iKamikazeEffect, flags);
 
 				if (g_esKamikazeCache[tank].g_iKamikazeMessage & messages)

@@ -921,7 +921,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	vPyroPlayerRunCmd(client);
 #endif
 #if defined MT_MENU_RECALL
-	vRecallPlayerRunCmd(client);
+	vRecallPlayerRunCmd(client, buttons);
 #endif
 #if defined MT_MENU_SHIELD
 	vShieldPlayerRunCmd(client);
@@ -2172,6 +2172,14 @@ public void MT_OnPostTankSpawn(int tank)
 	vAbilityPlayer(4, tank);
 }
 
+public Action MT_OnFatalFalling(int survivor)
+{
+#if defined MT_MENU_RECALL
+	vRecallFatalFalling(survivor);
+#endif
+	return Plugin_Continue;
+}
+
 public void MT_OnPlayerEventKilled(int victim, int attacker)
 {
 #if defined MT_MENU_NECRO
@@ -2225,6 +2233,9 @@ public Action MT_OnPlayerShovedBySurvivor(int player, int survivor, const float 
 
 public Action MT_OnRewardSurvivor(int survivor, int tank, int &type, int priority, float &duration, bool apply)
 {
+#if defined MT_MENU_RECALL
+	vRecallRewardSurvivor(survivor, type, apply);
+#endif
 	Action aReturn = Plugin_Continue;
 #if defined MT_MENU_RESPAWN
 	Action aResult = aRespawnRewardSurvivor(tank, priority, apply);
