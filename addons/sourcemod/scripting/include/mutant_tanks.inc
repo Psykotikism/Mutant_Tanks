@@ -1318,7 +1318,7 @@ stock void vAttachParticle(int entity, const char[] particlename, float duration
 				float flPos[3];
 				GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flPos);
 				flPos[2] += origin;
-				TeleportEntity(iParticle, flPos, NULL_VECTOR, NULL_VECTOR);
+				TeleportEntity(iParticle, flPos);
 			}
 
 			vSetEntityParent(iParticle, entity);
@@ -1339,7 +1339,7 @@ stock void vAttachParticle2(float pos[3], float angles[3], const char[] particle
 	if (bIsValidEntity(iParticle))
 	{
 		DispatchKeyValue(iParticle, "effect_name", particlename);
-		TeleportEntity(iParticle, pos, angles, NULL_VECTOR);
+		TeleportEntity(iParticle, pos, angles);
 		DispatchSpawn(iParticle);
 		ActivateEntity(iParticle);
 		AcceptEntityInput(iParticle, "Start");
@@ -1444,12 +1444,12 @@ stock void vExternalView(int player, float time)
 	}
 }
 
-stock void vFixPlayerPosition(int client)
+stock void vFixPlayerPosition(int client, bool noVelocity = true)
 {
 	if (bIsPlayerStuck(client))
 	{
 		float flPosZ = 0.1;
-		while (flPosZ <= 200.0 && !bIsPlayerPositionFixed(client, 10.0, flPosZ))
+		while (flPosZ <= 200.0 && !bIsPlayerPositionFixed(client, 10.0, flPosZ, noVelocity))
 		{
 			flPosZ = -flPosZ;
 			if (flPosZ > 0.0)
@@ -1471,7 +1471,7 @@ stock void vFixPlayerPosition(int client)
 			{
 				TR_GetEndPosition(flOrigin, hTrace);
 				flOrigin[2] += 10.0;
-				TeleportEntity(client, flOrigin, NULL_VECTOR, {0.0, 0.0, -300.0});
+				TeleportEntity(client, flOrigin, .velocity = (noVelocity ? view_as<float>({0.0, 0.0, -300.0}) : NULL_VECTOR));
 			}
 
 			delete hTrace;
@@ -1558,7 +1558,7 @@ stock void vPushNearbyEntities(int tank, float pos[3], float magnitude = 600.0, 
 		DispatchKeyValueFloat(iPointPush, "radius", radius);
 		DispatchKeyValue(iPointPush, "spawnflags", "8");
 
-		TeleportEntity(iPointPush, pos, NULL_VECTOR, NULL_VECTOR);
+		TeleportEntity(iPointPush, pos);
 		DispatchSpawn(iPointPush);
 		SetEntPropEnt(iPointPush, Prop_Data, "m_hOwnerEntity", tank);
 		AcceptEntityInput(iPointPush, "Enable");
@@ -1659,11 +1659,11 @@ stock void vSetTempHealth(int survivor, float health)
 	SetEntPropFloat(survivor, Prop_Send, "m_healthBufferTime", GetGameTime());
 }
 
-stock void vSetVector(float target[3], float x, float y, float z)
+stock void vSetVector(float target[3], float xAxis, float yAxis, float zAxis)
 {
-	target[0] = x;
-	target[1] = y;
-	target[2] = z;
+	target[0] = xAxis;
+	target[1] = yAxis;
+	target[2] = zAxis;
 }
 
 stock void vSetWounds(int common, int type = -1)
@@ -1693,7 +1693,7 @@ stock void vSpawnBreakProp(int tank, float pos[3], float offset, const char[] mo
 		SetEntityModel(iProp, model);
 
 		pos[2] += offset;
-		TeleportEntity(iProp, pos, NULL_VECTOR, NULL_VECTOR);
+		TeleportEntity(iProp, pos);
 		DispatchSpawn(iProp);
 
 		SetEntPropEnt(iProp, Prop_Data, "m_hOwnerEntity", tank);
@@ -1792,6 +1792,15 @@ stock void MT_PrintToChatAll(const char[] message, any ...)
 			MT_PrintToChat(iPlayer, sBuffer);
 		}
 	}
+}
+
+stock void MT_PrintToConsole(int client, const char[] message, any ...)
+{
+	char sBuffer[1024];
+	SetGlobalTransTarget(client);
+	VFormat(sBuffer, sizeof sBuffer, message, 3);
+	MT_ReplaceChatPlaceholders(sBuffer, sizeof sBuffer, true);
+	PrintToConsole(client, sBuffer);
 }
 
 stock void MT_PrintToServer(const char[] message, any ...)
@@ -1938,14 +1947,15 @@ stock void MT_TE_SetupStopAllParticles(int entity)
 	TE_WriteNum("m_nDamageType", 0);
 }
 
-stock void MT_TeleportPlayerAhead(int tank, const float origin[3], const float angles[3], const float velocity[3], const float direction[3], const float distance)
+stock void MT_TeleportPlayerAhead(int player, const float origin[3], const float angles[3], const float velocity[3], const float direction[3], const float distance)
 {
 	float flPos[3];
 	flPos[0] = origin[0] + (direction[0] * distance);
 	flPos[1] = origin[1] + (direction[1] * distance);
 	flPos[2] = origin[2];
 
-	TeleportEntity(tank, flPos, angles, velocity);
+	TeleportEntity(player, flPos, angles, velocity);
+	vFixPlayerPosition(player, false);
 }
 
 stock void MT_UnloadPlugin(Handle plugin = null)
@@ -1986,7 +1996,6 @@ stock bool MT_TE_CreateParticle(float startPos[3] = {0.0, 0.0, 0.0}, float endPo
 	}
 
 	TE_Start("EffectDispatch");
-
 	TE_WriteFloat((bSecondGame ? "m_vOrigin.x" : "m_vOrigin[0]"), startPos[0]);
 	TE_WriteFloat((bSecondGame ? "m_vOrigin.y" : "m_vOrigin[1]"), startPos[1]);
 	TE_WriteFloat((bSecondGame ? "m_vOrigin.z" : "m_vOrigin[2]"), startPos[2]);
@@ -2510,19 +2519,19 @@ stock bool bIsPlayerInThirdPerson(int player, int flags = MT_CHECK_INDEX|MT_CHEC
 	return bIsPlayerIncapacitated(player) || (bIsSecondGame() && GetEntPropFloat(player, Prop_Send, "m_TimeForceExternalView") > GetGameTime()) || GetEntPropFloat(player, Prop_Send, "m_staggerTimer", 1) > -1.0 || GetEntPropEnt(player, Prop_Send, "m_hViewEntity") > 0;
 }
 
-stock bool bIsPlayerPositionFixed(int client, float radius, float z)
+stock bool bIsPlayerPositionFixed(int client, float radius, float zAxis, bool noVelocity = true)
 {
 	float flDegreeAngle, flPos[3], flOrigin[3], flAngles[3];
 	GetClientAbsOrigin(client, flOrigin);
 	GetClientEyeAngles(client, flAngles);
-	flPos[2] = flOrigin[2] + z;
+	flPos[2] = flOrigin[2] + zAxis;
 
 	flDegreeAngle = -180.0;
 	while (flDegreeAngle < 180.0)
 	{
 		flPos[0] = (flOrigin[0] + (radius * Cosine(flDegreeAngle * (FLOAT_PI / 180))));
 		flPos[1] = (flOrigin[1] + (radius * Sine(flDegreeAngle * (FLOAT_PI / 180))));
-		TeleportEntity(client, flPos, flAngles, {0.0, 0.0, -300.0});
+		TeleportEntity(client, flPos, flAngles, .velocity = (noVelocity ? view_as<float>({0.0, 0.0, -300.0}) : NULL_VECTOR));
 
 		if (!bIsPlayerStuck(client))
 		{
@@ -2532,11 +2541,11 @@ stock bool bIsPlayerPositionFixed(int client, float radius, float z)
 		flDegreeAngle += 10.0;
 	}
 
-	TeleportEntity(client, flOrigin, flAngles, {0.0, 0.0, -300.0});
+	TeleportEntity(client, flOrigin, flAngles, .velocity = (noVelocity ? view_as<float>({0.0, 0.0, -300.0}) : NULL_VECTOR));
 
 	if (radius <= 200.0)
 	{
-		return bIsPlayerPositionFixed(client, (radius + 20.0), z);
+		return bIsPlayerPositionFixed(client, (radius + 20.0), zAxis, noVelocity);
 	}
 
 	return false;
@@ -4248,7 +4257,7 @@ stock int iCreateParticle(int player, const char[] particlename, float pos[3], f
 	{
 		DispatchKeyValue(iEffect, "effect_name", particlename);
 		vSetEntityParent(iEffect, player);
-		TeleportEntity(iEffect, pos, angles, NULL_VECTOR);
+		TeleportEntity(iEffect, pos, angles);
 		DispatchSpawn(iEffect);
 		ActivateEntity(iEffect);
 		AcceptEntityInput(iEffect, "Start");

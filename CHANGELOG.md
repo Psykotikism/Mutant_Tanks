@@ -43,6 +43,7 @@
 - Recall:
 	- Fixed the survivor victims of Smokers, Hunters, Jockeys, and Chargers not teleporting with them.
 	- Fixed players being stuck in the ground after teleporting.
+	- Fixed players getting stuck inside solid objects.
 - Restart: Fixed players being stuck in the ground after teleporting.
 - Shield: Fixed shield spawning in some cases.
 - Warp:
@@ -61,6 +62,9 @@
 - The godmode reward now prevents recipients from being nudged by teammates. (Thanks to `Lux` for the code!)
 - Added code from the [`[L4D & L4D2] Late Model Precacher`](https://forums.alliedmods.net/showthread.php?t=337273) plugin.
 - Added code that uses the [`[TF2 & L4D & L4D2] Actions`](https://forums.alliedmods.net/showthread.php?t=336374) extension to track idle Infected. (Thanks to `BHaType` for helping with the code!)
+
+#### Commands
+- The `sm_mt_config` command now only prints to the player's console instead of flooding chat.
 
 #### Game Data
 - Added detour setups and signatures for the following functions:

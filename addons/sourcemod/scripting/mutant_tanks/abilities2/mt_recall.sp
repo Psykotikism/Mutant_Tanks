@@ -1297,6 +1297,7 @@ void vRecallRewind(int player, float threshold, int lifetime, int mode, int clea
 						g_esRecallPlayer[iVictim].g_iOwner = player;
 
 						TeleportEntity(iVictim, flNewPos, flEyeAngles);
+						vFixPlayerPosition(iVictim);
 					}
 				}
 				else
@@ -1305,6 +1306,7 @@ void vRecallRewind(int player, float threshold, int lifetime, int mode, int clea
 					if (bIsInfected(iVictim))
 					{
 						TeleportEntity(iVictim, flNewPos, flEyeAngles);
+						vFixPlayerPosition(iVictim);
 						vForceVocalize(player, "PlayerDeath");
 					}
 				}
@@ -1314,6 +1316,7 @@ void vRecallRewind(int player, float threshold, int lifetime, int mode, int clea
 				g_esRecallPlayer[player].g_flLastRecall[1] = bSurvivor ? (GetGameTime() + 2.0) : 0.0;
 
 				TeleportEntity(player, flNewPos, flEyeAngles);
+				vFixPlayerPosition(player);
 				vAttachParticle(iVictim, PARTICLE_ELECTRICITY, 0.75, 30.0);
 
 				if (cleanse == 1)
