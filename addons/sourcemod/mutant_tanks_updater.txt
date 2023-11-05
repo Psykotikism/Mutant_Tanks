@@ -10,7 +10,7 @@
 
 		"Notes"		"AlliedModders forum thread: https://forums.alliedmods.net/showthread.php?t=302140"
 		"Notes"		"GitHub repository: https://github.com/Psykotikism/Mutant_Tanks"
-		"Notes"		"Release date: 12-2023"
+		"Notes"		"Release date: 12-5-2023"
 		"Notes"		"Changes in v8.99:"
 		"Notes"		"Bug Fixes:"
 		"Notes"		"General:"
@@ -35,6 +35,7 @@
 		"Notes"		"- Fixed the \"MT_GetSpawnType\" native only working for human-controlled Mutants."
 		"Notes"		"Abilities:"
 		"Notes"		"- Fixed all the \"Ability Sight\" settings not working."
+		"Notes"		"- Fixed some abilities applying the wrong damage types when damaging survivors."
 		"Notes"		"- Clone: Fixed array index errors."
 		"Notes"		"- Fly: Fixed the ability not resetting when Infected with the ability change their Mutant types."
 		"Notes"		"- Hypno: Fixed shield not spawning all the time."

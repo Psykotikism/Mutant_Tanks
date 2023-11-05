@@ -1457,18 +1457,18 @@ void tTimerRocketDetonate(Handle timer, DataPack pack)
 					{
 						SetEntProp(iSurvivor, Prop_Send, "m_isIncapacitated", 1);
 						SetEntPropFloat(iSurvivor, Prop_Send, "m_healthBuffer", 1.0);
-						vDamagePlayer(iSurvivor, iTank, float(GetEntProp(iSurvivor, Prop_Data, "m_iHealth")));
+						vDamagePlayer(iSurvivor, iTank, float(GetEntProp(iSurvivor, Prop_Data, "m_iHealth")), "128");
 					}
-					case 2: vDamagePlayer(iSurvivor, iTank, float(GetEntProp(iSurvivor, Prop_Data, "m_iHealth")));
+					case 2: vDamagePlayer(iSurvivor, iTank, float(GetEntProp(iSurvivor, Prop_Data, "m_iHealth")), "128");
 				}
 			}
 			case 1:
 			{
 				SetEntProp(iSurvivor, Prop_Send, "m_isIncapacitated", 1);
 				SetEntPropFloat(iSurvivor, Prop_Send, "m_healthBuffer", 1.0);
-				vDamagePlayer(iSurvivor, iTank, float(GetEntProp(iSurvivor, Prop_Data, "m_iHealth")));
+				vDamagePlayer(iSurvivor, iTank, float(GetEntProp(iSurvivor, Prop_Data, "m_iHealth")), "128");
 			}
-			case 2: vDamagePlayer(iSurvivor, iTank, float(GetEntProp(iSurvivor, Prop_Data, "m_iHealth")));
+			case 2: vDamagePlayer(iSurvivor, iTank, float(GetEntProp(iSurvivor, Prop_Data, "m_iHealth")), "128");
 		}
 
 		int iMessage = pack.ReadCell();

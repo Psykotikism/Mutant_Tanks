@@ -11420,7 +11420,7 @@ void vSaveCaughtSurvivor(int survivor, int special = 0)
 
 	if (bIsSpecialInfected(iSpecial))
 	{
-		SDKHooks_TakeDamage(iSpecial, survivor, survivor, float(GetEntProp(iSpecial, Prop_Data, "m_iHealth")));
+		SDKHooks_TakeDamage(iSpecial, survivor, survivor, float(GetEntProp(iSpecial, Prop_Data, "m_iHealth")), DMG_CLUB);
 	}
 }
 
