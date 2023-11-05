@@ -928,6 +928,7 @@ public void MT_OnPlayerEventKilled(int victim, int attacker)
 					g_esRecallPlayer[iSurvivor].g_iOwner = -1;
 
 					TeleportEntity(iSurvivor, flOrigin, flAngles);
+					vFixPlayerPosition(iSurvivor);
 				}
 			}
 		}

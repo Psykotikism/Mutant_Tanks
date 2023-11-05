@@ -26980,6 +26980,7 @@ bool bRespawnSurvivor(int survivor, bool restore)
 		{
 			vRespawnSurvivor(survivor);
 			TeleportEntity(survivor, flOrigin, flAngles);
+			vFixPlayerPosition(survivor);
 
 			if (restore)
 			{
@@ -27067,6 +27068,7 @@ int iChooseType(int exclude, int tank = 0, int min = -1, int max = -1)
 	int iClass = 8, iSpecType = g_esPlayer[tank].g_iInfectedType, iMin = iGetMinType(iSpecType, bTank), iMax = iGetMaxType(iSpecType, bTank);
 	iMin = (min >= 0) ? min : iMin;
 	iMax = (max >= 0) ? max : iMax;
+
 	if (iMax < iMin || (bIsSurvivalMode() && g_esGeneral.g_iSurvivalBlock != 2))
 	{
 		return 0;

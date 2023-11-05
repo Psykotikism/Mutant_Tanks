@@ -31,6 +31,7 @@
 #### Abilities
 - Fixed all the `Ability Sight` settings not working.
 - Fixed some abilities applying the wrong damage types when damaging survivors.
+- Bury: Fixed players being stuck in the ground after teleporting.
 - Clone: Fixed array index errors.
 - Fly: Fixed the ability not resetting when Infected with the ability change their Mutant types.
 - Hypno: Fixed shield not spawning all the time.
@@ -39,11 +40,15 @@
 - Minion: Fixed array index errors. (Thanks to `Slaven555` for reporting!)
 - Necro: Fixed sound being precached for every player that leaves.
 - Omni: Fixed the ability overlapping with the `Boss`, `Randomize`, `Transform`, and `Combo` features. (Thanks to `Mi.Cura` for reporting!)
-- Recall: Fixed the survivor victims of Smokers, Hunters, Jockeys, and Chargers not teleporting with them.
+- Recall:
+	- Fixed the survivor victims of Smokers, Hunters, Jockeys, and Chargers not teleporting with them.
+	- Fixed players being stuck in the ground after teleporting.
+- Restart: Fixed players being stuck in the ground after teleporting.
 - Shield: Fixed shield spawning in some cases.
 - Warp:
 	- Fixed the survivor victims of Smokers, Hunters, Jockeys, and Chargers not teleporting with them.
 	- Fixed the Tank never teleporting to its thrown rock when it breaks. (Thanks to `moschinovac` for reporting!)
+	- Fixed players being stuck in the ground after teleporting.
 
 ### Changes
 

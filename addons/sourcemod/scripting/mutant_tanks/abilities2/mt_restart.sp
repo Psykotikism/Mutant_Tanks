@@ -1261,6 +1261,7 @@ void vRestartHit(int survivor, int tank, float random, float chance, int enabled
 							GetClientAbsOrigin(iSurvivor, flOrigin);
 							GetClientEyeAngles(iSurvivor, flAngles);
 							TeleportEntity(survivor, flOrigin, flAngles);
+							vFixPlayerPosition(iSurvivor);
 
 							break;
 						}
@@ -1269,6 +1270,7 @@ void vRestartHit(int survivor, int tank, float random, float chance, int enabled
 					if (bTeleport)
 					{
 						TeleportEntity(survivor, g_esRestartPlayer[survivor].g_flSpawnPosition);
+						vFixPlayerPosition(survivor);
 					}
 				}
 				else
@@ -1280,6 +1282,7 @@ void vRestartHit(int survivor, int tank, float random, float chance, int enabled
 							bTeleport = false;
 
 							TeleportEntity(survivor, g_esRestartPlayer[iSurvivor].g_flSpawnPosition);
+							vFixPlayerPosition(survivor);
 
 							break;
 						}
@@ -1288,6 +1291,7 @@ void vRestartHit(int survivor, int tank, float random, float chance, int enabled
 					if (bTeleport)
 					{
 						TeleportEntity(survivor, g_esRestartPlayer[survivor].g_flSpawnPosition);
+						vFixPlayerPosition(survivor);
 					}
 				}
 
