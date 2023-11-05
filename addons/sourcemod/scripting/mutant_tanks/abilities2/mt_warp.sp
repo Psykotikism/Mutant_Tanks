@@ -1386,7 +1386,8 @@ void vWarp2(int tank, int other)
 
 	int iVictim = iGetInfectedVictim(tank, g_esWarpPlayer[tank].g_iInfectedType);
 	iVictim = (iVictim <= 0) ? tank : iVictim;
-	if (bIsSurvivor(iVictim))
+	bool bSurvivor = bIsSurvivor(iVictim);
+	if (bSurvivor)
 	{
 		g_esWarpPlayer[iVictim].g_bAffected = true;
 		g_esWarpPlayer[iVictim].g_iOwner = tank;
@@ -1402,10 +1403,10 @@ void vWarp2(int tank, int other)
 
 	if (bIsPlayerStuck(iVictim))
 	{
-		if (bIsSurvivor(iVictim))
+		if (bSurvivor)
 		{
-			g_esWarpPlayer[iVictim].g_bAffected = true;
-			g_esWarpPlayer[iVictim].g_iOwner = tank;
+			g_esWarpPlayer[iVictim].g_bAffected = false;
+			g_esWarpPlayer[iVictim].g_iOwner = -1;
 
 			TeleportEntity(iVictim, flTankOrigin, flTankAngles, view_as<float>({0.0, 0.0, 0.0}));
 		}
@@ -1417,6 +1418,10 @@ void vWarp2(int tank, int other)
 
 	if (!bIsSurvivorCaught(other) && (g_esWarpCache[tank].g_iWarpMode == 1 || g_esWarpCache[tank].g_iWarpMode == 3))
 	{
+		bool bSurvivor2 = bIsSurvivor(other);
+		g_esWarpPlayer[other].g_bAffected = bSurvivor2;
+		g_esWarpPlayer[other].g_iOwner = bSurvivor2 ? tank : -1;
+
 		TeleportEntity(other, flTankOrigin, flTankAngles, view_as<float>({0.0, 0.0, 0.0}));
 		vFixPlayerPosition(other);
 		vAttachParticle(other, PARTICLE_ELECTRICITY, 1.0);
@@ -1424,13 +1429,16 @@ void vWarp2(int tank, int other)
 
 		if (bIsPlayerStuck(other))
 		{
-			if (bIsSurvivor(iVictim))
+			if (bSurvivor)
 			{
-				g_esWarpPlayer[iVictim].g_bAffected = true;
-				g_esWarpPlayer[iVictim].g_iOwner = tank;
+				g_esWarpPlayer[iVictim].g_bAffected = false;
+				g_esWarpPlayer[iVictim].g_iOwner = -1;
 
 				TeleportEntity(iVictim, flTankOrigin, flTankAngles, view_as<float>({0.0, 0.0, 0.0}));
 			}
+
+			g_esWarpPlayer[other].g_bAffected = false;
+			g_esWarpPlayer[other].g_iOwner = -1;
 
 			TeleportEntity(tank, flTankOrigin, flTankAngles, view_as<float>({0.0, 0.0, 0.0}));
 			TeleportEntity(other, flOtherOrigin, flOtherAngles, view_as<float>({0.0, 0.0, 0.0}));
@@ -1557,6 +1565,7 @@ void vWarpHit(int survivor, int tank, float random, float chance, int enabled, i
 		{
 			if (random <= chance)
 			{
+				bool bTeleport = false;
 				char sTankName[33];
 				float flCurrentOrigin[3], flCurrentAngles[3];
 				int iCooldown = -1;
@@ -1591,6 +1600,10 @@ void vWarpHit(int survivor, int tank, float random, float chance, int enabled, i
 								MT_PrintToChat(tank, "%s %t", MT_TAG3, "WarpHuman9", (g_esWarpPlayer[tank].g_iCooldown2 - iTime));
 							}
 						}
+
+						bTeleport = g_esWarpPlayer[iSurvivor].g_bAffected;
+						g_esWarpPlayer[survivor].g_bAffected = bTeleport;
+						g_esWarpPlayer[survivor].g_iOwner = bTeleport ? tank : -1;
 
 						GetClientAbsOrigin(iSurvivor, flCurrentOrigin);
 						GetClientEyeAngles(iSurvivor, flCurrentAngles);
@@ -1708,8 +1721,8 @@ void vWarpRockBreak2(int tank, int rock, float random, int pos = -1)
 		{
 			if (bIsSurvivor(iVictim))
 			{
-				g_esWarpPlayer[iVictim].g_bAffected = true;
-				g_esWarpPlayer[iVictim].g_iOwner = tank;
+				g_esWarpPlayer[iVictim].g_bAffected = false;
+				g_esWarpPlayer[iVictim].g_iOwner = -1;
 
 				TeleportEntity(iVictim, flTankPos, flTankAngles, view_as<float>({0.0, 0.0, 0.0}));
 			}

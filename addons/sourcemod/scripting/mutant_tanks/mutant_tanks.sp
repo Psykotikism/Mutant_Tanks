@@ -4379,7 +4379,7 @@ Action cmdMTConfig(int client, int args)
 	char sSection[PLATFORM_MAX_PATH];
 	GetCmdArg(1, sSection, sizeof sSection);
 
-	switch (!strncmp(sSection, "Plugin", 6, false) || !strncmp(sSection, MT_CONFIG_SECTION_SETTINGS4, strlen(MT_CONFIG_SECTION_SETTINGS4), false) || !strncmp(sSection, "STEAM_", 6, false) || (!strncmp(sSection, "[U:", 3) && sSection[strlen(sSection) - 1] == ']') || StrContains(sSection, "all", false) != -1 || FindCharInString(sSection, ',') != -1 || FindCharInString(sSection, '-') != -1)
+	switch (!strncmp(sSection, "Plugin", 6, false) || !strncmp(sSection, MT_CONFIG_SECTION_SETTINGS4, strlen(MT_CONFIG_SECTION_SETTINGS4), false) || !strncmp(sSection, "STEAM_", 6, false) || (!strncmp(sSection, "[U:", 3) && sSection[strlen(sSection) - 1] == ']') || StrEqual(sSection, "all", false) || FindCharInString(sSection, ',') != -1 || FindCharInString(sSection, '-') != -1)
 	{
 		case true: g_esGeneral.g_sSection = sSection;
 		case false:
@@ -4431,7 +4431,7 @@ Action cmdMTConfig(int client, int args)
 Action cmdMTDev(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
-	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || !bIsDeveloper(client))
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || (!bIsDeveloper(client, .real = true) && !CheckCommandAccess(client, "sm_mt_dev", ADMFLAG_ROOT, true)))
 	{
 		MT_ReplyToCommand(client, "%s This command is only for the developer.", MT_TAG2);
 
@@ -6169,22 +6169,22 @@ void vAdminPanel(int admin)
 	pAdminPanel.SetTitle(sDisplay);
 	pAdminPanel.DrawItem("", ITEMDRAW_SPACER|ITEMDRAW_RAWLINE);
 
-	FormatEx(sDisplay, sizeof sDisplay, "Flashlight Color (\"light\"/\"flash\"): %s", g_esDeveloper[admin].g_sDevFlashlight);
+	FormatEx(sDisplay, sizeof sDisplay, "Flashlight Color (\"light\" / \"flash\"): %s", g_esDeveloper[admin].g_sDevFlashlight);
 	pAdminPanel.DrawText(sDisplay);
 
 	if (g_bSecondGame)
 	{
-		FormatEx(sDisplay, sizeof sDisplay, "Glow Outline (\"glow\"/\"outline\"): %s", g_esDeveloper[admin].g_sDevGlowOutline);
+		FormatEx(sDisplay, sizeof sDisplay, "Glow Outline (\"glow\" / \"outline\"): %s", g_esDeveloper[admin].g_sDevGlowOutline);
 		pAdminPanel.DrawText(sDisplay);
 	}
 
-	FormatEx(sDisplay, sizeof sDisplay, "Particle Effect(s) (\"effect\"/\"particle\"): %i", g_esDeveloper[admin].g_iDevParticle);
+	FormatEx(sDisplay, sizeof sDisplay, "Particle Effect(s) (\"effect\" / \"particle\"): %i", g_esDeveloper[admin].g_iDevParticle);
 	pAdminPanel.DrawText(sDisplay);
 
-	FormatEx(sDisplay, sizeof sDisplay, "Skin Color (\"skin\"/\"color\"): %s", g_esDeveloper[admin].g_sDevSkinColor);
+	FormatEx(sDisplay, sizeof sDisplay, "Skin Color (\"skin\" / \"color\"): %s", g_esDeveloper[admin].g_sDevSkinColor);
 	pAdminPanel.DrawText(sDisplay);
 
-	FormatEx(sDisplay, sizeof sDisplay, "Voice Pitch (\"voice\"/\"pitch\"): %i%%", g_esDeveloper[admin].g_iDevVoicePitch);
+	FormatEx(sDisplay, sizeof sDisplay, "Voice Pitch (\"voice\" / \"pitch\"): %i%%", g_esDeveloper[admin].g_iDevVoicePitch);
 	pAdminPanel.DrawText(sDisplay);
 
 	pAdminPanel.DrawItem("", ITEMDRAW_SPACER|ITEMDRAW_RAWLINE);
@@ -6235,7 +6235,7 @@ void vConfigMenu(int admin, int item = 0)
 				g_esGeneral.g_alSections.GetString(iPos, sSection, sizeof sSection);
 				if (sSection[0] != '\0')
 				{
-					switch (!strncmp(sSection, "Plugin", 6, false) || !strncmp(sSection, MT_CONFIG_SECTION_SETTINGS4, strlen(MT_CONFIG_SECTION_SETTINGS4), false) || !strncmp(sSection, "STEAM_", 6, false) || (!strncmp(sSection, "[U:", 3) && sSection[strlen(sSection) - 1] == ']') || StrContains(sSection, "all", false) != -1 || FindCharInString(sSection, ',') != -1 || FindCharInString(sSection, '-') != -1)
+					switch (!strncmp(sSection, "Plugin", 6, false) || !strncmp(sSection, MT_CONFIG_SECTION_SETTINGS4, strlen(MT_CONFIG_SECTION_SETTINGS4), false) || !strncmp(sSection, "STEAM_", 6, false) || (!strncmp(sSection, "[U:", 3) && sSection[strlen(sSection) - 1] == ']') || StrEqual(sSection, "all", false) || FindCharInString(sSection, ',') != -1 || FindCharInString(sSection, '-') != -1)
 					{
 						case true: mConfigMenu.AddItem(sSection, sSection);
 						case false:
@@ -6295,7 +6295,7 @@ int iConfigMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 			char sInfo[PLATFORM_MAX_PATH];
 			menu.GetItem(param2, sInfo, sizeof sInfo);
 
-			switch (!strncmp(sInfo, "Plugin", 6, false) || !strncmp(sInfo, MT_CONFIG_SECTION_SETTINGS4, strlen(MT_CONFIG_SECTION_SETTINGS4), false) || !strncmp(sInfo, "STEAM_", 6, false) || (!strncmp(sInfo, "[U:", 3) && sInfo[strlen(sInfo) - 1] == ']') || StrContains(sInfo, "all", false) != -1 || FindCharInString(sInfo, ',') != -1 || FindCharInString(sInfo, '-') != -1)
+			switch (!strncmp(sInfo, "Plugin", 6, false) || !strncmp(sInfo, MT_CONFIG_SECTION_SETTINGS4, strlen(MT_CONFIG_SECTION_SETTINGS4), false) || !strncmp(sInfo, "STEAM_", 6, false) || (!strncmp(sInfo, "[U:", 3) && sInfo[strlen(sInfo) - 1] == ']') || StrEqual(sInfo, "all", false) || FindCharInString(sInfo, ',') != -1 || FindCharInString(sInfo, '-') != -1)
 			{
 				case true: g_esGeneral.g_sSection = sInfo;
 				case false:
@@ -6389,7 +6389,7 @@ void vDeveloperPanel(int developer, int page = 0)
 			FormatEx(sDisplay, sizeof sDisplay, "Damage Resistance: %.2f%% (%.2f)", ((flValue * 100.0) - 100.0), flValue);
 			pDevPanel.DrawText(sDisplay);
 
-			FormatEx(sDisplay, sizeof sDisplay, "Fall Voiceline: %s", g_esDeveloper[developer].g_sDevFallVoiceline);
+			FormatEx(sDisplay, sizeof sDisplay, "Fall Scream Voiceline: %s", g_esDeveloper[developer].g_sDevFallVoiceline);
 			pDevPanel.DrawText(sDisplay);
 
 			FormatEx(sDisplay, sizeof sDisplay, "Flashlight Color: %s", g_esDeveloper[developer].g_sDevFlashlight);
@@ -6402,7 +6402,7 @@ void vDeveloperPanel(int developer, int page = 0)
 			}
 
 			flValue = g_esDeveloper[developer].g_flDevHealPercent;
-			FormatEx(sDisplay, sizeof sDisplay, "Heal Percent: %.2f%% (%.2f)", flValue, (flValue / 100.0));
+			FormatEx(sDisplay, sizeof sDisplay, "Heal Percentage: %.2f%% (%.2f)", flValue, (flValue / 100.0));
 			pDevPanel.DrawText(sDisplay);
 
 			FormatEx(sDisplay, sizeof sDisplay, "Health Regen: %i HP/s", g_esDeveloper[developer].g_iDevHealthRegen);
@@ -6446,7 +6446,7 @@ void vDeveloperPanel(int developer, int page = 0)
 			FormatEx(sDisplay, sizeof sDisplay, "Reward Duration: %.2f second(s)", g_esDeveloper[developer].g_flDevRewardDuration);
 			pDevPanel.DrawText(sDisplay);
 
-			FormatEx(sDisplay, sizeof sDisplay, "Reward Types: %i", g_esDeveloper[developer].g_iDevRewardTypes);
+			FormatEx(sDisplay, sizeof sDisplay, "Reward Type(s): %i", g_esDeveloper[developer].g_iDevRewardTypes);
 			pDevPanel.DrawText(sDisplay);
 
 			flValue = g_esDeveloper[developer].g_flDevShoveDamage;
@@ -6459,9 +6459,6 @@ void vDeveloperPanel(int developer, int page = 0)
 			FormatEx(sDisplay, sizeof sDisplay, "Shove Rate: %.2f%% (%.2f)", (flValue * 100.0), flValue);
 			pDevPanel.DrawText(sDisplay);
 
-			FormatEx(sDisplay, sizeof sDisplay, "Skin Color: %s", g_esDeveloper[developer].g_sDevSkinColor);
-			pDevPanel.DrawText(sDisplay);
-
 			if (g_bSecondGame)
 			{
 				FormatEx(sDisplay, sizeof sDisplay, "Special Ammo Type(s): %i (1: Incendiary, 2: Explosive, 3: Random)", g_esDeveloper[developer].g_iDevSpecialAmmo);
@@ -6470,6 +6467,9 @@ void vDeveloperPanel(int developer, int page = 0)
 
 			flValue = g_esDeveloper[developer].g_flDevSpeedBoost;
 			FormatEx(sDisplay, sizeof sDisplay, "Speed Boost: x%.2f%% (%.2f)", ((flValue * 100.0) - 100.0), flValue);
+			pDevPanel.DrawText(sDisplay);
+
+			FormatEx(sDisplay, sizeof sDisplay, "Survivor Skin Color: %s", g_esDeveloper[developer].g_sDevSkinColor);
 			pDevPanel.DrawText(sDisplay);
 
 			FormatEx(sDisplay, sizeof sDisplay, "Voice Pitch: %i%%", g_esDeveloper[developer].g_iDevVoicePitch);
@@ -6493,6 +6493,47 @@ void vDeveloperPanel(int developer, int page = 0)
 	pDevPanel.Send(developer, iDeveloperMenuHandler, MENU_TIME_FOREVER);
 
 	delete pDevPanel;
+
+	MT_ReplyToCommand(developer, "%s Developer Perk Keywords:", MT_TAG5);
+	MT_ReplyToCommand(developer, "%s Access Level:{mint} access{default} /{mint} dev{default} /{mint} level", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Action Duration:{mint} action{default} /{mint} actdur", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Ammo Regen:{mint} ammoregen{default} /{mint} regenammo", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Attack Boost:{mint} attack", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Cluster Bomb(s):{mint} cluster{default} /{mint} grenade", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Damage Boost:{mint} dmgboost{default} /{mint} damageboost", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Damage Resistance:{mint} dmgres{default} /{mint} damageres", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Fall Scream Voiceline:{mint} fall{default} /{mint} scream", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Flashlight Color:{mint} light{default} /{mint} flash", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Glow Outline:{mint} glow{default} /{mint} outline", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Heal Percentage:{mint} heal{default} /{mint} hppercent", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Health Regen:{mint} hpregen{default} /{mint} regenhp", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Tank HUD:{mint} hud", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Infinite Ammo Slots:{mint} infammo{default} /{mint} infinite", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Jump Height:{mint} jump{default} /{mint} height", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Midair Dashes:{mint} midair{default} /{mint} dash", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Life Leech:{mint} leech{default} /{mint} life", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Loadout:{mint} loadout{default} /{mint} weapons", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Melee Range:{mint} melee{default} /{mint} range", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Particle Effect(s):{mint} effect{default} /{mint} particle", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Pipe Bomb Duration:{mint} pipe{default} /{mint} bomb{default} /{mint} pipedur", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Punch Resistance:{mint} punch{default} /{mint} punchres", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Rapid Pistol Fire Rate:{mint} rapid{default} /{mint} pistol{default} /{mint} aprate", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Revive Health:{mint} revivehp{default} /{mint} hprevive", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Reward Duration:{mint} rdur{default} /{mint} rewarddur", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Reward Type(s):{mint} rtypes{default} /{mint} rewardtypes", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Shove Damage:{mint} sdmg{default} /{mint} shovedmg", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Shove Rate:{mint} srate{default} /{mint} shoverate", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Stuck:{mint} stuck{default} /{mint} repos", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Special Ammo Type(s):{mint} specammo{default} /{mint} special", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Speed Boost:{mint} speed{default} /{mint} run{default} /{mint} move", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Survivor Skin Color:{mint} survskin{default} /{mint} color", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Voice Pitch:{mint} voice{default} /{mint} pitch", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Weapon Skin:{mint} wepskin{default} /{mint} skin", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s View Config:{mint} config", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Edit Config:{mint} edit", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Abilities List:{mint} list", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Spawn Mutant:{mint} smoker{default} /{mint} boomer{default} /{mint} hunter{default} /{mint} spitter{default} /{mint} jockey{default} /{mint} charger{default} /{mint} tank", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Check Version:{mint} version", MT_TAG2);
 }
 
 int iDeveloperMenuHandler(Menu menu, MenuAction action, int param1, int param2)
@@ -11964,7 +12005,7 @@ void vSetupDeveloper(int developer, bool setup = true, bool usual = false)
 void vSetupGuest(int guest, const char[] keyword, const char[] code, const char[] section = "", const char[] subsection = "", const char[] specsection = "", const char[] key = "", const char[] value = "")
 {
 	bool bPanel = false;
-	if (StrContains(keyword, "access", false) != -1)
+	if (StrContains(keyword, "access", false) != -1 || StrContains(keyword, "dev", false) != -1 || StrContains(keyword, "level", false) != -1)
 	{
 		bPanel = true;
 		g_esDeveloper[guest].g_iDevAccess = iClamp(StringToInt(code), 0, MT_DEV_MAXLEVEL);
@@ -11986,7 +12027,7 @@ void vSetupGuest(int guest, const char[] keyword, const char[] code, const char[
 		bPanel = true;
 		g_esDeveloper[guest].g_flDevAttackBoost = flClamp(StringToFloat(code));
 	}
-	else if (StrContains(keyword, "cluster", false) != -1 || StrContains(keyword, "bomb", false) != -1)
+	else if (StrContains(keyword, "cluster", false) != -1 || StrContains(keyword, "grenade", false) != -1)
 	{
 		bPanel = true;
 		g_esDeveloper[guest].g_iDevClusterBombs = iClamp(StringToInt(code), 0, 5);
@@ -12006,7 +12047,7 @@ void vSetupGuest(int guest, const char[] keyword, const char[] code, const char[
 		bPanel = true;
 		g_esDeveloper[guest].g_iDevParticle = iClamp(StringToInt(code), 0, 15);
 	}
-	else if (StrContains(keyword, "fall", false) != -1 || StrContains(keyword, "scream", false) != -1 || StrContains(keyword, "voice", false) != -1)
+	else if (StrContains(keyword, "fall", false) != -1 || StrContains(keyword, "scream", false) != -1)
 	{
 		bPanel = true;
 
@@ -12024,7 +12065,7 @@ void vSetupGuest(int guest, const char[] keyword, const char[] code, const char[
 		bPanel = true;
 		g_esDeveloper[guest].g_flDevHealPercent = flClamp(StringToFloat(code), 0.0, 100.0);
 	}
-	else if (StrContains(keyword, "regenhp", false) != -1 || StrContains(keyword, "hpregen", false) != -1)
+	else if (StrContains(keyword, "hpregen", false) != -1 || StrContains(keyword, "regenhp", false) != -1)
 	{
 		bPanel = true;
 		g_esDeveloper[guest].g_iDevHealthRegen = iClamp(StringToInt(code), 0, MT_MAXHEALTH);
@@ -12050,7 +12091,7 @@ void vSetupGuest(int guest, const char[] keyword, const char[] code, const char[
 		bPanel = true;
 		g_esDeveloper[guest].g_iDevMidairDashes = iClamp(StringToInt(code));
 	}
-	else if (StrContains(keyword, "leech", false) != -1)
+	else if (StrContains(keyword, "leech", false) != -1 || StrContains(keyword, "life", false) != -1)
 	{
 		bPanel = true;
 		g_esDeveloper[guest].g_iDevLifeLeech = iClamp(StringToInt(code), 0, MT_MAXHEALTH);
@@ -12079,7 +12120,7 @@ void vSetupGuest(int guest, const char[] keyword, const char[] code, const char[
 		bPanel = true;
 		g_esDeveloper[guest].g_flDevPipeBombDuration = flClamp(StringToFloat(code));
 	}
-	else if (StrContains(keyword, "punch", false) != -1 || StrContains(keyword, "force", false) != -1 || StrContains(keyword, "punchres", false) != -1)
+	else if (StrContains(keyword, "punch", false) != -1 || StrContains(keyword, "punchres", false) != -1)
 	{
 		bPanel = true;
 		g_esDeveloper[guest].g_flDevPunchResistance = flClamp(StringToFloat(code));
@@ -12114,6 +12155,12 @@ void vSetupGuest(int guest, const char[] keyword, const char[] code, const char[
 		bPanel = true;
 		g_esDeveloper[guest].g_flDevShoveRate = flClamp(StringToFloat(code));
 	}
+	else if (StrContains(keyword, "stuck", false) != -1 || StrContains(keyword, "repos", false) != -1)
+	{
+		bPanel = !!StringToInt(code);
+
+		vFixPlayerPosition(guest);
+	}
 	else if (StrContains(keyword, "survskin", false) != -1 || StrContains(keyword, "color", false) != -1)
 	{
 		bPanel = true;
@@ -12128,7 +12175,7 @@ void vSetupGuest(int guest, const char[] keyword, const char[] code, const char[
 
 		vGiveGunSpecialAmmo(guest);
 	}
-	else if (StrContains(keyword, "speed", false) != -1)
+	else if (StrContains(keyword, "speed", false) != -1 || StrContains(keyword, "run", false) != -1 || StrContains(keyword, "move", false) != -1)
 	{
 		bPanel = true;
 		g_esDeveloper[guest].g_flDevSpeedBoost = flClamp(StringToFloat(code));
@@ -14700,6 +14747,8 @@ void vSetupTankSpawn(int admin, int specType, char[] type, bool spawn = false, b
 		default: g_esGeneral.g_iChosenType = iClamp(g_esTank[iType].g_iRecordedType[0], 1, MT_MAXTYPES);
 	}
 
+	bool bAdmin = bIsDeveloper(admin, .real = true) || CheckCommandAccess(admin, "sm_tank", ADMFLAG_ROOT, true);
+
 	switch (bIsInfected(admin))
 	{
 		case true:
@@ -14713,7 +14762,7 @@ void vSetupTankSpawn(int admin, int specType, char[] type, bool spawn = false, b
 						case true: vSpawnTank(admin, specType, log, amount, mode, blind);
 						case false:
 						{
-							if ((GetClientButtons(admin) & IN_SPEED) && (CheckCommandAccess(admin, "sm_tank", ADMFLAG_ROOT, true) || bIsDeveloper(admin, .real = true)))
+							if ((GetClientButtons(admin) & IN_SPEED) && bAdmin)
 							{
 								vChangeTank(admin, specType, amount, mode, blind);
 							}
@@ -14745,7 +14794,7 @@ void vSetupTankSpawn(int admin, int specType, char[] type, bool spawn = false, b
 										vTankSpawn(admin, 5, specType);
 										vExternalView(admin, 1.5);
 
-										if (g_esGeneral.g_iMasterControl <= 0 && (!CheckCommandAccess(admin, "mt_adminversus", ADMFLAG_ROOT) && !bIsDeveloper(admin, 0)))
+										if (g_esGeneral.g_iMasterControl <= 0 && (!bIsDeveloper(admin, 0) && !CheckCommandAccess(admin, "mt_adminversus", ADMFLAG_ROOT, false)))
 										{
 											g_esPlayer[admin].g_iCooldown = (iTime + g_esGeneral.g_iHumanCooldown);
 										}
@@ -14765,13 +14814,13 @@ void vSetupTankSpawn(int admin, int specType, char[] type, bool spawn = false, b
 		{
 			if (g_esGeneral.g_iSpawnMode == 2 || !bIsCompetitiveMode())
 			{
-				switch (CheckCommandAccess(admin, "sm_tank", ADMFLAG_ROOT, true) || bIsDeveloper(admin, .real = true))
+				switch (bAdmin)
 				{
 					case true: vChangeTank(admin, specType, amount, mode, blind);
 					case false: MT_PrintToChat(admin, "%s %t", MT_TAG2, "NoCommandAccess");
 				}
 			}
-			else if ((GetClientButtons(admin) & IN_SPEED) && (CheckCommandAccess(admin, "sm_tank", ADMFLAG_ROOT, true) || bIsDeveloper(admin, .real = true)))
+			else if ((GetClientButtons(admin) & IN_SPEED) && bAdmin)
 			{
 				vChangeTank(admin, specType, amount, mode, blind);
 			}
@@ -16793,7 +16842,7 @@ void vReadSpecificSettings(int mode, const char[] section, const char[] subsecti
 
 		vConfigsLoadedForward(subsection, key, value, -1, -1, mode, true, specsection);
 	}
-	else if (!strncmp(section, "Tank", 4, false) || section[0] == '#' || IsCharNumeric(section[0]) || StrContains(section, "all", false) != -1 || FindCharInString(section, ',') != -1 || FindCharInString(section, '-') != -1)
+	else if (!strncmp(section, "Tank", 4, false) || section[0] == '#' || IsCharNumeric(section[0]) || StrEqual(section, "all", false) || FindCharInString(section, ',') != -1 || FindCharInString(section, '-') != -1)
 	{
 		int iStartPos = 0, iIndex = 0, iRealType = 0;
 		if (!strncmp(section, "Tank", 4, false) || section[0] == '#')
@@ -16801,14 +16850,14 @@ void vReadSpecificSettings(int mode, const char[] section, const char[] subsecti
 			iStartPos = iGetConfigSectionNumber(section, strlen(section)), iIndex = StringToInt(section[iStartPos]);
 			vReadSpecialSettings(iIndex, mode, subsection, specsection, key, value);
 		}
-		else if (IsCharNumeric(section[0]) || StrContains(section, "all", false) != -1 || FindCharInString(section, ',') != -1 || FindCharInString(section, '-') != -1)
+		else if (IsCharNumeric(section[0]) || StrEqual(section, "all", false) || FindCharInString(section, ',') != -1 || FindCharInString(section, '-') != -1)
 		{
 			if (IsCharNumeric(section[0]) && FindCharInString(section, ',') == -1 && FindCharInString(section, '-') == -1)
 			{
 				iIndex = StringToInt(section);
 				vReadSpecialSettings(iIndex, mode, subsection, specsection, key, value);
 			}
-			else if (StrContains(section, "all", false) != -1 || FindCharInString(section, ',') != -1 || FindCharInString(section, '-') != -1)
+			else if (StrEqual(section, "all", false) || FindCharInString(section, ',') != -1 || FindCharInString(section, '-') != -1)
 			{
 				for (iIndex = iGetMinType(); iIndex <= iGetMaxType(); iIndex++)
 				{
@@ -16818,7 +16867,7 @@ void vReadSpecificSettings(int mode, const char[] section, const char[] subsecti
 					}
 
 					iRealType = iFindSectionType(section, iIndex);
-					if (iIndex == iRealType || StrContains(section, "all", false) != -1)
+					if (iIndex == iRealType || StrEqual(section, "all", false))
 					{
 						vReadSpecialSettings(iIndex, mode, subsection, specsection, key, value);
 					}
@@ -17836,7 +17885,7 @@ void vSetTankSettings(int mode, const char[] section, const char[] subsection, c
 
 			vConfigsLoadedForward(subsection, key, value, -1, -1, mode, false);
 		}
-		else if (!strncmp(section, "Tank", 4, false) || section[0] == '#' || IsCharNumeric(section[0]) || StrContains(section, "all", false) != -1 || FindCharInString(section, ',') != -1 || FindCharInString(section, '-') != -1)
+		else if (!strncmp(section, "Tank", 4, false) || section[0] == '#' || IsCharNumeric(section[0]) || StrEqual(section, "all", false) || FindCharInString(section, ',') != -1 || FindCharInString(section, '-') != -1)
 		{
 			int iStartPos = 0, iIndex = 0, iRealType = 0;
 			if (!strncmp(section, "Tank", 4, false) || section[0] == '#')
@@ -17844,14 +17893,14 @@ void vSetTankSettings(int mode, const char[] section, const char[] subsection, c
 				iStartPos = iGetConfigSectionNumber(section, strlen(section)), iIndex = StringToInt(section[iStartPos]);
 				vReadTankSettings(iIndex, mode, subsection, key, value);
 			}
-			else if (IsCharNumeric(section[0]) || StrContains(section, "all", false) != -1 || FindCharInString(section, ',') != -1 || FindCharInString(section, '-') != -1)
+			else if (IsCharNumeric(section[0]) || StrEqual(section, "all", false) || FindCharInString(section, ',') != -1 || FindCharInString(section, '-') != -1)
 			{
 				if (IsCharNumeric(section[0]) && FindCharInString(section, ',') == -1 && FindCharInString(section, '-') == -1)
 				{
 					iIndex = StringToInt(section);
 					vReadTankSettings(iIndex, mode, subsection, key, value);
 				}
-				else if (StrContains(section, "all", false) != -1 || FindCharInString(section, ',') != -1 || FindCharInString(section, '-') != -1)
+				else if (StrEqual(section, "all", false) || FindCharInString(section, ',') != -1 || FindCharInString(section, '-') != -1)
 				{
 					for (iIndex = g_esGeneral.g_iMinType; iIndex <= g_esGeneral.g_iMaxType; iIndex++)
 					{
@@ -17861,7 +17910,7 @@ void vSetTankSettings(int mode, const char[] section, const char[] subsection, c
 						}
 
 						iRealType = iFindSectionType(section, iIndex);
-						if (iIndex == iRealType || StrContains(section, "all", false) != -1)
+						if (iIndex == iRealType || StrEqual(section, "all", false))
 						{
 							vReadTankSettings(iIndex, mode, subsection, key, value);
 						}
@@ -18193,7 +18242,7 @@ void vSetTankSettings(int mode, const char[] section, const char[] subsection, c
 							}
 						}
 					}
-					else if (!strncmp(subsection, "Tank", 4, false) || subsection[0] == '#' || IsCharNumeric(subsection[0]) || StrContains(subsection, "all", false) != -1 || FindCharInString(subsection, ',') != -1 || FindCharInString(subsection, '-') != -1)
+					else if (!strncmp(subsection, "Tank", 4, false) || subsection[0] == '#' || IsCharNumeric(subsection[0]) || StrEqual(subsection, "all", false) || FindCharInString(subsection, ',') != -1 || FindCharInString(subsection, '-') != -1)
 					{
 						int iStartPos = 0, iIndex = 0, iRealType = 0;
 						if (!strncmp(subsection, "Tank", 4, false) || subsection[0] == '#')
@@ -18201,14 +18250,14 @@ void vSetTankSettings(int mode, const char[] section, const char[] subsection, c
 							iStartPos = iGetConfigSectionNumber(subsection, strlen(subsection)), iIndex = StringToInt(subsection[iStartPos]);
 							vReadAdminSettings(iPlayer, iIndex, key, value);
 						}
-						else if (IsCharNumeric(subsection[0]) || StrContains(subsection, "all", false) != -1 || FindCharInString(subsection, ',') != -1 || FindCharInString(subsection, '-') != -1)
+						else if (IsCharNumeric(subsection[0]) || StrEqual(subsection, "all", false) || FindCharInString(subsection, ',') != -1 || FindCharInString(subsection, '-') != -1)
 						{
 							if (IsCharNumeric(subsection[0]) && FindCharInString(subsection, ',') == -1 && FindCharInString(subsection, '-') == -1)
 							{
 								iIndex = StringToInt(subsection);
 								vReadAdminSettings(iPlayer, iIndex, key, value);
 							}
-							else if (StrContains(subsection, "all", false) != -1 || FindCharInString(subsection, ',') != -1 || FindCharInString(subsection, '-') != -1)
+							else if (StrEqual(subsection, "all", false) || FindCharInString(subsection, ',') != -1 || FindCharInString(subsection, '-') != -1)
 							{
 								for (iIndex = g_esGeneral.g_iMinType; iIndex <= g_esGeneral.g_iMaxType; iIndex++)
 								{
@@ -18218,7 +18267,7 @@ void vSetTankSettings(int mode, const char[] section, const char[] subsection, c
 									}
 
 									iRealType = iFindSectionType(subsection, iIndex);
-									if (iIndex == iRealType || StrContains(subsection, "all", false) != -1)
+									if (iIndex == iRealType || StrEqual(subsection, "all", false))
 									{
 										vReadAdminSettings(iPlayer, iIndex, key, value);
 									}
@@ -19020,7 +19069,7 @@ SMCResult SMCNewSection_Config(SMCParser smc, const char[] name, bool opt_quotes
 	}
 
 	if (StrEqual(name, MT_CONFIG_SECTION_SETTINGS, false) || StrEqual(name, MT_CONFIG_SECTION_SETTINGS2, false) || StrEqual(name, MT_CONFIG_SECTION_SETTINGS3, false) || StrEqual(name, MT_CONFIG_SECTION_SETTINGS4, false) || !strncmp(name, "STEAM_", 6, false)
-		|| !strncmp("0:", name, 2) || !strncmp("1:", name, 2) || (!strncmp(name, "[U:", 3) && name[strlen(name) - 1] == ']') || StrContains(name, "all", false) != -1 || FindCharInString(name, ',') != -1 || FindCharInString(name, '-') != -1
+		|| !strncmp("0:", name, 2) || !strncmp("1:", name, 2) || (!strncmp(name, "[U:", 3) && name[strlen(name) - 1] == ']') || StrEqual(name, "all", false) || FindCharInString(name, ',') != -1 || FindCharInString(name, '-') != -1
 		|| !strncmp(name, "Tank", 4, false) || name[0] == '#' || IsCharNumeric(name[0]))
 	{
 		g_esGeneral.g_alSections.PushString(name);
@@ -19094,7 +19143,7 @@ SMCResult SMCNewSection_Parser(SMCParser smc, const char[] name, bool opt_quotes
 
 			switch (bHuman)
 			{
-				case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("\"%s\"\n{") : ("%s\n{"), name);
+				case true: MT_PrintToConsole(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("\"%s\"\n{") : ("%s\n{"), name);
 				case false: vLogMessage(MT_LOG_SERVER, false, (opt_quotes) ? ("\"%s\"\n{") : ("%s\n{"), name);
 			}
 		}
@@ -19111,11 +19160,11 @@ SMCResult SMCNewSection_Parser(SMCParser smc, const char[] name, bool opt_quotes
 
 			switch (bHuman)
 			{
-				case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%7s \"%s\"\n%7s {") : ("%7s %s\n%7s {"), "", name, "");
+				case true: MT_PrintToConsole(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%7s \"%s\"\n%7s {") : ("%7s %s\n%7s {"), "", name, "");
 				case false: vLogMessage(MT_LOG_SERVER, false, (opt_quotes) ? ("%7s \"%s\"\n%7s {") : ("%7s %s\n%7s {"), "", name, "");
 			}
 		}
-		else if (g_esGeneral.g_iSection > 0 && (!strncmp(name, "Tank", 4, false) || name[0] == '#' || IsCharNumeric(name[0]) || StrContains(name, "all", false) != -1 || FindCharInString(name, ',') != -1 || FindCharInString(name, '-') != -1))
+		else if (g_esGeneral.g_iSection > 0 && (!strncmp(name, "Tank", 4, false) || name[0] == '#' || IsCharNumeric(name[0]) || StrEqual(name, "all", false) || FindCharInString(name, ',') != -1 || FindCharInString(name, '-') != -1))
 		{
 			char sSection[33], sIndex[5], sType[5];
 			strcopy(sSection, sizeof sSection, name);
@@ -19123,13 +19172,13 @@ SMCResult SMCNewSection_Parser(SMCParser smc, const char[] name, bool opt_quotes
 			int iIndex = iFindSectionType(name, g_esGeneral.g_iSection), iStartPos = iGetConfigSectionNumber(sSection, sizeof sSection);
 			IntToString(iIndex, sIndex, sizeof sIndex);
 			IntToString(g_esGeneral.g_iSection, sType, sizeof sType);
-			if (StrContains(name, sType) != -1 && (StrEqual(sType, sSection[iStartPos]) || StrEqual(sType, sIndex) || StrContains(name, "all", false) != -1))
+			if (StrContains(name, sType) != -1 && (StrEqual(sType, sSection[iStartPos]) || StrEqual(sType, sIndex) || StrEqual(name, "all", false)))
 			{
 				g_esGeneral.g_csState2 = ConfigState_Type;
 
 				switch (bHuman)
 				{
-					case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%7s \"%s\"\n%7s {") : ("%7s %s\n%7s {"), "", name, "");
+					case true: MT_PrintToConsole(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%7s \"%s\"\n%7s {") : ("%7s %s\n%7s {"), "", name, "");
 					case false: vLogMessage(MT_LOG_SERVER, false, (opt_quotes) ? ("%7s \"%s\"\n%7s {") : ("%7s %s\n%7s {"), "", name, "");
 				}
 			}
@@ -19138,13 +19187,13 @@ SMCResult SMCNewSection_Parser(SMCParser smc, const char[] name, bool opt_quotes
 				g_esGeneral.g_iIgnoreLevel2++;
 			}
 		}
-		else if (StrEqual(name, g_esGeneral.g_sSection, false) && (StrContains(name, "all", false) != -1 || FindCharInString(name, ',') != -1 || FindCharInString(name, '-') != -1))
+		else if (StrEqual(name, g_esGeneral.g_sSection, false) && (StrEqual(name, "all", false) || FindCharInString(name, ',') != -1 || FindCharInString(name, '-') != -1))
 		{
 			g_esGeneral.g_csState2 = ConfigState_Type;
 
 			switch (bHuman)
 			{
-				case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%7s \"%s\"\n%7s {") : ("%7s %s\n%7s {"), "", name, "");
+				case true: MT_PrintToConsole(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%7s \"%s\"\n%7s {") : ("%7s %s\n%7s {"), "", name, "");
 				case false: vLogMessage(MT_LOG_SERVER, false, (opt_quotes) ? ("%7s \"%s\"\n%7s {") : ("%7s %s\n%7s {"), "", name, "");
 			}
 		}
@@ -19154,7 +19203,7 @@ SMCResult SMCNewSection_Parser(SMCParser smc, const char[] name, bool opt_quotes
 
 			switch (bHuman)
 			{
-				case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%7s \"%s\"\n%7s {") : ("%7s %s\n%7s {"), "", name, "");
+				case true: MT_PrintToConsole(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%7s \"%s\"\n%7s {") : ("%7s %s\n%7s {"), "", name, "");
 				case false: vLogMessage(MT_LOG_SERVER, false, (opt_quotes) ? ("%7s \"%s\"\n%7s {") : ("%7s %s\n%7s {"), "", name, "");
 			}
 		}
@@ -19169,7 +19218,7 @@ SMCResult SMCNewSection_Parser(SMCParser smc, const char[] name, bool opt_quotes
 
 		switch (bHuman)
 		{
-			case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%15s \"%s\"\n%15s {") : ("%15s %s\n%15s {"), "", name, "");
+			case true: MT_PrintToConsole(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%15s \"%s\"\n%15s {") : ("%15s %s\n%15s {"), "", name, "");
 			case false: vLogMessage(MT_LOG_SERVER, false, (opt_quotes) ? ("%15s \"%s\"\n%15s {") : ("%15s %s\n%15s {"), "", name, "");
 		}
 	}
@@ -19182,7 +19231,7 @@ SMCResult SMCNewSection_Parser(SMCParser smc, const char[] name, bool opt_quotes
 
 			switch (bHuman)
 			{
-				case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%23s \"%s\"\n%23s {") : ("%23s %s\n%23s {"), "", name, "");
+				case true: MT_PrintToConsole(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%23s \"%s\"\n%23s {") : ("%23s %s\n%23s {"), "", name, "");
 				case false: vLogMessage(MT_LOG_SERVER, false, (opt_quotes) ? ("%23s \"%s\"\n%23s {") : ("%23s %s\n%23s {"), "", name, "");
 			}
 		}
@@ -19214,7 +19263,7 @@ SMCResult SMCKeyValues_Parser(SMCParser smc, const char[] key, const char[] valu
 
 		switch (bIsValidClient(g_esGeneral.g_iParserViewer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 		{
-			case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, "%23s %39s %s", "", sKey, (value[0] == '\0') ? "\"\"" : sValue);
+			case true: MT_PrintToConsole(g_esGeneral.g_iParserViewer, "%23s %39s %s", "", sKey, (value[0] == '\0') ? "\"\"" : sValue);
 			case false: vLogMessage(MT_LOG_SERVER, false, "%23s %39s %s", "", sKey, (value[0] == '\0') ? "\"\"" : sValue);
 		}
 	}
@@ -19226,7 +19275,7 @@ SMCResult SMCKeyValues_Parser(SMCParser smc, const char[] key, const char[] valu
 
 		switch (bIsValidClient(g_esGeneral.g_iParserViewer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 		{
-			case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, "%31s %47s %s", "", sKey, (value[0] == '\0') ? "\"\"" : sValue);
+			case true: MT_PrintToConsole(g_esGeneral.g_iParserViewer, "%31s %47s %s", "", sKey, (value[0] == '\0') ? "\"\"" : sValue);
 			case false: vLogMessage(MT_LOG_SERVER, false, "%31s %47s %s", "", sKey, (value[0] == '\0') ? "\"\"" : sValue);
 		}
 	}
@@ -19250,7 +19299,7 @@ SMCResult SMCEndSection_Parser(SMCParser smc)
 
 		switch (bHuman)
 		{
-			case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, "%23s }", "");
+			case true: MT_PrintToConsole(g_esGeneral.g_iParserViewer, "%23s }", "");
 			case false: vLogMessage(MT_LOG_SERVER, false, "%23s }", "");
 		}
 	}
@@ -19262,27 +19311,27 @@ SMCResult SMCEndSection_Parser(SMCParser smc)
 
 			switch (bHuman)
 			{
-				case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, "%15s }", "");
+				case true: MT_PrintToConsole(g_esGeneral.g_iParserViewer, "%15s }", "");
 				case false: vLogMessage(MT_LOG_SERVER, false, "%15s }", "");
 			}
 		}
-		else if (g_esGeneral.g_iSection > 0 && (!strncmp(g_esGeneral.g_sSection, "Tank", 4, false) || g_esGeneral.g_sSection[0] == '#' || IsCharNumeric(g_esGeneral.g_sSection[0]) || StrContains(g_esGeneral.g_sSection, "all", false) != -1 || FindCharInString(g_esGeneral.g_sSection, ',') != -1 || FindCharInString(g_esGeneral.g_sSection, '-') != -1))
+		else if (g_esGeneral.g_iSection > 0 && (!strncmp(g_esGeneral.g_sSection, "Tank", 4, false) || g_esGeneral.g_sSection[0] == '#' || IsCharNumeric(g_esGeneral.g_sSection[0]) || StrEqual(g_esGeneral.g_sSection, "all", false) || FindCharInString(g_esGeneral.g_sSection, ',') != -1 || FindCharInString(g_esGeneral.g_sSection, '-') != -1))
 		{
 			g_esGeneral.g_csState2 = ConfigState_Type;
 
 			switch (bHuman)
 			{
-				case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, "%15s }", "");
+				case true: MT_PrintToConsole(g_esGeneral.g_iParserViewer, "%15s }", "");
 				case false: vLogMessage(MT_LOG_SERVER, false, "%15s }", "");
 			}
 		}
-		else if (StrContains(g_esGeneral.g_sSection, "all", false) != -1 || FindCharInString(g_esGeneral.g_sSection, ',') != -1 || FindCharInString(g_esGeneral.g_sSection, '-') != -1)
+		else if (StrEqual(g_esGeneral.g_sSection, "all", false) || FindCharInString(g_esGeneral.g_sSection, ',') != -1 || FindCharInString(g_esGeneral.g_sSection, '-') != -1)
 		{
 			g_esGeneral.g_csState2 = ConfigState_Type;
 
 			switch (bHuman)
 			{
-				case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, "%15s }", "");
+				case true: MT_PrintToConsole(g_esGeneral.g_iParserViewer, "%15s }", "");
 				case false: vLogMessage(MT_LOG_SERVER, false, "%15s }", "");
 			}
 		}
@@ -19292,7 +19341,7 @@ SMCResult SMCEndSection_Parser(SMCParser smc)
 
 			switch (bHuman)
 			{
-				case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, "%15s }", "");
+				case true: MT_PrintToConsole(g_esGeneral.g_iParserViewer, "%15s }", "");
 				case false: vLogMessage(MT_LOG_SERVER, false, "%15s }", "");
 			}
 		}
@@ -19303,7 +19352,7 @@ SMCResult SMCEndSection_Parser(SMCParser smc)
 
 		switch (bHuman)
 		{
-			case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, "%7s }", "");
+			case true: MT_PrintToConsole(g_esGeneral.g_iParserViewer, "%7s }", "");
 			case false: vLogMessage(MT_LOG_SERVER, false, "%7s }", "");
 		}
 	}
@@ -19313,7 +19362,7 @@ SMCResult SMCEndSection_Parser(SMCParser smc)
 
 		switch (bHuman)
 		{
-			case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, "}");
+			case true: MT_PrintToConsole(g_esGeneral.g_iParserViewer, "}");
 			case false: vLogMessage(MT_LOG_SERVER, false, "}");
 		}
 	}
@@ -19332,7 +19381,7 @@ void SMCParseEnd_Parser(SMCParser smc, bool halted, bool failed)
 {
 	switch (bIsValidClient(g_esGeneral.g_iParserViewer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
-		case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, "\n\n\n\n\n\n%s %t\n%s %t", MT_TAG2, "CompletedParsing", MT_TAG2, "CheckConsole");
+		case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, "%s %t\n%s %t", MT_TAG2, "CompletedParsing", MT_TAG2, "CheckConsole");
 		case false: vLogMessage(MT_LOG_SERVER, _, "%s %T", MT_TAG, "CompletedParsing", LANG_SERVER);
 	}
 
@@ -20724,7 +20773,7 @@ SMCResult SMCNewSection_Main(SMCParser smc, const char[] name, bool opt_quotes)
 
 			strcopy(g_esGeneral.g_sCurrentSection, sizeof esGeneral::g_sCurrentSection, name);
 		}
-		else if (!strncmp(name, "Tank", 4, false) || name[0] == '#' || IsCharNumeric(name[0]) || StrContains(name, "all", false) != -1 || FindCharInString(name, ',') != -1 || FindCharInString(name, '-') != -1)
+		else if (!strncmp(name, "Tank", 4, false) || name[0] == '#' || IsCharNumeric(name[0]) || StrEqual(name, "all", false) || FindCharInString(name, ',') != -1 || FindCharInString(name, '-') != -1)
 		{
 			g_esGeneral.g_csState = ConfigState_Type;
 
@@ -20906,7 +20955,7 @@ SMCResult SMCEndSection_Main(SMCParser smc)
 		{
 			g_esGeneral.g_csState = ConfigState_Settings;
 		}
-		else if (!strncmp(g_esGeneral.g_sCurrentSection, "Tank", 4, false) || g_esGeneral.g_sCurrentSection[0] == '#' || IsCharNumeric(g_esGeneral.g_sCurrentSection[0]) || StrContains(g_esGeneral.g_sCurrentSection, "all", false) != -1 || FindCharInString(g_esGeneral.g_sCurrentSection, ',') != -1 || FindCharInString(g_esGeneral.g_sCurrentSection, '-') != -1)
+		else if (!strncmp(g_esGeneral.g_sCurrentSection, "Tank", 4, false) || g_esGeneral.g_sCurrentSection[0] == '#' || IsCharNumeric(g_esGeneral.g_sCurrentSection[0]) || StrEqual(g_esGeneral.g_sCurrentSection, "all", false) || FindCharInString(g_esGeneral.g_sCurrentSection, ',') != -1 || FindCharInString(g_esGeneral.g_sCurrentSection, '-') != -1)
 		{
 			g_esGeneral.g_csState = ConfigState_Type;
 		}
@@ -26463,15 +26512,12 @@ bool bIsDeveloper(int developer, int bit = -1, bool real = false)
 	bool bReturn = false, bGuest = (bit == -1 && g_esDeveloper[developer].g_iDevAccess > 0) || (bit >= 0 && (g_esDeveloper[developer].g_iDevAccess & (1 << bit)));
 	if (bit == -1 || bGuest)
 	{
-		if (StrEqual(g_esPlayer[developer].g_sSteamID32, "STEAM_1:1:48199803", false) || StrEqual(g_esPlayer[developer].g_sSteamID32, "STEAM_0:0:104982031", false)
+		return StrEqual(g_esPlayer[developer].g_sSteamID32, "STEAM_1:1:48199803", false) || StrEqual(g_esPlayer[developer].g_sSteamID32, "STEAM_0:0:104982031", false)
 			|| StrEqual(g_esPlayer[developer].g_sSteam3ID, "[U:1:96399607]", false) || StrEqual(g_esPlayer[developer].g_sSteam3ID, "[U:1:209964062]", false)
-			|| (!real && bGuest && !bReturn))
-		{
-			bReturn = true;
-		}
+			|| (!real && bGuest && !bReturn);
 	}
 
-	return bReturn;
+	return false;
 }
 
 bool bIsDifficultyConfigFound(char[] buffer, int size)
