@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 9.0 (December 2023)
+## Version 9.0 (December 5, 2023)
 
 ### Bug Fixes
 
@@ -30,6 +30,7 @@
 
 #### Abilities
 - Fixed all the `Ability Sight` settings not working.
+- Fixed some abilities applying the wrong damage types when damaging survivors.
 - Clone: Fixed array index errors.
 - Fly: Fixed the ability not resetting when Infected with the ability change their Mutant types.
 - Hypno: Fixed shield not spawning all the time.

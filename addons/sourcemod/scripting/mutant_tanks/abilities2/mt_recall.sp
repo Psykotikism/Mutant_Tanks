@@ -462,7 +462,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 		{
 			if (g_esRecallPlayer[client].g_flLastRecall[1] < (flCurrentTime + 2.0))
 			{
-				vRecallRewind(client, 1.0, 15, 0, 1, true);
+				vRecallRewind(client, 1.0, 30, 0, 1, true);
 			}
 		}
 #if defined MT_ABILITIES_MAIN2

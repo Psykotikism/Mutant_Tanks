@@ -1260,7 +1260,7 @@ Action tTimerLeech(Handle timer, DataPack pack)
 		iTotalHealth = (iNewHealth > MT_MAXHEALTH) ? iLeftover : 1;
 	MT_TankMaxHealth(iTank, 3, (iMaxHealth + iTotalHealth));
 	SetEntProp(iTank, Prop_Data, "m_iHealth", iFinalHealth);
-	vDamagePlayer(iSurvivor, iTank, 1.0);
+	vDamagePlayer(iSurvivor, iTank, 1.0, "128");
 	vAttachParticle(iSurvivor, PARTICLE_BLOOD, 0.1);
 
 	return Plugin_Continue;
