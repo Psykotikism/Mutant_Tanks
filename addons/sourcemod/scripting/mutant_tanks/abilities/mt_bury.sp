@@ -1367,6 +1367,7 @@ void vStopBury(int survivor, int tank)
 			GetClientEyeAngles(iSurvivor, flAngles);
 			flOrigin[2] += g_esBuryCache[tank].g_flBuryHeight / 2.0;
 			TeleportEntity(survivor, flOrigin, flAngles, view_as<float>({0.0, 0.0, 0.0}));
+			vFixPlayerPosition(survivor);
 
 			break;
 		}
@@ -1377,6 +1378,7 @@ void vStopBury(int survivor, int tank)
 		g_esBuryPlayer[survivor].g_flLastPosition[2] += g_esBuryCache[tank].g_flBuryHeight / 2.0;
 
 		TeleportEntity(survivor, g_esBuryPlayer[survivor].g_flLastPosition, .velocity = view_as<float>({0.0, 0.0, 0.0}));
+		vFixPlayerPosition(survivor);
 	}
 
 	int iWeapon = 0;

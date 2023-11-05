@@ -867,8 +867,6 @@ void vTrackThink(int rock)
 						return;
 					}
 
-					SetEntityGravity(rock, 0.01);
-
 					float flDirection[3], flVelocity3[3];
 					SubtractVectors(flPos2, flPos, flDirection);
 					NormalizeVector(flDirection, flDirection);
@@ -879,6 +877,7 @@ void vTrackThink(int rock)
 					NormalizeVector(flVelocity3, flVelocity3);
 					ScaleVector(flVelocity3, flVector);
 
+					SetEntityGravity(rock, 0.01);
 					TeleportEntity(rock, .velocity = flVelocity3);
 				}
 			}

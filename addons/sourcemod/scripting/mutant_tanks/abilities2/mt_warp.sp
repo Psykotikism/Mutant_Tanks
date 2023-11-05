@@ -1179,6 +1179,7 @@ public void MT_OnPlayerEventKilled(int victim, int attacker)
 					g_esWarpPlayer[iSurvivor].g_iOwner = -1;
 
 					TeleportEntity(iSurvivor, flOrigin, flAngles, view_as<float>({0.0, 0.0, 0.0}));
+					vFixPlayerPosition(iSurvivor);
 				}
 			}
 		}
@@ -1594,6 +1595,7 @@ void vWarpHit(int survivor, int tank, float random, float chance, int enabled, i
 						GetClientAbsOrigin(iSurvivor, flCurrentOrigin);
 						GetClientEyeAngles(iSurvivor, flCurrentAngles);
 						TeleportEntity(survivor, flCurrentOrigin, flCurrentAngles, view_as<float>({0.0, 0.0, 0.0}));
+						vFixPlayerPosition(survivor);
 
 						if (g_esWarpCache[tank].g_iWarpMessage & messages)
 						{
