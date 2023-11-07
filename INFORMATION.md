@@ -210,8 +210,8 @@
 			// Note: Both games usually wait around 5 seconds by default before kicking infected bots.
 			// Note: Do not change this setting if you are unsure of how it works.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Kick Bots"				"0"
 
 			// Enable Mutant Tanks on listen servers.
@@ -360,8 +360,8 @@
 			// Note: The cycle resets when there are no unique Mutant Tank types left to choose from.
 			// Note: Do not change this setting if you are unsure of how it works.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Cycle Types"				"0"
 
 			// All Mutant Tanks can spawn.
@@ -9943,6 +9943,13 @@
 			// 2: Check if the Mutant Tank is facing the survivors.
 			"Ability Sight"				"0"
 
+			// Block the fall damage of the Mutant Tank's ability.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Choke Block"				"1"
+
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
@@ -10091,6 +10098,7 @@
 				"Ability Effect"			"0"
 				"Ability Message"			"0"
 				"Ability Sight"				"0"
+				"Choke Block"				"1"
 				"Choke Chance"				"33.3"
 				"Choke Cooldown"			"0"
 				"Choke Damage"				"5.0"
