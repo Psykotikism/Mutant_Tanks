@@ -201,7 +201,7 @@ enum struct esMeteorCache
 
 esMeteorCache g_esMeteorCache[MAXPLAYERS + 1];
 
-int g_iUserID[2048];
+int g_iCountdown[2048], g_iUserID[2048];
 
 #if !defined MT_ABILITIES_MAIN2
 public void OnPluginStart()
@@ -1210,26 +1210,38 @@ void tTimerMeteorCombo(Handle timer, DataPack pack)
 	vMeteor(iTank, iPos);
 }
 
-void tTimerDestroyMeteor(Handle timer, DataPack pack)
+Action tTimerDestroyMeteor(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iMeteor = EntRefToEntIndex(pack.ReadCell());
 	if (iMeteor == INVALID_ENT_REFERENCE || !bIsValidEntity(iMeteor))
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsTankSupported(iTank))
 	{
+		g_iCountdown[iMeteor] = 0;
+
 		RemoveEntity(iMeteor);
 
-		return;
+		return Plugin_Stop;
 	}
 
-	int iPos = pack.ReadCell();
-	vMeteor3(iTank, iMeteor, iPos);
+	g_iCountdown[iMeteor]--;
+	if (g_iCountdown[iMeteor] <= 0)
+	{
+		g_iCountdown[iMeteor] = 0;
+
+		int iPos = pack.ReadCell();
+		vMeteor3(iTank, iMeteor, iPos);
+
+		return Plugin_Stop;
+	}
+
+	return Plugin_Continue;
 }
 
 Action tTimerMeteor(Handle timer, DataPack pack)
@@ -1312,8 +1324,10 @@ Action tTimerMeteor(Handle timer, DataPack pack)
 			iMeteor = EntIndexToEntRef(iMeteor);
 			vDeleteEntity(iMeteor, g_esMeteorCache[iTank].g_flMeteorLifetime);
 
+			g_iCountdown[iMeteor] = 10;
+
 			DataPack dpMeteor;
-			CreateDataTimer(10.0, tTimerDestroyMeteor, dpMeteor, TIMER_FLAG_NO_MAPCHANGE);
+			CreateDataTimer(1.0, tTimerDestroyMeteor, dpMeteor, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 			dpMeteor.WriteCell(iMeteor);
 			dpMeteor.WriteCell(GetClientUserId(iTank));
 			dpMeteor.WriteCell(iPos);

@@ -8222,7 +8222,7 @@ void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 
 				SDKUnhook(iVictim, SDKHook_PostThinkPost, OnTankPostThinkPost);
 				vCalculateDeath(iVictim, iAttacker);
-				CreateTimer(1.0, tTimerResetType, iVictimId, TIMER_FLAG_NO_MAPCHANGE);
+				CreateTimer(0.5, tTimerResetType, iVictimId, TIMER_FLAG_NO_MAPCHANGE);
 
 				if (g_esPlayer[iVictim].g_iTankType > 0)
 				{

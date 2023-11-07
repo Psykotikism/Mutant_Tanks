@@ -439,7 +439,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 		float flCurrentTime = GetGameTime();
 		if (buttons & IN_ATTACK2)
 		{
-			if (g_esRecallPlayer[client].g_flLastRecall[0] < (flCurrentTime + 2.0))
+			if (g_esRecallPlayer[client].g_flLastRecall[0] < (flCurrentTime + 5.0))
 			{
 				float flEyeAngles[3], flOrigin[3], flDirection[3], flTemp[3];
 				vRecallBlink(client, buttons, flOrigin, flEyeAngles, flDirection, flTemp);
@@ -451,7 +451,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 				}
 
 				g_esRecallPlayer[client].g_bBlockFall = true;
-				g_esRecallPlayer[client].g_flLastRecall[0] = flCurrentTime + 2.0;
+				g_esRecallPlayer[client].g_flLastRecall[0] = flCurrentTime + 5.0;
 
 				MT_TeleportPlayerAhead(client, flOrigin, flEyeAngles, NULL_VECTOR, flDirection, 150.0);
 				vAttachParticle(client, PARTICLE_ELECTRICITY, 0.75, 30.0);
@@ -460,7 +460,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 		}
 		else if (buttons & IN_RELOAD)
 		{
-			if (g_esRecallPlayer[client].g_flLastRecall[1] < (flCurrentTime + 2.0))
+			if (g_esRecallPlayer[client].g_flLastRecall[1] < (flCurrentTime + 5.0))
 			{
 				vRecallRewind(client, 1.0, 30, 0, 1, true);
 			}
@@ -1313,7 +1313,7 @@ void vRecallRewind(int player, float threshold, int lifetime, int mode, int clea
 
 				bool bSurvivor = bIsSurvivor(player);
 				g_esRecallPlayer[player].g_bBlockFall = bSurvivor;
-				g_esRecallPlayer[player].g_flLastRecall[1] = bSurvivor ? (GetGameTime() + 2.0) : 0.0;
+				g_esRecallPlayer[player].g_flLastRecall[1] = bSurvivor ? (GetGameTime() + 5.0) : 0.0;
 
 				TeleportEntity(player, flNewPos, flEyeAngles);
 				vFixPlayerPosition(player);

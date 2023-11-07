@@ -37,6 +37,9 @@
 - Hypno: Fixed shield not spawning all the time.
 - Ice: Fixed survivors not reverting back to their original colors when the ability ends.
 - Jump: Fixed the survivor victims of Smokers, Hunters, Jockeys, and Chargers not jumping with them.
+- Meteor:
+	- Fixed meteors giving players accelerated velocity when standing on them.
+	- Fixed meteors not disappearing when Mutant Infected die.
 - Minion: Fixed array index errors. (Thanks to `Slaven555` for reporting!)
 - Necro: Fixed sound being precached for every player that leaves.
 - Omni: Fixed the ability overlapping with the `Boss`, `Randomize`, `Transform`, and `Combo` features. (Thanks to `Mi.Cura` for reporting!)
@@ -122,7 +125,9 @@
 #### Abilities
 - Mutant Infected will now reserve their abilities for engaging with survivors for a more tactical approach. [Requires `Actions`.]
 - Bury: The ability no longer affects pinned survivors.
-- Choke: The ability no longer affects pinned survivors.
+- Choke:
+	- The ability no longer affects pinned survivors.
+	- Added the `Choke Block` setting.
 - Electric: Added visibility check for survivors caught in chain reactions.
 - Fast:
 	- Changed the minimum value of the `Fast Speed` setting from `3.0` to `-1.0`.
@@ -135,7 +140,6 @@
 - Laser:
 	- The ability now chains to multiple survivors.
 	- Added the `Ability Sight` setting.
-- Meteor: Fixed meteors giving players accelerated velocity when standing on them.
 - Nullify: The ability now blocks the survivors' damage towards everything.
 - Recall: Affected survivors are now teleported back to the team when the Mutant Infected dies.
 - Restart: The ability no longer affects incapacitated survivors.
