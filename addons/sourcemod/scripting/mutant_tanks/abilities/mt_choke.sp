@@ -460,13 +460,19 @@ Action OnChokeTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
 	{
-		if (bIsSurvivor(victim) && (damagetype & DMG_FALL) && g_esChokePlayer[victim].g_bBlockFall)
+		if (bIsSurvivor(victim) && (damagetype & DMG_FALL))
 		{
-			g_esChokePlayer[victim].g_bBlockFall = false;
+			SetEntityGravity(victim, 1.0);
 
-			return Plugin_Handled;
+			if (g_esChokePlayer[victim].g_bBlockFall)
+			{
+				g_esChokePlayer[victim].g_bBlockFall = false;
+
+				return Plugin_Handled;
+			}
 		}
-		else if (bIsValidEntity(inflictor))
+
+		if (bIsValidEntity(inflictor))
 		{
 			char sClassname[32];
 			GetEntityClassname(inflictor, sClassname, sizeof sClassname);
@@ -1269,7 +1275,7 @@ void vChokeReset2(int survivor, int tank, int messages)
 	g_esChokePlayer[survivor].g_iOwner = -1;
 
 	SetEntityMoveType(survivor, MOVETYPE_WALK);
-	SetEntityGravity(survivor, 1.0);
+	SetEntityGravity(survivor, 3.0);
 	TeleportEntity(survivor, .velocity = view_as<float>({0.0, 0.0, -300.0}));
 
 	int iWeapon = 0;
