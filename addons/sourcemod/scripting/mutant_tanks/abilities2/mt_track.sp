@@ -714,7 +714,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esTrackCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esTrackCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esTrackPlayer[tank].g_iTankType, tank) || (g_esTrackCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esTrackCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esTrackAbility[g_esTrackPlayer[tank].g_iTankType].g_iAccessFlags, g_esTrackPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esTrackCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esTrackCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esTrackPlayer[tank].g_iTankType, tank) || (g_esTrackCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esTrackCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esTrackAbility[g_esTrackPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esTrackPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -780,7 +780,7 @@ public void MT_OnRockThrow(int tank, int rock)
 {
 	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esTrackCache[tank].g_iTrackAbility == 1 && g_esTrackCache[tank].g_iComboAbility == 0 && GetRandomFloat(0.1, 100.0) <= g_esTrackCache[tank].g_flTrackChance)
 	{
-		if (bIsAreaNarrow(tank, g_esTrackCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esTrackCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esTrackPlayer[tank].g_iTankType, tank) || (g_esTrackCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esTrackCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esTrackAbility[g_esTrackPlayer[tank].g_iTankType].g_iAccessFlags, g_esTrackPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esTrackCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esTrackCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esTrackPlayer[tank].g_iTankType, tank) || (g_esTrackCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esTrackCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esTrackAbility[g_esTrackPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esTrackPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -835,7 +835,7 @@ void vTrackThink(int rock)
 	int iTank = GetEntPropEnt(rock, Prop_Data, "m_hThrower");
 	if (bIsValidClient(iTank))
 	{
-		if (bIsAreaNarrow(iTank, g_esTrackCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esTrackCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esTrackPlayer[iTank].g_iTankType, iTank) || (g_esTrackCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esTrackCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esTrackAbility[g_esTrackPlayer[iTank].g_iTankType].g_iAccessFlags, g_esTrackPlayer[iTank].g_iAccessFlags)))
+		if (bIsAreaNarrow(iTank, g_esTrackCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esTrackCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esTrackPlayer[iTank].g_iTankType, iTank) || (g_esTrackCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esTrackCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esTrackAbility[g_esTrackPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esTrackPlayer[iTank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -1204,7 +1204,7 @@ int iGetRockTarget(float pos[3], float angles[3], int tank)
 	{
 		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 		{
-			if (MT_IsAdminImmune(iSurvivor, tank) || bIsAdminImmune(iSurvivor, g_esTrackPlayer[tank].g_iTankType, g_esTrackAbility[g_esTrackPlayer[tank].g_iTankType].g_iImmunityFlags, g_esTrackPlayer[iSurvivor].g_iImmunityFlags))
+			if (MT_IsAdminImmune(iSurvivor, tank) || bIsAdminImmune(iSurvivor, g_esTrackPlayer[tank].g_iTankType, g_esTrackAbility[g_esTrackPlayer[tank].g_iTankTypeRecorded].g_iImmunityFlags, g_esTrackPlayer[iSurvivor].g_iImmunityFlags))
 			{
 				continue;
 			}
@@ -1234,7 +1234,7 @@ void tTimerTrack(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
-	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esTrackCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esTrackCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esTrackPlayer[iTank].g_iTankType, iTank) || (g_esTrackCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esTrackCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esTrackAbility[g_esTrackPlayer[iTank].g_iTankType].g_iAccessFlags, g_esTrackPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esTrackPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || iType != g_esTrackPlayer[iTank].g_iTankType || g_esTrackCache[iTank].g_iTrackAbility == 0 || !g_esTrackPlayer[iTank].g_bActivated)
+	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esTrackCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esTrackCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esTrackPlayer[iTank].g_iTankType, iTank) || (g_esTrackCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esTrackCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esTrackAbility[g_esTrackPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esTrackPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esTrackPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || iType != g_esTrackPlayer[iTank].g_iTankType || g_esTrackCache[iTank].g_iTrackAbility == 0 || !g_esTrackPlayer[iTank].g_bActivated)
 	{
 		g_esTrackPlayer[iTank].g_bActivated = false;
 

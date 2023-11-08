@@ -475,7 +475,7 @@ Action OnRocketTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 
 		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esRocketCache[attacker].g_iRocketHitMode == 0 || g_esRocketCache[attacker].g_iRocketHitMode == 1) && bIsSurvivor(victim) && g_esRocketCache[attacker].g_iComboAbility == 0)
 		{
-			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esRocketAbility[g_esRocketPlayer[attacker].g_iTankType].g_iAccessFlags, g_esRocketPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esRocketPlayer[attacker].g_iTankType, g_esRocketAbility[g_esRocketPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esRocketPlayer[victim].g_iImmunityFlags))
+			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esRocketAbility[g_esRocketPlayer[attacker].g_iTankTypeRecorded].g_iAccessFlags, g_esRocketPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esRocketPlayer[attacker].g_iTankType, g_esRocketAbility[g_esRocketPlayer[attacker].g_iTankTypeRecorded].g_iImmunityFlags, g_esRocketPlayer[victim].g_iImmunityFlags))
 			{
 				return Plugin_Continue;
 			}
@@ -488,7 +488,7 @@ Action OnRocketTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esRocketCache[victim].g_iRocketHitMode == 0 || g_esRocketCache[victim].g_iRocketHitMode == 2) && bIsSurvivor(attacker) && g_esRocketCache[victim].g_iComboAbility == 0)
 		{
-			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esRocketAbility[g_esRocketPlayer[victim].g_iTankType].g_iAccessFlags, g_esRocketPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esRocketPlayer[victim].g_iTankType, g_esRocketAbility[g_esRocketPlayer[victim].g_iTankType].g_iImmunityFlags, g_esRocketPlayer[attacker].g_iImmunityFlags))
+			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esRocketAbility[g_esRocketPlayer[victim].g_iTankTypeRecorded].g_iAccessFlags, g_esRocketPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esRocketPlayer[victim].g_iTankType, g_esRocketAbility[g_esRocketPlayer[victim].g_iTankTypeRecorded].g_iImmunityFlags, g_esRocketPlayer[attacker].g_iImmunityFlags))
 			{
 				return Plugin_Continue;
 			}
@@ -1025,7 +1025,7 @@ void vRocketAbilityActivated(int tank)
 public void MT_OnAbilityActivated(int tank)
 #endif
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esRocketAbility[g_esRocketPlayer[tank].g_iTankType].g_iAccessFlags, g_esRocketPlayer[tank].g_iAccessFlags)) || g_esRocketCache[tank].g_iHumanAbility == 0))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esRocketAbility[g_esRocketPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esRocketPlayer[tank].g_iAccessFlags)) || g_esRocketCache[tank].g_iHumanAbility == 0))
 	{
 		return;
 	}
@@ -1044,7 +1044,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esRocketCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esRocketCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRocketPlayer[tank].g_iTankType, tank) || (g_esRocketCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRocketCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esRocketAbility[g_esRocketPlayer[tank].g_iTankType].g_iAccessFlags, g_esRocketPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esRocketCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esRocketCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRocketPlayer[tank].g_iTankType, tank) || (g_esRocketCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRocketCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esRocketAbility[g_esRocketPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esRocketPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -1100,7 +1100,7 @@ void vRocket(int tank, int survivor, int enabled, int messages, int pos = -1)
 
 void vRocketAbility(int tank, float random, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esRocketCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esRocketCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRocketPlayer[tank].g_iTankType, tank) || (g_esRocketCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRocketCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esRocketAbility[g_esRocketPlayer[tank].g_iTankType].g_iAccessFlags, g_esRocketPlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esRocketCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esRocketCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRocketPlayer[tank].g_iTankType, tank) || (g_esRocketCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRocketCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esRocketAbility[g_esRocketPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esRocketPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -1117,7 +1117,7 @@ void vRocketAbility(int tank, float random, int pos = -1)
 		int iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esRocketPlayer[tank].g_iTankType, g_esRocketAbility[g_esRocketPlayer[tank].g_iTankType].g_iImmunityFlags, g_esRocketPlayer[iSurvivor].g_iImmunityFlags))
+			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esRocketPlayer[tank].g_iTankType, g_esRocketAbility[g_esRocketPlayer[tank].g_iTankTypeRecorded].g_iImmunityFlags, g_esRocketPlayer[iSurvivor].g_iImmunityFlags))
 			{
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 				if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange && bIsVisibleToPlayer(tank, iSurvivor, g_esRocketCache[tank].g_iRocketSight, .range = flRange))
@@ -1145,7 +1145,7 @@ void vRocketAbility(int tank, float random, int pos = -1)
 
 void vRocketHit(int survivor, int tank, float random, float chance, int enabled, int messages, int flags, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esRocketCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esRocketCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRocketPlayer[tank].g_iTankType, tank) || (g_esRocketCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRocketCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esRocketAbility[g_esRocketPlayer[tank].g_iTankType].g_iAccessFlags, g_esRocketPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esRocketPlayer[tank].g_iTankType, g_esRocketAbility[g_esRocketPlayer[tank].g_iTankType].g_iImmunityFlags, g_esRocketPlayer[survivor].g_iImmunityFlags))
+	if (bIsAreaNarrow(tank, g_esRocketCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esRocketCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRocketPlayer[tank].g_iTankType, tank) || (g_esRocketCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRocketCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esRocketAbility[g_esRocketPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esRocketPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esRocketPlayer[tank].g_iTankType, g_esRocketAbility[g_esRocketPlayer[tank].g_iTankTypeRecorded].g_iImmunityFlags, g_esRocketPlayer[survivor].g_iImmunityFlags))
 	{
 		return;
 	}
@@ -1326,7 +1326,7 @@ void tTimerRocket(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iRocketEnabled = pack.ReadCell();
-	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esRocketCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esRocketCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRocketPlayer[iTank].g_iTankType, iTank) || (g_esRocketCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRocketCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esRocketAbility[g_esRocketPlayer[iTank].g_iTankType].g_iAccessFlags, g_esRocketPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esRocketPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esRocketPlayer[iTank].g_iTankType, g_esRocketAbility[g_esRocketPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esRocketPlayer[iSurvivor].g_iImmunityFlags) || iRocketEnabled == 0 || !g_esRocketPlayer[iSurvivor].g_bAffected || MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_GODMODE))
+	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esRocketCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esRocketCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRocketPlayer[iTank].g_iTankType, iTank) || (g_esRocketCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRocketCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esRocketAbility[g_esRocketPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esRocketPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esRocketPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esRocketPlayer[iTank].g_iTankType, g_esRocketAbility[g_esRocketPlayer[iTank].g_iTankTypeRecorded].g_iImmunityFlags, g_esRocketPlayer[iSurvivor].g_iImmunityFlags) || iRocketEnabled == 0 || !g_esRocketPlayer[iSurvivor].g_bAffected || MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_GODMODE))
 	{
 		vRocketReset2(iSurvivor);
 
@@ -1342,7 +1342,7 @@ void tTimerRocketCombo(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esRocketAbility[g_esRocketPlayer[iTank].g_iTankType].g_iAccessFlags, g_esRocketPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esRocketPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esRocketCache[iTank].g_iRocketAbility == 0)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esRocketAbility[g_esRocketPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esRocketPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esRocketPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esRocketCache[iTank].g_iRocketAbility == 0)
 	{
 		return;
 	}
@@ -1363,7 +1363,7 @@ void tTimerRocketCombo2(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esRocketAbility[g_esRocketPlayer[iTank].g_iTankType].g_iAccessFlags, g_esRocketPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esRocketPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esRocketCache[iTank].g_iRocketHit == 0)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esRocketAbility[g_esRocketPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esRocketPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esRocketPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esRocketCache[iTank].g_iRocketHit == 0)
 	{
 		return;
 	}
@@ -1396,7 +1396,7 @@ void tTimerRocketLaunch(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell(), iRocketEnabled = pack.ReadCell();
-	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esRocketCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esRocketCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRocketPlayer[iTank].g_iTankType, iTank) || (g_esRocketCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRocketCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esRocketAbility[g_esRocketPlayer[iTank].g_iTankType].g_iAccessFlags, g_esRocketPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esRocketPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || iType != g_esRocketPlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esRocketPlayer[iTank].g_iTankType, g_esRocketAbility[g_esRocketPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esRocketPlayer[iSurvivor].g_iImmunityFlags) || iRocketEnabled == 0 || !g_esRocketPlayer[iSurvivor].g_bAffected || MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_GODMODE))
+	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esRocketCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esRocketCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRocketPlayer[iTank].g_iTankType, iTank) || (g_esRocketCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRocketCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esRocketAbility[g_esRocketPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esRocketPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esRocketPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || iType != g_esRocketPlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esRocketPlayer[iTank].g_iTankType, g_esRocketAbility[g_esRocketPlayer[iTank].g_iTankTypeRecorded].g_iImmunityFlags, g_esRocketPlayer[iSurvivor].g_iImmunityFlags) || iRocketEnabled == 0 || !g_esRocketPlayer[iSurvivor].g_bAffected || MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_GODMODE))
 	{
 		vRocketReset2(iSurvivor);
 
@@ -1429,7 +1429,7 @@ void tTimerRocketDetonate(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell(), iRocketEnabled = pack.ReadCell();
-	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esRocketCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esRocketCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRocketPlayer[iTank].g_iTankType, iTank) || (g_esRocketCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRocketCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esRocketAbility[g_esRocketPlayer[iTank].g_iTankType].g_iAccessFlags, g_esRocketPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esRocketPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || iType != g_esRocketPlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esRocketPlayer[iTank].g_iTankType, g_esRocketAbility[g_esRocketPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esRocketPlayer[iSurvivor].g_iImmunityFlags) || iRocketEnabled == 0 || !g_esRocketPlayer[iSurvivor].g_bAffected || MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_GODMODE))
+	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esRocketCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esRocketCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRocketPlayer[iTank].g_iTankType, iTank) || (g_esRocketCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRocketCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esRocketAbility[g_esRocketPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esRocketPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esRocketPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || iType != g_esRocketPlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esRocketPlayer[iTank].g_iTankType, g_esRocketAbility[g_esRocketPlayer[iTank].g_iTankTypeRecorded].g_iImmunityFlags, g_esRocketPlayer[iSurvivor].g_iImmunityFlags) || iRocketEnabled == 0 || !g_esRocketPlayer[iSurvivor].g_bAffected || MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_GODMODE))
 	{
 		vRocketReset2(iSurvivor);
 

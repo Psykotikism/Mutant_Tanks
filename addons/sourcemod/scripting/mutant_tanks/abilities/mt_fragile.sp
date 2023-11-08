@@ -451,7 +451,7 @@ Action OnFragileTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && g_esFragilePlayer[victim].g_bActivated)
 		{
 			bool bSurvivor = bIsSurvivor(attacker);
-			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esFragileAbility[g_esFragilePlayer[victim].g_iTankType].g_iAccessFlags, g_esFragilePlayer[victim].g_iAccessFlags)) || (bSurvivor && (MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esFragilePlayer[victim].g_iTankType, g_esFragileAbility[g_esFragilePlayer[victim].g_iTankType].g_iImmunityFlags, g_esFragilePlayer[attacker].g_iImmunityFlags))))
+			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esFragileAbility[g_esFragilePlayer[victim].g_iTankTypeRecorded].g_iAccessFlags, g_esFragilePlayer[victim].g_iAccessFlags)) || (bSurvivor && (MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esFragilePlayer[victim].g_iTankType, g_esFragileAbility[g_esFragilePlayer[victim].g_iTankTypeRecorded].g_iImmunityFlags, g_esFragilePlayer[attacker].g_iImmunityFlags))))
 			{
 				return Plugin_Continue;
 			}
@@ -995,7 +995,7 @@ void vFragileAbilityActivated(int tank)
 public void MT_OnAbilityActivated(int tank)
 #endif
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFragileAbility[g_esFragilePlayer[tank].g_iTankType].g_iAccessFlags, g_esFragilePlayer[tank].g_iAccessFlags)) || g_esFragileCache[tank].g_iHumanAbility == 0))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFragileAbility[g_esFragilePlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esFragilePlayer[tank].g_iAccessFlags)) || g_esFragileCache[tank].g_iHumanAbility == 0))
 	{
 		return;
 	}
@@ -1014,7 +1014,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esFragileCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esFragileCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esFragilePlayer[tank].g_iTankType, tank) || (g_esFragileCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esFragileCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFragileAbility[g_esFragilePlayer[tank].g_iTankType].g_iAccessFlags, g_esFragilePlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esFragileCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esFragileCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esFragilePlayer[tank].g_iTankType, tank) || (g_esFragileCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esFragileCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFragileAbility[g_esFragilePlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esFragilePlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -1132,7 +1132,7 @@ void vFragile(int tank, int pos = -1)
 
 void vFragileAbility(int tank)
 {
-	if ((g_esFragilePlayer[tank].g_iCooldown != -1 && g_esFragilePlayer[tank].g_iCooldown >= GetTime()) || bIsAreaNarrow(tank, g_esFragileCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esFragileCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esFragilePlayer[tank].g_iTankType, tank) || (g_esFragileCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esFragileCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFragileAbility[g_esFragilePlayer[tank].g_iTankType].g_iAccessFlags, g_esFragilePlayer[tank].g_iAccessFlags)))
+	if ((g_esFragilePlayer[tank].g_iCooldown != -1 && g_esFragilePlayer[tank].g_iCooldown >= GetTime()) || bIsAreaNarrow(tank, g_esFragileCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esFragileCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esFragilePlayer[tank].g_iTankType, tank) || (g_esFragileCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esFragileCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFragileAbility[g_esFragilePlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esFragilePlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -1212,7 +1212,7 @@ void tTimerFragileCombo(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esFragileAbility[g_esFragilePlayer[iTank].g_iTankType].g_iAccessFlags, g_esFragilePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esFragilePlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esFragileCache[iTank].g_iFragileAbility == 0 || g_esFragilePlayer[iTank].g_bActivated)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esFragileAbility[g_esFragilePlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esFragilePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esFragilePlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esFragileCache[iTank].g_iFragileAbility == 0 || g_esFragilePlayer[iTank].g_bActivated)
 	{
 		return;
 	}

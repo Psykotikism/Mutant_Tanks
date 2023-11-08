@@ -889,7 +889,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esOmniCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esOmniCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esOmniPlayer[tank].g_iTankType, tank) || (g_esOmniCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esOmniCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esOmniAbility[g_esOmniPlayer[tank].g_iTankType].g_iAccessFlags, g_esOmniPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esOmniCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esOmniCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esOmniPlayer[tank].g_iTankType, tank) || (g_esOmniCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esOmniCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esOmniAbility[g_esOmniPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esOmniPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -1006,7 +1006,7 @@ void vOmni(int tank, int pos = -1)
 
 void vOmni2(int tank, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esOmniCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esOmniCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esOmniPlayer[tank].g_iTankType, tank) || (g_esOmniCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esOmniCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esOmniAbility[g_esOmniPlayer[tank].g_iTankType].g_iAccessFlags, g_esOmniPlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esOmniCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esOmniCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esOmniPlayer[tank].g_iTankType, tank) || (g_esOmniCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esOmniCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esOmniAbility[g_esOmniPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esOmniPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -1062,7 +1062,7 @@ void vOmni2(int tank, int pos = -1)
 
 void vOmniAbility(int tank)
 {
-	if ((g_esOmniPlayer[tank].g_iCooldown != -1 && g_esOmniPlayer[tank].g_iCooldown >= GetTime()) || bIsAreaNarrow(tank, g_esOmniCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esOmniCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esOmniPlayer[tank].g_iTankType, tank) || (g_esOmniCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esOmniCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esOmniAbility[g_esOmniPlayer[tank].g_iTankType].g_iAccessFlags, g_esOmniPlayer[tank].g_iAccessFlags)))
+	if ((g_esOmniPlayer[tank].g_iCooldown != -1 && g_esOmniPlayer[tank].g_iCooldown >= GetTime()) || bIsAreaNarrow(tank, g_esOmniCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esOmniCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esOmniPlayer[tank].g_iTankType, tank) || (g_esOmniCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esOmniCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esOmniAbility[g_esOmniPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esOmniPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -1173,7 +1173,7 @@ bool bIsOmniType(int tank, int type, int specType)
 void tTimerOmniCombo(Handle timer, DataPack pack)
 {
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esOmniAbility[g_esOmniPlayer[iTank].g_iTankType].g_iAccessFlags, g_esOmniPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esOmniPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esOmniCache[iTank].g_iOmniAbility == 0 || g_esOmniPlayer[iTank].g_bActivated)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esOmniAbility[g_esOmniPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esOmniPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esOmniPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esOmniCache[iTank].g_iOmniAbility == 0 || g_esOmniPlayer[iTank].g_bActivated)
 	{
 		return;
 	}

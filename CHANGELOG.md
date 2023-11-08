@@ -130,6 +130,11 @@
 	- Added the `Choke Block` setting.
 - Electric: Added visibility check for survivors caught in chain reactions.
 - Fast:
+	- Added the `Fast Dash` setting.
+	- Added the `Fast Dash Chance` setting.
+	- Added the `Fast Dash Range` setting.
+	- Added the `Ability Sight` setting.
+	- Added the `Immunity Flags` setting.
 	- Changed the minimum value of the `Fast Speed` setting from `3.0` to `-1.0`.
 	- Changed the maximum value of the `Fast Speed` setting from `10.0` to `99.0`.
 - Hypno: Changed the default value of the `Hypno View` setting from `1` to `0`.
@@ -142,6 +147,11 @@
 	- Added the `Ability Sight` setting.
 - Nullify: The ability now blocks the survivors' damage towards everything.
 - Recall: Affected survivors are now teleported back to the team when the Mutant Infected dies.
+- Regen:
+	- Added the `Regen Leech` setting.
+	- Added the `Regen Leech Range` setting.
+	- Added the `Ability Sight` setting.
+	- Added the `Immunity Flags` setting.
 - Restart: The ability no longer affects incapacitated survivors.
 - Rocket:
 	- Added the `Rocket Countdown` setting.

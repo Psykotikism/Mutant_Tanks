@@ -1054,7 +1054,7 @@ void vGunnerAbilityActivated(int tank)
 public void MT_OnAbilityActivated(int tank)
 #endif
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esGunnerAbility[g_esGunnerPlayer[tank].g_iTankType].g_iAccessFlags, g_esGunnerPlayer[tank].g_iAccessFlags)) || g_esGunnerCache[tank].g_iHumanAbility == 0))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esGunnerAbility[g_esGunnerPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esGunnerPlayer[tank].g_iAccessFlags)) || g_esGunnerCache[tank].g_iHumanAbility == 0))
 	{
 		return;
 	}
@@ -1073,7 +1073,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esGunnerCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esGunnerCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esGunnerPlayer[tank].g_iTankType, tank) || (g_esGunnerCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esGunnerCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esGunnerAbility[g_esGunnerPlayer[tank].g_iTankType].g_iAccessFlags, g_esGunnerPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esGunnerCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esGunnerCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esGunnerPlayer[tank].g_iTankType, tank) || (g_esGunnerCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esGunnerCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esGunnerAbility[g_esGunnerPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esGunnerPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -1537,7 +1537,7 @@ void vGunner4(int tank, int target, int drone, float pos[3], float origin[3])
 
 void vGunnerAbility(int tank)
 {
-	if ((g_esGunnerPlayer[tank].g_iCooldown != -1 && g_esGunnerPlayer[tank].g_iCooldown >= GetTime()) || bIsAreaNarrow(tank, g_esGunnerCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esGunnerCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esGunnerPlayer[tank].g_iTankType, tank) || (g_esGunnerCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esGunnerCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esGunnerAbility[g_esGunnerPlayer[tank].g_iTankType].g_iAccessFlags, g_esGunnerPlayer[tank].g_iAccessFlags)))
+	if ((g_esGunnerPlayer[tank].g_iCooldown != -1 && g_esGunnerPlayer[tank].g_iCooldown >= GetTime()) || bIsAreaNarrow(tank, g_esGunnerCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esGunnerCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esGunnerPlayer[tank].g_iTankType, tank) || (g_esGunnerCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esGunnerCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esGunnerAbility[g_esGunnerPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esGunnerPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -1692,7 +1692,7 @@ void vSetGunnerGlow(int drone, int color, bool flashing, int min, int max, int t
 void tTimerGunnerCombo(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esGunnerAbility[g_esGunnerPlayer[iTank].g_iTankType].g_iAccessFlags, g_esGunnerPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esGunnerPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esGunnerCache[iTank].g_iGunnerAbility == 0 || g_esGunnerPlayer[iTank].g_bActivated)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esGunnerAbility[g_esGunnerPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esGunnerPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esGunnerPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esGunnerCache[iTank].g_iGunnerAbility == 0 || g_esGunnerPlayer[iTank].g_bActivated)
 	{
 		return;
 	}

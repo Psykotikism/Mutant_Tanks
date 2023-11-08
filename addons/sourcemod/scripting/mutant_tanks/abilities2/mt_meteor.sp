@@ -924,7 +924,7 @@ void vMeteorAbilityActivated(int tank)
 public void MT_OnAbilityActivated(int tank)
 #endif
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esMeteorAbility[g_esMeteorPlayer[tank].g_iTankType].g_iAccessFlags, g_esMeteorPlayer[tank].g_iAccessFlags)) || g_esMeteorCache[tank].g_iHumanAbility == 0))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esMeteorAbility[g_esMeteorPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esMeteorPlayer[tank].g_iAccessFlags)) || g_esMeteorCache[tank].g_iHumanAbility == 0))
 	{
 		return;
 	}
@@ -943,7 +943,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esMeteorCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esMeteorCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esMeteorPlayer[tank].g_iTankType, tank) || (g_esMeteorCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esMeteorCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esMeteorAbility[g_esMeteorPlayer[tank].g_iTankType].g_iAccessFlags, g_esMeteorPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esMeteorCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esMeteorCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esMeteorPlayer[tank].g_iTankType, tank) || (g_esMeteorCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esMeteorCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esMeteorAbility[g_esMeteorPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esMeteorPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -1060,7 +1060,7 @@ void vMeteor(int tank, int pos = -1)
 
 void vMeteor2(int tank, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esMeteorCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esMeteorCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esMeteorPlayer[tank].g_iTankType, tank) || (g_esMeteorCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esMeteorCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esMeteorAbility[g_esMeteorPlayer[tank].g_iTankType].g_iAccessFlags, g_esMeteorPlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esMeteorCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esMeteorCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esMeteorPlayer[tank].g_iTankType, tank) || (g_esMeteorCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esMeteorCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esMeteorAbility[g_esMeteorPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esMeteorPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -1079,7 +1079,7 @@ void vMeteor2(int tank, int pos = -1)
 
 void vMeteor3(int tank, int rock, int pos = -1)
 {
-	if (!MT_IsTankSupported(tank) || bIsAreaNarrow(tank, g_esMeteorCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esMeteorCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esMeteorPlayer[tank].g_iTankType, tank) || (g_esMeteorCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esMeteorCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esMeteorAbility[g_esMeteorPlayer[tank].g_iTankType].g_iAccessFlags, g_esMeteorPlayer[tank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esMeteorPlayer[tank].g_iTankType, tank) || !MT_IsCustomTankSupported(tank) || !bIsValidEntity(rock))
+	if (!MT_IsTankSupported(tank) || bIsAreaNarrow(tank, g_esMeteorCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esMeteorCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esMeteorPlayer[tank].g_iTankType, tank) || (g_esMeteorCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esMeteorCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esMeteorAbility[g_esMeteorPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esMeteorPlayer[tank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esMeteorPlayer[tank].g_iTankType, tank) || !MT_IsCustomTankSupported(tank) || !bIsValidEntity(rock))
 	{
 		return;
 	}
@@ -1108,7 +1108,7 @@ void vMeteor3(int tank, int rock, int pos = -1)
 			{
 				for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 				{
-					if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esMeteorPlayer[tank].g_iTankType, g_esMeteorAbility[g_esMeteorPlayer[tank].g_iTankType].g_iImmunityFlags, g_esMeteorPlayer[iSurvivor].g_iImmunityFlags))
+					if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esMeteorPlayer[tank].g_iTankType, g_esMeteorAbility[g_esMeteorPlayer[tank].g_iTankTypeRecorded].g_iImmunityFlags, g_esMeteorPlayer[iSurvivor].g_iImmunityFlags))
 					{
 						GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 						if (GetVectorDistance(flTankPos, flSurvivorPos) <= 200.0)
@@ -1126,7 +1126,7 @@ void vMeteor3(int tank, int rock, int pos = -1)
 
 void vMeteorAbility(int tank)
 {
-	if ((g_esMeteorPlayer[tank].g_iCooldown != -1 && g_esMeteorPlayer[tank].g_iCooldown >= GetTime()) || bIsAreaNarrow(tank, g_esMeteorCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esMeteorCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esMeteorPlayer[tank].g_iTankType, tank) || (g_esMeteorCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esMeteorCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esMeteorAbility[g_esMeteorPlayer[tank].g_iTankType].g_iAccessFlags, g_esMeteorPlayer[tank].g_iAccessFlags)))
+	if ((g_esMeteorPlayer[tank].g_iCooldown != -1 && g_esMeteorPlayer[tank].g_iCooldown >= GetTime()) || bIsAreaNarrow(tank, g_esMeteorCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esMeteorCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esMeteorPlayer[tank].g_iTankType, tank) || (g_esMeteorCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esMeteorCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esMeteorAbility[g_esMeteorPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esMeteorPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -1201,7 +1201,7 @@ void tTimerMeteorCombo(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esMeteorAbility[g_esMeteorPlayer[iTank].g_iTankType].g_iAccessFlags, g_esMeteorPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esMeteorPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esMeteorCache[iTank].g_iMeteorAbility == 0 || g_esMeteorPlayer[iTank].g_bActivated)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esMeteorAbility[g_esMeteorPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esMeteorPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esMeteorPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esMeteorCache[iTank].g_iMeteorAbility == 0 || g_esMeteorPlayer[iTank].g_bActivated)
 	{
 		return;
 	}
@@ -1249,7 +1249,7 @@ Action tTimerMeteor(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || MT_DoesTypeRequireHumans(g_esMeteorPlayer[iTank].g_iTankType, iTank) || (g_esMeteorCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esMeteorCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esMeteorAbility[g_esMeteorPlayer[iTank].g_iTankType].g_iAccessFlags, g_esMeteorPlayer[iTank].g_iAccessFlags)) || !MT_IsCustomTankSupported(iTank) || iType != g_esMeteorPlayer[iTank].g_iTankType || !g_esMeteorPlayer[iTank].g_bActivated)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || MT_DoesTypeRequireHumans(g_esMeteorPlayer[iTank].g_iTankType, iTank) || (g_esMeteorCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esMeteorCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esMeteorAbility[g_esMeteorPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esMeteorPlayer[iTank].g_iAccessFlags)) || !MT_IsCustomTankSupported(iTank) || iType != g_esMeteorPlayer[iTank].g_iTankType || !g_esMeteorPlayer[iTank].g_bActivated)
 	{
 		g_esMeteorPlayer[iTank].g_bActivated = false;
 

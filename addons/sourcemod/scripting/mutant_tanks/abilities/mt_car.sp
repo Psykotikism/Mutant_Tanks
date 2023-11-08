@@ -859,7 +859,7 @@ void vCarAbilityActivated(int tank)
 public void MT_OnAbilityActivated(int tank)
 #endif
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esCarAbility[g_esCarPlayer[tank].g_iTankType].g_iAccessFlags, g_esCarPlayer[tank].g_iAccessFlags)) || g_esCarCache[tank].g_iHumanAbility == 0))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esCarAbility[g_esCarPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esCarPlayer[tank].g_iAccessFlags)) || g_esCarCache[tank].g_iHumanAbility == 0))
 	{
 		return;
 	}
@@ -878,7 +878,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esCarCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esCarCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esCarPlayer[tank].g_iTankType, tank) || (g_esCarCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCarCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esCarAbility[g_esCarPlayer[tank].g_iTankType].g_iAccessFlags, g_esCarPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esCarCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esCarCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esCarPlayer[tank].g_iTankType, tank) || (g_esCarCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCarCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esCarAbility[g_esCarPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esCarPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -995,7 +995,7 @@ void vCar(int tank, int pos = -1)
 
 void vCar2(int tank, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esCarCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esCarCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esCarPlayer[tank].g_iTankType, tank) || (g_esCarCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCarCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esCarAbility[g_esCarPlayer[tank].g_iTankType].g_iAccessFlags, g_esCarPlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esCarCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esCarCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esCarPlayer[tank].g_iTankType, tank) || (g_esCarCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCarCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esCarAbility[g_esCarPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esCarPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -1014,7 +1014,7 @@ void vCar2(int tank, int pos = -1)
 
 void vCarAbility(int tank)
 {
-	if ((g_esCarPlayer[tank].g_iCooldown != -1 && g_esCarPlayer[tank].g_iCooldown >= GetTime()) || bIsAreaNarrow(tank, g_esCarCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esCarCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esCarPlayer[tank].g_iTankType, tank) || (g_esCarCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCarCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esCarAbility[g_esCarPlayer[tank].g_iTankType].g_iAccessFlags, g_esCarPlayer[tank].g_iAccessFlags)))
+	if ((g_esCarPlayer[tank].g_iCooldown != -1 && g_esCarPlayer[tank].g_iCooldown >= GetTime()) || bIsAreaNarrow(tank, g_esCarCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esCarCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esCarPlayer[tank].g_iTankType, tank) || (g_esCarCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCarCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esCarAbility[g_esCarPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esCarPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -1089,7 +1089,7 @@ Action tTimerCar(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esCarAbility[g_esCarPlayer[iTank].g_iTankType].g_iAccessFlags, g_esCarPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esCarPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || iType != g_esCarPlayer[iTank].g_iTankType || !g_esCarPlayer[iTank].g_bActivated)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esCarAbility[g_esCarPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esCarPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esCarPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || iType != g_esCarPlayer[iTank].g_iTankType || !g_esCarPlayer[iTank].g_bActivated)
 	{
 		g_esCarPlayer[iTank].g_bActivated = false;
 
@@ -1225,7 +1225,7 @@ void tTimerCarCombo(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esCarAbility[g_esCarPlayer[iTank].g_iTankType].g_iAccessFlags, g_esCarPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esCarPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esCarCache[iTank].g_iCarAbility == 0 || g_esCarPlayer[iTank].g_bActivated)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esCarAbility[g_esCarPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esCarPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esCarPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esCarCache[iTank].g_iCarAbility == 0 || g_esCarPlayer[iTank].g_bActivated)
 	{
 		return;
 	}

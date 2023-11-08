@@ -66,6 +66,7 @@ public Plugin myinfo =
 #define SPRITE_DOT "sprites/dot.vmt"
 #define SPRITE_FIRE "sprites/sprite_fire01.vmt"
 #define SPRITE_GLOW "sprites/glow01.vmt"
+#define SPRITE_LASER "sprites/laser.vmt"
 #define SPRITE_LASERBEAM "sprites/laserbeam.vmt"
 
 bool g_bDedicated, g_bLaggedMovementInstalled, g_bLateLoad, g_bSecondGame;

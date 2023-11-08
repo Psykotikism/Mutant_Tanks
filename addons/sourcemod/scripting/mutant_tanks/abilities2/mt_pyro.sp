@@ -443,7 +443,7 @@ Action OnPyroTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 	{
 		if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim))
 		{
-			if (!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esPyroAbility[g_esPyroPlayer[victim].g_iTankType].g_iAccessFlags, g_esPyroPlayer[victim].g_iAccessFlags))
+			if (!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esPyroAbility[g_esPyroPlayer[victim].g_iTankTypeRecorded].g_iAccessFlags, g_esPyroPlayer[victim].g_iAccessFlags))
 			{
 				return Plugin_Continue;
 			}
@@ -488,7 +488,7 @@ Action OnPyroTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 		}
 		else if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker))
 		{
-			if (!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esPyroAbility[g_esPyroPlayer[attacker].g_iTankType].g_iAccessFlags, g_esPyroPlayer[attacker].g_iAccessFlags))
+			if (!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esPyroAbility[g_esPyroPlayer[attacker].g_iTankTypeRecorded].g_iAccessFlags, g_esPyroPlayer[attacker].g_iAccessFlags))
 			{
 				return Plugin_Continue;
 			}
@@ -948,7 +948,7 @@ void vPyroAbilityActivated(int tank)
 public void MT_OnAbilityActivated(int tank)
 #endif
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esPyroAbility[g_esPyroPlayer[tank].g_iTankType].g_iAccessFlags, g_esPyroPlayer[tank].g_iAccessFlags)) || g_esPyroCache[tank].g_iHumanAbility == 0))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esPyroAbility[g_esPyroPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esPyroPlayer[tank].g_iAccessFlags)) || g_esPyroCache[tank].g_iHumanAbility == 0))
 	{
 		return;
 	}
@@ -967,7 +967,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esPyroCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esPyroCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esPyroPlayer[tank].g_iTankType, tank) || (g_esPyroCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esPyroCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esPyroAbility[g_esPyroPlayer[tank].g_iTankType].g_iAccessFlags, g_esPyroPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esPyroCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esPyroCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esPyroPlayer[tank].g_iTankType, tank) || (g_esPyroCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esPyroCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esPyroAbility[g_esPyroPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esPyroPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -1090,7 +1090,7 @@ void vPyro(int tank, int pos = -1)
 
 void vPyroAbility(int tank)
 {
-	if ((g_esPyroPlayer[tank].g_iCooldown != -1 && g_esPyroPlayer[tank].g_iCooldown >= GetTime()) || bIsAreaNarrow(tank, g_esPyroCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esPyroCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esPyroPlayer[tank].g_iTankType, tank) || (g_esPyroCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esPyroCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esPyroAbility[g_esPyroPlayer[tank].g_iTankType].g_iAccessFlags, g_esPyroPlayer[tank].g_iAccessFlags)))
+	if ((g_esPyroPlayer[tank].g_iCooldown != -1 && g_esPyroPlayer[tank].g_iCooldown >= GetTime()) || bIsAreaNarrow(tank, g_esPyroCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esPyroCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esPyroPlayer[tank].g_iTankType, tank) || (g_esPyroCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esPyroCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esPyroAbility[g_esPyroPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esPyroPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -1183,7 +1183,7 @@ void tTimerPyroCombo(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esPyroAbility[g_esPyroPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPyroPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPyroPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esPyroCache[iTank].g_iPyroAbility == 0 || g_esPyroPlayer[iTank].g_bActivated)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esPyroAbility[g_esPyroPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esPyroPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPyroPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esPyroCache[iTank].g_iPyroAbility == 0 || g_esPyroPlayer[iTank].g_bActivated)
 	{
 		return;
 	}

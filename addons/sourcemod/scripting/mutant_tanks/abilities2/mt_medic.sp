@@ -1142,7 +1142,7 @@ void vMedicAbilityActivated(int tank)
 public void MT_OnAbilityActivated(int tank)
 #endif
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esMedicAbility[g_esMedicPlayer[tank].g_iTankType].g_iAccessFlags, g_esMedicPlayer[tank].g_iAccessFlags)) || g_esMedicCache[tank].g_iHumanAbility == 0))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esMedicAbility[g_esMedicPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esMedicPlayer[tank].g_iAccessFlags)) || g_esMedicCache[tank].g_iHumanAbility == 0))
 	{
 		return;
 	}
@@ -1161,7 +1161,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esMedicCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esMedicCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esMedicPlayer[tank].g_iTankType, tank) || (g_esMedicCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esMedicCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esMedicAbility[g_esMedicPlayer[tank].g_iTankType].g_iAccessFlags, g_esMedicPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esMedicCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esMedicCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esMedicPlayer[tank].g_iTankType, tank) || (g_esMedicCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esMedicCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esMedicAbility[g_esMedicPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esMedicPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -1255,7 +1255,7 @@ void vMedicRockBreak(int tank, int rock)
 public void MT_OnRockBreak(int tank, int rock)
 #endif
 {
-	if (bIsAreaNarrow(tank, g_esMedicCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esMedicCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esMedicPlayer[tank].g_iTankType, tank) || (g_esMedicCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esMedicCache[tank].g_iRequiresHumans) || (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esMedicAbility[g_esMedicPlayer[tank].g_iTankType].g_iAccessFlags, g_esMedicPlayer[tank].g_iAccessFlags)) || g_esMedicCache[tank].g_iHumanAbility == 0)))
+	if (bIsAreaNarrow(tank, g_esMedicCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esMedicCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esMedicPlayer[tank].g_iTankType, tank) || (g_esMedicCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esMedicCache[tank].g_iRequiresHumans) || (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esMedicAbility[g_esMedicPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esMedicPlayer[tank].g_iAccessFlags)) || g_esMedicCache[tank].g_iHumanAbility == 0)))
 	{
 		return;
 	}
@@ -1295,7 +1295,7 @@ void vMedic(int tank, int pos = -1)
 
 void vMedic2(int tank, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esMedicCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esMedicCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esMedicPlayer[tank].g_iTankType, tank) || (g_esMedicCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esMedicCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esMedicAbility[g_esMedicPlayer[tank].g_iTankType].g_iAccessFlags, g_esMedicPlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esMedicCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esMedicCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esMedicPlayer[tank].g_iTankType, tank) || (g_esMedicCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esMedicCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esMedicAbility[g_esMedicPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esMedicPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -1402,7 +1402,7 @@ void vMedic4(int special, int tank, int duration)
 
 void vMedicAbility(int tank)
 {
-	if ((g_esMedicPlayer[tank].g_iCooldown != -1 && g_esMedicPlayer[tank].g_iCooldown >= GetTime()) || bIsAreaNarrow(tank, g_esMedicCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esMedicCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esMedicPlayer[tank].g_iTankType, tank) || (g_esMedicCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esMedicCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esMedicAbility[g_esMedicPlayer[tank].g_iTankType].g_iAccessFlags, g_esMedicPlayer[tank].g_iAccessFlags)))
+	if ((g_esMedicPlayer[tank].g_iCooldown != -1 && g_esMedicPlayer[tank].g_iCooldown >= GetTime()) || bIsAreaNarrow(tank, g_esMedicCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esMedicCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esMedicPlayer[tank].g_iTankType, tank) || (g_esMedicCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esMedicCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esMedicAbility[g_esMedicPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esMedicPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -1570,7 +1570,7 @@ void tTimerMedicCombo(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esMedicAbility[g_esMedicPlayer[iTank].g_iTankType].g_iAccessFlags, g_esMedicPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esMedicPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esMedicCache[iTank].g_iMedicAbility == 0 || g_esMedicPlayer[iTank].g_bActivated)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esMedicAbility[g_esMedicPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esMedicPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esMedicPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esMedicCache[iTank].g_iMedicAbility == 0 || g_esMedicPlayer[iTank].g_bActivated)
 	{
 		return;
 	}
@@ -1584,7 +1584,7 @@ Action tTimerMedic(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsPlayerIncapacitated(iTank) || bIsAreaNarrow(iTank, g_esMedicCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esMedicCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esMedicPlayer[iTank].g_iTankType, iTank) || (g_esMedicCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esMedicCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esMedicAbility[g_esMedicPlayer[iTank].g_iTankType].g_iAccessFlags, g_esMedicPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esMedicPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || iType != g_esMedicPlayer[iTank].g_iTankType || g_esMedicCache[iTank].g_iMedicAbility == 0 || !g_esMedicPlayer[iTank].g_bActivated)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsPlayerIncapacitated(iTank) || bIsAreaNarrow(iTank, g_esMedicCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esMedicCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esMedicPlayer[iTank].g_iTankType, iTank) || (g_esMedicCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esMedicCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esMedicAbility[g_esMedicPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esMedicPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esMedicPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || iType != g_esMedicPlayer[iTank].g_iTankType || g_esMedicCache[iTank].g_iMedicAbility == 0 || !g_esMedicPlayer[iTank].g_bActivated)
 	{
 		vMedicReset2(iTank);
 

@@ -438,7 +438,7 @@ Action OnShoveTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esShoveCache[attacker].g_iShoveHitMode == 0 || g_esShoveCache[attacker].g_iShoveHitMode == 1) && bIsSurvivor(victim) && g_esShoveCache[attacker].g_iComboAbility == 0)
 		{
-			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esShoveAbility[g_esShovePlayer[attacker].g_iTankType].g_iAccessFlags, g_esShovePlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esShovePlayer[attacker].g_iTankType, g_esShoveAbility[g_esShovePlayer[attacker].g_iTankType].g_iImmunityFlags, g_esShovePlayer[victim].g_iImmunityFlags))
+			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esShoveAbility[g_esShovePlayer[attacker].g_iTankTypeRecorded].g_iAccessFlags, g_esShovePlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esShovePlayer[attacker].g_iTankType, g_esShoveAbility[g_esShovePlayer[attacker].g_iTankTypeRecorded].g_iImmunityFlags, g_esShovePlayer[victim].g_iImmunityFlags))
 			{
 				return Plugin_Continue;
 			}
@@ -451,7 +451,7 @@ Action OnShoveTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esShoveCache[victim].g_iShoveHitMode == 0 || g_esShoveCache[victim].g_iShoveHitMode == 2) && bIsSurvivor(attacker) && g_esShoveCache[victim].g_iComboAbility == 0)
 		{
-			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esShoveAbility[g_esShovePlayer[victim].g_iTankType].g_iAccessFlags, g_esShovePlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esShovePlayer[victim].g_iTankType, g_esShoveAbility[g_esShovePlayer[victim].g_iTankType].g_iImmunityFlags, g_esShovePlayer[attacker].g_iImmunityFlags))
+			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esShoveAbility[g_esShovePlayer[victim].g_iTankTypeRecorded].g_iAccessFlags, g_esShovePlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esShovePlayer[victim].g_iTankType, g_esShoveAbility[g_esShovePlayer[victim].g_iTankTypeRecorded].g_iImmunityFlags, g_esShovePlayer[attacker].g_iImmunityFlags))
 			{
 				return Plugin_Continue;
 			}
@@ -974,7 +974,7 @@ void vShoveAbilityActivated(int tank)
 public void MT_OnAbilityActivated(int tank)
 #endif
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esShoveAbility[g_esShovePlayer[tank].g_iTankType].g_iAccessFlags, g_esShovePlayer[tank].g_iAccessFlags)) || g_esShoveCache[tank].g_iHumanAbility == 0))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esShoveAbility[g_esShovePlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esShovePlayer[tank].g_iAccessFlags)) || g_esShoveCache[tank].g_iHumanAbility == 0))
 	{
 		return;
 	}
@@ -993,7 +993,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esShoveCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esShoveCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esShovePlayer[tank].g_iTankType, tank) || (g_esShoveCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esShoveCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esShoveAbility[g_esShovePlayer[tank].g_iTankType].g_iAccessFlags, g_esShovePlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esShoveCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esShoveCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esShovePlayer[tank].g_iTankType, tank) || (g_esShoveCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esShoveCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esShoveAbility[g_esShovePlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esShovePlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -1036,7 +1036,7 @@ public void MT_OnPostTankSpawn(int tank)
 
 void vShoveAbility(int tank, float random, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esShoveCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esShoveCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esShovePlayer[tank].g_iTankType, tank) || (g_esShoveCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esShoveCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esShoveAbility[g_esShovePlayer[tank].g_iTankType].g_iAccessFlags, g_esShovePlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esShoveCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esShoveCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esShovePlayer[tank].g_iTankType, tank) || (g_esShoveCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esShoveCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esShoveAbility[g_esShovePlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esShovePlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -1053,7 +1053,7 @@ void vShoveAbility(int tank, float random, int pos = -1)
 		int iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esShovePlayer[tank].g_iTankType, g_esShoveAbility[g_esShovePlayer[tank].g_iTankType].g_iImmunityFlags, g_esShovePlayer[iSurvivor].g_iImmunityFlags))
+			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esShovePlayer[tank].g_iTankType, g_esShoveAbility[g_esShovePlayer[tank].g_iTankTypeRecorded].g_iImmunityFlags, g_esShovePlayer[iSurvivor].g_iImmunityFlags))
 			{
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 				if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange && bIsVisibleToPlayer(tank, iSurvivor, g_esShoveCache[tank].g_iShoveSight, .range = flRange))
@@ -1081,7 +1081,7 @@ void vShoveAbility(int tank, float random, int pos = -1)
 
 void vShoveHit(int survivor, int tank, float random, float chance, int enabled, int messages, int flags, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esShoveCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esShoveCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esShovePlayer[tank].g_iTankType, tank) || (g_esShoveCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esShoveCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esShoveAbility[g_esShovePlayer[tank].g_iTankType].g_iAccessFlags, g_esShovePlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esShovePlayer[tank].g_iTankType, g_esShoveAbility[g_esShovePlayer[tank].g_iTankType].g_iImmunityFlags, g_esShovePlayer[survivor].g_iImmunityFlags))
+	if (bIsAreaNarrow(tank, g_esShoveCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esShoveCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esShovePlayer[tank].g_iTankType, tank) || (g_esShoveCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esShoveCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esShoveAbility[g_esShovePlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esShovePlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esShovePlayer[tank].g_iTankType, g_esShoveAbility[g_esShovePlayer[tank].g_iTankTypeRecorded].g_iImmunityFlags, g_esShovePlayer[survivor].g_iImmunityFlags))
 	{
 		return;
 	}
@@ -1178,7 +1178,7 @@ void vShoveRange(int tank, int value, float random, int pos = -1)
 	float flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 13, pos) : g_esShoveCache[tank].g_flShoveDeathChance;
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(tank) && g_esShoveCache[tank].g_iShoveDeath == 1 && random <= flChance)
 	{
-		if (g_esShoveCache[tank].g_iComboAbility == value || bIsAreaNarrow(tank, g_esShoveCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esShoveCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esShovePlayer[tank].g_iTankType, tank) || (g_esShoveCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esShoveCache[tank].g_iRequiresHumans) || (bIsInfected(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esShoveAbility[g_esShovePlayer[tank].g_iTankType].g_iAccessFlags, g_esShovePlayer[tank].g_iAccessFlags)) || g_esShoveCache[tank].g_iHumanAbility == 0)))
+		if (g_esShoveCache[tank].g_iComboAbility == value || bIsAreaNarrow(tank, g_esShoveCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esShoveCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esShovePlayer[tank].g_iTankType, tank) || (g_esShoveCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esShoveCache[tank].g_iRequiresHumans) || (bIsInfected(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esShoveAbility[g_esShovePlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esShovePlayer[tank].g_iAccessFlags)) || g_esShoveCache[tank].g_iHumanAbility == 0)))
 		{
 			return;
 		}
@@ -1188,7 +1188,7 @@ void vShoveRange(int tank, int value, float random, int pos = -1)
 		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 12, pos) : g_esShoveCache[tank].g_flShoveDeathRange;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsSurvivorDisabled(iSurvivor) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esShovePlayer[tank].g_iTankType, g_esShoveAbility[g_esShovePlayer[tank].g_iTankType].g_iImmunityFlags, g_esShovePlayer[iSurvivor].g_iImmunityFlags))
+			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsSurvivorDisabled(iSurvivor) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esShovePlayer[tank].g_iTankType, g_esShoveAbility[g_esShovePlayer[tank].g_iTankTypeRecorded].g_iImmunityFlags, g_esShovePlayer[iSurvivor].g_iImmunityFlags))
 			{
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 				if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange && bIsVisibleToPlayer(tank, iSurvivor, g_esShoveCache[tank].g_iShoveSight, .range = flRange))
@@ -1261,7 +1261,7 @@ void tTimerShoveCombo(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esShoveAbility[g_esShovePlayer[iTank].g_iTankType].g_iAccessFlags, g_esShovePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esShovePlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esShoveCache[iTank].g_iShoveAbility == 0)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esShoveAbility[g_esShovePlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esShovePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esShovePlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esShoveCache[iTank].g_iShoveAbility == 0)
 	{
 		return;
 	}
@@ -1282,7 +1282,7 @@ void tTimerShoveCombo2(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esShoveAbility[g_esShovePlayer[iTank].g_iTankType].g_iAccessFlags, g_esShovePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esShovePlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esShoveCache[iTank].g_iShoveHit == 0)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esShoveAbility[g_esShovePlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esShovePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esShovePlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esShoveCache[iTank].g_iShoveHit == 0)
 	{
 		return;
 	}
@@ -1315,7 +1315,7 @@ Action tTimerShove(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell(), iMessage = pack.ReadCell();
-	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esShoveCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esShoveCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esShovePlayer[iTank].g_iTankType, iTank) || (g_esShoveCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esShoveCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esShoveAbility[g_esShovePlayer[iTank].g_iTankType].g_iAccessFlags, g_esShovePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esShovePlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || iType != g_esShovePlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esShovePlayer[iTank].g_iTankType, g_esShoveAbility[g_esShovePlayer[iTank].g_iTankType].g_iImmunityFlags, g_esShovePlayer[iSurvivor].g_iImmunityFlags) || !g_esShovePlayer[iSurvivor].g_bAffected || MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_GODMODE))
+	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esShoveCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esShoveCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esShovePlayer[iTank].g_iTankType, iTank) || (g_esShoveCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esShoveCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esShoveAbility[g_esShovePlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esShovePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esShovePlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || iType != g_esShovePlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esShovePlayer[iTank].g_iTankType, g_esShoveAbility[g_esShovePlayer[iTank].g_iTankTypeRecorded].g_iImmunityFlags, g_esShovePlayer[iSurvivor].g_iImmunityFlags) || !g_esShovePlayer[iSurvivor].g_bAffected || MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_GODMODE))
 	{
 		vShoveReset2(iSurvivor, iTank, iMessage);
 

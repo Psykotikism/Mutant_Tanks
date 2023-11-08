@@ -936,7 +936,7 @@ void vCloneAbilityActivated(int tank)
 public void MT_OnAbilityActivated(int tank)
 #endif
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esCloneAbility[g_esClonePlayer[tank].g_iTankType].g_iAccessFlags, g_esClonePlayer[tank].g_iAccessFlags)) || g_esCloneCache[tank].g_iHumanAbility == 0))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esCloneAbility[g_esClonePlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esClonePlayer[tank].g_iAccessFlags)) || g_esCloneCache[tank].g_iHumanAbility == 0))
 	{
 		return;
 	}
@@ -955,7 +955,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT))
 	{
-		if (bIsAreaNarrow(tank, g_esCloneCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esCloneCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esClonePlayer[tank].g_iTankType, tank) || (g_esCloneCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCloneCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esCloneAbility[g_esClonePlayer[tank].g_iTankType].g_iAccessFlags, g_esClonePlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esCloneCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esCloneCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esClonePlayer[tank].g_iTankType, tank) || (g_esCloneCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCloneCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esCloneAbility[g_esClonePlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esClonePlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -1100,7 +1100,7 @@ void vClone(int tank)
 
 void vClone2(int tank, int min = 0, int max = 0)
 {
-	if (bIsAreaNarrow(tank, g_esCloneCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esCloneCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esClonePlayer[tank].g_iTankType, tank) || (g_esCloneCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCloneCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esCloneAbility[g_esClonePlayer[tank].g_iTankType].g_iAccessFlags, g_esClonePlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esCloneCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esCloneCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esClonePlayer[tank].g_iTankType, tank) || (g_esCloneCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCloneCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esCloneAbility[g_esClonePlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esClonePlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -1130,7 +1130,7 @@ void vClone2(int tank, int min = 0, int max = 0)
 
 void vCloneAbility(int tank)
 {
-	if ((g_esClonePlayer[tank].g_iCooldown != -1 && g_esClonePlayer[tank].g_iCooldown >= GetTime()) || bIsAreaNarrow(tank, g_esCloneCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esCloneCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esClonePlayer[tank].g_iTankType, tank) || (g_esCloneCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCloneCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esCloneAbility[g_esClonePlayer[tank].g_iTankType].g_iAccessFlags, g_esClonePlayer[tank].g_iAccessFlags)))
+	if ((g_esClonePlayer[tank].g_iCooldown != -1 && g_esClonePlayer[tank].g_iCooldown >= GetTime()) || bIsAreaNarrow(tank, g_esCloneCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esCloneCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esClonePlayer[tank].g_iTankType, tank) || (g_esCloneCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCloneCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esCloneAbility[g_esClonePlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esClonePlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -1213,7 +1213,7 @@ void vCloneReset()
 void tTimerCloneCombo(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esCloneAbility[g_esClonePlayer[iTank].g_iTankType].g_iAccessFlags, g_esClonePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esClonePlayer[iTank].g_iTankType, iTank) || g_esClonePlayer[iTank].g_bCloned || g_esCloneCache[iTank].g_iCloneAbility == 0)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esCloneAbility[g_esClonePlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esClonePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esClonePlayer[iTank].g_iTankType, iTank) || g_esClonePlayer[iTank].g_bCloned || g_esCloneCache[iTank].g_iCloneAbility == 0)
 	{
 		return;
 	}

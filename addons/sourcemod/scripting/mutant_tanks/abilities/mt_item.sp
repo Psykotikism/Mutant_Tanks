@@ -771,7 +771,7 @@ void vItemAbilityActivated(int tank)
 public void MT_OnAbilityActivated(int tank)
 #endif
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esItemAbility[g_esItemPlayer[tank].g_iTankType].g_iAccessFlags, g_esItemPlayer[tank].g_iAccessFlags)) || g_esItemCache[tank].g_iHumanAbility == 0))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esItemAbility[g_esItemPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esItemPlayer[tank].g_iAccessFlags)) || g_esItemCache[tank].g_iHumanAbility == 0))
 	{
 		return;
 	}
@@ -790,7 +790,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esItemCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esItemCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esItemPlayer[tank].g_iTankType, tank) || (g_esItemCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esItemCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esItemAbility[g_esItemPlayer[tank].g_iTankType].g_iAccessFlags, g_esItemPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esItemCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esItemCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esItemPlayer[tank].g_iTankType, tank) || (g_esItemCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esItemCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esItemAbility[g_esItemPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esItemPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -817,7 +817,7 @@ void vItemChangeType(int tank, int oldType)
 public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
-	if (oldType <= 0 || (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esItemAbility[g_esItemPlayer[tank].g_iTankType].g_iAccessFlags, g_esItemPlayer[tank].g_iAccessFlags)) || g_esItemCache[tank].g_iHumanAbility == 0)))
+	if (oldType <= 0 || (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esItemAbility[g_esItemPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esItemPlayer[tank].g_iAccessFlags)) || g_esItemCache[tank].g_iHumanAbility == 0)))
 	{
 		return;
 	}
@@ -832,7 +832,7 @@ void vItemAbility(int tank)
 {
 	g_esItemPlayer[tank].g_bActivated = false;
 
-	if (bIsAreaNarrow(tank, g_esItemCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esItemCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esItemPlayer[tank].g_iTankType, tank) || (g_esItemCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esItemCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esItemAbility[g_esItemPlayer[tank].g_iTankType].g_iAccessFlags, g_esItemPlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esItemCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esItemCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esItemPlayer[tank].g_iTankType, tank) || (g_esItemCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esItemCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esItemAbility[g_esItemPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esItemPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -847,7 +847,7 @@ void vItemAbility(int tank)
 		{
 			for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 			{
-				if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esItemPlayer[tank].g_iTankType, g_esItemAbility[g_esItemPlayer[tank].g_iTankType].g_iImmunityFlags, g_esItemPlayer[iSurvivor].g_iImmunityFlags))
+				if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esItemPlayer[tank].g_iTankType, g_esItemAbility[g_esItemPlayer[tank].g_iTankTypeRecorded].g_iImmunityFlags, g_esItemPlayer[iSurvivor].g_iImmunityFlags))
 				{
 					switch (g_esItemCache[tank].g_iItemMode)
 					{
@@ -1002,7 +1002,7 @@ void vSpawnItem(const char[] name, float pos[3])
 void tTimerItemCombo(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esItemAbility[g_esItemPlayer[iTank].g_iTankType].g_iAccessFlags, g_esItemPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esItemPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esItemCache[iTank].g_iItemAbility == 0 || g_esItemPlayer[iTank].g_bActivated)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esItemAbility[g_esItemPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esItemPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esItemPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esItemCache[iTank].g_iItemAbility == 0 || g_esItemPlayer[iTank].g_bActivated)
 	{
 		return;
 	}

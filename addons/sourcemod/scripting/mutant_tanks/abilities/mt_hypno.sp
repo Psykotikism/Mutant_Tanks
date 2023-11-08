@@ -477,7 +477,7 @@ Action OnHypnoTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esHypnoCache[attacker].g_iHypnoHitMode == 0 || g_esHypnoCache[attacker].g_iHypnoHitMode == 1) && bIsSurvivor(victim) && g_esHypnoCache[attacker].g_iComboAbility == 0)
 		{
-			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esHypnoAbility[g_esHypnoPlayer[attacker].g_iTankType].g_iAccessFlags, g_esHypnoPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esHypnoPlayer[attacker].g_iTankType, g_esHypnoAbility[g_esHypnoPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esHypnoPlayer[victim].g_iImmunityFlags))
+			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esHypnoAbility[g_esHypnoPlayer[attacker].g_iTankTypeRecorded].g_iAccessFlags, g_esHypnoPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esHypnoPlayer[attacker].g_iTankType, g_esHypnoAbility[g_esHypnoPlayer[attacker].g_iTankTypeRecorded].g_iImmunityFlags, g_esHypnoPlayer[victim].g_iImmunityFlags))
 			{
 				return Plugin_Continue;
 			}
@@ -492,7 +492,7 @@ Action OnHypnoTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 		{
 			if ((g_esHypnoCache[victim].g_iHypnoHitMode == 0 || g_esHypnoCache[victim].g_iHypnoHitMode == 2) && StrEqual(sClassname[7], "melee") && g_esHypnoCache[victim].g_iComboAbility == 0)
 			{
-				if ((MT_HasAdminAccess(victim) || bHasAdminAccess(victim, g_esHypnoAbility[g_esHypnoPlayer[victim].g_iTankType].g_iAccessFlags, g_esHypnoPlayer[victim].g_iAccessFlags)) && !MT_IsAdminImmune(attacker, victim) && !bIsAdminImmune(attacker, g_esHypnoPlayer[victim].g_iTankType, g_esHypnoAbility[g_esHypnoPlayer[victim].g_iTankType].g_iImmunityFlags, g_esHypnoPlayer[attacker].g_iImmunityFlags))
+				if ((MT_HasAdminAccess(victim) || bHasAdminAccess(victim, g_esHypnoAbility[g_esHypnoPlayer[victim].g_iTankTypeRecorded].g_iAccessFlags, g_esHypnoPlayer[victim].g_iAccessFlags)) && !MT_IsAdminImmune(attacker, victim) && !bIsAdminImmune(attacker, g_esHypnoPlayer[victim].g_iTankType, g_esHypnoAbility[g_esHypnoPlayer[victim].g_iTankTypeRecorded].g_iImmunityFlags, g_esHypnoPlayer[attacker].g_iImmunityFlags))
 				{
 					vHypnoHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esHypnoCache[victim].g_flHypnoChance, g_esHypnoCache[victim].g_iHypnoHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 				}
@@ -1198,7 +1198,7 @@ void vHypnoAbilityActivated(int tank)
 public void MT_OnAbilityActivated(int tank)
 #endif
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esHypnoAbility[g_esHypnoPlayer[tank].g_iTankType].g_iAccessFlags, g_esHypnoPlayer[tank].g_iAccessFlags)) || g_esHypnoCache[tank].g_iHumanAbility == 0))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esHypnoAbility[g_esHypnoPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esHypnoPlayer[tank].g_iAccessFlags)) || g_esHypnoCache[tank].g_iHumanAbility == 0))
 	{
 		return;
 	}
@@ -1217,7 +1217,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esHypnoCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esHypnoCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esHypnoPlayer[tank].g_iTankType, tank) || (g_esHypnoCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esHypnoCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esHypnoAbility[g_esHypnoPlayer[tank].g_iTankType].g_iAccessFlags, g_esHypnoPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esHypnoCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esHypnoCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esHypnoPlayer[tank].g_iTankType, tank) || (g_esHypnoCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esHypnoCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esHypnoAbility[g_esHypnoPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esHypnoPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -1302,7 +1302,7 @@ void vHypno(int tank)
 
 void vHypnoAbility(int tank, float random, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esHypnoCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esHypnoCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esHypnoPlayer[tank].g_iTankType, tank) || (g_esHypnoCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esHypnoCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esHypnoAbility[g_esHypnoPlayer[tank].g_iTankType].g_iAccessFlags, g_esHypnoPlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esHypnoCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esHypnoCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esHypnoPlayer[tank].g_iTankType, tank) || (g_esHypnoCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esHypnoCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esHypnoAbility[g_esHypnoPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esHypnoPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -1319,7 +1319,7 @@ void vHypnoAbility(int tank, float random, int pos = -1)
 		int iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esHypnoPlayer[tank].g_iTankType, g_esHypnoAbility[g_esHypnoPlayer[tank].g_iTankType].g_iImmunityFlags, g_esHypnoPlayer[iSurvivor].g_iImmunityFlags))
+			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esHypnoPlayer[tank].g_iTankType, g_esHypnoAbility[g_esHypnoPlayer[tank].g_iTankTypeRecorded].g_iImmunityFlags, g_esHypnoPlayer[iSurvivor].g_iImmunityFlags))
 			{
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 				if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange && bIsVisibleToPlayer(tank, iSurvivor, g_esHypnoCache[tank].g_iHypnoSight, .range = flRange))
@@ -1347,7 +1347,7 @@ void vHypnoAbility(int tank, float random, int pos = -1)
 
 void vHypnoHit(int survivor, int tank, float random, float chance, int enabled, int messages, int flags, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esHypnoCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esHypnoCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esHypnoPlayer[tank].g_iTankType, tank) || (g_esHypnoCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esHypnoCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esHypnoAbility[g_esHypnoPlayer[tank].g_iTankType].g_iAccessFlags, g_esHypnoPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esHypnoPlayer[tank].g_iTankType, g_esHypnoAbility[g_esHypnoPlayer[tank].g_iTankType].g_iImmunityFlags, g_esHypnoPlayer[survivor].g_iImmunityFlags))
+	if (bIsAreaNarrow(tank, g_esHypnoCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esHypnoCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esHypnoPlayer[tank].g_iTankType, tank) || (g_esHypnoCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esHypnoCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esHypnoAbility[g_esHypnoPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esHypnoPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esHypnoPlayer[tank].g_iTankType, g_esHypnoAbility[g_esHypnoPlayer[tank].g_iTankTypeRecorded].g_iImmunityFlags, g_esHypnoPlayer[survivor].g_iImmunityFlags))
 	{
 		return;
 	}
@@ -1554,7 +1554,7 @@ void tTimerHypnoCombo(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esHypnoAbility[g_esHypnoPlayer[iTank].g_iTankType].g_iAccessFlags, g_esHypnoPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esHypnoPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esHypnoCache[iTank].g_iHypnoAbility == 0)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esHypnoAbility[g_esHypnoPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esHypnoPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esHypnoPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esHypnoCache[iTank].g_iHypnoAbility == 0)
 	{
 		return;
 	}
@@ -1575,7 +1575,7 @@ void tTimerHypnoCombo2(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esHypnoAbility[g_esHypnoPlayer[iTank].g_iTankType].g_iAccessFlags, g_esHypnoPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esHypnoPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esHypnoCache[iTank].g_iHypnoHit == 0)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esHypnoAbility[g_esHypnoPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esHypnoPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esHypnoPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esHypnoCache[iTank].g_iHypnoHit == 0)
 	{
 		return;
 	}
