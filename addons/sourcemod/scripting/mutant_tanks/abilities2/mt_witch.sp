@@ -382,7 +382,7 @@ Action OnWitchTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 		int iTank = GetEntPropEnt(attacker, Prop_Data, "m_hOwnerEntity");
 		if (MT_IsTankSupported(iTank) && MT_IsCustomTankSupported(iTank) && g_esWitchCache[iTank].g_iWitchAbility == 1)
 		{
-			if ((!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esWitchAbility[g_esWitchPlayer[iTank].g_iTankType].g_iAccessFlags, g_esWitchPlayer[iTank].g_iAccessFlags)) || MT_IsAdminImmune(victim, iTank) || bIsAdminImmune(victim, g_esWitchPlayer[iTank].g_iTankType, g_esWitchAbility[g_esWitchPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esWitchPlayer[victim].g_iImmunityFlags))
+			if ((!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esWitchAbility[g_esWitchPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esWitchPlayer[iTank].g_iAccessFlags)) || MT_IsAdminImmune(victim, iTank) || bIsAdminImmune(victim, g_esWitchPlayer[iTank].g_iTankType, g_esWitchAbility[g_esWitchPlayer[iTank].g_iTankTypeRecorded].g_iImmunityFlags, g_esWitchPlayer[victim].g_iImmunityFlags))
 			{
 				return Plugin_Handled;
 			}
@@ -792,7 +792,7 @@ void vWitchAbilityActivated(int tank)
 public void MT_OnAbilityActivated(int tank)
 #endif
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esWitchAbility[g_esWitchPlayer[tank].g_iTankType].g_iAccessFlags, g_esWitchPlayer[tank].g_iAccessFlags)) || g_esWitchCache[tank].g_iHumanAbility == 0))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esWitchAbility[g_esWitchPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esWitchPlayer[tank].g_iAccessFlags)) || g_esWitchCache[tank].g_iHumanAbility == 0))
 	{
 		return;
 	}
@@ -811,7 +811,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esWitchCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esWitchCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esWitchPlayer[tank].g_iTankType, tank) || (g_esWitchCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esWitchCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esWitchAbility[g_esWitchPlayer[tank].g_iTankType].g_iAccessFlags, g_esWitchPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esWitchCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esWitchCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esWitchPlayer[tank].g_iTankType, tank) || (g_esWitchCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esWitchCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esWitchAbility[g_esWitchPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esWitchPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -914,7 +914,7 @@ void vWitch(int tank, int pos = -1)
 
 void vWitch2(int tank, float pos[3], float angles[3])
 {
-	if (bIsAreaNarrow(tank, g_esWitchCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esWitchCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esWitchPlayer[tank].g_iTankType, tank) || (g_esWitchCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esWitchCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esWitchAbility[g_esWitchPlayer[tank].g_iTankType].g_iAccessFlags, g_esWitchPlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esWitchCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esWitchCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esWitchPlayer[tank].g_iTankType, tank) || (g_esWitchCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esWitchCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esWitchAbility[g_esWitchPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esWitchPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -936,7 +936,7 @@ void vWitch2(int tank, float pos[3], float angles[3])
 
 void vWitchAbility(int tank)
 {
-	if ((g_esWitchPlayer[tank].g_iCooldown != -1 && g_esWitchPlayer[tank].g_iCooldown >= GetTime()) || bIsAreaNarrow(tank, g_esWitchCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esWitchCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esWitchPlayer[tank].g_iTankType, tank) || (g_esWitchCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esWitchCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esWitchAbility[g_esWitchPlayer[tank].g_iTankType].g_iAccessFlags, g_esWitchPlayer[tank].g_iAccessFlags)))
+	if ((g_esWitchPlayer[tank].g_iCooldown != -1 && g_esWitchPlayer[tank].g_iCooldown >= GetTime()) || bIsAreaNarrow(tank, g_esWitchCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esWitchCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esWitchPlayer[tank].g_iTankType, tank) || (g_esWitchCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esWitchCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esWitchAbility[g_esWitchPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esWitchPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -962,7 +962,7 @@ void vWitchRange(int tank)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(tank) && g_esWitchCache[tank].g_iWitchAbility == 1)
 	{
-		if (bIsAreaNarrow(tank, g_esWitchCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esWitchCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esWitchPlayer[tank].g_iTankType, tank) || (g_esWitchCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esWitchCache[tank].g_iRequiresHumans) || (bIsInfected(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esWitchAbility[g_esWitchPlayer[tank].g_iTankType].g_iAccessFlags, g_esWitchPlayer[tank].g_iAccessFlags)) || g_esWitchCache[tank].g_iHumanAbility == 0)))
+		if (bIsAreaNarrow(tank, g_esWitchCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esWitchCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esWitchPlayer[tank].g_iTankType, tank) || (g_esWitchCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esWitchCache[tank].g_iRequiresHumans) || (bIsInfected(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esWitchAbility[g_esWitchPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esWitchPlayer[tank].g_iAccessFlags)) || g_esWitchCache[tank].g_iHumanAbility == 0)))
 		{
 			return;
 		}
@@ -1017,7 +1017,7 @@ void tTimerWitchCombo(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esWitchAbility[g_esWitchPlayer[iTank].g_iTankType].g_iAccessFlags, g_esWitchPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esWitchPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esWitchCache[iTank].g_iWitchAbility == 0)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esWitchAbility[g_esWitchPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esWitchPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esWitchPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esWitchCache[iTank].g_iWitchAbility == 0)
 	{
 		return;
 	}

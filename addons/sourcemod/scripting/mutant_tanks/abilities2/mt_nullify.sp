@@ -420,7 +420,7 @@ Action OnNullifyTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esNullifyCache[attacker].g_iNullifyHitMode == 0 || g_esNullifyCache[attacker].g_iNullifyHitMode == 1) && bIsSurvivor(victim) && g_esNullifyCache[attacker].g_iComboAbility == 0)
 		{
-			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esNullifyAbility[g_esNullifyPlayer[attacker].g_iTankType].g_iAccessFlags, g_esNullifyPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esNullifyPlayer[attacker].g_iTankType, g_esNullifyAbility[g_esNullifyPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esNullifyPlayer[victim].g_iImmunityFlags))
+			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esNullifyAbility[g_esNullifyPlayer[attacker].g_iTankTypeRecorded].g_iAccessFlags, g_esNullifyPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esNullifyPlayer[attacker].g_iTankType, g_esNullifyAbility[g_esNullifyPlayer[attacker].g_iTankTypeRecorded].g_iImmunityFlags, g_esNullifyPlayer[victim].g_iImmunityFlags))
 			{
 				return Plugin_Continue;
 			}
@@ -435,7 +435,7 @@ Action OnNullifyTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esNullifyCache[victim].g_iNullifyHitMode == 0 || g_esNullifyCache[victim].g_iNullifyHitMode == 2) && StrEqual(sClassname[7], "melee") && g_esNullifyCache[victim].g_iComboAbility == 0)
 			{
-				if ((MT_HasAdminAccess(victim) || bHasAdminAccess(victim, g_esNullifyAbility[g_esNullifyPlayer[victim].g_iTankType].g_iAccessFlags, g_esNullifyPlayer[victim].g_iAccessFlags)) && !MT_IsAdminImmune(attacker, victim) && !bIsAdminImmune(attacker, g_esNullifyPlayer[victim].g_iTankType, g_esNullifyAbility[g_esNullifyPlayer[victim].g_iTankType].g_iImmunityFlags, g_esNullifyPlayer[attacker].g_iImmunityFlags))
+				if ((MT_HasAdminAccess(victim) || bHasAdminAccess(victim, g_esNullifyAbility[g_esNullifyPlayer[victim].g_iTankTypeRecorded].g_iAccessFlags, g_esNullifyPlayer[victim].g_iAccessFlags)) && !MT_IsAdminImmune(attacker, victim) && !bIsAdminImmune(attacker, g_esNullifyPlayer[victim].g_iTankType, g_esNullifyAbility[g_esNullifyPlayer[victim].g_iTankTypeRecorded].g_iImmunityFlags, g_esNullifyPlayer[attacker].g_iImmunityFlags))
 				{
 					vNullifyHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esNullifyCache[victim].g_flNullifyChance, g_esNullifyCache[victim].g_iNullifyHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 				}
@@ -930,7 +930,7 @@ void vNullifyAbilityActivated(int tank)
 public void MT_OnAbilityActivated(int tank)
 #endif
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esNullifyAbility[g_esNullifyPlayer[tank].g_iTankType].g_iAccessFlags, g_esNullifyPlayer[tank].g_iAccessFlags)) || g_esNullifyCache[tank].g_iHumanAbility == 0))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esNullifyAbility[g_esNullifyPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esNullifyPlayer[tank].g_iAccessFlags)) || g_esNullifyCache[tank].g_iHumanAbility == 0))
 	{
 		return;
 	}
@@ -949,7 +949,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esNullifyCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esNullifyCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esNullifyPlayer[tank].g_iTankType, tank) || (g_esNullifyCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esNullifyCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esNullifyAbility[g_esNullifyPlayer[tank].g_iTankType].g_iAccessFlags, g_esNullifyPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esNullifyCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esNullifyCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esNullifyPlayer[tank].g_iTankType, tank) || (g_esNullifyCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esNullifyCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esNullifyAbility[g_esNullifyPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esNullifyPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -983,7 +983,7 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 
 void vNullifyAbility(int tank, float random, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esNullifyCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esNullifyCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esNullifyPlayer[tank].g_iTankType, tank) || (g_esNullifyCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esNullifyCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esNullifyAbility[g_esNullifyPlayer[tank].g_iTankType].g_iAccessFlags, g_esNullifyPlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esNullifyCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esNullifyCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esNullifyPlayer[tank].g_iTankType, tank) || (g_esNullifyCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esNullifyCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esNullifyAbility[g_esNullifyPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esNullifyPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -1000,7 +1000,7 @@ void vNullifyAbility(int tank, float random, int pos = -1)
 		int iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esNullifyPlayer[tank].g_iTankType, g_esNullifyAbility[g_esNullifyPlayer[tank].g_iTankType].g_iImmunityFlags, g_esNullifyPlayer[iSurvivor].g_iImmunityFlags))
+			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esNullifyPlayer[tank].g_iTankType, g_esNullifyAbility[g_esNullifyPlayer[tank].g_iTankTypeRecorded].g_iImmunityFlags, g_esNullifyPlayer[iSurvivor].g_iImmunityFlags))
 			{
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 				if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange && bIsVisibleToPlayer(tank, iSurvivor, g_esNullifyCache[tank].g_iNullifySight, .range = flRange))
@@ -1028,7 +1028,7 @@ void vNullifyAbility(int tank, float random, int pos = -1)
 
 void vNullifyHit(int survivor, int tank, float random, float chance, int enabled, int messages, int flags, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esNullifyCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esNullifyCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esNullifyPlayer[tank].g_iTankType, tank) || (g_esNullifyCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esNullifyCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esNullifyAbility[g_esNullifyPlayer[tank].g_iTankType].g_iAccessFlags, g_esNullifyPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esNullifyPlayer[tank].g_iTankType, g_esNullifyAbility[g_esNullifyPlayer[tank].g_iTankType].g_iImmunityFlags, g_esNullifyPlayer[survivor].g_iImmunityFlags))
+	if (bIsAreaNarrow(tank, g_esNullifyCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esNullifyCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esNullifyPlayer[tank].g_iTankType, tank) || (g_esNullifyCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esNullifyCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esNullifyAbility[g_esNullifyPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esNullifyPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esNullifyPlayer[tank].g_iTankType, g_esNullifyAbility[g_esNullifyPlayer[tank].g_iTankTypeRecorded].g_iImmunityFlags, g_esNullifyPlayer[survivor].g_iImmunityFlags))
 	{
 		return;
 	}
@@ -1165,7 +1165,7 @@ void tTimerNullifyCombo(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esNullifyAbility[g_esNullifyPlayer[iTank].g_iTankType].g_iAccessFlags, g_esNullifyPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esNullifyPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esNullifyCache[iTank].g_iNullifyAbility == 0)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esNullifyAbility[g_esNullifyPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esNullifyPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esNullifyPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esNullifyCache[iTank].g_iNullifyAbility == 0)
 	{
 		return;
 	}
@@ -1186,7 +1186,7 @@ void tTimerNullifyCombo2(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esNullifyAbility[g_esNullifyPlayer[iTank].g_iTankType].g_iAccessFlags, g_esNullifyPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esNullifyPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esNullifyCache[iTank].g_iNullifyHit == 0)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esNullifyAbility[g_esNullifyPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esNullifyPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esNullifyPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esNullifyCache[iTank].g_iNullifyHit == 0)
 	{
 		return;
 	}

@@ -465,7 +465,7 @@ Action OnSmiteTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esSmiteCache[attacker].g_iSmiteHitMode == 0 || g_esSmiteCache[attacker].g_iSmiteHitMode == 1) && bIsSurvivor(victim) && g_esSmiteCache[attacker].g_iComboAbility == 0)
 		{
-			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esSmiteAbility[g_esSmitePlayer[attacker].g_iTankType].g_iAccessFlags, g_esSmitePlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esSmitePlayer[attacker].g_iTankType, g_esSmiteAbility[g_esSmitePlayer[attacker].g_iTankType].g_iImmunityFlags, g_esSmitePlayer[victim].g_iImmunityFlags))
+			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esSmiteAbility[g_esSmitePlayer[attacker].g_iTankTypeRecorded].g_iAccessFlags, g_esSmitePlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esSmitePlayer[attacker].g_iTankType, g_esSmiteAbility[g_esSmitePlayer[attacker].g_iTankTypeRecorded].g_iImmunityFlags, g_esSmitePlayer[victim].g_iImmunityFlags))
 			{
 				return Plugin_Continue;
 			}
@@ -478,7 +478,7 @@ Action OnSmiteTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esSmiteCache[victim].g_iSmiteHitMode == 0 || g_esSmiteCache[victim].g_iSmiteHitMode == 2) && bIsSurvivor(attacker) && g_esSmiteCache[victim].g_iComboAbility == 0)
 		{
-			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esSmiteAbility[g_esSmitePlayer[victim].g_iTankType].g_iAccessFlags, g_esSmitePlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esSmitePlayer[victim].g_iTankType, g_esSmiteAbility[g_esSmitePlayer[victim].g_iTankType].g_iImmunityFlags, g_esSmitePlayer[attacker].g_iImmunityFlags))
+			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esSmiteAbility[g_esSmitePlayer[victim].g_iTankTypeRecorded].g_iAccessFlags, g_esSmitePlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esSmitePlayer[victim].g_iTankType, g_esSmiteAbility[g_esSmitePlayer[victim].g_iTankTypeRecorded].g_iImmunityFlags, g_esSmitePlayer[attacker].g_iImmunityFlags))
 			{
 				return Plugin_Continue;
 			}
@@ -999,7 +999,7 @@ void vSmiteAbilityActivated(int tank)
 public void MT_OnAbilityActivated(int tank)
 #endif
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSmiteAbility[g_esSmitePlayer[tank].g_iTankType].g_iAccessFlags, g_esSmitePlayer[tank].g_iAccessFlags)) || g_esSmiteCache[tank].g_iHumanAbility == 0))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSmiteAbility[g_esSmitePlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esSmitePlayer[tank].g_iAccessFlags)) || g_esSmiteCache[tank].g_iHumanAbility == 0))
 	{
 		return;
 	}
@@ -1018,7 +1018,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esSmiteCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esSmiteCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esSmitePlayer[tank].g_iTankType, tank) || (g_esSmiteCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSmiteCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSmiteAbility[g_esSmitePlayer[tank].g_iTankType].g_iAccessFlags, g_esSmitePlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esSmiteCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esSmiteCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esSmitePlayer[tank].g_iTankType, tank) || (g_esSmiteCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSmiteCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSmiteAbility[g_esSmitePlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esSmitePlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -1113,7 +1113,7 @@ void vSmite2(int survivor)
 
 void vSmiteAbility(int tank, float random, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esSmiteCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esSmiteCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esSmitePlayer[tank].g_iTankType, tank) || (g_esSmiteCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSmiteCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSmiteAbility[g_esSmitePlayer[tank].g_iTankType].g_iAccessFlags, g_esSmitePlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esSmiteCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esSmiteCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esSmitePlayer[tank].g_iTankType, tank) || (g_esSmiteCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSmiteCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSmiteAbility[g_esSmitePlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esSmitePlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -1130,7 +1130,7 @@ void vSmiteAbility(int tank, float random, int pos = -1)
 		int iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esSmitePlayer[tank].g_iTankType, g_esSmiteAbility[g_esSmitePlayer[tank].g_iTankType].g_iImmunityFlags, g_esSmitePlayer[iSurvivor].g_iImmunityFlags))
+			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esSmitePlayer[tank].g_iTankType, g_esSmiteAbility[g_esSmitePlayer[tank].g_iTankTypeRecorded].g_iImmunityFlags, g_esSmitePlayer[iSurvivor].g_iImmunityFlags))
 			{
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 				if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange && bIsVisibleToPlayer(tank, iSurvivor, g_esSmiteCache[tank].g_iSmiteSight, .range = flRange))
@@ -1158,7 +1158,7 @@ void vSmiteAbility(int tank, float random, int pos = -1)
 
 void vSmiteHit(int survivor, int tank, float random, float chance, int enabled, int messages, int flags, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esSmiteCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esSmiteCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esSmitePlayer[tank].g_iTankType, tank) || (g_esSmiteCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSmiteCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSmiteAbility[g_esSmitePlayer[tank].g_iTankType].g_iAccessFlags, g_esSmitePlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esSmitePlayer[tank].g_iTankType, g_esSmiteAbility[g_esSmitePlayer[tank].g_iTankType].g_iImmunityFlags, g_esSmitePlayer[survivor].g_iImmunityFlags))
+	if (bIsAreaNarrow(tank, g_esSmiteCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esSmiteCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esSmitePlayer[tank].g_iTankType, tank) || (g_esSmiteCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSmiteCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSmiteAbility[g_esSmitePlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esSmitePlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esSmitePlayer[tank].g_iTankType, g_esSmiteAbility[g_esSmitePlayer[tank].g_iTankTypeRecorded].g_iImmunityFlags, g_esSmitePlayer[survivor].g_iImmunityFlags))
 	{
 		return;
 	}
@@ -1317,7 +1317,7 @@ void tTimerSmiteCombo(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esSmiteAbility[g_esSmitePlayer[iTank].g_iTankType].g_iAccessFlags, g_esSmitePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esSmitePlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esSmiteCache[iTank].g_iSmiteAbility == 0)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esSmiteAbility[g_esSmitePlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esSmitePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esSmitePlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esSmiteCache[iTank].g_iSmiteAbility == 0)
 	{
 		return;
 	}
@@ -1338,7 +1338,7 @@ void tTimerSmiteCombo2(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esSmiteAbility[g_esSmitePlayer[iTank].g_iTankType].g_iAccessFlags, g_esSmitePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esSmitePlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esSmiteCache[iTank].g_iSmiteHit == 0)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esSmiteAbility[g_esSmitePlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esSmitePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esSmitePlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esSmiteCache[iTank].g_iSmiteHit == 0)
 	{
 		return;
 	}

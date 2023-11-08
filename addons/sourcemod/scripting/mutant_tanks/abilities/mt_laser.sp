@@ -809,7 +809,7 @@ void vLaserAbilityActivated(int tank)
 public void MT_OnAbilityActivated(int tank)
 #endif
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esLaserAbility[g_esLaserPlayer[tank].g_iTankType].g_iAccessFlags, g_esLaserPlayer[tank].g_iAccessFlags)) || g_esLaserCache[tank].g_iHumanAbility == 0))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esLaserAbility[g_esLaserPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esLaserPlayer[tank].g_iAccessFlags)) || g_esLaserCache[tank].g_iHumanAbility == 0))
 	{
 		return;
 	}
@@ -828,7 +828,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esLaserCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esLaserCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esLaserPlayer[tank].g_iTankType, tank) || (g_esLaserCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLaserCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esLaserAbility[g_esLaserPlayer[tank].g_iTankType].g_iAccessFlags, g_esLaserPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esLaserCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esLaserCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esLaserPlayer[tank].g_iTankType, tank) || (g_esLaserCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLaserCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esLaserAbility[g_esLaserPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esLaserPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -981,7 +981,7 @@ void vLaser2(int tank, int survivor, int target, float range, int pos = -1)
 
 void vLaserAbility(int tank)
 {
-	if ((g_esLaserPlayer[tank].g_iCooldown != -1 && g_esLaserPlayer[tank].g_iCooldown >= GetTime()) || bIsAreaNarrow(tank, g_esLaserCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esLaserCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esLaserPlayer[tank].g_iTankType, tank) || (g_esLaserCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLaserCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esLaserAbility[g_esLaserPlayer[tank].g_iTankType].g_iAccessFlags, g_esLaserPlayer[tank].g_iAccessFlags)))
+	if ((g_esLaserPlayer[tank].g_iCooldown != -1 && g_esLaserPlayer[tank].g_iCooldown >= GetTime()) || bIsAreaNarrow(tank, g_esLaserCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esLaserCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esLaserPlayer[tank].g_iTankType, tank) || (g_esLaserCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLaserCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esLaserAbility[g_esLaserPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esLaserPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -1075,7 +1075,7 @@ int iLaserTarget(int tank, int survivor, float range = 0.0, int pos = -1)
 	{
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsVisibleToPlayer(survivor, iSurvivor, 1, .range = flRange) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esElectricPlayer[tank].g_iTankType, g_esElectricAbility[g_esElectricPlayer[tank].g_iTankType].g_iImmunityFlags, g_esElectricPlayer[iSurvivor].g_iImmunityFlags) && !g_esElectricPlayer[iSurvivor].g_bAffected && iSurvivor != survivor)
+			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsVisibleToPlayer(survivor, iSurvivor, 1, .range = flRange) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esElectricPlayer[tank].g_iTankType, g_esElectricAbility[g_esElectricPlayer[tank].g_iTankTypeRecorded].g_iImmunityFlags, g_esElectricPlayer[iSurvivor].g_iImmunityFlags) && !g_esElectricPlayer[iSurvivor].g_bAffected && iSurvivor != survivor)
 			{
 				vLaser2(tank, survivor, iSurvivor, flRange, pos);
 			}
@@ -1090,7 +1090,7 @@ void tTimerLaserCombo(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esLaserAbility[g_esLaserPlayer[iTank].g_iTankType].g_iAccessFlags, g_esLaserPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esLaserPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esLaserCache[iTank].g_iLaserAbility == 0 || g_esLaserPlayer[iTank].g_bActivated)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esLaserAbility[g_esLaserPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esLaserPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esLaserPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esLaserCache[iTank].g_iLaserAbility == 0 || g_esLaserPlayer[iTank].g_bActivated)
 	{
 		return;
 	}
@@ -1104,7 +1104,7 @@ Action tTimerLaser(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esLaserCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esLaserCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esLaserPlayer[iTank].g_iTankType, iTank) || (g_esLaserCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLaserCache[iTank].g_iRequiresHumans) || !MT_HasAdminAccess(iTank) || !bHasAdminAccess(iTank, g_esLaserAbility[g_esLaserPlayer[iTank].g_iTankType].g_iAccessFlags, g_esLaserPlayer[iTank].g_iAccessFlags) || !MT_IsTypeEnabled(g_esLaserPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || iType != g_esLaserPlayer[iTank].g_iTankType || !g_esLaserPlayer[iTank].g_bActivated)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esLaserCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esLaserCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esLaserPlayer[iTank].g_iTankType, iTank) || (g_esLaserCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLaserCache[iTank].g_iRequiresHumans) || !MT_HasAdminAccess(iTank) || !bHasAdminAccess(iTank, g_esLaserAbility[g_esLaserPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esLaserPlayer[iTank].g_iAccessFlags) || !MT_IsTypeEnabled(g_esLaserPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || iType != g_esLaserPlayer[iTank].g_iTankType || !g_esLaserPlayer[iTank].g_bActivated)
 	{
 		vLaserReset2(iTank);
 

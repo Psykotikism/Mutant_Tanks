@@ -960,7 +960,7 @@ void vRecallAbilityActivated(int tank)
 public void MT_OnAbilityActivated(int tank)
 #endif
 {
-	if ((MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esRecallAbility[g_esRecallPlayer[tank].g_iTankType].g_iAccessFlags, g_esRecallPlayer[tank].g_iAccessFlags)) || g_esRecallCache[tank].g_iHumanAbility == 0)) || bIsPlayerIncapacitated(tank))
+	if ((MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esRecallAbility[g_esRecallPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esRecallPlayer[tank].g_iAccessFlags)) || g_esRecallCache[tank].g_iHumanAbility == 0)) || bIsPlayerIncapacitated(tank))
 	{
 		return;
 	}
@@ -980,7 +980,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esRecallCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esRecallCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRecallPlayer[tank].g_iTankType, tank) || (g_esRecallCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRecallCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esRecallAbility[g_esRecallPlayer[tank].g_iTankType].g_iAccessFlags, g_esRecallPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esRecallCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esRecallCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRecallPlayer[tank].g_iTankType, tank) || (g_esRecallCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRecallCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esRecallAbility[g_esRecallPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esRecallPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -1054,7 +1054,7 @@ void vClearPreviousLocationList(int tank)
 
 void vRecallAbility(int tank, bool main)
 {
-	if (bIsAreaNarrow(tank, g_esRecallCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esRecallCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRecallPlayer[tank].g_iTankType, tank) || (g_esRecallCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRecallCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esRecallAbility[g_esRecallPlayer[tank].g_iTankType].g_iAccessFlags, g_esRecallPlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esRecallCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esRecallCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRecallPlayer[tank].g_iTankType, tank) || (g_esRecallCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRecallCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esRecallAbility[g_esRecallPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esRecallPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -1417,7 +1417,7 @@ void vResetRecallTimers(int player, bool restart = true)
 Action tTimerStoreRecall(Handle timer, int userid)
 {
 	int iPlayer = GetClientOfUserId(userid);
-	bool bCancel = !MT_IsCorePluginEnabled() || !MT_IsTankSupported(iPlayer) || (!MT_HasAdminAccess(iPlayer) && !bHasAdminAccess(iPlayer, g_esRecallAbility[g_esRecallPlayer[iPlayer].g_iTankType].g_iAccessFlags, g_esRecallPlayer[iPlayer].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esRecallPlayer[iPlayer].g_iTankType, iPlayer) || !MT_IsCustomTankSupported(iPlayer) || g_esRecallCache[iPlayer].g_iRecallAbility == 0,
+	bool bCancel = !MT_IsCorePluginEnabled() || !MT_IsTankSupported(iPlayer) || (!MT_HasAdminAccess(iPlayer) && !bHasAdminAccess(iPlayer, g_esRecallAbility[g_esRecallPlayer[iPlayer].g_iTankTypeRecorded].g_iAccessFlags, g_esRecallPlayer[iPlayer].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esRecallPlayer[iPlayer].g_iTankType, iPlayer) || !MT_IsCustomTankSupported(iPlayer) || g_esRecallCache[iPlayer].g_iRecallAbility == 0,
 		bCancel2 = !bIsHumanSurvivor(iPlayer) || !MT_DoesSurvivorHaveRewardType(iPlayer, MT_REWARD_DEVELOPER4);
 	if (bCancel && bCancel2)
 	{

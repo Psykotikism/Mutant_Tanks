@@ -454,7 +454,7 @@ Action OnDrugTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esDrugCache[attacker].g_iDrugHitMode == 0 || g_esDrugCache[attacker].g_iDrugHitMode == 1) && bIsHumanSurvivor(victim) && g_esDrugCache[attacker].g_iComboAbility == 0)
 		{
-			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esDrugAbility[g_esDrugPlayer[attacker].g_iTankType].g_iAccessFlags, g_esDrugPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esDrugPlayer[attacker].g_iTankType, g_esDrugAbility[g_esDrugPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esDrugPlayer[victim].g_iImmunityFlags))
+			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esDrugAbility[g_esDrugPlayer[attacker].g_iTankTypeRecorded].g_iAccessFlags, g_esDrugPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esDrugPlayer[attacker].g_iTankType, g_esDrugAbility[g_esDrugPlayer[attacker].g_iTankTypeRecorded].g_iImmunityFlags, g_esDrugPlayer[victim].g_iImmunityFlags))
 			{
 				return Plugin_Continue;
 			}
@@ -467,7 +467,7 @@ Action OnDrugTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esDrugCache[victim].g_iDrugHitMode == 0 || g_esDrugCache[victim].g_iDrugHitMode == 2) && bIsHumanSurvivor(attacker) && g_esDrugCache[victim].g_iComboAbility == 0)
 		{
-			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esDrugAbility[g_esDrugPlayer[victim].g_iTankType].g_iAccessFlags, g_esDrugPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esDrugPlayer[victim].g_iTankType, g_esDrugAbility[g_esDrugPlayer[victim].g_iTankType].g_iImmunityFlags, g_esDrugPlayer[attacker].g_iImmunityFlags))
+			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esDrugAbility[g_esDrugPlayer[victim].g_iTankTypeRecorded].g_iAccessFlags, g_esDrugPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esDrugPlayer[victim].g_iTankType, g_esDrugAbility[g_esDrugPlayer[victim].g_iTankTypeRecorded].g_iImmunityFlags, g_esDrugPlayer[attacker].g_iImmunityFlags))
 			{
 				return Plugin_Continue;
 			}
@@ -976,7 +976,7 @@ void vDrugAbilityActivated(int tank)
 public void MT_OnAbilityActivated(int tank)
 #endif
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esDrugAbility[g_esDrugPlayer[tank].g_iTankType].g_iAccessFlags, g_esDrugPlayer[tank].g_iAccessFlags)) || g_esDrugCache[tank].g_iHumanAbility == 0))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esDrugAbility[g_esDrugPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esDrugPlayer[tank].g_iAccessFlags)) || g_esDrugCache[tank].g_iHumanAbility == 0))
 	{
 		return;
 	}
@@ -995,7 +995,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esDrugCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esDrugCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esDrugPlayer[tank].g_iTankType, tank) || (g_esDrugCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esDrugCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esDrugAbility[g_esDrugPlayer[tank].g_iTankType].g_iAccessFlags, g_esDrugPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esDrugCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esDrugCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esDrugPlayer[tank].g_iTankType, tank) || (g_esDrugCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esDrugCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esDrugAbility[g_esDrugPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esDrugPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -1064,7 +1064,7 @@ void vDrug(int survivor, bool toggle, float angles[20])
 
 void vDrugAbility(int tank, float random, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esDrugCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esDrugCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esDrugPlayer[tank].g_iTankType, tank) || (g_esDrugCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esDrugCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esDrugAbility[g_esDrugPlayer[tank].g_iTankType].g_iAccessFlags, g_esDrugPlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esDrugCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esDrugCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esDrugPlayer[tank].g_iTankType, tank) || (g_esDrugCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esDrugCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esDrugAbility[g_esDrugPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esDrugPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -1081,7 +1081,7 @@ void vDrugAbility(int tank, float random, int pos = -1)
 		int iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsHumanSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esDrugPlayer[tank].g_iTankType, g_esDrugAbility[g_esDrugPlayer[tank].g_iTankType].g_iImmunityFlags, g_esDrugPlayer[iSurvivor].g_iImmunityFlags))
+			if (bIsHumanSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esDrugPlayer[tank].g_iTankType, g_esDrugAbility[g_esDrugPlayer[tank].g_iTankTypeRecorded].g_iImmunityFlags, g_esDrugPlayer[iSurvivor].g_iImmunityFlags))
 			{
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 				if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange && bIsVisibleToPlayer(tank, iSurvivor, g_esDrugCache[tank].g_iDrugSight, .range = flRange))
@@ -1109,7 +1109,7 @@ void vDrugAbility(int tank, float random, int pos = -1)
 
 void vDrugHit(int survivor, int tank, float random, float chance, int enabled, int messages, int flags, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esDrugCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esDrugCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esDrugPlayer[tank].g_iTankType, tank) || (g_esDrugCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esDrugCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esDrugAbility[g_esDrugPlayer[tank].g_iTankType].g_iAccessFlags, g_esDrugPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esDrugPlayer[tank].g_iTankType, g_esDrugAbility[g_esDrugPlayer[tank].g_iTankType].g_iImmunityFlags, g_esDrugPlayer[survivor].g_iImmunityFlags))
+	if (bIsAreaNarrow(tank, g_esDrugCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esDrugCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esDrugPlayer[tank].g_iTankType, tank) || (g_esDrugCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esDrugCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esDrugAbility[g_esDrugPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esDrugPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esDrugPlayer[tank].g_iTankType, g_esDrugAbility[g_esDrugPlayer[tank].g_iTankTypeRecorded].g_iImmunityFlags, g_esDrugPlayer[survivor].g_iImmunityFlags))
 	{
 		return;
 	}
@@ -1263,7 +1263,7 @@ void tTimerDrugCombo(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esDrugAbility[g_esDrugPlayer[iTank].g_iTankType].g_iAccessFlags, g_esDrugPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esDrugPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esDrugCache[iTank].g_iDrugAbility == 0)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esDrugAbility[g_esDrugPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esDrugPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esDrugPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esDrugCache[iTank].g_iDrugAbility == 0)
 	{
 		return;
 	}
@@ -1284,7 +1284,7 @@ void tTimerDrugCombo2(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esDrugAbility[g_esDrugPlayer[iTank].g_iTankType].g_iAccessFlags, g_esDrugPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esDrugPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esDrugCache[iTank].g_iDrugHit == 0)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esDrugAbility[g_esDrugPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esDrugPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esDrugPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esDrugCache[iTank].g_iDrugHit == 0)
 	{
 		return;
 	}
@@ -1317,7 +1317,7 @@ Action tTimerDrug(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell(), iMessage = pack.ReadCell();
-	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esDrugCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esDrugCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esDrugPlayer[iTank].g_iTankType, iTank) || (g_esDrugCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esDrugCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esDrugAbility[g_esDrugPlayer[iTank].g_iTankType].g_iAccessFlags, g_esDrugPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esDrugPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || iType != g_esDrugPlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esDrugPlayer[iTank].g_iTankType, g_esDrugAbility[g_esDrugPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esDrugPlayer[iSurvivor].g_iImmunityFlags) || !g_esDrugPlayer[iSurvivor].g_bAffected)
+	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esDrugCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esDrugCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esDrugPlayer[iTank].g_iTankType, iTank) || (g_esDrugCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esDrugCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esDrugAbility[g_esDrugPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esDrugPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esDrugPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || iType != g_esDrugPlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esDrugPlayer[iTank].g_iTankType, g_esDrugAbility[g_esDrugPlayer[iTank].g_iTankTypeRecorded].g_iImmunityFlags, g_esDrugPlayer[iSurvivor].g_iImmunityFlags) || !g_esDrugPlayer[iSurvivor].g_bAffected)
 	{
 		vDrugReset2(iSurvivor, iTank, iMessage);
 

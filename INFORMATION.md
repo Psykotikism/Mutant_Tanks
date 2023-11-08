@@ -12197,6 +12197,14 @@
 			// Not empty: These access flags have access.
 			"Access Flags"				""
 
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// The ability can only activate in close areas.
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
@@ -12306,6 +12314,17 @@
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Message"			"0"
 
+			// Check line-of-sight when the Mutant Tank uses its abilities.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 2
+			// --
+			// 0: OFF
+			// 1: Check if there is a solid object between the Mutant Tank and survivors.
+			// 2: Check if the Mutant Tank is facing the survivors.
+			"Ability Sight"				"0"
+
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
@@ -12335,6 +12354,42 @@
 			// "forever" - 99999 seconds
 			"Fast Cooldown"				"0"
 
+			// The Mutant Tank dashes to damage nearby survivors after incapacitating or killing a survivor.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.0 (OFF)
+			// Maximum: 99999.0
+			// --
+			// Keywords:
+			// "weakest" - 1.0 damage
+			// "strongest" - 99999.0 damage
+			"Fast Dash"				"0.0"
+
+			// The Mutant Tank has this many chances out of 100.0% to trigger the dash ability.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.0 (No chance)
+			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
+			"Fast Dash Chance"			"33.3"
+
+			// The Mutant Tank's dash ability damages survivors that are within this range.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 1.0 (Closest)
+			// Maximum: 99999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 99999.0 range
+			"Fast Dash Range"			"150.0"
+
 			// The Mutant Tank's ability effects last this long.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
@@ -12362,6 +12417,7 @@
 
 				// Example
 				"Access Flags"				""
+				"Immunity Flags"			""
 				"Close Areas Only"			"0.0"
 				"Combo Ability"				"0"
 				"Human Ability"				"0"
@@ -12373,8 +12429,12 @@
 				"Requires Humans"			"0"
 				"Ability Enabled"			"0"
 				"Ability Message"			"0"
+				"Ability Sight"				"0"
 				"Fast Chance"				"33.3"
 				"Fast Cooldown"				"0"
+				"Fast Dash"				"0.0"
+				"Fast Dash Chance"			"33.3"
+				"Fast Dash Range"			"150.0"
 				"Fast Duration"				"5"
 				"Fast Speed"				"5.0"
 			}
@@ -23286,6 +23346,14 @@
 			// Not empty: These access flags have access.
 			"Access Flags"				""
 
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// The ability can only activate in close areas.
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
@@ -23395,6 +23463,17 @@
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Message"			"0"
 
+			// Check line-of-sight when the Mutant Tank uses its abilities.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 2
+			// --
+			// 0: OFF
+			// 1: Check if there is a solid object between the Mutant Tank and survivors.
+			// 2: Check if the Mutant Tank is facing the survivors.
+			"Ability Sight"				"0"
+
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
@@ -23461,6 +23540,27 @@
 			// "forever" - 99999 seconds
 			"Regen Interval"			"1.0"
 
+			// The Mutant Tank leeches this much health from each nearby survivor each time.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: -1000000
+			// Maximum: 1000000
+			// --
+			// Positive numbers: Current health + Regen leech
+			// Negative numbers: Current health - Regen leech
+			"Regen Leech"				"0"
+
+			// The distance between a survivor and the Mutant Tank needed to leech health.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 1.0 (Closest)
+			// Maximum: 99999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 99999.0 range
+			"Regen Leech Range"			"500.0"
+
 			// The Mutant Tank stops regenerating health at this value.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -23474,6 +23574,7 @@
 
 				// Example
 				"Access Flags"				""
+				"Immunity Flags"			""
 				"Close Areas Only"			"0.0"
 				"Combo Ability"				"0"
 				"Human Ability"				"0"
@@ -23485,11 +23586,14 @@
 				"Requires Humans"			"0"
 				"Ability Enabled"			"0"
 				"Ability Message"			"0"
+				"Ability Sight"				"0"
 				"Regen Chance"				"33.3"
 				"Regen Cooldown"			"0"
 				"Regen Duration"			"0"
 				"Regen Health"				"1"
 				"Regen Interval"			"1.0"
+				"Regen Leech"				"0"
+				"Regen Leech Range"			"500.0"
 				"Regen Limit"				"1000000"
 			}
 		}

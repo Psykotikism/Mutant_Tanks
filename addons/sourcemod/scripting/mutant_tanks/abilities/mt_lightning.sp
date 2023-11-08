@@ -802,7 +802,7 @@ void vLightningAbilityActivated(int tank)
 public void MT_OnAbilityActivated(int tank)
 #endif
 {
-	if (!g_bSecondGame || (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esLightningAbility[g_esLightningPlayer[tank].g_iTankType].g_iAccessFlags, g_esLightningPlayer[tank].g_iAccessFlags)) || g_esLightningCache[tank].g_iHumanAbility == 0)))
+	if (!g_bSecondGame || (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esLightningAbility[g_esLightningPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esLightningPlayer[tank].g_iAccessFlags)) || g_esLightningCache[tank].g_iHumanAbility == 0)))
 	{
 		return;
 	}
@@ -821,7 +821,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (!g_bSecondGame || bIsAreaNarrow(tank, g_esLightningCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esLightningCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esLightningPlayer[tank].g_iTankType, tank) || (g_esLightningCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLightningCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esLightningAbility[g_esLightningPlayer[tank].g_iTankType].g_iAccessFlags, g_esLightningPlayer[tank].g_iAccessFlags)))
+		if (!g_bSecondGame || bIsAreaNarrow(tank, g_esLightningCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esLightningCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esLightningPlayer[tank].g_iTankType, tank) || (g_esLightningCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLightningCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esLightningAbility[g_esLightningPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esLightningPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -938,7 +938,7 @@ void vLightning(int tank, int pos = -1)
 
 void vLightning2(int tank, int pos = -1)
 {
-	if (!g_bSecondGame || bIsAreaNarrow(tank, g_esLightningCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esLightningCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esLightningPlayer[tank].g_iTankType, tank) || (g_esLightningCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLightningCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esLightningAbility[g_esLightningPlayer[tank].g_iTankType].g_iAccessFlags, g_esLightningPlayer[tank].g_iAccessFlags)))
+	if (!g_bSecondGame || bIsAreaNarrow(tank, g_esLightningCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esLightningCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esLightningPlayer[tank].g_iTankType, tank) || (g_esLightningCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLightningCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esLightningAbility[g_esLightningPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esLightningPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -957,7 +957,7 @@ void vLightning2(int tank, int pos = -1)
 
 void vLightningAbility(int tank)
 {
-	if (!g_bSecondGame || (g_esLightningPlayer[tank].g_iCooldown != -1 && g_esLightningPlayer[tank].g_iCooldown >= GetTime()) || bIsAreaNarrow(tank, g_esLightningCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esLightningCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esLightningPlayer[tank].g_iTankType, tank) || (g_esLightningCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLightningCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esLightningAbility[g_esLightningPlayer[tank].g_iTankType].g_iAccessFlags, g_esLightningPlayer[tank].g_iAccessFlags)))
+	if (!g_bSecondGame || (g_esLightningPlayer[tank].g_iCooldown != -1 && g_esLightningPlayer[tank].g_iCooldown >= GetTime()) || bIsAreaNarrow(tank, g_esLightningCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esLightningCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esLightningPlayer[tank].g_iTankType, tank) || (g_esLightningCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLightningCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esLightningAbility[g_esLightningPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esLightningPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -1032,7 +1032,7 @@ void tTimerLightningCombo(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!g_bSecondGame || !MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esLightningAbility[g_esLightningPlayer[iTank].g_iTankType].g_iAccessFlags, g_esLightningPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esLightningPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esLightningCache[iTank].g_iLightningAbility == 0 || g_esLightningPlayer[iTank].g_bActivated)
+	if (!g_bSecondGame || !MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esLightningAbility[g_esLightningPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esLightningPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esLightningPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esLightningCache[iTank].g_iLightningAbility == 0 || g_esLightningPlayer[iTank].g_bActivated)
 	{
 		return;
 	}
@@ -1046,7 +1046,7 @@ Action tTimerLightning(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
-	if (!g_bSecondGame || !MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esLightningAbility[g_esLightningPlayer[iTank].g_iTankType].g_iAccessFlags, g_esLightningPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esLightningPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || iType != g_esLightningPlayer[iTank].g_iTankType || !g_esLightningPlayer[iTank].g_bActivated)
+	if (!g_bSecondGame || !MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esLightningAbility[g_esLightningPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esLightningPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esLightningPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || iType != g_esLightningPlayer[iTank].g_iTankType || !g_esLightningPlayer[iTank].g_bActivated)
 	{
 		g_esLightningPlayer[iTank].g_bActivated = false;
 
@@ -1096,7 +1096,7 @@ Action tTimerLightning(Handle timer, DataPack pack)
 	float flSurvivorPos[3], flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 3, iPos) : g_esLightningCache[iTank].g_flLightningDamage;
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, iTank) && !bIsAdminImmune(iSurvivor, g_esLightningPlayer[iTank].g_iTankType, g_esLightningAbility[g_esLightningPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esLightningPlayer[iSurvivor].g_iImmunityFlags))
+		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, iTank) && !bIsAdminImmune(iSurvivor, g_esLightningPlayer[iTank].g_iTankType, g_esLightningAbility[g_esLightningPlayer[iTank].g_iTankTypeRecorded].g_iImmunityFlags, g_esLightningPlayer[iSurvivor].g_iImmunityFlags))
 		{
 			GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 			if (GetVectorDistance(flOrigin, flSurvivorPos) <= 200.0 && bIsVisibleToPlayer(iTank, iSurvivor, g_esLightningCache[iTank].g_iLightningSight, .range = 200.0))

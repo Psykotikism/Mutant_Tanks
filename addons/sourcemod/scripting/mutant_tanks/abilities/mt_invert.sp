@@ -456,7 +456,7 @@ Action OnInvertTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 
 		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esInvertCache[attacker].g_iInvertHitMode == 0 || g_esInvertCache[attacker].g_iInvertHitMode == 1) && bIsSurvivor(victim) && g_esInvertCache[attacker].g_iComboAbility == 0)
 		{
-			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esInvertAbility[g_esInvertPlayer[attacker].g_iTankType].g_iAccessFlags, g_esInvertPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esInvertPlayer[attacker].g_iTankType, g_esInvertAbility[g_esInvertPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esInvertPlayer[victim].g_iImmunityFlags))
+			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esInvertAbility[g_esInvertPlayer[attacker].g_iTankTypeRecorded].g_iAccessFlags, g_esInvertPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esInvertPlayer[attacker].g_iTankType, g_esInvertAbility[g_esInvertPlayer[attacker].g_iTankTypeRecorded].g_iImmunityFlags, g_esInvertPlayer[victim].g_iImmunityFlags))
 			{
 				return Plugin_Continue;
 			}
@@ -469,7 +469,7 @@ Action OnInvertTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esInvertCache[victim].g_iInvertHitMode == 0 || g_esInvertCache[victim].g_iInvertHitMode == 2) && bIsSurvivor(attacker) && g_esInvertCache[victim].g_iComboAbility == 0)
 		{
-			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esInvertAbility[g_esInvertPlayer[victim].g_iTankType].g_iAccessFlags, g_esInvertPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esInvertPlayer[victim].g_iTankType, g_esInvertAbility[g_esInvertPlayer[victim].g_iTankType].g_iImmunityFlags, g_esInvertPlayer[attacker].g_iImmunityFlags))
+			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esInvertAbility[g_esInvertPlayer[victim].g_iTankTypeRecorded].g_iAccessFlags, g_esInvertPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esInvertPlayer[victim].g_iTankType, g_esInvertAbility[g_esInvertPlayer[victim].g_iTankTypeRecorded].g_iImmunityFlags, g_esInvertPlayer[attacker].g_iImmunityFlags))
 			{
 				return Plugin_Continue;
 			}
@@ -949,7 +949,7 @@ void vInvertAbilityActivated(int tank)
 public void MT_OnAbilityActivated(int tank)
 #endif
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esInvertAbility[g_esInvertPlayer[tank].g_iTankType].g_iAccessFlags, g_esInvertPlayer[tank].g_iAccessFlags)) || g_esInvertCache[tank].g_iHumanAbility == 0))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esInvertAbility[g_esInvertPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esInvertPlayer[tank].g_iAccessFlags)) || g_esInvertCache[tank].g_iHumanAbility == 0))
 	{
 		return;
 	}
@@ -968,7 +968,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esInvertCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esInvertCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esInvertPlayer[tank].g_iTankType, tank) || (g_esInvertCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esInvertCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esInvertAbility[g_esInvertPlayer[tank].g_iTankType].g_iAccessFlags, g_esInvertPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esInvertCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esInvertCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esInvertPlayer[tank].g_iTankType, tank) || (g_esInvertCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esInvertCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esInvertAbility[g_esInvertPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esInvertPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -1002,7 +1002,7 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 
 void vInvertAbility(int tank, float random, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esInvertCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esInvertCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esInvertPlayer[tank].g_iTankType, tank) || (g_esInvertCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esInvertCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esInvertAbility[g_esInvertPlayer[tank].g_iTankType].g_iAccessFlags, g_esInvertPlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esInvertCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esInvertCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esInvertPlayer[tank].g_iTankType, tank) || (g_esInvertCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esInvertCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esInvertAbility[g_esInvertPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esInvertPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -1019,7 +1019,7 @@ void vInvertAbility(int tank, float random, int pos = -1)
 		int iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esInvertPlayer[tank].g_iTankType, g_esInvertAbility[g_esInvertPlayer[tank].g_iTankType].g_iImmunityFlags, g_esInvertPlayer[iSurvivor].g_iImmunityFlags))
+			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esInvertPlayer[tank].g_iTankType, g_esInvertAbility[g_esInvertPlayer[tank].g_iTankTypeRecorded].g_iImmunityFlags, g_esInvertPlayer[iSurvivor].g_iImmunityFlags))
 			{
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 				if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange && bIsVisibleToPlayer(tank, iSurvivor, g_esInvertCache[tank].g_iInvertSight, .range = flRange))
@@ -1047,7 +1047,7 @@ void vInvertAbility(int tank, float random, int pos = -1)
 
 void vInvertHit(int survivor, int tank, float random, float chance, int enabled, int messages, int flags, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esInvertCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esInvertCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esInvertPlayer[tank].g_iTankType, tank) || (g_esInvertCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esInvertCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esInvertAbility[g_esInvertPlayer[tank].g_iTankType].g_iAccessFlags, g_esInvertPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esInvertPlayer[tank].g_iTankType, g_esInvertAbility[g_esInvertPlayer[tank].g_iTankType].g_iImmunityFlags, g_esInvertPlayer[survivor].g_iImmunityFlags))
+	if (bIsAreaNarrow(tank, g_esInvertCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esInvertCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esInvertPlayer[tank].g_iTankType, tank) || (g_esInvertCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esInvertCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esInvertAbility[g_esInvertPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esInvertPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esInvertPlayer[tank].g_iTankType, g_esInvertAbility[g_esInvertPlayer[tank].g_iTankTypeRecorded].g_iImmunityFlags, g_esInvertPlayer[survivor].g_iImmunityFlags))
 	{
 		return;
 	}
@@ -1184,7 +1184,7 @@ void tTimerInvertCombo(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esInvertAbility[g_esInvertPlayer[iTank].g_iTankType].g_iAccessFlags, g_esInvertPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esInvertPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esInvertCache[iTank].g_iInvertAbility == 0)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esInvertAbility[g_esInvertPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esInvertPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esInvertPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esInvertCache[iTank].g_iInvertAbility == 0)
 	{
 		return;
 	}
@@ -1205,7 +1205,7 @@ void tTimerInvertCombo2(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esInvertAbility[g_esInvertPlayer[iTank].g_iTankType].g_iAccessFlags, g_esInvertPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esInvertPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esInvertCache[iTank].g_iInvertHit == 0)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esInvertAbility[g_esInvertPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esInvertPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esInvertPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esInvertCache[iTank].g_iInvertHit == 0)
 	{
 		return;
 	}

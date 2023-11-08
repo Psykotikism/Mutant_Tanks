@@ -413,7 +413,7 @@ Action OnGodTakeDamage(int victim, int &attacker, int &inflictor, float &damage,
 		if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && g_esGodPlayer[victim].g_bActivated)
 		{
 			bool bSurvivor = bIsSurvivor(attacker);
-			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esGodAbility[g_esGodPlayer[victim].g_iTankType].g_iAccessFlags, g_esGodPlayer[victim].g_iAccessFlags)) || (bSurvivor && (MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esGodPlayer[victim].g_iTankType, g_esGodAbility[g_esGodPlayer[victim].g_iTankType].g_iImmunityFlags, g_esGodPlayer[attacker].g_iImmunityFlags))))
+			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esGodAbility[g_esGodPlayer[victim].g_iTankTypeRecorded].g_iAccessFlags, g_esGodPlayer[victim].g_iAccessFlags)) || (bSurvivor && (MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esGodPlayer[victim].g_iTankType, g_esGodAbility[g_esGodPlayer[victim].g_iTankTypeRecorded].g_iImmunityFlags, g_esGodPlayer[attacker].g_iImmunityFlags))))
 			{
 				return Plugin_Continue;
 			}
@@ -840,7 +840,7 @@ void vGodAbilityActivated(int tank)
 public void MT_OnAbilityActivated(int tank)
 #endif
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esGodAbility[g_esGodPlayer[tank].g_iTankType].g_iAccessFlags, g_esGodPlayer[tank].g_iAccessFlags)) || g_esGodCache[tank].g_iHumanAbility == 0))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esGodAbility[g_esGodPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esGodPlayer[tank].g_iAccessFlags)) || g_esGodCache[tank].g_iHumanAbility == 0))
 	{
 		return;
 	}
@@ -859,7 +859,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esGodCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esGodCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esGodPlayer[tank].g_iTankType, tank) || (g_esGodCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esGodCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esGodAbility[g_esGodPlayer[tank].g_iTankType].g_iAccessFlags, g_esGodPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esGodCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esGodCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esGodPlayer[tank].g_iTankType, tank) || (g_esGodCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esGodCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esGodAbility[g_esGodPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esGodPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -979,7 +979,7 @@ void vGod(int tank, int pos = -1)
 
 void vGodAbility(int tank)
 {
-	if ((g_esGodPlayer[tank].g_iCooldown != -1 && g_esGodPlayer[tank].g_iCooldown >= GetTime()) || bIsAreaNarrow(tank, g_esGodCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esGodCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esGodPlayer[tank].g_iTankType, tank) || (g_esGodCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esGodCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esGodAbility[g_esGodPlayer[tank].g_iTankType].g_iAccessFlags, g_esGodPlayer[tank].g_iAccessFlags)))
+	if ((g_esGodPlayer[tank].g_iCooldown != -1 && g_esGodPlayer[tank].g_iCooldown >= GetTime()) || bIsAreaNarrow(tank, g_esGodCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esGodCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esGodPlayer[tank].g_iTankType, tank) || (g_esGodCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esGodCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esGodAbility[g_esGodPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esGodPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -1056,7 +1056,7 @@ void tTimerGodCombo(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esGodAbility[g_esGodPlayer[iTank].g_iTankType].g_iAccessFlags, g_esGodPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esGodPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esGodCache[iTank].g_iGodAbility == 0 || g_esGodPlayer[iTank].g_bActivated)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esGodAbility[g_esGodPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esGodPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esGodPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esGodCache[iTank].g_iGodAbility == 0 || g_esGodPlayer[iTank].g_bActivated)
 	{
 		return;
 	}

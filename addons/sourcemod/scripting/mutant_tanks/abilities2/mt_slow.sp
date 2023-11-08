@@ -436,7 +436,7 @@ Action OnSlowTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esSlowCache[attacker].g_iSlowHitMode == 0 || g_esSlowCache[attacker].g_iSlowHitMode == 1) && bIsSurvivor(victim) && g_esSlowCache[attacker].g_iComboAbility == 0)
 		{
-			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esSlowAbility[g_esSlowPlayer[attacker].g_iTankType].g_iAccessFlags, g_esSlowPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esSlowPlayer[attacker].g_iTankType, g_esSlowAbility[g_esSlowPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esSlowPlayer[victim].g_iImmunityFlags))
+			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esSlowAbility[g_esSlowPlayer[attacker].g_iTankTypeRecorded].g_iAccessFlags, g_esSlowPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esSlowPlayer[attacker].g_iTankType, g_esSlowAbility[g_esSlowPlayer[attacker].g_iTankTypeRecorded].g_iImmunityFlags, g_esSlowPlayer[victim].g_iImmunityFlags))
 			{
 				return Plugin_Continue;
 			}
@@ -449,7 +449,7 @@ Action OnSlowTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esSlowCache[victim].g_iSlowHitMode == 0 || g_esSlowCache[victim].g_iSlowHitMode == 2) && bIsSurvivor(attacker) && g_esSlowCache[victim].g_iComboAbility == 0)
 		{
-			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esSlowAbility[g_esSlowPlayer[victim].g_iTankType].g_iAccessFlags, g_esSlowPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esSlowPlayer[victim].g_iTankType, g_esSlowAbility[g_esSlowPlayer[victim].g_iTankType].g_iImmunityFlags, g_esSlowPlayer[attacker].g_iImmunityFlags))
+			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esSlowAbility[g_esSlowPlayer[victim].g_iTankTypeRecorded].g_iAccessFlags, g_esSlowPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esSlowPlayer[victim].g_iTankType, g_esSlowAbility[g_esSlowPlayer[victim].g_iTankTypeRecorded].g_iImmunityFlags, g_esSlowPlayer[attacker].g_iImmunityFlags))
 			{
 				return Plugin_Continue;
 			}
@@ -983,7 +983,7 @@ void vSlowAbilityActivated(int tank)
 public void MT_OnAbilityActivated(int tank)
 #endif
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSlowAbility[g_esSlowPlayer[tank].g_iTankType].g_iAccessFlags, g_esSlowPlayer[tank].g_iAccessFlags)) || g_esSlowCache[tank].g_iHumanAbility == 0))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSlowAbility[g_esSlowPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esSlowPlayer[tank].g_iAccessFlags)) || g_esSlowCache[tank].g_iHumanAbility == 0))
 	{
 		return;
 	}
@@ -1002,7 +1002,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esSlowCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esSlowCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esSlowPlayer[tank].g_iTankType, tank) || (g_esSlowCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSlowCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSlowAbility[g_esSlowPlayer[tank].g_iTankType].g_iAccessFlags, g_esSlowPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esSlowCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esSlowCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esSlowPlayer[tank].g_iTankType, tank) || (g_esSlowCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSlowCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSlowAbility[g_esSlowPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esSlowPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -1036,7 +1036,7 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 
 void vSlowAbility(int tank, float random, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esSlowCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esSlowCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esSlowPlayer[tank].g_iTankType, tank) || (g_esSlowCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSlowCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSlowAbility[g_esSlowPlayer[tank].g_iTankType].g_iAccessFlags, g_esSlowPlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esSlowCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esSlowCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esSlowPlayer[tank].g_iTankType, tank) || (g_esSlowCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSlowCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSlowAbility[g_esSlowPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esSlowPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -1053,7 +1053,7 @@ void vSlowAbility(int tank, float random, int pos = -1)
 		int iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esSlowPlayer[tank].g_iTankType, g_esSlowAbility[g_esSlowPlayer[tank].g_iTankType].g_iImmunityFlags, g_esSlowPlayer[iSurvivor].g_iImmunityFlags))
+			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esSlowPlayer[tank].g_iTankType, g_esSlowAbility[g_esSlowPlayer[tank].g_iTankTypeRecorded].g_iImmunityFlags, g_esSlowPlayer[iSurvivor].g_iImmunityFlags))
 			{
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 				if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange && bIsVisibleToPlayer(tank, iSurvivor, g_esSlowCache[tank].g_iSlowSight, .range = flRange))
@@ -1081,7 +1081,7 @@ void vSlowAbility(int tank, float random, int pos = -1)
 
 void vSlowHit(int survivor, int tank, float random, float chance, int enabled, int messages, int flags, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esSlowCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esSlowCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esSlowPlayer[tank].g_iTankType, tank) || (g_esSlowCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSlowCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSlowAbility[g_esSlowPlayer[tank].g_iTankType].g_iAccessFlags, g_esSlowPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esSlowPlayer[tank].g_iTankType, g_esSlowAbility[g_esSlowPlayer[tank].g_iTankType].g_iImmunityFlags, g_esSlowPlayer[survivor].g_iImmunityFlags))
+	if (bIsAreaNarrow(tank, g_esSlowCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esSlowCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esSlowPlayer[tank].g_iTankType, tank) || (g_esSlowCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSlowCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSlowAbility[g_esSlowPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esSlowPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esSlowPlayer[tank].g_iTankType, g_esSlowAbility[g_esSlowPlayer[tank].g_iTankTypeRecorded].g_iImmunityFlags, g_esSlowPlayer[survivor].g_iImmunityFlags))
 	{
 		return;
 	}
@@ -1239,7 +1239,7 @@ void tTimerSlowCombo(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esSlowAbility[g_esSlowPlayer[iTank].g_iTankType].g_iAccessFlags, g_esSlowPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esSlowPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esSlowCache[iTank].g_iSlowAbility == 0)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esSlowAbility[g_esSlowPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esSlowPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esSlowPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esSlowCache[iTank].g_iSlowAbility == 0)
 	{
 		return;
 	}
@@ -1260,7 +1260,7 @@ void tTimerSlowCombo2(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esSlowAbility[g_esSlowPlayer[iTank].g_iTankType].g_iAccessFlags, g_esSlowPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esSlowPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esSlowCache[iTank].g_iSlowHit == 0)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esSlowAbility[g_esSlowPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esSlowPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esSlowPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esSlowCache[iTank].g_iSlowHit == 0)
 	{
 		return;
 	}

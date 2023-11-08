@@ -421,7 +421,7 @@ Action OnFlyTakeDamage(int victim, int &attacker, int &inflictor, float &damage,
 	{
 		if (MT_IsTankSupported(attacker) && (!bIsInfected(attacker, MT_CHECK_FAKECLIENT) || g_esFlyCache[attacker].g_iHumanAbility == 2) && MT_IsCustomTankSupported(attacker) && g_esFlyCache[attacker].g_iFlyAbility == 1 && bIsSurvivor(victim))
 		{
-			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esFlyAbility[g_esFlyPlayer[attacker].g_iTankType].g_iAccessFlags, g_esFlyPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esFlyPlayer[attacker].g_iTankType, g_esFlyAbility[g_esFlyPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esFlyPlayer[victim].g_iImmunityFlags))
+			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esFlyAbility[g_esFlyPlayer[attacker].g_iTankTypeRecorded].g_iAccessFlags, g_esFlyPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esFlyPlayer[attacker].g_iTankType, g_esFlyAbility[g_esFlyPlayer[attacker].g_iTankTypeRecorded].g_iImmunityFlags, g_esFlyPlayer[victim].g_iImmunityFlags))
 			{
 				return Plugin_Continue;
 			}
@@ -443,7 +443,7 @@ Action OnFlyTakeDamage(int victim, int &attacker, int &inflictor, float &damage,
 		}
 		else if (MT_IsTankSupported(victim) && (!bIsInfected(victim, MT_CHECK_FAKECLIENT) || g_esFlyCache[victim].g_iHumanAbility == 2) && MT_IsCustomTankSupported(victim) && g_esFlyCache[victim].g_iFlyAbility == 1 && bIsSurvivor(attacker))
 		{
-			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esFlyAbility[g_esFlyPlayer[victim].g_iTankType].g_iAccessFlags, g_esFlyPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esFlyPlayer[victim].g_iTankType, g_esFlyAbility[g_esFlyPlayer[victim].g_iTankType].g_iImmunityFlags, g_esFlyPlayer[attacker].g_iImmunityFlags))
+			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esFlyAbility[g_esFlyPlayer[victim].g_iTankTypeRecorded].g_iAccessFlags, g_esFlyPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esFlyPlayer[victim].g_iTankType, g_esFlyAbility[g_esFlyPlayer[victim].g_iTankTypeRecorded].g_iImmunityFlags, g_esFlyPlayer[attacker].g_iImmunityFlags))
 			{
 				return Plugin_Continue;
 			}
@@ -903,7 +903,7 @@ void vFlyAbilityActivated(int tank)
 public void MT_OnAbilityActivated(int tank)
 #endif
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFlyAbility[g_esFlyPlayer[tank].g_iTankType].g_iAccessFlags, g_esFlyPlayer[tank].g_iAccessFlags)) || g_esFlyCache[tank].g_iHumanAbility == 0))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFlyAbility[g_esFlyPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esFlyPlayer[tank].g_iAccessFlags)) || g_esFlyCache[tank].g_iHumanAbility == 0))
 	{
 		return;
 	}
@@ -922,7 +922,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esFlyCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esFlyCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esFlyPlayer[tank].g_iTankType, tank) || (g_esFlyCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esFlyCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFlyAbility[g_esFlyPlayer[tank].g_iTankType].g_iAccessFlags, g_esFlyPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esFlyCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esFlyCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esFlyPlayer[tank].g_iTankType, tank) || (g_esFlyCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esFlyCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFlyAbility[g_esFlyPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esFlyPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -1003,7 +1003,7 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 	}
 
 	vRemoveFly(tank);
-	vRemoveFly2(tank);
+	vRemoveFly2(tank, false);
 }
 
 #if defined MT_ABILITIES_MAIN
@@ -1014,7 +1014,7 @@ public void MT_OnRockThrow(int tank, int rock)
 {
 	if (MT_IsTankSupported(tank) && (!bIsInfected(tank, MT_CHECK_FAKECLIENT) || g_esFlyCache[tank].g_iHumanAbility == 2) && MT_IsCustomTankSupported(tank) && g_esFlyCache[tank].g_iFlyAbility == 1 && (g_esFlyCache[tank].g_iFlyType == 0 || (g_esFlyCache[tank].g_iFlyType & MT_FLY_THROW)) && !g_esFlyPlayer[tank].g_bActivated)
 	{
-		if (bIsAreaNarrow(tank, g_esFlyCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esFlyCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esFlyPlayer[tank].g_iTankType, tank) || (g_esFlyCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esFlyCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFlyAbility[g_esFlyPlayer[tank].g_iTankType].g_iAccessFlags, g_esFlyPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esFlyCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esFlyCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esFlyPlayer[tank].g_iTankType, tank) || (g_esFlyCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esFlyCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFlyAbility[g_esFlyPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esFlyPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -1081,7 +1081,7 @@ void vFly(int tank, bool announce, int pos = -1)
 
 void vFlyAbility(int tank)
 {
-	if ((g_esFlyPlayer[tank].g_iCooldown != -1 && g_esFlyPlayer[tank].g_iCooldown >= GetTime()) || bIsAreaNarrow(tank, g_esFlyCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esFlyCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esFlyPlayer[tank].g_iTankType, tank) || (g_esFlyCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esFlyCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFlyAbility[g_esFlyPlayer[tank].g_iTankType].g_iAccessFlags, g_esFlyPlayer[tank].g_iAccessFlags)))
+	if ((g_esFlyPlayer[tank].g_iCooldown != -1 && g_esFlyPlayer[tank].g_iCooldown >= GetTime()) || bIsAreaNarrow(tank, g_esFlyCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esFlyCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esFlyPlayer[tank].g_iTankType, tank) || (g_esFlyCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esFlyCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFlyAbility[g_esFlyPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esFlyPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -1105,7 +1105,7 @@ void vFlyAbility(int tank)
 
 void vFlyThink(int tank, int buttons, float duration)
 {
-	if (!bIsInfected(tank) || MT_DoesTypeRequireHumans(g_esFlyPlayer[tank].g_iTankType, tank) || (g_esFlyCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esFlyCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFlyAbility[g_esFlyPlayer[tank].g_iTankType].g_iAccessFlags, g_esFlyPlayer[tank].g_iAccessFlags)))
+	if (!bIsInfected(tank) || MT_DoesTypeRequireHumans(g_esFlyPlayer[tank].g_iTankType, tank) || (g_esFlyCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esFlyCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFlyAbility[g_esFlyPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esFlyPlayer[tank].g_iAccessFlags)))
 	{
 		vRemoveFly2(tank);
 
@@ -1589,7 +1589,7 @@ void vFlyReset4(int tank)
 	g_esFlyPlayer[tank].g_iDuration = -1;
 }
 
-void vRemoveFly2(int tank)
+void vRemoveFly2(int tank, bool apply = true)
 {
 	SDKUnhook(tank, SDKHook_PreThink, OnFlyPreThink);
 	SDKUnhook(tank, SDKHook_StartTouch, OnFlyStartTouch);
@@ -1600,7 +1600,7 @@ void vRemoveFly2(int tank)
 		SetEntityGravity(tank, 1.0);
 	}
 
-	if (g_esFlyPlayer[tank].g_iCooldown == -1 || g_esFlyPlayer[tank].g_iCooldown <= GetTime())
+	if (apply && (g_esFlyPlayer[tank].g_iCooldown == -1 || g_esFlyPlayer[tank].g_iCooldown <= GetTime()))
 	{
 		vFlyReset3(tank);
 	}
@@ -1616,7 +1616,7 @@ int iGetFlyTarget(float pos[3], float angles[3], int tank)
 	{
 		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 		{
-			if (bIsSurvivorDisabled(iSurvivor) || MT_IsAdminImmune(iSurvivor, tank) || bIsAdminImmune(iSurvivor, g_esFlyPlayer[tank].g_iTankType, g_esFlyAbility[g_esFlyPlayer[tank].g_iTankType].g_iImmunityFlags, g_esFlyPlayer[iSurvivor].g_iImmunityFlags))
+			if (bIsSurvivorDisabled(iSurvivor) || MT_IsAdminImmune(iSurvivor, tank) || bIsAdminImmune(iSurvivor, g_esFlyPlayer[tank].g_iTankType, g_esFlyAbility[g_esFlyPlayer[tank].g_iTankTypeRecorded].g_iImmunityFlags, g_esFlyPlayer[iSurvivor].g_iImmunityFlags))
 			{
 				continue;
 			}
@@ -1640,7 +1640,7 @@ void tTimerFlyCombo(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esFlyAbility[g_esFlyPlayer[iTank].g_iTankType].g_iAccessFlags, g_esFlyPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esFlyPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esFlyCache[iTank].g_iFlyAbility == 0 || g_esFlyPlayer[iTank].g_bActivated)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esFlyAbility[g_esFlyPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esFlyPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esFlyPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esFlyCache[iTank].g_iFlyAbility == 0 || g_esFlyPlayer[iTank].g_bActivated)
 	{
 		return;
 	}
