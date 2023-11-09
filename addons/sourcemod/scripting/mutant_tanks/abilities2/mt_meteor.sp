@@ -1320,11 +1320,11 @@ Action tTimerMeteor(Handle timer, DataPack pack)
 			AcceptEntityInput(iMeteor, "Ignite");
 			SetEntPropEnt(iMeteor, Prop_Data, "m_hThrower", iTank);
 
+			g_iCountdown[iMeteor] = 10;
+
 			SDKHook(iMeteor, SDKHook_StartTouch, OnMeteorStartTouch);
 			iMeteor = EntIndexToEntRef(iMeteor);
 			vDeleteEntity(iMeteor, g_esMeteorCache[iTank].g_flMeteorLifetime);
-
-			g_iCountdown[iMeteor] = 10;
 
 			DataPack dpMeteor;
 			CreateDataTimer(1.0, tTimerDestroyMeteor, dpMeteor, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
