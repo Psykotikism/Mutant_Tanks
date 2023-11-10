@@ -1094,7 +1094,9 @@ Action tTimerRegen(Handle timer, DataPack pack)
 	{
 		float flTankPos[3], flSurvivorPos[3];
 		GetClientAbsOrigin(iTank, flTankPos);
-		float flRange = (iPos != -1) ? MT_GetCombinationSetting(iTank, 9, iPos) : g_esRegenCache[iTank].g_flRegenLeechRange;
+		flTankPos[2] += 40.0;
+		float flInterval = (iPos != -1) ? MT_GetCombinationSetting(iTank, 6, iPos) : g_esRegenCache[iTank].g_flRegenInterval,
+			flRange = (iPos != -1) ? MT_GetCombinationSetting(iTank, 9, iPos) : g_esRegenCache[iTank].g_flRegenLeechRange;
 		int iColor[4];
 		GetEntityRenderColor(iTank, iColor[0], iColor[1], iColor[2], iColor[3]);
 		iColor[3] = 150;
@@ -1103,12 +1105,13 @@ Action tTimerRegen(Handle timer, DataPack pack)
 			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, iTank) && !bIsAdminImmune(iSurvivor, g_esRegenPlayer[iTank].g_iTankType, g_esRegenAbility[g_esRegenPlayer[iTank].g_iTankTypeRecorded].g_iImmunityFlags, g_esRegenPlayer[iSurvivor].g_iImmunityFlags))
 			{
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+				flSurvivorPos[2] += 40.0;
 				if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange && bIsVisibleToPlayer(iTank, iSurvivor, g_esRegenCache[iTank].g_iRegenSight, .range = flRange))
 				{
 					iMultiplier++;
 
 					vDamagePlayer(iSurvivor, iTank, MT_GetScaledDamage(float(g_esRegenCache[iTank].g_iRegenLeech)), "128");
-					TE_SetupBeamPoints(flTankPos, flSurvivorPos, g_iLaserSprite, 0, 0, 0, 0.5, 5.0, 5.0, 1, 0.0, iColor, 0);
+					TE_SetupBeamPoints(flTankPos, flSurvivorPos, g_iLaserSprite, 0, 0, 0, flInterval, 5.0, 5.0, 1, 0.0, iColor, 0);
 					TE_SendToAll();
 				}
 			}
