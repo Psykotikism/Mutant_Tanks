@@ -1097,6 +1097,7 @@ Action tTimerRegen(Handle timer, DataPack pack)
 		float flRange = (iPos != -1) ? MT_GetCombinationSetting(iTank, 9, iPos) : g_esRegenCache[iTank].g_flRegenLeechRange;
 		int iColor[4];
 		GetEntityRenderColor(iTank, iColor[0], iColor[1], iColor[2], iColor[3]);
+		iColor[3] = 150;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, iTank) && !bIsAdminImmune(iSurvivor, g_esRegenPlayer[iTank].g_iTankType, g_esRegenAbility[g_esRegenPlayer[iTank].g_iTankTypeRecorded].g_iImmunityFlags, g_esRegenPlayer[iSurvivor].g_iImmunityFlags))
