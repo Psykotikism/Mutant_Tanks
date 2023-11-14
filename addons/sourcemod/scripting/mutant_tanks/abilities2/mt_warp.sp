@@ -1559,7 +1559,7 @@ void vWarpHit(int survivor, int tank, float random, float chance, int enabled, i
 		return;
 	}
 
-	if ((enabled == 1 || enabled == 3) && bIsSurvivor(survivor) && !bIsSurvivorDisabled(survivor))
+	if ((enabled == 1 || enabled == 3) && bIsSurvivor(survivor) && !bIsSurvivorCaught(survivor) && !bIsSurvivorDisabled(survivor))
 	{
 		if (!bIsInfected(tank, MT_CHECK_FAKECLIENT) || (flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE) || (g_esWarpPlayer[tank].g_iAmmoCount2 < g_esWarpCache[tank].g_iHumanAmmo && g_esWarpCache[tank].g_iHumanAmmo > 0))
 		{
