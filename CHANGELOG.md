@@ -162,7 +162,9 @@
 - Smite:
 	- Added the `Smite Countdown` setting.
 	- The ability now credits Mutants for killing survivor victims.
-- Warp: Affected survivors are now teleported back to the team when the Mutant Infected dies.
+- Warp:
+	- Affected survivors are now teleported back to the team when the Mutant Infected dies.
+	- The ability no longer affects pinned survivors.
 
 ### Files
 

@@ -12918,7 +12918,7 @@ void vChooseArrivalType(int tank, const char[] oldname, const char[] name, int m
 				int iType = g_esTank[g_esPlayer[tank].g_iTankType].g_iRealType[0];
 				if (bIsSmoker(tank) && g_esCache[tank].g_iSpecialNote == 1)
 				{
-					FormatEx(sPhrase, sizeof sPhrase, "Smoker #%i", iType);
+					FormatEx(sPhrase, sizeof sPhrase, "%s #%i", g_sSpecialNames[specType], iType);
 					FormatEx(sNote, sizeof sNote, "%s", ((bIsValidClient(tank, MT_CHECK_FAKECLIENT) && g_esTeammate[tank].g_iSpecialNote == 1 && sSteamIDFinal[0] != '\0') ? sSteamIDFinal : sPhrase));
 
 					bool bExists = TranslationPhraseExists(sNote);
@@ -12927,7 +12927,7 @@ void vChooseArrivalType(int tank, const char[] oldname, const char[] name, int m
 				}
 				else if (bIsBoomer(tank) && g_esCache[tank].g_iSpecialNote == 1)
 				{
-					FormatEx(sPhrase, sizeof sPhrase, "Boomer #%i", iType);
+					FormatEx(sPhrase, sizeof sPhrase, "%s #%i", g_sSpecialNames[specType], iType);
 					FormatEx(sNote, sizeof sNote, "%s", ((bIsValidClient(tank, MT_CHECK_FAKECLIENT) && g_esTeammate[tank].g_iSpecialNote == 1 && sSteamIDFinal[0] != '\0') ? sSteamIDFinal : sPhrase));
 
 					bool bExists = TranslationPhraseExists(sNote);
@@ -12936,7 +12936,7 @@ void vChooseArrivalType(int tank, const char[] oldname, const char[] name, int m
 				}
 				else if (bIsHunter(tank) && g_esCache[tank].g_iSpecialNote == 1)
 				{
-					FormatEx(sPhrase, sizeof sPhrase, "Hunter #%i", iType);
+					FormatEx(sPhrase, sizeof sPhrase, "%s #%i", g_sSpecialNames[specType], iType);
 					FormatEx(sNote, sizeof sNote, "%s", ((bIsValidClient(tank, MT_CHECK_FAKECLIENT) && g_esTeammate[tank].g_iSpecialNote == 1 && sSteamIDFinal[0] != '\0') ? sSteamIDFinal : sPhrase));
 
 					bool bExists = TranslationPhraseExists(sNote);
@@ -12945,7 +12945,7 @@ void vChooseArrivalType(int tank, const char[] oldname, const char[] name, int m
 				}
 				else if (bIsSpitter(tank) && g_esCache[tank].g_iSpecialNote == 1)
 				{
-					FormatEx(sPhrase, sizeof sPhrase, "Spitter #%i", iType);
+					FormatEx(sPhrase, sizeof sPhrase, "%s #%i", g_sSpecialNames[specType], iType);
 					FormatEx(sNote, sizeof sNote, "%s", ((bIsValidClient(tank, MT_CHECK_FAKECLIENT) && g_esTeammate[tank].g_iSpecialNote == 1 && sSteamIDFinal[0] != '\0') ? sSteamIDFinal : sPhrase));
 
 					bool bExists = TranslationPhraseExists(sNote);
@@ -12954,7 +12954,7 @@ void vChooseArrivalType(int tank, const char[] oldname, const char[] name, int m
 				}
 				else if (bIsJockey(tank) && g_esCache[tank].g_iSpecialNote == 1)
 				{
-					FormatEx(sPhrase, sizeof sPhrase, "Jockey #%i", iType);
+					FormatEx(sPhrase, sizeof sPhrase, "%s #%i", g_sSpecialNames[specType], iType);
 					FormatEx(sNote, sizeof sNote, "%s", ((bIsValidClient(tank, MT_CHECK_FAKECLIENT) && g_esTeammate[tank].g_iSpecialNote == 1 && sSteamIDFinal[0] != '\0') ? sSteamIDFinal : sPhrase));
 
 					bool bExists = TranslationPhraseExists(sNote);
@@ -12963,7 +12963,7 @@ void vChooseArrivalType(int tank, const char[] oldname, const char[] name, int m
 				}
 				else if (bIsCharger(tank) && g_esCache[tank].g_iSpecialNote == 1)
 				{
-					FormatEx(sPhrase, sizeof sPhrase, "Charger #%i", iType);
+					FormatEx(sPhrase, sizeof sPhrase, "%s #%i", g_sSpecialNames[specType], iType);
 					FormatEx(sNote, sizeof sNote, "%s", ((bIsValidClient(tank, MT_CHECK_FAKECLIENT) && g_esTeammate[tank].g_iSpecialNote == 1 && sSteamIDFinal[0] != '\0') ? sSteamIDFinal : sPhrase));
 
 					bool bExists = TranslationPhraseExists(sNote);
@@ -14934,12 +14934,7 @@ void vSpawnTank(int admin, int specType, bool log = true, int amount, int mode, 
 			{
 				switch (specType)
 				{
-					case 1: FormatEx(sName, sizeof sName, "Smoker");
-					case 2: FormatEx(sName, sizeof sName, "Boomer");
-					case 3: FormatEx(sName, sizeof sName, "Hunter");
-					case 4: FormatEx(sName, sizeof sName, "Spitter");
-					case 5: FormatEx(sName, sizeof sName, "Jockey");
-					case 6: FormatEx(sName, sizeof sName, "Charger");
+					case 1, 2, 3, 4, 5, 6: FormatEx(sName, sizeof sName, g_sSpecialNames[specType]);
 					default: FormatEx(sName, sizeof sName, "Tank");
 				}
 			}
@@ -20119,15 +20114,15 @@ void SMCParseStart_Main(SMCParser smc)
 				}
 			}
 
-			g_esSpecial[iIndex].g_sBoomerName = "Boomer";
-			g_esSpecial[iIndex].g_sChargerName = "Charger";
+			g_esSpecial[iIndex].g_sBoomerName = MT_CONFIG_SECTION_BOOMER;
+			g_esSpecial[iIndex].g_sChargerName = MT_CONFIG_SECTION_CHARGER;
 			g_esSpecial[iIndex].g_sGlowColor[0] = '\0';
-			g_esSpecial[iIndex].g_sHunterName = "Hunter";
-			g_esSpecial[iIndex].g_sJockeyName = "Jockey";
+			g_esSpecial[iIndex].g_sHunterName = MT_CONFIG_SECTION_HUNTER;
+			g_esSpecial[iIndex].g_sJockeyName = MT_CONFIG_SECTION_JOCKEY;
 			g_esSpecial[iIndex].g_sRockColor[0] = '\0';
 			g_esSpecial[iIndex].g_sSkinColor[0] = '\0';
-			g_esSpecial[iIndex].g_sSmokerName = "Smoker";
-			g_esSpecial[iIndex].g_sSpitterName = "Spitter";
+			g_esSpecial[iIndex].g_sSmokerName = MT_CONFIG_SECTION_SMOKER;
+			g_esSpecial[iIndex].g_sSpitterName = MT_CONFIG_SECTION_SPITTER;
 			g_esSpecial[iIndex].g_iSpecialTypes = -1;
 			g_esSpecial[iIndex].g_iGameType = -1;
 			g_esSpecial[iIndex].g_flSpecialChance = -1.0;
@@ -26150,8 +26145,7 @@ void vGetTranslatedName(char[] buffer, int size, int tank = 0, int type = 0, int
 {
 	int iType = (type > 0) ? type : g_esTank[g_esPlayer[tank].g_iTankType].g_iRealType[0],
 		iSpecType = (tank > 0 && specType <= 0) ? g_esPlayer[tank].g_iInfectedType : specType;
-
-	vGetTranslatedNoName(buffer, size, tank, specType);
+	vGetTranslatedNoName(buffer, size, iSpecType);
 
 	if (tank > 0 && bIsValidClient(tank, MT_CHECK_FAKECLIENT))
 	{
@@ -26159,12 +26153,7 @@ void vGetTranslatedName(char[] buffer, int size, int tank = 0, int type = 0, int
 
 		switch (iSpecType)
 		{
-			case 1: sSpecialName = "Smoker";
-			case 2: sSpecialName = "Boomer";
-			case 3: sSpecialName = "Hunter";
-			case 4: sSpecialName = "Spitter";
-			case 5: sSpecialName = "Jockey";
-			case 6: sSpecialName = "Charger";
+			case 1, 2, 3, 4, 5, 6: strcopy(sSpecialName, sizeof sSpecialName, g_sSpecialNames[iSpecType]);
 			default: sSpecialName = "Tank";
 		}
 
@@ -26175,37 +26164,30 @@ void vGetTranslatedName(char[] buffer, int size, int tank = 0, int type = 0, int
 		switch (sSteamIDFinal[0] != '\0' && TranslationPhraseExists(sSteamIDFinal))
 		{
 			case true: strcopy(buffer, size, sSteamIDFinal);
-			case false: vGetTranslatedNoName(buffer, size, tank, specType);
+			case false: vGetTranslatedNoName(buffer, size, iSpecType);
 		}
 	}
 	else if (iType > 0 || tank > 0)
 	{
-		char sSpecialName[32];
+		char sSpecialName[33];
 
 		switch (iSpecType)
 		{
-			case 1: FormatEx(sSpecialName, sizeof sSpecialName, "Smoker #%i Name", iType);
-			case 2: FormatEx(sSpecialName, sizeof sSpecialName, "Boomer #%i Name", iType);
-			case 3: FormatEx(sSpecialName, sizeof sSpecialName, "Hunter #%i Name", iType);
-			case 4: FormatEx(sSpecialName, sizeof sSpecialName, "Spitter #%i Name", iType);
-			case 5: FormatEx(sSpecialName, sizeof sSpecialName, "Jockey #%i Name", iType);
-			case 6: FormatEx(sSpecialName, sizeof sSpecialName, "Charger #%i Name", iType);
+			case 1, 2, 3, 4, 5, 6: FormatEx(sSpecialName, sizeof sSpecialName, "%s #%i Name", g_sSpecialNames[iSpecType], iType);
 			default: FormatEx(sSpecialName, sizeof sSpecialName, "Tank #%i Name", iType);
 		}
 
 		switch (sSpecialName[0] != '\0' && TranslationPhraseExists(sSpecialName))
 		{
 			case true: strcopy(buffer, size, sSpecialName);
-			case false: vGetTranslatedNoName(buffer, size, tank, specType);
+			case false: vGetTranslatedNoName(buffer, size, iSpecType);
 		}
 	}
 }
 
-void vGetTranslatedNoName(char[] buffer, int size, int tank = 0, int specType = 0)
+void vGetTranslatedNoName(char[] buffer, int size, int specType)
 {
-	int iSpecType = (tank > 0 && specType <= 0) ? g_esPlayer[tank].g_iInfectedType : specType;
-
-	switch (iSpecType)
+	switch (specType)
 	{
 		case 1: strcopy(buffer, size, "NoNameSmoker");
 		case 2: strcopy(buffer, size, "NoNameBoomer");
