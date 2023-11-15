@@ -172,6 +172,7 @@
 - The pre-compiled plugins included in the package are:
 	- Compiled without any of the optional dependencies.
 	- Compiled with the `SourceMod 1.12.0.7066` compiler.
+- The plugins can still be compiled with `SourceMod 1.12.0.6985` or higher.
 
 #### Updates
 - Updated config files.

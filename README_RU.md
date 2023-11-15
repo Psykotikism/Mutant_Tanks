@@ -4,9 +4,7 @@
 [Пожертвовать для мотивации](https://paypal.me/Psyk0tikism?locale.x=ru_ru)
 
 ## Языки
-- Нажмите на один из флажков, чтобы просмотреть на другой языковой версии.
-<a href = "https://github.com/Psykotikism/Mutant_Tanks/blob/master/README.md">
-<img src = "https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/us.svg" alt = "Английский" width = "32"></a>
+[Английский](https://github.com/Psykotikism/Mutant_Tanks/blob/master/README.md)
 
 ## Лицензия
 > Следующая лицензия помещается в исходный код каждого плагина и включаемого файла.
@@ -30,16 +28,15 @@
 <details>
 	<summary>Нажмите, чтобы расширить!</summary>
 
-1. `SourceMod 1.12.0.7066` или выше
-2. [`DHooks 2.2.0-detours15` или выше](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
-3. Рекомендуется (Необязательно):
+1. `SourceMod 1.12.0.6985` или выше
+2. Рекомендуется (Необязательно):
 - [`Actions`](https://forums.alliedmods.net/showthread.php?t=336374)
 - [`AutoExecConfig`](https://forums.alliedmods.net/showthread.php?t=204254)
 - [`Explosive Chains Credit`](https://forums.alliedmods.net/showthread.php?t=334655)
 - [`ThirdPersonShoulder_Detect`](https://forums.alliedmods.net/showthread.php?t=298649)
 - [`Updater`](https://github.com/Teamkiller324/Updater)
 - [`WeaponHandling_API`](https://forums.alliedmods.net/showthread.php?t=319947)
-4. Знания по установке SourceMod плагинов.
+3. Знания по установке SourceMod плагинов.
 </details>
 
 ## Примечание

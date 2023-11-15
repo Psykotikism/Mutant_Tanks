@@ -168,6 +168,7 @@
 		"Notes"		"- The pre-compiled plugins included in the package are:"
 		"Notes"		"	- Compiled without any of the optional dependencies."
 		"Notes"		"	- Compiled with the \"SourceMod 1.12.0.7066\" compiler."
+		"Notes"		"- The plugins can still be compiled with \"SourceMod 1.12.0.6985\" or higher."
 		"Notes"		"Updates:"
 		"Notes"		"- Updated config files."
 		"Notes"		"- Updated gamedata file."

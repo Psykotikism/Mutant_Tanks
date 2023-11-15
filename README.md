@@ -4,9 +4,7 @@
 [Donate to Motivate](https://paypal.me/Psyk0tikism?locale.x=en_US)
 
 ## Languages
-- Click on one of the flags to view in another language.
-<a href = "https://github.com/Psykotikism/Mutant_Tanks/blob/master/README_RU.md">
-<img src = "https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/ru.svg" alt = "Russian" width = "32"></a>
+[Russian](https://github.com/Psykotikism/Mutant_Tanks/blob/master/README_RU.md)
 
 ## License
 > The following license is placed inside the source code of each plugin and include file.
@@ -30,16 +28,15 @@ Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, 
 <details>
 	<summary>Click to expand!</summary>
 
-1. `SourceMod 1.12.0.7066` or higher
-2. [`DHooks 2.2.0-detours15` or higher](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
-3. Recommended (Optional):
+1. `SourceMod 1.12.0.6985` or higher
+2. Recommended (Optional):
 - [`Actions`](https://forums.alliedmods.net/showthread.php?t=336374)
 - [`AutoExecConfig`](https://forums.alliedmods.net/showthread.php?t=204254)
 - [`Explosive Chains Credit`](https://forums.alliedmods.net/showthread.php?t=334655)
 - [`ThirdPersonShoulder_Detect`](https://forums.alliedmods.net/showthread.php?t=298649)
 - [`Updater`](https://github.com/Teamkiller324/Updater)
 - [`WeaponHandling_API`](https://forums.alliedmods.net/showthread.php?t=319947)
-4. Knowledge of installing SourceMod plugins.
+3. Knowledge of installing SourceMod plugins.
 </details>
 
 ## Notes
