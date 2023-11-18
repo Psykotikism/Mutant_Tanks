@@ -692,7 +692,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esAmmoTeammate[admin].g_iAmmoAbility = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAmmoTeammate[admin].g_iAmmoAbility, value, -1, 1);
 			g_esAmmoTeammate[admin].g_iAmmoEffect = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAmmoTeammate[admin].g_iAmmoEffect, value, -1, 7);
 			g_esAmmoTeammate[admin].g_iAmmoMessage = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAmmoTeammate[admin].g_iAmmoMessage, value, -1, 3);
-			g_esAmmoTeammate[admin].g_iAmmoSight = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esAmmoTeammate[admin].g_iAmmoSight, value, -1, 2);
+			g_esAmmoTeammate[admin].g_iAmmoSight = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esAmmoTeammate[admin].g_iAmmoSight, value, -1, 5);
 			g_esAmmoTeammate[admin].g_iAmmoAmount = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AmmoCount", "Ammo Count", "Ammo_Count", "count", g_esAmmoTeammate[admin].g_iAmmoAmount, value, -1, 100);
 			g_esAmmoTeammate[admin].g_flAmmoChance = flGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AmmoChance", "Ammo Chance", "Ammo_Chance", "chance", g_esAmmoTeammate[admin].g_flAmmoChance, value, -1.0, 100.0);
 			g_esAmmoTeammate[admin].g_iAmmoCooldown = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AmmoCooldown", "Ammo Cooldown", "Ammo_Cooldown", "cooldown", g_esAmmoTeammate[admin].g_iAmmoCooldown, value, -1, 99999);
@@ -716,7 +716,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esAmmoPlayer[admin].g_iAmmoAbility = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAmmoPlayer[admin].g_iAmmoAbility, value, -1, 1);
 			g_esAmmoPlayer[admin].g_iAmmoEffect = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAmmoPlayer[admin].g_iAmmoEffect, value, -1, 7);
 			g_esAmmoPlayer[admin].g_iAmmoMessage = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAmmoPlayer[admin].g_iAmmoMessage, value, -1, 3);
-			g_esAmmoPlayer[admin].g_iAmmoSight = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esAmmoPlayer[admin].g_iAmmoSight, value, -1, 2);
+			g_esAmmoPlayer[admin].g_iAmmoSight = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esAmmoPlayer[admin].g_iAmmoSight, value, -1, 5);
 			g_esAmmoPlayer[admin].g_iAmmoAmount = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AmmoCount", "Ammo Count", "Ammo_Count", "count", g_esAmmoPlayer[admin].g_iAmmoAmount, value, -1, 100);
 			g_esAmmoPlayer[admin].g_flAmmoChance = flGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AmmoChance", "Ammo Chance", "Ammo_Chance", "chance", g_esAmmoPlayer[admin].g_flAmmoChance, value, -1.0, 100.0);
 			g_esAmmoPlayer[admin].g_iAmmoCooldown = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AmmoCooldown", "Ammo Cooldown", "Ammo_Cooldown", "cooldown", g_esAmmoPlayer[admin].g_iAmmoCooldown, value, -1, 99999);
@@ -746,7 +746,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esAmmoSpecial[type].g_iAmmoAbility = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAmmoSpecial[type].g_iAmmoAbility, value, -1, 1);
 			g_esAmmoSpecial[type].g_iAmmoEffect = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAmmoSpecial[type].g_iAmmoEffect, value, -1, 7);
 			g_esAmmoSpecial[type].g_iAmmoMessage = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAmmoSpecial[type].g_iAmmoMessage, value, -1, 3);
-			g_esAmmoSpecial[type].g_iAmmoSight = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esAmmoSpecial[type].g_iAmmoSight, value, -1, 2);
+			g_esAmmoSpecial[type].g_iAmmoSight = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esAmmoSpecial[type].g_iAmmoSight, value, -1, 5);
 			g_esAmmoSpecial[type].g_iAmmoAmount = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AmmoCount", "Ammo Count", "Ammo_Count", "count", g_esAmmoSpecial[type].g_iAmmoAmount, value, -1, 100);
 			g_esAmmoSpecial[type].g_flAmmoChance = flGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AmmoChance", "Ammo Chance", "Ammo_Chance", "chance", g_esAmmoSpecial[type].g_flAmmoChance, value, -1.0, 100.0);
 			g_esAmmoSpecial[type].g_iAmmoCooldown = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AmmoCooldown", "Ammo Cooldown", "Ammo_Cooldown", "cooldown", g_esAmmoSpecial[type].g_iAmmoCooldown, value, -1, 99999);
@@ -770,7 +770,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esAmmoAbility[type].g_iAmmoAbility = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAmmoAbility[type].g_iAmmoAbility, value, -1, 1);
 			g_esAmmoAbility[type].g_iAmmoEffect = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAmmoAbility[type].g_iAmmoEffect, value, -1, 7);
 			g_esAmmoAbility[type].g_iAmmoMessage = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAmmoAbility[type].g_iAmmoMessage, value, -1, 3);
-			g_esAmmoAbility[type].g_iAmmoSight = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esAmmoAbility[type].g_iAmmoSight, value, -1, 2);
+			g_esAmmoAbility[type].g_iAmmoSight = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esAmmoAbility[type].g_iAmmoSight, value, -1, 5);
 			g_esAmmoAbility[type].g_iAmmoAmount = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AmmoCount", "Ammo Count", "Ammo_Count", "count", g_esAmmoAbility[type].g_iAmmoAmount, value, -1, 100);
 			g_esAmmoAbility[type].g_flAmmoChance = flGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AmmoChance", "Ammo Chance", "Ammo_Chance", "chance", g_esAmmoAbility[type].g_flAmmoChance, value, -1.0, 100.0);
 			g_esAmmoAbility[type].g_iAmmoCooldown = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AmmoCooldown", "Ammo Cooldown", "Ammo_Cooldown", "cooldown", g_esAmmoAbility[type].g_iAmmoCooldown, value, -1, 99999);
@@ -913,7 +913,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			iBoomerId = event.GetInt("attacker"), iBoomer = GetClientOfUserId(iBoomerId);
 		if (bIsBoomer(iBoomer) && bIsSurvivor(iSurvivor) && !bExploded)
 		{
-			vAmmoHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esAmmoCache[iBoomer].g_flAmmoChance, g_esAmmoCache[iBoomer].g_iAmmoHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+			vAmmoHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esAmmoCache[iBoomer].g_flAmmoChance, g_esAmmoCache[iBoomer].g_iAmmoHit, MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
 		}
 	}
 }
@@ -1039,6 +1039,11 @@ void vAmmoHit(int survivor, int tank, float random, float chance, int enabled, i
 		{
 			if (random <= chance)
 			{
+				if ((messages & MT_MESSAGE_MELEE) && !bIsVisibleToPlayer(tank, survivor, g_esAmmoCache[tank].g_iAmmoSight, .range = 100.0))
+				{
+					return;
+				}
+
 				int iCooldown = -1;
 				if ((flags & MT_ATTACK_RANGE) && (g_esAmmoPlayer[tank].g_iRangeCooldown == -1 || g_esAmmoPlayer[tank].g_iRangeCooldown <= iTime))
 				{

@@ -721,7 +721,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esHurtTeammate[admin].g_iHurtAbility = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esHurtTeammate[admin].g_iHurtAbility, value, -1, 1);
 			g_esHurtTeammate[admin].g_iHurtEffect = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esHurtTeammate[admin].g_iHurtEffect, value, -1, 7);
 			g_esHurtTeammate[admin].g_iHurtMessage = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esHurtTeammate[admin].g_iHurtMessage, value, -1, 3);
-			g_esHurtTeammate[admin].g_iHurtSight = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esHurtTeammate[admin].g_iHurtSight, value, -1, 2);
+			g_esHurtTeammate[admin].g_iHurtSight = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esHurtTeammate[admin].g_iHurtSight, value, -1, 5);
 			g_esHurtTeammate[admin].g_flHurtChance = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtChance", "Hurt Chance", "Hurt_Chance", "chance", g_esHurtTeammate[admin].g_flHurtChance, value, -1.0, 100.0);
 			g_esHurtTeammate[admin].g_iHurtCooldown = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtCooldown", "Hurt Cooldown", "Hurt_Cooldown", "cooldown", g_esHurtTeammate[admin].g_iHurtCooldown, value, -1, 99999);
 			g_esHurtTeammate[admin].g_flHurtDamage = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtDamage", "Hurt Damage", "Hurt_Damage", "damage", g_esHurtTeammate[admin].g_flHurtDamage, value, -1.0, 99999.0);
@@ -746,7 +746,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esHurtPlayer[admin].g_iHurtAbility = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esHurtPlayer[admin].g_iHurtAbility, value, -1, 1);
 			g_esHurtPlayer[admin].g_iHurtEffect = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esHurtPlayer[admin].g_iHurtEffect, value, -1, 7);
 			g_esHurtPlayer[admin].g_iHurtMessage = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esHurtPlayer[admin].g_iHurtMessage, value, -1, 3);
-			g_esHurtPlayer[admin].g_iHurtSight = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esHurtPlayer[admin].g_iHurtSight, value, -1, 2);
+			g_esHurtPlayer[admin].g_iHurtSight = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esHurtPlayer[admin].g_iHurtSight, value, -1, 5);
 			g_esHurtPlayer[admin].g_flHurtChance = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtChance", "Hurt Chance", "Hurt_Chance", "chance", g_esHurtPlayer[admin].g_flHurtChance, value, -1.0, 100.0);
 			g_esHurtPlayer[admin].g_iHurtCooldown = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtCooldown", "Hurt Cooldown", "Hurt_Cooldown", "cooldown", g_esHurtPlayer[admin].g_iHurtCooldown, value, -1, 99999);
 			g_esHurtPlayer[admin].g_flHurtDamage = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtDamage", "Hurt Damage", "Hurt_Damage", "damage", g_esHurtPlayer[admin].g_flHurtDamage, value, -1.0, 99999.0);
@@ -777,7 +777,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esHurtSpecial[type].g_iHurtAbility = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esHurtSpecial[type].g_iHurtAbility, value, -1, 1);
 			g_esHurtSpecial[type].g_iHurtEffect = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esHurtSpecial[type].g_iHurtEffect, value, -1, 7);
 			g_esHurtSpecial[type].g_iHurtMessage = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esHurtSpecial[type].g_iHurtMessage, value, -1, 3);
-			g_esHurtSpecial[type].g_iHurtSight = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esHurtSpecial[type].g_iHurtSight, value, -1, 2);
+			g_esHurtSpecial[type].g_iHurtSight = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esHurtSpecial[type].g_iHurtSight, value, -1, 5);
 			g_esHurtSpecial[type].g_flHurtChance = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtChance", "Hurt Chance", "Hurt_Chance", "chance", g_esHurtSpecial[type].g_flHurtChance, value, -1.0, 100.0);
 			g_esHurtSpecial[type].g_iHurtCooldown = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtCooldown", "Hurt Cooldown", "Hurt_Cooldown", "cooldown", g_esHurtSpecial[type].g_iHurtCooldown, value, -1, 99999);
 			g_esHurtSpecial[type].g_flHurtDamage = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtDamage", "Hurt Damage", "Hurt_Damage", "damage", g_esHurtSpecial[type].g_flHurtDamage, value, -1.0, 99999.0);
@@ -802,7 +802,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esHurtAbility[type].g_iHurtAbility = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esHurtAbility[type].g_iHurtAbility, value, -1, 1);
 			g_esHurtAbility[type].g_iHurtEffect = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esHurtAbility[type].g_iHurtEffect, value, -1, 7);
 			g_esHurtAbility[type].g_iHurtMessage = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esHurtAbility[type].g_iHurtMessage, value, -1, 3);
-			g_esHurtAbility[type].g_iHurtSight = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esHurtAbility[type].g_iHurtSight, value, -1, 2);
+			g_esHurtAbility[type].g_iHurtSight = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esHurtAbility[type].g_iHurtSight, value, -1, 5);
 			g_esHurtAbility[type].g_flHurtChance = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtChance", "Hurt Chance", "Hurt_Chance", "chance", g_esHurtAbility[type].g_flHurtChance, value, -1.0, 100.0);
 			g_esHurtAbility[type].g_iHurtCooldown = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtCooldown", "Hurt Cooldown", "Hurt_Cooldown", "cooldown", g_esHurtAbility[type].g_iHurtCooldown, value, -1, 99999);
 			g_esHurtAbility[type].g_flHurtDamage = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtDamage", "Hurt Damage", "Hurt_Damage", "damage", g_esHurtAbility[type].g_flHurtDamage, value, -1.0, 99999.0);
@@ -948,7 +948,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			iBoomerId = event.GetInt("attacker"), iBoomer = GetClientOfUserId(iBoomerId);
 		if (bIsBoomer(iBoomer) && bIsSurvivor(iSurvivor) && !bExploded)
 		{
-			vHurtHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esHurtCache[iBoomer].g_flHurtChance, g_esHurtCache[iBoomer].g_iHurtHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+			vHurtHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esHurtCache[iBoomer].g_flHurtChance, g_esHurtCache[iBoomer].g_iHurtHit, MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
 		}
 	}
 }
@@ -1074,6 +1074,11 @@ void vHurtHit(int survivor, int tank, float random, float chance, int enabled, i
 		{
 			if (random <= chance && !g_esHurtPlayer[survivor].g_bAffected)
 			{
+				if ((messages & MT_MESSAGE_MELEE) && !bIsVisibleToPlayer(tank, survivor, g_esHurtCache[tank].g_iHurtSight, .range = 100.0))
+				{
+					return;
+				}
+
 				g_esHurtPlayer[survivor].g_bAffected = true;
 				g_esHurtPlayer[survivor].g_iOwner = tank;
 

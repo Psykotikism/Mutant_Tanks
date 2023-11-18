@@ -47,6 +47,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define MT_GAMEDATA "mutant_tanks"
 #else
 	#if MT_DROP_COMPILE_METHOD == 1
 		#error This file must be compiled as a standalone plugin.

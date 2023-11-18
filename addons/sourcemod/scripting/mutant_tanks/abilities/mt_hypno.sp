@@ -852,7 +852,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esHypnoTeammate[admin].g_iHypnoAbility = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esHypnoTeammate[admin].g_iHypnoAbility, value, -1, 1);
 			g_esHypnoTeammate[admin].g_iHypnoEffect = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esHypnoTeammate[admin].g_iHypnoEffect, value, -1, 7);
 			g_esHypnoTeammate[admin].g_iHypnoMessage = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esHypnoTeammate[admin].g_iHypnoMessage, value, -1, 3);
-			g_esHypnoTeammate[admin].g_iHypnoSight = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esHypnoTeammate[admin].g_iHypnoSight, value, -1, 2);
+			g_esHypnoTeammate[admin].g_iHypnoSight = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esHypnoTeammate[admin].g_iHypnoSight, value, -1, 5);
 			g_esHypnoTeammate[admin].g_flHypnoBulletDivisor = flGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "HypnoBulletDivisor", "Hypno Bullet Divisor", "Hypno_Bullet_Divisor", "bullet", g_esHypnoTeammate[admin].g_flHypnoBulletDivisor, value, -1.0, 99999.0);
 			g_esHypnoTeammate[admin].g_flHypnoChance = flGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "HypnoChance", "Hypno Chance", "Hypno_Chance", "chance", g_esHypnoTeammate[admin].g_flHypnoChance, value, -1.0, 100.0);
 			g_esHypnoTeammate[admin].g_iHypnoCooldown = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "HypnoCooldown", "Hypno Cooldown", "Hypno_Cooldown", "cooldown", g_esHypnoTeammate[admin].g_iHypnoCooldown, value, -1, 99999);
@@ -897,7 +897,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esHypnoPlayer[admin].g_flHypnoRange = flGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "HypnoRange", "Hypno Range", "Hypno_Range", "range", g_esHypnoPlayer[admin].g_flHypnoRange, value, -1.0, 99999.0);
 			g_esHypnoPlayer[admin].g_flHypnoRangeChance = flGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "HypnoRangeChance", "Hypno Range Chance", "Hypno_Range_Chance", "rangechance", g_esHypnoPlayer[admin].g_flHypnoRangeChance, value, -1.0, 100.0);
 			g_esHypnoPlayer[admin].g_iHypnoRangeCooldown = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "HypnoRangeCooldown", "Hypno Range Cooldown", "Hypno_Range_Cooldown", "rangecooldown", g_esHypnoPlayer[admin].g_iHypnoRangeCooldown, value, -1, 99999);
-			g_esHypnoPlayer[admin].g_iHypnoSight = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esHypnoPlayer[admin].g_iHypnoSight, value, -1, 2);
+			g_esHypnoPlayer[admin].g_iHypnoSight = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esHypnoPlayer[admin].g_iHypnoSight, value, -1, 5);
 			g_esHypnoPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 			g_esHypnoPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 		}
@@ -943,7 +943,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esHypnoSpecial[type].g_iHypnoAbility = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esHypnoSpecial[type].g_iHypnoAbility, value, -1, 1);
 			g_esHypnoSpecial[type].g_iHypnoEffect = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esHypnoSpecial[type].g_iHypnoEffect, value, -1, 7);
 			g_esHypnoSpecial[type].g_iHypnoMessage = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esHypnoSpecial[type].g_iHypnoMessage, value, -1, 3);
-			g_esHypnoSpecial[type].g_iHypnoSight = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esHypnoSpecial[type].g_iHypnoSight, value, -1, 2);
+			g_esHypnoSpecial[type].g_iHypnoSight = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esHypnoSpecial[type].g_iHypnoSight, value, -1, 5);
 			g_esHypnoSpecial[type].g_flHypnoBulletDivisor = flGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "HypnoBulletDivisor", "Hypno Bullet Divisor", "Hypno_Bullet_Divisor", "bullet", g_esHypnoSpecial[type].g_flHypnoBulletDivisor, value, -1.0, 99999.0);
 			g_esHypnoSpecial[type].g_flHypnoChance = flGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "HypnoChance", "Hypno Chance", "Hypno_Chance", "chance", g_esHypnoSpecial[type].g_flHypnoChance, value, -1.0, 100.0);
 			g_esHypnoSpecial[type].g_iHypnoCooldown = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "HypnoCooldown", "Hypno Cooldown", "Hypno_Cooldown", "cooldown", g_esHypnoSpecial[type].g_iHypnoCooldown, value, -1, 99999);
@@ -973,7 +973,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esHypnoAbility[type].g_iHypnoAbility = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esHypnoAbility[type].g_iHypnoAbility, value, -1, 1);
 			g_esHypnoAbility[type].g_iHypnoEffect = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esHypnoAbility[type].g_iHypnoEffect, value, -1, 7);
 			g_esHypnoAbility[type].g_iHypnoMessage = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esHypnoAbility[type].g_iHypnoMessage, value, -1, 3);
-			g_esHypnoAbility[type].g_iHypnoSight = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esHypnoAbility[type].g_iHypnoSight, value, -1, 2);
+			g_esHypnoAbility[type].g_iHypnoSight = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esHypnoAbility[type].g_iHypnoSight, value, -1, 5);
 			g_esHypnoAbility[type].g_flHypnoBulletDivisor = flGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "HypnoBulletDivisor", "Hypno Bullet Divisor", "Hypno_Bullet_Divisor", "bullet", g_esHypnoAbility[type].g_flHypnoBulletDivisor, value, -1.0, 99999.0);
 			g_esHypnoAbility[type].g_flHypnoChance = flGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "HypnoChance", "Hypno Chance", "Hypno_Chance", "chance", g_esHypnoAbility[type].g_flHypnoChance, value, -1.0, 100.0);
 			g_esHypnoAbility[type].g_iHypnoCooldown = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "HypnoCooldown", "Hypno Cooldown", "Hypno_Cooldown", "cooldown", g_esHypnoAbility[type].g_iHypnoCooldown, value, -1, 99999);
@@ -1187,7 +1187,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			iBoomerId = event.GetInt("attacker"), iBoomer = GetClientOfUserId(iBoomerId);
 		if (bIsBoomer(iBoomer) && bIsSurvivor(iSurvivor) && !bExploded)
 		{
-			vHypnoHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esHypnoCache[iBoomer].g_flHypnoChance, g_esHypnoCache[iBoomer].g_iHypnoHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+			vHypnoHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esHypnoCache[iBoomer].g_flHypnoChance, g_esHypnoCache[iBoomer].g_iHypnoHit, MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
 		}
 	}
 }
@@ -1364,6 +1364,11 @@ void vHypnoHit(int survivor, int tank, float random, float chance, int enabled, 
 		{
 			if (random <= chance && !g_esHypnoPlayer[survivor].g_bAffected)
 			{
+				if ((messages & MT_MESSAGE_MELEE) && !bIsVisibleToPlayer(tank, survivor, g_esHypnoCache[tank].g_iHypnoSight, .range = 100.0))
+				{
+					return;
+				}
+
 				g_esHypnoPlayer[survivor].g_bAffected = true;
 				g_esHypnoPlayer[survivor].g_iOwner = tank;
 

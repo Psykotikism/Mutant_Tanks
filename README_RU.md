@@ -1787,6 +1787,15 @@ stock void MT_PrintToChatAll(const char[] message, any ...)
 	}
 }
 
+stock void MT_PrintToConsole(int client, const char[] message, any ...)
+{
+	char sBuffer[1024];
+	SetGlobalTransTarget(client);
+	VFormat(sBuffer, sizeof sBuffer, message, 3);
+	MT_ReplaceChatPlaceholders(sBuffer, sizeof sBuffer, true);
+	PrintToConsole(client, sBuffer);
+}
+
 stock void MT_PrintToServer(const char[] message, any ...)
 {
 	char sBuffer[1024];
@@ -1931,14 +1940,15 @@ stock void MT_TE_SetupStopAllParticles(int entity)
 	TE_WriteNum("m_nDamageType", 0);
 }
 
-stock void MT_TeleportPlayerAhead(int tank, const float origin[3], const float angles[3], const float velocity[3], const float direction[3], const float distance)
+stock void MT_TeleportPlayerAhead(int player, const float origin[3], const float angles[3], const float velocity[3], const float direction[3], const float distance)
 {
 	float flPos[3];
 	flPos[0] = origin[0] + (direction[0] * distance);
 	flPos[1] = origin[1] + (direction[1] * distance);
 	flPos[2] = origin[2];
 
-	TeleportEntity(tank, flPos, angles, velocity);
+	TeleportEntity(player, flPos, angles, velocity);
+	vFixPlayerPosition(player, false);
 }
 
 stock void MT_UnloadPlugin(Handle plugin = null)
@@ -2034,7 +2044,7 @@ stock bool MT_TE_CreateParticle(float startPos[3] = {0.0, 0.0, 0.0}, float endPo
 
 stock float MT_GetRandomFloat(float min, float max)
 {
-	return ((GetURandomFloat() * (max - min)) + min);
+	return (GetURandomFloat() * (max - min)) + min;
 }
 
 stock int MT_AddCommasToFloat(float number, char[] output, int size)
@@ -2147,7 +2157,7 @@ stock int MT_GetParticleIndex(const char[] particlename)
 
 stock int MT_GetRandomInt(int min, int max)
 {
-	return (RoundToNearest(GetURandomFloat() * float(max - min)) + min);
+	return RoundToNearest(GetURandomFloat() * float(max - min)) + min;
 }
 ```
 </details>

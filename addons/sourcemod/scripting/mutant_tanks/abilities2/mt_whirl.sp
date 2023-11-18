@@ -707,7 +707,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esWhirlTeammate[admin].g_iWhirlAbility = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esWhirlTeammate[admin].g_iWhirlAbility, value, -1, 1);
 			g_esWhirlTeammate[admin].g_iWhirlEffect = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esWhirlTeammate[admin].g_iWhirlEffect, value, -1, 7);
 			g_esWhirlTeammate[admin].g_iWhirlMessage = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esWhirlTeammate[admin].g_iWhirlMessage, value, -1, 3);
-			g_esWhirlTeammate[admin].g_iWhirlSight = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esWhirlTeammate[admin].g_iWhirlSight, value, -1, 2);
+			g_esWhirlTeammate[admin].g_iWhirlSight = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esWhirlTeammate[admin].g_iWhirlSight, value, -1, 5);
 			g_esWhirlTeammate[admin].g_iWhirlAxis = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlAxis", "Whirl Axis", "Whirl_Axis", "axis", g_esWhirlTeammate[admin].g_iWhirlAxis, value, -1, 7);
 			g_esWhirlTeammate[admin].g_flWhirlChance = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlChance", "Whirl Chance", "Whirl_Chance", "chance", g_esWhirlTeammate[admin].g_flWhirlChance, value, -1.0, 100.0);
 			g_esWhirlTeammate[admin].g_iWhirlCooldown = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlCooldown", "Whirl Cooldown", "Whirl_Cooldown", "cooldown", g_esWhirlTeammate[admin].g_iWhirlCooldown, value, -1, 99999);
@@ -732,7 +732,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esWhirlPlayer[admin].g_iWhirlAbility = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esWhirlPlayer[admin].g_iWhirlAbility, value, -1, 1);
 			g_esWhirlPlayer[admin].g_iWhirlEffect = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esWhirlPlayer[admin].g_iWhirlEffect, value, -1, 7);
 			g_esWhirlPlayer[admin].g_iWhirlMessage = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esWhirlPlayer[admin].g_iWhirlMessage, value, -1, 3);
-			g_esWhirlPlayer[admin].g_iWhirlSight = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esWhirlPlayer[admin].g_iWhirlSight, value, -1, 2);
+			g_esWhirlPlayer[admin].g_iWhirlSight = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esWhirlPlayer[admin].g_iWhirlSight, value, -1, 5);
 			g_esWhirlPlayer[admin].g_iWhirlAxis = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlAxis", "Whirl Axis", "Whirl_Axis", "axis", g_esWhirlPlayer[admin].g_iWhirlAxis, value, -1, 7);
 			g_esWhirlPlayer[admin].g_flWhirlChance = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlChance", "Whirl Chance", "Whirl_Chance", "chance", g_esWhirlPlayer[admin].g_flWhirlChance, value, -1.0, 100.0);
 			g_esWhirlPlayer[admin].g_iWhirlCooldown = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlCooldown", "Whirl Cooldown", "Whirl_Cooldown", "cooldown", g_esWhirlPlayer[admin].g_iWhirlCooldown, value, -1, 99999);
@@ -763,7 +763,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esWhirlSpecial[type].g_iWhirlAbility = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esWhirlSpecial[type].g_iWhirlAbility, value, -1, 1);
 			g_esWhirlSpecial[type].g_iWhirlEffect = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esWhirlSpecial[type].g_iWhirlEffect, value, -1, 7);
 			g_esWhirlSpecial[type].g_iWhirlMessage = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esWhirlSpecial[type].g_iWhirlMessage, value, -1, 3);
-			g_esWhirlSpecial[type].g_iWhirlSight = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esWhirlSpecial[type].g_iWhirlSight, value, -1, 2);
+			g_esWhirlSpecial[type].g_iWhirlSight = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esWhirlSpecial[type].g_iWhirlSight, value, -1, 5);
 			g_esWhirlSpecial[type].g_iWhirlAxis = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlAxis", "Whirl Axis", "Whirl_Axis", "axis", g_esWhirlSpecial[type].g_iWhirlAxis, value, -1, 7);
 			g_esWhirlSpecial[type].g_flWhirlChance = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlChance", "Whirl Chance", "Whirl_Chance", "chance", g_esWhirlSpecial[type].g_flWhirlChance, value, -1.0, 100.0);
 			g_esWhirlSpecial[type].g_iWhirlCooldown = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlCooldown", "Whirl Cooldown", "Whirl_Cooldown", "cooldown", g_esWhirlSpecial[type].g_iWhirlCooldown, value, -1, 99999);
@@ -788,7 +788,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esWhirlAbility[type].g_iWhirlAbility = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esWhirlAbility[type].g_iWhirlAbility, value, -1, 1);
 			g_esWhirlAbility[type].g_iWhirlEffect = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esWhirlAbility[type].g_iWhirlEffect, value, -1, 7);
 			g_esWhirlAbility[type].g_iWhirlMessage = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esWhirlAbility[type].g_iWhirlMessage, value, -1, 3);
-			g_esWhirlAbility[type].g_iWhirlSight = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esWhirlAbility[type].g_iWhirlSight, value, -1, 2);
+			g_esWhirlAbility[type].g_iWhirlSight = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esWhirlAbility[type].g_iWhirlSight, value, -1, 5);
 			g_esWhirlAbility[type].g_iWhirlAxis = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlAxis", "Whirl Axis", "Whirl_Axis", "axis", g_esWhirlAbility[type].g_iWhirlAxis, value, -1, 7);
 			g_esWhirlAbility[type].g_flWhirlChance = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlChance", "Whirl Chance", "Whirl_Chance", "chance", g_esWhirlAbility[type].g_flWhirlChance, value, -1.0, 100.0);
 			g_esWhirlAbility[type].g_iWhirlCooldown = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlCooldown", "Whirl Cooldown", "Whirl_Cooldown", "cooldown", g_esWhirlAbility[type].g_iWhirlCooldown, value, -1, 99999);
@@ -949,7 +949,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			iBoomerId = event.GetInt("attacker"), iBoomer = GetClientOfUserId(iBoomerId);
 		if (bIsBoomer(iBoomer) && bIsSurvivor(iSurvivor) && !bExploded)
 		{
-			vWhirlHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esWhirlCache[iBoomer].g_flWhirlChance, g_esWhirlCache[iBoomer].g_iWhirlHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+			vWhirlHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esWhirlCache[iBoomer].g_flWhirlChance, g_esWhirlCache[iBoomer].g_iWhirlHit, MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
 		}
 	}
 }
@@ -1075,6 +1075,11 @@ void vWhirlHit(int survivor, int tank, float random, float chance, int enabled, 
 		{
 			if (random <= chance && !g_esWhirlPlayer[survivor].g_bAffected)
 			{
+				if ((messages & MT_MESSAGE_MELEE) && !bIsVisibleToPlayer(tank, survivor, g_esWhirlCache[tank].g_iWhirlSight, .range = 100.0))
+				{
+					return;
+				}
+
 				int iCamera = CreateEntityByName("env_sprite");
 				if (bIsValidEntity(iCamera))
 				{

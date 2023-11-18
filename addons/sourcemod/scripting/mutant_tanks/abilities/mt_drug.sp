@@ -725,7 +725,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esDrugTeammate[admin].g_iDrugAbility = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esDrugTeammate[admin].g_iDrugAbility, value, -1, 1);
 			g_esDrugTeammate[admin].g_iDrugEffect = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esDrugTeammate[admin].g_iDrugEffect, value, -1, 7);
 			g_esDrugTeammate[admin].g_iDrugMessage = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esDrugTeammate[admin].g_iDrugMessage, value, -1, 3);
-			g_esDrugTeammate[admin].g_iDrugSight = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esDrugTeammate[admin].g_iDrugSight, value, -1, 2);
+			g_esDrugTeammate[admin].g_iDrugSight = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esDrugTeammate[admin].g_iDrugSight, value, -1, 5);
 			g_esDrugTeammate[admin].g_flDrugChance = flGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugChance", "Drug Chance", "Drug_Chance", "chance", g_esDrugTeammate[admin].g_flDrugChance, value, -1.0, 100.0);
 			g_esDrugTeammate[admin].g_iDrugCooldown = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugCooldown", "Drug Cooldown", "Drug_Cooldown", "cooldown", g_esDrugTeammate[admin].g_iDrugCooldown, value, -1, 99999);
 			g_esDrugTeammate[admin].g_iDrugDuration = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugDuration", "Drug Duration", "Drug_Duration", "duration", g_esDrugTeammate[admin].g_iDrugDuration, value, -1, 99999);
@@ -749,7 +749,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esDrugPlayer[admin].g_iDrugAbility = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esDrugPlayer[admin].g_iDrugAbility, value, -1, 1);
 			g_esDrugPlayer[admin].g_iDrugEffect = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esDrugPlayer[admin].g_iDrugEffect, value, -1, 7);
 			g_esDrugPlayer[admin].g_iDrugMessage = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esDrugPlayer[admin].g_iDrugMessage, value, -1, 3);
-			g_esDrugPlayer[admin].g_iDrugSight = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esDrugPlayer[admin].g_iDrugSight, value, -1, 2);
+			g_esDrugPlayer[admin].g_iDrugSight = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esDrugPlayer[admin].g_iDrugSight, value, -1, 5);
 			g_esDrugPlayer[admin].g_flDrugChance = flGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugChance", "Drug Chance", "Drug_Chance", "chance", g_esDrugPlayer[admin].g_flDrugChance, value, -1.0, 100.0);
 			g_esDrugPlayer[admin].g_iDrugCooldown = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugCooldown", "Drug Cooldown", "Drug_Cooldown", "cooldown", g_esDrugPlayer[admin].g_iDrugCooldown, value, -1, 99999);
 			g_esDrugPlayer[admin].g_iDrugDuration = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugDuration", "Drug Duration", "Drug_Duration", "duration", g_esDrugPlayer[admin].g_iDrugDuration, value, -1, 99999);
@@ -779,7 +779,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esDrugSpecial[type].g_iDrugAbility = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esDrugSpecial[type].g_iDrugAbility, value, -1, 1);
 			g_esDrugSpecial[type].g_iDrugEffect = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esDrugSpecial[type].g_iDrugEffect, value, -1, 7);
 			g_esDrugSpecial[type].g_iDrugMessage = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esDrugSpecial[type].g_iDrugMessage, value, -1, 3);
-			g_esDrugSpecial[type].g_iDrugSight = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esDrugSpecial[type].g_iDrugSight, value, -1, 2);
+			g_esDrugSpecial[type].g_iDrugSight = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esDrugSpecial[type].g_iDrugSight, value, -1, 5);
 			g_esDrugSpecial[type].g_flDrugChance = flGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugChance", "Drug Chance", "Drug_Chance", "chance", g_esDrugSpecial[type].g_flDrugChance, value, -1.0, 100.0);
 			g_esDrugSpecial[type].g_iDrugCooldown = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugCooldown", "Drug Cooldown", "Drug_Cooldown", "cooldown", g_esDrugSpecial[type].g_iDrugCooldown, value, -1, 99999);
 			g_esDrugSpecial[type].g_iDrugDuration = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugDuration", "Drug Duration", "Drug_Duration", "duration", g_esDrugSpecial[type].g_iDrugDuration, value, -1, 99999);
@@ -803,7 +803,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esDrugAbility[type].g_iDrugAbility = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esDrugAbility[type].g_iDrugAbility, value, -1, 1);
 			g_esDrugAbility[type].g_iDrugEffect = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esDrugAbility[type].g_iDrugEffect, value, -1, 7);
 			g_esDrugAbility[type].g_iDrugMessage = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esDrugAbility[type].g_iDrugMessage, value, -1, 3);
-			g_esDrugAbility[type].g_iDrugSight = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esDrugAbility[type].g_iDrugSight, value, -1, 2);
+			g_esDrugAbility[type].g_iDrugSight = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esDrugAbility[type].g_iDrugSight, value, -1, 5);
 			g_esDrugAbility[type].g_flDrugChance = flGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugChance", "Drug Chance", "Drug_Chance", "chance", g_esDrugAbility[type].g_flDrugChance, value, -1.0, 100.0);
 			g_esDrugAbility[type].g_iDrugCooldown = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugCooldown", "Drug Cooldown", "Drug_Cooldown", "cooldown", g_esDrugAbility[type].g_iDrugCooldown, value, -1, 99999);
 			g_esDrugAbility[type].g_iDrugDuration = iGetKeyValue(subsection, MT_DRUG_SECTION, MT_DRUG_SECTION2, MT_DRUG_SECTION3, MT_DRUG_SECTION4, key, "DrugDuration", "Drug Duration", "Drug_Duration", "duration", g_esDrugAbility[type].g_iDrugDuration, value, -1, 99999);
@@ -965,7 +965,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			iBoomerId = event.GetInt("attacker"), iBoomer = GetClientOfUserId(iBoomerId);
 		if (bIsBoomer(iBoomer) && bIsSurvivor(iSurvivor) && !bExploded)
 		{
-			vDrugHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esDrugCache[iBoomer].g_flDrugChance, g_esDrugCache[iBoomer].g_iDrugHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+			vDrugHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esDrugCache[iBoomer].g_flDrugChance, g_esDrugCache[iBoomer].g_iDrugHit, MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
 		}
 	}
 }
@@ -1126,6 +1126,11 @@ void vDrugHit(int survivor, int tank, float random, float chance, int enabled, i
 		{
 			if (random <= chance && !g_esDrugPlayer[survivor].g_bAffected)
 			{
+				if ((messages & MT_MESSAGE_MELEE) && !bIsVisibleToPlayer(tank, survivor, g_esDrugCache[tank].g_iDrugSight, .range = 100.0))
+				{
+					return;
+				}
+
 				g_esDrugPlayer[survivor].g_bAffected = true;
 				g_esDrugPlayer[survivor].g_iOwner = tank;
 

@@ -7503,11 +7503,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the hit ability.
@@ -7894,11 +7897,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -8228,11 +8234,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -8561,11 +8570,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -8939,11 +8951,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -9329,11 +9344,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The amount of temporary health given to survivors recovering from the Mutant Tank's bury ability.
@@ -9936,11 +9954,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// Block the fall damage of the Mutant Tank's ability.
@@ -10502,11 +10523,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -10960,11 +10984,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -11300,11 +11327,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -11653,11 +11683,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -12014,11 +12047,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -12318,11 +12354,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -12648,11 +12687,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -13042,11 +13084,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -13961,11 +14006,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -14654,11 +14702,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -15434,11 +15485,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The distance between an infected and the Mutant Tank needed to trigger the ability.
@@ -15964,11 +16018,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -16317,11 +16374,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The bullet damage reflected towards survivors by the Mutant Tank is divided by this value.
@@ -16728,11 +16788,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -17054,11 +17117,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -17365,11 +17431,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -17922,11 +17991,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -18274,11 +18346,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// Removes the death model of the survivor when killed.
@@ -18583,11 +18658,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -18869,11 +18947,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -19168,11 +19249,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -19470,11 +19554,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -19724,11 +19811,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The damage buff multiplier given to nearby special infected. 
@@ -20575,11 +20665,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -20845,11 +20938,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -21124,11 +21220,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -21615,11 +21714,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -21971,11 +22073,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -22566,11 +22671,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -23180,11 +23288,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -23467,11 +23578,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -23950,11 +24064,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -24524,11 +24641,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// Removes the death model of the survivor when killed.
@@ -24890,11 +25010,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -25613,11 +25736,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -25991,11 +26117,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -26334,11 +26463,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// Removes the death model of the survivor when killed.
@@ -26676,11 +26808,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// Removes the death model of the survivor when killed.
@@ -27215,11 +27350,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -27515,11 +27653,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -28943,11 +29084,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -29332,11 +29476,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -29728,11 +29875,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The axis of the Mutant Tank's whirl effect.
@@ -30406,11 +30556,14 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 2
+			// Maximum: 5
 			// --
 			// 0: OFF
 			// 1: Check if there is a solid object between the Mutant Tank and survivors.
-			// 2: Check if the Mutant Tank is facing the survivors.
+			// 2: Option 1 + Check if the Mutant Tank is looking toward the survivors.
+			// 3: Option 1 + Check if the Mutant Tank is looking away from the survivors.
+			// 4: Option 1 + Check if the survivors are looking toward the Mutant Tank.
+			// 5: Option 1 + Check if the survivors are looking away from the Mutant Tank.
 			"Ability Sight"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.

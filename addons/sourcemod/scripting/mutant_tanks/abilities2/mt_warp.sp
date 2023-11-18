@@ -45,6 +45,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
+#define MT_GAMEDATA "mutant_tanks"
+
 #define PARTICLE_ELECTRICITY "electrical_arc_01_system"
 
 #define SOUND_ELECTRICITY "ambient/energy/zap5.wav"
@@ -878,7 +880,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esWarpTeammate[admin].g_iWarpAbility = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esWarpTeammate[admin].g_iWarpAbility, value, -1, 3);
 			g_esWarpTeammate[admin].g_iWarpEffect = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esWarpTeammate[admin].g_iWarpEffect, value, -1, 7);
 			g_esWarpTeammate[admin].g_iWarpMessage = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esWarpTeammate[admin].g_iWarpMessage, value, -1, 7);
-			g_esWarpTeammate[admin].g_iWarpSight = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esWarpTeammate[admin].g_iWarpSight, value, -1, 2);
+			g_esWarpTeammate[admin].g_iWarpSight = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esWarpTeammate[admin].g_iWarpSight, value, -1, 5);
 			g_esWarpTeammate[admin].g_flWarpChance = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpChance", "Warp Chance", "Warp_Chance", "chance", g_esWarpTeammate[admin].g_flWarpChance, value, -1.0, 100.0);
 			g_esWarpTeammate[admin].g_iWarpCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpCooldown", "Warp Cooldown", "Warp_Cooldown", "cooldown", g_esWarpTeammate[admin].g_iWarpCooldown, value, -1, 99999);
 			g_esWarpTeammate[admin].g_iWarpDuration = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpDuration", "Warp Duration", "Warp_Duration", "duration", g_esWarpTeammate[admin].g_iWarpDuration, value, -1, 99999);
@@ -909,7 +911,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esWarpPlayer[admin].g_iWarpAbility = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esWarpPlayer[admin].g_iWarpAbility, value, -1, 3);
 			g_esWarpPlayer[admin].g_iWarpEffect = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esWarpPlayer[admin].g_iWarpEffect, value, -1, 7);
 			g_esWarpPlayer[admin].g_iWarpMessage = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esWarpPlayer[admin].g_iWarpMessage, value, -1, 7);
-			g_esWarpPlayer[admin].g_iWarpSight = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esWarpPlayer[admin].g_iWarpSight, value, -1, 2);
+			g_esWarpPlayer[admin].g_iWarpSight = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esWarpPlayer[admin].g_iWarpSight, value, -1, 5);
 			g_esWarpPlayer[admin].g_flWarpChance = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpChance", "Warp Chance", "Warp_Chance", "chance", g_esWarpPlayer[admin].g_flWarpChance, value, -1.0, 100.0);
 			g_esWarpPlayer[admin].g_iWarpCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpCooldown", "Warp Cooldown", "Warp_Cooldown", "cooldown", g_esWarpPlayer[admin].g_iWarpCooldown, value, -1, 99999);
 			g_esWarpPlayer[admin].g_iWarpDuration = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpDuration", "Warp Duration", "Warp_Duration", "duration", g_esWarpPlayer[admin].g_iWarpDuration, value, -1, 99999);
@@ -946,7 +948,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esWarpSpecial[type].g_iWarpAbility = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esWarpSpecial[type].g_iWarpAbility, value, -1, 3);
 			g_esWarpSpecial[type].g_iWarpEffect = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esWarpSpecial[type].g_iWarpEffect, value, -1, 7);
 			g_esWarpSpecial[type].g_iWarpMessage = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esWarpSpecial[type].g_iWarpMessage, value, -1, 7);
-			g_esWarpSpecial[type].g_iWarpSight = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esWarpSpecial[type].g_iWarpSight, value, -1, 2);
+			g_esWarpSpecial[type].g_iWarpSight = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esWarpSpecial[type].g_iWarpSight, value, -1, 5);
 			g_esWarpSpecial[type].g_flWarpChance = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpChance", "Warp Chance", "Warp_Chance", "chance", g_esWarpSpecial[type].g_flWarpChance, value, -1.0, 100.0);
 			g_esWarpSpecial[type].g_iWarpCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpCooldown", "Warp Cooldown", "Warp_Cooldown", "cooldown", g_esWarpSpecial[type].g_iWarpCooldown, value, -1, 99999);
 			g_esWarpSpecial[type].g_iWarpDuration = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpDuration", "Warp Duration", "Warp_Duration", "duration", g_esWarpSpecial[type].g_iWarpDuration, value, -1, 99999);
@@ -977,7 +979,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esWarpAbility[type].g_iWarpAbility = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esWarpAbility[type].g_iWarpAbility, value, -1, 3);
 			g_esWarpAbility[type].g_iWarpEffect = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esWarpAbility[type].g_iWarpEffect, value, -1, 7);
 			g_esWarpAbility[type].g_iWarpMessage = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esWarpAbility[type].g_iWarpMessage, value, -1, 7);
-			g_esWarpAbility[type].g_iWarpSight = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esWarpAbility[type].g_iWarpSight, value, -1, 2);
+			g_esWarpAbility[type].g_iWarpSight = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esWarpAbility[type].g_iWarpSight, value, -1, 5);
 			g_esWarpAbility[type].g_flWarpChance = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpChance", "Warp Chance", "Warp_Chance", "chance", g_esWarpAbility[type].g_flWarpChance, value, -1.0, 100.0);
 			g_esWarpAbility[type].g_iWarpCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpCooldown", "Warp Cooldown", "Warp_Cooldown", "cooldown", g_esWarpAbility[type].g_iWarpCooldown, value, -1, 99999);
 			g_esWarpAbility[type].g_iWarpDuration = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpDuration", "Warp Duration", "Warp_Duration", "duration", g_esWarpAbility[type].g_iWarpDuration, value, -1, 99999);
@@ -1140,7 +1142,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			iBoomerId = event.GetInt("attacker"), iBoomer = GetClientOfUserId(iBoomerId);
 		if (bIsBoomer(iBoomer) && bIsSurvivor(iSurvivor) && !bExploded)
 		{
-			vWarpHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esWarpCache[iBoomer].g_flWarpChance, g_esWarpCache[iBoomer].g_iWarpHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+			vWarpHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esWarpCache[iBoomer].g_flWarpChance, g_esWarpCache[iBoomer].g_iWarpHit, MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
 		}
 	}
 }
@@ -1565,6 +1567,11 @@ void vWarpHit(int survivor, int tank, float random, float chance, int enabled, i
 		{
 			if (random <= chance)
 			{
+				if ((messages & MT_MESSAGE_MELEE) && !bIsVisibleToPlayer(tank, survivor, g_esWarpCache[tank].g_iWarpSight, .range = 100.0))
+				{
+					return;
+				}
+
 				bool bTeleport = false;
 				char sTankName[33];
 				float flCurrentOrigin[3], flCurrentAngles[3];

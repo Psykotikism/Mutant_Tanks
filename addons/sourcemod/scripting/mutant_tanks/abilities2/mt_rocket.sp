@@ -754,7 +754,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esRocketTeammate[admin].g_iRocketAbility = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRocketTeammate[admin].g_iRocketAbility, value, -1, 1);
 			g_esRocketTeammate[admin].g_iRocketEffect = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRocketTeammate[admin].g_iRocketEffect, value, -1, 7);
 			g_esRocketTeammate[admin].g_iRocketMessage = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRocketTeammate[admin].g_iRocketMessage, value, -1, 3);
-			g_esRocketTeammate[admin].g_iRocketSight = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRocketTeammate[admin].g_iRocketSight, value, -1, 2);
+			g_esRocketTeammate[admin].g_iRocketSight = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRocketTeammate[admin].g_iRocketSight, value, -1, 5);
 			g_esRocketTeammate[admin].g_iRocketBody = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketBody", "Rocket Body", "Rocket_Body", "body", g_esRocketTeammate[admin].g_iRocketBody, value, -1, 1);
 			g_esRocketTeammate[admin].g_flRocketChance = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketChance", "Rocket Chance", "Rocket_Chance", "chance", g_esRocketTeammate[admin].g_flRocketChance, value, -1.0, 100.0);
 			g_esRocketTeammate[admin].g_iRocketCooldown = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketCooldown", "Rocket Cooldown", "Rocket_Cooldown", "cooldown", g_esRocketTeammate[admin].g_iRocketCooldown, value, -1, 99999);
@@ -780,7 +780,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esRocketPlayer[admin].g_iRocketAbility = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRocketPlayer[admin].g_iRocketAbility, value, -1, 1);
 			g_esRocketPlayer[admin].g_iRocketEffect = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRocketPlayer[admin].g_iRocketEffect, value, -1, 7);
 			g_esRocketPlayer[admin].g_iRocketMessage = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRocketPlayer[admin].g_iRocketMessage, value, -1, 3);
-			g_esRocketPlayer[admin].g_iRocketSight = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRocketPlayer[admin].g_iRocketSight, value, -1, 2);
+			g_esRocketPlayer[admin].g_iRocketSight = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRocketPlayer[admin].g_iRocketSight, value, -1, 5);
 			g_esRocketPlayer[admin].g_iRocketBody = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketBody", "Rocket Body", "Rocket_Body", "body", g_esRocketPlayer[admin].g_iRocketBody, value, -1, 1);
 			g_esRocketPlayer[admin].g_flRocketChance = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketChance", "Rocket Chance", "Rocket_Chance", "chance", g_esRocketPlayer[admin].g_flRocketChance, value, -1.0, 100.0);
 			g_esRocketPlayer[admin].g_iRocketCooldown = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketCooldown", "Rocket Cooldown", "Rocket_Cooldown", "cooldown", g_esRocketPlayer[admin].g_iRocketCooldown, value, -1, 99999);
@@ -812,7 +812,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esRocketSpecial[type].g_iRocketAbility = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRocketSpecial[type].g_iRocketAbility, value, -1, 1);
 			g_esRocketSpecial[type].g_iRocketEffect = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRocketSpecial[type].g_iRocketEffect, value, -1, 7);
 			g_esRocketSpecial[type].g_iRocketMessage = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRocketSpecial[type].g_iRocketMessage, value, -1, 3);
-			g_esRocketSpecial[type].g_iRocketSight = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRocketSpecial[type].g_iRocketSight, value, -1, 2);
+			g_esRocketSpecial[type].g_iRocketSight = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRocketSpecial[type].g_iRocketSight, value, -1, 5);
 			g_esRocketSpecial[type].g_iRocketBody = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketBody", "Rocket Body", "Rocket_Body", "body", g_esRocketSpecial[type].g_iRocketBody, value, -1, 1);
 			g_esRocketSpecial[type].g_flRocketChance = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketChance", "Rocket Chance", "Rocket_Chance", "chance", g_esRocketSpecial[type].g_flRocketChance, value, -1.0, 100.0);
 			g_esRocketSpecial[type].g_iRocketCooldown = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketCooldown", "Rocket Cooldown", "Rocket_Cooldown", "cooldown", g_esRocketSpecial[type].g_iRocketCooldown, value, -1, 99999);
@@ -838,7 +838,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esRocketAbility[type].g_iRocketAbility = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRocketAbility[type].g_iRocketAbility, value, -1, 1);
 			g_esRocketAbility[type].g_iRocketEffect = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRocketAbility[type].g_iRocketEffect, value, -1, 7);
 			g_esRocketAbility[type].g_iRocketMessage = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRocketAbility[type].g_iRocketMessage, value, -1, 3);
-			g_esRocketAbility[type].g_iRocketSight = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRocketAbility[type].g_iRocketSight, value, -1, 2);
+			g_esRocketAbility[type].g_iRocketSight = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRocketAbility[type].g_iRocketSight, value, -1, 5);
 			g_esRocketAbility[type].g_iRocketBody = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketBody", "Rocket Body", "Rocket_Body", "body", g_esRocketAbility[type].g_iRocketBody, value, -1, 1);
 			g_esRocketAbility[type].g_flRocketChance = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketChance", "Rocket Chance", "Rocket_Chance", "chance", g_esRocketAbility[type].g_flRocketChance, value, -1.0, 100.0);
 			g_esRocketAbility[type].g_iRocketCooldown = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketCooldown", "Rocket Cooldown", "Rocket_Cooldown", "cooldown", g_esRocketAbility[type].g_iRocketCooldown, value, -1, 99999);
@@ -1002,7 +1002,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			iBoomerId = event.GetInt("attacker"), iBoomer = GetClientOfUserId(iBoomerId);
 		if (bIsBoomer(iBoomer) && bIsSurvivor(iSurvivor) && !bExploded)
 		{
-			vRocketHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esRocketCache[iBoomer].g_flRocketChance, g_esRocketCache[iBoomer].g_iRocketHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+			vRocketHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esRocketCache[iBoomer].g_flRocketChance, g_esRocketCache[iBoomer].g_iRocketHit, MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
 		}
 	}
 }
@@ -1162,6 +1162,11 @@ void vRocketHit(int survivor, int tank, float random, float chance, int enabled,
 		{
 			if (random <= chance && !g_esRocketPlayer[survivor].g_bAffected)
 			{
+				if ((messages & MT_MESSAGE_MELEE) && !bIsVisibleToPlayer(tank, survivor, g_esRocketCache[tank].g_iRocketSight, .range = 100.0))
+				{
+					return;
+				}
+
 				int iFlame = CreateEntityByName("env_steam");
 				if (bIsValidEntity(iFlame))
 				{

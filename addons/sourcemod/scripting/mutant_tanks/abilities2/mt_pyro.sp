@@ -27,7 +27,14 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
-bool g_bDedicated, g_bLateLoad;
+bool g_bDedicated, g_bLaggedMovementInstalled, g_bLateLoad;
+
+/**
+ * Third-party natives
+ **/
+
+// [L4D & L4D2] Lagged Movement - Plugin Conflict Resolver: https://forums.alliedmods.net/showthread.php?t=340345
+native any L4D_LaggedMovement(int client, float value, bool force = false);
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -43,6 +50,22 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	g_bLateLoad = late;
 
 	return APLRes_Success;
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (StrEqual(name, "LaggedMovement"))
+	{
+		g_bLaggedMovementInstalled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (StrEqual(name, "LaggedMovement"))
+	{
+		g_bLaggedMovementInstalled = false;
+	}
 }
 #else
 	#if MT_PYRO_COMPILE_METHOD == 1

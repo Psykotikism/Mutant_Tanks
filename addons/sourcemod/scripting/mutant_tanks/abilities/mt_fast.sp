@@ -27,7 +27,14 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
-bool g_bDedicated;
+bool g_bDedicated, g_bLaggedMovementInstalled;
+
+/**
+ * Third-party natives
+ **/
+
+// [L4D & L4D2] Lagged Movement - Plugin Conflict Resolver: https://forums.alliedmods.net/showthread.php?t=340345
+native any L4D_LaggedMovement(int client, float value, bool force = false);
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -42,6 +49,22 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	g_bDedicated = IsDedicatedServer();
 
 	return APLRes_Success;
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (StrEqual(name, "LaggedMovement"))
+	{
+		g_bLaggedMovementInstalled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (StrEqual(name, "LaggedMovement"))
+	{
+		g_bLaggedMovementInstalled = false;
+	}
 }
 #else
 	#if MT_FAST_COMPILE_METHOD == 1
@@ -621,7 +644,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esFastTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFastTeammate[admin].g_iRequiresHumans, value, -1, 32);
 			g_esFastTeammate[admin].g_iFastAbility = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFastTeammate[admin].g_iFastAbility, value, -1, 1);
 			g_esFastTeammate[admin].g_iFastMessage = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esFastTeammate[admin].g_iFastMessage, value, -1, 1);
-			g_esFastTeammate[admin].g_iFastSight = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esFastTeammate[admin].g_iFastSight, value, -1, 2);
+			g_esFastTeammate[admin].g_iFastSight = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esFastTeammate[admin].g_iFastSight, value, -1, 5);
 			g_esFastTeammate[admin].g_flFastChance = flGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "FastChance", "Fast Chance", "Fast_Chance", "chance", g_esFastTeammate[admin].g_flFastChance, value, -1.0, 100.0);
 			g_esFastTeammate[admin].g_iFastCooldown = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "FastCooldown", "Fast Cooldown", "Fast_Cooldown", "cooldown", g_esFastTeammate[admin].g_iFastCooldown, value, -1, 99999);
 			g_esFastTeammate[admin].g_flFastDash = flGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "FastDash", "Fast Dash", "Fast_Dash", "dash", g_esFastTeammate[admin].g_flFastDash, value, -1.0, 99999.0);
@@ -643,7 +666,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esFastPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFastPlayer[admin].g_iRequiresHumans, value, -1, 32);
 			g_esFastPlayer[admin].g_iFastAbility = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFastPlayer[admin].g_iFastAbility, value, -1, 1);
 			g_esFastPlayer[admin].g_iFastMessage = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esFastPlayer[admin].g_iFastMessage, value, -1, 1);
-			g_esFastPlayer[admin].g_iFastSight = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esFastPlayer[admin].g_iFastSight, value, -1, 2);
+			g_esFastPlayer[admin].g_iFastSight = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esFastPlayer[admin].g_iFastSight, value, -1, 5);
 			g_esFastPlayer[admin].g_flFastChance = flGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "FastChance", "Fast Chance", "Fast_Chance", "chance", g_esFastPlayer[admin].g_flFastChance, value, -1.0, 100.0);
 			g_esFastPlayer[admin].g_iFastCooldown = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "FastCooldown", "Fast Cooldown", "Fast_Cooldown", "cooldown", g_esFastPlayer[admin].g_iFastCooldown, value, -1, 99999);
 			g_esFastPlayer[admin].g_flFastDash = flGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "FastDash", "Fast Dash", "Fast_Dash", "dash", g_esFastPlayer[admin].g_flFastDash, value, -1.0, 99999.0);
@@ -671,7 +694,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esFastSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFastSpecial[type].g_iRequiresHumans, value, -1, 32);
 			g_esFastSpecial[type].g_iFastAbility = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFastSpecial[type].g_iFastAbility, value, -1, 1);
 			g_esFastSpecial[type].g_iFastMessage = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esFastSpecial[type].g_iFastMessage, value, -1, 1);
-			g_esFastSpecial[type].g_iFastSight = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esFastSpecial[type].g_iFastSight, value, -1, 2);
+			g_esFastSpecial[type].g_iFastSight = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esFastSpecial[type].g_iFastSight, value, -1, 5);
 			g_esFastSpecial[type].g_flFastChance = flGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "FastChance", "Fast Chance", "Fast_Chance", "chance", g_esFastSpecial[type].g_flFastChance, value, -1.0, 100.0);
 			g_esFastSpecial[type].g_iFastCooldown = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "FastCooldown", "Fast Cooldown", "Fast_Cooldown", "cooldown", g_esFastSpecial[type].g_iFastCooldown, value, -1, 99999);
 			g_esFastSpecial[type].g_flFastDash = flGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "FastDash", "Fast Dash", "Fast_Dash", "dash", g_esFastSpecial[type].g_flFastDash, value, -1.0, 99999.0);
@@ -693,7 +716,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esFastAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFastAbility[type].g_iRequiresHumans, value, -1, 32);
 			g_esFastAbility[type].g_iFastAbility = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFastAbility[type].g_iFastAbility, value, -1, 1);
 			g_esFastAbility[type].g_iFastMessage = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esFastAbility[type].g_iFastMessage, value, -1, 1);
-			g_esFastAbility[type].g_iFastSight = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esFastAbility[type].g_iFastSight, value, -1, 2);
+			g_esFastAbility[type].g_iFastSight = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esFastAbility[type].g_iFastSight, value, -1, 5);
 			g_esFastAbility[type].g_flFastChance = flGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "FastChance", "Fast Chance", "Fast_Chance", "chance", g_esFastAbility[type].g_flFastChance, value, -1.0, 100.0);
 			g_esFastAbility[type].g_iFastCooldown = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "FastCooldown", "Fast Cooldown", "Fast_Cooldown", "cooldown", g_esFastAbility[type].g_iFastCooldown, value, -1, 99999);
 			g_esFastAbility[type].g_flFastDash = flGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "FastDash", "Fast Dash", "Fast_Dash", "dash", g_esFastAbility[type].g_flFastDash, value, -1.0, 99999.0);

@@ -49,6 +49,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
+#define MT_GAMEDATA "mutant_tanks"
+
 #define PARTICLE_ELECTRICITY "electrical_arc_01_system"
 
 #define SOUND_ELECTRICITY "ambient/energy/zap5.wav"
@@ -769,7 +771,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esRestartTeammate[admin].g_iRestartAbility = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRestartTeammate[admin].g_iRestartAbility, value, -1, 1);
 			g_esRestartTeammate[admin].g_iRestartEffect = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRestartTeammate[admin].g_iRestartEffect, value, -1, 7);
 			g_esRestartTeammate[admin].g_iRestartMessage = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRestartTeammate[admin].g_iRestartMessage, value, -1, 3);
-			g_esRestartTeammate[admin].g_iRestartSight = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRestartTeammate[admin].g_iRestartSight, value, -1, 2);
+			g_esRestartTeammate[admin].g_iRestartSight = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRestartTeammate[admin].g_iRestartSight, value, -1, 5);
 			g_esRestartTeammate[admin].g_flRestartChance = flGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartChance", "Restart Chance", "Restart_Chance", "chance", g_esRestartTeammate[admin].g_flRestartChance, value, -1.0, 100.0);
 			g_esRestartTeammate[admin].g_iRestartCooldown = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartCooldown", "Restart Cooldown", "Restart_Cooldown", "cooldown", g_esRestartTeammate[admin].g_iRestartCooldown, value, -1, 99999);
 			g_esRestartTeammate[admin].g_iRestartHit = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartHit", "Restart Hit", "Restart_Hit", "hit", g_esRestartTeammate[admin].g_iRestartHit, value, -1, 1);
@@ -794,7 +796,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esRestartPlayer[admin].g_iRestartAbility = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRestartPlayer[admin].g_iRestartAbility, value, -1, 1);
 			g_esRestartPlayer[admin].g_iRestartEffect = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRestartPlayer[admin].g_iRestartEffect, value, -1, 7);
 			g_esRestartPlayer[admin].g_iRestartMessage = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRestartPlayer[admin].g_iRestartMessage, value, -1, 3);
-			g_esRestartPlayer[admin].g_iRestartSight = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRestartPlayer[admin].g_iRestartSight, value, -1, 2);
+			g_esRestartPlayer[admin].g_iRestartSight = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRestartPlayer[admin].g_iRestartSight, value, -1, 5);
 			g_esRestartPlayer[admin].g_flRestartChance = flGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartChance", "Restart Chance", "Restart_Chance", "chance", g_esRestartPlayer[admin].g_flRestartChance, value, -1.0, 100.0);
 			g_esRestartPlayer[admin].g_iRestartCooldown = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartCooldown", "Restart Cooldown", "Restart_Cooldown", "cooldown", g_esRestartPlayer[admin].g_iRestartCooldown, value, -1, 99999);
 			g_esRestartPlayer[admin].g_iRestartHit = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartHit", "Restart Hit", "Restart_Hit", "hit", g_esRestartPlayer[admin].g_iRestartHit, value, -1, 1);
@@ -825,7 +827,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esRestartSpecial[type].g_iRestartAbility = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRestartSpecial[type].g_iRestartAbility, value, -1, 1);
 			g_esRestartSpecial[type].g_iRestartEffect = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRestartSpecial[type].g_iRestartEffect, value, -1, 7);
 			g_esRestartSpecial[type].g_iRestartMessage = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRestartSpecial[type].g_iRestartMessage, value, -1, 3);
-			g_esRestartSpecial[type].g_iRestartSight = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRestartSpecial[type].g_iRestartSight, value, -1, 2);
+			g_esRestartSpecial[type].g_iRestartSight = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRestartSpecial[type].g_iRestartSight, value, -1, 5);
 			g_esRestartSpecial[type].g_flRestartChance = flGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartChance", "Restart Chance", "Restart_Chance", "chance", g_esRestartSpecial[type].g_flRestartChance, value, -1.0, 100.0);
 			g_esRestartSpecial[type].g_iRestartCooldown = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartCooldown", "Restart Cooldown", "Restart_Cooldown", "cooldown", g_esRestartSpecial[type].g_iRestartCooldown, value, -1, 99999);
 			g_esRestartSpecial[type].g_iRestartHit = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartHit", "Restart Hit", "Restart_Hit", "hit", g_esRestartSpecial[type].g_iRestartHit, value, -1, 1);
@@ -850,7 +852,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esRestartAbility[type].g_iRestartAbility = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRestartAbility[type].g_iRestartAbility, value, -1, 1);
 			g_esRestartAbility[type].g_iRestartEffect = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRestartAbility[type].g_iRestartEffect, value, -1, 7);
 			g_esRestartAbility[type].g_iRestartMessage = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRestartAbility[type].g_iRestartMessage, value, -1, 3);
-			g_esRestartAbility[type].g_iRestartSight = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRestartAbility[type].g_iRestartSight, value, -1, 2);
+			g_esRestartAbility[type].g_iRestartSight = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRestartAbility[type].g_iRestartSight, value, -1, 5);
 			g_esRestartAbility[type].g_flRestartChance = flGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartChance", "Restart Chance", "Restart_Chance", "chance", g_esRestartAbility[type].g_flRestartChance, value, -1.0, 100.0);
 			g_esRestartAbility[type].g_iRestartCooldown = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartCooldown", "Restart Cooldown", "Restart_Cooldown", "cooldown", g_esRestartAbility[type].g_iRestartCooldown, value, -1, 99999);
 			g_esRestartAbility[type].g_iRestartHit = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartHit", "Restart Hit", "Restart_Hit", "hit", g_esRestartAbility[type].g_iRestartHit, value, -1, 1);
@@ -1042,7 +1044,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			iBoomerId = event.GetInt("attacker"), iBoomer = GetClientOfUserId(iBoomerId);
 		if (bIsBoomer(iBoomer) && bIsSurvivor(iSurvivor) && !bExploded)
 		{
-			vRestartHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esRestartCache[iBoomer].g_flRestartChance, g_esRestartCache[iBoomer].g_iRestartHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+			vRestartHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esRestartCache[iBoomer].g_flRestartChance, g_esRestartCache[iBoomer].g_iRestartHit, MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
 		}
 	}
 	else if (StrEqual(name, "player_spawn"))
@@ -1203,6 +1205,11 @@ void vRestartHit(int survivor, int tank, float random, float chance, int enabled
 		{
 			if (random <= chance)
 			{
+				if ((messages & MT_MESSAGE_MELEE) && !bIsVisibleToPlayer(tank, survivor, g_esRestartCache[tank].g_iRestartSight, .range = 100.0))
+				{
+					return;
+				}
+
 				int iCooldown = -1;
 				if ((flags & MT_ATTACK_RANGE) && (g_esRestartPlayer[tank].g_iRangeCooldown == -1 || g_esRestartPlayer[tank].g_iRangeCooldown <= iTime))
 				{

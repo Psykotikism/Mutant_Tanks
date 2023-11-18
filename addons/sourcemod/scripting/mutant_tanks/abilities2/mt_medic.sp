@@ -27,7 +27,14 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
-bool g_bDedicated, g_bSecondGame;
+bool g_bDedicated, g_bLaggedMovementInstalled, g_bSecondGame;
+
+/**
+ * Third-party natives
+ **/
+
+// [L4D & L4D2] Lagged Movement - Plugin Conflict Resolver: https://forums.alliedmods.net/showthread.php?t=340345
+native any L4D_LaggedMovement(int client, float value, bool force = false);
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -46,6 +53,22 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	g_bDedicated = IsDedicatedServer();
 
 	return APLRes_Success;
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (StrEqual(name, "LaggedMovement"))
+	{
+		g_bLaggedMovementInstalled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (StrEqual(name, "LaggedMovement"))
+	{
+		g_bLaggedMovementInstalled = false;
+	}
 }
 
 #define SPRITE_GLOW "sprites/glow01.vmt"
@@ -779,7 +802,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esMedicTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esMedicTeammate[admin].g_iRequiresHumans, value, -1, 32);
 			g_esMedicTeammate[admin].g_iMedicAbility = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esMedicTeammate[admin].g_iMedicAbility, value, -1, 1);
 			g_esMedicTeammate[admin].g_iMedicMessage = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esMedicTeammate[admin].g_iMedicMessage, value, -1, 1);
-			g_esMedicTeammate[admin].g_iMedicSight = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esMedicTeammate[admin].g_iMedicSight, value, -1, 2);
+			g_esMedicTeammate[admin].g_iMedicSight = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esMedicTeammate[admin].g_iMedicSight, value, -1, 5);
 			g_esMedicTeammate[admin].g_flMedicBuffDamage = flGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "MedicBuffDamage", "Medic Buff Damage", "Medic_Buff_Damage", "buffdmg", g_esMedicTeammate[admin].g_flMedicBuffDamage, value, -1.0, 99999.0);
 			g_esMedicTeammate[admin].g_flMedicBuffResistance = flGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "MedicBuffResistance", "Medic Buff Resistance", "Medic_Buff_Resistance", "buffres", g_esMedicTeammate[admin].g_flMedicBuffResistance, value, -1.0, 1.0);
 			g_esMedicTeammate[admin].g_flMedicBuffSpeed = flGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "MedicBuffSpeed", "Medic Buff Speed", "Medic_Buff_Speed", "buffspeed", g_esMedicTeammate[admin].g_flMedicBuffSpeed, value, -1.0, 10.0);
@@ -808,7 +831,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esMedicPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esMedicPlayer[admin].g_iRequiresHumans, value, -1, 32);
 			g_esMedicPlayer[admin].g_iMedicAbility = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esMedicPlayer[admin].g_iMedicAbility, value, -1, 1);
 			g_esMedicPlayer[admin].g_iMedicMessage = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esMedicPlayer[admin].g_iMedicMessage, value, -1, 1);
-			g_esMedicPlayer[admin].g_iMedicSight = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esMedicPlayer[admin].g_iMedicSight, value, -1, 2);
+			g_esMedicPlayer[admin].g_iMedicSight = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esMedicPlayer[admin].g_iMedicSight, value, -1, 5);
 			g_esMedicPlayer[admin].g_flMedicBuffDamage = flGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "MedicBuffDamage", "Medic Buff Damage", "Medic_Buff_Damage", "buffdmg", g_esMedicPlayer[admin].g_flMedicBuffDamage, value, -1.0, 99999.0);
 			g_esMedicPlayer[admin].g_flMedicBuffResistance = flGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "MedicBuffResistance", "Medic Buff Resistance", "Medic_Buff_Resistance", "buffres", g_esMedicPlayer[admin].g_flMedicBuffResistance, value, -1.0, 1.0);
 			g_esMedicPlayer[admin].g_flMedicBuffSpeed = flGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "MedicBuffSpeed", "Medic Buff Speed", "Medic_Buff_Speed", "buffspeed", g_esMedicPlayer[admin].g_flMedicBuffSpeed, value, -1.0, 10.0);
@@ -887,7 +910,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esMedicSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esMedicSpecial[type].g_iRequiresHumans, value, -1, 32);
 			g_esMedicSpecial[type].g_iMedicAbility = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esMedicSpecial[type].g_iMedicAbility, value, -1, 1);
 			g_esMedicSpecial[type].g_iMedicMessage = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esMedicSpecial[type].g_iMedicMessage, value, -1, 1);
-			g_esMedicSpecial[type].g_iMedicSight = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esMedicSpecial[type].g_iMedicSight, value, -1, 2);
+			g_esMedicSpecial[type].g_iMedicSight = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esMedicSpecial[type].g_iMedicSight, value, -1, 5);
 			g_esMedicSpecial[type].g_flMedicBuffDamage = flGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "MedicBuffDamage", "Medic Buff Damage", "Medic_Buff_Damage", "buffdmg", g_esMedicSpecial[type].g_flMedicBuffDamage, value, -1.0, 99999.0);
 			g_esMedicSpecial[type].g_flMedicBuffResistance = flGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "MedicBuffResistance", "Medic Buff Resistance", "Medic_Buff_Resistance", "buffres", g_esMedicSpecial[type].g_flMedicBuffResistance, value, -1.0, 1.0);
 			g_esMedicSpecial[type].g_flMedicBuffSpeed = flGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "MedicBuffSpeed", "Medic Buff Speed", "Medic_Buff_Speed", "buffspeed", g_esMedicSpecial[type].g_flMedicBuffSpeed, value, -1.0, 10.0);

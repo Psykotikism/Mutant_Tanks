@@ -686,7 +686,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esLagTeammate[admin].g_iLagAbility = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esLagTeammate[admin].g_iLagAbility, value, -1, 1);
 			g_esLagTeammate[admin].g_iLagEffect = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esLagTeammate[admin].g_iLagEffect, value, -1, 7);
 			g_esLagTeammate[admin].g_iLagMessage = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esLagTeammate[admin].g_iLagMessage, value, -1, 3);
-			g_esLagTeammate[admin].g_iLagSight = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esLagTeammate[admin].g_iLagSight, value, -1, 2);
+			g_esLagTeammate[admin].g_iLagSight = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esLagTeammate[admin].g_iLagSight, value, -1, 5);
 			g_esLagTeammate[admin].g_flLagChance = flGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "LagChance", "Lag Chance", "Lag_Chance", "chance", g_esLagTeammate[admin].g_flLagChance, value, -1.0, 100.0);
 			g_esLagTeammate[admin].g_iLagCooldown = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "LagCooldown", "Lag Cooldown", "Lag_Cooldown", "cooldown", g_esLagTeammate[admin].g_iLagCooldown, value, -1, 99999);
 			g_esLagTeammate[admin].g_iLagDuration = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "LagDuration", "Lag Duration", "Lag_Duration", "duration", g_esLagTeammate[admin].g_iLagDuration, value, -1, 99999);
@@ -709,7 +709,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esLagPlayer[admin].g_iLagAbility = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esLagPlayer[admin].g_iLagAbility, value, -1, 1);
 			g_esLagPlayer[admin].g_iLagEffect = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esLagPlayer[admin].g_iLagEffect, value, -1, 7);
 			g_esLagPlayer[admin].g_iLagMessage = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esLagPlayer[admin].g_iLagMessage, value, -1, 3);
-			g_esLagPlayer[admin].g_iLagSight = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esLagPlayer[admin].g_iLagSight, value, -1, 2);
+			g_esLagPlayer[admin].g_iLagSight = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esLagPlayer[admin].g_iLagSight, value, -1, 5);
 			g_esLagPlayer[admin].g_flLagChance = flGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "LagChance", "Lag Chance", "Lag_Chance", "chance", g_esLagPlayer[admin].g_flLagChance, value, -1.0, 100.0);
 			g_esLagPlayer[admin].g_iLagCooldown = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "LagCooldown", "Lag Cooldown", "Lag_Cooldown", "cooldown", g_esLagPlayer[admin].g_iLagCooldown, value, -1, 99999);
 			g_esLagPlayer[admin].g_iLagDuration = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "LagDuration", "Lag Duration", "Lag_Duration", "duration", g_esLagPlayer[admin].g_iLagDuration, value, -1, 99999);
@@ -738,7 +738,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esLagSpecial[type].g_iLagAbility = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esLagSpecial[type].g_iLagAbility, value, -1, 1);
 			g_esLagSpecial[type].g_iLagEffect = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esLagSpecial[type].g_iLagEffect, value, -1, 7);
 			g_esLagSpecial[type].g_iLagMessage = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esLagSpecial[type].g_iLagMessage, value, -1, 3);
-			g_esLagSpecial[type].g_iLagSight = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esLagSpecial[type].g_iLagSight, value, -1, 2);
+			g_esLagSpecial[type].g_iLagSight = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esLagSpecial[type].g_iLagSight, value, -1, 5);
 			g_esLagSpecial[type].g_flLagChance = flGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "LagChance", "Lag Chance", "Lag_Chance", "chance", g_esLagSpecial[type].g_flLagChance, value, -1.0, 100.0);
 			g_esLagSpecial[type].g_iLagCooldown = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "LagCooldown", "Lag Cooldown", "Lag_Cooldown", "cooldown", g_esLagSpecial[type].g_iLagCooldown, value, -1, 99999);
 			g_esLagSpecial[type].g_iLagDuration = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "LagDuration", "Lag Duration", "Lag_Duration", "duration", g_esLagSpecial[type].g_iLagDuration, value, -1, 99999);
@@ -761,7 +761,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esLagAbility[type].g_iLagAbility = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esLagAbility[type].g_iLagAbility, value, -1, 1);
 			g_esLagAbility[type].g_iLagEffect = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esLagAbility[type].g_iLagEffect, value, -1, 7);
 			g_esLagAbility[type].g_iLagMessage = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esLagAbility[type].g_iLagMessage, value, -1, 3);
-			g_esLagAbility[type].g_iLagSight = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esLagAbility[type].g_iLagSight, value, -1, 2);
+			g_esLagAbility[type].g_iLagSight = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esLagAbility[type].g_iLagSight, value, -1, 5);
 			g_esLagAbility[type].g_flLagChance = flGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "LagChance", "Lag Chance", "Lag_Chance", "chance", g_esLagAbility[type].g_flLagChance, value, -1.0, 100.0);
 			g_esLagAbility[type].g_iLagCooldown = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "LagCooldown", "Lag Cooldown", "Lag_Cooldown", "cooldown", g_esLagAbility[type].g_iLagCooldown, value, -1, 99999);
 			g_esLagAbility[type].g_iLagDuration = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "LagDuration", "Lag Duration", "Lag_Duration", "duration", g_esLagAbility[type].g_iLagDuration, value, -1, 99999);
@@ -901,7 +901,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			iBoomerId = event.GetInt("attacker"), iBoomer = GetClientOfUserId(iBoomerId);
 		if (bIsBoomer(iBoomer) && bIsSurvivor(iSurvivor) && !bExploded)
 		{
-			vLagHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esLagCache[iBoomer].g_flLagChance, g_esLagCache[iBoomer].g_iLagHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+			vLagHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esLagCache[iBoomer].g_flLagChance, g_esLagCache[iBoomer].g_iLagHit, MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
 		}
 	}
 }
@@ -1027,6 +1027,11 @@ void vLagHit(int survivor, int tank, float random, float chance, int enabled, in
 		{
 			if (random <= chance && !g_esLagPlayer[survivor].g_bAffected)
 			{
+				if ((messages & MT_MESSAGE_MELEE) && !bIsVisibleToPlayer(tank, survivor, g_esLagCache[tank].g_iLagSight, .range = 100.0))
+				{
+					return;
+				}
+
 				g_esLagPlayer[survivor].g_bAffected = true;
 				g_esLagPlayer[survivor].g_iOwner = tank;
 
