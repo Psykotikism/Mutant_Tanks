@@ -704,7 +704,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esNullifyTeammate[admin].g_iNullifyAbility = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esNullifyTeammate[admin].g_iNullifyAbility, value, -1, 1);
 			g_esNullifyTeammate[admin].g_iNullifyEffect = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esNullifyTeammate[admin].g_iNullifyEffect, value, -1, 7);
 			g_esNullifyTeammate[admin].g_iNullifyMessage = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esNullifyTeammate[admin].g_iNullifyMessage, value, -1, 3);
-			g_esNullifyTeammate[admin].g_iNullifySight = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esNullifyTeammate[admin].g_iNullifySight, value, -1, 2);
+			g_esNullifyTeammate[admin].g_iNullifySight = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esNullifyTeammate[admin].g_iNullifySight, value, -1, 5);
 			g_esNullifyTeammate[admin].g_flNullifyChance = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyChance", "Nullify Chance", "Nullify_Chance", "chance", g_esNullifyTeammate[admin].g_flNullifyChance, value, -1.0, 100.0);
 			g_esNullifyTeammate[admin].g_iNullifyCooldown = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyCooldown", "Nullify Cooldown", "Nullify_Cooldown", "cooldown", g_esNullifyTeammate[admin].g_iNullifyCooldown, value, -1, 99999);
 			g_esNullifyTeammate[admin].g_flNullifyDuration = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyDuration", "Nullify Duration", "Nullify_Duration", "duration", g_esNullifyTeammate[admin].g_flNullifyDuration, value, -1.0, 99999.0);
@@ -727,7 +727,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esNullifyPlayer[admin].g_iNullifyAbility = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esNullifyPlayer[admin].g_iNullifyAbility, value, -1, 1);
 			g_esNullifyPlayer[admin].g_iNullifyEffect = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esNullifyPlayer[admin].g_iNullifyEffect, value, -1, 7);
 			g_esNullifyPlayer[admin].g_iNullifyMessage = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esNullifyPlayer[admin].g_iNullifyMessage, value, -1, 3);
-			g_esNullifyPlayer[admin].g_iNullifySight = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esNullifyPlayer[admin].g_iNullifySight, value, -1, 2);
+			g_esNullifyPlayer[admin].g_iNullifySight = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esNullifyPlayer[admin].g_iNullifySight, value, -1, 5);
 			g_esNullifyPlayer[admin].g_flNullifyChance = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyChance", "Nullify Chance", "Nullify_Chance", "chance", g_esNullifyPlayer[admin].g_flNullifyChance, value, -1.0, 100.0);
 			g_esNullifyPlayer[admin].g_iNullifyCooldown = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyCooldown", "Nullify Cooldown", "Nullify_Cooldown", "cooldown", g_esNullifyPlayer[admin].g_iNullifyCooldown, value, -1, 99999);
 			g_esNullifyPlayer[admin].g_flNullifyDuration = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyDuration", "Nullify Duration", "Nullify_Duration", "duration", g_esNullifyPlayer[admin].g_flNullifyDuration, value, -1.0, 99999.0);
@@ -756,7 +756,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esNullifySpecial[type].g_iNullifyAbility = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esNullifySpecial[type].g_iNullifyAbility, value, -1, 1);
 			g_esNullifySpecial[type].g_iNullifyEffect = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esNullifySpecial[type].g_iNullifyEffect, value, -1, 7);
 			g_esNullifySpecial[type].g_iNullifyMessage = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esNullifySpecial[type].g_iNullifyMessage, value, -1, 3);
-			g_esNullifySpecial[type].g_iNullifySight = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esNullifySpecial[type].g_iNullifySight, value, -1, 2);
+			g_esNullifySpecial[type].g_iNullifySight = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esNullifySpecial[type].g_iNullifySight, value, -1, 5);
 			g_esNullifySpecial[type].g_flNullifyChance = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyChance", "Nullify Chance", "Nullify_Chance", "chance", g_esNullifySpecial[type].g_flNullifyChance, value, -1.0, 100.0);
 			g_esNullifySpecial[type].g_iNullifyCooldown = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyCooldown", "Nullify Cooldown", "Nullify_Cooldown", "cooldown", g_esNullifySpecial[type].g_iNullifyCooldown, value, -1, 99999);
 			g_esNullifySpecial[type].g_flNullifyDuration = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyDuration", "Nullify Duration", "Nullify_Duration", "duration", g_esNullifySpecial[type].g_flNullifyDuration, value, -1.0, 99999.0);
@@ -779,7 +779,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esNullifyAbility[type].g_iNullifyAbility = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esNullifyAbility[type].g_iNullifyAbility, value, -1, 1);
 			g_esNullifyAbility[type].g_iNullifyEffect = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esNullifyAbility[type].g_iNullifyEffect, value, -1, 7);
 			g_esNullifyAbility[type].g_iNullifyMessage = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esNullifyAbility[type].g_iNullifyMessage, value, -1, 3);
-			g_esNullifyAbility[type].g_iNullifySight = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esNullifyAbility[type].g_iNullifySight, value, -1, 2);
+			g_esNullifyAbility[type].g_iNullifySight = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esNullifyAbility[type].g_iNullifySight, value, -1, 5);
 			g_esNullifyAbility[type].g_flNullifyChance = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyChance", "Nullify Chance", "Nullify_Chance", "chance", g_esNullifyAbility[type].g_flNullifyChance, value, -1.0, 100.0);
 			g_esNullifyAbility[type].g_iNullifyCooldown = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyCooldown", "Nullify Cooldown", "Nullify_Cooldown", "cooldown", g_esNullifyAbility[type].g_iNullifyCooldown, value, -1, 99999);
 			g_esNullifyAbility[type].g_flNullifyDuration = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyDuration", "Nullify Duration", "Nullify_Duration", "duration", g_esNullifyAbility[type].g_flNullifyDuration, value, -1.0, 99999.0);
@@ -919,7 +919,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			iBoomerId = event.GetInt("attacker"), iBoomer = GetClientOfUserId(iBoomerId);
 		if (bIsBoomer(iBoomer) && bIsSurvivor(iSurvivor) && !bExploded)
 		{
-			vNullifyHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esNullifyCache[iBoomer].g_flNullifyChance, g_esNullifyCache[iBoomer].g_iNullifyHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+			vNullifyHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esNullifyCache[iBoomer].g_flNullifyChance, g_esNullifyCache[iBoomer].g_iNullifyHit, MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
 		}
 	}
 }
@@ -1045,6 +1045,11 @@ void vNullifyHit(int survivor, int tank, float random, float chance, int enabled
 		{
 			if (random <= chance && !g_esNullifyPlayer[survivor].g_bAffected)
 			{
+				if ((messages & MT_MESSAGE_MELEE) && !bIsVisibleToPlayer(tank, survivor, g_esNullifyCache[tank].g_iNullifySight, .range = 100.0))
+				{
+					return;
+				}
+
 				g_esNullifyPlayer[survivor].g_bAffected = true;
 				g_esNullifyPlayer[survivor].g_iOwner = tank;
 

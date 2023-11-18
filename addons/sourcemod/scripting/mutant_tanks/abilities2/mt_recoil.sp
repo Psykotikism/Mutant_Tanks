@@ -685,7 +685,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esRecoilTeammate[admin].g_iRecoilAbility = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRecoilTeammate[admin].g_iRecoilAbility, value, -1, 1);
 			g_esRecoilTeammate[admin].g_iRecoilEffect = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRecoilTeammate[admin].g_iRecoilEffect, value, -1, 7);
 			g_esRecoilTeammate[admin].g_iRecoilMessage = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRecoilTeammate[admin].g_iRecoilMessage, value, -1, 3);
-			g_esRecoilTeammate[admin].g_iRecoilSight = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRecoilTeammate[admin].g_iRecoilSight, value, -1, 2);
+			g_esRecoilTeammate[admin].g_iRecoilSight = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRecoilTeammate[admin].g_iRecoilSight, value, -1, 5);
 			g_esRecoilTeammate[admin].g_flRecoilChance = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilChance", "Recoil Chance", "Recoil_Chance", "chance", g_esRecoilTeammate[admin].g_flRecoilChance, value, -1.0, 100.0);
 			g_esRecoilTeammate[admin].g_iRecoilCooldown = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilCooldown", "Recoil Cooldown", "Recoil_Cooldown", "cooldown", g_esRecoilTeammate[admin].g_iRecoilCooldown, value, -1, 99999);
 			g_esRecoilTeammate[admin].g_flRecoilDuration = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilDuration", "Recoil Duration", "Recoil_Duration", "duration", g_esRecoilTeammate[admin].g_flRecoilDuration, value, -1.0, 99999.0);
@@ -708,7 +708,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esRecoilPlayer[admin].g_iRecoilAbility = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRecoilPlayer[admin].g_iRecoilAbility, value, -1, 1);
 			g_esRecoilPlayer[admin].g_iRecoilEffect = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRecoilPlayer[admin].g_iRecoilEffect, value, -1, 7);
 			g_esRecoilPlayer[admin].g_iRecoilMessage = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRecoilPlayer[admin].g_iRecoilMessage, value, -1, 3);
-			g_esRecoilPlayer[admin].g_iRecoilSight = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRecoilPlayer[admin].g_iRecoilSight, value, -1, 2);
+			g_esRecoilPlayer[admin].g_iRecoilSight = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRecoilPlayer[admin].g_iRecoilSight, value, -1, 5);
 			g_esRecoilPlayer[admin].g_flRecoilChance = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilChance", "Recoil Chance", "Recoil_Chance", "chance", g_esRecoilPlayer[admin].g_flRecoilChance, value, -1.0, 100.0);
 			g_esRecoilPlayer[admin].g_iRecoilCooldown = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilCooldown", "Recoil Cooldown", "Recoil_Cooldown", "cooldown", g_esRecoilPlayer[admin].g_iRecoilCooldown, value, -1, 99999);
 			g_esRecoilPlayer[admin].g_flRecoilDuration = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilDuration", "Recoil Duration", "Recoil_Duration", "duration", g_esRecoilPlayer[admin].g_flRecoilDuration, value, -1.0, 99999.0);
@@ -737,7 +737,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esRecoilSpecial[type].g_iRecoilAbility = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRecoilSpecial[type].g_iRecoilAbility, value, -1, 1);
 			g_esRecoilSpecial[type].g_iRecoilEffect = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRecoilSpecial[type].g_iRecoilEffect, value, -1, 7);
 			g_esRecoilSpecial[type].g_iRecoilMessage = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRecoilSpecial[type].g_iRecoilMessage, value, -1, 3);
-			g_esRecoilSpecial[type].g_iRecoilSight = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRecoilSpecial[type].g_iRecoilSight, value, -1, 2);
+			g_esRecoilSpecial[type].g_iRecoilSight = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRecoilSpecial[type].g_iRecoilSight, value, -1, 5);
 			g_esRecoilSpecial[type].g_flRecoilChance = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilChance", "Recoil Chance", "Recoil_Chance", "chance", g_esRecoilSpecial[type].g_flRecoilChance, value, -1.0, 100.0);
 			g_esRecoilSpecial[type].g_iRecoilCooldown = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilCooldown", "Recoil Cooldown", "Recoil_Cooldown", "cooldown", g_esRecoilSpecial[type].g_iRecoilCooldown, value, -1, 99999);
 			g_esRecoilSpecial[type].g_flRecoilDuration = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilDuration", "Recoil Duration", "Recoil_Duration", "duration", g_esRecoilSpecial[type].g_flRecoilDuration, value, -1.0, 99999.0);
@@ -760,7 +760,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esRecoilAbility[type].g_iRecoilAbility = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRecoilAbility[type].g_iRecoilAbility, value, -1, 1);
 			g_esRecoilAbility[type].g_iRecoilEffect = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRecoilAbility[type].g_iRecoilEffect, value, -1, 7);
 			g_esRecoilAbility[type].g_iRecoilMessage = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRecoilAbility[type].g_iRecoilMessage, value, -1, 3);
-			g_esRecoilAbility[type].g_iRecoilSight = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRecoilAbility[type].g_iRecoilSight, value, -1, 2);
+			g_esRecoilAbility[type].g_iRecoilSight = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRecoilAbility[type].g_iRecoilSight, value, -1, 5);
 			g_esRecoilAbility[type].g_flRecoilChance = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilChance", "Recoil Chance", "Recoil_Chance", "chance", g_esRecoilAbility[type].g_flRecoilChance, value, -1.0, 100.0);
 			g_esRecoilAbility[type].g_iRecoilCooldown = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilCooldown", "Recoil Cooldown", "Recoil_Cooldown", "cooldown", g_esRecoilAbility[type].g_iRecoilCooldown, value, -1, 99999);
 			g_esRecoilAbility[type].g_flRecoilDuration = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilDuration", "Recoil Duration", "Recoil_Duration", "duration", g_esRecoilAbility[type].g_flRecoilDuration, value, -1.0, 99999.0);
@@ -922,7 +922,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			iBoomerId = event.GetInt("attacker"), iBoomer = GetClientOfUserId(iBoomerId);
 		if (bIsBoomer(iBoomer) && bIsSurvivor(iSurvivor) && !bExploded)
 		{
-			vRecoilHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esRecoilCache[iBoomer].g_flRecoilChance, g_esRecoilCache[iBoomer].g_iRecoilHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+			vRecoilHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esRecoilCache[iBoomer].g_flRecoilChance, g_esRecoilCache[iBoomer].g_iRecoilHit, MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
 		}
 	}
 	else if (StrEqual(name, "weapon_fire"))
@@ -1060,6 +1060,11 @@ void vRecoilHit(int survivor, int tank, float random, float chance, int enabled,
 		{
 			if (random <= chance && !g_esRecoilPlayer[survivor].g_bAffected)
 			{
+				if ((messages & MT_MESSAGE_MELEE) && !bIsVisibleToPlayer(tank, survivor, g_esRecoilCache[tank].g_iRecoilSight, .range = 100.0))
+				{
+					return;
+				}
+
 				g_esRecoilPlayer[survivor].g_bAffected = true;
 				g_esRecoilPlayer[survivor].g_iOwner = tank;
 

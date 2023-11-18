@@ -886,7 +886,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esGhostTeammate[admin].g_iGhostAbility = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esGhostTeammate[admin].g_iGhostAbility, value, -1, 3);
 			g_esGhostTeammate[admin].g_iGhostEffect = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esGhostTeammate[admin].g_iGhostEffect, value, -1, 7);
 			g_esGhostTeammate[admin].g_iGhostMessage = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esGhostTeammate[admin].g_iGhostMessage, value, -1, 7);
-			g_esGhostTeammate[admin].g_iGhostSight = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esGhostTeammate[admin].g_iGhostSight, value, -1, 2);
+			g_esGhostTeammate[admin].g_iGhostSight = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esGhostTeammate[admin].g_iGhostSight, value, -1, 5);
 			g_esGhostTeammate[admin].g_flGhostChance = flGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "GhostChance", "Ghost Chance", "Ghost_Chance", "chance", g_esGhostTeammate[admin].g_flGhostChance, value, -1.0, 100.0);
 			g_esGhostTeammate[admin].g_iGhostCooldown = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "GhostCooldown", "Ghost Cooldown", "Ghost_Cooldown", "cooldown", g_esGhostTeammate[admin].g_iGhostCooldown, value, -1, 99999);
 			g_esGhostTeammate[admin].g_iGhostDuration = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "GhostDuration", "Ghost Duration", "Ghost_Duration", "duration", g_esGhostTeammate[admin].g_iGhostDuration, value, -1, 99999);
@@ -920,7 +920,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esGhostPlayer[admin].g_iGhostAbility = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esGhostPlayer[admin].g_iGhostAbility, value, -1, 3);
 			g_esGhostPlayer[admin].g_iGhostEffect = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esGhostPlayer[admin].g_iGhostEffect, value, -1, 7);
 			g_esGhostPlayer[admin].g_iGhostMessage = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esGhostPlayer[admin].g_iGhostMessage, value, -1, 7);
-			g_esGhostPlayer[admin].g_iGhostSight = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esGhostPlayer[admin].g_iGhostSight, value, -1, 2);
+			g_esGhostPlayer[admin].g_iGhostSight = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esGhostPlayer[admin].g_iGhostSight, value, -1, 5);
 			g_esGhostPlayer[admin].g_flGhostChance = flGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "GhostChance", "Ghost Chance", "Ghost_Chance", "chance", g_esGhostPlayer[admin].g_flGhostChance, value, -1.0, 100.0);
 			g_esGhostPlayer[admin].g_iGhostCooldown = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "GhostCooldown", "Ghost Cooldown", "Ghost_Cooldown", "cooldown", g_esGhostPlayer[admin].g_iGhostCooldown, value, -1, 99999);
 			g_esGhostPlayer[admin].g_iGhostDuration = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "GhostDuration", "Ghost Duration", "Ghost_Duration", "duration", g_esGhostPlayer[admin].g_iGhostDuration, value, -1, 99999);
@@ -960,7 +960,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esGhostSpecial[type].g_iGhostAbility = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esGhostSpecial[type].g_iGhostAbility, value, -1, 3);
 			g_esGhostSpecial[type].g_iGhostEffect = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esGhostSpecial[type].g_iGhostEffect, value, -1, 7);
 			g_esGhostSpecial[type].g_iGhostMessage = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esGhostSpecial[type].g_iGhostMessage, value, -1, 7);
-			g_esGhostSpecial[type].g_iGhostSight = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esGhostSpecial[type].g_iGhostSight, value, -1, 2);
+			g_esGhostSpecial[type].g_iGhostSight = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esGhostSpecial[type].g_iGhostSight, value, -1, 5);
 			g_esGhostSpecial[type].g_flGhostChance = flGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "GhostChance", "Ghost Chance", "Ghost_Chance", "chance", g_esGhostSpecial[type].g_flGhostChance, value, -1.0, 100.0);
 			g_esGhostSpecial[type].g_iGhostCooldown = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "GhostCooldown", "Ghost Cooldown", "Ghost_Cooldown", "cooldown", g_esGhostSpecial[type].g_iGhostCooldown, value, -1, 99999);
 			g_esGhostSpecial[type].g_iGhostDuration = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "GhostDuration", "Ghost Duration", "Ghost_Duration", "duration", g_esGhostSpecial[type].g_iGhostDuration, value, -1, 99999);
@@ -994,7 +994,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esGhostAbility[type].g_iGhostAbility = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esGhostAbility[type].g_iGhostAbility, value, -1, 3);
 			g_esGhostAbility[type].g_iGhostEffect = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esGhostAbility[type].g_iGhostEffect, value, -1, 7);
 			g_esGhostAbility[type].g_iGhostMessage = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esGhostAbility[type].g_iGhostMessage, value, -1, 7);
-			g_esGhostAbility[type].g_iGhostSight = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esGhostAbility[type].g_iGhostSight, value, -1, 2);
+			g_esGhostAbility[type].g_iGhostSight = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esGhostAbility[type].g_iGhostSight, value, -1, 5);
 			g_esGhostAbility[type].g_flGhostChance = flGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "GhostChance", "Ghost Chance", "Ghost_Chance", "chance", g_esGhostAbility[type].g_flGhostChance, value, -1.0, 100.0);
 			g_esGhostAbility[type].g_iGhostCooldown = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "GhostCooldown", "Ghost Cooldown", "Ghost_Cooldown", "cooldown", g_esGhostAbility[type].g_iGhostCooldown, value, -1, 99999);
 			g_esGhostAbility[type].g_iGhostDuration = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "GhostDuration", "Ghost Duration", "Ghost_Duration", "duration", g_esGhostAbility[type].g_iGhostDuration, value, -1, 99999);
@@ -1165,7 +1165,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			iBoomerId = event.GetInt("attacker"), iBoomer = GetClientOfUserId(iBoomerId);
 		if (bIsBoomer(iBoomer) && bIsSurvivor(iSurvivor) && !bExploded)
 		{
-			vGhostHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esGhostCache[iBoomer].g_flGhostChance, g_esGhostCache[iBoomer].g_iGhostHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+			vGhostHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esGhostCache[iBoomer].g_flGhostChance, g_esGhostCache[iBoomer].g_iGhostHit, MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
 		}
 	}
 }
@@ -1449,6 +1449,11 @@ void vGhostHit(int survivor, int tank, float random, float chance, int enabled, 
 		{
 			if (random <= chance)
 			{
+				if ((messages & MT_MESSAGE_MELEE) && !bIsVisibleToPlayer(tank, survivor, g_esGhostCache[tank].g_iGhostSight, .range = 100.0))
+				{
+					return;
+				}
+
 				int iCooldown = -1;
 				if ((flags & MT_ATTACK_RANGE) && (g_esGhostPlayer[tank].g_iRangeCooldown == -1 || g_esGhostPlayer[tank].g_iRangeCooldown <= iTime))
 				{

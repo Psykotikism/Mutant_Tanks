@@ -29,6 +29,7 @@
 - Fixed the `MT_GetSpawnType` native only working for human-controlled Mutants.
 
 #### Abilities
+- Fixed several abilities' plugins not compiling when used as standalone plugins.
 - Fixed all the `Ability Sight` settings not working.
 - Fixed some abilities applying the wrong damage types when damaging survivors.
 - Bury: Fixed players being stuck in the ground after teleporting.
@@ -41,7 +42,9 @@
 	- Fixed meteors giving players accelerated velocity when standing on them.
 	- Fixed meteors not disappearing when Mutant Infected die.
 - Minion: Fixed array index errors. (Thanks to `Slaven555` for reporting!)
-- Necro: Fixed sound being precached for every player that leaves.
+- Necro:
+	- Fixed sound being precached for every player that leaves.
+	- Fixed the ability using another ability's code.
 - Omni: Fixed the ability overlapping with the `Boss`, `Randomize`, `Transform`, and `Combo` features. (Thanks to `Mi.Cura` for reporting!)
 - Recall:
 	- Fixed the survivor victims of Smokers, Hunters, Jockeys, and Chargers not teleporting with them.
@@ -123,11 +126,13 @@
 - The `MT_GetSpawnType` native now has two more parameters.
 
 #### Abilities
+- Added more options for all the `Ability Sight` settings.
 - Mutant Infected will now reserve their abilities for engaging with survivors for a more tactical approach. [Requires `Actions`.]
 - Bury: The ability no longer affects pinned survivors.
 - Choke:
 	- The ability no longer affects pinned survivors.
 	- Added the `Choke Block` setting.
+- Clone: Removed unused code.
 - Electric: Added visibility check for survivors caught in chain reactions.
 - Fast:
 	- Added the `Fast Dash` setting.

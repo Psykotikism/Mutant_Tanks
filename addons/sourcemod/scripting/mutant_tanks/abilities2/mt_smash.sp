@@ -763,7 +763,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esSmashTeammate[admin].g_iSmashAbility = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSmashTeammate[admin].g_iSmashAbility, value, -1, 1);
 			g_esSmashTeammate[admin].g_iSmashEffect = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esSmashTeammate[admin].g_iSmashEffect, value, -1, 7);
 			g_esSmashTeammate[admin].g_iSmashMessage = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSmashTeammate[admin].g_iSmashMessage, value, -1, 3);
-			g_esSmashTeammate[admin].g_iSmashSight = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esSmashTeammate[admin].g_iSmashSight, value, -1, 2);
+			g_esSmashTeammate[admin].g_iSmashSight = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esSmashTeammate[admin].g_iSmashSight, value, -1, 5);
 			g_esSmashTeammate[admin].g_iSmashBody = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "SmashBody", "Smash Body", "Smash_Body", "body", g_esSmashTeammate[admin].g_iSmashBody, value, -1, 1);
 			g_esSmashTeammate[admin].g_flSmashChance = flGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "SmashChance", "Smash Chance", "Smash_Chance", "chance", g_esSmashTeammate[admin].g_flSmashChance, value, -1.0, 100.0);
 			g_esSmashTeammate[admin].g_iSmashCooldown = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "SmashCooldown", "Smash Cooldown", "Smash_Cooldown", "cooldown", g_esSmashTeammate[admin].g_iSmashCooldown, value, -1, 99999);
@@ -788,7 +788,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esSmashPlayer[admin].g_iSmashAbility = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSmashPlayer[admin].g_iSmashAbility, value, -1, 1);
 			g_esSmashPlayer[admin].g_iSmashEffect = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esSmashPlayer[admin].g_iSmashEffect, value, -1, 7);
 			g_esSmashPlayer[admin].g_iSmashMessage = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSmashPlayer[admin].g_iSmashMessage, value, -1, 3);
-			g_esSmashPlayer[admin].g_iSmashSight = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esSmashPlayer[admin].g_iSmashSight, value, -1, 2);
+			g_esSmashPlayer[admin].g_iSmashSight = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esSmashPlayer[admin].g_iSmashSight, value, -1, 5);
 			g_esSmashPlayer[admin].g_iSmashBody = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "SmashBody", "Smash Body", "Smash_Body", "body", g_esSmashPlayer[admin].g_iSmashBody, value, -1, 1);
 			g_esSmashPlayer[admin].g_flSmashChance = flGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "SmashChance", "Smash Chance", "Smash_Chance", "chance", g_esSmashPlayer[admin].g_flSmashChance, value, -1.0, 100.0);
 			g_esSmashPlayer[admin].g_iSmashCooldown = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "SmashCooldown", "Smash Cooldown", "Smash_Cooldown", "cooldown", g_esSmashPlayer[admin].g_iSmashCooldown, value, -1, 99999);
@@ -819,7 +819,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esSmashSpecial[type].g_iSmashAbility = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSmashSpecial[type].g_iSmashAbility, value, -1, 1);
 			g_esSmashSpecial[type].g_iSmashEffect = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esSmashSpecial[type].g_iSmashEffect, value, -1, 7);
 			g_esSmashSpecial[type].g_iSmashMessage = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSmashSpecial[type].g_iSmashMessage, value, -1, 3);
-			g_esSmashSpecial[type].g_iSmashSight = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esSmashSpecial[type].g_iSmashSight, value, -1, 2);
+			g_esSmashSpecial[type].g_iSmashSight = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esSmashSpecial[type].g_iSmashSight, value, -1, 5);
 			g_esSmashSpecial[type].g_iSmashBody = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "SmashBody", "Smash Body", "Smash_Body", "body", g_esSmashSpecial[type].g_iSmashBody, value, -1, 1);
 			g_esSmashSpecial[type].g_flSmashChance = flGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "SmashChance", "Smash Chance", "Smash_Chance", "chance", g_esSmashSpecial[type].g_flSmashChance, value, -1.0, 100.0);
 			g_esSmashSpecial[type].g_iSmashCooldown = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "SmashCooldown", "Smash Cooldown", "Smash_Cooldown", "cooldown", g_esSmashSpecial[type].g_iSmashCooldown, value, -1, 99999);
@@ -844,7 +844,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esSmashAbility[type].g_iSmashAbility = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSmashAbility[type].g_iSmashAbility, value, -1, 1);
 			g_esSmashAbility[type].g_iSmashEffect = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esSmashAbility[type].g_iSmashEffect, value, -1, 7);
 			g_esSmashAbility[type].g_iSmashMessage = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSmashAbility[type].g_iSmashMessage, value, -1, 3);
-			g_esSmashAbility[type].g_iSmashSight = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esSmashAbility[type].g_iSmashSight, value, -1, 2);
+			g_esSmashAbility[type].g_iSmashSight = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esSmashAbility[type].g_iSmashSight, value, -1, 5);
 			g_esSmashAbility[type].g_iSmashBody = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "SmashBody", "Smash Body", "Smash_Body", "body", g_esSmashAbility[type].g_iSmashBody, value, -1, 1);
 			g_esSmashAbility[type].g_flSmashChance = flGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "SmashChance", "Smash Chance", "Smash_Chance", "chance", g_esSmashAbility[type].g_flSmashChance, value, -1.0, 100.0);
 			g_esSmashAbility[type].g_iSmashCooldown = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "SmashCooldown", "Smash Cooldown", "Smash_Cooldown", "cooldown", g_esSmashAbility[type].g_iSmashCooldown, value, -1, 99999);
@@ -990,7 +990,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			iBoomerId = event.GetInt("attacker"), iBoomer = GetClientOfUserId(iBoomerId);
 		if (bIsBoomer(iBoomer) && bIsSurvivor(iSurvivor) && !bExploded)
 		{
-			vSmashHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esSmashCache[iBoomer].g_flSmashChance, g_esSmashCache[iBoomer].g_iSmashHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+			vSmashHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esSmashCache[iBoomer].g_flSmashChance, g_esSmashCache[iBoomer].g_iSmashHit, MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
 		}
 	}
 }
@@ -1152,6 +1152,11 @@ void vSmashHit(int survivor, int tank, float random, float chance, int enabled, 
 		{
 			if (random <= chance)
 			{
+				if ((messages & MT_MESSAGE_MELEE) && !bIsVisibleToPlayer(tank, survivor, g_esSmashCache[tank].g_iSmashSight, .range = 100.0))
+				{
+					return;
+				}
+
 				if (g_esSmashCache[tank].g_flSmashMeter <= 0.0 || (0.0 < g_esSmashCache[tank].g_flSmashMeter <= g_esSmashPlayer[tank].g_flDamage))
 				{
 					int iCooldown = -1;

@@ -27,16 +27,20 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
-bool g_bDedicated;
+bool g_bDedicated, g_bSecondGame;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	EngineVersion evEngine = GetEngineVersion();
-	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	switch (GetEngineVersion())
 	{
-		strcopy(error, err_max, "\"[MT] Regen Ability\" only supports Left 4 Dead 1 & 2.");
+		case Engine_Left4Dead: g_bSecondGame = false;
+		case Engine_Left4Dead2: g_bSecondGame = true;
+		default:
+		{
+			strcopy(error, err_max, "\"[MT] Regen Ability\" only supports Left 4 Dead 1 & 2.");
 
-		return APLRes_SilentFailure;
+			return APLRes_SilentFailure;
+		}
 	}
 
 	g_bDedicated = IsDedicatedServer();
@@ -610,7 +614,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esRegenTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRegenTeammate[admin].g_iRequiresHumans, value, -1, 32);
 			g_esRegenTeammate[admin].g_iRegenAbility = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRegenTeammate[admin].g_iRegenAbility, value, -1, 1);
 			g_esRegenTeammate[admin].g_iRegenMessage = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRegenTeammate[admin].g_iRegenMessage, value, -1, 1);
-			g_esRegenTeammate[admin].g_iRegenSight = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRegenTeammate[admin].g_iRegenSight, value, -1, 2);
+			g_esRegenTeammate[admin].g_iRegenSight = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRegenTeammate[admin].g_iRegenSight, value, -1, 5);
 			g_esRegenTeammate[admin].g_flRegenChance = flGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenChance", "Regen Chance", "Regen_Chance", "chance", g_esRegenTeammate[admin].g_flRegenChance, value, -1.0, 100.0);
 			g_esRegenTeammate[admin].g_iRegenCooldown = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenCooldown", "Regen Cooldown", "Regen_Cooldown", "cooldown", g_esRegenTeammate[admin].g_iRegenCooldown, value, -1, 99999);
 			g_esRegenTeammate[admin].g_iRegenDuration = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenDuration", "Regen Duration", "Regen_Duration", "duration", g_esRegenTeammate[admin].g_iRegenDuration, value, -1, 99999);
@@ -633,7 +637,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esRegenPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRegenPlayer[admin].g_iRequiresHumans, value, -1, 32);
 			g_esRegenPlayer[admin].g_iRegenAbility = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRegenPlayer[admin].g_iRegenAbility, value, -1, 1);
 			g_esRegenPlayer[admin].g_iRegenMessage = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRegenPlayer[admin].g_iRegenMessage, value, -1, 1);
-			g_esRegenPlayer[admin].g_iRegenSight = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRegenPlayer[admin].g_iRegenSight, value, -1, 2);
+			g_esRegenPlayer[admin].g_iRegenSight = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRegenPlayer[admin].g_iRegenSight, value, -1, 5);
 			g_esRegenPlayer[admin].g_flRegenChance = flGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenChance", "Regen Chance", "Regen_Chance", "chance", g_esRegenPlayer[admin].g_flRegenChance, value, -1.0, 100.0);
 			g_esRegenPlayer[admin].g_iRegenCooldown = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenCooldown", "Regen Cooldown", "Regen_Cooldown", "cooldown", g_esRegenPlayer[admin].g_iRegenCooldown, value, -1, 99999);
 			g_esRegenPlayer[admin].g_iRegenDuration = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenDuration", "Regen Duration", "Regen_Duration", "duration", g_esRegenPlayer[admin].g_iRegenDuration, value, -1, 99999);
@@ -662,7 +666,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esRegenSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRegenSpecial[type].g_iRequiresHumans, value, -1, 32);
 			g_esRegenSpecial[type].g_iRegenAbility = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRegenSpecial[type].g_iRegenAbility, value, -1, 1);
 			g_esRegenSpecial[type].g_iRegenMessage = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRegenSpecial[type].g_iRegenMessage, value, -1, 1);
-			g_esRegenSpecial[type].g_iRegenSight = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRegenSpecial[type].g_iRegenSight, value, -1, 2);
+			g_esRegenSpecial[type].g_iRegenSight = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRegenSpecial[type].g_iRegenSight, value, -1, 5);
 			g_esRegenSpecial[type].g_flRegenChance = flGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenChance", "Regen Chance", "Regen_Chance", "chance", g_esRegenSpecial[type].g_flRegenChance, value, -1.0, 100.0);
 			g_esRegenSpecial[type].g_iRegenCooldown = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenCooldown", "Regen Cooldown", "Regen_Cooldown", "cooldown", g_esRegenSpecial[type].g_iRegenCooldown, value, -1, 99999);
 			g_esRegenSpecial[type].g_iRegenDuration = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenDuration", "Regen Duration", "Regen_Duration", "duration", g_esRegenSpecial[type].g_iRegenDuration, value, -1, 99999);
@@ -685,7 +689,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esRegenAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRegenAbility[type].g_iRequiresHumans, value, -1, 32);
 			g_esRegenAbility[type].g_iRegenAbility = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRegenAbility[type].g_iRegenAbility, value, -1, 1);
 			g_esRegenAbility[type].g_iRegenMessage = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRegenAbility[type].g_iRegenMessage, value, -1, 1);
-			g_esRegenAbility[type].g_iRegenSight = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRegenAbility[type].g_iRegenSight, value, -1, 2);
+			g_esRegenAbility[type].g_iRegenSight = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRegenAbility[type].g_iRegenSight, value, -1, 5);
 			g_esRegenAbility[type].g_flRegenChance = flGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenChance", "Regen Chance", "Regen_Chance", "chance", g_esRegenAbility[type].g_flRegenChance, value, -1.0, 100.0);
 			g_esRegenAbility[type].g_iRegenCooldown = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenCooldown", "Regen Cooldown", "Regen_Cooldown", "cooldown", g_esRegenAbility[type].g_iRegenCooldown, value, -1, 99999);
 			g_esRegenAbility[type].g_iRegenDuration = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenDuration", "Regen Duration", "Regen_Duration", "duration", g_esRegenAbility[type].g_iRegenDuration, value, -1, 99999);

@@ -27,7 +27,7 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
-bool g_bDedicated, g_bSecondGame;
+bool g_bDedicated, g_bLateLoad, g_bSecondGame;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -44,6 +44,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	}
 
 	g_bDedicated = IsDedicatedServer();
+	g_bLateLoad = late;
 
 	return APLRes_Success;
 }
@@ -737,7 +738,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esSplatterTeammate[admin].g_iSplatterAbility = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSplatterTeammate[admin].g_iSplatterAbility, value, -1, 3);
 			g_esSplatterTeammate[admin].g_iSplatterEffect = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esSplatterTeammate[admin].g_iSplatterEffect, value, -1, 7);
 			g_esSplatterTeammate[admin].g_iSplatterMessage = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSplatterTeammate[admin].g_iSplatterMessage, value, -1, 1);
-			g_esSplatterTeammate[admin].g_iSplatterSight = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esSplatterTeammate[admin].g_iSplatterSight, value, -1, 2);
+			g_esSplatterTeammate[admin].g_iSplatterSight = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esSplatterTeammate[admin].g_iSplatterSight, value, -1, 5);
 			g_esSplatterTeammate[admin].g_flSplatterChance = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterChance", "Splatter Chance", "Splatter_Chance", "chance", g_esSplatterTeammate[admin].g_flSplatterChance, value, -1.0, 100.0);
 			g_esSplatterTeammate[admin].g_iSplatterCooldown = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterCooldown", "Splatter Cooldown", "Splatter_Cooldown", "cooldown", g_esSplatterTeammate[admin].g_iSplatterCooldown, value, -1, 99999);
 			g_esSplatterTeammate[admin].g_iSplatterDuration = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterDuration", "Splatter Duration", "Splatter_Duration", "duration", g_esSplatterTeammate[admin].g_iSplatterDuration, value, -1, 99999);
@@ -762,7 +763,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esSplatterPlayer[admin].g_iSplatterAbility = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSplatterPlayer[admin].g_iSplatterAbility, value, -1, 3);
 			g_esSplatterPlayer[admin].g_iSplatterEffect = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esSplatterPlayer[admin].g_iSplatterEffect, value, -1, 7);
 			g_esSplatterPlayer[admin].g_iSplatterMessage = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSplatterPlayer[admin].g_iSplatterMessage, value, -1, 1);
-			g_esSplatterPlayer[admin].g_iSplatterSight = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esSplatterPlayer[admin].g_iSplatterSight, value, -1, 2);
+			g_esSplatterPlayer[admin].g_iSplatterSight = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esSplatterPlayer[admin].g_iSplatterSight, value, -1, 5);
 			g_esSplatterPlayer[admin].g_flSplatterChance = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterChance", "Splatter Chance", "Splatter_Chance", "chance", g_esSplatterPlayer[admin].g_flSplatterChance, value, -1.0, 100.0);
 			g_esSplatterPlayer[admin].g_iSplatterCooldown = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterCooldown", "Splatter Cooldown", "Splatter_Cooldown", "cooldown", g_esSplatterPlayer[admin].g_iSplatterCooldown, value, -1, 99999);
 			g_esSplatterPlayer[admin].g_iSplatterDuration = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterDuration", "Splatter Duration", "Splatter_Duration", "duration", g_esSplatterPlayer[admin].g_iSplatterDuration, value, -1, 99999);
@@ -793,7 +794,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esSplatterSpecial[type].g_iSplatterAbility = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSplatterSpecial[type].g_iSplatterAbility, value, -1, 3);
 			g_esSplatterSpecial[type].g_iSplatterEffect = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esSplatterSpecial[type].g_iSplatterEffect, value, -1, 7);
 			g_esSplatterSpecial[type].g_iSplatterMessage = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSplatterSpecial[type].g_iSplatterMessage, value, -1, 1);
-			g_esSplatterSpecial[type].g_iSplatterSight = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esSplatterSpecial[type].g_iSplatterSight, value, -1, 2);
+			g_esSplatterSpecial[type].g_iSplatterSight = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esSplatterSpecial[type].g_iSplatterSight, value, -1, 5);
 			g_esSplatterSpecial[type].g_flSplatterChance = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterChance", "Splatter Chance", "Splatter_Chance", "chance", g_esSplatterSpecial[type].g_flSplatterChance, value, -1.0, 100.0);
 			g_esSplatterSpecial[type].g_iSplatterCooldown = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterCooldown", "Splatter Cooldown", "Splatter_Cooldown", "cooldown", g_esSplatterSpecial[type].g_iSplatterCooldown, value, -1, 99999);
 			g_esSplatterSpecial[type].g_iSplatterDuration = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterDuration", "Splatter Duration", "Splatter_Duration", "duration", g_esSplatterSpecial[type].g_iSplatterDuration, value, -1, 99999);
@@ -818,7 +819,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esSplatterAbility[type].g_iSplatterAbility = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSplatterAbility[type].g_iSplatterAbility, value, -1, 3);
 			g_esSplatterAbility[type].g_iSplatterEffect = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esSplatterAbility[type].g_iSplatterEffect, value, -1, 7);
 			g_esSplatterAbility[type].g_iSplatterMessage = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSplatterAbility[type].g_iSplatterMessage, value, -1, 1);
-			g_esSplatterAbility[type].g_iSplatterSight = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esSplatterAbility[type].g_iSplatterSight, value, -1, 2);
+			g_esSplatterAbility[type].g_iSplatterSight = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esSplatterAbility[type].g_iSplatterSight, value, -1, 5);
 			g_esSplatterAbility[type].g_flSplatterChance = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterChance", "Splatter Chance", "Splatter_Chance", "chance", g_esSplatterAbility[type].g_flSplatterChance, value, -1.0, 100.0);
 			g_esSplatterAbility[type].g_iSplatterCooldown = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterCooldown", "Splatter Cooldown", "Splatter_Cooldown", "cooldown", g_esSplatterAbility[type].g_iSplatterCooldown, value, -1, 99999);
 			g_esSplatterAbility[type].g_iSplatterDuration = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterDuration", "Splatter Duration", "Splatter_Duration", "duration", g_esSplatterAbility[type].g_iSplatterDuration, value, -1, 99999);
@@ -1084,6 +1085,11 @@ void vSplatterHit(int survivor, int tank, float random, float chance, int enable
 		{
 			if (random <= chance && !g_esSplatterPlayer[survivor].g_bAffected)
 			{
+				if ((messages & MT_MESSAGE_MELEE) && !bIsVisibleToPlayer(tank, survivor, g_esSplatterCache[tank].g_iSplatterSight, .range = 100.0))
+				{
+					return;
+				}
+
 				g_esSplatterPlayer[survivor].g_bAffected = true;
 				g_esSplatterPlayer[survivor].g_iOwner = tank;
 

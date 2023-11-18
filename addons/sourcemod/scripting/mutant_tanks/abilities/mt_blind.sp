@@ -738,7 +738,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esBlindTeammate[admin].g_iBlindAbility = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esBlindTeammate[admin].g_iBlindAbility, value, -1, 1);
 			g_esBlindTeammate[admin].g_iBlindEffect = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esBlindTeammate[admin].g_iBlindEffect, value, -1, 7);
 			g_esBlindTeammate[admin].g_iBlindMessage = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esBlindTeammate[admin].g_iBlindMessage, value, -1, 3);
-			g_esBlindTeammate[admin].g_iBlindSight = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esBlindTeammate[admin].g_iBlindSight, value, -1, 2);
+			g_esBlindTeammate[admin].g_iBlindSight = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esBlindTeammate[admin].g_iBlindSight, value, -1, 5);
 			g_esBlindTeammate[admin].g_flBlindChance = flGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "BlindChance", "Blind Chance", "Blind_Chance", "chance", g_esBlindTeammate[admin].g_flBlindChance, value, -1.0, 100.0);
 			g_esBlindTeammate[admin].g_iBlindCooldown = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "BlindCooldown", "Blind Cooldown", "Blind_Cooldown", "cooldown", g_esBlindTeammate[admin].g_iBlindCooldown, value, -1, 99999);
 			g_esBlindTeammate[admin].g_flBlindDuration = flGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "BlindDuration", "Blind Duration", "Blind_Duration", "duration", g_esBlindTeammate[admin].g_flBlindDuration, value, -1.0, 99999.0);
@@ -764,7 +764,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esBlindPlayer[admin].g_iBlindAbility = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esBlindPlayer[admin].g_iBlindAbility, value, -1, 1);
 			g_esBlindPlayer[admin].g_iBlindEffect = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esBlindPlayer[admin].g_iBlindEffect, value, -1, 7);
 			g_esBlindPlayer[admin].g_iBlindMessage = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esBlindPlayer[admin].g_iBlindMessage, value, -1, 3);
-			g_esBlindPlayer[admin].g_iBlindSight = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esBlindPlayer[admin].g_iBlindSight, value, -1, 2);
+			g_esBlindPlayer[admin].g_iBlindSight = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esBlindPlayer[admin].g_iBlindSight, value, -1, 5);
 			g_esBlindPlayer[admin].g_flBlindChance = flGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "BlindChance", "Blind Chance", "Blind_Chance", "chance", g_esBlindPlayer[admin].g_flBlindChance, value, -1.0, 100.0);
 			g_esBlindPlayer[admin].g_iBlindCooldown = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "BlindCooldown", "Blind Cooldown", "Blind_Cooldown", "cooldown", g_esBlindPlayer[admin].g_iBlindCooldown, value, -1, 99999);
 			g_esBlindPlayer[admin].g_flBlindDuration = flGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "BlindDuration", "Blind Duration", "Blind_Duration", "duration", g_esBlindPlayer[admin].g_flBlindDuration, value, -1.0, 99999.0);
@@ -796,7 +796,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esBlindSpecial[type].g_iBlindAbility = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esBlindSpecial[type].g_iBlindAbility, value, -1, 1);
 			g_esBlindSpecial[type].g_iBlindEffect = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esBlindSpecial[type].g_iBlindEffect, value, -1, 7);
 			g_esBlindSpecial[type].g_iBlindMessage = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esBlindSpecial[type].g_iBlindMessage, value, -1, 3);
-			g_esBlindSpecial[type].g_iBlindSight = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esBlindSpecial[type].g_iBlindSight, value, -1, 2);
+			g_esBlindSpecial[type].g_iBlindSight = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esBlindSpecial[type].g_iBlindSight, value, -1, 5);
 			g_esBlindSpecial[type].g_flBlindChance = flGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "BlindChance", "Blind Chance", "Blind_Chance", "chance", g_esBlindSpecial[type].g_flBlindChance, value, -1.0, 100.0);
 			g_esBlindSpecial[type].g_iBlindCooldown = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "BlindCooldown", "Blind Cooldown", "Blind_Cooldown", "cooldown", g_esBlindSpecial[type].g_iBlindCooldown, value, -1, 99999);
 			g_esBlindSpecial[type].g_flBlindDuration = flGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "BlindDuration", "Blind Duration", "Blind_Duration", "duration", g_esBlindSpecial[type].g_flBlindDuration, value, -1.0, 99999.0);
@@ -822,7 +822,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esBlindAbility[type].g_iBlindAbility = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esBlindAbility[type].g_iBlindAbility, value, -1, 1);
 			g_esBlindAbility[type].g_iBlindEffect = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esBlindAbility[type].g_iBlindEffect, value, -1, 7);
 			g_esBlindAbility[type].g_iBlindMessage = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esBlindAbility[type].g_iBlindMessage, value, -1, 3);
-			g_esBlindAbility[type].g_iBlindSight = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esBlindAbility[type].g_iBlindSight, value, -1, 2);
+			g_esBlindAbility[type].g_iBlindSight = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esBlindAbility[type].g_iBlindSight, value, -1, 5);
 			g_esBlindAbility[type].g_flBlindChance = flGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "BlindChance", "Blind Chance", "Blind_Chance", "chance", g_esBlindAbility[type].g_flBlindChance, value, -1.0, 100.0);
 			g_esBlindAbility[type].g_iBlindCooldown = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "BlindCooldown", "Blind Cooldown", "Blind_Cooldown", "cooldown", g_esBlindAbility[type].g_iBlindCooldown, value, -1, 99999);
 			g_esBlindAbility[type].g_flBlindDuration = flGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "BlindDuration", "Blind Duration", "Blind_Duration", "duration", g_esBlindAbility[type].g_flBlindDuration, value, -1.0, 99999.0);
@@ -990,7 +990,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			iBoomerId = event.GetInt("attacker"), iBoomer = GetClientOfUserId(iBoomerId);
 		if (bIsBoomer(iBoomer) && bIsSurvivor(iSurvivor) && !bExploded)
 		{
-			vBlindHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esBlindCache[iBoomer].g_flBlindChance, g_esBlindCache[iBoomer].g_iBlindHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+			vBlindHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esBlindCache[iBoomer].g_flBlindChance, g_esBlindCache[iBoomer].g_iBlindHit, MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
 		}
 	}
 }
@@ -1163,6 +1163,11 @@ void vBlindHit(int survivor, int tank, float random, float chance, int enabled, 
 		{
 			if (random <= chance && !g_esBlindPlayer[survivor].g_bAffected)
 			{
+				if ((messages & MT_MESSAGE_MELEE) && !bIsVisibleToPlayer(tank, survivor, g_esBlindCache[tank].g_iBlindSight, .range = 100.0))
+				{
+					return;
+				}
+
 				g_esBlindPlayer[survivor].g_bAffected = true;
 				g_esBlindPlayer[survivor].g_iOwner = tank;
 

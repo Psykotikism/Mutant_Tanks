@@ -740,7 +740,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esSmiteTeammate[admin].g_iSmiteAbility = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSmiteTeammate[admin].g_iSmiteAbility, value, -1, 1);
 			g_esSmiteTeammate[admin].g_iSmiteEffect = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esSmiteTeammate[admin].g_iSmiteEffect, value, -1, 7);
 			g_esSmiteTeammate[admin].g_iSmiteMessage = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSmiteTeammate[admin].g_iSmiteMessage, value, -1, 3);
-			g_esSmiteTeammate[admin].g_iSmiteSight = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esSmiteTeammate[admin].g_iSmiteSight, value, -1, 2);
+			g_esSmiteTeammate[admin].g_iSmiteSight = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esSmiteTeammate[admin].g_iSmiteSight, value, -1, 5);
 			g_esSmiteTeammate[admin].g_iSmiteBody = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteBody", "Smite Body", "Smite_Body", "body", g_esSmiteTeammate[admin].g_iSmiteBody, value, -1, 1);
 			g_esSmiteTeammate[admin].g_flSmiteChance = flGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteChance", "Smite Chance", "Smite_Chance", "chance", g_esSmiteTeammate[admin].g_flSmiteChance, value, -1.0, 100.0);
 			g_esSmiteTeammate[admin].g_iSmiteCooldown = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteCooldown", "Smite Cooldown", "Smite_Cooldown", "cooldown", g_esSmiteTeammate[admin].g_iSmiteCooldown, value, -1, 99999);
@@ -765,7 +765,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esSmitePlayer[admin].g_iSmiteAbility = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSmitePlayer[admin].g_iSmiteAbility, value, -1, 1);
 			g_esSmitePlayer[admin].g_iSmiteEffect = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esSmitePlayer[admin].g_iSmiteEffect, value, -1, 7);
 			g_esSmitePlayer[admin].g_iSmiteMessage = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSmitePlayer[admin].g_iSmiteMessage, value, -1, 3);
-			g_esSmitePlayer[admin].g_iSmiteSight = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esSmitePlayer[admin].g_iSmiteSight, value, -1, 2);
+			g_esSmitePlayer[admin].g_iSmiteSight = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esSmitePlayer[admin].g_iSmiteSight, value, -1, 5);
 			g_esSmitePlayer[admin].g_iSmiteBody = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteBody", "Smite Body", "Smite_Body", "body", g_esSmitePlayer[admin].g_iSmiteBody, value, -1, 1);
 			g_esSmitePlayer[admin].g_flSmiteChance = flGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteChance", "Smite Chance", "Smite_Chance", "chance", g_esSmitePlayer[admin].g_flSmiteChance, value, -1.0, 100.0);
 			g_esSmitePlayer[admin].g_iSmiteCooldown = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteCooldown", "Smite Cooldown", "Smite_Cooldown", "cooldown", g_esSmitePlayer[admin].g_iSmiteCooldown, value, -1, 99999);
@@ -796,7 +796,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esSmiteSpecial[type].g_iSmiteAbility = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSmiteSpecial[type].g_iSmiteAbility, value, -1, 1);
 			g_esSmiteSpecial[type].g_iSmiteEffect = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esSmiteSpecial[type].g_iSmiteEffect, value, -1, 7);
 			g_esSmiteSpecial[type].g_iSmiteMessage = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSmiteSpecial[type].g_iSmiteMessage, value, -1, 3);
-			g_esSmiteSpecial[type].g_iSmiteSight = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esSmiteSpecial[type].g_iSmiteSight, value, -1, 2);
+			g_esSmiteSpecial[type].g_iSmiteSight = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esSmiteSpecial[type].g_iSmiteSight, value, -1, 5);
 			g_esSmiteSpecial[type].g_iSmiteBody = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteBody", "Smite Body", "Smite_Body", "body", g_esSmiteSpecial[type].g_iSmiteBody, value, -1, 1);
 			g_esSmiteSpecial[type].g_flSmiteChance = flGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteChance", "Smite Chance", "Smite_Chance", "chance", g_esSmiteSpecial[type].g_flSmiteChance, value, -1.0, 100.0);
 			g_esSmiteSpecial[type].g_iSmiteCooldown = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteCooldown", "Smite Cooldown", "Smite_Cooldown", "cooldown", g_esSmiteSpecial[type].g_iSmiteCooldown, value, -1, 99999);
@@ -821,7 +821,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esSmiteAbility[type].g_iSmiteAbility = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSmiteAbility[type].g_iSmiteAbility, value, -1, 1);
 			g_esSmiteAbility[type].g_iSmiteEffect = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esSmiteAbility[type].g_iSmiteEffect, value, -1, 7);
 			g_esSmiteAbility[type].g_iSmiteMessage = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSmiteAbility[type].g_iSmiteMessage, value, -1, 3);
-			g_esSmiteAbility[type].g_iSmiteSight = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esSmiteAbility[type].g_iSmiteSight, value, -1, 2);
+			g_esSmiteAbility[type].g_iSmiteSight = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esSmiteAbility[type].g_iSmiteSight, value, -1, 5);
 			g_esSmiteAbility[type].g_iSmiteBody = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteBody", "Smite Body", "Smite_Body", "body", g_esSmiteAbility[type].g_iSmiteBody, value, -1, 1);
 			g_esSmiteAbility[type].g_flSmiteChance = flGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteChance", "Smite Chance", "Smite_Chance", "chance", g_esSmiteAbility[type].g_flSmiteChance, value, -1.0, 100.0);
 			g_esSmiteAbility[type].g_iSmiteCooldown = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteCooldown", "Smite Cooldown", "Smite_Cooldown", "cooldown", g_esSmiteAbility[type].g_iSmiteCooldown, value, -1, 99999);
@@ -972,7 +972,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			iBoomerId = event.GetInt("attacker"), iBoomer = GetClientOfUserId(iBoomerId);
 		if (bIsBoomer(iBoomer) && bIsSurvivor(iSurvivor) && !bExploded)
 		{
-			vSmiteHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esSmiteCache[iBoomer].g_flSmiteChance, g_esSmiteCache[iBoomer].g_iSmiteHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+			vSmiteHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esSmiteCache[iBoomer].g_flSmiteChance, g_esSmiteCache[iBoomer].g_iSmiteHit, MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
 		}
 	}
 	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
@@ -1175,6 +1175,11 @@ void vSmiteHit(int survivor, int tank, float random, float chance, int enabled, 
 		{
 			if (random <= chance)
 			{
+				if ((messages & MT_MESSAGE_MELEE) && !bIsVisibleToPlayer(tank, survivor, g_esSmiteCache[tank].g_iSmiteSight, .range = 100.0))
+				{
+					return;
+				}
+
 				int iCooldown = -1;
 				if ((flags & MT_ATTACK_RANGE) && (g_esSmitePlayer[tank].g_iRangeCooldown == -1 || g_esSmitePlayer[tank].g_iRangeCooldown <= iTime))
 				{
@@ -1251,10 +1256,10 @@ void vRemoveSmite(int tank)
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME) && g_esNullifyPlayer[iSurvivor].g_bAffected && g_esNullifyPlayer[iSurvivor].g_iOwner == tank)
+		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME) && g_esSmitePlayer[iSurvivor].g_bAffected && g_esSmitePlayer[iSurvivor].g_iOwner == tank)
 		{
-			g_esNullifyPlayer[iSurvivor].g_bAffected = false;
-			g_esNullifyPlayer[iSurvivor].g_iOwner = -1;
+			g_esSmitePlayer[iSurvivor].g_bAffected = false;
+			g_esSmitePlayer[iSurvivor].g_iOwner = -1;
 		}
 	}
 

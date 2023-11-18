@@ -694,7 +694,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esVisionTeammate[admin].g_iVisionAbility = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esVisionTeammate[admin].g_iVisionAbility, value, -1, 1);
 			g_esVisionTeammate[admin].g_iVisionEffect = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esVisionTeammate[admin].g_iVisionEffect, value, -1, 7);
 			g_esVisionTeammate[admin].g_iVisionMessage = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esVisionTeammate[admin].g_iVisionMessage, value, -1, 3);
-			g_esVisionTeammate[admin].g_iVisionSight = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esVisionTeammate[admin].g_iVisionSight, value, -1, 2);
+			g_esVisionTeammate[admin].g_iVisionSight = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esVisionTeammate[admin].g_iVisionSight, value, -1, 5);
 			g_esVisionTeammate[admin].g_flVisionChance = flGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionChance", "Vision Chance", "Vision_Chance", "chance", g_esVisionTeammate[admin].g_flVisionChance, value, -1.0, 100.0);
 			g_esVisionTeammate[admin].g_iVisionCooldown = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionCooldown", "Vision Cooldown", "Vision_Cooldown", "cooldown", g_esVisionTeammate[admin].g_iVisionCooldown, value, -1, 99999);
 			g_esVisionTeammate[admin].g_iVisionDuration = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionDuration", "Vision Duration", "Vision_Duration", "duration", g_esVisionTeammate[admin].g_iVisionDuration, value, -1, 99999);
@@ -718,7 +718,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esVisionPlayer[admin].g_iVisionAbility = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esVisionPlayer[admin].g_iVisionAbility, value, -1, 1);
 			g_esVisionPlayer[admin].g_iVisionEffect = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esVisionPlayer[admin].g_iVisionEffect, value, -1, 7);
 			g_esVisionPlayer[admin].g_iVisionMessage = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esVisionPlayer[admin].g_iVisionMessage, value, -1, 3);
-			g_esVisionPlayer[admin].g_iVisionSight = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esVisionPlayer[admin].g_iVisionSight, value, -1, 2);
+			g_esVisionPlayer[admin].g_iVisionSight = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esVisionPlayer[admin].g_iVisionSight, value, -1, 5);
 			g_esVisionPlayer[admin].g_flVisionChance = flGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionChance", "Vision Chance", "Vision_Chance", "chance", g_esVisionPlayer[admin].g_flVisionChance, value, -1.0, 100.0);
 			g_esVisionPlayer[admin].g_iVisionCooldown = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionCooldown", "Vision Cooldown", "Vision_Cooldown", "cooldown", g_esVisionPlayer[admin].g_iVisionCooldown, value, -1, 99999);
 			g_esVisionPlayer[admin].g_iVisionDuration = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionDuration", "Vision Duration", "Vision_Duration", "duration", g_esVisionPlayer[admin].g_iVisionDuration, value, -1, 99999);
@@ -748,7 +748,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esVisionSpecial[type].g_iVisionAbility = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esVisionSpecial[type].g_iVisionAbility, value, -1, 1);
 			g_esVisionSpecial[type].g_iVisionEffect = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esVisionSpecial[type].g_iVisionEffect, value, -1, 7);
 			g_esVisionSpecial[type].g_iVisionMessage = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esVisionSpecial[type].g_iVisionMessage, value, -1, 3);
-			g_esVisionSpecial[type].g_iVisionSight = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esVisionSpecial[type].g_iVisionSight, value, -1, 2);
+			g_esVisionSpecial[type].g_iVisionSight = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esVisionSpecial[type].g_iVisionSight, value, -1, 5);
 			g_esVisionSpecial[type].g_flVisionChance = flGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionChance", "Vision Chance", "Vision_Chance", "chance", g_esVisionSpecial[type].g_flVisionChance, value, -1.0, 100.0);
 			g_esVisionSpecial[type].g_iVisionCooldown = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionCooldown", "Vision Cooldown", "Vision_Cooldown", "cooldown", g_esVisionSpecial[type].g_iVisionCooldown, value, -1, 99999);
 			g_esVisionSpecial[type].g_iVisionDuration = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionDuration", "Vision Duration", "Vision_Duration", "duration", g_esVisionSpecial[type].g_iVisionDuration, value, -1, 99999);
@@ -772,7 +772,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esVisionAbility[type].g_iVisionAbility = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esVisionAbility[type].g_iVisionAbility, value, -1, 1);
 			g_esVisionAbility[type].g_iVisionEffect = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esVisionAbility[type].g_iVisionEffect, value, -1, 7);
 			g_esVisionAbility[type].g_iVisionMessage = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esVisionAbility[type].g_iVisionMessage, value, -1, 3);
-			g_esVisionAbility[type].g_iVisionSight = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esVisionAbility[type].g_iVisionSight, value, -1, 2);
+			g_esVisionAbility[type].g_iVisionSight = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esVisionAbility[type].g_iVisionSight, value, -1, 5);
 			g_esVisionAbility[type].g_flVisionChance = flGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionChance", "Vision Chance", "Vision_Chance", "chance", g_esVisionAbility[type].g_flVisionChance, value, -1.0, 100.0);
 			g_esVisionAbility[type].g_iVisionCooldown = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionCooldown", "Vision Cooldown", "Vision_Cooldown", "cooldown", g_esVisionAbility[type].g_iVisionCooldown, value, -1, 99999);
 			g_esVisionAbility[type].g_iVisionDuration = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionDuration", "Vision Duration", "Vision_Duration", "duration", g_esVisionAbility[type].g_iVisionDuration, value, -1, 99999);
@@ -931,7 +931,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			iBoomerId = event.GetInt("attacker"), iBoomer = GetClientOfUserId(iBoomerId);
 		if (bIsBoomer(iBoomer) && bIsSurvivor(iSurvivor) && !bExploded)
 		{
-			vVisionHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esVisionCache[iBoomer].g_flVisionChance, g_esVisionCache[iBoomer].g_iVisionHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+			vVisionHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esVisionCache[iBoomer].g_flVisionChance, g_esVisionCache[iBoomer].g_iVisionHit, MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
 		}
 	}
 }
@@ -1057,6 +1057,11 @@ void vVisionHit(int survivor, int tank, float random, float chance, int enabled,
 		{
 			if (random <= chance && !g_esVisionPlayer[survivor].g_bAffected)
 			{
+				if ((messages & MT_MESSAGE_MELEE) && !bIsVisibleToPlayer(tank, survivor, g_esVisionCache[tank].g_iVisionSight, .range = 100.0))
+				{
+					return;
+				}
+
 				g_esVisionPlayer[survivor].g_bAffected = true;
 				g_esVisionPlayer[survivor].g_iOwner = tank;
 

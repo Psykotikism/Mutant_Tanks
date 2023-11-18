@@ -832,7 +832,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esHealTeammate[admin].g_iHealAbility = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esHealTeammate[admin].g_iHealAbility, value, -1, 3);
 			g_esHealTeammate[admin].g_iHealEffect = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esHealTeammate[admin].g_iHealEffect, value, -1, 7);
 			g_esHealTeammate[admin].g_iHealMessage = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esHealTeammate[admin].g_iHealMessage, value, -1, 7);
-			g_esHealTeammate[admin].g_iHealSight = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esHealTeammate[admin].g_iHealSight, value, -1, 2);
+			g_esHealTeammate[admin].g_iHealSight = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esHealTeammate[admin].g_iHealSight, value, -1, 5);
 			g_esHealTeammate[admin].g_flHealAbsorbRange = flGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HealAbsorbRange", "Heal Absorb Range", "Heal_Absorb_Range", "absorbrange", g_esHealTeammate[admin].g_flHealAbsorbRange, value, -1.0, 99999.0);
 			g_esHealTeammate[admin].g_flHealBuffer = flGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HealBuffer", "Heal Buffer", "Heal_Buffer", "buffer", g_esHealTeammate[admin].g_flHealBuffer, value, -1.0, float(MT_MAXHEALTH));
 			g_esHealTeammate[admin].g_flHealChance = flGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HealChance", "Heal Chance", "Heal_Chance", "chance", g_esHealTeammate[admin].g_flHealChance, value, -1.0, 100.0);
@@ -864,7 +864,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esHealPlayer[admin].g_iHealAbility = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esHealPlayer[admin].g_iHealAbility, value, -1, 3);
 			g_esHealPlayer[admin].g_iHealEffect = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esHealPlayer[admin].g_iHealEffect, value, -1, 7);
 			g_esHealPlayer[admin].g_iHealMessage = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esHealPlayer[admin].g_iHealMessage, value, -1, 7);
-			g_esHealPlayer[admin].g_iHealSight = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esHealPlayer[admin].g_iHealSight, value, -1, 2);
+			g_esHealPlayer[admin].g_iHealSight = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esHealPlayer[admin].g_iHealSight, value, -1, 5);
 			g_esHealPlayer[admin].g_flHealAbsorbRange = flGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HealAbsorbRange", "Heal Absorb Range", "Heal_Absorb_Range", "absorbrange", g_esHealPlayer[admin].g_flHealAbsorbRange, value, -1.0, 99999.0);
 			g_esHealPlayer[admin].g_flHealBuffer = flGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HealBuffer", "Heal Buffer", "Heal_Buffer", "buffer", g_esHealPlayer[admin].g_flHealBuffer, value, -1.0, float(MT_MAXHEALTH));
 			g_esHealPlayer[admin].g_flHealChance = flGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HealChance", "Heal Chance", "Heal_Chance", "chance", g_esHealPlayer[admin].g_flHealChance, value, -1.0, 100.0);
@@ -902,7 +902,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esHealSpecial[type].g_iHealAbility = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esHealSpecial[type].g_iHealAbility, value, -1, 3);
 			g_esHealSpecial[type].g_iHealEffect = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esHealSpecial[type].g_iHealEffect, value, -1, 7);
 			g_esHealSpecial[type].g_iHealMessage = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esHealSpecial[type].g_iHealMessage, value, -1, 7);
-			g_esHealSpecial[type].g_iHealSight = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esHealSpecial[type].g_iHealSight, value, -1, 2);
+			g_esHealSpecial[type].g_iHealSight = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esHealSpecial[type].g_iHealSight, value, -1, 5);
 			g_esHealSpecial[type].g_flHealAbsorbRange = flGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HealAbsorbRange", "Heal Absorb Range", "Heal_Absorb_Range", "absorbrange", g_esHealSpecial[type].g_flHealAbsorbRange, value, -1.0, 99999.0);
 			g_esHealSpecial[type].g_flHealBuffer = flGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HealBuffer", "Heal Buffer", "Heal_Buffer", "buffer", g_esHealSpecial[type].g_flHealBuffer, value, -1.0, float(MT_MAXHEALTH));
 			g_esHealSpecial[type].g_flHealChance = flGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HealChance", "Heal Chance", "Heal_Chance", "chance", g_esHealSpecial[type].g_flHealChance, value, -1.0, 100.0);
@@ -934,7 +934,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esHealAbility[type].g_iHealAbility = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esHealAbility[type].g_iHealAbility, value, -1, 3);
 			g_esHealAbility[type].g_iHealEffect = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esHealAbility[type].g_iHealEffect, value, -1, 7);
 			g_esHealAbility[type].g_iHealMessage = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esHealAbility[type].g_iHealMessage, value, -1, 7);
-			g_esHealAbility[type].g_iHealSight = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esHealAbility[type].g_iHealSight, value, -1, 2);
+			g_esHealAbility[type].g_iHealSight = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esHealAbility[type].g_iHealSight, value, -1, 5);
 			g_esHealAbility[type].g_flHealAbsorbRange = flGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HealAbsorbRange", "Heal Absorb Range", "Heal_Absorb_Range", "absorbrange", g_esHealAbility[type].g_flHealAbsorbRange, value, -1.0, 99999.0);
 			g_esHealAbility[type].g_flHealBuffer = flGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HealBuffer", "Heal Buffer", "Heal_Buffer", "buffer", g_esHealAbility[type].g_flHealBuffer, value, -1.0, float(MT_MAXHEALTH));
 			g_esHealAbility[type].g_flHealChance = flGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HealChance", "Heal Chance", "Heal_Chance", "chance", g_esHealAbility[type].g_flHealChance, value, -1.0, 100.0);
@@ -1124,7 +1124,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			iBoomerId = event.GetInt("attacker"), iBoomer = GetClientOfUserId(iBoomerId);
 		if (bIsBoomer(iBoomer) && bIsSurvivor(iSurvivor) && !bExploded)
 		{
-			vHealHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esHealCache[iBoomer].g_flHealChance, g_esHealCache[iBoomer].g_iHealHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+			vHealHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esHealCache[iBoomer].g_flHealChance, g_esHealCache[iBoomer].g_iHealHit, MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
 		}
 	}
 }
@@ -1383,6 +1383,11 @@ void vHealHit(int survivor, int tank, float random, float chance, int enabled, i
 		{
 			if (random <= chance && GetEntProp(survivor, Prop_Data, "m_iHealth") > 0 && !g_esHealPlayer[survivor].g_bAffected)
 			{
+				if ((messages & MT_MESSAGE_MELEE) && !bIsVisibleToPlayer(tank, survivor, g_esHealCache[tank].g_iHealSight, .range = 100.0))
+				{
+					return;
+				}
+
 				g_esHealPlayer[survivor].g_bAffected = true;
 
 				int iCooldown = -1;

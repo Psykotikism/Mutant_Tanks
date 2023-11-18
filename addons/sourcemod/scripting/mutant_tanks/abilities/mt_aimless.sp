@@ -733,7 +733,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esAimlessTeammate[admin].g_iAimlessAbility = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAimlessTeammate[admin].g_iAimlessAbility, value, -1, 1);
 			g_esAimlessTeammate[admin].g_iAimlessEffect = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAimlessTeammate[admin].g_iAimlessEffect, value, -1, 7);
 			g_esAimlessTeammate[admin].g_iAimlessMessage = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAimlessTeammate[admin].g_iAimlessMessage, value, -1, 3);
-			g_esAimlessTeammate[admin].g_iAimlessSight = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esAimlessTeammate[admin].g_iAimlessSight, value, -1, 2);
+			g_esAimlessTeammate[admin].g_iAimlessSight = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esAimlessTeammate[admin].g_iAimlessSight, value, -1, 5);
 			g_esAimlessTeammate[admin].g_flAimlessChance = flGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "AimlessChance", "Aimless Chance", "Aimless_Chance", "chance", g_esAimlessTeammate[admin].g_flAimlessChance, value, -1.0, 100.0);
 			g_esAimlessTeammate[admin].g_iAimlessCooldown = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "AimlessCooldown", "Aimless Cooldown", "Aimless_Cooldown", "cooldown", g_esAimlessTeammate[admin].g_iAimlessCooldown, value, -1, 99999);
 			g_esAimlessTeammate[admin].g_flAimlessDuration = flGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "AimlessDuration", "Aimless Duration", "Aimless_Duration", "duration", g_esAimlessTeammate[admin].g_flAimlessDuration, value, -1.0, 99999.0);
@@ -757,7 +757,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esAimlessPlayer[admin].g_iAimlessAbility = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAimlessPlayer[admin].g_iAimlessAbility, value, -1, 1);
 			g_esAimlessPlayer[admin].g_iAimlessEffect = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAimlessPlayer[admin].g_iAimlessEffect, value, -1, 7);
 			g_esAimlessPlayer[admin].g_iAimlessMessage = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAimlessPlayer[admin].g_iAimlessMessage, value, -1, 3);
-			g_esAimlessPlayer[admin].g_iAimlessSight = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esAimlessPlayer[admin].g_iAimlessSight, value, -1, 2);
+			g_esAimlessPlayer[admin].g_iAimlessSight = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esAimlessPlayer[admin].g_iAimlessSight, value, -1, 5);
 			g_esAimlessPlayer[admin].g_flAimlessChance = flGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "AimlessChance", "Aimless Chance", "Aimless_Chance", "chance", g_esAimlessPlayer[admin].g_flAimlessChance, value, -1.0, 100.0);
 			g_esAimlessPlayer[admin].g_iAimlessCooldown = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "AimlessCooldown", "Aimless Cooldown", "Aimless_Cooldown", "cooldown", g_esAimlessPlayer[admin].g_iAimlessCooldown, value, -1, 99999);
 			g_esAimlessPlayer[admin].g_flAimlessDuration = flGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "AimlessDuration", "Aimless Duration", "Aimless_Duration", "duration", g_esAimlessPlayer[admin].g_flAimlessDuration, value, -1.0, 99999.0);
@@ -787,7 +787,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esAimlessSpecial[type].g_iAimlessAbility = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAimlessSpecial[type].g_iAimlessAbility, value, -1, 1);
 			g_esAimlessSpecial[type].g_iAimlessEffect = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAimlessSpecial[type].g_iAimlessEffect, value, -1, 7);
 			g_esAimlessSpecial[type].g_iAimlessMessage = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAimlessSpecial[type].g_iAimlessMessage, value, -1, 3);
-			g_esAimlessSpecial[type].g_iAimlessSight = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esAimlessSpecial[type].g_iAimlessSight, value, -1, 2);
+			g_esAimlessSpecial[type].g_iAimlessSight = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esAimlessSpecial[type].g_iAimlessSight, value, -1, 5);
 			g_esAimlessSpecial[type].g_flAimlessChance = flGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "AimlessChance", "Aimless Chance", "Aimless_Chance", "chance", g_esAimlessSpecial[type].g_flAimlessChance, value, -1.0, 100.0);
 			g_esAimlessSpecial[type].g_iAimlessCooldown = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "AimlessCooldown", "Aimless Cooldown", "Aimless_Cooldown", "cooldown", g_esAimlessSpecial[type].g_iAimlessCooldown, value, -1, 99999);
 			g_esAimlessSpecial[type].g_flAimlessDuration = flGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "AimlessDuration", "Aimless Duration", "Aimless_Duration", "duration", g_esAimlessSpecial[type].g_flAimlessDuration, value, -1.0, 99999.0);
@@ -811,7 +811,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esAimlessAbility[type].g_iAimlessAbility = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAimlessAbility[type].g_iAimlessAbility, value, -1, 1);
 			g_esAimlessAbility[type].g_iAimlessEffect = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAimlessAbility[type].g_iAimlessEffect, value, -1, 7);
 			g_esAimlessAbility[type].g_iAimlessMessage = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAimlessAbility[type].g_iAimlessMessage, value, -1, 3);
-			g_esAimlessAbility[type].g_iAimlessSight = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esAimlessAbility[type].g_iAimlessSight, value, -1, 2);
+			g_esAimlessAbility[type].g_iAimlessSight = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esAimlessAbility[type].g_iAimlessSight, value, -1, 5);
 			g_esAimlessAbility[type].g_flAimlessChance = flGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "AimlessChance", "Aimless Chance", "Aimless_Chance", "chance", g_esAimlessAbility[type].g_flAimlessChance, value, -1.0, 100.0);
 			g_esAimlessAbility[type].g_iAimlessCooldown = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "AimlessCooldown", "Aimless Cooldown", "Aimless_Cooldown", "cooldown", g_esAimlessAbility[type].g_iAimlessCooldown, value, -1, 99999);
 			g_esAimlessAbility[type].g_flAimlessDuration = flGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "AimlessDuration", "Aimless Duration", "Aimless_Duration", "duration", g_esAimlessAbility[type].g_flAimlessDuration, value, -1.0, 99999.0);
@@ -976,7 +976,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			iBoomerId = event.GetInt("attacker"), iBoomer = GetClientOfUserId(iBoomerId);
 		if (bIsBoomer(iBoomer) && bIsSurvivor(iSurvivor) && !bExploded)
 		{
-			vAimlessHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esAimlessCache[iBoomer].g_flAimlessChance, g_esAimlessCache[iBoomer].g_iAimlessHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+			vAimlessHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esAimlessCache[iBoomer].g_flAimlessChance, g_esAimlessCache[iBoomer].g_iAimlessHit, MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
 		}
 	}
 	else if (StrEqual(name, "weapon_fire"))
@@ -1114,6 +1114,11 @@ void vAimlessHit(int survivor, int tank, float random, float chance, int enabled
 		{
 			if (random <= chance && !g_esAimlessPlayer[survivor].g_bAffected)
 			{
+				if ((messages & MT_MESSAGE_MELEE) && !bIsVisibleToPlayer(tank, survivor, g_esAimlessCache[tank].g_iAimlessSight, .range = 100.0))
+				{
+					return;
+				}
+
 				g_esAimlessPlayer[survivor].g_bAffected = true;
 				g_esAimlessPlayer[survivor].g_bForced = g_esAimlessCache[tank].g_iAimlessGunshots == 1;
 				g_esAimlessPlayer[survivor].g_iOwner = tank;

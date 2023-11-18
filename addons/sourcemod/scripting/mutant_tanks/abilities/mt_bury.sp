@@ -44,6 +44,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define MT_GAMEDATA "mutant_tanks"
 #else
 	#if MT_BURY_COMPILE_METHOD == 1
 		#error This file must be compiled as a standalone plugin.
@@ -787,7 +789,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esBuryTeammate[admin].g_iBuryAbility = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esBuryTeammate[admin].g_iBuryAbility, value, -1, 1);
 			g_esBuryTeammate[admin].g_iBuryEffect = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esBuryTeammate[admin].g_iBuryEffect, value, -1, 7);
 			g_esBuryTeammate[admin].g_iBuryMessage = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esBuryTeammate[admin].g_iBuryMessage, value, -1, 3);
-			g_esBuryTeammate[admin].g_iBurySight = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esBuryTeammate[admin].g_iBurySight, value, -1, 2);
+			g_esBuryTeammate[admin].g_iBurySight = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esBuryTeammate[admin].g_iBurySight, value, -1, 5);
 			g_esBuryTeammate[admin].g_flBuryBuffer = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryBuffer", "Bury Buffer", "Bury_Buffer", "buffer", g_esBuryTeammate[admin].g_flBuryBuffer, value, -1.0,float(MT_MAXHEALTH));
 			g_esBuryTeammate[admin].g_flBuryChance = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryChance", "Bury Chance", "Bury_Chance", "chance", g_esBuryTeammate[admin].g_flBuryChance, value, -1.0, 100.0);
 			g_esBuryTeammate[admin].g_iBuryCooldown = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryCooldown", "Bury Cooldown", "Bury_Cooldown", "cooldown", g_esBuryTeammate[admin].g_iBuryCooldown, value, -1, 99999);
@@ -812,7 +814,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esBuryPlayer[admin].g_iBuryAbility = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esBuryPlayer[admin].g_iBuryAbility, value, -1, 1);
 			g_esBuryPlayer[admin].g_iBuryEffect = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esBuryPlayer[admin].g_iBuryEffect, value, -1, 7);
 			g_esBuryPlayer[admin].g_iBuryMessage = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esBuryPlayer[admin].g_iBuryMessage, value, -1, 3);
-			g_esBuryPlayer[admin].g_iBurySight = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esBuryPlayer[admin].g_iBurySight, value, -1, 2);
+			g_esBuryPlayer[admin].g_iBurySight = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esBuryPlayer[admin].g_iBurySight, value, -1, 5);
 			g_esBuryPlayer[admin].g_flBuryBuffer = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryBuffer", "Bury Buffer", "Bury_Buffer", "buffer", g_esBuryPlayer[admin].g_flBuryBuffer, value, -1.0,float(MT_MAXHEALTH));
 			g_esBuryPlayer[admin].g_flBuryChance = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryChance", "Bury Chance", "Bury_Chance", "chance", g_esBuryPlayer[admin].g_flBuryChance, value, -1.0, 100.0);
 			g_esBuryPlayer[admin].g_iBuryCooldown = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryCooldown", "Bury Cooldown", "Bury_Cooldown", "cooldown", g_esBuryPlayer[admin].g_iBuryCooldown, value, -1, 99999);
@@ -843,7 +845,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esBurySpecial[type].g_iBuryAbility = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esBurySpecial[type].g_iBuryAbility, value, -1, 1);
 			g_esBurySpecial[type].g_iBuryEffect = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esBurySpecial[type].g_iBuryEffect, value, -1, 7);
 			g_esBurySpecial[type].g_iBuryMessage = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esBurySpecial[type].g_iBuryMessage, value, -1, 3);
-			g_esBurySpecial[type].g_iBurySight = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esBurySpecial[type].g_iBurySight, value, -1, 2);
+			g_esBurySpecial[type].g_iBurySight = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esBurySpecial[type].g_iBurySight, value, -1, 5);
 			g_esBurySpecial[type].g_flBuryBuffer = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryBuffer", "Bury Buffer", "Bury_Buffer", "buffer", g_esBurySpecial[type].g_flBuryBuffer, value, -1.0,float(MT_MAXHEALTH));
 			g_esBurySpecial[type].g_flBuryChance = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryChance", "Bury Chance", "Bury_Chance", "chance", g_esBurySpecial[type].g_flBuryChance, value, -1.0, 100.0);
 			g_esBurySpecial[type].g_iBuryCooldown = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryCooldown", "Bury Cooldown", "Bury_Cooldown", "cooldown", g_esBurySpecial[type].g_iBuryCooldown, value, -1, 99999);
@@ -868,7 +870,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esBuryAbility[type].g_iBuryAbility = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esBuryAbility[type].g_iBuryAbility, value, -1, 1);
 			g_esBuryAbility[type].g_iBuryEffect = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esBuryAbility[type].g_iBuryEffect, value, -1, 7);
 			g_esBuryAbility[type].g_iBuryMessage = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esBuryAbility[type].g_iBuryMessage, value, -1, 3);
-			g_esBuryAbility[type].g_iBurySight = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esBuryAbility[type].g_iBurySight, value, -1, 2);
+			g_esBuryAbility[type].g_iBurySight = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esBuryAbility[type].g_iBurySight, value, -1, 5);
 			g_esBuryAbility[type].g_flBuryBuffer = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryBuffer", "Bury Buffer", "Bury_Buffer", "buffer", g_esBuryAbility[type].g_flBuryBuffer, value, -1.0,float(MT_MAXHEALTH));
 			g_esBuryAbility[type].g_flBuryChance = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryChance", "Bury Chance", "Bury_Chance", "chance", g_esBuryAbility[type].g_flBuryChance, value, -1.0, 100.0);
 			g_esBuryAbility[type].g_iBuryCooldown = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryCooldown", "Bury Cooldown", "Bury_Cooldown", "cooldown", g_esBuryAbility[type].g_iBuryCooldown, value, -1, 99999);
@@ -1029,7 +1031,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			iBoomerId = event.GetInt("attacker"), iBoomer = GetClientOfUserId(iBoomerId);
 		if (bIsBoomer(iBoomer) && bIsSurvivor(iSurvivor) && !bExploded)
 		{
-			vBuryHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esBuryCache[iBoomer].g_flBuryChance, g_esBuryCache[iBoomer].g_iBuryHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+			vBuryHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esBuryCache[iBoomer].g_flBuryChance, g_esBuryCache[iBoomer].g_iBuryHit, MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
 		}
 	}
 }
@@ -1185,6 +1187,11 @@ void vBuryHit(int survivor, int tank, float random, float chance, int enabled, i
 		{
 			if (random <= chance && !g_esBuryPlayer[survivor].g_bAffected)
 			{
+				if ((messages & MT_MESSAGE_MELEE) && !bIsVisibleToPlayer(tank, survivor, g_esBuryCache[tank].g_iBurySight, .range = 100.0))
+				{
+					return;
+				}
+
 				g_esBuryPlayer[survivor].g_bAffected = true;
 				g_esBuryPlayer[survivor].g_iOwner = tank;
 

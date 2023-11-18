@@ -862,7 +862,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esGravityTeammate[admin].g_iGravityAbility = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esGravityTeammate[admin].g_iGravityAbility, value, -1, 3);
 			g_esGravityTeammate[admin].g_iGravityEffect = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esGravityTeammate[admin].g_iGravityEffect, value, -1, 7);
 			g_esGravityTeammate[admin].g_iGravityMessage = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esGravityTeammate[admin].g_iGravityMessage, value, -1, 7);
-			g_esGravityTeammate[admin].g_iGravitySight = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esGravityTeammate[admin].g_iGravitySight, value, -1, 2);
+			g_esGravityTeammate[admin].g_iGravitySight = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esGravityTeammate[admin].g_iGravitySight, value, -1, 5);
 			g_esGravityTeammate[admin].g_flGravityChance = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityChance", "Gravity Chance", "Gravity_Chance", "chance", g_esGravityTeammate[admin].g_flGravityChance, value, -1.0, 100.0);
 			g_esGravityTeammate[admin].g_iGravityCooldown = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityCooldown", "Gravity Cooldown", "Gravity_Cooldown", "cooldown", g_esGravityTeammate[admin].g_iGravityCooldown, value, -1, 99999);
 			g_esGravityTeammate[admin].g_iGravityDuration = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityDuration", "Gravity Duration", "Gravity_Duration", "duration", g_esGravityTeammate[admin].g_iGravityDuration, value, -1, 99999);
@@ -895,7 +895,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esGravityPlayer[admin].g_iGravityAbility = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esGravityPlayer[admin].g_iGravityAbility, value, -1, 3);
 			g_esGravityPlayer[admin].g_iGravityEffect = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esGravityPlayer[admin].g_iGravityEffect, value, -1, 7);
 			g_esGravityPlayer[admin].g_iGravityMessage = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esGravityPlayer[admin].g_iGravityMessage, value, -1, 7);
-			g_esGravityPlayer[admin].g_iGravitySight = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esGravityPlayer[admin].g_iGravitySight, value, -1, 2);
+			g_esGravityPlayer[admin].g_iGravitySight = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esGravityPlayer[admin].g_iGravitySight, value, -1, 5);
 			g_esGravityPlayer[admin].g_flGravityChance = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityChance", "Gravity Chance", "Gravity_Chance", "chance", g_esGravityPlayer[admin].g_flGravityChance, value, -1.0, 100.0);
 			g_esGravityPlayer[admin].g_iGravityCooldown = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityCooldown", "Gravity Cooldown", "Gravity_Cooldown", "cooldown", g_esGravityPlayer[admin].g_iGravityCooldown, value, -1, 99999);
 			g_esGravityPlayer[admin].g_iGravityDuration = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityDuration", "Gravity Duration", "Gravity_Duration", "duration", g_esGravityPlayer[admin].g_iGravityDuration, value, -1, 99999);
@@ -934,7 +934,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esGravitySpecial[type].g_iGravityAbility = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esGravitySpecial[type].g_iGravityAbility, value, -1, 3);
 			g_esGravitySpecial[type].g_iGravityEffect = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esGravitySpecial[type].g_iGravityEffect, value, -1, 7);
 			g_esGravitySpecial[type].g_iGravityMessage = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esGravitySpecial[type].g_iGravityMessage, value, -1, 7);
-			g_esGravitySpecial[type].g_iGravitySight = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esGravitySpecial[type].g_iGravitySight, value, -1, 2);
+			g_esGravitySpecial[type].g_iGravitySight = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esGravitySpecial[type].g_iGravitySight, value, -1, 5);
 			g_esGravitySpecial[type].g_flGravityChance = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityChance", "Gravity Chance", "Gravity_Chance", "chance", g_esGravitySpecial[type].g_flGravityChance, value, -1.0, 100.0);
 			g_esGravitySpecial[type].g_iGravityCooldown = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityCooldown", "Gravity Cooldown", "Gravity_Cooldown", "cooldown", g_esGravitySpecial[type].g_iGravityCooldown, value, -1, 99999);
 			g_esGravitySpecial[type].g_iGravityDuration = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityDuration", "Gravity Duration", "Gravity_Duration", "duration", g_esGravitySpecial[type].g_iGravityDuration, value, -1, 99999);
@@ -967,7 +967,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esGravityAbility[type].g_iGravityAbility = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esGravityAbility[type].g_iGravityAbility, value, -1, 3);
 			g_esGravityAbility[type].g_iGravityEffect = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esGravityAbility[type].g_iGravityEffect, value, -1, 7);
 			g_esGravityAbility[type].g_iGravityMessage = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esGravityAbility[type].g_iGravityMessage, value, -1, 7);
-			g_esGravityAbility[type].g_iGravitySight = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esGravityAbility[type].g_iGravitySight, value, -1, 2);
+			g_esGravityAbility[type].g_iGravitySight = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esGravityAbility[type].g_iGravitySight, value, -1, 5);
 			g_esGravityAbility[type].g_flGravityChance = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityChance", "Gravity Chance", "Gravity_Chance", "chance", g_esGravityAbility[type].g_flGravityChance, value, -1.0, 100.0);
 			g_esGravityAbility[type].g_iGravityCooldown = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityCooldown", "Gravity Cooldown", "Gravity_Cooldown", "cooldown", g_esGravityAbility[type].g_iGravityCooldown, value, -1, 99999);
 			g_esGravityAbility[type].g_iGravityDuration = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityDuration", "Gravity Duration", "Gravity_Duration", "duration", g_esGravityAbility[type].g_iGravityDuration, value, -1, 99999);
@@ -1154,7 +1154,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			iBoomerId = event.GetInt("attacker"), iBoomer = GetClientOfUserId(iBoomerId);
 		if (bIsBoomer(iBoomer) && bIsSurvivor(iSurvivor) && !bExploded)
 		{
-			vGravityHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esGravityCache[iBoomer].g_flGravityChance, g_esGravityCache[iBoomer].g_iGravityHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+			vGravityHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esGravityCache[iBoomer].g_flGravityChance, g_esGravityCache[iBoomer].g_iGravityHit, MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
 		}
 	}
 }
@@ -1478,6 +1478,11 @@ void vGravityHit(int survivor, int tank, float random, float chance, int enabled
 		{
 			if (random <= chance && !g_esGravityPlayer[survivor].g_bAffected)
 			{
+				if ((messages & MT_MESSAGE_MELEE) && !bIsVisibleToPlayer(tank, survivor, g_esGravityCache[tank].g_iGravitySight, .range = 100.0))
+				{
+					return;
+				}
+
 				g_esGravityPlayer[survivor].g_bAffected = true;
 				g_esGravityPlayer[survivor].g_iOwner = tank;
 

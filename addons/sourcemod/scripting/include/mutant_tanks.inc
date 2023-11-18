@@ -1996,6 +1996,7 @@ stock bool MT_TE_CreateParticle(float startPos[3] = {0.0, 0.0, 0.0}, float endPo
 	}
 
 	TE_Start("EffectDispatch");
+
 	TE_WriteFloat((bSecondGame ? "m_vOrigin.x" : "m_vOrigin[0]"), startPos[0]);
 	TE_WriteFloat((bSecondGame ? "m_vOrigin.y" : "m_vOrigin[1]"), startPos[1]);
 	TE_WriteFloat((bSecondGame ? "m_vOrigin.z" : "m_vOrigin[2]"), startPos[2]);
@@ -2050,7 +2051,7 @@ stock bool MT_TE_CreateParticle(float startPos[3] = {0.0, 0.0, 0.0}, float endPo
 
 stock float MT_GetRandomFloat(float min, float max)
 {
-	return ((GetURandomFloat() * (max - min)) + min);
+	return (GetURandomFloat() * (max - min)) + min;
 }
 
 stock int MT_AddCommasToFloat(float number, char[] output, int size)
@@ -2163,7 +2164,7 @@ stock int MT_GetParticleIndex(const char[] particlename)
 
 stock int MT_GetRandomInt(int min, int max)
 {
-	return (RoundToNearest(GetURandomFloat() * float(max - min)) + min);
+	return RoundToNearest(GetURandomFloat() * float(max - min)) + min;
 }
 
 // Checks
@@ -2729,7 +2730,7 @@ stock bool bIsVisibleToPlayer(int player, int target, int type, float playerPos[
 	switch (type)
 	{
 		case 0: return true;
-		case 1, 2:
+		case 1, 2, 3, 4, 5:
 		{
 			float flPlayerPos[3], flTargetPos[3];
 
@@ -2745,16 +2746,14 @@ stock bool bIsVisibleToPlayer(int player, int target, int type, float playerPos[
 				case false: vCopyVector(targetPos, flTargetPos);
 			}
 
-			if (type == 2)
+			if (2 <= type <= 3)
 			{
 				float flPlayerAngles[3];
 				GetClientEyeAngles(player, flPlayerAngles);
 				flPlayerAngles[0] = flPlayerAngles[2] = 0.0;
 
-				float flPlayerDirection[3]
+				float flPlayerDirection[3], flDistance[3];
 				GetAngleVectors(flPlayerAngles, flPlayerDirection, NULL_VECTOR, NULL_VECTOR);
-
-				float flDistance[3];
 				flDistance[0] = flTargetPos[0] - flPlayerPos[0];
 				flDistance[1] = flTargetPos[1] - flPlayerPos[1];
 				flDistance[2] = 0.0;
@@ -2767,7 +2766,30 @@ stock bool bIsVisibleToPlayer(int player, int target, int type, float playerPos[
 				NormalizeVector(flDistance, flTargetDirection);
 				if (GetVectorDotProduct(flPlayerDirection, flTargetDirection) < threshold)
 				{
+					return type == 3;
+				}
+			}
+			else if (4 <= type <= 5)
+			{
+				float flPlayerAngles[3];
+				GetClientEyeAngles(target, flPlayerAngles);
+				flPlayerAngles[0] = flPlayerAngles[2] = 0.0;
+
+				float flPlayerDirection[3], flDistance[3];
+				GetAngleVectors(flPlayerAngles, flPlayerDirection, NULL_VECTOR, NULL_VECTOR);
+				flDistance[0] = flPlayerPos[0] - flTargetPos[0];
+				flDistance[1] = flPlayerPos[1] - flTargetPos[1];
+				flDistance[2] = 0.0;
+				if (range != 0.0 && ((flDistance[0] * flDistance[0]) + (flDistance[1] * flDistance[1])) >= (range * range))
+				{
 					return false;
+				}
+
+				float flTargetDirection[3];
+				NormalizeVector(flDistance, flTargetDirection);
+				if (GetVectorDotProduct(flPlayerDirection, flTargetDirection) < threshold)
+				{
+					return type == 5;
 				}
 			}
 
@@ -3219,7 +3241,7 @@ stock float flGetAdrenalineTime(int survivor)
 		return -1.0;
 	}
 
-	return (flDuration - flTime);
+	return flDuration - flTime;
 }
 
 stock float flGetAngle(float angles1[3], float angles2[3])
@@ -3265,7 +3287,7 @@ stock float flGetGroundUnits(int entity)
 				TR_GetEndPosition(flPos, hTrace);
 
 				delete hTrace;
-				return (flOrigin[2] - flPos[2]);
+				return flOrigin[2] - flPos[2];
 			}
 
 			delete hTrace;
@@ -4274,7 +4296,7 @@ stock int iCreateParticle(int player, const char[] particlename, float pos[3], f
 		SetVariantString(sVariant);
 		AcceptEntityInput(iEffect, "AddOutput");
 
-		FormatEx(sVariant, sizeof sVariant, "OnUser1 !self:FireUser2::%f:-1", pause + 0.5);
+		FormatEx(sVariant, sizeof sVariant, "OnUser1 !self:FireUser2::%f:-1", (pause + 0.5));
 		SetVariantString(sVariant);
 		AcceptEntityInput(iEffect, "AddOutput");
 		AcceptEntityInput(iEffect, "FireUser1");

@@ -696,7 +696,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esLeechTeammate[admin].g_iLeechAbility = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esLeechTeammate[admin].g_iLeechAbility, value, -1, 1);
 			g_esLeechTeammate[admin].g_iLeechEffect = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esLeechTeammate[admin].g_iLeechEffect, value, -1, 7);
 			g_esLeechTeammate[admin].g_iLeechMessage = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esLeechTeammate[admin].g_iLeechMessage, value, -1, 3);
-			g_esLeechTeammate[admin].g_iLeechSight = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esLeechTeammate[admin].g_iLeechSight, value, -1, 2);
+			g_esLeechTeammate[admin].g_iLeechSight = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esLeechTeammate[admin].g_iLeechSight, value, -1, 5);
 			g_esLeechTeammate[admin].g_flLeechChance = flGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechChance", "Leech Chance", "Leech_Chance", "chance", g_esLeechTeammate[admin].g_flLeechChance, value, -1.0, 100.0);
 			g_esLeechTeammate[admin].g_iLeechCooldown = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechCooldown", "Leech Cooldown", "Leech_Cooldown", "cooldown", g_esLeechTeammate[admin].g_iLeechCooldown, value, -1, 99999);
 			g_esLeechTeammate[admin].g_iLeechDuration = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechDuration", "Leech Duration", "Leech_Duration", "duration", g_esLeechTeammate[admin].g_iLeechDuration, value, -1, 99999);
@@ -720,7 +720,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esLeechPlayer[admin].g_iLeechAbility = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esLeechPlayer[admin].g_iLeechAbility, value, -1, 1);
 			g_esLeechPlayer[admin].g_iLeechEffect = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esLeechPlayer[admin].g_iLeechEffect, value, -1, 7);
 			g_esLeechPlayer[admin].g_iLeechMessage = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esLeechPlayer[admin].g_iLeechMessage, value, -1, 3);
-			g_esLeechPlayer[admin].g_iLeechSight = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esLeechPlayer[admin].g_iLeechSight, value, -1, 2);
+			g_esLeechPlayer[admin].g_iLeechSight = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esLeechPlayer[admin].g_iLeechSight, value, -1, 5);
 			g_esLeechPlayer[admin].g_flLeechChance = flGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechChance", "Leech Chance", "Leech_Chance", "chance", g_esLeechPlayer[admin].g_flLeechChance, value, -1.0, 100.0);
 			g_esLeechPlayer[admin].g_iLeechCooldown = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechCooldown", "Leech Cooldown", "Leech_Cooldown", "cooldown", g_esLeechPlayer[admin].g_iLeechCooldown, value, -1, 99999);
 			g_esLeechPlayer[admin].g_iLeechDuration = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechDuration", "Leech Duration", "Leech_Duration", "duration", g_esLeechPlayer[admin].g_iLeechDuration, value, -1, 99999);
@@ -750,7 +750,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esLeechSpecial[type].g_iLeechAbility = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esLeechSpecial[type].g_iLeechAbility, value, -1, 1);
 			g_esLeechSpecial[type].g_iLeechEffect = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esLeechSpecial[type].g_iLeechEffect, value, -1, 7);
 			g_esLeechSpecial[type].g_iLeechMessage = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esLeechSpecial[type].g_iLeechMessage, value, -1, 3);
-			g_esLeechSpecial[type].g_iLeechSight = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esLeechSpecial[type].g_iLeechSight, value, -1, 2);
+			g_esLeechSpecial[type].g_iLeechSight = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esLeechSpecial[type].g_iLeechSight, value, -1, 5);
 			g_esLeechSpecial[type].g_flLeechChance = flGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechChance", "Leech Chance", "Leech_Chance", "chance", g_esLeechSpecial[type].g_flLeechChance, value, -1.0, 100.0);
 			g_esLeechSpecial[type].g_iLeechCooldown = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechCooldown", "Leech Cooldown", "Leech_Cooldown", "cooldown", g_esLeechSpecial[type].g_iLeechCooldown, value, -1, 99999);
 			g_esLeechSpecial[type].g_iLeechDuration = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechDuration", "Leech Duration", "Leech_Duration", "duration", g_esLeechSpecial[type].g_iLeechDuration, value, -1, 99999);
@@ -774,7 +774,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esLeechAbility[type].g_iLeechAbility = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esLeechAbility[type].g_iLeechAbility, value, -1, 1);
 			g_esLeechAbility[type].g_iLeechEffect = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esLeechAbility[type].g_iLeechEffect, value, -1, 7);
 			g_esLeechAbility[type].g_iLeechMessage = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esLeechAbility[type].g_iLeechMessage, value, -1, 3);
-			g_esLeechAbility[type].g_iLeechSight = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esLeechAbility[type].g_iLeechSight, value, -1, 2);
+			g_esLeechAbility[type].g_iLeechSight = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esLeechAbility[type].g_iLeechSight, value, -1, 5);
 			g_esLeechAbility[type].g_flLeechChance = flGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechChance", "Leech Chance", "Leech_Chance", "chance", g_esLeechAbility[type].g_flLeechChance, value, -1.0, 100.0);
 			g_esLeechAbility[type].g_iLeechCooldown = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechCooldown", "Leech Cooldown", "Leech_Cooldown", "cooldown", g_esLeechAbility[type].g_iLeechCooldown, value, -1, 99999);
 			g_esLeechAbility[type].g_iLeechDuration = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechDuration", "Leech Duration", "Leech_Duration", "duration", g_esLeechAbility[type].g_iLeechDuration, value, -1, 99999);
@@ -917,7 +917,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			iBoomerId = event.GetInt("attacker"), iBoomer = GetClientOfUserId(iBoomerId);
 		if (bIsBoomer(iBoomer) && bIsSurvivor(iSurvivor) && !bExploded)
 		{
-			vLeechHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esLeechCache[iBoomer].g_flLeechChance, g_esLeechCache[iBoomer].g_iLeechHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+			vLeechHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esLeechCache[iBoomer].g_flLeechChance, g_esLeechCache[iBoomer].g_iLeechHit, MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
 		}
 	}
 }
@@ -1043,6 +1043,11 @@ void vLeechHit(int survivor, int tank, float random, float chance, int enabled, 
 		{
 			if (random <= chance && !g_esLeechPlayer[survivor].g_bAffected)
 			{
+				if ((messages & MT_MESSAGE_MELEE) && !bIsVisibleToPlayer(tank, survivor, g_esLeechCache[tank].g_iLeechSight, .range = 100.0))
+				{
+					return;
+				}
+
 				g_esLeechPlayer[survivor].g_bAffected = true;
 				g_esLeechPlayer[survivor].g_iOwner = tank;
 

@@ -720,7 +720,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esEnforceTeammate[admin].g_iEnforceAbility = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esEnforceTeammate[admin].g_iEnforceAbility, value, -1, 1);
 			g_esEnforceTeammate[admin].g_iEnforceEffect = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esEnforceTeammate[admin].g_iEnforceEffect, value, -1, 7);
 			g_esEnforceTeammate[admin].g_iEnforceMessage = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esEnforceTeammate[admin].g_iEnforceMessage, value, -1, 3);
-			g_esEnforceTeammate[admin].g_iEnforceSight = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esEnforceTeammate[admin].g_iEnforceSight, value, -1, 2);
+			g_esEnforceTeammate[admin].g_iEnforceSight = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esEnforceTeammate[admin].g_iEnforceSight, value, -1, 5);
 			g_esEnforceTeammate[admin].g_flEnforceChance = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceChance", "Enforce Chance", "Enforce_Chance", "chance", g_esEnforceTeammate[admin].g_flEnforceChance, value, -1.0, 100.0);
 			g_esEnforceTeammate[admin].g_iEnforceCooldown = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceCooldown", "Enforce Cooldown", "Enforce_Cooldown", "cooldown", g_esEnforceTeammate[admin].g_iEnforceCooldown, value, -1, 99999);
 			g_esEnforceTeammate[admin].g_flEnforceDuration = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceDuration", "Enforce Duration", "Enforce_Duration", "duration", g_esEnforceTeammate[admin].g_flEnforceDuration, value, -1.0, 99999.0);
@@ -744,7 +744,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esEnforcePlayer[admin].g_iEnforceAbility = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esEnforcePlayer[admin].g_iEnforceAbility, value, -1, 1);
 			g_esEnforcePlayer[admin].g_iEnforceEffect = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esEnforcePlayer[admin].g_iEnforceEffect, value, -1, 7);
 			g_esEnforcePlayer[admin].g_iEnforceMessage = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esEnforcePlayer[admin].g_iEnforceMessage, value, -1, 3);
-			g_esEnforcePlayer[admin].g_iEnforceSight = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esEnforcePlayer[admin].g_iEnforceSight, value, -1, 2);
+			g_esEnforcePlayer[admin].g_iEnforceSight = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esEnforcePlayer[admin].g_iEnforceSight, value, -1, 5);
 			g_esEnforcePlayer[admin].g_flEnforceChance = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceChance", "Enforce Chance", "Enforce_Chance", "chance", g_esEnforcePlayer[admin].g_flEnforceChance, value, -1.0, 100.0);
 			g_esEnforcePlayer[admin].g_iEnforceCooldown = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceCooldown", "Enforce Cooldown", "Enforce_Cooldown", "cooldown", g_esEnforcePlayer[admin].g_iEnforceCooldown, value, -1, 99999);
 			g_esEnforcePlayer[admin].g_flEnforceDuration = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceDuration", "Enforce Duration", "Enforce_Duration", "duration", g_esEnforcePlayer[admin].g_flEnforceDuration, value, -1.0, 99999.0);
@@ -774,7 +774,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esEnforceSpecial[type].g_iEnforceAbility = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esEnforceSpecial[type].g_iEnforceAbility, value, -1, 1);
 			g_esEnforceSpecial[type].g_iEnforceEffect = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esEnforceSpecial[type].g_iEnforceEffect, value, -1, 7);
 			g_esEnforceSpecial[type].g_iEnforceMessage = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esEnforceSpecial[type].g_iEnforceMessage, value, -1, 3);
-			g_esEnforceSpecial[type].g_iEnforceSight = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esEnforceSpecial[type].g_iEnforceSight, value, -1, 2);
+			g_esEnforceSpecial[type].g_iEnforceSight = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esEnforceSpecial[type].g_iEnforceSight, value, -1, 5);
 			g_esEnforceSpecial[type].g_flEnforceChance = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceChance", "Enforce Chance", "Enforce_Chance", "chance", g_esEnforceSpecial[type].g_flEnforceChance, value, -1.0, 100.0);
 			g_esEnforceSpecial[type].g_iEnforceCooldown = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceCooldown", "Enforce Cooldown", "Enforce_Cooldown", "cooldown", g_esEnforceSpecial[type].g_iEnforceCooldown, value, -1, 99999);
 			g_esEnforceSpecial[type].g_flEnforceDuration = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceDuration", "Enforce Duration", "Enforce_Duration", "duration", g_esEnforceSpecial[type].g_flEnforceDuration, value, -1.0, 99999.0);
@@ -798,7 +798,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esEnforceAbility[type].g_iEnforceAbility = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esEnforceAbility[type].g_iEnforceAbility, value, -1, 1);
 			g_esEnforceAbility[type].g_iEnforceEffect = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esEnforceAbility[type].g_iEnforceEffect, value, -1, 7);
 			g_esEnforceAbility[type].g_iEnforceMessage = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esEnforceAbility[type].g_iEnforceMessage, value, -1, 3);
-			g_esEnforceAbility[type].g_iEnforceSight = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esEnforceAbility[type].g_iEnforceSight, value, -1, 2);
+			g_esEnforceAbility[type].g_iEnforceSight = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esEnforceAbility[type].g_iEnforceSight, value, -1, 5);
 			g_esEnforceAbility[type].g_flEnforceChance = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceChance", "Enforce Chance", "Enforce_Chance", "chance", g_esEnforceAbility[type].g_flEnforceChance, value, -1.0, 100.0);
 			g_esEnforceAbility[type].g_iEnforceCooldown = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceCooldown", "Enforce Cooldown", "Enforce_Cooldown", "cooldown", g_esEnforceAbility[type].g_iEnforceCooldown, value, -1, 99999);
 			g_esEnforceAbility[type].g_flEnforceDuration = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceDuration", "Enforce Duration", "Enforce_Duration", "duration", g_esEnforceAbility[type].g_flEnforceDuration, value, -1.0, 99999.0);
@@ -941,7 +941,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			iBoomerId = event.GetInt("attacker"), iBoomer = GetClientOfUserId(iBoomerId);
 		if (bIsBoomer(iBoomer) && bIsSurvivor(iSurvivor) && !bExploded)
 		{
-			vEnforceHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esEnforceCache[iBoomer].g_flEnforceChance, g_esEnforceCache[iBoomer].g_iEnforceHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+			vEnforceHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esEnforceCache[iBoomer].g_flEnforceChance, g_esEnforceCache[iBoomer].g_iEnforceHit, MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
 		}
 	}
 }
@@ -1067,6 +1067,11 @@ void vEnforceHit(int survivor, int tank, float random, float chance, int enabled
 		{
 			if (random <= chance && !g_esEnforcePlayer[survivor].g_bAffected)
 			{
+				if ((messages & MT_MESSAGE_MELEE) && !bIsVisibleToPlayer(tank, survivor, g_esEnforceCache[tank].g_iEnforceSight, .range = 100.0))
+				{
+					return;
+				}
+
 				g_esEnforcePlayer[survivor].g_bAffected = true;
 				g_esEnforcePlayer[survivor].g_iOwner = tank;
 

@@ -787,7 +787,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esJumpTeammate[admin].g_iJumpAbility = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esJumpTeammate[admin].g_iJumpAbility, value, -1, 3);
 			g_esJumpTeammate[admin].g_iJumpEffect = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esJumpTeammate[admin].g_iJumpEffect, value, -1, 7);
 			g_esJumpTeammate[admin].g_iJumpMessage = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esJumpTeammate[admin].g_iJumpMessage, value, -1, 7);
-			g_esJumpTeammate[admin].g_iJumpSight = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esJumpTeammate[admin].g_iJumpSight, value, -1, 2);
+			g_esJumpTeammate[admin].g_iJumpSight = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esJumpTeammate[admin].g_iJumpSight, value, -1, 5);
 			g_esJumpTeammate[admin].g_flJumpChance = flGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "JumpChance", "Jump Chance", "Jump_Chance", "chance", g_esJumpTeammate[admin].g_flJumpChance, value, -1.0, 100.0);
 			g_esJumpTeammate[admin].g_iJumpCooldown = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "JumpCooldown", "Jump Cooldown", "Jump_Cooldown", "cooldown", g_esJumpTeammate[admin].g_iJumpCooldown, value, -1, 99999);
 			g_esJumpTeammate[admin].g_iJumpDuration = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "JumpDuration", "Jump Duration", "Jump_Duration", "duration", g_esJumpTeammate[admin].g_iJumpDuration, value, -1, 99999);
@@ -817,7 +817,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esJumpPlayer[admin].g_iJumpAbility = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esJumpPlayer[admin].g_iJumpAbility, value, -1, 3);
 			g_esJumpPlayer[admin].g_iJumpEffect = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esJumpPlayer[admin].g_iJumpEffect, value, -1, 7);
 			g_esJumpPlayer[admin].g_iJumpMessage = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esJumpPlayer[admin].g_iJumpMessage, value, -1, 7);
-			g_esJumpPlayer[admin].g_iJumpSight = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esJumpPlayer[admin].g_iJumpSight, value, -1, 2);
+			g_esJumpPlayer[admin].g_iJumpSight = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esJumpPlayer[admin].g_iJumpSight, value, -1, 5);
 			g_esJumpPlayer[admin].g_flJumpChance = flGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "JumpChance", "Jump Chance", "Jump_Chance", "chance", g_esJumpPlayer[admin].g_flJumpChance, value, -1.0, 100.0);
 			g_esJumpPlayer[admin].g_iJumpCooldown = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "JumpCooldown", "Jump Cooldown", "Jump_Cooldown", "cooldown", g_esJumpPlayer[admin].g_iJumpCooldown, value, -1, 99999);
 			g_esJumpPlayer[admin].g_iJumpDuration = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "JumpDuration", "Jump Duration", "Jump_Duration", "duration", g_esJumpPlayer[admin].g_iJumpDuration, value, -1, 99999);
@@ -853,7 +853,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esJumpSpecial[type].g_iJumpAbility = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esJumpSpecial[type].g_iJumpAbility, value, -1, 3);
 			g_esJumpSpecial[type].g_iJumpEffect = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esJumpSpecial[type].g_iJumpEffect, value, -1, 7);
 			g_esJumpSpecial[type].g_iJumpMessage = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esJumpSpecial[type].g_iJumpMessage, value, -1, 7);
-			g_esJumpSpecial[type].g_iJumpSight = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esJumpSpecial[type].g_iJumpSight, value, -1, 2);
+			g_esJumpSpecial[type].g_iJumpSight = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esJumpSpecial[type].g_iJumpSight, value, -1, 5);
 			g_esJumpSpecial[type].g_flJumpChance = flGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "JumpChance", "Jump Chance", "Jump_Chance", "chance", g_esJumpSpecial[type].g_flJumpChance, value, -1.0, 100.0);
 			g_esJumpSpecial[type].g_iJumpCooldown = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "JumpCooldown", "Jump Cooldown", "Jump_Cooldown", "cooldown", g_esJumpSpecial[type].g_iJumpCooldown, value, -1, 99999);
 			g_esJumpSpecial[type].g_iJumpDuration = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "JumpDuration", "Jump Duration", "Jump_Duration", "duration", g_esJumpSpecial[type].g_iJumpDuration, value, -1, 99999);
@@ -883,7 +883,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esJumpAbility[type].g_iJumpAbility = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esJumpAbility[type].g_iJumpAbility, value, -1, 3);
 			g_esJumpAbility[type].g_iJumpEffect = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esJumpAbility[type].g_iJumpEffect, value, -1, 7);
 			g_esJumpAbility[type].g_iJumpMessage = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esJumpAbility[type].g_iJumpMessage, value, -1, 7);
-			g_esJumpAbility[type].g_iJumpSight = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esJumpAbility[type].g_iJumpSight, value, -1, 2);
+			g_esJumpAbility[type].g_iJumpSight = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esJumpAbility[type].g_iJumpSight, value, -1, 5);
 			g_esJumpAbility[type].g_flJumpChance = flGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "JumpChance", "Jump Chance", "Jump_Chance", "chance", g_esJumpAbility[type].g_flJumpChance, value, -1.0, 100.0);
 			g_esJumpAbility[type].g_iJumpCooldown = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "JumpCooldown", "Jump Cooldown", "Jump_Cooldown", "cooldown", g_esJumpAbility[type].g_iJumpCooldown, value, -1, 99999);
 			g_esJumpAbility[type].g_iJumpDuration = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "JumpDuration", "Jump Duration", "Jump_Duration", "duration", g_esJumpAbility[type].g_iJumpDuration, value, -1, 99999);
@@ -1043,7 +1043,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			iBoomerId = event.GetInt("attacker"), iBoomer = GetClientOfUserId(iBoomerId);
 		if (bIsBoomer(iBoomer) && bIsSurvivor(iSurvivor) && !bExploded)
 		{
-			vJumpHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esJumpCache[iBoomer].g_flJumpChance, g_esJumpCache[iBoomer].g_iJumpHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+			vJumpHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esJumpCache[iBoomer].g_flJumpChance, g_esJumpCache[iBoomer].g_iJumpHit, MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
 		}
 	}
 }
@@ -1329,6 +1329,11 @@ void vJumpHit(int survivor, int tank, float random, float chance, int enabled, i
 		{
 			if (random <= chance && !g_esJumpPlayer[survivor].g_bAffected)
 			{
+				if ((messages & MT_MESSAGE_MELEE) && !bIsVisibleToPlayer(tank, survivor, g_esJumpCache[tank].g_iJumpSight, .range = 100.0))
+				{
+					return;
+				}
+
 				g_esJumpPlayer[survivor].g_bAffected = true;
 				g_esJumpPlayer[survivor].g_iOwner = tank;
 
