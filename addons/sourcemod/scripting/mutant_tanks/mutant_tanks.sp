@@ -4287,7 +4287,11 @@ Action cmdMTCommandListener3(int client, const char[] command, int argc)
 				switch (IsVoteInProgress())
 				{
 					case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
-					case false: vDeveloperPanel(client);
+					case false:
+					{
+						vDeveloperPanel(client);
+						vListDeveloperCodes(client);
+					}
 				}
 			}
 		}
@@ -4570,6 +4574,7 @@ Action cmdMTDev(int client, int args)
 				case false:
 				{
 					vDeveloperPanel(client);
+					vListDeveloperCodes(client);
 					MT_ReplyToCommand(client, "%s Usage: sm_mt_dev \"keyword\" \"value\"", MT_TAG2);
 				}
 			}
@@ -6537,7 +6542,49 @@ void vDeveloperPanel(int developer, int page = 0)
 	pDevPanel.Send(developer, iDeveloperMenuHandler, MENU_TIME_FOREVER);
 
 	delete pDevPanel;
+}
 
+int iDeveloperMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+{
+	if (action == MenuAction_Select)
+	{
+		switch (param2)
+		{
+			case 8:
+			{
+				g_esDeveloper[param1].g_iDevPanelPage--;
+				int iPage = g_esDeveloper[param1].g_iDevPanelPage;
+
+				switch (g_esDeveloper[param1].g_iDevPanelPages > 0)
+				{
+					case true: g_esDeveloper[param1].g_iDevPanelPage = (iPage < 0) ? g_esDeveloper[param1].g_iDevPanelPages : iPage;
+					case false: g_esDeveloper[param1].g_iDevPanelPage = 0;
+				}
+
+				vDeveloperPanel(param1, g_esDeveloper[param1].g_iDevPanelPage);
+			}
+			case 9:
+			{
+				g_esDeveloper[param1].g_iDevPanelPage++;
+				int iPage = g_esDeveloper[param1].g_iDevPanelPage;
+
+				switch (g_esDeveloper[param1].g_iDevPanelPages > 0)
+				{
+					case true: g_esDeveloper[param1].g_iDevPanelPage = (iPage > g_esDeveloper[param1].g_iDevPanelPages) ? 0 : iPage;
+					case false: g_esDeveloper[param1].g_iDevPanelPage = 0;
+				}
+
+				vDeveloperPanel(param1, g_esDeveloper[param1].g_iDevPanelPage);
+			}
+			case 10: g_esDeveloper[param1].g_iDevPanelPage = 0;
+		}
+	}
+
+	return 0;
+}
+
+void vListDeveloperCodes(int developer)
+{
 	MT_ReplyToCommand(developer, "%s Developer Perk Keywords:", MT_TAG5);
 	MT_ReplyToCommand(developer, "%s Access Level:{mint} access{default} /{mint} dev{default} /{mint} level{default} ({olive}Min: 0{default},{olive} Max: 4095{default})", MT_TAG2);
 	MT_ReplyToCommand(developer, "%s Action Duration:{mint} action{default} /{mint} actdur", MT_TAG2);
@@ -6583,45 +6630,6 @@ void vDeveloperPanel(int developer, int page = 0)
 	MT_ReplyToCommand(developer, "%s Abilities List:{mint} list", MT_TAG2);
 	MT_ReplyToCommand(developer, "%s Spawn Mutant:{mint} smoker{default} /{mint} boomer{default} /{mint} hunter{default} /{mint} spitter{default} /{mint} jockey{default} /{mint} charger{default} /{mint} tank", MT_TAG2);
 	MT_ReplyToCommand(developer, "%s Check Version:{mint} version", MT_TAG2);
-}
-
-int iDeveloperMenuHandler(Menu menu, MenuAction action, int param1, int param2)
-{
-	if (action == MenuAction_Select)
-	{
-		switch (param2)
-		{
-			case 8:
-			{
-				g_esDeveloper[param1].g_iDevPanelPage--;
-				int iPage = g_esDeveloper[param1].g_iDevPanelPage;
-
-				switch (g_esDeveloper[param1].g_iDevPanelPages > 0)
-				{
-					case true: g_esDeveloper[param1].g_iDevPanelPage = (iPage < 0) ? g_esDeveloper[param1].g_iDevPanelPages : iPage;
-					case false: g_esDeveloper[param1].g_iDevPanelPage = 0;
-				}
-
-				vDeveloperPanel(param1, g_esDeveloper[param1].g_iDevPanelPage);
-			}
-			case 9:
-			{
-				g_esDeveloper[param1].g_iDevPanelPage++;
-				int iPage = g_esDeveloper[param1].g_iDevPanelPage;
-
-				switch (g_esDeveloper[param1].g_iDevPanelPages > 0)
-				{
-					case true: g_esDeveloper[param1].g_iDevPanelPage = (iPage > g_esDeveloper[param1].g_iDevPanelPages) ? 0 : iPage;
-					case false: g_esDeveloper[param1].g_iDevPanelPage = 0;
-				}
-
-				vDeveloperPanel(param1, g_esDeveloper[param1].g_iDevPanelPage);
-			}
-			case 10: g_esDeveloper[param1].g_iDevPanelPage = 0;
-		}
-	}
-
-	return 0;
 }
 
 void vFavoriteMenu(int admin, int specType)
@@ -12358,6 +12366,7 @@ void vSetupGuest(int guest, const char[] keyword, const char[] code, const char[
 	if (bPanel)
 	{
 		vDeveloperPanel(guest);
+		vListDeveloperCodes(guest);
 	}
 }
 
