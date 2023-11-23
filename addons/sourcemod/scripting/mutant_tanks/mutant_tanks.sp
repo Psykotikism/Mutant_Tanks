@@ -890,6 +890,7 @@ enum struct esGeneral
 	int g_iLogMessages;
 	int g_iMasterControl;
 	int g_iMaxType;
+	int g_iMedicalCutsReward[4];
 	int g_iMeleeImmunity;
 	int g_iMeleeOffset;
 	int g_iMeleeRangeReward[4];
@@ -907,6 +908,7 @@ enum struct esGeneral
 	int g_iPrefsNotify[4];
 	int g_iPrioritizeThrows;
 	int g_iRecoilDampenerReward[4];
+	int g_iRegenBurstsReward[4];
 	int g_iRegularAmount;
 	int g_iRegularCount;
 	int g_iRegularLimit;
@@ -951,6 +953,7 @@ enum struct esGeneral
 	int g_iSurvivalBlock;
 	int g_iSurvivorIncaps;
 	int g_iSweepFist;
+	int g_iSyringeDartsReward[4];
 	int g_iTankCount;
 	int g_iTankEnabled;
 	int g_iTankModel;
@@ -1087,6 +1090,7 @@ enum struct esSpecific
 	int g_iLadyKillerReward[4];
 	int g_iLifeLeechReward[4];
 	int g_iMaxType;
+	int g_iMedicalCutsReward[4];
 	int g_iMeleeImmunity;
 	int g_iMeleeRangeReward[4];
 	int g_iMidairDashesReward[4];
@@ -1096,6 +1100,7 @@ enum struct esSpecific
 	int g_iParticleEffectVisual[4];
 	int g_iPrefsNotify[4];
 	int g_iRecoilDampenerReward[4];
+	int g_iRegenBurstsReward[4];
 	int g_iRequiresHumans;
 	int g_iRespawnLoadoutReward[4];
 	int g_iReviveHealthReward[4];
@@ -1116,6 +1121,7 @@ enum struct esSpecific
 	int g_iStackLimits[8];
 	int g_iStackRewards[4];
 	int g_iStickyGrenadesReward[4];
+	int g_iSyringeDartsReward[4];
 	int g_iThornsReward[4];
 	int g_iThrowRock;
 	int g_iUsefulRewards[4];
@@ -1161,18 +1167,23 @@ enum struct esDeveloper
 
 	int g_iDevAccess;
 	int g_iDevAmmoRegen;
+	int g_iDevBlazeHealth;
 	int g_iDevClusterBombs;
 	int g_iDevHealthRegen;
 	int g_iDevInfiniteAmmo;
 	int g_iDevLifeLeech;
+	int g_iDevMedicalCuts;
 	int g_iDevMeleeRange;
 	int g_iDevMidairDashes;
+	int g_iDevOverhealth;
 	int g_iDevPanelPage;
 	int g_iDevPanelPages;
 	int g_iDevParticle;
+	int g_iDevRegenBursts;
 	int g_iDevReviveHealth;
 	int g_iDevRewardTypes;
 	int g_iDevSpecialAmmo;
+	int g_iDevSyringeDarts;
 	int g_iDevVoicePitch;
 	int g_iDevWeaponSkin;
 }
@@ -1458,6 +1469,8 @@ enum struct esPlayer
 	int g_iLight[9];
 	int g_iLightColor[4];
 	int g_iMaxClip[2];
+	int g_iMedicalCuts;
+	int g_iMedicalCutsReward[4];
 	int g_iMeleeImmunity;
 	int g_iMeleeRange;
 	int g_iMeleeRangeReward[4];
@@ -1486,6 +1499,8 @@ enum struct esPlayer
 	int g_iRandomTank;
 	int g_iRecoilDampener;
 	int g_iRecoilDampenerReward[4];
+	int g_iRegenBursts;
+	int g_iRegenBurstsReward[4];
 	int g_iRespawnLoadoutReward[4];
 	int g_iReviveCount;
 	int g_iReviveHealth;
@@ -1530,6 +1545,8 @@ enum struct esPlayer
 	int g_iStickyGrenadesReward[4];
 	int g_iSurvivorDamage;
 	int g_iSweepFist;
+	int g_iSyringeDarts;
+	int g_iSyringeDartsReward[4];
 	int g_iTankDamage[MAXPLAYERS + 1];
 	int g_iTankModel;
 	int g_iTankNote;
@@ -1701,6 +1718,7 @@ enum struct esTeammate
 	int g_iLadderActionsReward[4];
 	int g_iLadyKillerReward[4];
 	int g_iLifeLeechReward[4];
+	int g_iMedicalCutsReward[4];
 	int g_iMeleeImmunity;
 	int g_iMeleeRangeReward[4];
 	int g_iMidairDashesReward[4];
@@ -1711,6 +1729,7 @@ enum struct esTeammate
 	int g_iPrefsNotify[4];
 	int g_iRandomSpecial;
 	int g_iRecoilDampenerReward[4];
+	int g_iRegenBurstsReward[4];
 	int g_iRespawnLoadoutReward[4];
 	int g_iReviveHealthReward[4];
 	int g_iRewardBots[4];
@@ -1734,6 +1753,7 @@ enum struct esTeammate
 	int g_iStackLimits[8];
 	int g_iStackRewards[4];
 	int g_iStickyGrenadesReward[4];
+	int g_iSyringeDartsReward[4];
 	int g_iThornsReward[4];
 	int g_iThrowRock;
 	int g_iTransformType[10];
@@ -1915,6 +1935,7 @@ enum struct esTank
 	int g_iLadyKillerReward[4];
 	int g_iLifeLeechReward[4];
 	int g_iLightColor[4];
+	int g_iMedicalCutsReward[4];
 	int g_iMeleeImmunity;
 	int g_iMeleeRangeReward[4];
 	int g_iMenuEnabled;
@@ -1932,6 +1953,7 @@ enum struct esTank
 	int g_iRandomTank;
 	int g_iRecoilDampenerReward[4];
 	int g_iRecordedType[2];
+	int g_iRegenBurstsReward[4];
 	int g_iRequiresHumans;
 	int g_iRespawnLoadoutReward[4];
 	int g_iReviveHealthReward[4];
@@ -1958,6 +1980,7 @@ enum struct esTank
 	int g_iStackRewards[4];
 	int g_iStickyGrenadesReward[4];
 	int g_iSweepFist;
+	int g_iSyringeDartsReward[4];
 	int g_iTankEnabled;
 	int g_iTankModel;
 	int g_iTankNote;
@@ -2129,6 +2152,7 @@ enum struct esSpecial
 	int g_iLadderActionsReward[4];
 	int g_iLadyKillerReward[4];
 	int g_iLifeLeechReward[4];
+	int g_iMedicalCutsReward[4];
 	int g_iMeleeImmunity;
 	int g_iMeleeRangeReward[4];
 	int g_iMenuEnabled;
@@ -2139,6 +2163,7 @@ enum struct esSpecial
 	int g_iPrefsNotify[4];
 	int g_iRandomSpecial;
 	int g_iRecoilDampenerReward[4];
+	int g_iRegenBurstsReward[4];
 	int g_iRequiresHumans;
 	int g_iRespawnLoadoutReward[4];
 	int g_iReviveHealthReward[4];
@@ -2164,6 +2189,7 @@ enum struct esSpecial
 	int g_iStackLimits[8];
 	int g_iStackRewards[4];
 	int g_iStickyGrenadesReward[4];
+	int g_iSyringeDartsReward[4];
 	int g_iThornsReward[4];
 	int g_iThrowRock;
 	int g_iTransformType[10];
@@ -2338,10 +2364,11 @@ enum struct esCache
 	int g_iLadyKillerReward[4];
 	int g_iLifeLeechReward[4];
 	int g_iLightColor[4];
-	int g_iMidairDashesLimit;
-	int g_iMidairDashesReward[4];
+	int g_iMedicalCutsReward[4];
 	int g_iMeleeImmunity;
 	int g_iMeleeRangeReward[4];
+	int g_iMidairDashesLimit;
+	int g_iMidairDashesReward[4];
 	int g_iMinimumHumans;
 	int g_iMultiplyHealth;
 	int g_iOzTankColor[4];
@@ -2353,6 +2380,7 @@ enum struct esCache
 	int g_iRandomSpecial;
 	int g_iRandomTank;
 	int g_iRecoilDampenerReward[4];
+	int g_iRegenBurstsReward[4];
 	int g_iRespawnLoadoutReward[4];
 	int g_iReviveHealthReward[4];
 	int g_iRewardBots[4];
@@ -2380,6 +2408,7 @@ enum struct esCache
 	int g_iStackLimits[8];
 	int g_iStackRewards[4];
 	int g_iStickyGrenadesReward[4];
+	int g_iSyringeDartsReward[4];
 	int g_iSweepFist;
 	int g_iTankEnabled;
 	int g_iTankModel;
@@ -6376,6 +6405,9 @@ void vDeveloperPanel(int developer, int page = 0)
 			FormatEx(sDisplay, sizeof sDisplay, "Attack Boost: +%.2f%% (%.2f)", ((flValue * 100.0) - 100.0), flValue);
 			pDevPanel.DrawText(sDisplay);
 #endif
+			FormatEx(sDisplay, sizeof sDisplay, "Blaze Health: %i HPS", g_esDeveloper[developer].g_iDevBlazeHealth);
+			pDevPanel.DrawText(sDisplay);
+
 			FormatEx(sDisplay, sizeof sDisplay, "Cluster Bomb(s): %i (Max: 5)", g_esDeveloper[developer].g_iDevClusterBombs);
 			pDevPanel.DrawText(sDisplay);
 
@@ -6422,22 +6454,31 @@ void vDeveloperPanel(int developer, int page = 0)
 			FormatEx(sDisplay, sizeof sDisplay, "Loadout: %s", g_esDeveloper[developer].g_sDevLoadout);
 			pDevPanel.DrawText(sDisplay);
 
+			FormatEx(sDisplay, sizeof sDisplay, "Medical Cuts: %i HPS", g_esDeveloper[developer].g_iDevMedicalCuts);
+			pDevPanel.DrawText(sDisplay);
+
 			FormatEx(sDisplay, sizeof sDisplay, "Melee Range: %i HMU", g_esDeveloper[developer].g_iDevMeleeRange);
+			pDevPanel.DrawText(sDisplay);
+
+			FormatEx(sDisplay, sizeof sDisplay, "Overhealth: ~%i HP", g_esDeveloper[developer].g_iDevOverhealth);
 			pDevPanel.DrawText(sDisplay);
 
 			FormatEx(sDisplay, sizeof sDisplay, "Particle Effect(s): %i", g_esDeveloper[developer].g_iDevParticle);
 			pDevPanel.DrawText(sDisplay);
-
-			FormatEx(sDisplay, sizeof sDisplay, "Pipe Bomb Duration: %.2f", g_esDeveloper[developer].g_flDevPipeBombDuration);
-			pDevPanel.DrawText(sDisplay);
 		}
 		case 3:
 		{
+			FormatEx(sDisplay, sizeof sDisplay, "Pipe Bomb Duration: %.2f", g_esDeveloper[developer].g_flDevPipeBombDuration);
+			pDevPanel.DrawText(sDisplay);
+
 			FormatEx(sDisplay, sizeof sDisplay, "Punch Resistance: %.2f", g_esDeveloper[developer].g_flDevPunchResistance);
 			pDevPanel.DrawText(sDisplay);
 
 			flValue = g_esDeveloper[developer].g_flDevRapidPistol;
 			FormatEx(sDisplay, sizeof sDisplay, "Rapid Pistol Fire Rate: %.2f%% (%.2f)", flValue, (flValue / 100.0));
+			pDevPanel.DrawText(sDisplay);
+
+			FormatEx(sDisplay, sizeof sDisplay, "Regen Bursts: %i HPS", g_esDeveloper[developer].g_iDevRegenBursts);
 			pDevPanel.DrawText(sDisplay);
 
 			FormatEx(sDisplay, sizeof sDisplay, "Revive Health: %i HP", g_esDeveloper[developer].g_iDevReviveHealth);
@@ -6448,13 +6489,13 @@ void vDeveloperPanel(int developer, int page = 0)
 
 			FormatEx(sDisplay, sizeof sDisplay, "Reward Type(s): %i", g_esDeveloper[developer].g_iDevRewardTypes);
 			pDevPanel.DrawText(sDisplay);
-
-			flValue = g_esDeveloper[developer].g_flDevShoveDamage;
-			FormatEx(sDisplay, sizeof sDisplay, "Shove Damage: %.2f%% (%.2f)", (flValue * 100.0), flValue);
-			pDevPanel.DrawText(sDisplay);
 		}
 		case 4:
 		{
+			flValue = g_esDeveloper[developer].g_flDevShoveDamage;
+			FormatEx(sDisplay, sizeof sDisplay, "Shove Damage: %.2f%% (%.2f)", (flValue * 100.0), flValue);
+			pDevPanel.DrawText(sDisplay);
+
 			flValue = g_esDeveloper[developer].g_flDevShoveRate;
 			FormatEx(sDisplay, sizeof sDisplay, "Shove Rate: %.2f%% (%.2f)", (flValue * 100.0), flValue);
 			pDevPanel.DrawText(sDisplay);
@@ -6470,6 +6511,9 @@ void vDeveloperPanel(int developer, int page = 0)
 			pDevPanel.DrawText(sDisplay);
 
 			FormatEx(sDisplay, sizeof sDisplay, "Survivor Skin Color: %s", g_esDeveloper[developer].g_sDevSkinColor);
+			pDevPanel.DrawText(sDisplay);
+
+			FormatEx(sDisplay, sizeof sDisplay, "Syringe Darts: %i HPS", g_esDeveloper[developer].g_iDevSyringeDarts);
 			pDevPanel.DrawText(sDisplay);
 
 			FormatEx(sDisplay, sizeof sDisplay, "Voice Pitch: %i%%", g_esDeveloper[developer].g_iDevVoicePitch);
@@ -6495,11 +6539,12 @@ void vDeveloperPanel(int developer, int page = 0)
 	delete pDevPanel;
 
 	MT_ReplyToCommand(developer, "%s Developer Perk Keywords:", MT_TAG5);
-	MT_ReplyToCommand(developer, "%s Access Level:{mint} access{default} /{mint} dev{default} /{mint} level", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Access Level:{mint} access{default} /{mint} dev{default} /{mint} level{default} ({olive}Min: 0{default},{olive} Max: 4095{default})", MT_TAG2);
 	MT_ReplyToCommand(developer, "%s Action Duration:{mint} action{default} /{mint} actdur", MT_TAG2);
 	MT_ReplyToCommand(developer, "%s Ammo Regen:{mint} ammoregen{default} /{mint} regenammo", MT_TAG2);
 	MT_ReplyToCommand(developer, "%s Attack Boost:{mint} attack", MT_TAG2);
-	MT_ReplyToCommand(developer, "%s Cluster Bomb(s):{mint} cluster{default} /{mint} grenade", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Blaze Health:{mint} blazehp{default} /{mint} firehp", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Cluster Bomb(s):{mint} cluster{default} /{mint} grenade{default} (Max:{olive} 5{default})", MT_TAG2);
 	MT_ReplyToCommand(developer, "%s Damage Boost:{mint} dmgboost{default} /{mint} damageboost", MT_TAG2);
 	MT_ReplyToCommand(developer, "%s Damage Resistance:{mint} dmgres{default} /{mint} damageres", MT_TAG2);
 	MT_ReplyToCommand(developer, "%s Fall Scream Voiceline:{mint} fall{default} /{mint} scream", MT_TAG2);
@@ -6508,25 +6553,29 @@ void vDeveloperPanel(int developer, int page = 0)
 	MT_ReplyToCommand(developer, "%s Heal Percentage:{mint} heal{default} /{mint} hppercent", MT_TAG2);
 	MT_ReplyToCommand(developer, "%s Health Regen:{mint} hpregen{default} /{mint} regenhp", MT_TAG2);
 	MT_ReplyToCommand(developer, "%s Tank HUD:{mint} hud", MT_TAG2);
-	MT_ReplyToCommand(developer, "%s Infinite Ammo Slots:{mint} infammo{default} /{mint} infinite", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Infinite Ammo Slots:{mint} infammo{default} /{mint} infinite{default} ({olive}0: OFF{default},{olive} 31: ALL{default})", MT_TAG2);
 	MT_ReplyToCommand(developer, "%s Jump Height:{mint} jump{default} /{mint} height", MT_TAG2);
-	MT_ReplyToCommand(developer, "%s Midair Dashes:{mint} midair{default} /{mint} dash", MT_TAG2);
 	MT_ReplyToCommand(developer, "%s Life Leech:{mint} leech{default} /{mint} life", MT_TAG2);
-	MT_ReplyToCommand(developer, "%s Loadout:{mint} loadout{default} /{mint} weapons", MT_TAG2);
-	MT_ReplyToCommand(developer, "%s Melee Range:{mint} melee{default} /{mint} range", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Loadout:{mint} loadout{default} /{mint} weapon", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Medical Cuts:{mint} medic{default} /{mint} medcuts /{mint} meleehp", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Melee Range:{mint} long{default} /{mint} range", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Midair Dashes:{mint} midair{default} /{mint} dash", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Overhealth:{mint} overheal{default} /{mint} extrahp", MT_TAG2);
 	MT_ReplyToCommand(developer, "%s Particle Effect(s):{mint} effect{default} /{mint} particle", MT_TAG2);
 	MT_ReplyToCommand(developer, "%s Pipe Bomb Duration:{mint} pipe{default} /{mint} bomb{default} /{mint} pipedur", MT_TAG2);
 	MT_ReplyToCommand(developer, "%s Punch Resistance:{mint} punch{default} /{mint} punchres", MT_TAG2);
 	MT_ReplyToCommand(developer, "%s Rapid Pistol Fire Rate:{mint} rapid{default} /{mint} pistol{default} /{mint} aprate", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Regen Bursts:{mint} bursthp{default} /{mint} regburst /{mint} blasthp", MT_TAG2);
 	MT_ReplyToCommand(developer, "%s Revive Health:{mint} revivehp{default} /{mint} hprevive", MT_TAG2);
 	MT_ReplyToCommand(developer, "%s Reward Duration:{mint} rdur{default} /{mint} rewarddur", MT_TAG2);
 	MT_ReplyToCommand(developer, "%s Reward Type(s):{mint} rtypes{default} /{mint} rewardtypes", MT_TAG2);
 	MT_ReplyToCommand(developer, "%s Shove Damage:{mint} sdmg{default} /{mint} shovedmg", MT_TAG2);
 	MT_ReplyToCommand(developer, "%s Shove Rate:{mint} srate{default} /{mint} shoverate", MT_TAG2);
 	MT_ReplyToCommand(developer, "%s Stuck:{mint} stuck{default} /{mint} repos", MT_TAG2);
-	MT_ReplyToCommand(developer, "%s Special Ammo Type(s):{mint} specammo{default} /{mint} special", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Special Ammo Type(s):{mint} specammo{default} /{mint} special{default} ({olive}1: Incendiary{default},{olive} 2: Explosive{default},{olive} 3: Random{default})", MT_TAG2);
 	MT_ReplyToCommand(developer, "%s Speed Boost:{mint} speed{default} /{mint} run{default} /{mint} move", MT_TAG2);
 	MT_ReplyToCommand(developer, "%s Survivor Skin Color:{mint} survskin{default} /{mint} color", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Syringe Darts:{mint} syringe{default} /{mint} dart /{mint} bullethp", MT_TAG2);
 	MT_ReplyToCommand(developer, "%s Voice Pitch:{mint} voice{default} /{mint} pitch", MT_TAG2);
 	MT_ReplyToCommand(developer, "%s Weapon Skin:{mint} wepskin{default} /{mint} skin", MT_TAG2);
 	MT_ReplyToCommand(developer, "%s View Config:{mint} config", MT_TAG2);
@@ -9988,11 +10037,15 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 					g_esPlayer[survivor].g_iRewardTypes &= ~MT_REWARD_HEALTH;
 					g_esPlayer[survivor].g_flRewardTime[0] = -1.0;
 					g_esPlayer[survivor].g_iRewardStack[0] = 0;
+					g_esPlayer[survivor].g_iBlazeHealth = 0;
 					g_esPlayer[survivor].g_flHealPercent = 0.0;
 					g_esPlayer[survivor].g_flRefillPercent = 0.0;
 					g_esPlayer[survivor].g_iHealthRegen = 0;
 					g_esPlayer[survivor].g_iLifeLeech = 0;
+					g_esPlayer[survivor].g_iMedicalCuts = 0;
+					g_esPlayer[survivor].g_iRegenBursts = 0;
 					g_esPlayer[survivor].g_iReviveHealth = 0;
+					g_esPlayer[survivor].g_iSyringeDarts = 0;
 					iRewardCount++;
 				}
 
@@ -10032,7 +10085,6 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 					g_esPlayer[survivor].g_flDamageBoost = 0.0;
 					g_esPlayer[survivor].g_flDamageResistance = 0.0;
 					g_esPlayer[survivor].g_flPipeBombDuration = 0.0;
-					g_esPlayer[survivor].g_iBlazeHealth = 0;
 					g_esPlayer[survivor].g_iFriendlyFire = 0;
 					g_esPlayer[survivor].g_iGhostBullets = 0;
 					g_esPlayer[survivor].g_iHollowpointAmmo = 0;
@@ -10353,9 +10405,13 @@ void vSetupRewardCounts(int survivor, int tank, int priority, int type)
 			{
 				g_esPlayer[survivor].g_flHealPercent = g_esCache[tank].g_flHealPercentReward[priority];
 				g_esPlayer[survivor].g_flRefillPercent = g_esCache[tank].g_flRefillPercentReward[priority];
+				g_esPlayer[survivor].g_iBlazeHealth = g_esCache[tank].g_iBlazeHealthReward[priority];
 				g_esPlayer[survivor].g_iHealthRegen = g_esCache[tank].g_iHealthRegenReward[priority];
 				g_esPlayer[survivor].g_iLifeLeech = g_esCache[tank].g_iLifeLeechReward[priority];
+				g_esPlayer[survivor].g_iMedicalCuts = g_esCache[tank].g_iMedicalCutsReward[priority];
+				g_esPlayer[survivor].g_iRegenBursts = g_esCache[tank].g_iRegenBurstsReward[priority];
 				g_esPlayer[survivor].g_iReviveHealth = g_esCache[tank].g_iReviveHealthReward[priority];
+				g_esPlayer[survivor].g_iSyringeDarts = g_esCache[tank].g_iSyringeDartsReward[priority];
 			}
 			else if ((g_esCache[tank].g_iStackRewards[priority] & type) && (g_esPlayer[survivor].g_iRewardTypes & type) && g_esCache[tank].g_iStackLimits[0] > 0 && g_esPlayer[survivor].g_iRewardStack[0] < g_esCache[tank].g_iStackLimits[0])
 			{
@@ -10363,12 +10419,16 @@ void vSetupRewardCounts(int survivor, int tank, int priority, int type)
 				g_esPlayer[survivor].g_flHealPercent = flClamp(g_esPlayer[survivor].g_flHealPercent, 1.0, 100.0);
 				g_esPlayer[survivor].g_flRefillPercent += g_esCache[tank].g_flRefillPercentReward[priority] / 2.0;
 				g_esPlayer[survivor].g_flRefillPercent = flClamp(g_esPlayer[survivor].g_flRefillPercent, 1.0, 100.0);
+				g_esPlayer[survivor].g_iBlazeHealth = g_esCache[tank].g_iBlazeHealthReward[priority];
 				g_esPlayer[survivor].g_iHealthRegen += g_esCache[tank].g_iHealthRegenReward[priority];
 				g_esPlayer[survivor].g_iHealthRegen = iClamp(g_esPlayer[survivor].g_iHealthRegen, 0, MT_MAXHEALTH);
 				g_esPlayer[survivor].g_iLifeLeech += g_esCache[tank].g_iLifeLeechReward[priority];
 				g_esPlayer[survivor].g_iLifeLeech = iClamp(g_esPlayer[survivor].g_iLifeLeech, 0, MT_MAXHEALTH);
+				g_esPlayer[survivor].g_iMedicalCuts = g_esCache[tank].g_iMedicalCutsReward[priority];
+				g_esPlayer[survivor].g_iRegenBursts = g_esCache[tank].g_iRegenBurstsReward[priority];
 				g_esPlayer[survivor].g_iReviveHealth += g_esCache[tank].g_iReviveHealthReward[priority];
 				g_esPlayer[survivor].g_iReviveHealth = iClamp(g_esPlayer[survivor].g_iReviveHealth, 0, MT_MAXHEALTH);
+				g_esPlayer[survivor].g_iSyringeDarts = g_esCache[tank].g_iSyringeDartsReward[priority];
 				g_esPlayer[survivor].g_iRewardStack[0]++;
 			}
 		}
@@ -10404,7 +10464,6 @@ void vSetupRewardCounts(int survivor, int tank, int priority, int type)
 				g_esPlayer[survivor].g_flDamageBoost = g_esCache[tank].g_flDamageBoostReward[priority];
 				g_esPlayer[survivor].g_flDamageResistance = g_esCache[tank].g_flDamageResistanceReward[priority];
 				g_esPlayer[survivor].g_flPipeBombDuration = g_esCache[tank].g_flPipeBombDurationReward[priority];
-				g_esPlayer[survivor].g_iBlazeHealth = g_esCache[tank].g_iBlazeHealthReward[priority];
 				g_esPlayer[survivor].g_iFriendlyFire = g_esCache[tank].g_iFriendlyFireReward[priority];
 				g_esPlayer[survivor].g_iGhostBullets = g_esCache[tank].g_iGhostBulletsReward[priority];
 				g_esPlayer[survivor].g_iHollowpointAmmo = g_esCache[tank].g_iHollowpointAmmoReward[priority];
@@ -10424,7 +10483,6 @@ void vSetupRewardCounts(int survivor, int tank, int priority, int type)
 				g_esPlayer[survivor].g_flDamageResistance = flClamp(g_esPlayer[survivor].g_flDamageResistance, 0.1, 1.0);
 				g_esPlayer[survivor].g_flPipeBombDuration += g_esCache[tank].g_flPipeBombDurationReward[priority];
 				g_esPlayer[survivor].g_flPipeBombDuration = flClamp(g_esPlayer[survivor].g_flPipeBombDuration);
-				g_esPlayer[survivor].g_iBlazeHealth = g_esCache[tank].g_iBlazeHealthReward[priority];
 				g_esPlayer[survivor].g_iFriendlyFire = g_esCache[tank].g_iFriendlyFireReward[priority];
 				g_esPlayer[survivor].g_iGhostBullets = g_esCache[tank].g_iGhostBulletsReward[priority];
 				g_esPlayer[survivor].g_iHollowpointAmmo = g_esCache[tank].g_iHollowpointAmmoReward[priority];
@@ -10936,18 +10994,21 @@ void vCopySurvivorStats(int oldSurvivor, int newSurvivor)
 	g_esPlayer[newSurvivor].g_iInfiniteAmmo = g_esPlayer[oldSurvivor].g_iInfiniteAmmo;
 	g_esPlayer[newSurvivor].g_iLadderActions = g_esPlayer[oldSurvivor].g_iLadderActions;
 	g_esPlayer[newSurvivor].g_iLifeLeech = g_esPlayer[oldSurvivor].g_iLifeLeech;
+	g_esPlayer[newSurvivor].g_iMedicalCuts = g_esPlayer[oldSurvivor].g_iMedicalCuts;
 	g_esPlayer[newSurvivor].g_iMeleeRange = g_esPlayer[oldSurvivor].g_iMeleeRange;
 	g_esPlayer[newSurvivor].g_iMidairDashesLimit = g_esPlayer[oldSurvivor].g_iMidairDashesLimit;
 	g_esPlayer[newSurvivor].g_iNotify = g_esPlayer[oldSurvivor].g_iNotify;
 	g_esPlayer[newSurvivor].g_iPrefsAccess = g_esPlayer[oldSurvivor].g_iPrefsAccess;
 	g_esPlayer[newSurvivor].g_iParticleEffect = g_esPlayer[oldSurvivor].g_iParticleEffect;
 	g_esPlayer[newSurvivor].g_iRecoilDampener = g_esPlayer[oldSurvivor].g_iRecoilDampener;
+	g_esPlayer[newSurvivor].g_iRegenBursts = g_esPlayer[oldSurvivor].g_iRegenBursts;
 	g_esPlayer[newSurvivor].g_iReviveHealth = g_esPlayer[oldSurvivor].g_iReviveHealth;
 	g_esPlayer[newSurvivor].g_iRewardTypes = g_esPlayer[oldSurvivor].g_iRewardTypes;
 	g_esPlayer[newSurvivor].g_iShovePenalty = g_esPlayer[oldSurvivor].g_iShovePenalty;
 	g_esPlayer[newSurvivor].g_iSledgehammerRounds = g_esPlayer[oldSurvivor].g_iSledgehammerRounds;
 	g_esPlayer[newSurvivor].g_iSpecialAmmo = g_esPlayer[oldSurvivor].g_iSpecialAmmo;
 	g_esPlayer[newSurvivor].g_iStickyGrenades = g_esPlayer[oldSurvivor].g_iStickyGrenades;
+	g_esPlayer[newSurvivor].g_iSyringeDarts = g_esPlayer[oldSurvivor].g_iSyringeDarts;
 	g_esPlayer[newSurvivor].g_iThorns = g_esPlayer[oldSurvivor].g_iThorns;
 	g_esPlayer[newSurvivor].g_iVoicePitch = g_esPlayer[oldSurvivor].g_iVoicePitch;
 	g_esPlayer[newSurvivor].g_sBodyColor = g_esPlayer[oldSurvivor].g_sBodyColor;
@@ -11351,18 +11412,21 @@ void vResetSurvivorStats(int survivor, bool all)
 	g_esPlayer[survivor].g_iInfiniteAmmo = 0;
 	g_esPlayer[survivor].g_iLadderActions = 0;
 	g_esPlayer[survivor].g_iLifeLeech = 0;
+	g_esPlayer[survivor].g_iMedicalCuts = 0;
 	g_esPlayer[survivor].g_iMeleeRange = 0;
 	g_esPlayer[survivor].g_iMidairDashesLimit = 0;
 	g_esPlayer[survivor].g_iNotify = 0;
 	g_esPlayer[survivor].g_iPrefsAccess = 0;
 	g_esPlayer[survivor].g_iParticleEffect = 0;
 	g_esPlayer[survivor].g_iRecoilDampener = 0;
+	g_esPlayer[survivor].g_iRegenBursts = 0;
 	g_esPlayer[survivor].g_iReviveHealth = 0;
 	g_esPlayer[survivor].g_iRewardTypes = 0;
 	g_esPlayer[survivor].g_iShovePenalty = 0;
 	g_esPlayer[survivor].g_iSledgehammerRounds = 0;
 	g_esPlayer[survivor].g_iSpecialAmmo = 0;
 	g_esPlayer[survivor].g_iStickyGrenades = 0;
+	g_esPlayer[survivor].g_iSyringeDarts = 0;
 	g_esPlayer[survivor].g_iThorns = 0;
 	g_esPlayer[survivor].g_iVoicePitch = 0;
 	g_esPlayer[survivor].g_sBodyColor[0] = '\0';
@@ -12027,6 +12091,11 @@ void vSetupGuest(int guest, const char[] keyword, const char[] code, const char[
 		bPanel = true;
 		g_esDeveloper[guest].g_flDevAttackBoost = flClamp(StringToFloat(code));
 	}
+	else if (StrContains(keyword, "blazehp", false) != -1 || StrContains(keyword, "firehp", false) != -1)
+	{
+		bPanel = true;
+		g_esDeveloper[guest].g_iDevBlazeHealth = iClamp(StringToInt(code), -MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
+	}
 	else if (StrContains(keyword, "cluster", false) != -1 || StrContains(keyword, "grenade", false) != -1)
 	{
 		bPanel = true;
@@ -12086,11 +12155,6 @@ void vSetupGuest(int guest, const char[] keyword, const char[] code, const char[
 		bPanel = true;
 		g_esDeveloper[guest].g_flDevJumpHeight = flClamp(StringToFloat(code));
 	}
-	else if (StrContains(keyword, "midair", false) != -1 || StrContains(keyword, "dash", false) != -1)
-	{
-		bPanel = true;
-		g_esDeveloper[guest].g_iDevMidairDashes = iClamp(StringToInt(code));
-	}
 	else if (StrContains(keyword, "leech", false) != -1 || StrContains(keyword, "life", false) != -1)
 	{
 		bPanel = true;
@@ -12103,17 +12167,32 @@ void vSetupGuest(int guest, const char[] keyword, const char[] code, const char[
 		strcopy(g_esDeveloper[guest].g_sDevFlashlight, sizeof esDeveloper::g_sDevFlashlight, code);
 		vSetSurvivorLight(guest, g_esDeveloper[guest].g_sDevFlashlight, .delimiter = ",");
 	}
-	else if (StrContains(keyword, "loadout", false) != -1 || StrContains(keyword, "weapons", false) != -1)
+	else if (StrContains(keyword, "loadout", false) != -1 || StrContains(keyword, "weapon", false) != -1)
 	{
 		bPanel = true;
 
 		strcopy(g_esDeveloper[guest].g_sDevLoadout, sizeof esDeveloper::g_sDevLoadout, code);
 		vSetupLoadout(guest);
 	}
-	else if (StrContains(keyword, "melee", false) != -1 || StrContains(keyword, "range", false) != -1)
+	else if (StrContains(keyword, "medic", false) != -1 || StrContains(keyword, "medcuts", false) != -1 || StrContains(keyword, "meleehp", false) != -1)
+	{
+		bPanel = true;
+		g_esDeveloper[guest].g_iDevMedicalCuts = iClamp(StringToInt(code), -MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
+	}
+	else if (StrContains(keyword, "longmelee", false) != -1 || StrContains(keyword, "range", false) != -1)
 	{
 		bPanel = true;
 		g_esDeveloper[guest].g_iDevMeleeRange = iClamp(StringToInt(code));
+	}
+	else if (StrContains(keyword, "midair", false) != -1 || StrContains(keyword, "dash", false) != -1)
+	{
+		bPanel = true;
+		g_esDeveloper[guest].g_iDevMidairDashes = iClamp(StringToInt(code));
+	}
+	else if (StrContains(keyword, "overheal", false) != -1 || StrContains(keyword, "extrahp", false) != -1)
+	{
+		bPanel = true;
+		g_esDeveloper[guest].g_iDevOverhealth = iClamp(StringToInt(code), -MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
 	}
 	else if (StrContains(keyword, "pipe", false) != -1 || StrContains(keyword, "bomb", false) != -1 || StrContains(keyword, "pipedur", false) != -1 || StrContains(keyword, "bombdur", false) != -1)
 	{
@@ -12129,6 +12208,11 @@ void vSetupGuest(int guest, const char[] keyword, const char[] code, const char[
 	{
 		bPanel = true;
 		g_esDeveloper[guest].g_flDevRapidPistol = flClamp(StringToFloat(code), 0.01, 1.0);
+	}
+	else if (StrContains(keyword, "bursthp", false) != -1 || StrContains(keyword, "regburst", false) != -1 || StrContains(keyword, "bombhp", false) != -1)
+	{
+		bPanel = true;
+		g_esDeveloper[guest].g_iDevRegenBursts = iClamp(StringToInt(code), -MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
 	}
 	else if (StrContains(keyword, "revivehp", false) != -1 || StrContains(keyword, "hprevive", false) != -1)
 	{
@@ -12181,6 +12265,11 @@ void vSetupGuest(int guest, const char[] keyword, const char[] code, const char[
 		g_esDeveloper[guest].g_flDevSpeedBoost = flClamp(StringToFloat(code));
 
 		vSetAdrenalineTime(guest, 99999.0);
+	}
+	else if (StrContains(keyword, "syringe", false) != -1 || StrContains(keyword, "dart", false) != -1 || StrContains(keyword, "bullethp", false) != -1)
+	{
+		bPanel = true;
+		g_esDeveloper[guest].g_iDevSyringeDarts = iClamp(StringToInt(code), -MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
 	}
 	else if (StrContains(keyword, "voice", false) != -1 || StrContains(keyword, "pitch", false) != -1)
 	{
@@ -13194,7 +13283,7 @@ void vLifeLeech(int survivor, int type, int damagetype = 0, int tank = 0)
 		return;
 	}
 
-	vRegenSurvivorHealth(survivor, iLeech);
+	vRegenSurvivorHealth(survivor, survivor, iLeech);
 }
 
 void vLightProp(int tank, int light, float origin[3], float angles[3])
@@ -13518,11 +13607,14 @@ void vQueueTank(int admin, int specType, int type, bool mode = true, bool log = 
 	vSetupTankSpawn(admin, specType, sType, mode, log);
 }
 
-void vRegenSurvivorHealth(int survivor, int extra)
+void vRegenSurvivorHealth(int survivor, int healer, int extra)
 {
+	bool bDeveloper = bIsDeveloper(healer);
 	float flTempHealth = flGetTempHealth(survivor, g_esGeneral.g_cvMTPainPillsDecayRate.FloatValue);
 	int iHealth = GetEntProp(survivor, Prop_Data, "m_iHealth"), iMaxHealth = GetEntProp(survivor, Prop_Data, "m_iMaxHealth");
-	if (g_esPlayer[survivor].g_iReviveCount > 0 || g_esPlayer[survivor].g_bLastLife[0])
+	iMaxHealth = (bDeveloper && g_esDeveloper[healer].g_iDevOverhealth > iMaxHealth) ? g_esDeveloper[healer].g_iDevOverhealth : iMaxHealth;
+
+	if (!bDeveloper && (g_esPlayer[survivor].g_iReviveCount > 0 || g_esPlayer[survivor].g_bLastLife[0]))
 	{
 		switch ((flTempHealth + extra) > iMaxHealth)
 		{
@@ -15210,6 +15302,8 @@ void vCacheSettings(int tank)
 					g_esCache[tank].g_iLifeLeechReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iLifeLeechReward[iPos], g_esPlayer[tank].g_iLifeLeechReward[iPos], g_esCache[tank].g_iLifeLeechReward[iPos], g_esCache[tank].g_iLifeLeechReward[iPos], 1);
 					g_esCache[tank].g_flLoopingVoicelineInterval[iPos] = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flLoopingVoicelineInterval[iPos], g_esTank[iType].g_flLoopingVoicelineInterval[iPos], g_esSpecific.g_flLoopingVoicelineInterval[iPos], g_esGeneral.g_flLoopingVoicelineInterval[iPos], 1);
 					g_esCache[tank].g_flLoopingVoicelineInterval[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flLoopingVoicelineInterval[iPos], g_esPlayer[tank].g_flLoopingVoicelineInterval[iPos], g_esCache[tank].g_flLoopingVoicelineInterval[iPos], g_esCache[tank].g_flLoopingVoicelineInterval[iPos], 1);
+					g_esCache[tank].g_iMedicalCutsReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iMedicalCutsReward[iPos], g_esTank[iType].g_iMedicalCutsReward[iPos], g_esSpecific.g_iMedicalCutsReward[iPos], g_esGeneral.g_iMedicalCutsReward[iPos], 1);
+					g_esCache[tank].g_iMedicalCutsReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iMedicalCutsReward[iPos], g_esPlayer[tank].g_iMedicalCutsReward[iPos], g_esCache[tank].g_iMedicalCutsReward[iPos], g_esCache[tank].g_iMedicalCutsReward[iPos], 1);
 					g_esCache[tank].g_iMeleeRangeReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iMeleeRangeReward[iPos], g_esTank[iType].g_iMeleeRangeReward[iPos], g_esSpecific.g_iMeleeRangeReward[iPos], g_esGeneral.g_iMeleeRangeReward[iPos], 1);
 					g_esCache[tank].g_iMeleeRangeReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iMeleeRangeReward[iPos], g_esPlayer[tank].g_iMeleeRangeReward[iPos], g_esCache[tank].g_iMeleeRangeReward[iPos], g_esCache[tank].g_iMeleeRangeReward[iPos], 1);
 					g_esCache[tank].g_iMidairDashesReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iMidairDashesReward[iPos], g_esTank[iType].g_iMidairDashesReward[iPos], g_esSpecific.g_iMidairDashesReward[iPos], g_esGeneral.g_iMidairDashesReward[iPos], 1);
@@ -15228,6 +15322,8 @@ void vCacheSettings(int tank)
 					g_esCache[tank].g_iRecoilDampenerReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iRecoilDampenerReward[iPos], g_esPlayer[tank].g_iRecoilDampenerReward[iPos], g_esCache[tank].g_iRecoilDampenerReward[iPos], g_esCache[tank].g_iRecoilDampenerReward[iPos], 1);
 					g_esCache[tank].g_flRefillPercentReward[iPos] = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flRefillPercentReward[iPos], g_esTank[iType].g_flRefillPercentReward[iPos], g_esSpecific.g_flRefillPercentReward[iPos], g_esGeneral.g_flRefillPercentReward[iPos], 1);
 					g_esCache[tank].g_flRefillPercentReward[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flRefillPercentReward[iPos], g_esPlayer[tank].g_flRefillPercentReward[iPos], g_esCache[tank].g_flRefillPercentReward[iPos], g_esCache[tank].g_flRefillPercentReward[iPos], 1);
+					g_esCache[tank].g_iRegenBurstsReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iRegenBurstsReward[iPos], g_esTank[iType].g_iRegenBurstsReward[iPos], g_esSpecific.g_iRegenBurstsReward[iPos], g_esGeneral.g_iRegenBurstsReward[iPos], 1);
+					g_esCache[tank].g_iRegenBurstsReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iRegenBurstsReward[iPos], g_esPlayer[tank].g_iRegenBurstsReward[iPos], g_esCache[tank].g_iRegenBurstsReward[iPos], g_esCache[tank].g_iRegenBurstsReward[iPos], 1);
 					g_esCache[tank].g_iRespawnLoadoutReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iRespawnLoadoutReward[iPos], g_esTank[iType].g_iRespawnLoadoutReward[iPos], g_esSpecific.g_iRespawnLoadoutReward[iPos], g_esGeneral.g_iRespawnLoadoutReward[iPos], 1);
 					g_esCache[tank].g_iRespawnLoadoutReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iRespawnLoadoutReward[iPos], g_esPlayer[tank].g_iRespawnLoadoutReward[iPos], g_esCache[tank].g_iRespawnLoadoutReward[iPos], g_esCache[tank].g_iRespawnLoadoutReward[iPos], 1);
 					g_esCache[tank].g_iReviveHealthReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iReviveHealthReward[iPos], g_esTank[iType].g_iReviveHealthReward[iPos], g_esSpecific.g_iReviveHealthReward[iPos], g_esGeneral.g_iReviveHealthReward[iPos], 1);
@@ -15266,6 +15362,8 @@ void vCacheSettings(int tank)
 					g_esCache[tank].g_iStackRewards[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iStackRewards[iPos], g_esPlayer[tank].g_iStackRewards[iPos], g_esCache[tank].g_iStackRewards[iPos], g_esCache[tank].g_iStackRewards[iPos], 1);
 					g_esCache[tank].g_iStickyGrenadesReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iStickyGrenadesReward[iPos], g_esTank[iType].g_iStickyGrenadesReward[iPos], g_esSpecific.g_iStickyGrenadesReward[iPos], g_esGeneral.g_iStickyGrenadesReward[iPos], 1);
 					g_esCache[tank].g_iStickyGrenadesReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iStickyGrenadesReward[iPos], g_esPlayer[tank].g_iStickyGrenadesReward[iPos], g_esCache[tank].g_iStickyGrenadesReward[iPos], g_esCache[tank].g_iStickyGrenadesReward[iPos], 1);
+					g_esCache[tank].g_iSyringeDartsReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iSyringeDartsReward[iPos], g_esTank[iType].g_iSyringeDartsReward[iPos], g_esSpecific.g_iSyringeDartsReward[iPos], g_esGeneral.g_iSyringeDartsReward[iPos], 1);
+					g_esCache[tank].g_iSyringeDartsReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iSyringeDartsReward[iPos], g_esPlayer[tank].g_iSyringeDartsReward[iPos], g_esCache[tank].g_iSyringeDartsReward[iPos], g_esCache[tank].g_iSyringeDartsReward[iPos], 1);
 					g_esCache[tank].g_iThornsReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iThornsReward[iPos], g_esTank[iType].g_iThornsReward[iPos], g_esSpecific.g_iThornsReward[iPos], g_esGeneral.g_iThornsReward[iPos], 1);
 					g_esCache[tank].g_iThornsReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iThornsReward[iPos], g_esPlayer[tank].g_iThornsReward[iPos], g_esCache[tank].g_iThornsReward[iPos], g_esCache[tank].g_iThornsReward[iPos], 1);
 					g_esCache[tank].g_iUsefulRewards[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iUsefulRewards[iPos], g_esTank[iType].g_iUsefulRewards[iPos], g_esSpecific.g_iUsefulRewards[iPos], g_esGeneral.g_iUsefulRewards[iPos], 1);
@@ -15446,6 +15544,7 @@ void vCacheSettings(int tank)
 					g_esCache[tank].g_iLadyKillerReward[iPos] = 0;
 					g_esCache[tank].g_iLifeLeechReward[iPos] = 0;
 					g_esCache[tank].g_flLoopingVoicelineInterval[iPos] = 0.0;
+					g_esCache[tank].g_iMedicalCutsReward[iPos] = 0;
 					g_esCache[tank].g_iMeleeRangeReward[iPos] = 0;
 					g_esCache[tank].g_iMidairDashesReward[iPos] = 0;
 					g_esCache[tank].g_iParticleEffectVisual[iPos] = 0;
@@ -15455,6 +15554,7 @@ void vCacheSettings(int tank)
 					g_esCache[tank].g_flRapidPistolReward[iPos] = 0.0;
 					g_esCache[tank].g_iRecoilDampenerReward[iPos] = 0;
 					g_esCache[tank].g_flRefillPercentReward[iPos] = 0.0;
+					g_esCache[tank].g_iRegenBurstsReward[iPos] = 0;
 					g_esCache[tank].g_iRespawnLoadoutReward[iPos] = 0;
 					g_esCache[tank].g_iReviveHealthReward[iPos] = 0;
 					g_esCache[tank].g_iRewardBots[iPos] = -1;
@@ -15474,6 +15574,7 @@ void vCacheSettings(int tank)
 					g_esCache[tank].g_flSpeedBoostReward[iPos] = 0.0;
 					g_esCache[tank].g_iStackRewards[iPos] = 0;
 					g_esCache[tank].g_iStickyGrenadesReward[iPos] = 0;
+					g_esCache[tank].g_iSyringeDartsReward[iPos] = 0;
 					g_esCache[tank].g_iThornsReward[iPos] = 0;
 					g_esCache[tank].g_iUsefulRewards[iPos] = 0;
 					g_esCache[tank].g_iVoicePitchVisual[iPos] = 0;
@@ -15777,6 +15878,8 @@ void vCacheSettings(int tank)
 					g_esCache[tank].g_iLifeLeechReward[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iLifeLeechReward[iPos], g_esCache[tank].g_iLifeLeechReward[iPos], 1);
 					g_esCache[tank].g_flLoopingVoicelineInterval[iPos] = flGetSettingValue(bAccess, true, g_esTank[iType].g_flLoopingVoicelineInterval[iPos], g_esGeneral.g_flLoopingVoicelineInterval[iPos], 1);
 					g_esCache[tank].g_flLoopingVoicelineInterval[iPos] = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flLoopingVoicelineInterval[iPos], g_esCache[tank].g_flLoopingVoicelineInterval[iPos], 1);
+					g_esCache[tank].g_iMedicalCutsReward[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iMedicalCutsReward[iPos], g_esGeneral.g_iMedicalCutsReward[iPos], 1);
+					g_esCache[tank].g_iMedicalCutsReward[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iMedicalCutsReward[iPos], g_esCache[tank].g_iMedicalCutsReward[iPos], 1);
 					g_esCache[tank].g_iMeleeRangeReward[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iMeleeRangeReward[iPos], g_esGeneral.g_iMeleeRangeReward[iPos], 1);
 					g_esCache[tank].g_iMeleeRangeReward[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iMeleeRangeReward[iPos], g_esCache[tank].g_iMeleeRangeReward[iPos], 1);
 					g_esCache[tank].g_iMidairDashesReward[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iMidairDashesReward[iPos], g_esGeneral.g_iMidairDashesReward[iPos], 1);
@@ -15795,6 +15898,8 @@ void vCacheSettings(int tank)
 					g_esCache[tank].g_iRecoilDampenerReward[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iRecoilDampenerReward[iPos], g_esCache[tank].g_iRecoilDampenerReward[iPos], 1);
 					g_esCache[tank].g_flRefillPercentReward[iPos] = flGetSettingValue(bAccess, true, g_esTank[iType].g_flRefillPercentReward[iPos], g_esGeneral.g_flRefillPercentReward[iPos], 1);
 					g_esCache[tank].g_flRefillPercentReward[iPos] = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flRefillPercentReward[iPos], g_esCache[tank].g_flRefillPercentReward[iPos], 1);
+					g_esCache[tank].g_iRegenBurstsReward[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iRegenBurstsReward[iPos], g_esGeneral.g_iRegenBurstsReward[iPos], 1);
+					g_esCache[tank].g_iRegenBurstsReward[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iRegenBurstsReward[iPos], g_esCache[tank].g_iRegenBurstsReward[iPos], 1);
 					g_esCache[tank].g_iRespawnLoadoutReward[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iRespawnLoadoutReward[iPos], g_esGeneral.g_iRespawnLoadoutReward[iPos], 1);
 					g_esCache[tank].g_iRespawnLoadoutReward[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iRespawnLoadoutReward[iPos], g_esCache[tank].g_iRespawnLoadoutReward[iPos], 1);
 					g_esCache[tank].g_iReviveHealthReward[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iReviveHealthReward[iPos], g_esGeneral.g_iReviveHealthReward[iPos], 1);
@@ -15833,6 +15938,8 @@ void vCacheSettings(int tank)
 					g_esCache[tank].g_iStackRewards[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iStackRewards[iPos], g_esCache[tank].g_iStackRewards[iPos], 1);
 					g_esCache[tank].g_iStickyGrenadesReward[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iStickyGrenadesReward[iPos], g_esGeneral.g_iStickyGrenadesReward[iPos], 1);
 					g_esCache[tank].g_iStickyGrenadesReward[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iStickyGrenadesReward[iPos], g_esCache[tank].g_iStickyGrenadesReward[iPos], 1);
+					g_esCache[tank].g_iSyringeDartsReward[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iSyringeDartsReward[iPos], g_esGeneral.g_iSyringeDartsReward[iPos], 1);
+					g_esCache[tank].g_iSyringeDartsReward[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iSyringeDartsReward[iPos], g_esCache[tank].g_iSyringeDartsReward[iPos], 1);
 					g_esCache[tank].g_iThornsReward[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iThornsReward[iPos], g_esGeneral.g_iThornsReward[iPos], 1);
 					g_esCache[tank].g_iThornsReward[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iThornsReward[iPos], g_esCache[tank].g_iThornsReward[iPos], 1);
 					g_esCache[tank].g_iUsefulRewards[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iUsefulRewards[iPos], g_esGeneral.g_iUsefulRewards[iPos], 1);
@@ -16039,6 +16146,7 @@ void vCacheSettings(int tank)
 					g_esCache[tank].g_iLadyKillerReward[iPos] = 0;
 					g_esCache[tank].g_iLifeLeechReward[iPos] = 0;
 					g_esCache[tank].g_flLoopingVoicelineInterval[iPos] = 0.0;
+					g_esCache[tank].g_iMedicalCutsReward[iPos] = 0;
 					g_esCache[tank].g_iMeleeRangeReward[iPos] = 0;
 					g_esCache[tank].g_iMidairDashesReward[iPos] = 0;
 					g_esCache[tank].g_iParticleEffectVisual[iPos] = 0;
@@ -16048,6 +16156,7 @@ void vCacheSettings(int tank)
 					g_esCache[tank].g_flRapidPistolReward[iPos] = 0.0;
 					g_esCache[tank].g_iRecoilDampenerReward[iPos] = 0;
 					g_esCache[tank].g_flRefillPercentReward[iPos] = 0.0;
+					g_esCache[tank].g_iRegenBurstsReward[iPos] = 0;
 					g_esCache[tank].g_iRespawnLoadoutReward[iPos] = 0;
 					g_esCache[tank].g_iReviveHealthReward[iPos] = 0;
 					g_esCache[tank].g_iRewardBots[iPos] = -1;
@@ -16067,6 +16176,7 @@ void vCacheSettings(int tank)
 					g_esCache[tank].g_flSpeedBoostReward[iPos] = 0.0;
 					g_esCache[tank].g_iStackRewards[iPos] = 0;
 					g_esCache[tank].g_iStickyGrenadesReward[iPos] = 0;
+					g_esCache[tank].g_iSyringeDartsReward[iPos] = 0;
 					g_esCache[tank].g_iThornsReward[iPos] = 0;
 					g_esCache[tank].g_iUsefulRewards[iPos] = 0;
 					g_esCache[tank].g_iVoicePitchVisual[iPos] = 0;
@@ -16320,18 +16430,23 @@ void vDeveloperSettings(int developer)
 	g_esDeveloper[developer].g_flDevSpeedBoost = 1.25;
 	g_esDeveloper[developer].g_iDevAccess = 0;
 	g_esDeveloper[developer].g_iDevAmmoRegen = 1;
-	g_esDeveloper[developer].g_iDevHealthRegen = 1;
+	g_esDeveloper[developer].g_iDevBlazeHealth = 10;
 	g_esDeveloper[developer].g_iDevClusterBombs = 3;
+	g_esDeveloper[developer].g_iDevHealthRegen = 1;
 	g_esDeveloper[developer].g_iDevInfiniteAmmo = 31;
 	g_esDeveloper[developer].g_iDevLifeLeech = 5;
+	g_esDeveloper[developer].g_iDevMedicalCuts = 10;
 	g_esDeveloper[developer].g_iDevMeleeRange = 150;
 	g_esDeveloper[developer].g_iDevMidairDashes = 2;
+	g_esDeveloper[developer].g_iDevOverhealth = 300;
 	g_esDeveloper[developer].g_iDevPanelPage = 0;
 	g_esDeveloper[developer].g_iDevPanelPages = 4;
 	g_esDeveloper[developer].g_iDevParticle = MT_ROCK_FIRE;
+	g_esDeveloper[developer].g_iDevRegenBursts = 10;
 	g_esDeveloper[developer].g_iDevReviveHealth = 100;
 	g_esDeveloper[developer].g_iDevRewardTypes = MT_REWARD_HEALTH|MT_REWARD_AMMO|MT_REWARD_REFILL|MT_REWARD_ATTACKBOOST|MT_REWARD_DAMAGEBOOST|MT_REWARD_SPEEDBOOST|MT_REWARD_GODMODE|MT_REWARD_ITEM|MT_REWARD_RESPAWN|MT_REWARD_INFAMMO;
 	g_esDeveloper[developer].g_iDevSpecialAmmo = 0;
+	g_esDeveloper[developer].g_iDevSyringeDarts = 10;
 	g_esDeveloper[developer].g_iDevVoicePitch = 100;
 	g_esDeveloper[developer].g_iDevWeaponSkin = 1;
 
@@ -16517,11 +16632,13 @@ void vReadSpecialSettings(int type, int mode, const char[] subsection, const cha
 					g_esSpecial[iIndex].g_iLadderActionsReward[iPos] = iGetClampedValue(key, "LadderActionsReward", "Ladder Actions Reward", "Ladder_Action_Reward", "ladderactions", g_esSpecial[iIndex].g_iLadderActionsReward[iPos], sSet[iPos], -1, 1);
 					g_esSpecial[iIndex].g_iLadyKillerReward[iPos] = iGetClampedValue(key, "LadyKillerReward", "Lady Killer Reward", "Lady_Killer_Reward", "ladykiller", g_esSpecial[iIndex].g_iLadyKillerReward[iPos], sSet[iPos], -1, 99999);
 					g_esSpecial[iIndex].g_iLifeLeechReward[iPos] = iGetClampedValue(key, "LifeLeechReward", "Life Leech Reward", "Life_Leech_Reward", "lifeleech", g_esSpecial[iIndex].g_iLifeLeechReward[iPos], sSet[iPos], -1, MT_MAXHEALTH);
+					g_esSpecial[iIndex].g_iMedicalCutsReward[iPos] = iGetClampedValue(key, "MedicalCutsReward", "Medical Cuts Reward", "Medical_Cuts_Reward", "medcuts", g_esSpecial[iIndex].g_iMedicalCutsReward[iPos], sSet[iPos], -1, 1);
 					g_esSpecial[iIndex].g_iMeleeRangeReward[iPos] = iGetClampedValue(key, "MeleeRangeReward", "Melee Range Reward", "Melee_Range_Reward", "meleerange", g_esSpecial[iIndex].g_iMeleeRangeReward[iPos], sSet[iPos], -1, 99999);
 					g_esSpecial[iIndex].g_iMidairDashesReward[iPos] = iGetClampedValue(key, "MidairDashesReward", "Midair Dashes Reward", "Midair_Dashes_Reward", "midairdashes", g_esSpecial[iIndex].g_iMidairDashesReward[iPos], sSet[iPos], -1, 99999);
 					g_esSpecial[iIndex].g_iParticleEffectVisual[iPos] = iGetClampedValue(key, "ParticleEffectVisual", "Particle Effect Visual", "Particle_Effect_Visual", "particle", g_esSpecial[iIndex].g_iParticleEffectVisual[iPos], sSet[iPos], -1, 15);
 					g_esSpecial[iIndex].g_iPrefsNotify[iPos] = iGetClampedValue(key, "PrefsNotify", "Prefs Notify", "Prefs_Notify", "pnotify", g_esSpecial[iIndex].g_iPrefsNotify[iPos], sSet[iPos], -1, 1);
 					g_esSpecial[iIndex].g_iRecoilDampenerReward[iPos] = iGetClampedValue(key, "RecoilDampenerReward", "Recoil Dampener Reward", "Recoil_Dampener_Reward", "recoil", g_esSpecial[iIndex].g_iRecoilDampenerReward[iPos], sSet[iPos], -1, 1);
+					g_esSpecial[iIndex].g_iRegenBurstsReward[iPos] = iGetClampedValue(key, "RegenBurstsReward", "Regen Bursts Reward", "Regen_Bursts_Reward", "regburst", g_esSpecial[iIndex].g_iRegenBurstsReward[iPos], sSet[iPos], -1, 1);
 					g_esSpecial[iIndex].g_iRespawnLoadoutReward[iPos] = iGetClampedValue(key, "RespawnLoadoutReward", "Respawn Loadout Reward", "Respawn_Loadout_Reward", "resloadout", g_esSpecial[iIndex].g_iRespawnLoadoutReward[iPos], sSet[iPos], -1, 1);
 					g_esSpecial[iIndex].g_iReviveHealthReward[iPos] = iGetClampedValue(key, "ReviveHealthReward", "Revive Health Reward", "Revive_Health_Reward", "revivehp", g_esSpecial[iIndex].g_iReviveHealthReward[iPos], sSet[iPos], -1, MT_MAXHEALTH);
 					g_esSpecial[iIndex].g_iShareRewards[iPos] = iGetClampedValue(key, "ShareRewards", "Share Rewards", "Share_Rewards", "share", g_esSpecial[iIndex].g_iShareRewards[iPos], sSet[iPos], -1, 3);
@@ -16530,6 +16647,7 @@ void vReadSpecialSettings(int type, int mode, const char[] subsection, const cha
 					g_esSpecial[iIndex].g_iSpecialAmmoReward[iPos] = iGetClampedValue(key, "SpecialAmmoReward", "Special Ammo Reward", "Special_Ammo_Reward", "specialammo", g_esSpecial[iIndex].g_iSpecialAmmoReward[iPos], sSet[iPos], -1, 3);
 					g_esSpecial[iIndex].g_iStackRewards[iPos] = iGetClampedValue(key, "StackRewards", "Stack Rewards", "Stack_Rewards", "stack", g_esSpecial[iIndex].g_iStackRewards[iPos], sSet[iPos], -1, 2147483647);
 					g_esSpecial[iIndex].g_iStickyGrenadesReward[iPos] = iGetClampedValue(key, "StickyGrenadesReward", "Sticky Grenades Reward", "Sticky_Grenades_Reward", "sticky", g_esSpecial[iIndex].g_iStickyGrenadesReward[iPos], sSet[iPos], -1, 1);
+					g_esSpecial[iIndex].g_iSyringeDartsReward[iPos] = iGetClampedValue(key, "SyringeDartsReward", "Syringe Darts Reward", "Syringe_Darts_Reward", "syringe", g_esSpecial[iIndex].g_iSyringeDartsReward[iPos], sSet[iPos], -1, 1);
 					g_esSpecial[iIndex].g_iThornsReward[iPos] = iGetClampedValue(key, "ThornsReward", "Thorns Reward", "Thorns_Reward", "thorns", g_esSpecial[iIndex].g_iThornsReward[iPos], sSet[iPos], -1, 1);
 					g_esSpecial[iIndex].g_iUsefulRewards[iPos] = iGetClampedValue(key, "UsefulRewards", "Useful Rewards", "Useful_Rewards", "useful", g_esSpecial[iIndex].g_iUsefulRewards[iPos], sSet[iPos], -1, 15);
 					g_esSpecial[iIndex].g_iVoicePitchVisual[iPos] = iGetClampedValue(key, "VoicePitchVisual", "Voice Pitch Visual", "Voice_Pitch_Visual", "voicepitch", g_esSpecial[iIndex].g_iVoicePitchVisual[iPos], sSet[iPos], -1, 255);
@@ -16793,11 +16911,13 @@ void vReadSpecificSettings(int mode, const char[] section, const char[] subsecti
 					g_esSpecific.g_iLadderActionsReward[iPos] = iGetClampedValue(key, "LadderActionsReward", "Ladder Actions Reward", "Ladder_Action_Reward", "ladderactions", g_esSpecific.g_iLadderActionsReward[iPos], sSet[iPos], -1, 1);
 					g_esSpecific.g_iLadyKillerReward[iPos] = iGetClampedValue(key, "LadyKillerReward", "Lady Killer Reward", "Lady_Killer_Reward", "ladykiller", g_esSpecific.g_iLadyKillerReward[iPos], sSet[iPos], -1, 1);
 					g_esSpecific.g_iLifeLeechReward[iPos] = iGetClampedValue(key, "LifeLeechReward", "Life Leech Reward", "Life_Leech_Reward", "lifeleech", g_esSpecific.g_iLifeLeechReward[iPos], sSet[iPos], -1, MT_MAXHEALTH);
+					g_esSpecific.g_iMedicalCutsReward[iPos] = iGetClampedValue(key, "MedicalCutsReward", "Medical Cuts Reward", "Medical_Cuts_Reward", "medcuts", g_esSpecific.g_iMedicalCutsReward[iPos], sSet[iPos], -1, 1);
 					g_esSpecific.g_iMeleeRangeReward[iPos] = iGetClampedValue(key, "MeleeRangeReward", "Melee Range Reward", "Melee_Range_Reward", "meleerange", g_esSpecific.g_iMeleeRangeReward[iPos], sSet[iPos], -1, 99999);
 					g_esSpecific.g_iMidairDashesReward[iPos] = iGetClampedValue(key, "MidairDashesReward", "Midair Dashes Reward", "Midair_Dashes_Reward", "midairdashes", g_esSpecific.g_iMidairDashesReward[iPos], sSet[iPos], -1, 99999);
 					g_esSpecific.g_iParticleEffectVisual[iPos] = iGetClampedValue(key, "ParticleEffectVisual", "Particle Effect Visual", "Particle_Effect_Visual", "particle", g_esSpecific.g_iParticleEffectVisual[iPos], sSet[iPos], -1, 15);
 					g_esSpecific.g_iPrefsNotify[iPos] = iGetClampedValue(key, "PrefsNotify", "Prefs Notify", "Prefs_Notify", "pnotify", g_esSpecific.g_iPrefsNotify[iPos], sSet[iPos], -1, 1);
 					g_esSpecific.g_iRecoilDampenerReward[iPos] = iGetClampedValue(key, "RecoilDampenerReward", "Recoil Dampener Reward", "Recoil_Dampener_Reward", "recoil", g_esSpecific.g_iRecoilDampenerReward[iPos], sSet[iPos], -1, 1);
+					g_esSpecific.g_iRegenBurstsReward[iPos] = iGetClampedValue(key, "RegenBurstsReward", "Regen Bursts Reward", "Regen_Bursts_Reward", "regburst", g_esSpecific.g_iRegenBurstsReward[iPos], sSet[iPos], -1, 1);
 					g_esSpecific.g_iRespawnLoadoutReward[iPos] = iGetClampedValue(key, "RespawnLoadoutReward", "Respawn Loadout Reward", "Respawn_Loadout_Reward", "resloadout", g_esSpecific.g_iRespawnLoadoutReward[iPos], sSet[iPos], -1, 1);
 					g_esSpecific.g_iReviveHealthReward[iPos] = iGetClampedValue(key, "ReviveHealthReward", "Revive Health Reward", "Revive_Health_Reward", "revivehp", g_esSpecific.g_iReviveHealthReward[iPos], sSet[iPos], -1, MT_MAXHEALTH);
 					g_esSpecific.g_iShareRewards[iPos] = iGetClampedValue(key, "ShareRewards", "Share Rewards", "Share_Rewards", "share", g_esSpecific.g_iShareRewards[iPos], sSet[iPos], -1, 3);
@@ -16806,6 +16926,7 @@ void vReadSpecificSettings(int mode, const char[] section, const char[] subsecti
 					g_esSpecific.g_iSpecialAmmoReward[iPos] = iGetClampedValue(key, "SpecialAmmoReward", "Special Ammo Reward", "Special_Ammo_Reward", "specialammo", g_esSpecific.g_iSpecialAmmoReward[iPos], sSet[iPos], -1, 3);
 					g_esSpecific.g_iStackRewards[iPos] = iGetClampedValue(key, "StackRewards", "Stack Rewards", "Stack_Rewards", "stack", g_esSpecific.g_iStackRewards[iPos], sSet[iPos], -1, 2147483647);
 					g_esSpecific.g_iStickyGrenadesReward[iPos] = iGetClampedValue(key, "StickyGrenadesReward", "Sticky Grenades Reward", "Sticky_Grenades_Reward", "sticky", g_esSpecific.g_iStickyGrenadesReward[iPos], sSet[iPos], -1, 1);
+					g_esSpecific.g_iSyringeDartsReward[iPos] = iGetClampedValue(key, "SyringeDartsReward", "Syringe Darts Reward", "Syringe_Darts_Reward", "syringe", g_esSpecific.g_iSyringeDartsReward[iPos], sSet[iPos], -1, 1);
 					g_esSpecific.g_iThornsReward[iPos] = iGetClampedValue(key, "ThornsReward", "Thorns Reward", "Thorns_Reward", "thorns", g_esSpecific.g_iThornsReward[iPos], sSet[iPos], -1, 1);
 					g_esSpecific.g_iUsefulRewards[iPos] = iGetClampedValue(key, "UsefulRewards", "Useful Rewards", "Useful_Rewards", "useful", g_esSpecific.g_iUsefulRewards[iPos], sSet[iPos], -1, 15);
 					g_esSpecific.g_iVoicePitchVisual[iPos] = iGetClampedValue(key, "VoicePitchVisual", "Voice Pitch Visual", "Voice_Pitch_Visual", "voicepitch", g_esSpecific.g_iVoicePitchVisual[iPos], sSet[iPos], -1, 255);
@@ -17034,11 +17155,13 @@ void vReadTankSettings(int type, int mode, const char[] subsection, const char[]
 					g_esTank[iIndex].g_iLadderActionsReward[iPos] = iGetClampedValue(key, "LadderActionsReward", "Ladder Actions Reward", "Ladder_Action_Reward", "ladderactions", g_esTank[iIndex].g_iLadderActionsReward[iPos], sSet[iPos], -1, 1);
 					g_esTank[iIndex].g_iLadyKillerReward[iPos] = iGetClampedValue(key, "LadyKillerReward", "Lady Killer Reward", "Lady_Killer_Reward", "ladykiller", g_esTank[iIndex].g_iLadyKillerReward[iPos], sSet[iPos], -1, 99999);
 					g_esTank[iIndex].g_iLifeLeechReward[iPos] = iGetClampedValue(key, "LifeLeechReward", "Life Leech Reward", "Life_Leech_Reward", "lifeleech", g_esTank[iIndex].g_iLifeLeechReward[iPos], sSet[iPos], -1, MT_MAXHEALTH);
+					g_esTank[iIndex].g_iMedicalCutsReward[iPos] = iGetClampedValue(key, "MedicalCutsReward", "Medical Cuts Reward", "Medical_Cuts_Reward", "medcuts", g_esTank[iIndex].g_iMedicalCutsReward[iPos], sSet[iPos], -1, 1);
 					g_esTank[iIndex].g_iMeleeRangeReward[iPos] = iGetClampedValue(key, "MeleeRangeReward", "Melee Range Reward", "Melee_Range_Reward", "meleerange", g_esTank[iIndex].g_iMeleeRangeReward[iPos], sSet[iPos], -1, 99999);
 					g_esTank[iIndex].g_iMidairDashesReward[iPos] = iGetClampedValue(key, "MidairDashesReward", "Midair Dashes Reward", "Midair_Dashes_Reward", "midairdashes", g_esTank[iIndex].g_iMidairDashesReward[iPos], sSet[iPos], -1, 99999);
 					g_esTank[iIndex].g_iParticleEffectVisual[iPos] = iGetClampedValue(key, "ParticleEffectVisual", "Particle Effect Visual", "Particle_Effect_Visual", "particle", g_esTank[iIndex].g_iParticleEffectVisual[iPos], sSet[iPos], -1, 15);
 					g_esTank[iIndex].g_iPrefsNotify[iPos] = iGetClampedValue(key, "PrefsNotify", "Prefs Notify", "Prefs_Notify", "pnotify", g_esTank[iIndex].g_iPrefsNotify[iPos], sSet[iPos], -1, 1);
 					g_esTank[iIndex].g_iRecoilDampenerReward[iPos] = iGetClampedValue(key, "RecoilDampenerReward", "Recoil Dampener Reward", "Recoil_Dampener_Reward", "recoil", g_esTank[iIndex].g_iRecoilDampenerReward[iPos], sSet[iPos], -1, 1);
+					g_esTank[iIndex].g_iRegenBurstsReward[iPos] = iGetClampedValue(key, "RegenBurstsReward", "Regen Bursts Reward", "Regen_Bursts_Reward", "regburst", g_esTank[iIndex].g_iRegenBurstsReward[iPos], sSet[iPos], -1, 1);
 					g_esTank[iIndex].g_iRespawnLoadoutReward[iPos] = iGetClampedValue(key, "RespawnLoadoutReward", "Respawn Loadout Reward", "Respawn_Loadout_Reward", "resloadout", g_esTank[iIndex].g_iRespawnLoadoutReward[iPos], sSet[iPos], -1, 1);
 					g_esTank[iIndex].g_iReviveHealthReward[iPos] = iGetClampedValue(key, "ReviveHealthReward", "Revive Health Reward", "Revive_Health_Reward", "revivehp", g_esTank[iIndex].g_iReviveHealthReward[iPos], sSet[iPos], -1, MT_MAXHEALTH);
 					g_esTank[iIndex].g_iShareRewards[iPos] = iGetClampedValue(key, "ShareRewards", "Share Rewards", "Share_Rewards", "share", g_esTank[iIndex].g_iShareRewards[iPos], sSet[iPos], -1, 3);
@@ -17047,6 +17170,7 @@ void vReadTankSettings(int type, int mode, const char[] subsection, const char[]
 					g_esTank[iIndex].g_iSpecialAmmoReward[iPos] = iGetClampedValue(key, "SpecialAmmoReward", "Special Ammo Reward", "Special_Ammo_Reward", "specialammo", g_esTank[iIndex].g_iSpecialAmmoReward[iPos], sSet[iPos], -1, 3);
 					g_esTank[iIndex].g_iStackRewards[iPos] = iGetClampedValue(key, "StackRewards", "Stack Rewards", "Stack_Rewards", "stack", g_esTank[iIndex].g_iStackRewards[iPos], sSet[iPos], -1, 2147483647);
 					g_esTank[iIndex].g_iStickyGrenadesReward[iPos] = iGetClampedValue(key, "StickyGrenadesReward", "Sticky Grenades Reward", "Sticky_Grenades_Reward", "sticky", g_esTank[iIndex].g_iStickyGrenadesReward[iPos], sSet[iPos], -1, 1);
+					g_esTank[iIndex].g_iSyringeDartsReward[iPos] = iGetClampedValue(key, "SyringeDartsReward", "Syringe Darts Reward", "Syringe_Darts_Reward", "syringe", g_esTank[iIndex].g_iSyringeDartsReward[iPos], sSet[iPos], -1, 1);
 					g_esTank[iIndex].g_iThornsReward[iPos] = iGetClampedValue(key, "ThornsReward", "Thorns Reward", "Thorns_Reward", "thorns", g_esTank[iIndex].g_iThornsReward[iPos], sSet[iPos], -1, 1);
 					g_esTank[iIndex].g_iUsefulRewards[iPos] = iGetClampedValue(key, "UsefulRewards", "Useful Rewards", "Useful_Rewards", "useful", g_esTank[iIndex].g_iUsefulRewards[iPos], sSet[iPos], -1, 15);
 					g_esTank[iIndex].g_iVoicePitchVisual[iPos] = iGetClampedValue(key, "VoicePitchVisual", "Voice Pitch Visual", "Voice_Pitch_Visual", "voicepitch", g_esTank[iIndex].g_iVoicePitchVisual[iPos], sSet[iPos], -1, 255);
@@ -17358,11 +17482,13 @@ void vReadTeammateSettings(int special, int mode, const char[] subsection, const
 				g_esTeammate[special].g_iLadderActionsReward[iPos] = iGetClampedValue(key, "LadderActionsReward", "Ladder Actions Reward", "Ladder_Action_Reward", "ladderactions", g_esTeammate[special].g_iLadderActionsReward[iPos], sSet[iPos], -1, 1);
 				g_esTeammate[special].g_iLadyKillerReward[iPos] = iGetClampedValue(key, "LadyKillerReward", "Lady Killer Reward", "Lady_Killer_Reward", "ladykiller", g_esTeammate[special].g_iLadyKillerReward[iPos], sSet[iPos], -1, 1);
 				g_esTeammate[special].g_iLifeLeechReward[iPos] = iGetClampedValue(key, "LifeLeechReward", "Life Leech Reward", "Life_Leech_Reward", "lifeleech", g_esTeammate[special].g_iLifeLeechReward[iPos], sSet[iPos], -1, MT_MAXHEALTH);
+				g_esTeammate[special].g_iMedicalCutsReward[iPos] = iGetClampedValue(key, "MedicalCutsReward", "Medical Cuts Reward", "Medical_Cuts_Reward", "medcuts", g_esTeammate[special].g_iMedicalCutsReward[iPos], sSet[iPos], -1, 1);
 				g_esTeammate[special].g_iMeleeRangeReward[iPos] = iGetClampedValue(key, "MeleeRangeReward", "Melee Range Reward", "Melee_Range_Reward", "meleerange", g_esTeammate[special].g_iMeleeRangeReward[iPos], sSet[iPos], -1, 99999);
 				g_esTeammate[special].g_iMidairDashesReward[iPos] = iGetClampedValue(key, "MidairDashesReward", "Midair Dashes Reward", "Midair_Dashes_Reward", "midairdashes", g_esTeammate[special].g_iMidairDashesReward[iPos], sSet[iPos], -1, 99999);
 				g_esTeammate[special].g_iParticleEffectVisual[iPos] = iGetClampedValue(key, "ParticleEffectVisual", "Particle Effect Visual", "Particle_Effect_Visual", "particle", g_esTeammate[special].g_iParticleEffectVisual[iPos], sSet[iPos], -1, 15);
 				g_esTeammate[special].g_iPrefsNotify[iPos] = iGetClampedValue(key, "PrefsNotify", "Prefs Notify", "Prefs_Notify", "pnotify", g_esTeammate[special].g_iPrefsNotify[iPos], sSet[iPos], -1, 1);
 				g_esTeammate[special].g_iRecoilDampenerReward[iPos] = iGetClampedValue(key, "RecoilDampenerReward", "Recoil Dampener Reward", "Recoil_Dampener_Reward", "recoil", g_esTeammate[special].g_iRecoilDampenerReward[iPos], sSet[iPos], -1, 1);
+				g_esTeammate[special].g_iRegenBurstsReward[iPos] = iGetClampedValue(key, "RegenBurstsReward", "Regen Bursts Reward", "Regen_Bursts_Reward", "regburst", g_esTeammate[special].g_iRegenBurstsReward[iPos], sSet[iPos], -1, 1);
 				g_esTeammate[special].g_iRespawnLoadoutReward[iPos] = iGetClampedValue(key, "RespawnLoadoutReward", "Respawn Loadout Reward", "Respawn_Loadout_Reward", "resloadout", g_esTeammate[special].g_iRespawnLoadoutReward[iPos], sSet[iPos], -1, 1);
 				g_esTeammate[special].g_iReviveHealthReward[iPos] = iGetClampedValue(key, "ReviveHealthReward", "Revive Health Reward", "Revive_Health_Reward", "revivehp", g_esTeammate[special].g_iReviveHealthReward[iPos], sSet[iPos], -1, MT_MAXHEALTH);
 				g_esTeammate[special].g_iShareRewards[iPos] = iGetClampedValue(key, "ShareRewards", "Share Rewards", "Share_Rewards", "share", g_esTeammate[special].g_iShareRewards[iPos], sSet[iPos], -1, 3);
@@ -17371,6 +17497,7 @@ void vReadTeammateSettings(int special, int mode, const char[] subsection, const
 				g_esTeammate[special].g_iSpecialAmmoReward[iPos] = iGetClampedValue(key, "SpecialAmmoReward", "Special Ammo Reward", "Special_Ammo_Reward", "specialammo", g_esTeammate[special].g_iSpecialAmmoReward[iPos], sSet[iPos], -1, 3);
 				g_esTeammate[special].g_iStackRewards[iPos] = iGetClampedValue(key, "StackRewards", "Stack Rewards", "Stack_Rewards", "stack", g_esTeammate[special].g_iStackRewards[iPos], sSet[iPos], -1, 2147483647);
 				g_esTeammate[special].g_iStickyGrenadesReward[iPos] = iGetClampedValue(key, "StickyGrenadesReward", "Sticky Grenades Reward", "Sticky_Grenades_Reward", "cluster", g_esTeammate[special].g_iStickyGrenadesReward[iPos], sSet[iPos], -1, 1);
+				g_esTeammate[special].g_iSyringeDartsReward[iPos] = iGetClampedValue(key, "SyringeDartsReward", "Syringe Darts Reward", "Syringe_Darts_Reward", "syringe", g_esTeammate[special].g_iSyringeDartsReward[iPos], sSet[iPos], -1, 1);
 				g_esTeammate[special].g_iThornsReward[iPos] = iGetClampedValue(key, "ThornsReward", "Thorns Reward", "Thorns_Reward", "thorns", g_esTeammate[special].g_iThornsReward[iPos], sSet[iPos], -1, 1);
 				g_esTeammate[special].g_iUsefulRewards[iPos] = iGetClampedValue(key, "UsefulRewards", "Useful Rewards", "Useful_Rewards", "useful", g_esTeammate[special].g_iUsefulRewards[iPos], sSet[iPos], -1, 15);
 				g_esTeammate[special].g_iVoicePitchVisual[iPos] = iGetClampedValue(key, "VoicePitchVisual", "Voice Pitch Visual", "Voice_Pitch_Visual", "voicepitch", g_esTeammate[special].g_iVoicePitchVisual[iPos], sSet[iPos], -1, 255);
@@ -17748,11 +17875,13 @@ void vSetTankSettings(int mode, const char[] section, const char[] subsection, c
 						g_esGeneral.g_iLadderActionsReward[iPos] = iGetClampedValue(key, "LadderActionsReward", "Ladder Actions Reward", "Ladder_Action_Reward", "ladderactions", g_esGeneral.g_iLadderActionsReward[iPos], sSet[iPos], -1, 1);
 						g_esGeneral.g_iLadyKillerReward[iPos] = iGetClampedValue(key, "LadyKillerReward", "Lady Killer Reward", "Lady_Killer_Reward", "ladykiller", g_esGeneral.g_iLadyKillerReward[iPos], sSet[iPos], -1, 1);
 						g_esGeneral.g_iLifeLeechReward[iPos] = iGetClampedValue(key, "LifeLeechReward", "Life Leech Reward", "Life_Leech_Reward", "lifeleech", g_esGeneral.g_iLifeLeechReward[iPos], sSet[iPos], -1, MT_MAXHEALTH);
+						g_esGeneral.g_iMedicalCutsReward[iPos] = iGetClampedValue(key, "MedicalCutsReward", "Medical Cuts Reward", "Medical_Cuts_Reward", "medcuts", g_esGeneral.g_iMedicalCutsReward[iPos], sSet[iPos], -1, 1);
 						g_esGeneral.g_iMeleeRangeReward[iPos] = iGetClampedValue(key, "MeleeRangeReward", "Melee Range Reward", "Melee_Range_Reward", "meleerange", g_esGeneral.g_iMeleeRangeReward[iPos], sSet[iPos], -1, 99999);
 						g_esGeneral.g_iMidairDashesReward[iPos] = iGetClampedValue(key, "MidairDashesReward", "Midair Dashes Reward", "Midair_Dashes_Reward", "midairdashes", g_esGeneral.g_iMidairDashesReward[iPos], sSet[iPos], -1, 99999);
 						g_esGeneral.g_iParticleEffectVisual[iPos] = iGetClampedValue(key, "ParticleEffectVisual", "Particle Effect Visual", "Particle_Effect_Visual", "particle", g_esGeneral.g_iParticleEffectVisual[iPos], sSet[iPos], -1, 15);
 						g_esGeneral.g_iPrefsNotify[iPos] = iGetClampedValue(key, "PrefsNotify", "Prefs Notify", "Prefs_Notify", "pnotify", g_esGeneral.g_iPrefsNotify[iPos], sSet[iPos], -1, 1);
 						g_esGeneral.g_iRecoilDampenerReward[iPos] = iGetClampedValue(key, "RecoilDampenerReward", "Recoil Dampener Reward", "Recoil_Dampener_Reward", "recoil", g_esGeneral.g_iRecoilDampenerReward[iPos], sSet[iPos], -1, 1);
+						g_esGeneral.g_iRegenBurstsReward[iPos] = iGetClampedValue(key, "RegenBurstsReward", "Regen Bursts Reward", "Regen_Bursts_Reward", "regburst", g_esGeneral.g_iRegenBurstsReward[iPos], sSet[iPos], -1, 1);
 						g_esGeneral.g_iRespawnLoadoutReward[iPos] = iGetClampedValue(key, "RespawnLoadoutReward", "Respawn Loadout Reward", "Respawn_Loadout_Reward", "resloadout", g_esGeneral.g_iRespawnLoadoutReward[iPos], sSet[iPos], -1, 1);
 						g_esGeneral.g_iReviveHealthReward[iPos] = iGetClampedValue(key, "ReviveHealthReward", "Revive Health Reward", "Revive_Health_Reward", "revivehp", g_esGeneral.g_iReviveHealthReward[iPos], sSet[iPos], -1, MT_MAXHEALTH);
 						g_esGeneral.g_iShareRewards[iPos] = iGetClampedValue(key, "ShareRewards", "Share Rewards", "Share_Rewards", "share", g_esGeneral.g_iShareRewards[iPos], sSet[iPos], -1, 3);
@@ -17761,6 +17890,7 @@ void vSetTankSettings(int mode, const char[] section, const char[] subsection, c
 						g_esGeneral.g_iSpecialAmmoReward[iPos] = iGetClampedValue(key, "SpecialAmmoReward", "Special Ammo Reward", "Special_Ammo_Reward", "specialammo", g_esGeneral.g_iSpecialAmmoReward[iPos], sSet[iPos], -1, 3);
 						g_esGeneral.g_iStackRewards[iPos] = iGetClampedValue(key, "StackRewards", "Stack Rewards", "Stack_Rewards", "stack", g_esGeneral.g_iStackRewards[iPos], sSet[iPos], -1, 2147483647);
 						g_esGeneral.g_iStickyGrenadesReward[iPos] = iGetClampedValue(key, "StickyGrenadesReward", "Sticky Grenades Reward", "Sticky_Grenades_Reward", "sticky", g_esGeneral.g_iStickyGrenadesReward[iPos], sSet[iPos], -1, 1);
+						g_esGeneral.g_iSyringeDartsReward[iPos] = iGetClampedValue(key, "SyringeDartsReward", "Syringe Darts Reward", "Syringe_Darts_Reward", "syringe", g_esGeneral.g_iSyringeDartsReward[iPos], sSet[iPos], -1, 1);
 						g_esGeneral.g_iThornsReward[iPos] = iGetClampedValue(key, "ThornsReward", "Thorns Reward", "Thorns_Reward", "thorns", g_esGeneral.g_iThornsReward[iPos], sSet[iPos], -1, 1);
 						g_esGeneral.g_iUsefulRewards[iPos] = iGetClampedValue(key, "UsefulRewards", "Useful Rewards", "Useful_Rewards", "useful", g_esGeneral.g_iUsefulRewards[iPos], sSet[iPos], -1, 15);
 						g_esGeneral.g_iVoicePitchVisual[iPos] = iGetClampedValue(key, "VoicePitchVisual", "Voice Pitch Visual", "Voice_Pitch_Visual", "voicepitch", g_esGeneral.g_iVoicePitchVisual[iPos], sSet[iPos], -1, 255);
@@ -18066,11 +18196,13 @@ void vSetTankSettings(int mode, const char[] section, const char[] subsection, c
 								g_esPlayer[iPlayer].g_iLadderActionsReward[iPos] = iGetClampedValue(key, "LadderActionsReward", "Ladder Actions Reward", "Ladder_Action_Reward", "ladderactions", g_esPlayer[iPlayer].g_iLadderActionsReward[iPos], sSet[iPos], -1, 1);
 								g_esPlayer[iPlayer].g_iLadyKillerReward[iPos] = iGetClampedValue(key, "LadyKillerReward", "Lady Killer Reward", "Lady_Killer_Reward", "ladykiller", g_esPlayer[iPlayer].g_iLadyKillerReward[iPos], sSet[iPos], -1, 1);
 								g_esPlayer[iPlayer].g_iLifeLeechReward[iPos] = iGetClampedValue(key, "LifeLeechReward", "Life Leech Reward", "Life_Leech_Reward", "lifeleech", g_esPlayer[iPlayer].g_iLifeLeechReward[iPos], sSet[iPos], -1, MT_MAXHEALTH);
+								g_esPlayer[iPlayer].g_iMedicalCutsReward[iPos] = iGetClampedValue(key, "MedicalCutsReward", "Medical Cuts Reward", "Medical_Cuts_Reward", "medcuts", g_esPlayer[iPlayer].g_iMedicalCutsReward[iPos], sSet[iPos], -1, 1);
 								g_esPlayer[iPlayer].g_iMeleeRangeReward[iPos] = iGetClampedValue(key, "MeleeRangeReward", "Melee Range Reward", "Melee_Range_Reward", "meleerange", g_esPlayer[iPlayer].g_iMeleeRangeReward[iPos], sSet[iPos], -1, 99999);
 								g_esPlayer[iPlayer].g_iMidairDashesReward[iPos] = iGetClampedValue(key, "MidairDashesReward", "Midair Dashes Reward", "Midair_Dashes_Reward", "midairdashes", g_esPlayer[iPlayer].g_iMidairDashesReward[iPos], sSet[iPos], -1, 99999);
 								g_esPlayer[iPlayer].g_iParticleEffectVisual[iPos] = iGetClampedValue(key, "ParticleEffectVisual", "Particle Effect Visual", "Particle_Effect_Visual", "particle", g_esPlayer[iPlayer].g_iParticleEffectVisual[iPos], sSet[iPos], -1, 15);
 								g_esPlayer[iPlayer].g_iPrefsNotify[iPos] = iGetClampedValue(key, "PrefsNotify", "Prefs Notify", "Prefs_Notify", "pnotify", g_esPlayer[iPlayer].g_iPrefsNotify[iPos], sSet[iPos], -1, 1);
 								g_esPlayer[iPlayer].g_iRecoilDampenerReward[iPos] = iGetClampedValue(key, "RecoilDampenerReward", "Recoil Dampener Reward", "Recoil_Dampener_Reward", "recoil", g_esPlayer[iPlayer].g_iRecoilDampenerReward[iPos], sSet[iPos], -1, 1);
+								g_esPlayer[iPlayer].g_iRegenBurstsReward[iPos] = iGetClampedValue(key, "RegenBurstsReward", "Regen Bursts Reward", "Regen_Bursts_Reward", "regburst", g_esPlayer[iPlayer].g_iRegenBurstsReward[iPos], sSet[iPos], -1, 1);
 								g_esPlayer[iPlayer].g_iRespawnLoadoutReward[iPos] = iGetClampedValue(key, "RespawnLoadoutReward", "Respawn Loadout Reward", "Respawn_Loadout_Reward", "resloadout", g_esPlayer[iPlayer].g_iRespawnLoadoutReward[iPos], sSet[iPos], -1, 1);
 								g_esPlayer[iPlayer].g_iReviveHealthReward[iPos] = iGetClampedValue(key, "ReviveHealthReward", "Revive Health Reward", "Revive_Health_Reward", "revivehp", g_esPlayer[iPlayer].g_iReviveHealthReward[iPos], sSet[iPos], -1, MT_MAXHEALTH);
 								g_esPlayer[iPlayer].g_iShareRewards[iPos] = iGetClampedValue(key, "ShareRewards", "Share Rewards", "Share_Rewards", "share", g_esPlayer[iPlayer].g_iShareRewards[iPos], sSet[iPos], -1, 3);
@@ -18079,6 +18211,7 @@ void vSetTankSettings(int mode, const char[] section, const char[] subsection, c
 								g_esPlayer[iPlayer].g_iSpecialAmmoReward[iPos] = iGetClampedValue(key, "SpecialAmmoReward", "Special Ammo Reward", "Special_Ammo_Reward", "specialammo", g_esPlayer[iPlayer].g_iSpecialAmmoReward[iPos], sSet[iPos], -1, 3);
 								g_esPlayer[iPlayer].g_iStackRewards[iPos] = iGetClampedValue(key, "StackRewards", "Stack Rewards", "Stack_Rewards", "stack", g_esPlayer[iPlayer].g_iStackRewards[iPos], sSet[iPos], -1, 2147483647);
 								g_esPlayer[iPlayer].g_iStickyGrenadesReward[iPos] = iGetClampedValue(key, "StickyGrenadesReward", "Sticky Grenades Reward", "Sticky_Grenades_Reward", "sticky", g_esPlayer[iPlayer].g_iStickyGrenadesReward[iPos], sSet[iPos], -1, 1);
+								g_esPlayer[iPlayer].g_iSyringeDartsReward[iPos] = iGetClampedValue(key, "SyringeDartsReward", "Syringe Darts Reward", "Syringe_Darts_Reward", "syringe", g_esPlayer[iPlayer].g_iSyringeDartsReward[iPos], sSet[iPos], -1, 1);
 								g_esPlayer[iPlayer].g_iThornsReward[iPos] = iGetClampedValue(key, "ThornsReward", "Thorns Reward", "Thorns_Reward", "thorns", g_esPlayer[iPlayer].g_iThornsReward[iPos], sSet[iPos], -1, 1);
 								g_esPlayer[iPlayer].g_iUsefulRewards[iPos] = iGetClampedValue(key, "UsefulRewards", "Useful Rewards", "Useful_Rewards", "useful", g_esPlayer[iPlayer].g_iUsefulRewards[iPos], sSet[iPos], -1, 15);
 								g_esPlayer[iPlayer].g_iVoicePitchVisual[iPos] = iGetClampedValue(key, "VoicePitchVisual", "Voice Pitch Visual", "Voice_Pitch_Visual", "voicepitch", g_esPlayer[iPlayer].g_iVoicePitchVisual[iPos], sSet[iPos], -1, 255);
@@ -19696,6 +19829,7 @@ void SMCParseStart_Main(SMCParser smc)
 				g_esGeneral.g_iLadyKillerReward[iPos] = 1;
 				g_esGeneral.g_iLifeLeechReward[iPos] = 1;
 				g_esGeneral.g_flLoopingVoicelineInterval[iPos] = 10.0;
+				g_esGeneral.g_iMedicalCutsReward[iPos] = 1;
 				g_esGeneral.g_iMeleeRangeReward[iPos] = 150;
 				g_esGeneral.g_iMidairDashesReward[iPos] = 2;
 				g_esGeneral.g_iParticleEffectVisual[iPos] = 15;
@@ -19705,6 +19839,7 @@ void SMCParseStart_Main(SMCParser smc)
 				g_esGeneral.g_flRapidPistolReward[iPos] = 0.130;
 				g_esGeneral.g_iRecoilDampenerReward[iPos] = 1;
 				g_esGeneral.g_flRefillPercentReward[iPos] = 100.0;
+				g_esGeneral.g_iRegenBurstsReward[iPos] = 1;
 				g_esGeneral.g_iRespawnLoadoutReward[iPos] = 1;
 				g_esGeneral.g_iReviveHealthReward[iPos] = 100;
 				g_esGeneral.g_iShareRewards[iPos] = 0;
@@ -19716,6 +19851,7 @@ void SMCParseStart_Main(SMCParser smc)
 				g_esGeneral.g_flSpeedBoostReward[iPos] = 1.25;
 				g_esGeneral.g_iStackRewards[iPos] = 0;
 				g_esGeneral.g_iStickyGrenadesReward[iPos] = 1;
+				g_esGeneral.g_iSyringeDartsReward[iPos] = 1;
 				g_esGeneral.g_iThornsReward[iPos] = 1;
 				g_esGeneral.g_iUsefulRewards[iPos] = 15;
 				g_esGeneral.g_iVoicePitchVisual[iPos] = 100;
@@ -19826,6 +19962,7 @@ void SMCParseStart_Main(SMCParser smc)
 				g_esSpecific.g_iLadyKillerReward[iPos] = -1;
 				g_esSpecific.g_iLifeLeechReward[iPos] = -1;
 				g_esSpecific.g_flLoopingVoicelineInterval[iPos] = -1.0;
+				g_esSpecific.g_iMedicalCutsReward[iPos] = -1;
 				g_esSpecific.g_iMeleeRangeReward[iPos] = -1;
 				g_esSpecific.g_iMidairDashesReward[iPos] = -1;
 				g_esSpecific.g_iParticleEffectVisual[iPos] = -1;
@@ -19835,6 +19972,7 @@ void SMCParseStart_Main(SMCParser smc)
 				g_esSpecific.g_flRapidPistolReward[iPos] = -1.0;
 				g_esSpecific.g_iRecoilDampenerReward[iPos] = -1;
 				g_esSpecific.g_flRefillPercentReward[iPos] = -1.0;
+				g_esSpecific.g_iRegenBurstsReward[iPos] = -1;
 				g_esSpecific.g_iRespawnLoadoutReward[iPos] = -1;
 				g_esSpecific.g_iReviveHealthReward[iPos] = -1;
 				g_esSpecific.g_iShareRewards[iPos] = -1;
@@ -19846,6 +19984,7 @@ void SMCParseStart_Main(SMCParser smc)
 				g_esSpecific.g_flSpeedBoostReward[iPos] = -1.0;
 				g_esSpecific.g_iStackRewards[iPos] = -1;
 				g_esSpecific.g_iStickyGrenadesReward[iPos] = -1;
+				g_esSpecific.g_iSyringeDartsReward[iPos] = -1;
 				g_esSpecific.g_iThornsReward[iPos] = -1;
 				g_esSpecific.g_iUsefulRewards[iPos] = -1;
 				g_esSpecific.g_iVoicePitchVisual[iPos] = -1;
@@ -20033,6 +20172,7 @@ void SMCParseStart_Main(SMCParser smc)
 					g_esTank[iIndex].g_iLadyKillerReward[iPos] = -1;
 					g_esTank[iIndex].g_iLifeLeechReward[iPos] = -1;
 					g_esTank[iIndex].g_flLoopingVoicelineInterval[iPos] = -1.0;
+					g_esTank[iIndex].g_iMedicalCutsReward[iPos] = -1;
 					g_esTank[iIndex].g_iMeleeRangeReward[iPos] = -1;
 					g_esTank[iIndex].g_iMidairDashesReward[iPos] = -1;
 					g_esTank[iIndex].g_iParticleEffectVisual[iPos] = -1;
@@ -20042,6 +20182,7 @@ void SMCParseStart_Main(SMCParser smc)
 					g_esTank[iIndex].g_flRapidPistolReward[iPos] = -1.0;
 					g_esTank[iIndex].g_iRecoilDampenerReward[iPos] = -1;
 					g_esTank[iIndex].g_flRefillPercentReward[iPos] = -1.0;
+					g_esTank[iIndex].g_iRegenBurstsReward[iPos] = -1;
 					g_esTank[iIndex].g_iRespawnLoadoutReward[iPos] = -1;
 					g_esTank[iIndex].g_iReviveHealthReward[iPos] = -1;
 					g_esTank[iIndex].g_iShareRewards[iPos] = -1;
@@ -20053,6 +20194,7 @@ void SMCParseStart_Main(SMCParser smc)
 					g_esTank[iIndex].g_flSpeedBoostReward[iPos] = -1.0;
 					g_esTank[iIndex].g_iStackRewards[iPos] = -1;
 					g_esTank[iIndex].g_iStickyGrenadesReward[iPos] = -1;
+					g_esTank[iIndex].g_iSyringeDartsReward[iPos] = -1;
 					g_esTank[iIndex].g_iThornsReward[iPos] = -1;
 					g_esTank[iIndex].g_iUsefulRewards[iPos] = -1;
 					g_esTank[iIndex].g_iVoicePitchVisual[iPos] = -1;
@@ -20242,6 +20384,7 @@ void SMCParseStart_Main(SMCParser smc)
 					g_esSpecial[iIndex].g_iLadyKillerReward[iPos] = -1;
 					g_esSpecial[iIndex].g_iLifeLeechReward[iPos] = -1;
 					g_esSpecial[iIndex].g_flLoopingVoicelineInterval[iPos] = -1.0;
+					g_esSpecial[iIndex].g_iMedicalCutsReward[iPos] = -1;
 					g_esSpecial[iIndex].g_iMeleeRangeReward[iPos] = -1;
 					g_esSpecial[iIndex].g_iMidairDashesReward[iPos] = -1;
 					g_esSpecial[iIndex].g_iParticleEffectVisual[iPos] = -1;
@@ -20251,6 +20394,7 @@ void SMCParseStart_Main(SMCParser smc)
 					g_esSpecial[iIndex].g_flRapidPistolReward[iPos] = -1.0;
 					g_esSpecial[iIndex].g_iRecoilDampenerReward[iPos] = -1;
 					g_esSpecial[iIndex].g_flRefillPercentReward[iPos] = -1.0;
+					g_esSpecial[iIndex].g_iRegenBurstsReward[iPos] = -1;
 					g_esSpecial[iIndex].g_iRespawnLoadoutReward[iPos] = -1;
 					g_esSpecial[iIndex].g_iReviveHealthReward[iPos] = -1;
 					g_esSpecial[iIndex].g_iShareRewards[iPos] = -1;
@@ -20262,6 +20406,7 @@ void SMCParseStart_Main(SMCParser smc)
 					g_esSpecial[iIndex].g_flSpeedBoostReward[iPos] = -1.0;
 					g_esSpecial[iIndex].g_iStackRewards[iPos] = -1;
 					g_esSpecial[iIndex].g_iStickyGrenadesReward[iPos] = -1;
+					g_esSpecial[iIndex].g_iSyringeDartsReward[iPos] = -1;
 					g_esSpecial[iIndex].g_iThornsReward[iPos] = -1;
 					g_esSpecial[iIndex].g_iUsefulRewards[iPos] = -1;
 					g_esSpecial[iIndex].g_iVoicePitchVisual[iPos] = -1;
@@ -20467,6 +20612,7 @@ void SMCParseStart_Main(SMCParser smc)
 					g_esPlayer[iPlayer].g_iLadyKillerReward[iPos] = -1;
 					g_esPlayer[iPlayer].g_iLifeLeechReward[iPos] = -1;
 					g_esPlayer[iPlayer].g_flLoopingVoicelineInterval[iPos] = -1.0;
+					g_esPlayer[iPlayer].g_iMedicalCutsReward[iPos] = -1;
 					g_esPlayer[iPlayer].g_iMeleeRangeReward[iPos] = -1;
 					g_esPlayer[iPlayer].g_iMidairDashesReward[iPos] = -1;
 					g_esPlayer[iPlayer].g_iParticleEffectVisual[iPos] = -1;
@@ -20476,6 +20622,7 @@ void SMCParseStart_Main(SMCParser smc)
 					g_esPlayer[iPlayer].g_flRapidPistolReward[iPos] = -1.0;
 					g_esPlayer[iPlayer].g_iRecoilDampenerReward[iPos] = -1;
 					g_esPlayer[iPlayer].g_flRefillPercentReward[iPos] = -1.0;
+					g_esPlayer[iPlayer].g_iRegenBurstsReward[iPos] = -1;
 					g_esPlayer[iPlayer].g_iRespawnLoadoutReward[iPos] = -1;
 					g_esPlayer[iPlayer].g_iReviveHealthReward[iPos] = -1;
 					g_esPlayer[iPlayer].g_iShareRewards[iPos] = -1;
@@ -20487,6 +20634,7 @@ void SMCParseStart_Main(SMCParser smc)
 					g_esPlayer[iPlayer].g_flSpeedBoostReward[iPos] = -1.0;
 					g_esPlayer[iPlayer].g_iStackRewards[iPos] = -1;
 					g_esPlayer[iPlayer].g_iStickyGrenadesReward[iPos] = -1;
+					g_esPlayer[iPlayer].g_iSyringeDartsReward[iPos] = -1;
 					g_esPlayer[iPlayer].g_iThornsReward[iPos] = -1;
 					g_esPlayer[iPlayer].g_iUsefulRewards[iPos] = -1;
 					g_esPlayer[iPlayer].g_iVoicePitchVisual[iPos] = -1;
@@ -20661,6 +20809,7 @@ void SMCParseStart_Main(SMCParser smc)
 					g_esTeammate[iPlayer].g_iLadyKillerReward[iPos] = -1;
 					g_esTeammate[iPlayer].g_iLifeLeechReward[iPos] = -1;
 					g_esTeammate[iPlayer].g_flLoopingVoicelineInterval[iPos] = -1.0;
+					g_esTeammate[iPlayer].g_iMedicalCutsReward[iPos] = -1;
 					g_esTeammate[iPlayer].g_iMeleeRangeReward[iPos] = -1;
 					g_esTeammate[iPlayer].g_iMidairDashesReward[iPos] = -1;
 					g_esTeammate[iPlayer].g_iParticleEffectVisual[iPos] = -1;
@@ -20670,6 +20819,7 @@ void SMCParseStart_Main(SMCParser smc)
 					g_esTeammate[iPlayer].g_flRapidPistolReward[iPos] = -1.0;
 					g_esTeammate[iPlayer].g_iRecoilDampenerReward[iPos] = -1;
 					g_esTeammate[iPlayer].g_flRefillPercentReward[iPos] = -1.0;
+					g_esTeammate[iPlayer].g_iRegenBurstsReward[iPos] = -1;
 					g_esTeammate[iPlayer].g_iRespawnLoadoutReward[iPos] = -1;
 					g_esTeammate[iPlayer].g_iReviveHealthReward[iPos] = -1;
 					g_esTeammate[iPlayer].g_iShareRewards[iPos] = -1;
@@ -20681,6 +20831,7 @@ void SMCParseStart_Main(SMCParser smc)
 					g_esTeammate[iPlayer].g_flSpeedBoostReward[iPos] = -1.0;
 					g_esTeammate[iPlayer].g_iStackRewards[iPos] = -1;
 					g_esTeammate[iPlayer].g_iStickyGrenadesReward[iPos] = -1;
+					g_esTeammate[iPlayer].g_iSyringeDartsReward[iPos] = -1;
 					g_esTeammate[iPlayer].g_iThornsReward[iPos] = -1;
 					g_esTeammate[iPlayer].g_iUsefulRewards[iPos] = -1;
 					g_esTeammate[iPlayer].g_iVoicePitchVisual[iPos] = -1;
@@ -21646,11 +21797,40 @@ Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 				return Plugin_Handled;
 			}
 
-			if (bIsSurvivor(attacker) && (damagetype & DMG_BURN) && ((bIsDeveloper(victim, 4) || ((g_esPlayer[victim].g_iRewardTypes & MT_REWARD_HEALTH) && g_esPlayer[victim].g_iBlazeHealth == 1)) || (bIsDeveloper(attacker, 4) || ((g_esPlayer[attacker].g_iRewardTypes & MT_REWARD_HEALTH) && g_esPlayer[attacker].g_iBlazeHealth == 1))))
+			if (bIsSurvivor(attacker))
 			{
-				vRegenSurvivorHealth(victim, RoundToNearest(damage / 2.0));
+				bool bDeveloper2 = bIsDeveloper(attacker, 4);
+				if ((damagetype & DMG_BURN) && ((bDeveloper || ((g_esPlayer[victim].g_iRewardTypes & MT_REWARD_HEALTH) && g_esPlayer[victim].g_iBlazeHealth == 1)) || (bDeveloper2 || ((g_esPlayer[attacker].g_iRewardTypes & MT_REWARD_HEALTH) && g_esPlayer[attacker].g_iBlazeHealth == 1))))
+				{
+					int iExtra = (bDeveloper2 && g_esDeveloper[attacker].g_iDevBlazeHealth > 0) ? g_esDeveloper[attacker].g_iDevBlazeHealth : RoundToNearest(damage / 2.0);
+					vRegenSurvivorHealth(victim, attacker, iExtra);
 
-				return Plugin_Handled;
+					return Plugin_Handled;
+				}
+
+				if (((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && ((bDeveloper || ((g_esPlayer[victim].g_iRewardTypes & MT_REWARD_HEALTH) && g_esPlayer[victim].g_iMedicalCuts == 1)) || (bDeveloper2 || ((g_esPlayer[attacker].g_iRewardTypes & MT_REWARD_HEALTH) && g_esPlayer[attacker].g_iMedicalCuts == 1))))
+				{
+					int iExtra = (bDeveloper2 && g_esDeveloper[attacker].g_iDevMedicalCuts > 0) ? g_esDeveloper[attacker].g_iDevMedicalCuts : RoundToNearest(damage / 2.0);
+					vRegenSurvivorHealth(victim, attacker, iExtra);
+
+					return Plugin_Handled;
+				}
+
+				if (((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA)) && ((bDeveloper || ((g_esPlayer[victim].g_iRewardTypes & MT_REWARD_HEALTH) && g_esPlayer[victim].g_iRegenBursts == 1)) || (bDeveloper2 || ((g_esPlayer[attacker].g_iRewardTypes & MT_REWARD_HEALTH) && g_esPlayer[attacker].g_iRegenBursts == 1))))
+				{
+					int iExtra = (bDeveloper2 && g_esDeveloper[attacker].g_iDevRegenBursts > 0) ? g_esDeveloper[attacker].g_iDevRegenBursts : RoundToNearest(damage / 2.0);
+					vRegenSurvivorHealth(victim, attacker, iExtra);
+
+					return Plugin_Handled;
+				}
+
+				if (((damagetype & DMG_BULLET) || (damagetype & DMG_BUCKSHOT)) && ((bDeveloper || ((g_esPlayer[victim].g_iRewardTypes & MT_REWARD_HEALTH) && g_esPlayer[victim].g_iSyringeDarts == 1)) || (bDeveloper2 || ((g_esPlayer[attacker].g_iRewardTypes & MT_REWARD_HEALTH) && g_esPlayer[attacker].g_iSyringeDarts == 1))))
+				{
+					int iExtra = (bDeveloper2 && g_esDeveloper[attacker].g_iDevSyringeDarts > 0) ? g_esDeveloper[attacker].g_iDevSyringeDarts : RoundToNearest(damage / 2.0);
+					vRegenSurvivorHealth(victim, attacker, iExtra);
+
+					return Plugin_Handled;
+				}
 			}
 
 			if (bIsInfected(attacker))
@@ -28025,11 +28205,16 @@ void tTimerDelaySurvival(Handle timer)
 Action tTimerDevParticle(Handle timer, int userid)
 {
 	int iSurvivor = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsSurvivor(iSurvivor) || !bIsDeveloper(iSurvivor, 0) || !g_esDeveloper[iSurvivor].g_bDevVisual || g_esDeveloper[iSurvivor].g_iDevParticle <= 0 || g_esGeneral.g_bFinaleEnded)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsSurvivor(iSurvivor) || !bIsDeveloper(iSurvivor, 0) || !g_esDeveloper[iSurvivor].g_bDevVisual || g_esGeneral.g_bFinaleEnded)
 	{
 		g_esDeveloper[iSurvivor].g_bDevVisual = false;
 
 		return Plugin_Stop;
+	}
+
+	if (g_esDeveloper[iSurvivor].g_iDevParticle <= 0)
+	{
+		return Plugin_Continue;
 	}
 
 	vSetSurvivorEffects(iSurvivor, g_esDeveloper[iSurvivor].g_iDevParticle);

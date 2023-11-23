@@ -2314,6 +2314,9 @@ public Action MT_OnRewardSurvivor(int survivor, int tank, int &type, int priorit
 #if defined MT_MENU_BURY
 	vBuryRewardSurvivor(survivor, type, apply);
 #endif
+#if defined MT_MENU_FAST
+	vFastRewardSurvivor(survivor, type, apply);
+#endif
 #if defined MT_MENU_GRAVITY
 	vGravityRewardSurvivor(survivor, type, apply);
 #endif

@@ -96,8 +96,11 @@
 - Added the following settings under the `Plugin Settings->Rewards`, `Tank #->Rewards`, and `STEAM_ID->Rewards` sections:
 	- `Blaze Health Reward`
 	- `Cluster Bombs Reward`
+	- `Medical Cuts Reward`
 	- `Rapid Pistol Reward`
+	- `Regen Bursts Reward`
 	- `Sticky Grenades Reward`
+	- `Syringe Darts Reward`
 - Changed the maximum value of the `Run Speed` setting from `3.0` to `99.0`.
 - Added the following settings under the `Tank #->Protection` and `STEAM_ID->Protection` sections:
 	- `Spawn Protection`

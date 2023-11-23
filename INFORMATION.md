@@ -693,6 +693,9 @@
 			// - Slowly regenerate back to full health.
 			// - Leech health off of any infected per melee hit.
 			// - Turn damage into health from self-made fires.
+			// - Turn damage into health from self-made explosions.
+			// - Heal teammates with bullets.
+			// - Heal teammates with melee hits.
 			// 2: Speed boost reward (temporary)
 			// - Run faster
 			// - Jump higher (Disables the death fall camera for recipients.)
@@ -803,6 +806,9 @@
 			// - Slowly regenerate back to full health.
 			// - Leech health off of any infected per melee hit.
 			// - Turn damage into health from self-made fires.
+			// - Turn damage into health from self-made explosions.
+			// - Heal teammates with bullets.
+			// - Heal teammates with melee hits.
 			// 2: Speed boost reward (temporary)
 			// - Run faster
 			// - Jump higher (Disables the death fall camera for recipients.)
@@ -1503,6 +1509,24 @@
 			// 4th number = Amount for assistant killers.
 			"Life Leech Reward"			"1,1,1,1"
 
+			// Allow healing teammates with melee hits as a reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 4
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Allow healing teammates with melee hits to killers.
+			// 2nd number = Allow healing teammates with melee hits to assistants.
+			// 3rd number = Allow healing teammates with melee hits to teammates.
+			// 4th number = Allow healing teammates with melee hits to assistant killers.
+			"Medical Incisions Reward"		"1,1,1,1"
+
 			// The melee range to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
@@ -1628,6 +1652,24 @@
 			// 3rd number = Heal percentage for teammates.
 			// 4th number = Heal percentage for assistant killers.
 			"Refill Percent Reward"			"100.0,100.0,100.0,100.0"
+
+			// Allow healing from self-made explosions as a reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 4
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Allow healing from self-made explosions to killers.
+			// 2nd number = Allow healing from self-made explosions to assistants.
+			// 3rd number = Allow healing from self-made explosions to teammates.
+			// 4th number = Allow healing from self-made explosions to assistant killers.
+			"Regen Bursts Reward"			"1,1,1,1"
 
 			// Restore the previous loadouts of survivors after respawning them.
 			// Note: This setting can be used for standard Tanks.
@@ -1855,6 +1897,24 @@
 			// 3rd number = Give sticky grenades to teammates.
 			// 4th number = Give sticky grenades to assistant killers.
 			"Sticky Grenades Reward"		"1,1,1,1"
+
+			// Allow healing teammates with bullets as a reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 4
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Allow healing teammates with bullets to killers.
+			// 2nd number = Allow healing teammates with bullets to assistants.
+			// 3rd number = Allow healing teammates with bullets to teammates.
+			// 4th number = Allow healing teammates with bullets to assistant killers.
+			"Syringe Darts Reward"			"1,1,1,1"
 
 			// Give thorns as a reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -2122,6 +2182,7 @@
 				"Ladder Actions Reward"			"1,1,1,1"
 				"Lady Killer Reward"			"1,1,1,1"
 				"Life Leech Reward"			"1,1,1,1"
+				"Medical Incisions Reward"		"1,1,1,1"
 				"Melee Range Reward"			"100,100,100,100"
 				"Midair Dashes Reward"			"2,2,2,2"
 				"Pipebomb Duration Reward"		"10.0,10.0,10.0,10.0"
@@ -2129,6 +2190,7 @@
 				"Rapid Pistol Reward"			"0.130,0.130,0.130,0.130"
 				"Recoil Dampener Reward"		"1,1,1,1"
 				"Refill Percent Reward"			"100.0,100.0,100.0,100.0"
+				"Regen Bursts Reward"			"1,1,1,1"
 				"Respawn Loadout Reward"		"1,1,1,1"
 				"Revive Health Reward"			"100,100,100,100"
 				"Shove Damage Reward"			"0.025,0.025,0.025,0.025"
@@ -2140,6 +2202,7 @@
 				"Stack Limits"				"0,0,0,0,0,0,0,0"
 				"Stack Rewards"				"0,0,0,0"
 				"Sticky Grenades Reward"		"1,1,1,1"
+				"Syringe Darts Reward"			"1,1,1,1"
 				"Thorns Reward"				"1,1,1,1"
 				"Useful Rewards"			"15,15,15,15"
 				"Body Color Visual"			"-1;-1;-1;-1,-1;-1;-1;-1,-1;-1;-1;-1,-1;-1;-1;-1"
@@ -3850,6 +3913,9 @@
 			// - Slowly regenerate back to full health.
 			// - Leech health off of any infected per melee hit.
 			// - Turn damage into health from self-made fires.
+			// - Turn damage into health from self-made explosions.
+			// - Heal teammates with bullets.
+			// - Heal teammates with melee hits.
 			// 2: Speed boost reward (temporary)
 			// - Run faster
 			// - Jump higher (Disables the death fall camera for recipients.)
@@ -3960,6 +4026,9 @@
 			// - Slowly regenerate back to full health.
 			// - Leech health off of any infected per melee hit.
 			// - Turn damage into health from self-made fires.
+			// - Turn damage into health from self-made explosions.
+			// - Heal teammates with bullets.
+			// - Heal teammates with melee hits.
 			// 2: Speed boost reward (temporary)
 			// - Run faster
 			// - Jump higher (Disables the death fall camera for recipients.)
@@ -4660,6 +4729,24 @@
 			// 4th number = Amount for assistant killers.
 			"Life Leech Reward"			"0,0,0,0"
 
+			// Allow healing teammates with melee hits as a reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 4
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Allow healing teammates with melee hits to killers.
+			// 2nd number = Allow healing teammates with melee hits to assistants.
+			// 3rd number = Allow healing teammates with melee hits to teammates.
+			// 4th number = Allow healing teammates with melee hits to assistant killers.
+			"Medical Incisions Reward"		"0,0,0,0"
+
 			// The melee range to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
@@ -4785,6 +4872,24 @@
 			// 3rd number = Heal percentage for teammates.
 			// 4th number = Heal percentage for assistant killers.
 			"Refill Percent Reward"			"0.0,0.0,0.0,0.0"
+
+			// Allow healing from self-made explosions as a reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 4
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Allow healing from self-made explosions to killers.
+			// 2nd number = Allow healing from self-made explosions to assistants.
+			// 3rd number = Allow healing from self-made explosions to teammates.
+			// 4th number = Allow healing from self-made explosions to assistant killers.
+			"Regen Bursts Reward"			"0,0,0,0"
 
 			// Restore the previous loadouts of survivors after respawning them.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -5012,6 +5117,24 @@
 			// 3rd number = Give sticky grenades to teammates.
 			// 4th number = Give sticky grenades to assistant killers.
 			"Sticky Grenades Reward"		"0,0,0,0"
+
+			// Allow healing teammates with bullets as a reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 4
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Allow healing teammates with bullets to killers.
+			// 2nd number = Allow healing teammates with bullets to assistants.
+			// 3rd number = Allow healing teammates with bullets to teammates.
+			// 4th number = Allow healing teammates with bullets to assistant killers.
+			"Syringe Darts Reward"			"0,0,0,0"
 
 			// Give thorns as a reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -5279,6 +5402,7 @@
 				"Ladder Actions Reward"			"0,0,0,0"
 				"Lady Killer Reward"			"0,0,0,0"
 				"Life Leech Reward"			"0,0,0,0"
+				"Medical Incisions Reward"		"0,0,0,0"
 				"Melee Range Reward"			"0,0,0,0"
 				"Midair Dashes Reward"			"0,0,0,0"
 				"Pipebomb Duration Reward"		"0.0,0.0,0.0,0.0"
@@ -5286,6 +5410,7 @@
 				"Rapid Pistol Reward"			"0.0,0.0,0.0,0.0"
 				"Recoil Dampener Reward"		"0,0,0,0"
 				"Refill Percent Reward"			"0.0,0.0,0.0,0.0"
+				"Regen Bursts Reward"			"0,0,0,0"
 				"Respawn Loadout Reward"		"0,0,0,0"
 				"Revive Health Reward"			"0,0,0,0"
 				"Shove Damage Reward"			"0.0,0.0,0.0,0.0"
@@ -5297,6 +5422,7 @@
 				"Stack Limits"				"0,0,0,0,0,0,0,0"
 				"Stack Rewards"				"0,0,0,0"
 				"Sticky Grenades Reward"		"0,0,0,0"
+				"Syringe Darts Reward"			"0,0,0,0"
 				"Thorns Reward"				"0,0,0,0"
 				"Useful Rewards"			"0,0,0,0"
 				"Body Color Visual"			""

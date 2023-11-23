@@ -91,6 +91,8 @@ enum struct esFastPlayer
 	float g_flFastSpeed;
 	float g_flOpenAreasOnly;
 
+	Handle g_hGhostTimer;
+
 	int g_iAccessFlags;
 	int g_iAmmoCount;
 	int g_iComboAbility;
@@ -892,6 +894,23 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 }
 
 #if defined MT_ABILITIES_MAIN
+void vFastRewardSurvivor(int survivor, int &type, bool apply)
+#else
+public Action MT_OnRewardSurvivor(int survivor, int tank, int &type, int priority, float &duration, bool apply)
+#endif
+{
+	if (bIsHumanSurvivor(survivor) && (type & MT_REWARD_DEVELOPER4) && apply)
+	{
+		delete g_esFastPlayer[survivor].g_hGhostTimer;
+
+		g_esFastPlayer[survivor].g_hGhostTimer = CreateTimer(0.5, tTimerFastGhost, GetClientUserId(survivor), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+	}
+#if !defined MT_ABILITIES_MAIN
+	return Plugin_Continue;
+#endif
+}
+
+#if defined MT_ABILITIES_MAIN
 void vFastAbilityActivated(int tank)
 #else
 public void MT_OnAbilityActivated(int tank)
@@ -1069,6 +1088,7 @@ void vFastCopyStats2(int oldTank, int newTank)
 void vRemoveFast(int tank)
 {
 	g_esFastPlayer[tank].g_bActivated = false;
+	g_esFastPlayer[tank].g_hGhostTimer = null;
 	g_esFastPlayer[tank].g_iAmmoCount = 0;
 	g_esFastPlayer[tank].g_iCooldown = -1;
 	g_esFastPlayer[tank].g_iDuration = -1;
@@ -1148,4 +1168,58 @@ void tTimerFastDash(Handle timer, int userid)
 			}
 		}
 	}
+}
+
+Action tTimerFastGhost(Handle timer, int userid)
+{
+	int iSurvivor = GetClientOfUserId(userid);
+	if (!MT_IsCorePluginEnabled() || !bIsHumanSurvivor(iSurvivor) || !MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_DEVELOPER4))
+	{
+		g_esFastPlayer[iSurvivor].g_hGhostTimer = null;
+
+		return Plugin_Stop;
+	}
+
+	float flSurvivorPos[3], flInfectedPos[3];
+	int iInfected = 0;
+	GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+	for (iInfected = 1; iInfected <= MaxClients; iInfected++)
+	{
+		if (bIsInfected(iInfected, MT_CHECK_INGAME|MT_CHECK_ALIVE))
+		{
+			GetClientAbsOrigin(iInfected, flInfectedPos);
+			if (GetVectorDistance(flSurvivorPos, flInfectedPos) <= 100.0 && bIsVisibleToPlayer(iSurvivor, iInfected, 1, .range = 100.0))
+			{
+				vDamagePlayer(iInfected, iSurvivor, MT_GetScaledDamage(100.0), "128");
+			}
+		}
+	}
+
+	iInfected = -1;
+	while ((iInfected = FindEntityByClassname(iInfected, "infected")) != INVALID_ENT_REFERENCE)
+	{
+		if (bIsValidEntity(iInfected))
+		{
+			GetEntPropVector(iInfected, Prop_Send, "m_vecOrigin", flInfectedPos);
+			if (GetVectorDistance(flSurvivorPos, flInfectedPos) <= 100.0 && bIsVisibleToPosition(iInfected, flSurvivorPos, flInfectedPos, 100.0))
+			{
+				SDKHooks_TakeDamage(iInfected, iSurvivor, iSurvivor, MT_GetScaledDamage(100.0), DMG_CLUB);
+			}
+		}
+	}
+
+	iInfected = -1;
+	while ((iInfected = FindEntityByClassname(iInfected, "witch")) != INVALID_ENT_REFERENCE)
+	{
+		if (bIsValidEntity(iInfected))
+		{
+			GetEntPropVector(iInfected, Prop_Send, "m_vecOrigin", flInfectedPos);
+			if (GetVectorDistance(flSurvivorPos, flInfectedPos) <= 100.0 && bIsVisibleToPosition(iInfected, flSurvivorPos, flInfectedPos, 100.0))
+			{
+				SDKHooks_TakeDamage(iInfected, iSurvivor, iSurvivor, MT_GetScaledDamage(100.0), DMG_CLUB);
+			}
+		}
+	}
+
+	return Plugin_Continue;
 }

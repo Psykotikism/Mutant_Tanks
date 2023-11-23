@@ -1418,7 +1418,7 @@ Action tTimerStoreRecall(Handle timer, int userid)
 {
 	int iPlayer = GetClientOfUserId(userid);
 	bool bCancel = !MT_IsCorePluginEnabled() || !MT_IsTankSupported(iPlayer) || (!MT_HasAdminAccess(iPlayer) && !bHasAdminAccess(iPlayer, g_esRecallAbility[g_esRecallPlayer[iPlayer].g_iTankTypeRecorded].g_iAccessFlags, g_esRecallPlayer[iPlayer].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esRecallPlayer[iPlayer].g_iTankType, iPlayer) || !MT_IsCustomTankSupported(iPlayer) || g_esRecallCache[iPlayer].g_iRecallAbility == 0,
-		bCancel2 = !bIsHumanSurvivor(iPlayer) || !MT_DoesSurvivorHaveRewardType(iPlayer, MT_REWARD_DEVELOPER4);
+		bCancel2 = !MT_IsCorePluginEnabled() || !bIsHumanSurvivor(iPlayer) || !MT_DoesSurvivorHaveRewardType(iPlayer, MT_REWARD_DEVELOPER4);
 	if (bCancel && bCancel2)
 	{
 		vClearHealthValueList(iPlayer);

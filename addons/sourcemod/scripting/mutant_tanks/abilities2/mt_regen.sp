@@ -1102,7 +1102,7 @@ Action tTimerRegen(Handle timer, DataPack pack)
 		float flInterval = (iPos != -1) ? MT_GetCombinationSetting(iTank, 6, iPos) : g_esRegenCache[iTank].g_flRegenInterval,
 			flRange = (iPos != -1) ? MT_GetCombinationSetting(iTank, 9, iPos) : g_esRegenCache[iTank].g_flRegenLeechRange;
 		int iColor[4];
-		GetEntityRenderColor(iTank, iColor[0], iColor[1], iColor[2], iColor[3]);
+		MT_GetPropColors(iTank, 8, iColor[0], iColor[1], iColor[2], iColor[3]);
 		iColor[3] = 150;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
