@@ -2727,6 +2727,8 @@ stock bool bIsVisiblePosition(float pos1[3], float pos2[3], int entity, int type
 
 stock bool bIsVisibleToPlayer(int player, int target, int type, float playerPos[3] = NULL_VECTOR, float targetPos[3] = NULL_VECTOR, float range = 0.0, float threshold = 0.73)
 {
+	bool bReturn = true;
+
 	switch (type)
 	{
 		case 0: return true;
@@ -2764,9 +2766,11 @@ stock bool bIsVisibleToPlayer(int player, int target, int type, float playerPos[
 
 				float flTargetDirection[3];
 				NormalizeVector(flDistance, flTargetDirection);
-				if (GetVectorDotProduct(flPlayerDirection, flTargetDirection) < threshold)
+
+				switch (GetVectorDotProduct(flPlayerDirection, flTargetDirection) < threshold)
 				{
-					return type == 3;
+					case true: return type == 3;
+					case false: bReturn = type == 2;
 				}
 			}
 			else if (4 <= type <= 5)
@@ -2787,9 +2791,11 @@ stock bool bIsVisibleToPlayer(int player, int target, int type, float playerPos[
 
 				float flTargetDirection[3];
 				NormalizeVector(flDistance, flTargetDirection);
-				if (GetVectorDotProduct(flPlayerDirection, flTargetDirection) < threshold)
+
+				switch (GetVectorDotProduct(flPlayerDirection, flTargetDirection) < threshold)
 				{
-					return type == 5;
+					case true: return type == 5;
+					case false: bReturn = type == 4;
 				}
 			}
 
@@ -2807,7 +2813,7 @@ stock bool bIsVisibleToPlayer(int player, int target, int type, float playerPos[
 		}
 	}
 
-	return true;
+	return bReturn;
 }
 
 stock bool bIsVisibleToPosition(int entity, float pos1[3], float pos2[3], float range)
