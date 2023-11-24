@@ -1339,6 +1339,11 @@ Action tTimerDrug(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
+	if (!bIsVisibleToPlayer(iSurvivor, iTank, g_esDrugCache[iTank].g_iDrugSight))
+	{
+		return Plugin_Continue;
+	}
+
 	vDrug(iSurvivor, true, g_flDrugAngles);
 
 	return Plugin_Handled;

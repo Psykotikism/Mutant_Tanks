@@ -978,7 +978,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esHealCache[tank].g_flHealRange = flGetSubSettingValue(apply, bHuman, g_esHealTeammate[tank].g_flHealRange, g_esHealPlayer[tank].g_flHealRange, g_esHealSpecial[iType].g_flHealRange, g_esHealAbility[iType].g_flHealRange, 1);
 		g_esHealCache[tank].g_flHealRangeChance = flGetSubSettingValue(apply, bHuman, g_esHealTeammate[tank].g_flHealRangeChance, g_esHealPlayer[tank].g_flHealRangeChance, g_esHealSpecial[iType].g_flHealRangeChance, g_esHealAbility[iType].g_flHealRangeChance, 1);
 		g_esHealCache[tank].g_iHealAbility = iGetSubSettingValue(apply, bHuman, g_esHealTeammate[tank].g_iHealAbility, g_esHealPlayer[tank].g_iHealAbility, g_esHealSpecial[iType].g_iHealAbility, g_esHealAbility[iType].g_iHealAbility, 1);
-		g_esHealCache[tank].g_iHealCommon = iGetSubSettingValue(apply, bHuman, g_esHealTeammate[tank].g_iHealCommon, g_esHealPlayer[tank].g_iHealCommon, g_esHealSpecial[iType].g_iHealCommon, g_esHealAbility[iType].g_iHealCommon, 2, 1);
+		g_esHealCache[tank].g_iHealCommon = iGetSubSettingValue(apply, bHuman, g_esHealTeammate[tank].g_iHealCommon, g_esHealPlayer[tank].g_iHealCommon, g_esHealSpecial[iType].g_iHealCommon, g_esHealAbility[iType].g_iHealCommon, 2, -1);
 		g_esHealCache[tank].g_iHealCooldown = iGetSubSettingValue(apply, bHuman, g_esHealTeammate[tank].g_iHealCooldown, g_esHealPlayer[tank].g_iHealCooldown, g_esHealSpecial[iType].g_iHealCooldown, g_esHealAbility[iType].g_iHealCooldown, 1);
 		g_esHealCache[tank].g_iHealDuration = iGetSubSettingValue(apply, bHuman, g_esHealTeammate[tank].g_iHealDuration, g_esHealPlayer[tank].g_iHealDuration, g_esHealSpecial[iType].g_iHealDuration, g_esHealAbility[iType].g_iHealDuration, 1);
 		g_esHealCache[tank].g_iHealEffect = iGetSubSettingValue(apply, bHuman, g_esHealTeammate[tank].g_iHealEffect, g_esHealPlayer[tank].g_iHealEffect, g_esHealSpecial[iType].g_iHealEffect, g_esHealAbility[iType].g_iHealEffect, 1);
@@ -988,8 +988,8 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esHealCache[tank].g_iHealMessage = iGetSubSettingValue(apply, bHuman, g_esHealTeammate[tank].g_iHealMessage, g_esHealPlayer[tank].g_iHealMessage, g_esHealSpecial[iType].g_iHealMessage, g_esHealAbility[iType].g_iHealMessage, 1);
 		g_esHealCache[tank].g_iHealRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esHealTeammate[tank].g_iHealRangeCooldown, g_esHealPlayer[tank].g_iHealRangeCooldown, g_esHealSpecial[iType].g_iHealRangeCooldown, g_esHealAbility[iType].g_iHealRangeCooldown, 1);
 		g_esHealCache[tank].g_iHealSight = iGetSubSettingValue(apply, bHuman, g_esHealTeammate[tank].g_iHealSight, g_esHealPlayer[tank].g_iHealSight, g_esHealSpecial[iType].g_iHealSight, g_esHealAbility[iType].g_iHealSight, 1);
-		g_esHealCache[tank].g_iHealSpecial = iGetSubSettingValue(apply, bHuman, g_esHealTeammate[tank].g_iHealSpecial, g_esHealPlayer[tank].g_iHealSpecial, g_esHealSpecial[iType].g_iHealSpecial, g_esHealAbility[iType].g_iHealSpecial, 2, 1);
-		g_esHealCache[tank].g_iHealTank = iGetSubSettingValue(apply, bHuman, g_esHealTeammate[tank].g_iHealTank, g_esHealPlayer[tank].g_iHealTank, g_esHealSpecial[iType].g_iHealTank, g_esHealAbility[iType].g_iHealTank, 2, 1);
+		g_esHealCache[tank].g_iHealSpecial = iGetSubSettingValue(apply, bHuman, g_esHealTeammate[tank].g_iHealSpecial, g_esHealPlayer[tank].g_iHealSpecial, g_esHealSpecial[iType].g_iHealSpecial, g_esHealAbility[iType].g_iHealSpecial, 2, -1);
+		g_esHealCache[tank].g_iHealTank = iGetSubSettingValue(apply, bHuman, g_esHealTeammate[tank].g_iHealTank, g_esHealPlayer[tank].g_iHealTank, g_esHealSpecial[iType].g_iHealTank, g_esHealAbility[iType].g_iHealTank, 2, -1);
 		g_esHealCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esHealTeammate[tank].g_iHumanAbility, g_esHealPlayer[tank].g_iHumanAbility, g_esHealSpecial[iType].g_iHumanAbility, g_esHealAbility[iType].g_iHumanAbility, 1);
 		g_esHealCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esHealTeammate[tank].g_iHumanAmmo, g_esHealPlayer[tank].g_iHumanAmmo, g_esHealSpecial[iType].g_iHumanAmmo, g_esHealAbility[iType].g_iHumanAmmo, 1);
 		g_esHealCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esHealTeammate[tank].g_iHumanCooldown, g_esHealPlayer[tank].g_iHumanCooldown, g_esHealSpecial[iType].g_iHumanCooldown, g_esHealAbility[iType].g_iHumanCooldown, 1);
@@ -1010,7 +1010,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esHealCache[tank].g_flHealRange = flGetSettingValue(apply, bHuman, g_esHealPlayer[tank].g_flHealRange, g_esHealAbility[iType].g_flHealRange, 1);
 		g_esHealCache[tank].g_flHealRangeChance = flGetSettingValue(apply, bHuman, g_esHealPlayer[tank].g_flHealRangeChance, g_esHealAbility[iType].g_flHealRangeChance, 1);
 		g_esHealCache[tank].g_iHealAbility = iGetSettingValue(apply, bHuman, g_esHealPlayer[tank].g_iHealAbility, g_esHealAbility[iType].g_iHealAbility, 1);
-		g_esHealCache[tank].g_iHealCommon = iGetSettingValue(apply, bHuman, g_esHealPlayer[tank].g_iHealCommon, g_esHealAbility[iType].g_iHealCommon, 2, 1);
+		g_esHealCache[tank].g_iHealCommon = iGetSettingValue(apply, bHuman, g_esHealPlayer[tank].g_iHealCommon, g_esHealAbility[iType].g_iHealCommon, 2, -1);
 		g_esHealCache[tank].g_iHealCooldown = iGetSettingValue(apply, bHuman, g_esHealPlayer[tank].g_iHealCooldown, g_esHealAbility[iType].g_iHealCooldown, 1);
 		g_esHealCache[tank].g_iHealDuration = iGetSettingValue(apply, bHuman, g_esHealPlayer[tank].g_iHealDuration, g_esHealAbility[iType].g_iHealDuration, 1);
 		g_esHealCache[tank].g_iHealEffect = iGetSettingValue(apply, bHuman, g_esHealPlayer[tank].g_iHealEffect, g_esHealAbility[iType].g_iHealEffect, 1);
@@ -1020,8 +1020,8 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esHealCache[tank].g_iHealMessage = iGetSettingValue(apply, bHuman, g_esHealPlayer[tank].g_iHealMessage, g_esHealAbility[iType].g_iHealMessage, 1);
 		g_esHealCache[tank].g_iHealRangeCooldown = iGetSettingValue(apply, bHuman, g_esHealPlayer[tank].g_iHealRangeCooldown, g_esHealAbility[iType].g_iHealRangeCooldown, 1);
 		g_esHealCache[tank].g_iHealSight = iGetSettingValue(apply, bHuman, g_esHealPlayer[tank].g_iHealSight, g_esHealAbility[iType].g_iHealSight, 1);
-		g_esHealCache[tank].g_iHealSpecial = iGetSettingValue(apply, bHuman, g_esHealPlayer[tank].g_iHealSpecial, g_esHealAbility[iType].g_iHealSpecial, 2, 1);
-		g_esHealCache[tank].g_iHealTank = iGetSettingValue(apply, bHuman, g_esHealPlayer[tank].g_iHealTank, g_esHealAbility[iType].g_iHealTank, 2, 1);
+		g_esHealCache[tank].g_iHealSpecial = iGetSettingValue(apply, bHuman, g_esHealPlayer[tank].g_iHealSpecial, g_esHealAbility[iType].g_iHealSpecial, 2, -1);
+		g_esHealCache[tank].g_iHealTank = iGetSettingValue(apply, bHuman, g_esHealPlayer[tank].g_iHealTank, g_esHealAbility[iType].g_iHealTank, 2, -1);
 		g_esHealCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esHealPlayer[tank].g_iHumanAbility, g_esHealAbility[iType].g_iHumanAbility, 1);
 		g_esHealCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esHealPlayer[tank].g_iHumanAmmo, g_esHealAbility[iType].g_iHumanAmmo, 1);
 		g_esHealCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esHealPlayer[tank].g_iHumanCooldown, g_esHealAbility[iType].g_iHumanCooldown, 1);

@@ -1348,6 +1348,11 @@ Action tTimerWhirl(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
+	if (!bIsVisibleToPlayer(iSurvivor, iTank, g_esWhirlCache[iTank].g_iWhirlSight))
+	{
+		return Plugin_Continue;
+	}
+
 	float flAngles[3];
 	GetEntPropVector(iCamera, Prop_Data, "m_angRotation", flAngles);
 	float flSpeed = (iPos != -1) ? MT_GetCombinationSetting(iTank, 16, iPos) : g_esWhirlCache[iTank].g_flWhirlSpeed;

@@ -1247,6 +1247,11 @@ Action tTimerLagTeleport(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
+	if (!bIsVisibleToPlayer(iSurvivor, iTank, g_esLagCache[iTank].g_iLagSight))
+	{
+		return Plugin_Continue;
+	}
+
 	TeleportEntity(iSurvivor, g_esLagPlayer[iSurvivor].g_flLastPosition);
 
 	return Plugin_Continue;

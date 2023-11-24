@@ -1347,6 +1347,11 @@ Action tTimerShake(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
+	if (!bIsVisibleToPlayer(iSurvivor, iTank, g_esShakeCache[iTank].g_iShakeSight))
+	{
+		return Plugin_Continue;
+	}
+
 	vShakePlayerScreen(iSurvivor);
 
 	return Plugin_Continue;

@@ -1337,6 +1337,11 @@ Action tTimerShove(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
+	if (!bIsVisibleToPlayer(iSurvivor, iTank, g_esShoveCache[iTank].g_iShoveSight))
+	{
+		return Plugin_Continue;
+	}
+
 	float flOrigin[3];
 	GetClientAbsOrigin(iTank, flOrigin);
 	MT_StaggerPlayer(iSurvivor, iTank, flOrigin);

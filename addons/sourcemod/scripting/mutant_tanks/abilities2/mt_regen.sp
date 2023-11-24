@@ -730,8 +730,8 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esRegenCache[tank].g_iRegenAbility = iGetSubSettingValue(apply, bHuman, g_esRegenTeammate[tank].g_iRegenAbility, g_esRegenPlayer[tank].g_iRegenAbility, g_esRegenSpecial[iType].g_iRegenAbility, g_esRegenAbility[iType].g_iRegenAbility, 1);
 		g_esRegenCache[tank].g_iRegenCooldown = iGetSubSettingValue(apply, bHuman, g_esRegenTeammate[tank].g_iRegenCooldown, g_esRegenPlayer[tank].g_iRegenCooldown, g_esRegenSpecial[iType].g_iRegenCooldown, g_esRegenAbility[iType].g_iRegenCooldown, 1);
 		g_esRegenCache[tank].g_iRegenDuration = iGetSubSettingValue(apply, bHuman, g_esRegenTeammate[tank].g_iRegenDuration, g_esRegenPlayer[tank].g_iRegenDuration, g_esRegenSpecial[iType].g_iRegenDuration, g_esRegenAbility[iType].g_iRegenDuration, 1);
-		g_esRegenCache[tank].g_iRegenHealth = iGetSubSettingValue(apply, bHuman, g_esRegenTeammate[tank].g_iRegenHealth, g_esRegenPlayer[tank].g_iRegenHealth, g_esRegenSpecial[iType].g_iRegenHealth, g_esRegenAbility[iType].g_iRegenHealth, 2, 1);
-		g_esRegenCache[tank].g_iRegenLeech = iGetSubSettingValue(apply, bHuman, g_esRegenTeammate[tank].g_iRegenLeech, g_esRegenPlayer[tank].g_iRegenLeech, g_esRegenSpecial[iType].g_iRegenLeech, g_esRegenAbility[iType].g_iRegenLeech, 2, 1);
+		g_esRegenCache[tank].g_iRegenHealth = iGetSubSettingValue(apply, bHuman, g_esRegenTeammate[tank].g_iRegenHealth, g_esRegenPlayer[tank].g_iRegenHealth, g_esRegenSpecial[iType].g_iRegenHealth, g_esRegenAbility[iType].g_iRegenHealth, 2, -1);
+		g_esRegenCache[tank].g_iRegenLeech = iGetSubSettingValue(apply, bHuman, g_esRegenTeammate[tank].g_iRegenLeech, g_esRegenPlayer[tank].g_iRegenLeech, g_esRegenSpecial[iType].g_iRegenLeech, g_esRegenAbility[iType].g_iRegenLeech, 2, -1);
 		g_esRegenCache[tank].g_iRegenLimit = iGetSubSettingValue(apply, bHuman, g_esRegenTeammate[tank].g_iRegenLimit, g_esRegenPlayer[tank].g_iRegenLimit, g_esRegenSpecial[iType].g_iRegenLimit, g_esRegenAbility[iType].g_iRegenLimit, 1);
 		g_esRegenCache[tank].g_iRegenMessage = iGetSubSettingValue(apply, bHuman, g_esRegenTeammate[tank].g_iRegenMessage, g_esRegenPlayer[tank].g_iRegenMessage, g_esRegenSpecial[iType].g_iRegenMessage, g_esRegenAbility[iType].g_iRegenMessage, 1);
 		g_esRegenCache[tank].g_iRegenSight = iGetSubSettingValue(apply, bHuman, g_esRegenTeammate[tank].g_iRegenSight, g_esRegenPlayer[tank].g_iRegenSight, g_esRegenSpecial[iType].g_iRegenSight, g_esRegenAbility[iType].g_iRegenSight, 1);
@@ -753,8 +753,8 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esRegenCache[tank].g_iRegenAbility = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iRegenAbility, g_esRegenAbility[iType].g_iRegenAbility, 1);
 		g_esRegenCache[tank].g_iRegenCooldown = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iRegenCooldown, g_esRegenAbility[iType].g_iRegenCooldown, 1);
 		g_esRegenCache[tank].g_iRegenDuration = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iRegenDuration, g_esRegenAbility[iType].g_iRegenDuration, 1);
-		g_esRegenCache[tank].g_iRegenHealth = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iRegenHealth, g_esRegenAbility[iType].g_iRegenHealth, 2, 1);
-		g_esRegenCache[tank].g_iRegenLeech = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iRegenLeech, g_esRegenAbility[iType].g_iRegenLeech, 2, 1);
+		g_esRegenCache[tank].g_iRegenHealth = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iRegenHealth, g_esRegenAbility[iType].g_iRegenHealth, 2, -1);
+		g_esRegenCache[tank].g_iRegenLeech = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iRegenLeech, g_esRegenAbility[iType].g_iRegenLeech, 2, -1);
 		g_esRegenCache[tank].g_iRegenLimit = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iRegenLimit, g_esRegenAbility[iType].g_iRegenLimit, 1);
 		g_esRegenCache[tank].g_iRegenMessage = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iRegenMessage, g_esRegenAbility[iType].g_iRegenMessage, 1);
 		g_esRegenCache[tank].g_iRegenSight = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iRegenSight, g_esRegenAbility[iType].g_iRegenSight, 1);

@@ -443,21 +443,30 @@ Action OnNullifyTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 			if (g_esNullifyPlayer[attacker].g_bAffected && !MT_DoesSurvivorHaveRewardType(attacker, MT_REWARD_DAMAGEBOOST))
 			{
-				EmitSoundToAll(SOUND_METAL, victim);
-
-				if ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB))
+				int iTank = g_esNullifyPlayer[attacker].g_iOwner;
+				if (MT_IsTankSupported(iTank) && bIsVisibleToPlayer(iTank, attacker, g_esNullifyCache[iTank].g_iNullifySight))
 				{
-					float flTankPos[3];
-					GetClientAbsOrigin(victim, flTankPos);
+					EmitSoundToAll(SOUND_METAL, victim);
 
-					switch (MT_DoesSurvivorHaveRewardType(attacker, MT_REWARD_GODMODE))
+					if ((damagetype & DMG_BURN) || (damagetype & DMG_DIRECT))
 					{
-						case true: vPushNearbyEntities(victim, flTankPos, 300.0, 100.0);
-						case false: vPushNearbyEntities(victim, flTankPos);
+						ExtinguishEntity(victim);
 					}
-				}
 
-				return Plugin_Handled;
+					if ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB))
+					{
+						float flTankPos[3];
+						GetClientAbsOrigin(victim, flTankPos);
+
+						switch (MT_DoesSurvivorHaveRewardType(attacker, MT_REWARD_GODMODE))
+						{
+							case true: vPushNearbyEntities(victim, flTankPos, 300.0, 100.0);
+							case false: vPushNearbyEntities(victim, flTankPos);
+						}
+					}
+
+					return Plugin_Handled;
+				}
 			}
 		}
 	}

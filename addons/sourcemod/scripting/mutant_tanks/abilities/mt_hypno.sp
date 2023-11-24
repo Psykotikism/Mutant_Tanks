@@ -498,7 +498,7 @@ Action OnHypnoTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 				}
 			}
 
-			if (!bIsPlayerIncapacitated(victim) && g_esHypnoPlayer[attacker].g_bAffected)
+			if (!bIsPlayerIncapacitated(victim) && g_esHypnoPlayer[attacker].g_bAffected && g_esHypnoPlayer[attacker].g_iOwner == victim)
 			{
 				bool bChanged = false;
 				if (g_esHypnoCache[victim].g_flHypnoBulletDivisor > 1.0 && (damagetype & DMG_BULLET))

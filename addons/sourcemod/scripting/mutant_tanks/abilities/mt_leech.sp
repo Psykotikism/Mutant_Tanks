@@ -1257,6 +1257,11 @@ Action tTimerLeech(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
+	if (!bIsVisibleToPlayer(iSurvivor, iTank, g_esLeechCache[iTank].g_iLeechSight))
+	{
+		return Plugin_Continue;
+	}
+
 	int iTankHealth = GetEntProp(iTank, Prop_Data, "m_iHealth"),
 		iMaxHealth = MT_TankMaxHealth(iTank, 1),
 		iNewHealth = (iTankHealth + 1),

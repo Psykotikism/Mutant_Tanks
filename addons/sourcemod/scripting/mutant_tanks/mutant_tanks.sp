@@ -12102,7 +12102,7 @@ void vSetupGuest(int guest, const char[] keyword, const char[] code, const char[
 	else if (StrContains(keyword, "blazehp", false) != -1 || StrContains(keyword, "firehp", false) != -1)
 	{
 		bPanel = true;
-		g_esDeveloper[guest].g_iDevBlazeHealth = iClamp(StringToInt(code), -MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
+		g_esDeveloper[guest].g_iDevBlazeHealth = iClamp(StringToInt(code), MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
 	}
 	else if (StrContains(keyword, "cluster", false) != -1 || StrContains(keyword, "grenade", false) != -1)
 	{
@@ -12185,7 +12185,7 @@ void vSetupGuest(int guest, const char[] keyword, const char[] code, const char[
 	else if (StrContains(keyword, "medic", false) != -1 || StrContains(keyword, "medcuts", false) != -1 || StrContains(keyword, "meleehp", false) != -1)
 	{
 		bPanel = true;
-		g_esDeveloper[guest].g_iDevMedicalCuts = iClamp(StringToInt(code), -MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
+		g_esDeveloper[guest].g_iDevMedicalCuts = iClamp(StringToInt(code), MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
 	}
 	else if (StrContains(keyword, "longmelee", false) != -1 || StrContains(keyword, "range", false) != -1)
 	{
@@ -12200,7 +12200,7 @@ void vSetupGuest(int guest, const char[] keyword, const char[] code, const char[
 	else if (StrContains(keyword, "overheal", false) != -1 || StrContains(keyword, "extrahp", false) != -1)
 	{
 		bPanel = true;
-		g_esDeveloper[guest].g_iDevOverhealth = iClamp(StringToInt(code), -MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
+		g_esDeveloper[guest].g_iDevOverhealth = iClamp(StringToInt(code), MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
 	}
 	else if (StrContains(keyword, "pipe", false) != -1 || StrContains(keyword, "bomb", false) != -1 || StrContains(keyword, "pipedur", false) != -1 || StrContains(keyword, "bombdur", false) != -1)
 	{
@@ -12220,7 +12220,7 @@ void vSetupGuest(int guest, const char[] keyword, const char[] code, const char[
 	else if (StrContains(keyword, "bursthp", false) != -1 || StrContains(keyword, "regburst", false) != -1 || StrContains(keyword, "bombhp", false) != -1)
 	{
 		bPanel = true;
-		g_esDeveloper[guest].g_iDevRegenBursts = iClamp(StringToInt(code), -MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
+		g_esDeveloper[guest].g_iDevRegenBursts = iClamp(StringToInt(code), MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
 	}
 	else if (StrContains(keyword, "revivehp", false) != -1 || StrContains(keyword, "hprevive", false) != -1)
 	{
@@ -12277,7 +12277,7 @@ void vSetupGuest(int guest, const char[] keyword, const char[] code, const char[
 	else if (StrContains(keyword, "syringe", false) != -1 || StrContains(keyword, "dart", false) != -1 || StrContains(keyword, "bullethp", false) != -1)
 	{
 		bPanel = true;
-		g_esDeveloper[guest].g_iDevSyringeDarts = iClamp(StringToInt(code), -MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
+		g_esDeveloper[guest].g_iDevSyringeDarts = iClamp(StringToInt(code), MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
 	}
 	else if (StrContains(keyword, "voice", false) != -1 || StrContains(keyword, "pitch", false) != -1)
 	{

@@ -1270,6 +1270,11 @@ Action tTimerPimp(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
+	if (!bIsVisibleToPlayer(iSurvivor, iTank, g_esPimpCache[iTank].g_iPimpSight))
+	{
+		return Plugin_Continue;
+	}
+
 	float flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 3, iPos) : float(g_esPimpCache[iTank].g_iPimpDamage);
 	if (flDamage > 0.0)
 	{

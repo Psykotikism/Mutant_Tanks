@@ -128,6 +128,7 @@
 		"Notes"		"- The \"MT_GetSpawnType\" native now has two more parameters."
 		"Notes"		"Abilities:"
 		"Notes"		"- Added more options for all the \"Ability Sight\" settings."
+		"Notes"		"- Improved the \"Ability Sight\" setting for several abilities."
 		"Notes"		"- Mutant Infected will now reserve their abilities for engaging with survivors for a more tactical approach. [Requires \"Actions\".]"
 		"Notes"		"- Bury: The ability no longer affects pinned survivors."
 		"Notes"		"- Choke:"

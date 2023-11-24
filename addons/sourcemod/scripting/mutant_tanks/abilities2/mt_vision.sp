@@ -1268,6 +1268,11 @@ Action tTimerVision(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
+	if (!bIsVisibleToPlayer(iSurvivor, iTank, g_esVisionCache[iTank].g_iVisionSight))
+	{
+		return Plugin_Continue;
+	}
+
 	SetEntProp(iSurvivor, Prop_Send, "m_iFOV", g_esVisionCache[iTank].g_iVisionFOV);
 	SetEntProp(iSurvivor, Prop_Send, "m_iDefaultFOV", g_esVisionCache[iTank].g_iVisionFOV);
 

@@ -1315,6 +1315,11 @@ Action tTimerSplatter(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
+	if (!bIsVisibleToPlayer(iSurvivor, iTank, g_esSplatterCache[iTank].g_iSplatterSight))
+	{
+		return Plugin_Continue;
+	}
+
 	MT_TE_SetupParticleAttachment(iParticle, 1, iSurvivor, true);
 	TE_SendToClient(iSurvivor);
 
