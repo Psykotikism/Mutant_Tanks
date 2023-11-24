@@ -1314,6 +1314,11 @@ Action tTimerDrunkSpeed(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
+	if (!bIsVisibleToPlayer(iSurvivor, iTank, g_esDrunkCache[iTank].g_iDrunkSight))
+	{
+		return Plugin_Continue;
+	}
+
 	float flRandom = MT_GetRandomFloat(1.5, 3.0);
 	SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", (g_bLaggedMovementInstalled ? L4D_LaggedMovement(iSurvivor, flRandom) : flRandom));
 	CreateTimer(MT_GetRandomFloat(1.0, 3.0), tTimerStopDrunkSpeed, GetClientUserId(iSurvivor), TIMER_FLAG_NO_MAPCHANGE);
@@ -1350,6 +1355,11 @@ Action tTimerDrunkTurn(Handle timer, DataPack pack)
 		vDrunkReset2(iSurvivor, iTank, iMessage);
 
 		return Plugin_Stop;
+	}
+
+	if (!bIsVisibleToPlayer(iSurvivor, iTank, g_esDrunkCache[iTank].g_iDrunkSight))
+	{
+		return Plugin_Continue;
 	}
 
 	float flPunchAngles[3], flEyeAngles[3], flAngle = MT_GetRandomFloat(-360.0, 360.0);

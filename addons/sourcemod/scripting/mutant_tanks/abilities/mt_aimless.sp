@@ -963,10 +963,14 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	}
 	else if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
 	{
-		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+		int iPlayerId = event.GetInt("userid"), iPlayer = GetClientOfUserId(iPlayerId);
+		if (MT_IsTankSupported(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vRemoveAimless(iTank);
+			vRemoveAimless(iPlayer);
+		}
+		else if (bIsSurvivor(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME))
+		{
+			vStopAimless(iPlayer);
 		}
 	}
 	else if (StrEqual(name, "player_now_it"))
@@ -1214,9 +1218,7 @@ void vRemoveAimless(int tank)
 	{
 		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME) && g_esAimlessPlayer[iSurvivor].g_bAffected && g_esAimlessPlayer[iSurvivor].g_iOwner == tank)
 		{
-			g_esAimlessPlayer[iSurvivor].g_bAffected = false;
-			g_esAimlessPlayer[iSurvivor].g_bForced = false;
-			g_esAimlessPlayer[iSurvivor].g_iOwner = -1;
+			vStopAimless(iSurvivor);
 		}
 	}
 
@@ -1246,6 +1248,26 @@ void vAimlessReset2(int tank)
 	g_esAimlessPlayer[tank].g_iAmmoCount = 0;
 	g_esAimlessPlayer[tank].g_iCooldown = -1;
 	g_esAimlessPlayer[tank].g_iRangeCooldown = -1;
+}
+
+void vStopAimless(int survivor)
+{
+	g_esAimlessPlayer[survivor].g_bAffected = false;
+	g_esAimlessPlayer[survivor].g_bForced = false;
+	g_esAimlessPlayer[survivor].g_iOwner = -1;
+
+	int iWeapon = 0;
+	for (int iSlot = 0; iSlot < 5; iSlot++)
+	{
+		iWeapon = GetPlayerWeaponSlot(survivor, iSlot);
+		if (iWeapon > MaxClients)
+		{
+			SetEntPropFloat(iWeapon, Prop_Send, "m_flNextPrimaryAttack", 1.0);
+			SetEntPropFloat(iWeapon, Prop_Send, "m_flNextSecondaryAttack", 1.0);
+		}
+	}
+
+	SetEntPropFloat(survivor, Prop_Send, "m_flNextAttack", 1.0);
 }
 
 void tTimerAimlessCombo(Handle timer, DataPack pack)
@@ -1310,29 +1332,12 @@ void tTimerStopAimless(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsTankSupported(iTank) || !MT_IsCustomTankSupported(iTank))
 	{
-		g_esAimlessPlayer[iSurvivor].g_bAffected = false;
-		g_esAimlessPlayer[iSurvivor].g_bForced = false;
-		g_esAimlessPlayer[iSurvivor].g_iOwner = -1;
+		vStopAimless(iSurvivor);
 
 		return;
 	}
 
-	g_esAimlessPlayer[iSurvivor].g_bAffected = false;
-	g_esAimlessPlayer[iSurvivor].g_bForced = false;
-	g_esAimlessPlayer[iSurvivor].g_iOwner = -1;
-
-	int iWeapon = 0;
-	for (int iSlot = 0; iSlot < 5; iSlot++)
-	{
-		iWeapon = GetPlayerWeaponSlot(iSurvivor, iSlot);
-		if (iWeapon > MaxClients)
-		{
-			SetEntPropFloat(iWeapon, Prop_Send, "m_flNextPrimaryAttack", 1.0);
-			SetEntPropFloat(iWeapon, Prop_Send, "m_flNextSecondaryAttack", 1.0);
-		}
-	}
-
-	SetEntPropFloat(iSurvivor, Prop_Send, "m_flNextAttack", 1.0);
+	vStopAimless(iSurvivor);
 
 	int iMessage = pack.ReadCell();
 	if (g_esAimlessCache[iTank].g_iAimlessMessage & iMessage)

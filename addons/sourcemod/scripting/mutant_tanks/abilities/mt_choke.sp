@@ -1435,6 +1435,11 @@ Action tTimerChokeDamage(Handle timer, DataPack pack)
 	SetEntityMoveType(iSurvivor, MOVETYPE_NONE);
 	SetEntityGravity(iSurvivor, 1.0);
 
+	if (!bIsVisibleToPlayer(iSurvivor, iTank, g_esChokeCache[iTank].g_iChokeSight))
+	{
+		return Plugin_Continue;
+	}
+
 	float flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 3, iPos) : g_esChokeCache[iTank].g_flChokeDamage;
 	if (flDamage > 0.0)
 	{

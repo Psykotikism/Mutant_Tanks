@@ -130,6 +130,7 @@
 
 #### Abilities
 - Added more options for all the `Ability Sight` settings.
+- Improved the `Ability Sight` setting for several abilities.
 - Mutant Infected will now reserve their abilities for engaging with survivors for a more tactical approach. [Requires `Actions`.]
 - Bury: The ability no longer affects pinned survivors.
 - Choke:

@@ -930,11 +930,15 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iSurvivorId = event.GetInt("userid"), iSurvivor = GetClientOfUserId(iSurvivorId);
 		if (bIsSurvivor(iSurvivor) && bIsGunWeapon(iSurvivor) && !MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_INFAMMO) && g_esRecoilPlayer[iSurvivor].g_bAffected)
 		{
-			float flRecoil[3];
-			flRecoil[0] = MT_GetRandomFloat(-20.0, -80.0);
-			flRecoil[1] = MT_GetRandomFloat(-25.0, 25.0);
-			flRecoil[2] = MT_GetRandomFloat(-25.0, 25.0);
-			SetEntPropVector(iSurvivor, Prop_Data, "m_vecPunchAngle", flRecoil);
+			int iTank = g_esRecoilPlayer[iSurvivor].g_iOwner;
+			if (MT_IsTankSupported(iTank) && bIsVisibleToPlayer(iTank, iSurvivor, g_esRecoilCache[iTank].g_iRecoilSight))
+			{
+				float flRecoil[3];
+				flRecoil[0] = MT_GetRandomFloat(-20.0, -80.0);
+				flRecoil[1] = MT_GetRandomFloat(-25.0, 25.0);
+				flRecoil[2] = MT_GetRandomFloat(-25.0, 25.0);
+				SetEntPropVector(iSurvivor, Prop_Data, "m_vecPunchAngle", flRecoil);
+			}
 		}
 	}
 }

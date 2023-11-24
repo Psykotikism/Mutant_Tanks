@@ -1372,6 +1372,11 @@ Action tTimerElectric(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
+	if (!bIsVisibleToPlayer(iSurvivor, iTank, g_esElectricCache[iTank].g_iElectricSight))
+	{
+		return Plugin_Continue;
+	}
+
 	vElectric(iSurvivor, iTank, true, iPos);
 
 	float flSurvivorPos[3], flPlayerPos[3];

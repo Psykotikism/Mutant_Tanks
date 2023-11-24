@@ -1686,7 +1686,7 @@ Action tTimerJump3(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	if (!bIsEntityGrounded(iSurvivor))
+	if (!bIsEntityGrounded(iSurvivor) || !bIsVisibleToPlayer(iSurvivor, iTank, g_esJumpCache[iTank].g_iJumpSight))
 	{
 		return Plugin_Continue;
 	}

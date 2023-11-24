@@ -1292,6 +1292,11 @@ Action tTimerHurt(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
+	if (!bIsVisibleToPlayer(iSurvivor, iTank, g_esHurtCache[iTank].g_iHurtSight))
+	{
+		return Plugin_Continue;
+	}
+
 	float flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 3, iPos) : g_esHurtCache[iTank].g_flHurtDamage;
 	if (flDamage > 0.0)
 	{
