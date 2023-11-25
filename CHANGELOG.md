@@ -132,6 +132,8 @@
 - Added more options for all the `Ability Sight` settings.
 - Improved the `Ability Sight` setting for several abilities.
 - Mutant Infected will now reserve their abilities for engaging with survivors for a more tactical approach. [Requires `Actions`.]
+- Acid: Added more options for the `Acid Death` setting. (Requested by `Unfellowed`.)
+- Bomb: Added more options for the `Bomb Death` setting. (Requested by `Unfellowed`.)
 - Bury: The ability no longer affects pinned survivors.
 - Choke:
 	- The ability no longer affects pinned survivors.
@@ -146,6 +148,8 @@
 	- Added the `Immunity Flags` setting.
 	- Changed the minimum value of the `Fast Speed` setting from `3.0` to `-1.0`.
 	- Changed the maximum value of the `Fast Speed` setting from `10.0` to `99.0`.
+- Fire: Added more options for the `Fire Death` setting. (Requested by `Unfellowed`.)
+- Fling: Added more options for the `Fling Death` setting. (Requested by `Unfellowed`.)
 - Hypno: Changed the default value of the `Hypno View` setting from `1` to `0`.
 - Kamikaze:
 	- Added the `Kamikaze Meter` setting.
@@ -155,6 +159,7 @@
 	- The ability now chains to multiple survivors.
 	- Added the `Ability Sight` setting.
 - Nullify: The ability now blocks the survivors' damage towards everything.
+- Puke: Added more options for the `Puke Death` setting. (Requested by `Unfellowed`.)
 - Recall: Affected survivors are now teleported back to the team when the Mutant Infected dies.
 - Regen:
 	- Added the `Regen Leech` setting.
@@ -165,6 +170,8 @@
 - Rocket:
 	- Added the `Rocket Countdown` setting.
 	- The ability now credits Mutants for killing survivor victims.
+- Shake: Added more options for the `Shake Death` setting. (Requested by `Unfellowed`.)
+- Shove: Added more options for the `Shove Death` setting. (Requested by `Unfellowed`.)
 - Smash:
 	- Added the `Smash Meter` setting.
 	- The ability now credits Mutants for killing survivor victims.

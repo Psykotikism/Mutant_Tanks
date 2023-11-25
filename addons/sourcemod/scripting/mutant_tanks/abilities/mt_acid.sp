@@ -666,8 +666,8 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 							vAcidRockBreak2(tank, weapon, random, iPos);
 						}
 					}
-					case MT_COMBO_POSTSPAWN: vAcidRange(tank, 0, random, iPos);
-					case MT_COMBO_UPONDEATH: vAcidRange(tank, 0, random, iPos);
+					case MT_COMBO_POSTSPAWN: vAcidRange(tank, 0, 2, random, iPos);
+					case MT_COMBO_UPONDEATH: vAcidRange(tank, 0, 1, random, iPos);
 				}
 
 				break;
@@ -834,7 +834,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esAcidTeammate[admin].g_iAcidSight = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esAcidTeammate[admin].g_iAcidSight, value, -1, 5);
 			g_esAcidTeammate[admin].g_flAcidChance = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidChance", "Acid Chance", "Acid_Chance", "chance", g_esAcidTeammate[admin].g_flAcidChance, value, -1.0, 100.0);
 			g_esAcidTeammate[admin].g_iAcidCooldown = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidCooldown", "Acid Cooldown", "Acid_Cooldown", "cooldown", g_esAcidTeammate[admin].g_iAcidCooldown, value, -1, 99999);
-			g_esAcidTeammate[admin].g_iAcidDeath = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidDeath", "Acid Death", "Acid_Death", "death", g_esAcidTeammate[admin].g_iAcidDeath, value, -1, 1);
+			g_esAcidTeammate[admin].g_iAcidDeath = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidDeath", "Acid Death", "Acid_Death", "death", g_esAcidTeammate[admin].g_iAcidDeath, value, -1, 3);
 			g_esAcidTeammate[admin].g_flAcidDeathChance = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidDeathChance", "Acid Death Chance", "Acid_Death_Chance", "deathchance", g_esAcidTeammate[admin].g_flAcidDeathChance, value, -1.0, 100.0);
 			g_esAcidTeammate[admin].g_flAcidDeathRange = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidDeathRange", "Acid Death Range", "Acid_Death_Range", "deathrange", g_esAcidTeammate[admin].g_flAcidDeathRange, value, -1.0, 99999.0);
 			g_esAcidTeammate[admin].g_iAcidHit = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidHit", "Acid Hit", "Acid_Hit", "hit", g_esAcidTeammate[admin].g_iAcidHit, value, -1, 1);
@@ -863,7 +863,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esAcidPlayer[admin].g_iAcidSight = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esAcidPlayer[admin].g_iAcidSight, value, -1, 5);
 			g_esAcidPlayer[admin].g_flAcidChance = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidChance", "Acid Chance", "Acid_Chance", "chance", g_esAcidPlayer[admin].g_flAcidChance, value, -1.0, 100.0);
 			g_esAcidPlayer[admin].g_iAcidCooldown = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidCooldown", "Acid Cooldown", "Acid_Cooldown", "cooldown", g_esAcidPlayer[admin].g_iAcidCooldown, value, -1, 99999);
-			g_esAcidPlayer[admin].g_iAcidDeath = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidDeath", "Acid Death", "Acid_Death", "death", g_esAcidPlayer[admin].g_iAcidDeath, value, -1, 1);
+			g_esAcidPlayer[admin].g_iAcidDeath = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidDeath", "Acid Death", "Acid_Death", "death", g_esAcidPlayer[admin].g_iAcidDeath, value, -1, 3);
 			g_esAcidPlayer[admin].g_flAcidDeathChance = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidDeathChance", "Acid Death Chance", "Acid_Death_Chance", "deathchance", g_esAcidPlayer[admin].g_flAcidDeathChance, value, -1.0, 100.0);
 			g_esAcidPlayer[admin].g_flAcidDeathRange = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidDeathRange", "Acid Death Range", "Acid_Death_Range", "deathrange", g_esAcidPlayer[admin].g_flAcidDeathRange, value, -1.0, 99999.0);
 			g_esAcidPlayer[admin].g_iAcidHit = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidHit", "Acid Hit", "Acid_Hit", "hit", g_esAcidPlayer[admin].g_iAcidHit, value, -1, 1);
@@ -898,7 +898,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esAcidSpecial[type].g_iAcidSight = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esAcidSpecial[type].g_iAcidSight, value, -1, 5);
 			g_esAcidSpecial[type].g_flAcidChance = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidChance", "Acid Chance", "Acid_Chance", "chance", g_esAcidSpecial[type].g_flAcidChance, value, -1.0, 100.0);
 			g_esAcidSpecial[type].g_iAcidCooldown = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidCooldown", "Acid Cooldown", "Acid_Cooldown", "cooldown", g_esAcidSpecial[type].g_iAcidCooldown, value, -1, 99999);
-			g_esAcidSpecial[type].g_iAcidDeath = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidDeath", "Acid Death", "Acid_Death", "death", g_esAcidSpecial[type].g_iAcidDeath, value, -1, 1);
+			g_esAcidSpecial[type].g_iAcidDeath = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidDeath", "Acid Death", "Acid_Death", "death", g_esAcidSpecial[type].g_iAcidDeath, value, -1, 3);
 			g_esAcidSpecial[type].g_flAcidDeathChance = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidDeathChance", "Acid Death Chance", "Acid_Death_Chance", "deathchance", g_esAcidSpecial[type].g_flAcidDeathChance, value, -1.0, 100.0);
 			g_esAcidSpecial[type].g_flAcidDeathRange = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidDeathRange", "Acid Death Range", "Acid_Death_Range", "deathrange", g_esAcidSpecial[type].g_flAcidDeathRange, value, -1.0, 99999.0);
 			g_esAcidSpecial[type].g_iAcidHit = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidHit", "Acid Hit", "Acid_Hit", "hit", g_esAcidSpecial[type].g_iAcidHit, value, -1, 1);
@@ -927,7 +927,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esAcidAbility[type].g_iAcidSight = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esAcidAbility[type].g_iAcidSight, value, -1, 5);
 			g_esAcidAbility[type].g_flAcidChance = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidChance", "Acid Chance", "Acid_Chance", "chance", g_esAcidAbility[type].g_flAcidChance, value, -1.0, 100.0);
 			g_esAcidAbility[type].g_iAcidCooldown = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidCooldown", "Acid Cooldown", "Acid_Cooldown", "cooldown", g_esAcidAbility[type].g_iAcidCooldown, value, -1, 99999);
-			g_esAcidAbility[type].g_iAcidDeath = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidDeath", "Acid Death", "Acid_Death", "death", g_esAcidAbility[type].g_iAcidDeath, value, -1, 1);
+			g_esAcidAbility[type].g_iAcidDeath = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidDeath", "Acid Death", "Acid_Death", "death", g_esAcidAbility[type].g_iAcidDeath, value, -1, 3);
 			g_esAcidAbility[type].g_flAcidDeathChance = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidDeathChance", "Acid Death Chance", "Acid_Death_Chance", "deathchance", g_esAcidAbility[type].g_flAcidDeathChance, value, -1.0, 100.0);
 			g_esAcidAbility[type].g_flAcidDeathRange = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidDeathRange", "Acid Death Range", "Acid_Death_Range", "deathrange", g_esAcidAbility[type].g_flAcidDeathRange, value, -1.0, 99999.0);
 			g_esAcidAbility[type].g_iAcidHit = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidHit", "Acid Hit", "Acid_Hit", "hit", g_esAcidAbility[type].g_iAcidHit, value, -1, 1);
@@ -1066,12 +1066,12 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveAcid(iTank);
 		}
 	}
-	else if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
+	else if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (g_bSecondGame && MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vAcidRange(iTank, 1, GetRandomFloat(0.1, 100.0));
+			vAcidRange(iTank, 1, 1, GetRandomFloat(0.1, 100.0));
 			vRemoveAcid(iTank);
 		}
 	}
@@ -1083,6 +1083,15 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		if (g_bSecondGame && bIsBoomer(iBoomer) && bIsSurvivor(iSurvivor) && !bExploded)
 		{
 			vAcidHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esAcidCache[iBoomer].g_flAcidChance, g_esAcidCache[iBoomer].g_iAcidHit, MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
+		}
+	}
+	else if (StrEqual(name, "player_spawn"))
+	{
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
+		if (g_bSecondGame && MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+		{
+			vAcidRange(iTank, 1, 2, GetRandomFloat(0.1, 100.0));
+			vRemoveAcid(iTank);
 		}
 	}
 }
@@ -1160,7 +1169,7 @@ void vAcidPostTankSpawn(int tank)
 public void MT_OnPostTankSpawn(int tank)
 #endif
 {
-	vAcidRange(tank, 1, GetRandomFloat(0.1, 100.0));
+	vAcidRange(tank, 1, 2, GetRandomFloat(0.1, 100.0));
 }
 
 #if defined MT_ABILITIES_MAIN
@@ -1321,10 +1330,10 @@ void vAcidHit(int survivor, int tank, float random, float chance, int enabled, i
 	}
 }
 
-void vAcidRange(int tank, int value, float random, int pos = -1)
+void vAcidRange(int tank, int value, int bit, float random, int pos = -1)
 {
 	float flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 13, pos) : g_esAcidCache[tank].g_flAcidDeathChance;
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(tank) && g_esAcidCache[tank].g_iAcidDeath == 1 && random <= flChance)
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(tank) && (g_esAcidCache[tank].g_iAcidDeath & (1 << bit)) && random <= flChance)
 	{
 		if (!g_bSecondGame || g_esAcidCache[tank].g_iComboAbility == value || bIsAreaNarrow(tank, g_esAcidCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esAcidCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esAcidPlayer[tank].g_iTankType, tank) || (g_esAcidCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esAcidCache[tank].g_iRequiresHumans) || (bIsInfected(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAcidAbility[g_esAcidPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esAcidPlayer[tank].g_iAccessFlags)) || g_esAcidCache[tank].g_iHumanAbility == 0)))
 		{

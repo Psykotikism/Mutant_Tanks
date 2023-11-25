@@ -576,8 +576,8 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 							}
 						}
 					}
-					case MT_COMBO_POSTSPAWN: vShakeRange(tank, 0, random, iPos);
-					case MT_COMBO_UPONDEATH: vShakeRange(tank, 0, random, iPos);
+					case MT_COMBO_POSTSPAWN: vShakeRange(tank, 0, 2, random, iPos);
+					case MT_COMBO_UPONDEATH: vShakeRange(tank, 0, 1, random, iPos);
 				}
 
 				break;
@@ -735,7 +735,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esShakeTeammate[admin].g_iShakeSight = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esShakeTeammate[admin].g_iShakeSight, value, -1, 5);
 			g_esShakeTeammate[admin].g_flShakeChance = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeChance", "Shake Chance", "Shake_Chance", "chance", g_esShakeTeammate[admin].g_flShakeChance, value, -1.0, 100.0);
 			g_esShakeTeammate[admin].g_iShakeCooldown = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeCooldown", "Shake Cooldown", "Shake_Cooldown", "cooldown", g_esShakeTeammate[admin].g_iShakeCooldown, value, -1, 99999);
-			g_esShakeTeammate[admin].g_iShakeDeath = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeDeath", "Shake Death", "Shake_Death", "death", g_esShakeTeammate[admin].g_iShakeDeath, value, -1, 1);
+			g_esShakeTeammate[admin].g_iShakeDeath = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeDeath", "Shake Death", "Shake_Death", "death", g_esShakeTeammate[admin].g_iShakeDeath, value, -1, 3);
 			g_esShakeTeammate[admin].g_flShakeDeathChance = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeDeathChance", "Shake Death Chance", "Shake_Death_Chance", "deathchance", g_esShakeTeammate[admin].g_flShakeDeathChance, value, -1.0, 100.0);
 			g_esShakeTeammate[admin].g_flShakeDeathRange = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeDeathRange", "Shake Death Range", "Shake_Death_Range", "deathrange", g_esShakeTeammate[admin].g_flShakeDeathRange, value, -1.0, 99999.0);
 			g_esShakeTeammate[admin].g_iShakeDuration = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeDuration", "Shake Duration", "Shake_Duration", "duration", g_esShakeTeammate[admin].g_iShakeDuration, value, -1, 99999);
@@ -762,7 +762,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esShakePlayer[admin].g_iShakeSight = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esShakePlayer[admin].g_iShakeSight, value, -1, 5);
 			g_esShakePlayer[admin].g_flShakeChance = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeChance", "Shake Chance", "Shake_Chance", "chance", g_esShakePlayer[admin].g_flShakeChance, value, -1.0, 100.0);
 			g_esShakePlayer[admin].g_iShakeCooldown = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeCooldown", "Shake Cooldown", "Shake_Cooldown", "cooldown", g_esShakePlayer[admin].g_iShakeCooldown, value, -1, 99999);
-			g_esShakePlayer[admin].g_iShakeDeath = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeDeath", "Shake Death", "Shake_Death", "death", g_esShakePlayer[admin].g_iShakeDeath, value, -1, 1);
+			g_esShakePlayer[admin].g_iShakeDeath = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeDeath", "Shake Death", "Shake_Death", "death", g_esShakePlayer[admin].g_iShakeDeath, value, -1, 3);
 			g_esShakePlayer[admin].g_flShakeDeathChance = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeDeathChance", "Shake Death Chance", "Shake_Death_Chance", "deathchance", g_esShakePlayer[admin].g_flShakeDeathChance, value, -1.0, 100.0);
 			g_esShakePlayer[admin].g_flShakeDeathRange = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeDeathRange", "Shake Death Range", "Shake_Death_Range", "deathrange", g_esShakePlayer[admin].g_flShakeDeathRange, value, -1.0, 99999.0);
 			g_esShakePlayer[admin].g_iShakeDuration = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeDuration", "Shake Duration", "Shake_Duration", "duration", g_esShakePlayer[admin].g_iShakeDuration, value, -1, 99999);
@@ -794,7 +794,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esShakeSpecial[type].g_iShakeMessage = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esShakeSpecial[type].g_iShakeMessage, value, -1, 3);
 			g_esShakeSpecial[type].g_iShakeSight = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esShakeSpecial[type].g_iShakeSight, value, -1, 5);
 			g_esShakeSpecial[type].g_flShakeChance = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeChance", "Shake Chance", "Shake_Chance", "chance", g_esShakeSpecial[type].g_flShakeChance, value, -1.0, 100.0);
-			g_esShakeSpecial[type].g_iShakeDeath = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeDeath", "Shake Death", "Shake_Death", "death", g_esShakeSpecial[type].g_iShakeDeath, value, -1, 1);
+			g_esShakeSpecial[type].g_iShakeDeath = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeDeath", "Shake Death", "Shake_Death", "death", g_esShakeSpecial[type].g_iShakeDeath, value, -1, 3);
 			g_esShakeSpecial[type].g_iShakeCooldown = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeCooldown", "Shake Cooldown", "Shake_Cooldown", "cooldown", g_esShakeSpecial[type].g_iShakeCooldown, value, -1, 99999);
 			g_esShakeSpecial[type].g_flShakeDeathChance = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeDeathChance", "Shake Death Chance", "Shake_Death_Chance", "deathchance", g_esShakeSpecial[type].g_flShakeDeathChance, value, -1.0, 100.0);
 			g_esShakeSpecial[type].g_flShakeDeathRange = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeDeathRange", "Shake Death Range", "Shake_Death_Range", "deathrange", g_esShakeSpecial[type].g_flShakeDeathRange, value, -1.0, 99999.0);
@@ -821,7 +821,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esShakeAbility[type].g_iShakeMessage = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esShakeAbility[type].g_iShakeMessage, value, -1, 3);
 			g_esShakeAbility[type].g_iShakeSight = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esShakeAbility[type].g_iShakeSight, value, -1, 5);
 			g_esShakeAbility[type].g_flShakeChance = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeChance", "Shake Chance", "Shake_Chance", "chance", g_esShakeAbility[type].g_flShakeChance, value, -1.0, 100.0);
-			g_esShakeAbility[type].g_iShakeDeath = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeDeath", "Shake Death", "Shake_Death", "death", g_esShakeAbility[type].g_iShakeDeath, value, -1, 1);
+			g_esShakeAbility[type].g_iShakeDeath = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeDeath", "Shake Death", "Shake_Death", "death", g_esShakeAbility[type].g_iShakeDeath, value, -1, 3);
 			g_esShakeAbility[type].g_iShakeCooldown = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeCooldown", "Shake Cooldown", "Shake_Cooldown", "cooldown", g_esShakeAbility[type].g_iShakeCooldown, value, -1, 99999);
 			g_esShakeAbility[type].g_flShakeDeathChance = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeDeathChance", "Shake Death Chance", "Shake_Death_Chance", "deathchance", g_esShakeAbility[type].g_flShakeDeathChance, value, -1.0, 100.0);
 			g_esShakeAbility[type].g_flShakeDeathRange = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeDeathRange", "Shake Death Range", "Shake_Death_Range", "deathrange", g_esShakeAbility[type].g_flShakeDeathRange, value, -1.0, 99999.0);
@@ -956,12 +956,12 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveShake(iTank);
 		}
 	}
-	else if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
+	else if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vShakeRange(iTank, 1, GetRandomFloat(0.1, 100.0));
+			vShakeRange(iTank, 1, 1, GetRandomFloat(0.1, 100.0));
 			vRemoveShake(iTank);
 		}
 	}
@@ -973,6 +973,15 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		if (bIsBoomer(iBoomer) && bIsSurvivor(iSurvivor) && !bExploded)
 		{
 			vShakeHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esShakeCache[iBoomer].g_flShakeChance, g_esShakeCache[iBoomer].g_iShakeHit, MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
+		}
+	}
+	else if (StrEqual(name, "player_spawn"))
+	{
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
+		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+		{
+			vShakeRange(iTank, 1, 2, GetRandomFloat(0.1, 100.0));
+			vRemoveShake(iTank);
 		}
 	}
 }
@@ -1040,7 +1049,7 @@ void vShakePostTankSpawn(int tank)
 public void MT_OnPostTankSpawn(int tank)
 #endif
 {
-	vShakeRange(tank, 1, GetRandomFloat(0.1, 100.0));
+	vShakeRange(tank, 1, 2, GetRandomFloat(0.1, 100.0));
 }
 
 void vShakeAbility(int tank, float random, int pos = -1)
@@ -1188,10 +1197,10 @@ void vShakeHit(int survivor, int tank, float random, float chance, int enabled, 
 	}
 }
 
-void vShakeRange(int tank, int value, float random, int pos = -1)
+void vShakeRange(int tank, int value, int bit, float random, int pos = -1)
 {
 	float flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 13, pos) : g_esShakeCache[tank].g_flShakeDeathChance;
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(tank) && g_esShakeCache[tank].g_iShakeDeath == 1 && random <= flChance)
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(tank) && (g_esShakeCache[tank].g_iShakeDeath & (1 << bit)) && random <= flChance)
 	{
 		if (g_esShakeCache[tank].g_iComboAbility == value || bIsAreaNarrow(tank, g_esShakeCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esShakeCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esShakePlayer[tank].g_iTankType, tank) || (g_esShakeCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esShakeCache[tank].g_iRequiresHumans) || (bIsInfected(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esShakeAbility[g_esShakePlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esShakePlayer[tank].g_iAccessFlags)) || g_esShakeCache[tank].g_iHumanAbility == 0)))
 		{
