@@ -7438,7 +7438,7 @@
 		// - "Acid Range"
 		// - "Acid Range Chance"
 		// - "Acid Range Cooldown"
-		// "Acid Death" - When the Mutant Tank dies, an acid puddle is created underneath the Mutant Tank.
+		// "Acid Death" - When the Mutant Tank dies or spawns, an acid puddle is created underneath the Mutant Tank.
 		// - "Acid Death Chance"
 		// - "Acid Death Range"
 		// "Acid Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, an acid puddle is created underneath the survivor.
@@ -7672,8 +7672,14 @@
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0/"disabled"/"false"/"off"/"no": OFF
-			// 1/"enabled"/"true"/"on"/"yes": ON
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 3
+			// --
+			// 0: OFF
+			// 1: Trigger the range ability when the Mutant Tank dies.
+			// 2: Trigger the range ability when the Mutant Tank spawns.
 			"Acid Death"				"1"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the upon-death ability.
@@ -8887,7 +8893,7 @@
 		// - "Bomb Range"
 		// - "Bomb Range Chance"
 		// - "Bomb Range Cooldown"
-		// "Bomb Death" - When the Mutant Tank dies, an explosion is created underneath the Mutant Tank.
+		// "Bomb Death" - When the Mutant Tank dies or spawns, an explosion is created underneath the Mutant Tank.
 		// - "Bomb Death Chance"
 		// - "Bomb Death Range"
 		// "Bomb Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, an explosion is created around the survivor.
@@ -9120,8 +9126,14 @@
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0/"disabled"/"false"/"off"/"no": OFF
-			// 1/"enabled"/"true"/"on"/"yes": ON
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 3
+			// --
+			// 0: OFF
+			// 1: Trigger the range ability when the Mutant Tank dies.
+			// 2: Trigger the range ability when the Mutant Tank spawns.
 			"Bomb Death"				"1"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the upon-death ability.
@@ -12623,7 +12635,7 @@
 		// - "Fire Range"
 		// - "Fire Range Chance"
 		// - "Fire Range Cooldown"
-		// "Fire Death" - When the Mutant Tank dies, a fire is created around the Mutant Tank.
+		// "Fire Death" - When the Mutant Tank dies or spawns, a fire is created around the Mutant Tank.
 		// - "Fire Death Chance"
 		// - "Fire Death Range"
 		// "Fire Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, a fire is created around the survivor.
@@ -12856,8 +12868,14 @@
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0/"disabled"/"false"/"off"/"no": OFF
-			// 1/"enabled"/"true"/"on"/"yes": ON
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 3
+			// --
+			// 0: OFF
+			// 1: Trigger the range ability when the Mutant Tank dies.
+			// 2: Trigger the range ability when the Mutant Tank spawns.
 			"Fire Death"				"1"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the upon-death ability.
@@ -13040,7 +13058,7 @@
 		// - "Fling Range"
 		// - "Fling Range Chance"
 		// - "Fling Range Cooldown"
-		// "Fling Death" - When the Mutant Tank dies, nearby survivors are flung into the air.
+		// "Fling Death" - When the Mutant Tank dies or spawns, nearby survivors are flung into the air.
 		// - "Fling Death Chance"
 		// - "Fling Death Range"
 		// "Fling Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor is flung into the air.
@@ -13253,8 +13271,14 @@
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0/"disabled"/"false"/"off"/"no": OFF
-			// 1/"enabled"/"true"/"on"/"yes": ON
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 3
+			// --
+			// 0: OFF
+			// 1: Trigger the range ability when the Mutant Tank dies.
+			// 2: Trigger the range ability when the Mutant Tank spawns.
 			"Fling Death"				"1"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the upon-death ability.
@@ -22030,7 +22054,7 @@
 		// - "Puke Range"
 		// - "Puke Range Chance"
 		// - "Puke Range Cooldown"
-		// "Puke Death" - When the Mutant Tank dies, nearby survivors are puked on.
+		// "Puke Death" - When the Mutant Tank dies or spawns, nearby survivors are puked on.
 		// - "Puke Death Chance"
 		// - "Puke Death Range"
 		// "Puke Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the Mutant Tank pukes on the survivor.
@@ -22242,8 +22266,14 @@
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0/"disabled"/"false"/"off"/"no": OFF
-			// 1/"enabled"/"true"/"on"/"yes": ON
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 3
+			// --
+			// 0: OFF
+			// 1: Trigger the range ability when the Mutant Tank dies.
+			// 2: Trigger the range ability when the Mutant Tank spawns.
 			"Puke Death"				"1"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the upon-death ability.
@@ -24967,7 +24997,7 @@
 		// - "Shake Range"
 		// - "Shake Range Chance"
 		// - "Shake Range Cooldown"
-		// "Shake Death" - When the Mutant Tank dies, nearby survivors' screens are shaken.
+		// "Shake Death" - When the Mutant Tank dies or spawns, nearby survivors' screens are shaken.
 		// - "Shake Death Chance"
 		// - "Shake Death Range"
 		// "Shake Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor's screen is shaken.
@@ -25179,8 +25209,14 @@
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0/"disabled"/"false"/"off"/"no": OFF
-			// 1/"enabled"/"true"/"on"/"yes": ON
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 3
+			// --
+			// 0: OFF
+			// 1: Trigger the range ability when the Mutant Tank dies.
+			// 2: Trigger the range ability when the Mutant Tank spawns.
 			"Shake Death"				"1"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the upon-death ability.
@@ -25693,7 +25729,7 @@
 		// - "Shove Range"
 		// - "Shove Range Chance"
 		// - "Shove Range Cooldown"
-		// "Shove Death" - When the Mutant Tank dies, nearby survivors are shoved.
+		// "Shove Death" - When the Mutant Tank dies or spawns, nearby survivors are shoved.
 		// - "Shove Death Chance"
 		// - "Shove Death Range"
 		// "Shove Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor is shoved repeatedly.
@@ -25905,8 +25941,14 @@
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0/"disabled"/"false"/"off"/"no": OFF
-			// 1/"enabled"/"true"/"on"/"yes": ON
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 3
+			// --
+			// 0: OFF
+			// 1: Trigger the range ability when the Mutant Tank dies.
+			// 2: Trigger the range ability when the Mutant Tank spawns.
 			"Shove Death"				"1"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the upon-death ability.
