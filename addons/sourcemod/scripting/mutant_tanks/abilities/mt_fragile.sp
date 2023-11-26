@@ -22,7 +22,7 @@ public Plugin myinfo =
 {
 	name = "[MT] Fragile Ability",
 	author = MT_AUTHOR,
-	description = "The Mutant Tank takes more damage but becomes stronger.",
+	description = "The Mutant Tank takes more damage while dealing more damage and running faster.",
 	version = MT_VERSION,
 	url = MT_URL
 };

@@ -126,6 +126,8 @@
 		"Notes"		"	- \"Smoker Extra Health\""
 		"Notes"		"	- \"Spitter Extra Health\""
 		"Notes"		"- Added the Boomette as a random option for the \"Special Model\" setting."
+		"Notes"		"Translations:"
+		"Notes"		"- Updated English translations."
 		"Notes"		"Natives & Forwards:"
 		"Notes"		"- Added the \"MT_GetRecordedTankType\" native."
 		"Notes"		"- The \"MT_GetTankType\" native now has another parameter."
@@ -193,6 +195,7 @@
 		"Notes"		"- Updated config files."
 		"Notes"		"- Updated gamedata file."
 		"Notes"		"- Updated include file."
+		"Notes"		"- Updated translation files."
 		"Notes"		"- Updated updater file."
 	}
 

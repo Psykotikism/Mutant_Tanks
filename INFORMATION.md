@@ -13698,7 +13698,7 @@
 {
 	"Tank #1"
 	{
-		// The Mutant Tank takes more damage but becomes stronger.
+		// The Mutant Tank takes more damage while dealing more damage and running faster.
 		// Requires "mt_abilities.smx" to be compiled with "mt_fragile.sp" to work.
 		"Fragile Ability"
 		{
@@ -28581,7 +28581,7 @@
 {
 	"Tank #1"
 	{
-		// The Mutant Tank activates ultimate mode when low on health to gain temporary godmode and damage boost.
+		// The Mutant Tank activates ultimate mode when low on health to gain temporary god mode and damage boost.
 		// Requires "mt_abilities2.smx" to be compiled with "mt_ultimate.sp" to work.
 		"Ultimate Ability"
 		{

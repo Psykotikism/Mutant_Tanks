@@ -22,7 +22,7 @@ public Plugin myinfo =
 {
 	name = "[MT] Ultimate Ability",
 	author = MT_AUTHOR,
-	description = "The Mutant Tank activates ultimate mode when low on health to gain temporary godmode and damage boost.",
+	description = "The Mutant Tank activates ultimate mode when low on health to gain temporary god mode and damage boost.",
 	version = MT_VERSION,
 	url = MT_URL
 };

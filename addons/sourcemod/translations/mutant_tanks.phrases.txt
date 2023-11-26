@@ -5891,7 +5891,7 @@
 
 	"UltimateDetails"
 	{
-		"en"			"You activate ultimate mode when low on health to gain temporary godmode and damage boost"
+		"en"			"You activate ultimate mode when low on health to gain temporary god mode and damage boost."
 	}
 
 	"UltimateHuman"
