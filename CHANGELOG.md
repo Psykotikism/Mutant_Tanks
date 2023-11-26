@@ -127,6 +127,9 @@
 	- `Spitter Extra Health`
 - Added the Boomette as a random option for the `Special Model` setting.
 
+#### Translations
+- Updated English translations.
+
 #### Natives & Forwards
 - Added the `MT_GetRecordedTankType` native.
 - The `MT_GetTankType` native now has another parameter.
@@ -198,6 +201,7 @@
 - Updated config files.
 - Updated gamedata file.
 - Updated include file.
+- Updated translation files.
 - Updated updater file.
 
 ## Version 8.99 (October 10, 2023)
