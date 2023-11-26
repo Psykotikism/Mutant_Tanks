@@ -744,7 +744,7 @@
 			// - Refill clip to max size
 			// - Refill magazine to max size
 			// - Extra clip and magazine size
-			// - Receive one of the special ammo (incendiary or explosive). (Only available in Left 4 Dead 2.)
+			// - Receive one of the special ammo types (incendiary or explosive). (Only available in Left 4 Dead 2.)
 			// - Slowly regenerate back to full capacity.
 			// - Throw multiple pipe bombs at once (cluster bombs).
 			// 32: Item reward
@@ -857,7 +857,7 @@
 			// - Refill clip to max size
 			// - Refill magazine to max size
 			// - Extra clip and magazine size
-			// - Receive one of the special ammo (incendiary or explosive). (Only available in Left 4 Dead 2.)
+			// - Receive one of the special ammo types (incendiary or explosive). (Only available in Left 4 Dead 2.)
 			// - Slowly regenerate back to full capacity.
 			// - Throw multiple pipe bombs at once (cluster bombs).
 			// 32: Item reward
@@ -2374,7 +2374,7 @@
 			// Example: Health = 4000 x 2.5 = 10000
 			// Note: Use the value "1.0" to disable this setting. (Health x 1.0 = Health)
 			// Note: This setting can be used for standard Tanks.
-			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
+			// Note: This setting can be overridden for each Mutant Tank under the "Health" section of their settings.
 			// --
 			// Minimum: 1.0
 			// Maximum: 99999.0
@@ -2737,6 +2737,24 @@
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Intangible Body"			"0"
 
+			// The mode of how melee hits affect every Mutant Tank.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
+			// --
+			// 0: OFF
+			// 1: ON, melee hits deal damage based on a percentage of the Mutant Tank's max health.
+			// 2: ON, melee hits deal damage based on a certain amount.
+			"Melee Hit Mode"			"0"
+
+			// The value of melee hits against every Mutant Tank.
+			// Note: The value of the "Melee Hit Mode" setting determines how the value of this setting is applied.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
+			// --
+			// Minimum: 0.0 (OFF)
+			// Maximum: 99999.0 (Strongest)
+			"Melee Hit Value"			"0.0"
+
 			// Every Mutant Tank's punches have this much force.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
@@ -2888,6 +2906,8 @@
 				"Claw Damage"				"-1.0"
 				"Incap Damage Multiplier"		"1.0"
 				"Intangible Body"			"0"
+				"Melee Hit Mode"			"0"
+				"Melee Hit Value"			"0.0"
 				"Pin Damage"				"-1.0"
 				"Run Speed"				"0.0"
 				"Special Interval"			"0.0"
@@ -3964,7 +3984,7 @@
 			// - Refill clip to max size
 			// - Refill magazine to max size
 			// - Extra clip and magazine size
-			// - Receive one of the special ammo (incendiary or explosive). (Only available in Left 4 Dead 2.)
+			// - Receive one of the special ammo types (incendiary or explosive). (Only available in Left 4 Dead 2.)
 			// - Slowly regenerate back to full capacity.
 			// - Throw multiple pipe bombs at once (cluster bombs).
 			// 32: Item reward
@@ -4077,7 +4097,7 @@
 			// - Refill clip to max size
 			// - Refill magazine to max size
 			// - Extra clip and magazine size
-			// - Receive one of the special ammo (incendiary or explosive). (Only available in Left 4 Dead 2.)
+			// - Receive one of the special ammo types (incendiary or explosive). (Only available in Left 4 Dead 2.)
 			// - Slowly regenerate back to full capacity.
 			// - Throw multiple pipe bombs at once (cluster bombs).
 			// 32: Item reward
@@ -6927,6 +6947,24 @@
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Intangible Body"			"0"
 
+			// The mode of how melee hits affect the Mutant Tank.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Enhancements" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON, melee hits deal damage based on a percentage of the Mutant Tank's max health.
+			// 2: ON, melee hits deal damage based on a certain amount.
+			"Melee Hit Mode"			"0"
+
+			// The value of melee hits against the Mutant Tank.
+			// Note: The value of the "Melee Hit Mode" setting determines how the value of this setting is applied.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Enhancements" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.0 (OFF)
+			// Maximum: 99999.0 (Strongest)
+			"Melee Hit Value"			"0.0"
+
 			// The Mutant Tank's punches have this much force.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Enhancements" section.
 			// Note: This setting can be overridden for specific players.
@@ -7078,6 +7116,8 @@
 				"Claw Damage"				"-1.0"
 				"Incap Damage Multiplier"		"0.0"
 				"Intangible Body"			"0"
+				"Melee Hit Mode"			"0"
+				"Melee Hit Value"			"0.0"
 				"Pin Damage"				"-1.0"
 				"Run Speed"				"0.0"
 				"Special Interval"			"0.0"
