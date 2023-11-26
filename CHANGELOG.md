@@ -24,6 +24,7 @@
 
 #### Settings
 - Fixed several settings not being cached.
+- Fixed the override logic for several settings.
 
 #### Natives & Forwards
 - Fixed the `MT_GetSpawnType` native only working for human-controlled Mutants.

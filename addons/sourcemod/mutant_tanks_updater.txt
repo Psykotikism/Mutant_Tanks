@@ -31,6 +31,7 @@
 		"Notes"		"- Fixed the \"Reward\" system giving rewards in some cases while disabled."
 		"Notes"		"Settings:"
 		"Notes"		"- Fixed several settings not being cached."
+		"Notes"		"- Fixed the override logic for several settings."
 		"Notes"		"Natives & Forwards:"
 		"Notes"		"- Fixed the \"MT_GetSpawnType\" native only working for human-controlled Mutants."
 		"Notes"		"Abilities:"
