@@ -101,6 +101,9 @@
 	- `Regen Bursts Reward`
 	- `Sticky Grenades Reward`
 	- `Syringe Darts Reward`
+- Added the following settings under the `Plugin Settings->Enhancements`, `Tank #->Enhancements`, and `STEAM_ID->Enhancements` sections (Requested by `xcd222`.):
+	- `Melee Hit Mode`
+	- `Melee Hit Value`
 - Changed the maximum value of the `Run Speed` setting from `3.0` to `99.0`.
 - Added the following settings under the `Tank #->Protection` and `STEAM_ID->Protection` sections:
 	- `Spawn Protection`

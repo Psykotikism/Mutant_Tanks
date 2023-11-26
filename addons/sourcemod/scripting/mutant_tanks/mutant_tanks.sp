@@ -703,6 +703,7 @@ enum struct esGeneral
 	float g_flJumpHeightReward[4];
 	float g_flKillCountdown;
 	float g_flLoopingVoicelineInterval[4];
+	float g_flMeleeHitValue;
 	float g_flPipeBombDurationReward[4];
 	float g_flPunchForce;
 	float g_flPunchResistanceReward[4];
@@ -891,6 +892,7 @@ enum struct esGeneral
 	int g_iMasterControl;
 	int g_iMaxType;
 	int g_iMedicalCutsReward[4];
+	int g_iMeleeHitMode;
 	int g_iMeleeImmunity;
 	int g_iMeleeOffset;
 	int g_iMeleeRangeReward[4];
@@ -1033,6 +1035,7 @@ enum struct esSpecific
 	float g_flIncapDamageMultiplier;
 	float g_flJumpHeightReward[4];
 	float g_flLoopingVoicelineInterval[4];
+	float g_flMeleeHitValue;
 	float g_flPinDamage;
 	float g_flPipeBombDurationReward[4];
 	float g_flPunchResistanceReward[4];
@@ -1091,6 +1094,7 @@ enum struct esSpecific
 	int g_iLifeLeechReward[4];
 	int g_iMaxType;
 	int g_iMedicalCutsReward[4];
+	int g_iMeleeHitMode;
 	int g_iMeleeImmunity;
 	int g_iMeleeRangeReward[4];
 	int g_iMidairDashesReward[4];
@@ -1336,6 +1340,7 @@ enum struct esPlayer
 	float g_flLastPushTime;
 	float g_flLastWeaponShotPosition[3];
 	float g_flLoopingVoicelineInterval[4];
+	float g_flMeleeHitValue;
 	float g_flPipeBombDuration;
 	float g_flPipeBombDurationReward[4];
 	float g_flPreFallZ;
@@ -1471,6 +1476,7 @@ enum struct esPlayer
 	int g_iMaxClip[2];
 	int g_iMedicalCuts;
 	int g_iMedicalCutsReward[4];
+	int g_iMeleeHitMode;
 	int g_iMeleeImmunity;
 	int g_iMeleeRange;
 	int g_iMeleeRangeReward[4];
@@ -1648,6 +1654,7 @@ enum struct esTeammate
 	float g_flIncapDamageMultiplier;
 	float g_flJumpHeightReward[4];
 	float g_flLoopingVoicelineInterval[4];
+	float g_flMeleeHitValue;
 	float g_flPinDamage;
 	float g_flPipeBombDurationReward[4];
 	float g_flPunchResistanceReward[4];
@@ -1719,6 +1726,7 @@ enum struct esTeammate
 	int g_iLadyKillerReward[4];
 	int g_iLifeLeechReward[4];
 	int g_iMedicalCutsReward[4];
+	int g_iMeleeHitMode;
 	int g_iMeleeImmunity;
 	int g_iMeleeRangeReward[4];
 	int g_iMidairDashesReward[4];
@@ -1844,6 +1852,7 @@ enum struct esTank
 	float g_flIncapDamageMultiplier;
 	float g_flJumpHeightReward[4];
 	float g_flLoopingVoicelineInterval[4];
+	float g_flMeleeHitValue;
 	float g_flOpenAreasOnly;
 	float g_flPipeBombDurationReward[4];
 	float g_flPropsChance[9];
@@ -1936,6 +1945,7 @@ enum struct esTank
 	int g_iLifeLeechReward[4];
 	int g_iLightColor[4];
 	int g_iMedicalCutsReward[4];
+	int g_iMeleeHitMode;
 	int g_iMeleeImmunity;
 	int g_iMeleeRangeReward[4];
 	int g_iMenuEnabled;
@@ -2075,6 +2085,7 @@ enum struct esSpecial
 	float g_flIncapDamageMultiplier;
 	float g_flJumpHeightReward[4];
 	float g_flLoopingVoicelineInterval[4];
+	float g_flMeleeHitValue;
 	float g_flOpenAreasOnly;
 	float g_flPinDamage;
 	float g_flPipeBombDurationReward[4];
@@ -2153,6 +2164,7 @@ enum struct esSpecial
 	int g_iLadyKillerReward[4];
 	int g_iLifeLeechReward[4];
 	int g_iMedicalCutsReward[4];
+	int g_iMeleeHitMode;
 	int g_iMeleeImmunity;
 	int g_iMeleeRangeReward[4];
 	int g_iMenuEnabled;
@@ -2281,6 +2293,7 @@ enum struct esCache
 	float g_flIncapDamageMultiplier;
 	float g_flJumpHeightReward[4];
 	float g_flLoopingVoicelineInterval[4];
+	float g_flMeleeHitValue;
 	float g_flPinDamage;
 	float g_flPipeBombDurationReward[4];
 	float g_flPropsChance[9];
@@ -2365,6 +2378,7 @@ enum struct esCache
 	int g_iLifeLeechReward[4];
 	int g_iLightColor[4];
 	int g_iMedicalCutsReward[4];
+	int g_iMeleeHitMode;
 	int g_iMeleeImmunity;
 	int g_iMeleeRangeReward[4];
 	int g_iMidairDashesLimit;
@@ -15102,10 +15116,12 @@ void vCacheSettings(int tank)
 			g_esCache[tank].g_flHittableDamage = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flHittableDamage, g_esPlayer[tank].g_flHittableDamage, g_esCache[tank].g_flHittableDamage, g_esCache[tank].g_flHittableDamage, 1, -1.0);
 			g_esCache[tank].g_flIncapDamageMultiplier = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flIncapDamageMultiplier, g_esTank[iType].g_flIncapDamageMultiplier, g_esSpecific.g_flIncapDamageMultiplier, g_esGeneral.g_flIncapDamageMultiplier, 1);
 			g_esCache[tank].g_flIncapDamageMultiplier = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flIncapDamageMultiplier, g_esPlayer[tank].g_flIncapDamageMultiplier, g_esCache[tank].g_flIncapDamageMultiplier, g_esCache[tank].g_flIncapDamageMultiplier, 1);
-			g_esCache[tank].g_flRandomDuration = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flRandomDuration, g_esPlayer[tank].g_flRandomDuration, g_esSpecial[iType].g_flRandomDuration, g_esTank[iType].g_flRandomDuration, 1);
-			g_esCache[tank].g_flRandomInterval = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flRandomInterval, g_esPlayer[tank].g_flRandomInterval, g_esSpecial[iType].g_flRandomInterval, g_esTank[iType].g_flRandomInterval, 1);
+			g_esCache[tank].g_flMeleeHitValue = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flMeleeHitValue, g_esTank[iType].g_flMeleeHitValue, g_esSpecific.g_flMeleeHitValue, g_esGeneral.g_flMeleeHitValue, 1);
+			g_esCache[tank].g_flMeleeHitValue = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flMeleeHitValue, g_esPlayer[tank].g_flMeleeHitValue, g_esCache[tank].g_flMeleeHitValue, g_esCache[tank].g_flMeleeHitValue, 1);
 			g_esCache[tank].g_flPinDamage = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flPinDamage, g_esTank[iType].g_flRockDamage, g_esSpecific.g_flPinDamage, g_esGeneral.g_flRockDamage, 1, -1.0);
 			g_esCache[tank].g_flPinDamage = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flPinDamage, g_esPlayer[tank].g_flRockDamage, g_esCache[tank].g_flPinDamage, g_esCache[tank].g_flPinDamage, 1, -1.0);
+			g_esCache[tank].g_flRandomDuration = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flRandomDuration, g_esPlayer[tank].g_flRandomDuration, g_esSpecial[iType].g_flRandomDuration, g_esTank[iType].g_flRandomDuration, 1);
+			g_esCache[tank].g_flRandomInterval = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flRandomInterval, g_esPlayer[tank].g_flRandomInterval, g_esSpecial[iType].g_flRandomInterval, g_esTank[iType].g_flRandomInterval, 1);
 			g_esCache[tank].g_flRunSpeed = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flRunSpeed, g_esTank[iType].g_flRunSpeed, g_esSpecific.g_flRunSpeed, g_esGeneral.g_flRunSpeed, 1);
 			g_esCache[tank].g_flRunSpeed = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flRunSpeed, g_esPlayer[tank].g_flRunSpeed, g_esCache[tank].g_flRunSpeed, g_esCache[tank].g_flRunSpeed, 1);
 			g_esCache[tank].g_flShieldDuration = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flShieldDuration, g_esTank[iType].g_flShieldDuration, g_esSpecific.g_flShieldDuration, g_esGeneral.g_flShieldDuration, 1);
@@ -15166,6 +15182,8 @@ void vCacheSettings(int tank)
 			g_esCache[tank].g_iIntangibleBody = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iIntangibleBody, g_esPlayer[tank].g_iIntangibleBody, g_esCache[tank].g_iIntangibleBody, g_esCache[tank].g_iIntangibleBody, 1);
 			g_esCache[tank].g_iKillMessage = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iKillMessage, g_esTank[iType].g_iKillMessage, g_esSpecific.g_iKillMessage, g_esGeneral.g_iKillMessage, 1);
 			g_esCache[tank].g_iKillMessage = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iKillMessage, g_esPlayer[tank].g_iKillMessage, g_esCache[tank].g_iKillMessage, g_esCache[tank].g_iKillMessage, 1);
+			g_esCache[tank].g_iMeleeHitMode = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iMeleeHitMode, g_esTank[iType].g_iMeleeHitMode, g_esSpecific.g_iMeleeHitMode, g_esGeneral.g_iMeleeHitMode, 1);
+			g_esCache[tank].g_iMeleeHitMode = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iMeleeHitMode, g_esPlayer[tank].g_iMeleeHitMode, g_esCache[tank].g_iMeleeHitMode, g_esCache[tank].g_iMeleeHitMode, 1);
 			g_esCache[tank].g_iMeleeImmunity = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iMeleeImmunity, g_esTank[iType].g_iMeleeImmunity, g_esSpecific.g_iMeleeImmunity, g_esGeneral.g_iMeleeImmunity, 1);
 			g_esCache[tank].g_iMeleeImmunity = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iMeleeImmunity, g_esPlayer[tank].g_iMeleeImmunity, g_esCache[tank].g_iMeleeImmunity, g_esCache[tank].g_iMeleeImmunity, 1);
 			g_esCache[tank].g_iMinimumHumans = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iMinimumHumans, g_esTank[iType].g_iMinimumHumans, g_esSpecific.g_iMinimumHumans, g_esGeneral.g_iMinimumHumans, 1);
@@ -15473,8 +15491,9 @@ void vCacheSettings(int tank)
 			g_esCache[tank].g_flHealPercentMultiplier = 1.0;
 			g_esCache[tank].g_flHittableDamage = -1.0;
 			g_esCache[tank].g_flIncapDamageMultiplier = 1.0;
-			g_esCache[tank].g_flRandomDuration = 0.0;
+			g_esCache[tank].g_flMeleeHitValue = 0.0;
 			g_esCache[tank].g_flPinDamage = -1.0;
+			g_esCache[tank].g_flRandomDuration = 0.0;
 			g_esCache[tank].g_flRunSpeed = 0.0;
 			g_esCache[tank].g_flShieldDuration = 0.0;
 			g_esCache[tank].g_flShieldResistance = 0.0;
@@ -15509,6 +15528,7 @@ void vCacheSettings(int tank)
 			g_esCache[tank].g_iHumanMultiplierMode = 0;
 			g_esCache[tank].g_iIntangibleBody = 0;
 			g_esCache[tank].g_iKillMessage = 0;
+			g_esCache[tank].g_iMeleeHitMode = 0;
 			g_esCache[tank].g_iMeleeImmunity = 0;
 			g_esCache[tank].g_iMinimumHumans = 0;
 			g_esCache[tank].g_iMultiplyHealth = 0;
@@ -15657,6 +15677,8 @@ void vCacheSettings(int tank)
 			g_esCache[tank].g_flHittableDamage = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flHittableDamage, g_esCache[tank].g_flHittableDamage, 1, -1.0);
 			g_esCache[tank].g_flIncapDamageMultiplier = flGetSettingValue(bAccess, true, g_esTank[iType].g_flIncapDamageMultiplier, g_esGeneral.g_flIncapDamageMultiplier, 1);
 			g_esCache[tank].g_flIncapDamageMultiplier = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flIncapDamageMultiplier, g_esCache[tank].g_flIncapDamageMultiplier, 1);
+			g_esCache[tank].g_flMeleeHitValue = flGetSettingValue(bAccess, true, g_esTank[iType].g_flMeleeHitValue, g_esGeneral.g_flMeleeHitValue, 1);
+			g_esCache[tank].g_flMeleeHitValue = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flMeleeHitValue, g_esCache[tank].g_flMeleeHitValue, 1);
 			g_esCache[tank].g_flPunchForce = flGetSettingValue(bAccess, true, g_esTank[iType].g_flPunchForce, g_esGeneral.g_flPunchForce, 1, -1.0);
 			g_esCache[tank].g_flPunchForce = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flPunchForce, g_esCache[tank].g_flPunchForce, 1, -1.0);
 			g_esCache[tank].g_flPunchThrow = flGetSettingValue(bAccess, true, g_esTank[iType].g_flPunchThrow, g_esGeneral.g_flPunchThrow, 1);
@@ -15730,6 +15752,8 @@ void vCacheSettings(int tank)
 			g_esCache[tank].g_iIntangibleBody = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iIntangibleBody, g_esCache[tank].g_iIntangibleBody, 1);
 			g_esCache[tank].g_iKillMessage = iGetSettingValue(bAccess, true, g_esTank[iType].g_iKillMessage, g_esGeneral.g_iKillMessage, 1);
 			g_esCache[tank].g_iKillMessage = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iKillMessage, g_esCache[tank].g_iKillMessage, 1);
+			g_esCache[tank].g_iMeleeHitMode = iGetSettingValue(bAccess, true, g_esTank[iType].g_iMeleeHitMode, g_esGeneral.g_iMeleeHitMode, 1);
+			g_esCache[tank].g_iMeleeHitMode = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iMeleeHitMode, g_esCache[tank].g_iMeleeHitMode, 1);
 			g_esCache[tank].g_iMeleeImmunity = iGetSettingValue(bAccess, true, g_esTank[iType].g_iMeleeImmunity, g_esGeneral.g_iMeleeImmunity, 1);
 			g_esCache[tank].g_iMeleeImmunity = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iMeleeImmunity, g_esCache[tank].g_iMeleeImmunity, 1);
 			g_esCache[tank].g_iMinimumHumans = iGetSettingValue(bAccess, true, g_esTank[iType].g_iMinimumHumans, g_esGeneral.g_iMinimumHumans, 1);
@@ -16061,6 +16085,7 @@ void vCacheSettings(int tank)
 			g_esCache[tank].g_flHealPercentMultiplier = 1.0;
 			g_esCache[tank].g_flHittableDamage = -1.0;
 			g_esCache[tank].g_flIncapDamageMultiplier = 1.0;
+			g_esCache[tank].g_flMeleeHitValue = 0.0;
 			g_esCache[tank].g_flPunchForce = -1.0;
 			g_esCache[tank].g_flPunchThrow = 0.0;
 			g_esCache[tank].g_flRandomDuration = 0.0;
@@ -16104,6 +16129,7 @@ void vCacheSettings(int tank)
 			g_esCache[tank].g_iHumanMultiplierMode = 0;
 			g_esCache[tank].g_iIntangibleBody = 0;
 			g_esCache[tank].g_iKillMessage = 0;
+			g_esCache[tank].g_iMeleeHitMode = 0;
 			g_esCache[tank].g_iMeleeImmunity = 0;
 			g_esCache[tank].g_iMinimumHumans = 0;
 			g_esCache[tank].g_iMultiplyHealth = 0;
@@ -16555,6 +16581,8 @@ void vReadSpecialSettings(int type, int mode, const char[] subsection, const cha
 		g_esSpecial[iIndex].g_flHittableDamage = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "HittableDamage", "Hittable Damage", "Hittable_Damage", "hittable", g_esSpecial[iIndex].g_flHittableDamage, value, -2.0, 99999.0);
 		g_esSpecial[iIndex].g_flIncapDamageMultiplier = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "IncapDamageMultiplier", "Incap Damage Multiplier", "Incap_Damage_Multiplier", "incapdmgmulti", g_esSpecial[iIndex].g_flIncapDamageMultiplier, value, -1.0, 99999.0);
 		g_esSpecial[iIndex].g_iIntangibleBody = iGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "IntangibleBody", "Intangible Body", "Intangible_Body", "intangible", g_esSpecial[iIndex].g_iIntangibleBody, value, -1, 1);
+		g_esSpecial[iIndex].g_iMeleeHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "MeleeHitMode", "Melee Hit Mode", "Melee_Hit_Mode", "meleehit", g_esSpecial[iIndex].g_iMeleeHitMode, value, -1, 2);
+		g_esSpecial[iIndex].g_flMeleeHitValue = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "MeleeHitValue", "Melee Hit Value", "Melee_Hit_Value", "meleevalue", g_esSpecial[iIndex].g_flMeleeHitValue, value, -1.0, 99999.0);
 		g_esSpecial[iIndex].g_flPinDamage = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PinDamage", "Pin Damage", "Pin_Damage", "pindmg", g_esSpecial[iIndex].g_flPinDamage, value, -2.0, 99999.0);
 		g_esSpecial[iIndex].g_flRunSpeed = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_esSpecial[iIndex].g_flRunSpeed, value, -1.0, 99.0);
 		g_esSpecial[iIndex].g_flSpecialInterval = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "SpecialInterval", "Special Interval", "Special_Interval", "specint", g_esSpecial[iIndex].g_flSpecialInterval, value, -1.0, 99999.0);
@@ -16846,6 +16874,8 @@ void vReadSpecificSettings(int mode, const char[] section, const char[] subsecti
 		g_esSpecific.g_flHittableDamage = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "HittableDamage", "Hittable Damage", "Hittable_Damage", "hittable", g_esSpecific.g_flHittableDamage, value, -2.0, 99999.0);
 		g_esSpecific.g_flIncapDamageMultiplier = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "IncapDamageMultiplier", "Incap Damage Multiplier", "Incap_Damage_Multiplier", "incapdmgmulti", g_esSpecific.g_flIncapDamageMultiplier, value, -1.0, 99999.0);
 		g_esSpecific.g_iIntangibleBody = iGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "IntangibleBody", "Intangible Body", "Intangible_Body", "intangible", g_esSpecific.g_iIntangibleBody, value, -1, 1);
+		g_esSpecific.g_iMeleeHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "MeleeHitMode", "Melee Hit Mode", "Melee_Hit_Mode", "meleehit", g_esSpecific.g_iMeleeHitMode, value, -1, 2);
+		g_esSpecific.g_flMeleeHitValue = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "MeleeHitValue", "Melee Hit Value", "Melee_Hit_Value", "meleevalue", g_esSpecific.g_flMeleeHitValue, value, -1.0, 99999.0);
 		g_esSpecific.g_flPinDamage = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PinDamage", "Pin Damage", "Pin_Damage", "pindmg", g_esSpecific.g_flPinDamage, value, -2.0, 99999.0);
 		g_esSpecific.g_flRunSpeed = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_esSpecific.g_flRunSpeed, value, -1.0, 99.0);
 		g_esSpecific.g_flSpecialInterval = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "SpecialInterval", "Special Interval", "Special_Interval", "specint", g_esSpecific.g_flSpecialInterval, value, -1.0, 99999.0);
@@ -17075,6 +17105,8 @@ void vReadTankSettings(int type, int mode, const char[] subsection, const char[]
 		g_esTank[iIndex].g_flHittableDamage = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "HittableDamage", "Hittable Damage", "Hittable_Damage", "hittable", g_esTank[iIndex].g_flHittableDamage, value, -2.0, 99999.0);
 		g_esTank[iIndex].g_flIncapDamageMultiplier = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "IncapDamageMultiplier", "Incap Damage Multiplier", "Incap_Damage_Multiplier", "incapdmgmulti", g_esTank[iIndex].g_flIncapDamageMultiplier, value, -1.0, 99999.0);
 		g_esTank[iIndex].g_iIntangibleBody = iGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "IntangibleBody", "Intangible Body", "Intangible_Body", "intangible", g_esTank[iIndex].g_iIntangibleBody, value, -1, 1);
+		g_esTank[iIndex].g_iMeleeHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "MeleeHitMode", "Melee Hit Mode", "Melee_Hit_Mode", "meleehit", g_esTank[iIndex].g_iMeleeHitMode, value, -1, 2);
+		g_esTank[iIndex].g_flMeleeHitValue = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "MeleeHitValue", "Melee Hit Value", "Melee_Hit_Value", "meleevalue", g_esTank[iIndex].g_flMeleeHitValue, value, -1.0, 99999.0);
 		g_esTank[iIndex].g_flPunchForce = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PunchForce", "Punch Force", "Punch_Force", "punchforce", g_esTank[iIndex].g_flPunchForce, value, -2.0, 99999.0);
 		g_esTank[iIndex].g_flPunchThrow = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PunchThrow", "Punch Throw", "Punch_Throw", "punchthrow", g_esTank[iIndex].g_flPunchThrow, value, -1.0, 100.0);
 		g_esTank[iIndex].g_flRockDamage = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RockDamage", "Rock Damage", "Rock_Damage", "rockdmg", g_esTank[iIndex].g_flRockDamage, value, -2.0, 99999.0);
@@ -17405,6 +17437,8 @@ void vReadTeammateSettings(int special, int mode, const char[] subsection, const
 	g_esTeammate[special].g_flHittableDamage = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "HittableDamage", "Hittable Damage", "Hittable_Damage", "hittable", g_esTeammate[special].g_flHittableDamage, value, -2.0, 99999.0);
 	g_esTeammate[special].g_flIncapDamageMultiplier = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "IncapDamageMultiplier", "Incap Damage Multiplier", "Incap_Damage_Multiplier", "incapdmgmulti", g_esTeammate[special].g_flIncapDamageMultiplier, value, -1.0, 99999.0);
 	g_esTeammate[special].g_iIntangibleBody = iGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "IntangibleBody", "Intangible Body", "Intangible_Body", "intangible", g_esTeammate[special].g_iIntangibleBody, value, -1, 1);
+	g_esTeammate[special].g_iMeleeHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "MeleeHitMode", "Melee Hit Mode", "Melee_Hit_Mode", "meleehit", g_esTeammate[special].g_iMeleeHitMode, value, -1, 2);
+	g_esTeammate[special].g_flMeleeHitValue = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "MeleeHitValue", "Melee Hit Value", "Melee_Hit_Value", "meleevalue", g_esTeammate[special].g_flMeleeHitValue, value, -1.0, 99999.0);
 	g_esTeammate[special].g_flPinDamage = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PinDamage", "Pin Damage", "Pin_Damage", "pindmg", g_esTeammate[special].g_flPinDamage, value, -2.0, 99999.0);
 	g_esTeammate[special].g_flRunSpeed = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_esTeammate[special].g_flRunSpeed, value, -1.0, 99.0);
 	g_esTeammate[special].g_flSpecialInterval = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "SpecialInterval", "Special Interval", "Special_Interval", "specint", g_esTeammate[special].g_flSpecialInterval, value, -1.0, 99999.0);
@@ -17768,6 +17802,8 @@ void vSetTankSettings(int mode, const char[] section, const char[] subsection, c
 			g_esGeneral.g_flHittableDamage = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "HittableDamage", "Hittable Damage", "Hittable_Damage", "hittable", g_esGeneral.g_flHittableDamage, value, -2.0, 99999.0);
 			g_esGeneral.g_flIncapDamageMultiplier = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "IncapDamageMultiplier", "Incap Damage Multiplier", "Incap_Damage_Multiplier", "incapdmgmulti", g_esGeneral.g_flIncapDamageMultiplier, value, -1.0, 99999.0);
 			g_esGeneral.g_iIntangibleBody = iGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "IntangibleBody", "Intangible Body", "Intangible_Body", "intangible", g_esGeneral.g_iIntangibleBody, value, -1, 1);
+			g_esGeneral.g_iMeleeHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "MeleeHitMode", "Melee Hit Mode", "Melee_Hit_Mode", "meleehit", g_esGeneral.g_iMeleeHitMode, value, -1, 2);
+			g_esGeneral.g_flMeleeHitValue = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "MeleeHitValue", "Melee Hit Value", "Melee_Hit_Value", "meleevalue", g_esGeneral.g_flMeleeHitValue, value, -1.0, 99999.0);
 			g_esGeneral.g_flPunchForce = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PunchForce", "Punch Force", "Punch_Force", "punchforce", g_esGeneral.g_flPunchForce, value, -2.0, 99999.0);
 			g_esGeneral.g_flPunchThrow = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PunchThrow", "Punch Throw", "Punch_Throw", "punchthrow", g_esGeneral.g_flPunchThrow, value, -1.0, 100.0);
 			g_esGeneral.g_flRockDamage = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RockDamage", "Rock Damage", "Rock_Damage", "rockdmg", g_esGeneral.g_flRockDamage, value, -2.0, 99999.0);
@@ -18115,6 +18151,8 @@ void vSetTankSettings(int mode, const char[] section, const char[] subsection, c
 					g_esPlayer[iPlayer].g_flHittableDamage = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "HittableDamage", "Hittable Damage", "Hittable_Damage", "hittable", g_esPlayer[iPlayer].g_flHittableDamage, value, -2.0, 99999.0);
 					g_esPlayer[iPlayer].g_flIncapDamageMultiplier = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "IncapDamageMultiplier", "Incap Damage Multiplier", "Incap_Damage_Multiplier", "incapdmgmulti", g_esPlayer[iPlayer].g_flIncapDamageMultiplier, value, -1.0, 99999.0);
 					g_esPlayer[iPlayer].g_iIntangibleBody = iGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "IntangibleBody", "Intangible Body", "Intangible_Body", "intangible", g_esPlayer[iPlayer].g_iIntangibleBody, value, -1, 1);
+					g_esPlayer[iPlayer].g_iMeleeHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "MeleeHitMode", "Melee Hit Mode", "Melee_Hit_Mode", "meleehit", g_esPlayer[iPlayer].g_iMeleeHitMode, value, -1, 2);
+					g_esPlayer[iPlayer].g_flMeleeHitValue = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "MeleeHitValue", "Melee Hit Value", "Melee_Hit_Value", "meleevalue", g_esPlayer[iPlayer].g_flMeleeHitValue, value, -1.0, 99999.0);
 					g_esPlayer[iPlayer].g_flPunchForce = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PunchForce", "Punch Force", "Punch_Force", "punchforce", g_esPlayer[iPlayer].g_flPunchForce, value, -2.0, 99999.0);
 					g_esPlayer[iPlayer].g_flPunchThrow = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PunchThrow", "Punch Throw", "Punch_Throw", "punchthrow", g_esPlayer[iPlayer].g_flPunchThrow, value, -1.0, 100.0);
 					g_esPlayer[iPlayer].g_flRockDamage = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RockDamage", "Rock Damage", "Rock_Damage", "rockdmg", g_esPlayer[iPlayer].g_flRockDamage, value, -2.0, 99999.0);
@@ -19749,6 +19787,8 @@ void SMCParseStart_Main(SMCParser smc)
 		g_esGeneral.g_flHittableDamage = -1.0;
 		g_esGeneral.g_flIncapDamageMultiplier = 1.0;
 		g_esGeneral.g_iIntangibleBody = 0;
+		g_esGeneral.g_iMeleeHitMode = 0;
+		g_esGeneral.g_flMeleeHitValue = 0.0;
 		g_esGeneral.g_flPunchForce = -1.0;
 		g_esGeneral.g_flPunchThrow = 0.0;
 		g_esGeneral.g_flRockDamage = -1.0;
@@ -19916,6 +19956,8 @@ void SMCParseStart_Main(SMCParser smc)
 		g_esSpecific.g_flHittableDamage = -2.0;
 		g_esSpecific.g_flIncapDamageMultiplier = -1.0;
 		g_esSpecific.g_iIntangibleBody = -1;
+		g_esSpecific.g_iMeleeHitMode = -1;
+		g_esSpecific.g_flMeleeHitValue = -1.0;
 		g_esSpecific.g_flPinDamage = -2.0;
 		g_esSpecific.g_flRunSpeed = -1.0;
 		g_esSpecific.g_flSpecialInterval = -1.0;
@@ -20127,6 +20169,8 @@ void SMCParseStart_Main(SMCParser smc)
 			g_esTank[iIndex].g_flHittableDamage = -2.0;
 			g_esTank[iIndex].g_flIncapDamageMultiplier = -1.0;
 			g_esTank[iIndex].g_iIntangibleBody = -1;
+			g_esTank[iIndex].g_iMeleeHitMode = -1;
+			g_esTank[iIndex].g_flMeleeHitValue = -1.0;
 			g_esTank[iIndex].g_flPunchForce = -2.0;
 			g_esTank[iIndex].g_flPunchThrow = -1.0;
 			g_esTank[iIndex].g_flRockDamage = -2.0;
@@ -20337,6 +20381,8 @@ void SMCParseStart_Main(SMCParser smc)
 			g_esSpecial[iIndex].g_flHittableDamage = -2.0;
 			g_esSpecial[iIndex].g_flIncapDamageMultiplier = -1.0;
 			g_esSpecial[iIndex].g_iIntangibleBody = -1;
+			g_esSpecial[iIndex].g_iMeleeHitMode = -1;
+			g_esSpecial[iIndex].g_flMeleeHitValue = -1.0;
 			g_esSpecial[iIndex].g_flPinDamage = -2.0;
 			g_esSpecial[iIndex].g_flRunSpeed = -1.0;
 			g_esSpecial[iIndex].g_flSpecialInterval = -1.0;
@@ -20567,6 +20613,8 @@ void SMCParseStart_Main(SMCParser smc)
 			g_esPlayer[iPlayer].g_flHittableDamage = -2.0;
 			g_esPlayer[iPlayer].g_flIncapDamageMultiplier = -1.0;
 			g_esPlayer[iPlayer].g_iIntangibleBody = -1;
+			g_esPlayer[iPlayer].g_iMeleeHitMode = -1;
+			g_esPlayer[iPlayer].g_flMeleeHitValue = -1.0;
 			g_esPlayer[iPlayer].g_flPunchForce = -2.0;
 			g_esPlayer[iPlayer].g_flPunchThrow = -1.0;
 			g_esPlayer[iPlayer].g_flRockDamage = -2.0;
@@ -20764,6 +20812,8 @@ void SMCParseStart_Main(SMCParser smc)
 			g_esTeammate[iPlayer].g_flHittableDamage = -2.0;
 			g_esTeammate[iPlayer].g_flIncapDamageMultiplier = -1.0;
 			g_esTeammate[iPlayer].g_iIntangibleBody = -1;
+			g_esTeammate[iPlayer].g_iMeleeHitMode = -1;
+			g_esTeammate[iPlayer].g_flMeleeHitValue = -1.0;
 			g_esTeammate[iPlayer].g_flPinDamage = -2.0;
 			g_esTeammate[iPlayer].g_flRunSpeed = -1.0;
 			g_esTeammate[iPlayer].g_flSpecialInterval = -1.0;
@@ -21717,6 +21767,17 @@ Action OnPlayerTakeDamageAlive(int victim, int &attacker, int &inflictor, float 
 
 				return (flResistance > 0.0) ? Plugin_Changed : Plugin_Handled;
 			}
+
+			if (((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && g_esCache[victim].g_iMeleeHitMode > 0)
+			{
+				switch (g_esCache[victim].g_iMeleeHitMode)
+				{
+					case 1: damage = float(GetEntProp(victim, Prop_Data, "m_iMaxHealth")) * g_esCache[victim].g_flMeleeHitValue;
+					case 2: damage = g_esCache[victim].g_flMeleeHitValue;
+				}
+
+				return Plugin_Changed;
+			}
 		}
 	}
 
@@ -22025,7 +22086,7 @@ Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 
 				if (bSurvivor)
 				{
-					if ((damagetype & DMG_BULLET) || (damagetype & DMG_BUCKSHOT) || (damagetype & DMG_CLUB) || (damagetype & DMG_SLASH))
+					if ((damagetype & DMG_BULLET) || (damagetype & DMG_BUCKSHOT) || (damagetype & DMG_SLASH) || (damagetype & DMG_CLUB))
 					{
 						vKnockbackTank(victim, attacker, damagetype);
 					}
