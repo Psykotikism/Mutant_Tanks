@@ -125,10 +125,11 @@
 	- `Jockey Extra Health`
 	- `Smoker Extra Health`
 	- `Spitter Extra Health`
-- Added the Boomette as a random option for the `Special Model` setting.
+- Added the `Boomette` as a random option for the `Special Model` setting.
 
 #### Translations
 - Updated English translations.
+- Updated Russian translations. (Thanks to `JustMadMan`!)
 
 #### Natives & Forwards
 - Added the `MT_GetRecordedTankType` native.
