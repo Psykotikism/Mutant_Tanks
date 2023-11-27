@@ -1244,11 +1244,9 @@ void vBlindHit(int survivor, int tank, float random, float chance, int enabled, 
 					if (flDuration > 0.0)
 					{
 						DataPack dpStopBlind;
-						CreateDataTimer(0.1, tTimerStopBlind, dpStopBlind, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+						CreateDataTimer((flDuration + 1.0), tTimerStopBlind, dpStopBlind, TIMER_FLAG_NO_MAPCHANGE);
 						dpStopBlind.WriteCell(iSurvivorId);
 						dpStopBlind.WriteCell(iTankId);
-						dpStopBlind.WriteFloat(GetGameTime());
-						dpStopBlind.WriteFloat(flDuration + 1.0);
 						dpStopBlind.WriteCell(messages);
 					}
 
@@ -1408,7 +1406,7 @@ void tTimerBlindCombo2(Handle timer, DataPack pack)
 	}
 }
 
-Action tTimerStopBlind(Handle timer, DataPack pack)
+void tTimerStopBlind(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1418,7 +1416,7 @@ Action tTimerStopBlind(Handle timer, DataPack pack)
 		g_esBlindPlayer[iSurvivor].g_bAffected = false;
 		g_esBlindPlayer[iSurvivor].g_iOwner = -1;
 
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
@@ -1429,32 +1427,18 @@ Action tTimerStopBlind(Handle timer, DataPack pack)
 
 		vBlind(iSurvivor, 0);
 
-		return Plugin_Stop;
+		return;
 	}
 
-	float flCurrentTime = pack.ReadFloat(), flDuration = pack.ReadFloat();
+	g_esBlindPlayer[iSurvivor].g_bAffected = false;
+	g_esBlindPlayer[iSurvivor].g_iOwner = -1;
+
+	vBlind(iSurvivor, 0);
+
 	int iMessage = pack.ReadCell();
-	if ((flCurrentTime + flDuration) < GetGameTime())
+	if (g_esBlindCache[iTank].g_iBlindMessage & iMessage)
 	{
-		g_esBlindPlayer[iSurvivor].g_bAffected = false;
-		g_esBlindPlayer[iSurvivor].g_iOwner = -1;
-
-		vBlind(iSurvivor, 0);
-
-		if (g_esBlindCache[iTank].g_iBlindMessage & iMessage)
-		{
-			MT_PrintToChatAll("%s %t", MT_TAG2, "Blind2", iSurvivor);
-			MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Blind2", LANG_SERVER, iSurvivor);
-		}
-
-		return Plugin_Stop;
+		MT_PrintToChatAll("%s %t", MT_TAG2, "Blind2", iSurvivor);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Blind2", LANG_SERVER, iSurvivor);
 	}
-
-	switch (bIsVisibleToPlayer(iTank, iSurvivor, g_esBlindCache[iTank].g_iBlindSight))
-	{
-		case true: vBlind(iSurvivor, g_esBlindCache[iTank].g_iBlindIntensity);
-		case false: vBlind(iSurvivor, 0);
-	}
-
-	return Plugin_Continue;
 }

@@ -2739,6 +2739,10 @@
 			"Intangible Body"			"0"
 
 			// The mode of how melee hits affect every Mutant Tank.
+			// Note: If set to "1" then the formula is Damage = Max health x Melee hit value
+			// Example: Damage = 5000.0 x 0.05 = 250.0
+			// Note: If set to "2" then the formula is Damage = Melee hit value
+			// Example: Damage = 500.0
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
 			// --
@@ -2749,6 +2753,10 @@
 
 			// The value of melee hits against every Mutant Tank.
 			// Note: The value of the "Melee Hit Mode" setting determines how the value of this setting is applied.
+			// Note: If "Melee Hit Mode" is set to "1" use values between "0.0" and "1.0".
+			// Example: 0.05
+			// Note: If "Melee Hit Mode" is set to "2" use values between "0.0" and "99999.0".
+			// Example: 500.0
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
 			// --
@@ -6949,6 +6957,10 @@
 			"Intangible Body"			"0"
 
 			// The mode of how melee hits affect the Mutant Tank.
+			// Note: If set to "1" then the formula is Damage = Max health x Melee hit value
+			// Example: Damage = 5000.0 x 0.05 = 250.0
+			// Note: If set to "2" then the formula is Damage = Melee hit value
+			// Example: Damage = 500.0
 			// Note: This setting overrides the same setting under the "Plugin Settings/Enhancements" section.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -6959,6 +6971,10 @@
 
 			// The value of melee hits against the Mutant Tank.
 			// Note: The value of the "Melee Hit Mode" setting determines how the value of this setting is applied.
+			// Note: If "Melee Hit Mode" is set to "1" use values between "0.0" and "1.0".
+			// Example: 0.05
+			// Note: If "Melee Hit Mode" is set to "2" use values between "0.0" and "99999.0".
+			// Example: 500.0
 			// Note: This setting overrides the same setting under the "Plugin Settings/Enhancements" section.
 			// Note: This setting can be overridden for specific players.
 			// --
