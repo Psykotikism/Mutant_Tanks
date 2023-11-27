@@ -1175,13 +1175,10 @@ void vSlowHit(int survivor, int tank, float random, float chance, int enabled, i
 				if (flDuration > 0.0)
 				{
 					DataPack dpStopSlow;
-					CreateDataTimer(0.1, tTimerStopSlow, dpStopSlow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+					CreateDataTimer(flDuration, tTimerStopSlow, dpStopSlow, TIMER_FLAG_NO_MAPCHANGE);
 					dpStopSlow.WriteCell(GetClientUserId(survivor));
 					dpStopSlow.WriteCell(GetClientUserId(tank));
-					dpStopSlow.WriteFloat(GetGameTime());
-					dpStopSlow.WriteFloat(flDuration);
 					dpStopSlow.WriteCell(messages);
-					dpStopSlow.WriteFloat(flSpeed);
 				}
 
 				vScreenEffect(survivor, tank, g_esSlowCache[tank].g_iSlowEffect, flags);
@@ -1315,7 +1312,7 @@ void tTimerSlowCombo2(Handle timer, DataPack pack)
 	}
 }
 
-Action tTimerStopSlow(Handle timer, DataPack pack)
+void tTimerStopSlow(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1325,7 +1322,7 @@ Action tTimerStopSlow(Handle timer, DataPack pack)
 		g_esSlowPlayer[iSurvivor].g_bAffected = false;
 		g_esSlowPlayer[iSurvivor].g_iOwner = -1;
 
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
@@ -1333,37 +1330,15 @@ Action tTimerStopSlow(Handle timer, DataPack pack)
 	{
 		vStopSlow(iSurvivor);
 
-		return Plugin_Stop;
+		return;
 	}
 
-	float flCurrentTime = pack.ReadFloat(), flDuration = pack.ReadFloat();
+	vStopSlow(iSurvivor);
+
 	int iMessage = pack.ReadCell();
-	if ((flCurrentTime + flDuration) < GetGameTime())
+	if (g_esSlowCache[iTank].g_iSlowMessage & iMessage)
 	{
-		vStopSlow(iSurvivor);
-
-		if (g_esSlowCache[iTank].g_iSlowMessage & iMessage)
-		{
-			MT_PrintToChatAll("%s %t", MT_TAG2, "Slow2", iSurvivor);
-			MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Slow2", LANG_SERVER, iSurvivor);
-		}
-
-		return Plugin_Stop;
+		MT_PrintToChatAll("%s %t", MT_TAG2, "Slow2", iSurvivor);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Slow2", LANG_SERVER, iSurvivor);
 	}
-
-	switch (bIsVisibleToPlayer(iTank, iSurvivor, g_esSlowCache[iTank].g_iSlowSight))
-	{
-		case true:
-		{
-			float flSpeed = pack.ReadFloat();
-			vSlow(iTank, iSurvivor, flSpeed);
-		}
-		case false:
-		{
-			SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", (g_bLaggedMovementInstalled ? L4D_LaggedMovement(iSurvivor, 1.0, true) : 1.0));
-			SetEntPropFloat(iSurvivor, Prop_Send, "m_flStepSize", MT_STEP_DEFAULTSIZE);
-		}
-	}
-
-	return Plugin_Continue;
 }

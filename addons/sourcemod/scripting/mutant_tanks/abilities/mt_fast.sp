@@ -1190,7 +1190,7 @@ Action tTimerFastGhost(Handle timer, int userid)
 			GetClientAbsOrigin(iInfected, flInfectedPos);
 			if (GetVectorDistance(flSurvivorPos, flInfectedPos) <= 100.0 && bIsVisibleToPlayer(iSurvivor, iInfected, 1, .range = 100.0))
 			{
-				vDamagePlayer(iInfected, iSurvivor, MT_GetScaledDamage(100.0), "128");
+				SDKHooks_TakeDamage(iInfected, iSurvivor, iSurvivor, MT_GetScaledDamage(100.0), DMG_CLUB);
 			}
 		}
 	}

@@ -6611,7 +6611,7 @@ void vListDeveloperCodes(int developer)
 	MT_ReplyToCommand(developer, "%s Fall Scream Voiceline:{mint} fall{default} /{mint} scream", MT_TAG2);
 	MT_ReplyToCommand(developer, "%s Flashlight Color:{mint} light{default} /{mint} flash", MT_TAG2);
 	MT_ReplyToCommand(developer, "%s Glow Outline:{mint} glow{default} /{mint} outline", MT_TAG2);
-	MT_ReplyToCommand(developer, "%s Heal Percentage:{mint} heal{default} /{mint} hppercent", MT_TAG2);
+	MT_ReplyToCommand(developer, "%s Heal Percentage:{mint} healper{default} /{mint} hppercent", MT_TAG2);
 	MT_ReplyToCommand(developer, "%s Health Regen:{mint} hpregen{default} /{mint} regenhp", MT_TAG2);
 	MT_ReplyToCommand(developer, "%s Tank HUD:{mint} hud", MT_TAG2);
 	MT_ReplyToCommand(developer, "%s Infinite Ammo Slots:{mint} infammo{default} /{mint} infinite{default} ({olive}0: OFF{default},{olive} 31: ALL{default})", MT_TAG2);
@@ -8424,7 +8424,7 @@ void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 					float flMultiplier = (bDeveloper && g_esDeveloper[iSurvivor].g_flDevShoveDamage > g_esPlayer[iSurvivor].g_flShoveDamage) ? g_esDeveloper[iSurvivor].g_flDevShoveDamage : g_esPlayer[iSurvivor].g_flShoveDamage;
 					if (flMultiplier > 0.0)
 					{
-						vDamagePlayer(iSpecial, iSurvivor, (float(GetEntProp(iSpecial, Prop_Data, "m_iMaxHealth")) * flMultiplier), "128");
+						SDKHooks_TakeDamage(iSpecial, iSurvivor, iSurvivor, (float(GetEntProp(iSpecial, Prop_Data, "m_iMaxHealth")) * flMultiplier), DMG_CLUB);
 					}
 				}
 			}
@@ -12151,7 +12151,7 @@ void vSetupGuest(int guest, const char[] keyword, const char[] code, const char[
 		strcopy(g_esDeveloper[guest].g_sDevGlowOutline, sizeof esDeveloper::g_sDevGlowOutline, code);
 		vSetSurvivorOutline(guest, g_esDeveloper[guest].g_sDevGlowOutline, .delimiter = ",");
 	}
-	else if (StrContains(keyword, "heal", false) != -1 || StrContains(keyword, "hppercent", false) != -1)
+	else if (StrContains(keyword, "healper", false) != -1 || StrContains(keyword, "hppercent", false) != -1)
 	{
 		bPanel = true;
 		g_esDeveloper[guest].g_flDevHealPercent = flClamp(StringToFloat(code), 0.0, 100.0);
@@ -13653,7 +13653,7 @@ void vRegenSurvivorHealth(int survivor, int healer, int extra)
 			case false: SetEntProp(survivor, Prop_Data, "m_iHealth", (iHealth + extra));
 		}
 
-		float flHealth = (flTempHealth - extra);
+		float flHealth = flTempHealth - extra;
 		vSetTempHealth(survivor, ((flHealth < 0.0) ? 0.0 : flHealth));
 	}
 

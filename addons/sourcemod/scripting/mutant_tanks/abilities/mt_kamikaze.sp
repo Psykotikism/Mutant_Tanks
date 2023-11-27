@@ -1064,7 +1064,7 @@ void vKamikazeHit(int survivor, int tank, float random, float chance, int enable
 
 					vAttachParticle(tank, PARTICLE_BLOOD, 0.1);
 					EmitSoundToAll((g_bSecondGame ? SOUND_GROWL2 : SOUND_GROWL1), tank);
-					vDamagePlayer(tank, survivor, float(GetEntProp(tank, Prop_Data, "m_iHealth")), "128");
+					SDKHooks_TakeDamage(tank, survivor, survivor, float(GetEntProp(tank, Prop_Data, "m_iHealth")), DMG_CLUB);
 					vScreenEffect(survivor, tank, g_esKamikazeCache[tank].g_iKamikazeEffect, flags);
 
 					if (g_esKamikazeCache[tank].g_iKamikazeMessage & messages)

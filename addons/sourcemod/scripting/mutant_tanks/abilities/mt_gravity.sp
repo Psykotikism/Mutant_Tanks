@@ -1522,11 +1522,9 @@ void vGravityHit(int survivor, int tank, float random, float chance, int enabled
 				float flDuration = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : float(g_esGravityCache[tank].g_iGravityDuration);
 				flDuration = (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esGravityCache[tank].g_iHumanAbility == 1) ? float(g_esGravityCache[tank].g_iHumanDuration) : flDuration;
 				DataPack dpStopGravity;
-				CreateDataTimer(0.1, tTimerStopGravity, dpStopGravity, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+				CreateDataTimer(flDuration, tTimerStopGravity, dpStopGravity, TIMER_FLAG_NO_MAPCHANGE);
 				dpStopGravity.WriteCell(GetClientUserId(survivor));
 				dpStopGravity.WriteCell(GetClientUserId(tank));
-				dpStopGravity.WriteFloat(GetGameTime());
-				dpStopGravity.WriteFloat(flDuration);
 				dpStopGravity.WriteCell(messages);
 
 				if (g_esGravityCache[tank].g_iGravityMessage & messages)
@@ -1751,7 +1749,7 @@ void tTimerGravityCombo3(Handle timer, DataPack pack)
 	}
 }
 
-Action tTimerStopGravity(Handle timer, DataPack pack)
+void tTimerStopGravity(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1761,7 +1759,7 @@ Action tTimerStopGravity(Handle timer, DataPack pack)
 		g_esGravityPlayer[iSurvivor].g_bAffected = false;
 		g_esGravityPlayer[iSurvivor].g_iOwner = -1;
 
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
@@ -1769,29 +1767,15 @@ Action tTimerStopGravity(Handle timer, DataPack pack)
 	{
 		vStopGravity(iSurvivor);
 
-		return Plugin_Stop;
+		return;
 	}
 
-	float flCurrentTime = pack.ReadFloat(), flDuration = pack.ReadFloat();
+	vStopGravity(iSurvivor);
+
 	int iMessage = pack.ReadCell();
-	if ((flCurrentTime + flDuration) < GetGameTime())
+	if (g_esGravityCache[iTank].g_iGravityMessage & iMessage)
 	{
-		vStopGravity(iSurvivor);
-
-		if (g_esGravityCache[iTank].g_iGravityMessage & iMessage)
-		{
-			MT_PrintToChatAll("%s %t", MT_TAG2, "Gravity2", iSurvivor);
-			MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Gravity2", LANG_SERVER, iSurvivor);
-		}
-
-		return Plugin_Stop;
+		MT_PrintToChatAll("%s %t", MT_TAG2, "Gravity2", iSurvivor);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Gravity2", LANG_SERVER, iSurvivor);
 	}
-
-	switch (bIsVisibleToPlayer(iTank, iSurvivor, g_esGravityCache[iTank].g_iGravitySight))
-	{
-		case true: SetEntityGravity(iSurvivor, g_esGravityCache[iTank].g_flGravityValue);
-		case false: SetEntityGravity(iSurvivor, 1.0);
-	}
-
-	return Plugin_Continue;
 }
