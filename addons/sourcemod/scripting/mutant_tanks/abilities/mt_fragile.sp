@@ -1146,7 +1146,7 @@ void vFragile(int tank, int pos = -1)
 
 	if (g_esFragileCache[tank].g_iFragileMessage == 1)
 	{
-		char sTankName[33];
+		char sTankName[64];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Fragile", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Fragile", LANG_SERVER, sTankName);
@@ -1212,7 +1212,7 @@ void vFragileReset2(int tank)
 
 	if (g_esFragileCache[tank].g_iFragileMessage == 1)
 	{
-		char sTankName[33];
+		char sTankName[64];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Fragile2", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Fragile2", LANG_SERVER, sTankName);

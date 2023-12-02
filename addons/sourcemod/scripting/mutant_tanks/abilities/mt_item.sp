@@ -64,6 +64,7 @@ enum struct esItemPlayer
 {
 	bool g_bActivated;
 
+	char g_sGiveLoadout[325];
 	char g_sItemLoadout[325];
 	char g_sItemPinata[325];
 
@@ -74,6 +75,7 @@ enum struct esItemPlayer
 
 	int g_iAccessFlags;
 	int g_iComboAbility;
+	int g_iGiveMode;
 	int g_iHumanAbility;
 	int g_iImmunityFlags;
 	int g_iItemAbility;
@@ -201,7 +203,7 @@ void vItemClientPutInServer(int client)
 public void OnClientPutInServer(int client)
 #endif
 {
-	g_esItemPlayer[client].g_bActivated = false;
+	vItemReset2(client);
 }
 
 #if defined MT_ABILITIES_MAIN
@@ -210,7 +212,7 @@ void vItemClientDisconnect_Post(int client)
 public void OnClientDisconnect_Post(int client)
 #endif
 {
-	g_esItemPlayer[client].g_bActivated = false;
+	vItemReset2(client);
 }
 
 #if defined MT_ABILITIES_MAIN
@@ -706,10 +708,18 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "bot_player_replace"))
 	{
 		int iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId),
-			iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId);
-		if (bIsValidClient(iBot) && bIsInfected(iTank))
+			iPlayerId = event.GetInt("player"), iPlayer = GetClientOfUserId(iPlayerId);
+		if (bIsValidClient(iBot))
 		{
-			g_esItemPlayer[iTank].g_bActivated = g_esItemPlayer[iBot].g_bActivated;
+			if (bIsInfected(iPlayer))
+			{
+				g_esItemPlayer[iPlayer].g_bActivated = g_esItemPlayer[iBot].g_bActivated;
+			}
+			else if (bIsSurvivor(iPlayer))
+			{
+				g_esItemPlayer[iPlayer].g_iGiveMode = g_esItemPlayer[iBot].g_iGiveMode;
+				g_esItemPlayer[iPlayer].g_sGiveLoadout = g_esItemPlayer[iBot].g_sGiveLoadout;
+			}
 		}
 	}
 	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
@@ -718,11 +728,19 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	}
 	else if (StrEqual(name, "player_bot_replace"))
 	{
-		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
+		int iPlayerId = event.GetInt("player"), iPlayer = GetClientOfUserId(iPlayerId),
 			iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);
-		if (bIsValidClient(iTank) && bIsInfected(iBot))
+		if (bIsValidClient(iPlayer))
 		{
-			g_esItemPlayer[iBot].g_bActivated = g_esItemPlayer[iTank].g_bActivated;
+			if (bIsInfected(iBot))
+			{
+				g_esItemPlayer[iBot].g_bActivated = g_esItemPlayer[iPlayer].g_bActivated;
+			}
+			else if (bIsSurvivor(iBot))
+			{
+				g_esItemPlayer[iBot].g_iGiveMode = g_esItemPlayer[iPlayer].g_iGiveMode;
+				g_esItemPlayer[iBot].g_sGiveLoadout = g_esItemPlayer[iPlayer].g_sGiveLoadout;
+			}
 		}
 	}
 	else if (StrEqual(name, "player_death"))
@@ -731,6 +749,24 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(iTank) && g_esItemCache[iTank].g_iItemAbility == 1 && g_esItemPlayer[iTank].g_bActivated)
 		{
 			vItemAbility(iTank);
+		}
+	}
+	else if (StrEqual(name, "revive_success"))
+	{
+		int iSurvivorId = event.GetInt("userid"), iSurvivor = GetClientOfUserId(iSurvivorId);
+		if (bIsSurvivor(iSurvivor) && g_esItemPlayer[iSurvivor].g_iGiveMode >= 0 && g_esItemPlayer[iSurvivor].g_sGiveLoadout[0] != '\0')
+		{
+			char sItems[5][64];
+			ReplaceString(g_esItemPlayer[iSurvivor].g_sGiveLoadout, sizeof esItemPlayer::g_sGiveLoadout, " ", "");
+			ExplodeString(g_esItemPlayer[iSurvivor].g_sGiveLoadout, ",", sItems, sizeof sItems, sizeof sItems[]);
+
+			switch (g_esItemPlayer[iSurvivor].g_iGiveMode)
+			{
+				case 0: vCheatCommand(iSurvivor, "give", sItems[MT_GetRandomInt(1, (sizeof sItems)) - 1]);
+				case 1: vItemLoadout(iSurvivor, g_esItemPlayer[iSurvivor].g_sGiveLoadout, sItems, sizeof sItems);
+			}
+
+			vItemReset2(iSurvivor);
 		}
 	}
 }
@@ -849,32 +885,43 @@ void vItemAbility(int tank)
 			{
 				if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esItemPlayer[tank].g_iTankType, g_esItemAbility[g_esItemPlayer[tank].g_iTankTypeRecorded].g_iImmunityFlags, g_esItemPlayer[iSurvivor].g_iImmunityFlags))
 				{
-					switch (g_esItemCache[tank].g_iItemMode)
+					switch (bIsSurvivorDisabled(iSurvivor))
 					{
-						case 0: vCheatCommand(iSurvivor, "give", sItems[MT_GetRandomInt(1, (sizeof sItems)) - 1]);
-						case 1: vItemLoadout(tank, iSurvivor, sItems, sizeof sItems);
+						case true:
+						{
+							g_esItemPlayer[iSurvivor].g_iGiveMode = g_esItemCache[tank].g_iItemMode;
+							strcopy(g_esItemPlayer[iSurvivor].g_sGiveLoadout, sizeof esItemPlayer::g_sGiveLoadout, g_esItemCache[tank].g_sItemLoadout);
+						}
+						case false:
+						{
+							switch (g_esItemCache[tank].g_iItemMode)
+							{
+								case 0: vCheatCommand(iSurvivor, "give", sItems[MT_GetRandomInt(1, (sizeof sItems)) - 1]);
+								case 1: vItemLoadout(iSurvivor, g_esItemCache[tank].g_sItemLoadout, sItems, sizeof sItems);
+							}
+						}
 					}
 				}
 			}
 		}
 		case 2: vCheatCommand(tank, "give", sItems[MT_GetRandomInt(1, (sizeof sItems)) - 1]);
-		case 3: vItemLoadout(tank, tank, sItems, sizeof sItems);
+		case 3: vItemLoadout(tank, g_esItemCache[tank].g_sItemLoadout, sItems, sizeof sItems);
 	}
 
 	if (g_esItemCache[tank].g_iItemMessage == 1)
 	{
-		char sTankName[33];
+		char sTankName[64];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Item", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Item", LANG_SERVER, sTankName);
 	}
 }
 
-void vItemLoadout(int tank, int survivor, const char[][] list, int size)
+void vItemLoadout(int survivor, const char[] loadout, const char[][] list, int size)
 {
 	for (int iItem = 0; iItem < size; iItem++)
 	{
-		if (StrContains(g_esItemCache[tank].g_sItemLoadout, list[iItem]) != -1 && list[iItem][0] != '\0')
+		if (StrContains(loadout, list[iItem]) != -1 && list[iItem][0] != '\0')
 		{
 			vCheatCommand(survivor, "give", list[iItem]);
 		}
@@ -887,9 +934,16 @@ void vItemReset()
 	{
 		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
 		{
-			g_esItemPlayer[iPlayer].g_bActivated = false;
+			vItemReset2(iPlayer);
 		}
 	}
+}
+
+void vItemReset2(int tank)
+{
+	g_esItemPlayer[tank].g_bActivated = false;
+	g_esItemPlayer[tank].g_iGiveMode = -1;
+	g_esItemPlayer[tank].g_sGiveLoadout[0] = '\0';
 }
 
 void vSpawnItem(const char[] name, float pos[3])

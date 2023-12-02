@@ -2620,7 +2620,7 @@ public void OnMapStart()
 {
 	g_esGeneral.g_bFinalMap = (g_esGeneral.g_hSDKIsMissionFinalMap != null && SDKCall(g_esGeneral.g_hSDKIsMissionFinalMap)) || bIsFinalMap();
 	g_esGeneral.g_bNormalMap = bIsFirstMap() || bIsNormalMap();
-	g_esGeneral.g_bSameMission = bGetMissionName();
+	g_esGeneral.g_bSameMission = bIsSameMission();
 	g_iBossBeamSprite = PrecacheModel(SPRITE_LASERBEAM, true);
 	g_iBossHaloSprite = PrecacheModel(SPRITE_GLOW, true);
 
@@ -2886,7 +2886,7 @@ public void OnGameFrame()
 	bool bDeveloper = false, bSpectator = false;
 #endif
 	bool bHuman = false;
-	char sHealthBar[51], sHumanTag[128], sSet[2][2], sTankName[33];
+	char sHealthBar[51], sHumanTag[128], sSet[2][2], sTankName[64];
 	float flPercentage = 0.0;
 	int iTarget = 0, iHealth = 0, iMaxHealth = 0, iTotalHealth = 0;
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -3822,7 +3822,7 @@ any aNative_GetTankName(Handle plugin, int numParams)
 	int iTank = GetNativeCell(1);
 	if (bIsInfectedSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		char sTankName[33];
+		char sTankName[64];
 		vGetTranslatedName(sTankName, sizeof sTankName, iTank);
 		SetNativeString(2, sTankName, sizeof sTankName);
 	}
@@ -4773,7 +4773,7 @@ Action cmdTank(int client, int args)
 		int iRealType = g_esTank[iType].g_iRecordedType[0];
 		if (!bIsTankEnabled(iRealType) || !bIsMenuEnabled(iRealType, iSpecType) || !bIsTypeAvailable(iRealType, client) || bAreHumansRequired(iRealType, iSpecType) || !bCanTypeSpawn(iRealType, iSpecType) || !bIsRightGame(iRealType, iSpecType) || !bHasCoreAdminAccess(client, iRealType))
 		{
-			char sTankName[33];
+			char sTankName[64];
 			vGetTranslatedName(sTankName, sizeof sTankName, .type = iType, .specType = iSpecType);
 			MT_ReplyToCommand(client, "%s %t", MT_TAG5, "DisabledType", sTankName, iRealType, iType);
 
@@ -4835,7 +4835,7 @@ Action cmdSmoker(int client, int args)
 		int iRealType = g_esTank[iType].g_iRecordedType[0];
 		if (!bIsSmokerEnabled(iRealType) || !bIsMenuEnabled(iRealType, iSpecType) || !bIsTypeAvailable(iRealType, client) || bAreHumansRequired(iRealType, iSpecType) || !bCanTypeSpawn(iRealType, iSpecType) || !bIsRightGame(iRealType, iSpecType) || !bHasCoreAdminAccess(client, iRealType))
 		{
-			char sSmokerName[33];
+			char sSmokerName[64];
 			vGetTranslatedName(sSmokerName, sizeof sSmokerName, .type = iType, .specType = iSpecType);
 			MT_ReplyToCommand(client, "%s %t", MT_TAG5, "DisabledTypeSmoker", sSmokerName, iRealType, iType);
 
@@ -4897,7 +4897,7 @@ Action cmdBoomer(int client, int args)
 		int iRealType = g_esTank[iType].g_iRecordedType[0];
 		if (!bIsBoomerEnabled(iRealType) || !bIsMenuEnabled(iRealType, iSpecType) || !bIsTypeAvailable(iRealType, client) || bAreHumansRequired(iRealType, iSpecType) || !bCanTypeSpawn(iRealType, iSpecType) || !bIsRightGame(iRealType, iSpecType) || !bHasCoreAdminAccess(client, iRealType))
 		{
-			char sBoomerName[33];
+			char sBoomerName[64];
 			vGetTranslatedName(sBoomerName, sizeof sBoomerName, .type = iType, .specType = iSpecType);
 			MT_ReplyToCommand(client, "%s %t", MT_TAG5, "DisabledTypeBoomer", sBoomerName, iRealType, iType);
 
@@ -4959,7 +4959,7 @@ Action cmdHunter(int client, int args)
 		int iRealType = g_esTank[iType].g_iRecordedType[0];
 		if (!bIsHunterEnabled(iRealType) || !bIsMenuEnabled(iRealType, iSpecType) || !bIsTypeAvailable(iRealType, client) || bAreHumansRequired(iRealType, iSpecType) || !bCanTypeSpawn(iRealType, iSpecType) || !bIsRightGame(iRealType, iSpecType) || !bHasCoreAdminAccess(client, iRealType))
 		{
-			char sHunterName[33];
+			char sHunterName[64];
 			vGetTranslatedName(sHunterName, sizeof sHunterName, .type = iType, .specType = iSpecType);
 			MT_ReplyToCommand(client, "%s %t", MT_TAG5, "DisabledTypeHunter", sHunterName, iRealType, iType);
 
@@ -5021,7 +5021,7 @@ Action cmdSpitter(int client, int args)
 		int iRealType = g_esTank[iType].g_iRecordedType[0];
 		if (!bIsSpitterEnabled(iRealType) || !bIsMenuEnabled(iRealType, iSpecType) || !bIsTypeAvailable(iRealType, client) || bAreHumansRequired(iRealType, iSpecType) || !bCanTypeSpawn(iRealType, iSpecType) || !bIsRightGame(iRealType, iSpecType) || !bHasCoreAdminAccess(client, iRealType))
 		{
-			char sSpitterName[33];
+			char sSpitterName[64];
 			vGetTranslatedName(sSpitterName, sizeof sSpitterName, .type = iType, .specType = iSpecType);
 			MT_ReplyToCommand(client, "%s %t", MT_TAG5, "DisabledTypeSpitter", sSpitterName, iRealType, iType);
 
@@ -5083,7 +5083,7 @@ Action cmdJockey(int client, int args)
 		int iRealType = g_esTank[iType].g_iRecordedType[0];
 		if (!bIsJockeyEnabled(iRealType) || !bIsMenuEnabled(iRealType, iSpecType) || !bIsTypeAvailable(iRealType, client) || bAreHumansRequired(iRealType, iSpecType) || !bCanTypeSpawn(iRealType, iSpecType) || !bIsRightGame(iRealType, iSpecType) || !bHasCoreAdminAccess(client, iRealType))
 		{
-			char sJockeyName[33];
+			char sJockeyName[64];
 			vGetTranslatedName(sJockeyName, sizeof sJockeyName, .type = iType, .specType = iSpecType);
 			MT_ReplyToCommand(client, "%s %t", MT_TAG5, "DisabledTypeJockey", sJockeyName, iRealType, iType);
 
@@ -5145,7 +5145,7 @@ Action cmdCharger(int client, int args)
 		int iRealType = g_esTank[iType].g_iRecordedType[0];
 		if (!bIsChargerEnabled(iRealType) || !bIsMenuEnabled(iRealType, iSpecType) || !bIsTypeAvailable(iRealType, client) || bAreHumansRequired(iRealType, iSpecType) || !bCanTypeSpawn(iRealType, iSpecType) || !bIsRightGame(iRealType, iSpecType) || !bHasCoreAdminAccess(client, iRealType))
 		{
-			char sChargerName[33];
+			char sChargerName[64];
 			vGetTranslatedName(sChargerName, sizeof sChargerName, .type = iType, .specType = iSpecType);
 			MT_ReplyToCommand(client, "%s %t", MT_TAG5, "DisabledTypeCharger", sChargerName, iRealType, iType);
 
@@ -5213,7 +5213,7 @@ Action cmdMutantTank(int client, int args)
 		int iRealType = g_esTank[iType].g_iRecordedType[0];
 		if (!bIsTankEnabled(iRealType) || !bIsMenuEnabled(iRealType, iSpecType) || !bIsTypeAvailable(iRealType, client) || bAreHumansRequired(iRealType, iSpecType) || !bCanTypeSpawn(iRealType, iSpecType) || !bIsRightGame(iRealType, iSpecType) || !bHasCoreAdminAccess(client, iRealType))
 		{
-			char sTankName[33];
+			char sTankName[64];
 			vGetTranslatedName(sTankName, sizeof sTankName, .type = iType, .specType = iSpecType);
 			MT_ReplyToCommand(client, "%s %t", MT_TAG5, "DisabledType", sTankName, iRealType, iType);
 
@@ -5281,7 +5281,7 @@ Action cmdMutantSmoker(int client, int args)
 		int iRealType = g_esTank[iType].g_iRecordedType[0];
 		if (!bIsSmokerEnabled(iRealType) || !bIsMenuEnabled(iRealType, iSpecType) || !bIsTypeAvailable(iRealType, client) || bAreHumansRequired(iRealType, iSpecType) || !bCanTypeSpawn(iRealType, iSpecType) || !bIsRightGame(iRealType, iSpecType) || !bHasCoreAdminAccess(client, iRealType))
 		{
-			char sSmokerName[33];
+			char sSmokerName[64];
 			vGetTranslatedName(sSmokerName, sizeof sSmokerName, .type = iType, .specType = iSpecType);
 			MT_ReplyToCommand(client, "%s %t", MT_TAG5, "DisabledTypeSmoker", sSmokerName, iRealType, iType);
 
@@ -5349,7 +5349,7 @@ Action cmdMutantBoomer(int client, int args)
 		int iRealType = g_esTank[iType].g_iRecordedType[0];
 		if (!bIsBoomerEnabled(iRealType) || !bIsMenuEnabled(iRealType, iSpecType) || !bIsTypeAvailable(iRealType, client) || bAreHumansRequired(iRealType, iSpecType) || !bCanTypeSpawn(iRealType, iSpecType) || !bIsRightGame(iRealType, iSpecType) || !bHasCoreAdminAccess(client, iRealType))
 		{
-			char sBoomerName[33];
+			char sBoomerName[64];
 			vGetTranslatedName(sBoomerName, sizeof sBoomerName, .type = iType, .specType = iSpecType);
 			MT_ReplyToCommand(client, "%s %t", MT_TAG5, "DisabledTypeBoomer", sBoomerName, iRealType, iType);
 
@@ -5417,7 +5417,7 @@ Action cmdMutantHunter(int client, int args)
 		int iRealType = g_esTank[iType].g_iRecordedType[0];
 		if (!bIsHunterEnabled(iRealType) || !bIsMenuEnabled(iRealType, iSpecType) || !bIsTypeAvailable(iRealType, client) || bAreHumansRequired(iRealType, iSpecType) || !bCanTypeSpawn(iRealType, iSpecType) || !bIsRightGame(iRealType, iSpecType) || !bHasCoreAdminAccess(client, iRealType))
 		{
-			char sHunterName[33];
+			char sHunterName[64];
 			vGetTranslatedName(sHunterName, sizeof sHunterName, .type = iType, .specType = iSpecType);
 			MT_ReplyToCommand(client, "%s %t", MT_TAG5, "DisabledTypeHunter", sHunterName, iRealType, iType);
 
@@ -5485,7 +5485,7 @@ Action cmdMutantSpitter(int client, int args)
 		int iRealType = g_esTank[iType].g_iRecordedType[0];
 		if (!bIsSpitterEnabled(iRealType) || !bIsMenuEnabled(iRealType, iSpecType) || !bIsTypeAvailable(iRealType, client) || bAreHumansRequired(iRealType, iSpecType) || !bCanTypeSpawn(iRealType, iSpecType) || !bIsRightGame(iRealType, iSpecType) || !bHasCoreAdminAccess(client, iRealType))
 		{
-			char sSpitterName[33];
+			char sSpitterName[64];
 			vGetTranslatedName(sSpitterName, sizeof sSpitterName, .type = iType, .specType = iSpecType);
 			MT_ReplyToCommand(client, "%s %t", MT_TAG5, "DisabledTypeSpitter", sSpitterName, iRealType, iType);
 
@@ -5553,7 +5553,7 @@ Action cmdMutantJockey(int client, int args)
 		int iRealType = g_esTank[iType].g_iRecordedType[0];
 		if (!bIsJockeyEnabled(iRealType) || !bIsMenuEnabled(iRealType, iSpecType) || !bIsTypeAvailable(iRealType, client) || bAreHumansRequired(iRealType, iSpecType) || !bCanTypeSpawn(iRealType, iSpecType) || !bIsRightGame(iRealType, iSpecType) || !bHasCoreAdminAccess(client, iRealType))
 		{
-			char sJockeyName[33];
+			char sJockeyName[64];
 			vGetTranslatedName(sJockeyName, sizeof sJockeyName, .type = iType, .specType = iSpecType);
 			MT_ReplyToCommand(client, "%s %t", MT_TAG5, "DisabledTypeJockey", sJockeyName, iRealType, iType);
 
@@ -5621,7 +5621,7 @@ Action cmdMutantCharger(int client, int args)
 		int iRealType = g_esTank[iType].g_iRecordedType[0];
 		if (!bIsChargerEnabled(iRealType) || !bIsMenuEnabled(iRealType, iSpecType) || !bIsTypeAvailable(iRealType, client) || bAreHumansRequired(iRealType, iSpecType) || !bCanTypeSpawn(iRealType, iSpecType) || !bIsRightGame(iRealType, iSpecType) || !bHasCoreAdminAccess(client, iRealType))
 		{
-			char sChargerName[33];
+			char sChargerName[64];
 			vGetTranslatedName(sChargerName, sizeof sChargerName, .type = iType, .specType = iSpecType);
 			MT_ReplyToCommand(client, "%s %t", MT_TAG5, "DisabledTypeCharger", sChargerName, iRealType, iType);
 
@@ -6741,7 +6741,7 @@ void vHudPanel(int developer, int page = 0)
 	g_esPlayer[developer].g_iHudPanelPages = 0;
 
 	bool bHuman = false;
-	char sDisplay[PLATFORM_MAX_PATH], sDisplay2[PLATFORM_MAX_PATH], sDisplay3[PLATFORM_MAX_PATH], sDisplay4[PLATFORM_MAX_PATH], sFrustration[10], sRealName[33], sStatus[32], sTankName[33];
+	char sDisplay[PLATFORM_MAX_PATH], sDisplay2[PLATFORM_MAX_PATH], sDisplay3[PLATFORM_MAX_PATH], sDisplay4[PLATFORM_MAX_PATH], sFrustration[10], sRealName[33], sStatus[32], sTankName[64];
 	int iHealth = 0, iMaxHealth = 0, iTankCount = 0, iTanks[MAXPLAYERS + 1];
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
@@ -7265,7 +7265,7 @@ int iMutantMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 
 void vTankMenu(int admin, bool adminmenu = false, int item = 0)
 {
-	char sIndex[5], sMenuItem[64], sTankName[33];
+	char sIndex[5], sMenuItem[64], sTankName[64];
 	Menu mTankMenu = new Menu(iTankMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display);
 	mTankMenu.SetTitle("%s List (%s)", MT_CONFIG_SECTION_MAIN, g_esPlayer[admin].g_sMenuTitle);
 
@@ -7312,7 +7312,7 @@ void vTankMenu(int admin, bool adminmenu = false, int item = 0)
 
 void vSmokerMenu(int admin, bool adminmenu = false, int item = 0)
 {
-	char sIndex[5], sMenuItem[64], sSmokerName[33];
+	char sIndex[5], sMenuItem[64], sSmokerName[64];
 	Menu mSmokerMenu = new Menu(iSmokerMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display);
 	mSmokerMenu.SetTitle("%s List (%s)", MT_CONFIG_SECTION_SUB, g_esPlayer[admin].g_sMenuTitle);
 
@@ -7359,7 +7359,7 @@ void vSmokerMenu(int admin, bool adminmenu = false, int item = 0)
 
 void vBoomerMenu(int admin, bool adminmenu = false, int item = 0)
 {
-	char sIndex[5], sMenuItem[64], sBoomerName[33];
+	char sIndex[5], sMenuItem[64], sBoomerName[64];
 	Menu mBoomerMenu = new Menu(iBoomerMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display);
 	mBoomerMenu.SetTitle("%s List (%s)", MT_CONFIG_SECTION_SUB2, g_esPlayer[admin].g_sMenuTitle);
 
@@ -7406,7 +7406,7 @@ void vBoomerMenu(int admin, bool adminmenu = false, int item = 0)
 
 void vHunterMenu(int admin, bool adminmenu = false, int item = 0)
 {
-	char sIndex[5], sMenuItem[64], sHunterName[33];
+	char sIndex[5], sMenuItem[64], sHunterName[64];
 	Menu mHunterMenu = new Menu(iHunterMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display);
 	mHunterMenu.SetTitle("%s List (%s)", MT_CONFIG_SECTION_SUB3, g_esPlayer[admin].g_sMenuTitle);
 
@@ -7453,7 +7453,7 @@ void vHunterMenu(int admin, bool adminmenu = false, int item = 0)
 
 void vSpitterMenu(int admin, bool adminmenu = false, int item = 0)
 {
-	char sIndex[5], sMenuItem[64], sSpitterName[33];
+	char sIndex[5], sMenuItem[64], sSpitterName[64];
 	Menu mSpitterMenu = new Menu(iSpitterMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display);
 	mSpitterMenu.SetTitle("%s List (%s)", MT_CONFIG_SECTION_SUB4, g_esPlayer[admin].g_sMenuTitle);
 
@@ -7500,7 +7500,7 @@ void vSpitterMenu(int admin, bool adminmenu = false, int item = 0)
 
 void vJockeyMenu(int admin, bool adminmenu = false, int item = 0)
 {
-	char sIndex[5], sMenuItem[64], sJockeyName[33];
+	char sIndex[5], sMenuItem[64], sJockeyName[64];
 	Menu mJockeyMenu = new Menu(iJockeyMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display);
 	mJockeyMenu.SetTitle("%s List (%s)", MT_CONFIG_SECTION_SUB5, g_esPlayer[admin].g_sMenuTitle);
 
@@ -7547,7 +7547,7 @@ void vJockeyMenu(int admin, bool adminmenu = false, int item = 0)
 
 void vChargerMenu(int admin, bool adminmenu = false, int item = 0)
 {
-	char sIndex[5], sMenuItem[64], sChargerName[33];
+	char sIndex[5], sMenuItem[64], sChargerName[64];
 	Menu mChargerMenu = new Menu(iChargerMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display);
 	mChargerMenu.SetTitle("%s List (%s)", MT_CONFIG_SECTION_SUB6, g_esPlayer[admin].g_sMenuTitle);
 
@@ -8331,7 +8331,7 @@ void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 						int iOption = iGetMessageType(g_esCache[iAttacker].g_iKillMessage);
 						if (iOption > 0)
 						{
-							char sPhrase[32], sTankName[33];
+							char sPhrase[32], sTankName[64];
 							FormatEx(sPhrase, sizeof sPhrase, "Kill%i", iOption);
 							vGetTranslatedName(sTankName, sizeof sTankName, iAttacker);
 							MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, sTankName, iVictim);
@@ -9576,7 +9576,7 @@ void vResetLadyKiller(bool override)
 
 void vRewardPriority(int tank, int priority, int recipient = 0, int recipient2 = 0)
 {
-	char sTankName[33];
+	char sTankName[64];
 	vGetTranslatedName(sTankName, sizeof sTankName, tank);
 	float flPercentage = 0.0, flRandom = GetRandomFloat(0.1, 100.0);
 	int iPriority = (priority - 1), iSetting = 0;
@@ -9684,6 +9684,7 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 	{
 		Action aResult = Plugin_Continue;
 		vRewardSurvivorForward(survivor, tank, iType, priority, flTime, apply, aResult);
+
 		if (aResult == Plugin_Handled)
 		{
 			return;
@@ -9693,7 +9694,7 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 		{
 			case true:
 			{
-				char sSet[9][64], sSet2[9][64], sTankName[33];
+				char sSet[9][64], sSet2[9][64], sTankName[64];
 				int iRewardCount = 0, iRewardCount2 = 0;
 				vGetTranslatedName(sTankName, sizeof sTankName, tank);
 
@@ -11979,10 +11980,6 @@ void vSetupDeveloper(int developer, bool setup = true, bool usual = false)
 {
 	Action aResult = Plugin_Continue;
 	vRewardSurvivorForward(developer, 0, g_esDeveloper[developer].g_iDevAccess, 0, g_esDeveloper[developer].g_flDevRewardDuration, setup, aResult);
-	if (aResult == Plugin_Handled)
-	{
-		return;
-	}
 
 	if (setup)
 	{
@@ -12878,7 +12875,7 @@ void vAnnounceTankDeath(int tank, int killer = 0, float percentage = 0.0, int as
 			int iOption = iGetMessageType(g_esCache[tank].g_iDeathMessage);
 			if (iOption > 0)
 			{
-				char sDetails[128], sPhrase[32], sTankName[33], sTeammates[5][768];
+				char sDetails[128], sPhrase[32], sTankName[64], sTeammates[5][768];
 				vGetTranslatedName(sTankName, sizeof sTankName, tank);
 				if (bIsSurvivor(killer, MT_CHECK_INDEX|MT_CHECK_INGAME))
 				{
@@ -12915,7 +12912,7 @@ void vAnnounceTankDeath(int tank, int killer = 0, float percentage = 0.0, int as
 			int iOption = iGetMessageType(g_esCache[tank].g_iDeathMessage);
 			if (iOption > 0)
 			{
-				char sPhrase[32], sTankName[33];
+				char sPhrase[32], sTankName[64];
 				FormatEx(sPhrase, sizeof sPhrase, "Death%i", iOption);
 				vGetTranslatedName(sTankName, sizeof sTankName, tank);
 				MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, sTankName);
@@ -13025,71 +13022,72 @@ void vChooseArrivalType(int tank, const char[] oldname, const char[] name, int m
 
 			if (mode >= 0 && bIsCustomTankSupported(tank))
 			{
-				char sPhrase[64], sSteamIDFinal[64], sNote[64];
+				char sPhrase[64], sSteamIDFinal[64], sName[33], sNote[64], sNoNote[64];
 				FormatEx(sSteamIDFinal, sizeof sSteamIDFinal, "%s", (TranslationPhraseExists(g_esPlayer[tank].g_sSteamID32) ? g_esPlayer[tank].g_sSteamID32 : g_esPlayer[tank].g_sSteam3ID));
 				int iType = g_esTank[g_esPlayer[tank].g_iTankType].g_iRealType[0];
-				if (bIsSmoker(tank) && g_esCache[tank].g_iSpecialNote == 1)
+
+				switch (specType)
 				{
-					FormatEx(sPhrase, sizeof sPhrase, "%s #%i", g_sSpecialNames[specType], iType);
+					case 1: strcopy(sName, sizeof sName, g_esCache[tank].g_sSmokerName);
+					case 2: strcopy(sName, sizeof sName, g_esCache[tank].g_sBoomerName);
+					case 3: strcopy(sName, sizeof sName, g_esCache[tank].g_sHunterName);
+					case 4: strcopy(sName, sizeof sName, g_esCache[tank].g_sSpitterName);
+					case 5: strcopy(sName, sizeof sName, g_esCache[tank].g_sJockeyName);
+					case 6: strcopy(sName, sizeof sName, g_esCache[tank].g_sChargerName);
+					default: strcopy(sName, sizeof sName, g_esCache[tank].g_sTankName);
+				}
+
+				if (1 <= specType <= 6 && g_esCache[tank].g_iSpecialNote == 1)
+				{
+					FormatEx(sPhrase, sizeof sPhrase, "%s #%i Note", g_sSpecialNames[specType], iType);
+
+					if (sPhrase[0] != '\0' && !TranslationPhraseExists(sPhrase))
+					{
+						FormatEx(sPhrase, sizeof sPhrase, "%s Note", sName);
+					}
+
+					if (sPhrase[0] != '\0' && !TranslationPhraseExists(sPhrase))
+					{
+						FormatEx(sPhrase, sizeof sPhrase, "%s #%i", g_sSpecialNames[specType], iType);
+					}
+
+					if (sPhrase[0] != '\0' && !TranslationPhraseExists(sPhrase))
+					{
+						strcopy(sPhrase, sizeof sPhrase, sName);
+					}
+
 					FormatEx(sNote, sizeof sNote, "%s", ((bIsValidClient(tank, MT_CHECK_FAKECLIENT) && g_esTeammate[tank].g_iSpecialNote == 1 && sSteamIDFinal[0] != '\0') ? sSteamIDFinal : sPhrase));
+					FormatEx(sNoNote, sizeof sNoNote, "NoNote%s", g_sSpecialNames[specType]);
 
 					bool bExists = TranslationPhraseExists(sNote);
-					MT_PrintToChatAll("%s %t", MT_TAG3, (bExists ? sNote : "NoNoteSmoker"));
-					vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, (bExists ? sNote : "NoNoteSmoker"), LANG_SERVER);
+					MT_PrintToChatAll("%s %t", MT_TAG3, (bExists ? sNote : sNoNote));
+					vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, (bExists ? sNote : sNoNote), LANG_SERVER);
 				}
-				else if (bIsBoomer(tank) && g_esCache[tank].g_iSpecialNote == 1)
+				else if (g_esCache[tank].g_iTankNote == 1)
 				{
-					FormatEx(sPhrase, sizeof sPhrase, "%s #%i", g_sSpecialNames[specType], iType);
-					FormatEx(sNote, sizeof sNote, "%s", ((bIsValidClient(tank, MT_CHECK_FAKECLIENT) && g_esTeammate[tank].g_iSpecialNote == 1 && sSteamIDFinal[0] != '\0') ? sSteamIDFinal : sPhrase));
+					FormatEx(sPhrase, sizeof sPhrase, "Tank #%i Note", iType);
 
-					bool bExists = TranslationPhraseExists(sNote);
-					MT_PrintToChatAll("%s %t", MT_TAG3, (bExists ? sNote : "NoNoteBoomer"));
-					vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, (bExists ? sNote : "NoNoteBoomer"), LANG_SERVER);
-				}
-				else if (bIsHunter(tank) && g_esCache[tank].g_iSpecialNote == 1)
-				{
-					FormatEx(sPhrase, sizeof sPhrase, "%s #%i", g_sSpecialNames[specType], iType);
-					FormatEx(sNote, sizeof sNote, "%s", ((bIsValidClient(tank, MT_CHECK_FAKECLIENT) && g_esTeammate[tank].g_iSpecialNote == 1 && sSteamIDFinal[0] != '\0') ? sSteamIDFinal : sPhrase));
+					if (sPhrase[0] != '\0' && !TranslationPhraseExists(sPhrase))
+					{
+						FormatEx(sPhrase, sizeof sPhrase, "%s Note", sName);
+					}
 
-					bool bExists = TranslationPhraseExists(sNote);
-					MT_PrintToChatAll("%s %t", MT_TAG3, (bExists ? sNote : "NoNoteHunter"));
-					vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, (bExists ? sNote : "NoNoteHunter"), LANG_SERVER);
-				}
-				else if (bIsSpitter(tank) && g_esCache[tank].g_iSpecialNote == 1)
-				{
-					FormatEx(sPhrase, sizeof sPhrase, "%s #%i", g_sSpecialNames[specType], iType);
-					FormatEx(sNote, sizeof sNote, "%s", ((bIsValidClient(tank, MT_CHECK_FAKECLIENT) && g_esTeammate[tank].g_iSpecialNote == 1 && sSteamIDFinal[0] != '\0') ? sSteamIDFinal : sPhrase));
+					if (sPhrase[0] != '\0' && !TranslationPhraseExists(sPhrase))
+					{
+						FormatEx(sPhrase, sizeof sPhrase, "Tank #%i", iType);
+					}
 
-					bool bExists = TranslationPhraseExists(sNote);
-					MT_PrintToChatAll("%s %t", MT_TAG3, (bExists ? sNote : "NoNoteSpitter"));
-					vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, (bExists ? sNote : "NoNoteSpitter"), LANG_SERVER);
-				}
-				else if (bIsJockey(tank) && g_esCache[tank].g_iSpecialNote == 1)
-				{
-					FormatEx(sPhrase, sizeof sPhrase, "%s #%i", g_sSpecialNames[specType], iType);
-					FormatEx(sNote, sizeof sNote, "%s", ((bIsValidClient(tank, MT_CHECK_FAKECLIENT) && g_esTeammate[tank].g_iSpecialNote == 1 && sSteamIDFinal[0] != '\0') ? sSteamIDFinal : sPhrase));
+					if (sPhrase[0] != '\0' && !TranslationPhraseExists(sPhrase))
+					{
+						strcopy(sPhrase, sizeof sPhrase, sName);
+					}
 
-					bool bExists = TranslationPhraseExists(sNote);
-					MT_PrintToChatAll("%s %t", MT_TAG3, (bExists ? sNote : "NoNoteJockey"));
-					vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, (bExists ? sNote : "NoNoteJockey"), LANG_SERVER);
-				}
-				else if (bIsCharger(tank) && g_esCache[tank].g_iSpecialNote == 1)
-				{
-					FormatEx(sPhrase, sizeof sPhrase, "%s #%i", g_sSpecialNames[specType], iType);
-					FormatEx(sNote, sizeof sNote, "%s", ((bIsValidClient(tank, MT_CHECK_FAKECLIENT) && g_esTeammate[tank].g_iSpecialNote == 1 && sSteamIDFinal[0] != '\0') ? sSteamIDFinal : sPhrase));
-
-					bool bExists = TranslationPhraseExists(sNote);
-					MT_PrintToChatAll("%s %t", MT_TAG3, (bExists ? sNote : "NoNoteCharger"));
-					vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, (bExists ? sNote : "NoNoteCharger"), LANG_SERVER);
-				}
-				else if (bIsTank(tank) && g_esCache[tank].g_iTankNote == 1)
-				{
-					FormatEx(sPhrase, sizeof sPhrase, "Tank #%i", iType);
 					FormatEx(sNote, sizeof sNote, "%s", ((bIsValidClient(tank, MT_CHECK_FAKECLIENT) && (g_esPlayer[tank].g_iTankNote == 1) && sSteamIDFinal[0] != '\0') ? sSteamIDFinal : sPhrase));
+					strcopy(sNoNote, sizeof sNoNote, "NoNote");
 
 					bool bExists = TranslationPhraseExists(sNote);
-					MT_PrintToChatAll("%s %t", MT_TAG3, (bExists ? sNote : "NoNote"));
-					vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, (bExists ? sNote : "NoNote"), LANG_SERVER);
+					MT_PrintToChatAll("%s %t", MT_TAG3, (bExists ? sNote : sNoNote));
+					vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, (bExists ? sNote : sNoNote), LANG_SERVER);
 				}
 			}
 		}
@@ -14758,7 +14756,7 @@ void vSetupTankSpawn(int admin, int specType, char[] type, bool spawn = false, b
 			else
 			{
 				bool bCheck = true, bMenu = true;
-				char sPhrase[32], sTankName[33];
+				char sPhrase[32], sTankName[64];
 				int iClass = 8, iCycleCount = 0, iCycleTypes[MT_MAXTYPES + 1], iMin = iGetMinType(specType, (specType == iClass)), iMax = iGetMaxType(specType, (specType == iClass)),
 					iSpecType = (specType != iClass) ? specType : 0, iRealType = 0, iTypeCount = 0, iTankTypes[MT_MAXTYPES + 1];
 				for (int iIndex = iMin; iIndex <= iMax; iIndex++)
@@ -14820,10 +14818,6 @@ void vSetupTankSpawn(int admin, int specType, char[] type, bool spawn = false, b
 					case 1:
 					{
 						int iChosen = g_esGeneral.g_iChosenType;
-						g_esGeneral.g_bRecycleTypes2 = specType == iClass && iTypeCount <= 0 && iCycleCount > 0;
-						g_esTank[iChosen].g_bTypeCycled2 = specType == iClass;
-						g_esSpecific.g_bRecycleTypes2[iSpecType] = specType != iClass && iTypeCount <= 0 && iCycleCount > 0;
-						g_esSpecial[iChosen].g_bTypeCycled2[iSpecType] = specType != iClass;
 
 						switch (specType)
 						{
@@ -14838,7 +14832,8 @@ void vSetupTankSpawn(int admin, int specType, char[] type, bool spawn = false, b
 					}
 					default:
 					{
-						g_esGeneral.g_iChosenType = (iTypeCount > 0) ? iTankTypes[MT_GetRandomInt(1, iTypeCount)] : iCycleTypes[MT_GetRandomInt(1, iCycleCount)];
+						bool bLinear = iGetCycleType(specType) >= 3;
+						g_esGeneral.g_iChosenType = (iTypeCount > 0) ? iTankTypes[bLinear ? 1 : MT_GetRandomInt(1, iTypeCount)] : iCycleTypes[bLinear ? 1 : MT_GetRandomInt(1, iCycleCount)];
 						int iChosen = g_esGeneral.g_iChosenType;
 						g_esGeneral.g_bRecycleTypes2 = specType == iClass && iTypeCount <= 0 && iCycleCount > 0;
 						g_esTank[iChosen].g_bTypeCycled2 = specType == iClass;
@@ -14945,7 +14940,7 @@ void vSetupTankSpawn(int admin, int specType, char[] type, bool spawn = false, b
 				g_esPlayer[admin].g_iPersonalType = iClamp(iIndex, -1, MT_MAXTYPES);
 				g_esTeammate[admin].g_iPersonalType[specType] = iClamp(iIndex, -1, MT_MAXTYPES);
 
-				char sName[33];
+				char sName[64];
 				vGetTranslatedName(sName, sizeof sName, .type = iType, .specType = specType);
 
 				switch (specType)
@@ -16845,7 +16840,7 @@ void vReadSpecificSettings(int mode, const char[] section, const char[] subsecti
 		g_esSpecific.g_iSpecialModel = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "SpecialModel", "Special Model", "Special_Model", "model", g_esSpecific.g_iSpecialModel, value, -1, 3);
 		g_esSpecific.g_flBurnDuration = flGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "BurnDuration", "Burn Duration", "Burn_Duration", "burndur", g_esSpecific.g_flBurnDuration, value, -1.0, 99999.0);
 		g_esSpecific.g_flBurntSkin = flGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "BurntSkin", "Burnt Skin", "Burnt_Skin", "burnt", g_esSpecific.g_flBurntSkin, value, -2.0, 1.0);
-		g_esSpecific.g_iCycleTypes = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "CycleTypes", "Cycle Types", "Cycle_Types", "cycle", g_esSpecific.g_iCycleTypes, value, -1, 1);
+		g_esSpecific.g_iCycleTypes = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "CycleTypes", "Cycle Types", "Cycle_Types", "cycle", g_esSpecific.g_iCycleTypes, value, -1, 4);
 		g_esSpecific.g_iSpawnEnabled = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "SpawnEnabled", "Spawn Enabled", "Spawn_Enabled", "spawn", g_esSpecific.g_iSpawnEnabled, value, -1, 1);
 		g_esSpecific.g_iAnnounceArrival = iGetKeyValue(subsection, MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE2, key, "AnnounceArrival", "Announce Arrival", "Announce_Arrival", "arrival", g_esSpecific.g_iAnnounceArrival, value, -1, 31);
 		g_esSpecific.g_iAnnounceDeath = iGetKeyValue(subsection, MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE2, key, "AnnounceDeath", "Announce Death", "Announce_Death", "death", g_esSpecific.g_iAnnounceDeath, value, -1, 2);
@@ -17760,7 +17755,7 @@ void vSetTankSettings(int mode, const char[] section, const char[] subsection, c
 			g_esGeneral.g_iTankModel = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "TankModel", "Tank Model", "Tank_Model", "model", g_esGeneral.g_iTankModel, value, -1, 7);
 			g_esGeneral.g_flBurnDuration = flGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "BurnDuration", "Burn Duration", "Burn_Duration", "burndur", g_esGeneral.g_flBurnDuration, value, -1.0, 99999.0);
 			g_esGeneral.g_flBurntSkin = flGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "BurntSkin", "Burnt Skin", "Burnt_Skin", "burnt", g_esGeneral.g_flBurntSkin, value, -2.0, 1.0);
-			g_esGeneral.g_iCycleTypes = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "CycleTypes", "Cycle Types", "Cycle_Types", "cycle", g_esGeneral.g_iCycleTypes, value, -1, 1);
+			g_esGeneral.g_iCycleTypes = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "CycleTypes", "Cycle Types", "Cycle_Types", "cycle", g_esGeneral.g_iCycleTypes, value, -1, 4);
 			g_esGeneral.g_iSpawnEnabled = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "SpawnEnabled", "Spawn Enabled", "Spawn_Enabled", "spawn", g_esGeneral.g_iSpawnEnabled, value, -1, 1);
 			g_esGeneral.g_iSpawnLimit = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "SpawnLimit", "Spawn Limit", "Spawn_Limit", "limit", g_esGeneral.g_iSpawnLimit, value, -1, 32);
 			g_esGeneral.g_iAnnounceArrival = iGetKeyValue(subsection, MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE2, key, "AnnounceArrival", "Announce Arrival", "Announce_Arrival", "arrival", g_esGeneral.g_iAnnounceArrival, value, -1, 31);
@@ -20053,8 +20048,6 @@ void SMCParseStart_Main(SMCParser smc)
 			g_esTank[iIndex].g_bDuplicateType[1] = false;
 			g_esTank[iIndex].g_bRecordedType[0] = false;
 			g_esTank[iIndex].g_bRecordedType[1] = false;
-			g_esTank[iIndex].g_bTypeCycled = false;
-			g_esTank[iIndex].g_bTypeCycled2 = false;
 			g_esTank[iIndex].g_iRealType[0] = 0;
 			g_esTank[iIndex].g_iRealType[1] = 0;
 			g_esTank[iIndex].g_iAbilityCount = -1;
@@ -20400,8 +20393,6 @@ void SMCParseStart_Main(SMCParser smc)
 
 				if (iPos < (sizeof esSpecial::g_iBaseHealth))
 				{
-					g_esSpecial[iIndex].g_bTypeCycled[iPos] = false;
-					g_esSpecial[iIndex].g_bTypeCycled2[iPos] = false;
 					g_esSpecial[iIndex].g_iBaseHealth[iPos] = -1;
 					g_esSpecial[iIndex].g_iExtraHealth[iPos] = -1;
 				}
@@ -21205,6 +21196,29 @@ void SMCParseEnd_Main(SMCParser smc, bool halted, bool failed)
 			vCacheSettings(iPlayer);
 		}
 	}
+
+	int iCycleType = iGetCycleType(8);
+	if (iCycleType > 0 && (iCycleType % 2 != 0 || (iCycleType % 2 == 0 && !g_esGeneral.g_bSameMission)))
+	{
+		for (int iIndex = 0; iIndex <= MT_MAXTYPES; iIndex++)
+		{
+			g_esTank[iIndex].g_bTypeCycled = false;
+			g_esTank[iIndex].g_bTypeCycled2 = false;
+		}
+	}
+
+	iCycleType = iGetCycleType(MT_GetRandomInt(1, 6));
+	if (iCycleType > 0 && (iCycleType % 2 != 0 || (iCycleType % 2 == 0 && !g_esGeneral.g_bSameMission)))
+	{
+		for (int iIndex = 0; iIndex <= MT_MAXTYPES; iIndex++)
+		{
+			for (int iSpecType = 0; iSpecType < (sizeof g_sSpecialNames); iSpecType++)
+			{
+				g_esSpecial[iIndex].g_bTypeCycled[iSpecType] = false;
+				g_esSpecial[iIndex].g_bTypeCycled2[iSpecType] = false;
+			}
+		}
+	}
 }
 
 /**
@@ -21768,7 +21782,7 @@ Action OnPlayerTakeDamageAlive(int victim, int &attacker, int &inflictor, float 
 				return (flResistance > 0.0) ? Plugin_Changed : Plugin_Handled;
 			}
 
-			if (((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && g_esCache[victim].g_iMeleeHitMode > 0)
+			if (((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && g_esCache[victim].g_iMeleeHitMode > 0 && g_esCache[victim].g_flMeleeHitValue > 0.0)
 			{
 				switch (g_esCache[victim].g_iMeleeHitMode)
 				{
@@ -23620,6 +23634,7 @@ MRESReturn mreEventKilledPre(int pThis, DHookParam hParams)
 		SetEntPropFloat(pThis, Prop_Send, "m_flStepSize", 18.0);
 		SetEntProp(pThis, Prop_Send, "m_iFOV", 90);
 		SetEntProp(pThis, Prop_Send, "m_iDefaultFOV", 90);
+		TeleportEntity(pThis, .velocity = view_as<float>({0.0, 0.0, 0.0}));
 	}
 	else if (bIsInfected(pThis, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
@@ -26419,12 +26434,56 @@ void vGetTranslatedName(char[] buffer, int size, int tank = 0, int type = 0, int
 	}
 	else if (iType > 0 || tank > 0)
 	{
-		char sSpecialName[33];
+		char sSpecialName[64], sName[33];
 
 		switch (iSpecType)
 		{
-			case 1, 2, 3, 4, 5, 6: FormatEx(sSpecialName, sizeof sSpecialName, "%s #%i Name", g_sSpecialNames[iSpecType], iType);
-			default: FormatEx(sSpecialName, sizeof sSpecialName, "Tank #%i Name", iType);
+			case 1: strcopy(sName, sizeof sName, g_esCache[tank].g_sSmokerName);
+			case 2: strcopy(sName, sizeof sName, g_esCache[tank].g_sBoomerName);
+			case 3: strcopy(sName, sizeof sName, g_esCache[tank].g_sHunterName);
+			case 4: strcopy(sName, sizeof sName, g_esCache[tank].g_sSpitterName);
+			case 5: strcopy(sName, sizeof sName, g_esCache[tank].g_sJockeyName);
+			case 6: strcopy(sName, sizeof sName, g_esCache[tank].g_sChargerName);
+			default: strcopy(sName, sizeof sName, g_esCache[tank].g_sTankName);
+		}
+
+		if (1 <= iSpecType <= 6)
+		{
+			FormatEx(sSpecialName, sizeof sSpecialName, "%s #%i Name", g_sSpecialNames[iSpecType], iType);
+
+			if (sSpecialName[0] != '\0' && !TranslationPhraseExists(sSpecialName))
+			{
+				FormatEx(sSpecialName, sizeof sSpecialName, "%s Name", sName);
+			}
+
+			if (sSpecialName[0] != '\0' && !TranslationPhraseExists(sSpecialName))
+			{
+				FormatEx(sSpecialName, sizeof sSpecialName, "%s #%i", g_sSpecialNames[iSpecType], iType);
+			}
+
+			if (sSpecialName[0] != '\0' && !TranslationPhraseExists(sSpecialName))
+			{
+				strcopy(sSpecialName, sizeof sSpecialName, sName);
+			}
+		}
+		else
+		{
+			FormatEx(sSpecialName, sizeof sSpecialName, "Tank #%i Name", iType);
+
+			if (sSpecialName[0] != '\0' && !TranslationPhraseExists(sSpecialName))
+			{
+				FormatEx(sSpecialName, sizeof sSpecialName, "%s Name", sName);
+			}
+
+			if (sSpecialName[0] != '\0' && !TranslationPhraseExists(sSpecialName))
+			{
+				FormatEx(sSpecialName, sizeof sSpecialName, "Tank #%i", iType);
+			}
+
+			if (sSpecialName[0] != '\0' && !TranslationPhraseExists(sSpecialName))
+			{
+				strcopy(sSpecialName, sizeof sSpecialName, sName);
+			}
 		}
 
 		switch (sSpecialName[0] != '\0' && TranslationPhraseExists(sSpecialName))
@@ -26507,31 +26566,6 @@ bool bFoundSection(const char[] subsection, int index)
 			{
 				return true;
 			}
-		}
-	}
-
-	return false;
-}
-
-bool bGetMissionName()
-{
-	if (g_esGeneral.g_hSDKGetMissionInfo != null)
-	{
-		Address adMissionInfo = SDKCall(g_esGeneral.g_hSDKGetMissionInfo);
-		if (adMissionInfo != Address_Null && g_esGeneral.g_hSDKKeyValuesGetString != null)
-		{
-			char sTemp[64], sTemp2[64];
-			SDKCall(g_esGeneral.g_hSDKKeyValuesGetString, adMissionInfo, sTemp, sizeof sTemp, "Name", "");
-			SDKCall(g_esGeneral.g_hSDKKeyValuesGetString, adMissionInfo, sTemp2, sizeof sTemp2, "DisplayTitle", "");
-
-			bool bSame = StrEqual(g_esGeneral.g_sCurrentMissionName, sTemp) || StrEqual(g_esGeneral.g_sCurrentMissionDisplayTitle, sTemp2);
-			if (!bSame)
-			{
-				strcopy(g_esGeneral.g_sCurrentMissionName, sizeof esGeneral::g_sCurrentMissionName, sTemp);
-				strcopy(g_esGeneral.g_sCurrentMissionDisplayTitle, sizeof esGeneral::g_sCurrentMissionDisplayTitle, sTemp2);
-			}
-
-			return bSame;
 		}
 	}
 
@@ -27027,6 +27061,31 @@ bool bIsSafeFalling(int survivor)
 	return false;
 }
 
+bool bIsSameMission()
+{
+	if (g_esGeneral.g_hSDKGetMissionInfo != null)
+	{
+		Address adMissionInfo = SDKCall(g_esGeneral.g_hSDKGetMissionInfo);
+		if (adMissionInfo != Address_Null && g_esGeneral.g_hSDKKeyValuesGetString != null)
+		{
+			char sTemp[64], sTemp2[64];
+			SDKCall(g_esGeneral.g_hSDKKeyValuesGetString, adMissionInfo, sTemp, sizeof sTemp, "Name", "");
+			SDKCall(g_esGeneral.g_hSDKKeyValuesGetString, adMissionInfo, sTemp2, sizeof sTemp2, "DisplayTitle", "");
+
+			bool bSame = StrEqual(g_esGeneral.g_sCurrentMissionName, sTemp) || StrEqual(g_esGeneral.g_sCurrentMissionDisplayTitle, sTemp2);
+			if (!bSame)
+			{
+				strcopy(g_esGeneral.g_sCurrentMissionName, sizeof esGeneral::g_sCurrentMissionName, sTemp);
+				strcopy(g_esGeneral.g_sCurrentMissionDisplayTitle, sizeof esGeneral::g_sCurrentMissionDisplayTitle, sTemp2);
+			}
+
+			return bSame;
+		}
+	}
+
+	return false;
+}
+
 bool bIsScavengeMode()
 {
 	return g_esGeneral.g_iCurrentMode == 8;
@@ -27135,8 +27194,7 @@ bool bIsTypeCycled(int specType, int type, bool manual)
 		case false: bCycled = bSpecial ? g_esSpecial[type].g_bTypeCycled[specType] : g_esTank[type].g_bTypeCycled;
 	}
 
-	int iCycle = bSpecial ? iGetSettingValue(true, true, g_esSpecific.g_iCycleTypes, g_esGeneral.g_iCycleTypes, 1) : g_esGeneral.g_iCycleTypes;
-	return iCycle == 1 && bCycled;
+	return iGetCycleType(specType) > 0 && bCycled;
 }
 
 bool bIsTypeShown(int admin, int type, int specType)
@@ -27340,13 +27398,10 @@ int iChooseInfected(int tank, int exclude, int min = -1, int max = -1, bool muta
 	return 0;
 }
 
-int iChooseType(int exclude, int tank = 0, int min = -1, int max = -1)
+int iChooseType(int exclude, int tank, int min = -1, int max = -1)
 {
 	bool bCondition = false, bTank = bIsTank(tank);
-	int iClass = 8, iSpecType = g_esPlayer[tank].g_iInfectedType, iMin = iGetMinType(iSpecType, bTank), iMax = iGetMaxType(iSpecType, bTank);
-	iMin = (min >= 0) ? min : iMin;
-	iMax = (max >= 0) ? max : iMax;
-
+	int iClass = 8, iSpecType = g_esPlayer[tank].g_iInfectedType, iMin = (min >= 0) ? min : iGetMinType(iSpecType, bTank), iMax = (max >= 0) ? max : iGetMaxType(iSpecType, bTank);
 	if (iMax < iMin || (bIsSurvivalMode() && g_esGeneral.g_iSurvivalBlock != 2))
 	{
 		return 0;
@@ -27428,8 +27483,9 @@ int iChooseType(int exclude, int tank = 0, int min = -1, int max = -1)
 		iTypeCount++;
 	}
 
-	int iFinalCount = (iTypeCount > 0) ? iTypeCount : iCycleCount, iFinalType = (iTypeCount > 0) ? iTankTypes[MT_GetRandomInt(1, iTypeCount)] : iCycleTypes[MT_GetRandomInt(1, iCycleCount)],
-		iBackupType = (iBackupCount > 0) ? iBackupTypes[MT_GetRandomInt(1, iBackupCount)] : 0, iChosen = (iFinalCount > 0) ? iFinalType : iBackupType, iPos = (iSpecType != iClass) ? iSpecType : 0;
+	bool bLinear = iGetCycleType(iSpecType) >= 3;
+	int iFinalCount = (iTypeCount > 0) ? iTypeCount : iCycleCount, iFinalType = (iTypeCount > 0) ? iTankTypes[bLinear ? 1 : MT_GetRandomInt(1, iTypeCount)] : iCycleTypes[bLinear ? 1 : MT_GetRandomInt(1, iCycleCount)],
+		iBackupType = (iBackupCount > 0) ? iBackupTypes[bLinear ? 1 : MT_GetRandomInt(1, iBackupCount)] : 0, iChosen = (iFinalCount > 0) ? iFinalType : iBackupType, iPos = (iSpecType != iClass) ? iSpecType : 0;
 	g_esGeneral.g_bRecycleTypes = iSpecType == iClass && iTypeCount <= 0 && iCycleCount > 0;
 	g_esTank[iChosen].g_bTypeCycled = iSpecType == iClass;
 	g_esSpecific.g_bRecycleTypes[iPos] = iSpecType != iClass && iTypeCount <= 0 && iCycleCount > 0;
@@ -27501,6 +27557,11 @@ int iGetConfigSectionNumber(const char[] section, int size)
 	}
 
 	return -1;
+}
+
+int iGetCycleType(int specType)
+{
+	return (specType > 0 && specType != 8) ? iGetSettingValue(true, true, g_esSpecific.g_iCycleTypes, g_esGeneral.g_iCycleTypes, 1) : g_esGeneral.g_iCycleTypes;
 }
 
 int iGetDecimalFromHex(int character)
@@ -27745,7 +27806,7 @@ int iGetRandomRecipient(int recipient, int tank, int priority, bool none)
 	return iRecipient;
 }
 
-int iGetRealType(int type, int exclude = 0, int tank = 0, int min = -1, int max = -1)
+int iGetRealType(int type, int exclude = 0, int tank, int min = -1, int max = -1)
 {
 	Action aResult = Plugin_Continue;
 	int iType = g_esTank[type].g_iRealType[0];

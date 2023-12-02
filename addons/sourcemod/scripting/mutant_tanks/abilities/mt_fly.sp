@@ -1072,7 +1072,7 @@ void vFly(int tank, bool announce, int pos = -1)
 
 	if (announce && g_esFlyCache[tank].g_iFlyMessage == 1)
 	{
-		char sTankName[33];
+		char sTankName[64];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Fly", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Fly", LANG_SERVER, sTankName);
@@ -1561,7 +1561,7 @@ void vFlyReset2(int tank)
 
 	if (g_esFlyCache[tank].g_iFlyMessage == 1)
 	{
-		char sTankName[33];
+		char sTankName[64];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Fly2", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Fly2", LANG_SERVER, sTankName);

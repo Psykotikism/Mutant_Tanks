@@ -488,7 +488,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 		if (g_esRecallCache[client].g_iRecallMessage & MT_MESSAGE_RANGE)
 		{
-			char sTankName[33];
+			char sTankName[64];
 			MT_GetTankName(client, sTankName);
 			MT_PrintToChatAll("%s %t", MT_TAG2, "Recall3", sTankName);
 			MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Recall3", LANG_SERVER, sTankName);
@@ -1183,7 +1183,7 @@ void vRecallAbility(int tank, bool main)
 
 							if (g_esRecallCache[tank].g_iRecallMessage & MT_MESSAGE_RANGE)
 							{
-								char sTankName[33];
+								char sTankName[64];
 								MT_GetTankName(tank, sTankName);
 								MT_PrintToChatAll("%s %t", MT_TAG2, "Recall", sTankName);
 								MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Recall", LANG_SERVER, sTankName);
@@ -1346,7 +1346,7 @@ void vRecallRewind(int player, float threshold, int lifetime, int mode, int clea
 
 			if (g_esRecallCache[player].g_iRecallMessage & MT_MESSAGE_MELEE)
 			{
-				char sTankName[33];
+				char sTankName[64];
 				MT_GetTankName(player, sTankName);
 				MT_PrintToChatAll("%s %t", MT_TAG2, "Recall2", sTankName, lifetime);
 				MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Recall2", LANG_SERVER, sTankName, lifetime);

@@ -886,7 +886,7 @@ void vCloud(int tank, int pos = -1)
 
 	if (g_esCloudCache[tank].g_iCloudMessage == 1)
 	{
-		char sTankName[33];
+		char sTankName[64];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Cloud", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Cloud", LANG_SERVER, sTankName);
@@ -962,7 +962,7 @@ void vCloudReset2(int tank)
 
 	if (g_esCloudCache[tank].g_iCloudMessage == 1)
 	{
-		char sTankName[33];
+		char sTankName[64];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Cloud2", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Cloud2", LANG_SERVER, sTankName);

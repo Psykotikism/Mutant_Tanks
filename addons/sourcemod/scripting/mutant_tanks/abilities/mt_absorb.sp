@@ -1051,7 +1051,7 @@ void vAbsorb(int tank, int pos = -1)
 
 	if (g_esAbsorbCache[tank].g_iAbsorbMessage == 1)
 	{
-		char sTankName[33];
+		char sTankName[64];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Absorb", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Absorb", LANG_SERVER, sTankName);
@@ -1120,7 +1120,7 @@ void vAbsorbReset2(int tank)
 
 	if (g_esAbsorbCache[tank].g_iAbsorbMessage == 1)
 	{
-		char sTankName[33];
+		char sTankName[64];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Absorb2", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Absorb2", LANG_SERVER, sTankName);

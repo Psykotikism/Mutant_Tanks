@@ -1155,7 +1155,7 @@ void vIceHit(int survivor, int tank, float random, float chance, int enabled, in
 
 				if (g_esIceCache[tank].g_iIceMessage & messages)
 				{
-					char sTankName[33];
+					char sTankName[64];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Ice", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Ice", LANG_SERVER, sTankName, survivor);

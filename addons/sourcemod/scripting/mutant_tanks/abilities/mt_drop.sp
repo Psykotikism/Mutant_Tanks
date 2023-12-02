@@ -1086,7 +1086,7 @@ void vDropWeapon(int tank, int value, float random, int pos = -1)
 
 			if (iCount > 0 && g_esDropCache[tank].g_iDropMessage == 1)
 			{
-				char sTankName[33];
+				char sTankName[64];
 				MT_GetTankName(tank, sTankName);
 				MT_PrintToChatAll("%s %t", MT_TAG2, "Drop", sTankName);
 				MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Drop", LANG_SERVER, sTankName);
@@ -1107,7 +1107,7 @@ void vDropWeapon(int tank, int value, float random, int pos = -1)
 
 			if (iCount > 0 && g_esDropCache[tank].g_iDropMessage == 1)
 			{
-				char sTankName[33];
+				char sTankName[64];
 				MT_GetTankName(tank, sTankName);
 				MT_PrintToChatAll("%s %t", MT_TAG2, "Drop2", sTankName);
 				MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Drop2", LANG_SERVER, sTankName);

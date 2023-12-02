@@ -915,7 +915,7 @@ void vSplash(int tank, int pos = -1)
 
 	if (g_esSplashCache[tank].g_iSplashMessage == 1)
 	{
-		char sTankName[33];
+		char sTankName[64];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Splash", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Splash", LANG_SERVER, sTankName);
@@ -995,7 +995,7 @@ void vSplashReset2(int tank)
 
 	if (g_esSplashCache[tank].g_iSplashMessage == 1)
 	{
-		char sTankName[33];
+		char sTankName[64];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Splash2", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Splash2", LANG_SERVER, sTankName);

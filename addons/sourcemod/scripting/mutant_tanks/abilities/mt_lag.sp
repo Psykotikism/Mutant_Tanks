@@ -1090,7 +1090,7 @@ void vLagHit(int survivor, int tank, float random, float chance, int enabled, in
 
 				if (g_esLagCache[tank].g_iLagMessage & messages)
 				{
-					char sTankName[33];
+					char sTankName[64];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Lag", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Lag", LANG_SERVER, sTankName, survivor);

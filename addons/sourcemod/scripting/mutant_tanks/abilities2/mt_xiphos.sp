@@ -578,7 +578,7 @@ void vXiphos(int attacker, int victim, float damage, bool tank)
 	int iFlag = tank ? MT_XIPHOS_TANK : MT_XIPHOS_SURVIVOR;
 	if (g_esXiphosCache[iTank].g_iXiphosMessage & iFlag)
 	{
-		char sTankName[33];
+		char sTankName[64];
 		MT_GetTankName(iTank, sTankName);
 
 		switch (tank)

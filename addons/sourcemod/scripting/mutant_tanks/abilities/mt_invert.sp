@@ -1115,7 +1115,7 @@ void vInvertHit(int survivor, int tank, float random, float chance, int enabled,
 
 				if (g_esInvertCache[tank].g_iInvertMessage & messages)
 				{
-					char sTankName[33];
+					char sTankName[64];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Invert", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Invert", LANG_SERVER, sTankName, survivor);

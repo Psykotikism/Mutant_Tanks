@@ -1309,7 +1309,7 @@ void vMedic(int tank, int pos = -1)
 
 	if (g_esMedicCache[tank].g_iMedicMessage == 1)
 	{
-		char sTankName[33];
+		char sTankName[64];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Medic", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Medic", LANG_SERVER, sTankName);
@@ -1407,7 +1407,7 @@ void vMedic4(int special, int tank, int duration)
 
 	if (g_esMedicCache[tank].g_iMedicMessage == 1)
 	{
-		char sTankName[33], sInfectedName[33];
+		char sTankName[64], sInfectedName[33];
 		MT_GetTankName(tank, sTankName);
 		if (MT_IsTankSupported(special, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 		{
@@ -1478,7 +1478,7 @@ void vMedicRockBreak2(int tank, int rock, float random, int pos = -1)
 
 		if (g_esMedicCache[tank].g_iMedicMessage & MT_MESSAGE_SPECIAL)
 		{
-			char sTankName[33];
+			char sTankName[64];
 			MT_GetTankName(tank, sTankName);
 			MT_PrintToChatAll("%s %t", MT_TAG2, "Medic2", sTankName);
 			MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Medic2", LANG_SERVER, sTankName);
@@ -1522,7 +1522,7 @@ void vMedicReset2(int tank)
 
 	if (g_esMedicCache[tank].g_iMedicMessage == 1)
 	{
-		char sTankName[33];
+		char sTankName[64];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Medic4", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Medic4", LANG_SERVER, sTankName);

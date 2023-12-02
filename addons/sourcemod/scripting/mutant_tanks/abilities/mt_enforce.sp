@@ -1155,7 +1155,7 @@ void vEnforceHit(int survivor, int tank, float random, float chance, int enabled
 
 				if (g_esEnforceCache[tank].g_iEnforceMessage & messages)
 				{
-					char sTankName[33];
+					char sTankName[64];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Enforce", sTankName, survivor, (g_esEnforcePlayer[survivor].g_iSlot + 1));
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Enforce", LANG_SERVER, sTankName, survivor, (g_esEnforcePlayer[survivor].g_iSlot + 1));

@@ -1415,7 +1415,7 @@ void vHypnoHit(int survivor, int tank, float random, float chance, int enabled, 
 
 				if (g_esHypnoCache[tank].g_iHypnoMessage & messages)
 				{
-					char sTankName[33];
+					char sTankName[64];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Hypno", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Hypno", LANG_SERVER, sTankName, survivor);

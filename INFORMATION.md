@@ -361,8 +361,14 @@
 			// Note: The cycle resets when there are no unique Mutant Tank types left to choose from.
 			// Note: Do not change this setting if you are unsure of how it works.
 			// --
-			// 0/"disabled"/"false"/"off"/"no": OFF
-			// 1/"enabled"/"true"/"on"/"yes": ON
+			// Minimum: 0
+			// Maximum: 4
+			// --
+			// 0: OFF
+			// 1: Cycle through every available type randomly before reusing the same types on each map.
+			// 2: Cycle through every available type randomly before reusing the same types on each campaign.
+			// 3: Cycle through every available type in order before reusing the same types on each map.
+			// 4: Cycle through every available type in order before reusing the same types on each campaign.
 			"Cycle Types"				"0"
 
 			// All Mutant Tanks can spawn.
@@ -7725,6 +7731,18 @@
 			// "forever" - 99999 seconds
 			"Acid Cooldown"				"0"
 
+			// The Mutant Tank's acid puddles do this much damage.
+			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.0 (OFF)
+			// Maximum: 99999.0
+			// --
+			// Keywords:
+			// "weakest" - 1.0 damage
+			// "strongest" - 99999.0 damage
+			"Acid Damage"				"3.0"
+
 			// Enable the Mutant Tank's upon-death range ability.
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
@@ -7888,6 +7906,7 @@
 				"Ability Sight"				"0"
 				"Acid Chance"				"33.3"
 				"Acid Cooldown"				"0"
+				"Acid Damage"				"3.0"
 				"Acid Death"				"1"
 				"Acid Death Chance"			"33.3"
 				"Acid Death Range"			"200.0"
@@ -9179,6 +9198,18 @@
 			// "forever" - 99999 seconds
 			"Bomb Cooldown"				"0"
 
+			// The Mutant Tank's bomb explosions do this much damage.
+			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.0 (OFF)
+			// Maximum: 99999.0
+			// --
+			// Keywords:
+			// "weakest" - 1.0 damage
+			// "strongest" - 99999.0 damage
+			"Bomb Damage"				"3.0"
+
 			// Enable the Mutant Tank's upon-death range ability.
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
@@ -9341,6 +9372,7 @@
 				"Ability Sight"				"0"
 				"Bomb Chance"				"33.3"
 				"Bomb Cooldown"				"0"
+				"Bomb Damage"				"3.0"
 				"Bomb Death"				"1"
 				"Bomb Death Chance"			"33.3"
 				"Bomb Death Range"			"200.0"
@@ -12921,6 +12953,18 @@
 			// "forever" - 99999 seconds
 			"Fire Cooldown"				"0"
 
+			// The Mutant Tank's fires do this much damage.
+			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.0 (OFF)
+			// Maximum: 99999.0
+			// --
+			// Keywords:
+			// "weakest" - 1.0 damage
+			// "strongest" - 99999.0 damage
+			"Fire Damage"				"3.0"
+
 			// Enable the Mutant Tank's upon-death range ability.
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
@@ -13083,6 +13127,7 @@
 				"Ability Sight"				"0"
 				"Fire Chance"				"33.3"
 				"Fire Cooldown"				"0"
+				"Fire Damage"				"3.0"
 				"Fire Death"				"1"
 				"Fire Death Chance"			"33.3"
 				"Fire Death Range"			"200.0"

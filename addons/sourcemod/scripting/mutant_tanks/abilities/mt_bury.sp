@@ -1261,7 +1261,7 @@ void vBuryHit(int survivor, int tank, float random, float chance, int enabled, i
 
 				if (g_esBuryCache[tank].g_iBuryMessage & messages)
 				{
-					char sTankName[33];
+					char sTankName[64];
 					float flDepth = ((g_esBuryCache[tank].g_flBuryHeight * 0.75) / 12.0);
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Bury", sTankName, survivor, flDepth);

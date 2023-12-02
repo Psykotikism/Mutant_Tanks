@@ -1081,7 +1081,7 @@ void vSmite(int tank, int survivor, int messages, int flags)
 
 	if (g_esSmiteCache[tank].g_iSmiteMessage & messages)
 	{
-		char sTankName[33];
+		char sTankName[64];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Smite", sTankName, survivor);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Smite", LANG_SERVER, sTankName, survivor);

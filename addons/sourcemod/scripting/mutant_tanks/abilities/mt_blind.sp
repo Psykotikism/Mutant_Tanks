@@ -1244,9 +1244,11 @@ void vBlindHit(int survivor, int tank, float random, float chance, int enabled, 
 					if (flDuration > 0.0)
 					{
 						DataPack dpStopBlind;
-						CreateDataTimer((flDuration + 1.0), tTimerStopBlind, dpStopBlind, TIMER_FLAG_NO_MAPCHANGE);
+						CreateDataTimer(0.1, tTimerStopBlind, dpStopBlind, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 						dpStopBlind.WriteCell(iSurvivorId);
 						dpStopBlind.WriteCell(iTankId);
+						dpStopBlind.WriteFloat(GetGameTime());
+						dpStopBlind.WriteFloat(flDuration + 1.0);
 						dpStopBlind.WriteCell(messages);
 					}
 
@@ -1261,7 +1263,7 @@ void vBlindHit(int survivor, int tank, float random, float chance, int enabled, 
 
 				if (g_esBlindCache[tank].g_iBlindMessage & messages)
 				{
-					char sTankName[33];
+					char sTankName[64];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Blind", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Blind", LANG_SERVER, sTankName, survivor);
@@ -1406,7 +1408,7 @@ void tTimerBlindCombo2(Handle timer, DataPack pack)
 	}
 }
 
-void tTimerStopBlind(Handle timer, DataPack pack)
+Action tTimerStopBlind(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1416,7 +1418,7 @@ void tTimerStopBlind(Handle timer, DataPack pack)
 		g_esBlindPlayer[iSurvivor].g_bAffected = false;
 		g_esBlindPlayer[iSurvivor].g_iOwner = -1;
 
-		return;
+		return Plugin_Stop;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
@@ -1427,18 +1429,32 @@ void tTimerStopBlind(Handle timer, DataPack pack)
 
 		vBlind(iSurvivor, 0);
 
-		return;
+		return Plugin_Stop;
 	}
 
-	g_esBlindPlayer[iSurvivor].g_bAffected = false;
-	g_esBlindPlayer[iSurvivor].g_iOwner = -1;
-
-	vBlind(iSurvivor, 0);
-
+	float flCurrentTime = pack.ReadFloat(), flDuration = pack.ReadFloat();
 	int iMessage = pack.ReadCell();
-	if (g_esBlindCache[iTank].g_iBlindMessage & iMessage)
+	if ((flCurrentTime + flDuration) < GetGameTime())
 	{
-		MT_PrintToChatAll("%s %t", MT_TAG2, "Blind2", iSurvivor);
-		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Blind2", LANG_SERVER, iSurvivor);
+		g_esBlindPlayer[iSurvivor].g_bAffected = false;
+		g_esBlindPlayer[iSurvivor].g_iOwner = -1;
+
+		vBlind(iSurvivor, 0);
+
+		if (g_esBlindCache[iTank].g_iBlindMessage & iMessage)
+		{
+			MT_PrintToChatAll("%s %t", MT_TAG2, "Blind2", iSurvivor);
+			MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Blind2", LANG_SERVER, iSurvivor);
+		}
+
+		return Plugin_Stop;
 	}
+
+	switch (bIsVisibleToPlayer(iTank, iSurvivor, g_esBlindCache[iTank].g_iBlindSight))
+	{
+		case true: vBlind(iSurvivor, g_esBlindCache[iTank].g_iBlindIntensity);
+		case false: vBlind(iSurvivor, 0);
+	}
+
+	return Plugin_Continue;
 }

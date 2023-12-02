@@ -1141,7 +1141,7 @@ void vSplatterHit(int survivor, int tank, float random, float chance, int enable
 
 				if (g_esSplatterCache[tank].g_iSplatterMessage & messages)
 				{
-					char sTankName[33];
+					char sTankName[64];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Splatter", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Splatter", LANG_SERVER, sTankName, survivor);

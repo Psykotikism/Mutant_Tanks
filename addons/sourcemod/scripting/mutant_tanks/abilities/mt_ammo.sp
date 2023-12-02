@@ -1089,7 +1089,7 @@ void vAmmoHit(int survivor, int tank, float random, float chance, int enabled, i
 
 				if (g_esAmmoCache[tank].g_iAmmoMessage & messages)
 				{
-					char sTankName[33];
+					char sTankName[64];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Ammo", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Ammo", LANG_SERVER, sTankName, survivor);

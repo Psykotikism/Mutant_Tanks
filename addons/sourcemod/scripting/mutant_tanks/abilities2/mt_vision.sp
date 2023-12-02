@@ -1108,7 +1108,7 @@ void vVisionHit(int survivor, int tank, float random, float chance, int enabled,
 
 				if (g_esVisionCache[tank].g_iVisionMessage & messages)
 				{
-					char sTankName[33];
+					char sTankName[64];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Vision", sTankName, survivor, g_esVisionCache[tank].g_iVisionFOV);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Vision", LANG_SERVER, sTankName, survivor, g_esVisionCache[tank].g_iVisionFOV);

@@ -1180,7 +1180,7 @@ void vAimlessHit(int survivor, int tank, float random, float chance, int enabled
 
 				if (g_esAimlessCache[tank].g_iAimlessMessage & messages)
 				{
-					char sTankName[33];
+					char sTankName[64];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Aimless", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Aimless", LANG_SERVER, sTankName, survivor);

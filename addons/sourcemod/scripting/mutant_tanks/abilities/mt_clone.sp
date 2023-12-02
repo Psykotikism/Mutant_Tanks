@@ -1080,7 +1080,7 @@ void vClone(int tank)
 
 						if (g_esCloneCache[tank].g_iCloneMessage == 1)
 						{
-							char sTankName[33];
+							char sTankName[64];
 							MT_GetTankName(tank, sTankName);
 							MT_PrintToChatAll("%s %t", MT_TAG2, "Clone", sTankName);
 							MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Clone", LANG_SERVER, sTankName);
