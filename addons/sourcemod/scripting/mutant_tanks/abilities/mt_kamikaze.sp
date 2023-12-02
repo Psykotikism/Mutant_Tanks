@@ -1069,7 +1069,7 @@ void vKamikazeHit(int survivor, int tank, float random, float chance, int enable
 
 					if (g_esKamikazeCache[tank].g_iKamikazeMessage & messages)
 					{
-						char sTankName[33];
+						char sTankName[64];
 						MT_GetTankName(tank, sTankName);
 						MT_PrintToChatAll("%s %t", MT_TAG2, "Kamikaze", sTankName, survivor);
 						MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Kamikaze", LANG_SERVER, sTankName, survivor);

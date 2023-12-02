@@ -875,7 +875,7 @@ void vPanic(int tank, int pos = -1)
 
 	if (g_esPanicCache[tank].g_iPanicMessage == 1)
 	{
-		char sTankName[33];
+		char sTankName[64];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Panic", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Panic", LANG_SERVER, sTankName);
@@ -1034,7 +1034,7 @@ Action tTimerPanic(Handle timer, DataPack pack)
 
 	if (g_esPanicCache[iTank].g_iPanicMessage == 1)
 	{
-		char sTankName[33];
+		char sTankName[64];
 		MT_GetTankName(iTank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Panic2", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Panic2", LANG_SERVER, sTankName);

@@ -842,7 +842,7 @@ void vRespawn(int tank)
 
 			if (g_esRespawnCache[tank].g_iRespawnMessage == 1)
 			{
-				char sTankName[33];
+				char sTankName[64];
 				MT_GetTankName(tank, sTankName);
 				MT_PrintToChatAll("%s %t", MT_TAG2, "Respawn", sTankName);
 				MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Respawn", LANG_SERVER, sTankName);

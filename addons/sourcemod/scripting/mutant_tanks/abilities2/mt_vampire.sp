@@ -342,7 +342,7 @@ Action OnVampireTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 					if (g_esVampireCache[attacker].g_iVampireMessage == 1)
 					{
-						char sTankName[33];
+						char sTankName[64];
 						MT_GetTankName(attacker, sTankName);
 						MT_PrintToChatAll("%s %t", MT_TAG2, "Vampire", sTankName, victim);
 						MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Vampire", LANG_SERVER, sTankName, victim);

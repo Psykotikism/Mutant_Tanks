@@ -1253,7 +1253,7 @@ Action tTimerThrow(Handle timer, DataPack pack)
 
 					if (g_esThrowCache[iTank].g_iThrowMessage & MT_MESSAGE_MELEE)
 					{
-						char sTankName[33];
+						char sTankName[64];
 						MT_GetTankName(iTank, sTankName);
 						MT_PrintToChatAll("%s %t", MT_TAG2, "Throw", sTankName);
 						MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Throw", LANG_SERVER, sTankName);
@@ -1344,7 +1344,7 @@ Action tTimerThrow(Handle timer, DataPack pack)
 
 						if (g_esThrowCache[iTank].g_iThrowMessage & MT_MESSAGE_RANGE)
 						{
-							char sTankName[33];
+							char sTankName[64];
 							MT_GetTankName(iTank, sTankName);
 							MT_PrintToChatAll("%s %t", MT_TAG2, "Throw2", sTankName);
 							MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Throw2", LANG_SERVER, sTankName);
@@ -1364,7 +1364,7 @@ Action tTimerThrow(Handle timer, DataPack pack)
 
 				if (g_esThrowCache[iTank].g_iThrowMessage & MT_MESSAGE_SPECIAL)
 				{
-					char sTankName[33];
+					char sTankName[64];
 					MT_GetTankName(iTank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Throw3", sTankName);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Throw3", LANG_SERVER, sTankName);
@@ -1399,7 +1399,7 @@ Action tTimerThrow(Handle timer, DataPack pack)
 
 						if (g_esThrowCache[iTank].g_iThrowMessage & MT_MESSAGE_SPECIAL2)
 						{
-							char sTankName[33];
+							char sTankName[64];
 							MT_GetTankName(iTank, sTankName);
 							MT_PrintToChatAll("%s %t", MT_TAG2, "Throw4", sTankName);
 							MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Throw4", LANG_SERVER, sTankName);

@@ -904,7 +904,7 @@ void vWitch(int tank, int pos = -1)
 
 		if (g_esWitchCache[tank].g_iWitchMessage == 1)
 		{
-			char sTankName[33];
+			char sTankName[64];
 			MT_GetTankName(tank, sTankName);
 			MT_PrintToChatAll("%s %t", MT_TAG2, "Witch", sTankName);
 			MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Witch", LANG_SERVER, sTankName);

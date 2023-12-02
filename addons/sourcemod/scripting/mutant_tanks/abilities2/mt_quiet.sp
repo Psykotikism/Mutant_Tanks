@@ -1158,7 +1158,7 @@ void vQuietHit(int survivor, int tank, float random, float chance, int enabled, 
 
 				if (g_esQuietCache[tank].g_iQuietMessage & messages)
 				{
-					char sTankName[33];
+					char sTankName[64];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Quiet", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Quiet", LANG_SERVER, sTankName, survivor);
@@ -1305,7 +1305,7 @@ void tTimerStopQuiet(Handle timer, DataPack pack)
 	int iMessage = pack.ReadCell();
 	if (g_esQuietCache[iTank].g_iQuietMessage & iMessage)
 	{
-		char sTankName[33];
+		char sTankName[64];
 		MT_GetTankName(iTank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Quiet2", sTankName, iSurvivor);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Quiet2", LANG_SERVER, sTankName, iSurvivor);

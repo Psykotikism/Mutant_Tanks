@@ -1479,7 +1479,7 @@ void tTimerRocketDetonate(Handle timer, DataPack pack)
 		int iMessage = pack.ReadCell();
 		if (g_esRocketCache[iTank].g_iRocketMessage & iMessage)
 		{
-			char sTankName[33];
+			char sTankName[64];
 			MT_GetTankName(iTank, sTankName);
 			MT_PrintToChatAll("%s %t", MT_TAG2, "Rocket", sTankName, iSurvivor);
 			MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Rocket", LANG_SERVER, sTankName, iSurvivor);

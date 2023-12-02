@@ -983,7 +983,7 @@ void vMinion(int tank)
 
 						if (g_esMinionCache[tank].g_iMinionMessage == 1)
 						{
-							char sTankName[33];
+							char sTankName[64];
 							MT_GetTankName(tank, sTankName);
 							MT_PrintToChatAll("%s %t", MT_TAG2, "Minion", sTankName);
 							MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Minion", LANG_SERVER, sTankName);

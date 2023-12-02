@@ -1250,7 +1250,7 @@ void vGunner2(int tank)
 
 		if (g_esGunnerCache[tank].g_iGunnerMessage == 1)
 		{
-			char sTankName[33];
+			char sTankName[64];
 			MT_GetTankName(tank, sTankName);
 			MT_PrintToChatAll("%s %t", MT_TAG2, "Gunner", sTankName);
 			MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Gunner", LANG_SERVER, sTankName);
@@ -1657,7 +1657,7 @@ void vGunnerReset2(int tank)
 
 	if (g_esGunnerCache[tank].g_iGunnerMessage == 1)
 	{
-		char sTankName[33];
+		char sTankName[64];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Gunner2", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Gunner2", LANG_SERVER, sTankName);

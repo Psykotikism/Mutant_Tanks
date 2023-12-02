@@ -972,7 +972,7 @@ void vLaser2(int tank, int survivor, int target, float range, int pos = -1)
 
 	if (g_esLaserCache[tank].g_iLaserMessage == 1)
 	{
-		char sTankName[33];
+		char sTankName[64];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Laser", sTankName, target);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Laser", LANG_SERVER, sTankName, target);
@@ -1033,7 +1033,7 @@ void vLaserReset2(int tank)
 
 	if (g_esLaserCache[tank].g_iLaserMessage == 1)
 	{
-		char sTankName[33];
+		char sTankName[64];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Laser2", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Laser2", LANG_SERVER, sTankName);

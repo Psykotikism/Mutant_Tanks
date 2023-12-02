@@ -1295,7 +1295,7 @@ void vJumpAbility(int tank, bool main, float random = 0.0, int pos = -1)
 
 					if (g_esJumpCache[tank].g_iJumpMessage & MT_MESSAGE_SPECIAL)
 					{
-						char sTankName[33];
+						char sTankName[64];
 						MT_GetTankName(tank, sTankName);
 						MT_PrintToChatAll("%s %t", MT_TAG2, "Jump3", sTankName);
 						MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Jump3", LANG_SERVER, sTankName);
@@ -1380,7 +1380,7 @@ void vJumpHit(int survivor, int tank, float random, float chance, int enabled, i
 
 				if (g_esJumpCache[tank].g_iJumpMessage & messages)
 				{
-					char sTankName[33];
+					char sTankName[64];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Jump", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Jump", LANG_SERVER, sTankName, survivor);

@@ -1017,7 +1017,7 @@ void vZombie(int tank, int pos = -1)
 
 	if (g_esZombieCache[tank].g_iZombieMessage == 1)
 	{
-		char sTankName[33];
+		char sTankName[64];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Zombie", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Zombie", LANG_SERVER, sTankName);
@@ -1176,7 +1176,7 @@ Action tTimerZombie(Handle timer, DataPack pack)
 
 	if (g_esZombieCache[iTank].g_iZombieMessage == 1)
 	{
-		char sTankName[33];
+		char sTankName[64];
 		MT_GetTankName(iTank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Zombie2", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Zombie2", LANG_SERVER, sTankName);

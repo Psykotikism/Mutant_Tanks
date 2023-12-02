@@ -983,7 +983,7 @@ void vRock(int tank, int pos = -1)
 
 	if (g_esRockCache[tank].g_iRockMessage == 1)
 	{
-		char sTankName[33];
+		char sTankName[64];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Rock", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Rock", LANG_SERVER, sTankName);
@@ -1101,7 +1101,7 @@ void vRockReset2(int tank)
 
 	if (g_esRockCache[tank].g_iRockMessage == 1)
 	{
-		char sTankName[33];
+		char sTankName[64];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Rock2", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Rock2", LANG_SERVER, sTankName);

@@ -1200,7 +1200,7 @@ void vElectricHit(int survivor, int tank, float random, float chance, int enable
 
 				if (g_esElectricCache[tank].g_iElectricMessage & messages)
 				{
-					char sTankName[33];
+					char sTankName[64];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Electric", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Electric", LANG_SERVER, sTankName, survivor);

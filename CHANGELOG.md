@@ -38,6 +38,7 @@
 - Fly: Fixed the ability not resetting when Infected with the ability change their Mutant types.
 - Hypno: Fixed shield not spawning all the time.
 - Ice: Fixed survivors not reverting back to their original colors when the ability ends.
+- Item: Fixed survivors receiving items while incapacitated.
 - Jump: Fixed the survivor victims of Smokers, Hunters, Jockeys, and Chargers not jumping with them.
 - Meteor:
 	- Fixed meteors giving players accelerated velocity when standing on them.
@@ -130,6 +131,7 @@
 #### Translations
 - Updated English translations.
 - Updated Russian translations. (Thanks to `JustMadMan`!)
+- Name and note translations in the `mutant_tanks_names.phrases.txt` file can now be associated with each Mutant Infected's name set by the `* Name` settings for better user experience.
 
 #### Natives & Forwards
 - Added the `MT_GetRecordedTankType` native.
@@ -140,8 +142,12 @@
 - Added more options for all the `Ability Sight` settings.
 - Improved the `Ability Sight` setting for several abilities.
 - Mutant Infected will now reserve their abilities for engaging with survivors for a more tactical approach. [Requires `Actions`.]
-- Acid: Added more options for the `Acid Death` setting. (Requested by `Unfellowed`.)
-- Bomb: Added more options for the `Bomb Death` setting. (Requested by `Unfellowed`.)
+- Acid:
+	- Added the `Acid Damage` setting.
+	- Added more options for the `Acid Death` setting. (Requested by `Unfellowed`.)
+- Bomb:
+	- Added the `Bomb Damage` setting.
+	- Added more options for the `Bomb Death` setting. (Requested by `Unfellowed`.)
 - Bury: The ability no longer affects pinned survivors.
 - Choke:
 	- The ability no longer affects pinned survivors.
@@ -156,7 +162,9 @@
 	- Added the `Immunity Flags` setting.
 	- Changed the minimum value of the `Fast Speed` setting from `3.0` to `-1.0`.
 	- Changed the maximum value of the `Fast Speed` setting from `10.0` to `99.0`.
-- Fire: Added more options for the `Fire Death` setting. (Requested by `Unfellowed`.)
+- Fire:
+	- Added the `Fire Damage` setting.
+	- Added more options for the `Fire Death` setting. (Requested by `Unfellowed`.)
 - Fling: Added more options for the `Fling Death` setting. (Requested by `Unfellowed`.)
 - Hypno: Changed the default value of the `Hypno View` setting from `1` to `0`.
 - Kamikaze:

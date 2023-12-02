@@ -1213,7 +1213,7 @@ void vChokeHit(int survivor, int tank, float random, float chance, int enabled, 
 
 				if (g_esChokeCache[tank].g_iChokeMessage & messages)
 				{
-					char sTankName[33];
+					char sTankName[64];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Choke", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Choke", LANG_SERVER, sTankName, survivor);
@@ -1282,6 +1282,7 @@ void vChokeReset2(int survivor, int tank, int messages)
 	SetEntityMoveType(survivor, MOVETYPE_WALK);
 	SetEntityGravity(survivor, 3.0);
 	TeleportEntity(survivor, .velocity = view_as<float>({0.0, 0.0, -300.0}));
+	CreateTimer(1.5, tTimerChokeGravityReset, GetClientUserId(survivor), TIMER_FLAG_NO_MAPCHANGE);
 
 	int iWeapon = 0;
 	for (int iSlot = 0; iSlot < 5; iSlot++)
@@ -1447,4 +1448,15 @@ Action tTimerChokeDamage(Handle timer, DataPack pack)
 	}
 
 	return Plugin_Continue;
+}
+
+void tTimerChokeGravityReset(Handle timer, int userid)
+{
+	int iSurvivor = GetClientOfUserId(userid);
+	if (!bIsSurvivor(iSurvivor))
+	{
+		return;
+	}
+
+	SetEntityGravity(iSurvivor, 1.0);
 }

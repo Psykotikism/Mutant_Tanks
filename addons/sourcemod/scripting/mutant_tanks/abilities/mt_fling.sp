@@ -1205,7 +1205,7 @@ void vFlingHit(int survivor, int tank, float random, float chance, int enabled, 
 				vFling(survivor, tank);
 				vScreenEffect(survivor, tank, g_esFlingCache[tank].g_iFlingEffect, flags);
 
-				char sTankName[33];
+				char sTankName[64];
 				MT_GetTankName(tank, sTankName);
 				if (g_esFlingCache[tank].g_iFlingMessage & messages)
 				{

@@ -1113,7 +1113,7 @@ void vPimpHit(int survivor, int tank, float random, float chance, int enabled, i
 
 				if (g_esPimpCache[tank].g_iPimpMessage & messages)
 				{
-					char sTankName[33];
+					char sTankName[64];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Pimp", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Pimp", LANG_SERVER, sTankName, survivor);

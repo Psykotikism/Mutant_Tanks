@@ -395,7 +395,7 @@ Action OnUndeadTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 
 				if (g_esUndeadCache[victim].g_iUndeadMessage == 1)
 				{
-					char sTankName[33];
+					char sTankName[64];
 					MT_GetTankName(victim, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Undead2", sTankName);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Undead2", LANG_SERVER, sTankName);
@@ -826,7 +826,7 @@ void vUndead(int tank)
 
 		if (g_esUndeadCache[tank].g_iUndeadMessage == 1)
 		{
-			char sTankName[33];
+			char sTankName[64];
 			MT_GetTankName(tank, sTankName);
 			MT_PrintToChatAll("%s %t", MT_TAG2, "Undead", sTankName);
 			MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Undead", LANG_SERVER, sTankName);

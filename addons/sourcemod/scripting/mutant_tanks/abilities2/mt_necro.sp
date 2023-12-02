@@ -989,7 +989,7 @@ void vNecro(int tank, float pos[3], const char[] type)
 
 		if (g_esNecroCache[tank].g_iNecroMessage == 1)
 		{
-			char sTankName[33];
+			char sTankName[64];
 			MT_GetTankName(tank, sTankName);
 			MT_PrintToChatAll("%s %t", MT_TAG2, "Necro", sTankName);
 			MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Necro", LANG_SERVER, sTankName);

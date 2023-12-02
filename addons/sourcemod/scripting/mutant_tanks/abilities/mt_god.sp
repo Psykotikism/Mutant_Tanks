@@ -970,7 +970,7 @@ void vGod(int tank, int pos = -1)
 
 	if (g_esGodCache[tank].g_iGodMessage == 1)
 	{
-		char sTankName[33];
+		char sTankName[64];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "God", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "God", LANG_SERVER, sTankName);
@@ -1033,7 +1033,7 @@ void vGodReset2(int tank)
 
 	if (g_esGodCache[tank].g_iGodMessage == 1)
 	{
-		char sTankName[33];
+		char sTankName[64];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "God2", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "God2", LANG_SERVER, sTankName);

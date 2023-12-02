@@ -1175,10 +1175,13 @@ void vSlowHit(int survivor, int tank, float random, float chance, int enabled, i
 				if (flDuration > 0.0)
 				{
 					DataPack dpStopSlow;
-					CreateDataTimer(flDuration, tTimerStopSlow, dpStopSlow, TIMER_FLAG_NO_MAPCHANGE);
+					CreateDataTimer(0.1, tTimerStopSlow, dpStopSlow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 					dpStopSlow.WriteCell(GetClientUserId(survivor));
 					dpStopSlow.WriteCell(GetClientUserId(tank));
+					dpStopSlow.WriteFloat(GetGameTime());
+					dpStopSlow.WriteFloat(flDuration);
 					dpStopSlow.WriteCell(messages);
+					dpStopSlow.WriteFloat(flSpeed);
 				}
 
 				vScreenEffect(survivor, tank, g_esSlowCache[tank].g_iSlowEffect, flags);
@@ -1186,7 +1189,7 @@ void vSlowHit(int survivor, int tank, float random, float chance, int enabled, i
 
 				if (g_esSlowCache[tank].g_iSlowMessage & messages)
 				{
-					char sTankName[33];
+					char sTankName[64];
 					float flPercent = (flSpeed * 100.0);
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Slow", sTankName, survivor, flPercent);
@@ -1312,7 +1315,7 @@ void tTimerSlowCombo2(Handle timer, DataPack pack)
 	}
 }
 
-void tTimerStopSlow(Handle timer, DataPack pack)
+Action tTimerStopSlow(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1322,7 +1325,7 @@ void tTimerStopSlow(Handle timer, DataPack pack)
 		g_esSlowPlayer[iSurvivor].g_bAffected = false;
 		g_esSlowPlayer[iSurvivor].g_iOwner = -1;
 
-		return;
+		return Plugin_Stop;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
@@ -1330,15 +1333,38 @@ void tTimerStopSlow(Handle timer, DataPack pack)
 	{
 		vStopSlow(iSurvivor);
 
-		return;
+		return Plugin_Stop;
 	}
 
-	vStopSlow(iSurvivor);
-
+	float flCurrentTime = pack.ReadFloat(), flDuration = pack.ReadFloat();
 	int iMessage = pack.ReadCell();
-	if (g_esSlowCache[iTank].g_iSlowMessage & iMessage)
+	if ((flCurrentTime + flDuration) < GetGameTime())
 	{
-		MT_PrintToChatAll("%s %t", MT_TAG2, "Slow2", iSurvivor);
-		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Slow2", LANG_SERVER, iSurvivor);
+		vStopSlow(iSurvivor);
+
+		if (g_esSlowCache[iTank].g_iSlowMessage & iMessage)
+		{
+			MT_PrintToChatAll("%s %t", MT_TAG2, "Slow2", iSurvivor);
+			MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Slow2", LANG_SERVER, iSurvivor);
+		}
+
+		return Plugin_Stop;
 	}
+
+	switch (bIsVisibleToPlayer(iTank, iSurvivor, g_esSlowCache[iTank].g_iSlowSight))
+	{
+		case true:
+		{
+			float flSpeed = pack.ReadFloat();
+			vSlow(iTank, iSurvivor, flSpeed);
+		}
+		case false:
+		{
+			SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", (g_bLaggedMovementInstalled ? L4D_LaggedMovement(iSurvivor, 1.0, true) : 1.0));
+			SetEntPropFloat(iSurvivor, Prop_Send, "m_flStepSize", MT_STEP_DEFAULTSIZE);
+			EmitSoundToAll(SOUND_DRIP, iSurvivor);
+		}
+	}
+
+	return Plugin_Continue;
 }

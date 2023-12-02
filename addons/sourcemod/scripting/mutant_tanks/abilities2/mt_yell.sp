@@ -1007,7 +1007,7 @@ void vYell(int tank, int pos = -1)
 
 	if (g_esYellCache[tank].g_iYellMessage == 1)
 	{
-		char sTankName[33];
+		char sTankName[64];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Yell", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Yell", LANG_SERVER, sTankName);
@@ -1082,7 +1082,7 @@ void vYellReset2(int tank)
 
 	if (g_esYellCache[tank].g_iYellMessage == 1)
 	{
-		char sTankName[33];
+		char sTankName[64];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Yell2", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Yell2", LANG_SERVER, sTankName);

@@ -1349,7 +1349,7 @@ void vHealAbility(int tank, bool main, float random = 0.0, int pos = -1)
 
 					if (g_esHealCache[tank].g_iHealMessage & MT_MESSAGE_SPECIAL)
 					{
-						char sTankName[33];
+						char sTankName[64];
 						MT_GetTankName(tank, sTankName);
 						MT_PrintToChatAll("%s %t", MT_TAG2, "Heal2", sTankName);
 						MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Heal2", LANG_SERVER, sTankName);
@@ -1434,7 +1434,7 @@ void vHealHit(int survivor, int tank, float random, float chance, int enabled, i
 
 				if (g_esHealCache[tank].g_iHealMessage & messages)
 				{
-					char sTankName[33];
+					char sTankName[64];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Heal", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Heal", LANG_SERVER, sTankName, survivor);
@@ -1500,7 +1500,7 @@ void vHealReset2(int tank)
 
 	if (g_esHealCache[tank].g_iHealMessage & MT_MESSAGE_SPECIAL)
 	{
-		char sTankName[33];
+		char sTankName[64];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Heal3", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Heal3", LANG_SERVER, sTankName);

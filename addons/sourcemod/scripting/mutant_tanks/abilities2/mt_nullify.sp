@@ -1105,7 +1105,7 @@ void vNullifyHit(int survivor, int tank, float random, float chance, int enabled
 
 				if (g_esNullifyCache[tank].g_iNullifyMessage & messages)
 				{
-					char sTankName[33];
+					char sTankName[64];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Nullify", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Nullify", LANG_SERVER, sTankName, survivor);

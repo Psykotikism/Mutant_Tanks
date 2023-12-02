@@ -515,7 +515,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	{
 		if (g_esGhostCache[client].g_iGhostMessage & MT_MESSAGE_SPECIAL)
 		{
-			char sTankName[33];
+			char sTankName[64];
 			MT_GetTankName(client, sTankName);
 			MT_PrintToChatAll("%s %t", MT_TAG2, "Ghost3", sTankName);
 			MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Ghost3", LANG_SERVER, sTankName);
@@ -1415,7 +1415,7 @@ void vGhostAbility(int tank, bool main, float random = 0.0, int pos = -1)
 
 					if (g_esGhostCache[tank].g_iGhostMessage & MT_MESSAGE_SPECIAL)
 					{
-						char sTankName[33];
+						char sTankName[64];
 						MT_GetTankName(tank, sTankName);
 						MT_PrintToChatAll("%s %t", MT_TAG2, "Ghost2", sTankName);
 						MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Ghost2", LANG_SERVER, sTankName);
@@ -1503,7 +1503,7 @@ void vGhostHit(int survivor, int tank, float random, float chance, int enabled, 
 
 				if (g_esGhostCache[tank].g_iGhostMessage & messages)
 				{
-					char sTankName[33];
+					char sTankName[64];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Ghost", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Ghost", LANG_SERVER, sTankName, survivor);

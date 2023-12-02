@@ -1451,7 +1451,7 @@ void vWarp2(int tank, int other)
 
 	if (g_esWarpCache[tank].g_iWarpMessage & MT_MESSAGE_SPECIAL)
 	{
-		char sTankName[33];
+		char sTankName[64];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Warp3", sTankName, other);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Warp3", LANG_SERVER, sTankName, other);
@@ -1533,7 +1533,7 @@ void vWarpAbility(int tank, bool main, float random = 0.0, int pos = -1)
 
 					if (g_esWarpCache[tank].g_iWarpMessage & MT_MESSAGE_SPECIAL)
 					{
-						char sTankName[33];
+						char sTankName[64];
 						MT_GetTankName(tank, sTankName);
 						MT_PrintToChatAll("%s %t", MT_TAG2, "Warp2", sTankName);
 						MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Warp2", LANG_SERVER, sTankName);
@@ -1573,7 +1573,7 @@ void vWarpHit(int survivor, int tank, float random, float chance, int enabled, i
 				}
 
 				bool bTeleport = false;
-				char sTankName[33];
+				char sTankName[64];
 				float flCurrentOrigin[3], flCurrentAngles[3];
 				int iCooldown = -1;
 				for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
@@ -1741,7 +1741,7 @@ void vWarpRockBreak2(int tank, int rock, float random, int pos = -1)
 
 		if (g_esWarpCache[tank].g_iWarpMessage & MT_MESSAGE_SPECIAL)
 		{
-			char sTankName[33];
+			char sTankName[64];
 			MT_GetTankName(tank, sTankName);
 			MT_PrintToChatAll("%s %t", MT_TAG2, "Warp4", sTankName);
 			MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Warp4", LANG_SERVER, sTankName);

@@ -823,7 +823,7 @@ void vTrack(int tank, int rock)
 
 	if (g_esTrackCache[tank].g_iTrackMessage == 1)
 	{
-		char sTankName[33];
+		char sTankName[64];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Track", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Track", LANG_SERVER, sTankName);
