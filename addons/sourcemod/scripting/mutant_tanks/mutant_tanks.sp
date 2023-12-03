@@ -26763,7 +26763,7 @@ bool bIsDayConfigFound(char[] buffer, int size)
  * 1 - 0 - no versus cooldown, visual effects, voice pitch
  * 2 - 1 - immune to abilities, access to all tanks
  * 4 - 2 - loadout on initial spawn, voice pitch
- * 8 - 3 - all rewards/effects, laser sight, blink and recall
+ * 8 - 3 - all rewards/effects, laser sight, blink and recall, fast dash
  * 16 - 4 - damage boost/resistance, less punch force, no friendly-fire, ammo regen, custom pipe bomb duration, recoil dampener, blaze health, no nudge
  * 32 - 5 - speed boost, jump height, auto-revive, life leech, bunny hop, midair dash, door push, cluster bombs, sticky grenades
  * 64 - 6 - no shove penalty, fast shove/attack rate/action durations, fast recovery, full health when healing/reviving, ammo regen, ladder actions, bunny hop

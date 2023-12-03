@@ -1280,9 +1280,9 @@ void vChokeReset2(int survivor, int tank, int messages)
 	g_esChokePlayer[survivor].g_iOwner = -1;
 
 	SetEntityMoveType(survivor, MOVETYPE_WALK);
-	SetEntityGravity(survivor, 3.0);
+	SetEntityGravity(survivor, 5.0);
 	TeleportEntity(survivor, .velocity = view_as<float>({0.0, 0.0, -300.0}));
-	CreateTimer(1.5, tTimerChokeGravityReset, GetClientUserId(survivor), TIMER_FLAG_NO_MAPCHANGE);
+	CreateTimer(1.25, tTimerChokeGravityReset, GetClientUserId(survivor), TIMER_FLAG_NO_MAPCHANGE);
 
 	int iWeapon = 0;
 	for (int iSlot = 0; iSlot < 5; iSlot++)
