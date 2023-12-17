@@ -883,6 +883,7 @@ enum struct esGeneral
 	int g_iKillMessage;
 	int g_iLadderActionsReward[4];
 	int g_iLadyKillerReward[4];
+	int g_iLaserSightReward[4];
 	int g_iLauncher;
 	int g_iLifeLeechReward[4];
 	int g_iLimitExtras;
@@ -1091,6 +1092,7 @@ enum struct esSpecific
 	int g_iKillMessage;
 	int g_iLadderActionsReward[4];
 	int g_iLadyKillerReward[4];
+	int g_iLaserSightReward[4];
 	int g_iLifeLeechReward[4];
 	int g_iMaxType;
 	int g_iMedicalCutsReward[4];
@@ -1467,6 +1469,8 @@ enum struct esPlayer
 	int g_iLadyKillerCount;
 	int g_iLadyKillerLimit;
 	int g_iLadyKillerReward[4];
+	int g_iLaserSight;
+	int g_iLaserSightReward[4];
 	int g_iLastButtons;
 	int g_iLastFireAttacker;
 	int g_iLifeLeech;
@@ -1724,6 +1728,7 @@ enum struct esTeammate
 	int g_iKillMessage;
 	int g_iLadderActionsReward[4];
 	int g_iLadyKillerReward[4];
+	int g_iLaserSightReward[4];
 	int g_iLifeLeechReward[4];
 	int g_iMedicalCutsReward[4];
 	int g_iMeleeHitMode;
@@ -1942,6 +1947,7 @@ enum struct esTank
 	int g_iKillMessage;
 	int g_iLadderActionsReward[4];
 	int g_iLadyKillerReward[4];
+	int g_iLaserSightReward[4];
 	int g_iLifeLeechReward[4];
 	int g_iLightColor[4];
 	int g_iMedicalCutsReward[4];
@@ -2162,6 +2168,7 @@ enum struct esSpecial
 	int g_iKillMessage;
 	int g_iLadderActionsReward[4];
 	int g_iLadyKillerReward[4];
+	int g_iLaserSightReward[4];
 	int g_iLifeLeechReward[4];
 	int g_iMedicalCutsReward[4];
 	int g_iMeleeHitMode;
@@ -2375,6 +2382,7 @@ enum struct esCache
 	int g_iKillMessage;
 	int g_iLadderActionsReward[4];
 	int g_iLadyKillerReward[4];
+	int g_iLaserSightReward[4];
 	int g_iLifeLeechReward[4];
 	int g_iLightColor[4];
 	int g_iMedicalCutsReward[4];
@@ -10112,6 +10120,7 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 					g_esPlayer[survivor].g_iGhostBullets = 0;
 					g_esPlayer[survivor].g_iHollowpointAmmo = 0;
 					g_esPlayer[survivor].g_iInextinguishableFire = 0;
+					g_esPlayer[survivor].g_iLaserSight = 0;
 					g_esPlayer[survivor].g_iMeleeRange = 0;
 					g_esPlayer[survivor].g_iRecoilDampener = 0;
 					g_esPlayer[survivor].g_iSledgehammerRounds = 0;
@@ -10491,6 +10500,7 @@ void vSetupRewardCounts(int survivor, int tank, int priority, int type)
 				g_esPlayer[survivor].g_iGhostBullets = g_esCache[tank].g_iGhostBulletsReward[priority];
 				g_esPlayer[survivor].g_iHollowpointAmmo = g_esCache[tank].g_iHollowpointAmmoReward[priority];
 				g_esPlayer[survivor].g_iInextinguishableFire = g_esCache[tank].g_iInextinguishableFireReward[priority];
+				g_esPlayer[survivor].g_iLaserSight = g_esCache[tank].g_iLaserSightReward[priority];
 				g_esPlayer[survivor].g_iMeleeRange = g_esCache[tank].g_iMeleeRangeReward[priority];
 				g_esPlayer[survivor].g_iRecoilDampener = g_esCache[tank].g_iRecoilDampenerReward[priority];
 				g_esPlayer[survivor].g_iSledgehammerRounds = g_esCache[tank].g_iSledgehammerRoundsReward[priority];
@@ -10510,6 +10520,7 @@ void vSetupRewardCounts(int survivor, int tank, int priority, int type)
 				g_esPlayer[survivor].g_iGhostBullets = g_esCache[tank].g_iGhostBulletsReward[priority];
 				g_esPlayer[survivor].g_iHollowpointAmmo = g_esCache[tank].g_iHollowpointAmmoReward[priority];
 				g_esPlayer[survivor].g_iInextinguishableFire = g_esCache[tank].g_iInextinguishableFireReward[priority];
+				g_esPlayer[survivor].g_iLaserSight = g_esCache[tank].g_iLaserSightReward[priority];
 				g_esPlayer[survivor].g_iMeleeRange += g_esCache[tank].g_iMeleeRangeReward[priority];
 				g_esPlayer[survivor].g_iMeleeRange = iClamp(g_esPlayer[survivor].g_iMeleeRange);
 				g_esPlayer[survivor].g_iRecoilDampener = g_esCache[tank].g_iRecoilDampenerReward[priority];
@@ -11016,6 +11027,7 @@ void vCopySurvivorStats(int oldSurvivor, int newSurvivor)
 	g_esPlayer[newSurvivor].g_iInextinguishableFire = g_esPlayer[oldSurvivor].g_iInextinguishableFire;
 	g_esPlayer[newSurvivor].g_iInfiniteAmmo = g_esPlayer[oldSurvivor].g_iInfiniteAmmo;
 	g_esPlayer[newSurvivor].g_iLadderActions = g_esPlayer[oldSurvivor].g_iLadderActions;
+	g_esPlayer[newSurvivor].g_iLaserSight = g_esPlayer[oldSurvivor].g_iLaserSight;
 	g_esPlayer[newSurvivor].g_iLifeLeech = g_esPlayer[oldSurvivor].g_iLifeLeech;
 	g_esPlayer[newSurvivor].g_iMedicalCuts = g_esPlayer[oldSurvivor].g_iMedicalCuts;
 	g_esPlayer[newSurvivor].g_iMeleeRange = g_esPlayer[oldSurvivor].g_iMeleeRange;
@@ -11330,7 +11342,7 @@ void vRefillSurvivorHealth(int survivor)
 
 void vRefreshLaserSight(int survivor)
 {
-	if (g_esPlayer[survivor].g_bCustomLaser || bIsDeveloper(survivor, 3) || (g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_DAMAGEBOOST))
+	if (g_esPlayer[survivor].g_bCustomLaser || bIsDeveloper(survivor, 3) || ((g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[survivor].g_iLaserSight == 1))
 	{
 		if (!g_bSecondGame)
 		{
@@ -11434,6 +11446,7 @@ void vResetSurvivorStats(int survivor, bool all)
 	g_esPlayer[survivor].g_iInextinguishableFire = 0;
 	g_esPlayer[survivor].g_iInfiniteAmmo = 0;
 	g_esPlayer[survivor].g_iLadderActions = 0;
+	g_esPlayer[survivor].g_iLaserSight = 0;
 	g_esPlayer[survivor].g_iLifeLeech = 0;
 	g_esPlayer[survivor].g_iMedicalCuts = 0;
 	g_esPlayer[survivor].g_iMeleeRange = 0;
@@ -13527,6 +13540,8 @@ void vMutateTank(int tank, int specType, int type, bool blind)
 		}
 	}
 
+	vFixPlayerPosition(tank);
+
 	g_esGeneral.g_bBlindType = false;
 	g_esGeneral.g_bForceSpawned = false;
 	g_esGeneral.g_iChosenType = 0;
@@ -15320,6 +15335,8 @@ void vCacheSettings(int tank)
 					g_esCache[tank].g_iLadderActionsReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iLadderActionsReward[iPos], g_esPlayer[tank].g_iLadderActionsReward[iPos], g_esCache[tank].g_iLadderActionsReward[iPos], g_esCache[tank].g_iLadderActionsReward[iPos], 1);
 					g_esCache[tank].g_iLadyKillerReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iLadyKillerReward[iPos], g_esTank[iType].g_iLadyKillerReward[iPos], g_esSpecific.g_iLadyKillerReward[iPos], g_esGeneral.g_iLadyKillerReward[iPos], 1);
 					g_esCache[tank].g_iLadyKillerReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iLadyKillerReward[iPos], g_esPlayer[tank].g_iLadyKillerReward[iPos], g_esCache[tank].g_iLadyKillerReward[iPos], g_esCache[tank].g_iLadyKillerReward[iPos], 1);
+					g_esCache[tank].g_iLaserSightReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iLaserSightReward[iPos], g_esTank[iType].g_iLaserSightReward[iPos], g_esSpecific.g_iLaserSightReward[iPos], g_esGeneral.g_iLaserSightReward[iPos], 1);
+					g_esCache[tank].g_iLaserSightReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iLaserSightReward[iPos], g_esPlayer[tank].g_iLaserSightReward[iPos], g_esCache[tank].g_iLaserSightReward[iPos], g_esCache[tank].g_iLaserSightReward[iPos], 1);
 					g_esCache[tank].g_iLifeLeechReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iLifeLeechReward[iPos], g_esTank[iType].g_iLifeLeechReward[iPos], g_esSpecific.g_iLifeLeechReward[iPos], g_esGeneral.g_iLifeLeechReward[iPos], 1);
 					g_esCache[tank].g_iLifeLeechReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iLifeLeechReward[iPos], g_esPlayer[tank].g_iLifeLeechReward[iPos], g_esCache[tank].g_iLifeLeechReward[iPos], g_esCache[tank].g_iLifeLeechReward[iPos], 1);
 					g_esCache[tank].g_flLoopingVoicelineInterval[iPos] = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flLoopingVoicelineInterval[iPos], g_esTank[iType].g_flLoopingVoicelineInterval[iPos], g_esSpecific.g_flLoopingVoicelineInterval[iPos], g_esGeneral.g_flLoopingVoicelineInterval[iPos], 1);
@@ -15566,6 +15583,7 @@ void vCacheSettings(int tank)
 					g_esCache[tank].g_iInfiniteAmmoReward[iPos] = 0;
 					g_esCache[tank].g_iLadderActionsReward[iPos] = 0;
 					g_esCache[tank].g_iLadyKillerReward[iPos] = 0;
+					g_esCache[tank].g_iLaserSightReward[iPos] = 0;
 					g_esCache[tank].g_iLifeLeechReward[iPos] = 0;
 					g_esCache[tank].g_flLoopingVoicelineInterval[iPos] = 0.0;
 					g_esCache[tank].g_iMedicalCutsReward[iPos] = 0;
@@ -15902,6 +15920,8 @@ void vCacheSettings(int tank)
 					g_esCache[tank].g_iLadderActionsReward[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iLadderActionsReward[iPos], g_esCache[tank].g_iLadderActionsReward[iPos], 1);
 					g_esCache[tank].g_iLadyKillerReward[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iLadyKillerReward[iPos], g_esGeneral.g_iLadyKillerReward[iPos], 1);
 					g_esCache[tank].g_iLadyKillerReward[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iLadyKillerReward[iPos], g_esCache[tank].g_iLadyKillerReward[iPos], 1);
+					g_esCache[tank].g_iLaserSightReward[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iLaserSightReward[iPos], g_esGeneral.g_iLaserSightReward[iPos], 1);
+					g_esCache[tank].g_iLaserSightReward[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iLaserSightReward[iPos], g_esCache[tank].g_iLaserSightReward[iPos], 1);
 					g_esCache[tank].g_iLifeLeechReward[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iLifeLeechReward[iPos], g_esGeneral.g_iLifeLeechReward[iPos], 1);
 					g_esCache[tank].g_iLifeLeechReward[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iLifeLeechReward[iPos], g_esCache[tank].g_iLifeLeechReward[iPos], 1);
 					g_esCache[tank].g_flLoopingVoicelineInterval[iPos] = flGetSettingValue(bAccess, true, g_esTank[iType].g_flLoopingVoicelineInterval[iPos], g_esGeneral.g_flLoopingVoicelineInterval[iPos], 1);
@@ -16174,6 +16194,7 @@ void vCacheSettings(int tank)
 					g_esCache[tank].g_iInfiniteAmmoReward[iPos] = 0;
 					g_esCache[tank].g_iLadderActionsReward[iPos] = 0;
 					g_esCache[tank].g_iLadyKillerReward[iPos] = 0;
+					g_esCache[tank].g_iLaserSightReward[iPos] = 0;
 					g_esCache[tank].g_iLifeLeechReward[iPos] = 0;
 					g_esCache[tank].g_flLoopingVoicelineInterval[iPos] = 0.0;
 					g_esCache[tank].g_iMedicalCutsReward[iPos] = 0;
@@ -16663,6 +16684,7 @@ void vReadSpecialSettings(int type, int mode, const char[] subsection, const cha
 					g_esSpecial[iIndex].g_iInfiniteAmmoReward[iPos] = iGetClampedValue(key, "InfiniteAmmoReward", "Infinite Ammo Reward", "Infinite_Ammo_Reward", "infammo", g_esSpecial[iIndex].g_iInfiniteAmmoReward[iPos], sSet[iPos], -1, 31);
 					g_esSpecial[iIndex].g_iLadderActionsReward[iPos] = iGetClampedValue(key, "LadderActionsReward", "Ladder Actions Reward", "Ladder_Action_Reward", "ladderactions", g_esSpecial[iIndex].g_iLadderActionsReward[iPos], sSet[iPos], -1, 1);
 					g_esSpecial[iIndex].g_iLadyKillerReward[iPos] = iGetClampedValue(key, "LadyKillerReward", "Lady Killer Reward", "Lady_Killer_Reward", "ladykiller", g_esSpecial[iIndex].g_iLadyKillerReward[iPos], sSet[iPos], -1, 99999);
+					g_esSpecial[iIndex].g_iLaserSightReward[iPos] = iGetClampedValue(key, "LaserSightReward", "Laser Sight Reward", "Laser_Sight_Reward", "lasersight", g_esSpecial[iIndex].g_iLaserSightReward[iPos], sSet[iPos], -1, 1);
 					g_esSpecial[iIndex].g_iLifeLeechReward[iPos] = iGetClampedValue(key, "LifeLeechReward", "Life Leech Reward", "Life_Leech_Reward", "lifeleech", g_esSpecial[iIndex].g_iLifeLeechReward[iPos], sSet[iPos], -1, MT_MAXHEALTH);
 					g_esSpecial[iIndex].g_iMedicalCutsReward[iPos] = iGetClampedValue(key, "MedicalCutsReward", "Medical Cuts Reward", "Medical_Cuts_Reward", "medcuts", g_esSpecial[iIndex].g_iMedicalCutsReward[iPos], sSet[iPos], -1, 1);
 					g_esSpecial[iIndex].g_iMeleeRangeReward[iPos] = iGetClampedValue(key, "MeleeRangeReward", "Melee Range Reward", "Melee_Range_Reward", "meleerange", g_esSpecial[iIndex].g_iMeleeRangeReward[iPos], sSet[iPos], -1, 99999);
@@ -16943,7 +16965,8 @@ void vReadSpecificSettings(int mode, const char[] section, const char[] subsecti
 					g_esSpecific.g_iInextinguishableFireReward[iPos] = iGetClampedValue(key, "InextinguishableFireReward", "Inextinguishable Fire Reward", "Inextinguishable_Fire_Reward", "inexfire", g_esSpecific.g_iInextinguishableFireReward[iPos], sSet[iPos], -1, 1);
 					g_esSpecific.g_iInfiniteAmmoReward[iPos] = iGetClampedValue(key, "InfiniteAmmoReward", "Infinite Ammo Reward", "Infinite_Ammo_Reward", "infammo", g_esSpecific.g_iInfiniteAmmoReward[iPos], sSet[iPos], -1, 31);
 					g_esSpecific.g_iLadderActionsReward[iPos] = iGetClampedValue(key, "LadderActionsReward", "Ladder Actions Reward", "Ladder_Action_Reward", "ladderactions", g_esSpecific.g_iLadderActionsReward[iPos], sSet[iPos], -1, 1);
-					g_esSpecific.g_iLadyKillerReward[iPos] = iGetClampedValue(key, "LadyKillerReward", "Lady Killer Reward", "Lady_Killer_Reward", "ladykiller", g_esSpecific.g_iLadyKillerReward[iPos], sSet[iPos], -1, 1);
+					g_esSpecific.g_iLadyKillerReward[iPos] = iGetClampedValue(key, "LadyKillerReward", "Lady Killer Reward", "Lady_Killer_Reward", "ladykiller", g_esSpecific.g_iLadyKillerReward[iPos], sSet[iPos], -1, 99999);
+					g_esSpecific.g_iLaserSightReward[iPos] = iGetClampedValue(key, "LaserSightReward", "Laser Sight Reward", "Laser_Sight_Reward", "lasersight", g_esSpecific.g_iLaserSightReward[iPos], sSet[iPos], -1, 1);
 					g_esSpecific.g_iLifeLeechReward[iPos] = iGetClampedValue(key, "LifeLeechReward", "Life Leech Reward", "Life_Leech_Reward", "lifeleech", g_esSpecific.g_iLifeLeechReward[iPos], sSet[iPos], -1, MT_MAXHEALTH);
 					g_esSpecific.g_iMedicalCutsReward[iPos] = iGetClampedValue(key, "MedicalCutsReward", "Medical Cuts Reward", "Medical_Cuts_Reward", "medcuts", g_esSpecific.g_iMedicalCutsReward[iPos], sSet[iPos], -1, 1);
 					g_esSpecific.g_iMeleeRangeReward[iPos] = iGetClampedValue(key, "MeleeRangeReward", "Melee Range Reward", "Melee_Range_Reward", "meleerange", g_esSpecific.g_iMeleeRangeReward[iPos], sSet[iPos], -1, 99999);
@@ -17190,6 +17213,7 @@ void vReadTankSettings(int type, int mode, const char[] subsection, const char[]
 					g_esTank[iIndex].g_iInfiniteAmmoReward[iPos] = iGetClampedValue(key, "InfiniteAmmoReward", "Infinite Ammo Reward", "Infinite_Ammo_Reward", "infammo", g_esTank[iIndex].g_iInfiniteAmmoReward[iPos], sSet[iPos], -1, 31);
 					g_esTank[iIndex].g_iLadderActionsReward[iPos] = iGetClampedValue(key, "LadderActionsReward", "Ladder Actions Reward", "Ladder_Action_Reward", "ladderactions", g_esTank[iIndex].g_iLadderActionsReward[iPos], sSet[iPos], -1, 1);
 					g_esTank[iIndex].g_iLadyKillerReward[iPos] = iGetClampedValue(key, "LadyKillerReward", "Lady Killer Reward", "Lady_Killer_Reward", "ladykiller", g_esTank[iIndex].g_iLadyKillerReward[iPos], sSet[iPos], -1, 99999);
+					g_esTank[iIndex].g_iLaserSightReward[iPos] = iGetClampedValue(key, "LaserSightReward", "Laser Sight Reward", "Laser_Sight_Reward", "lasersight", g_esTank[iIndex].g_iLaserSightReward[iPos], sSet[iPos], -1, 1);
 					g_esTank[iIndex].g_iLifeLeechReward[iPos] = iGetClampedValue(key, "LifeLeechReward", "Life Leech Reward", "Life_Leech_Reward", "lifeleech", g_esTank[iIndex].g_iLifeLeechReward[iPos], sSet[iPos], -1, MT_MAXHEALTH);
 					g_esTank[iIndex].g_iMedicalCutsReward[iPos] = iGetClampedValue(key, "MedicalCutsReward", "Medical Cuts Reward", "Medical_Cuts_Reward", "medcuts", g_esTank[iIndex].g_iMedicalCutsReward[iPos], sSet[iPos], -1, 1);
 					g_esTank[iIndex].g_iMeleeRangeReward[iPos] = iGetClampedValue(key, "MeleeRangeReward", "Melee Range Reward", "Melee_Range_Reward", "meleerange", g_esTank[iIndex].g_iMeleeRangeReward[iPos], sSet[iPos], -1, 99999);
@@ -17518,7 +17542,8 @@ void vReadTeammateSettings(int special, int mode, const char[] subsection, const
 				g_esTeammate[special].g_iInextinguishableFireReward[iPos] = iGetClampedValue(key, "InextinguishableFireReward", "Inextinguishable Fire Reward", "Inextinguishable_Fire_Reward", "inexfire", g_esTeammate[special].g_iInextinguishableFireReward[iPos], sSet[iPos], -1, 1);
 				g_esTeammate[special].g_iInfiniteAmmoReward[iPos] = iGetClampedValue(key, "InfiniteAmmoReward", "Infinite Ammo Reward", "Infinite_Ammo_Reward", "infammo", g_esTeammate[special].g_iInfiniteAmmoReward[iPos], sSet[iPos], -1, 31);
 				g_esTeammate[special].g_iLadderActionsReward[iPos] = iGetClampedValue(key, "LadderActionsReward", "Ladder Actions Reward", "Ladder_Action_Reward", "ladderactions", g_esTeammate[special].g_iLadderActionsReward[iPos], sSet[iPos], -1, 1);
-				g_esTeammate[special].g_iLadyKillerReward[iPos] = iGetClampedValue(key, "LadyKillerReward", "Lady Killer Reward", "Lady_Killer_Reward", "ladykiller", g_esTeammate[special].g_iLadyKillerReward[iPos], sSet[iPos], -1, 1);
+				g_esTeammate[special].g_iLadyKillerReward[iPos] = iGetClampedValue(key, "LadyKillerReward", "Lady Killer Reward", "Lady_Killer_Reward", "ladykiller", g_esTeammate[special].g_iLadyKillerReward[iPos], sSet[iPos], -1, 99999);
+				g_esTeammate[special].g_iLaserSightReward[iPos] = iGetClampedValue(key, "LaserSightReward", "Laser Sight Reward", "Laser_Sight_Reward", "lasersight", g_esTeammate[special].g_iLaserSightReward[iPos], sSet[iPos], -1, 1);
 				g_esTeammate[special].g_iLifeLeechReward[iPos] = iGetClampedValue(key, "LifeLeechReward", "Life Leech Reward", "Life_Leech_Reward", "lifeleech", g_esTeammate[special].g_iLifeLeechReward[iPos], sSet[iPos], -1, MT_MAXHEALTH);
 				g_esTeammate[special].g_iMedicalCutsReward[iPos] = iGetClampedValue(key, "MedicalCutsReward", "Medical Cuts Reward", "Medical_Cuts_Reward", "medcuts", g_esTeammate[special].g_iMedicalCutsReward[iPos], sSet[iPos], -1, 1);
 				g_esTeammate[special].g_iMeleeRangeReward[iPos] = iGetClampedValue(key, "MeleeRangeReward", "Melee Range Reward", "Melee_Range_Reward", "meleerange", g_esTeammate[special].g_iMeleeRangeReward[iPos], sSet[iPos], -1, 99999);
@@ -17913,7 +17938,8 @@ void vSetTankSettings(int mode, const char[] section, const char[] subsection, c
 						g_esGeneral.g_iInextinguishableFireReward[iPos] = iGetClampedValue(key, "InextinguishableFireReward", "Inextinguishable Fire Reward", "Inextinguishable_Fire_Reward", "inexfire", g_esGeneral.g_iInextinguishableFireReward[iPos], sSet[iPos], -1, 1);
 						g_esGeneral.g_iInfiniteAmmoReward[iPos] = iGetClampedValue(key, "InfiniteAmmoReward", "Infinite Ammo Reward", "Infinite_Ammo_Reward", "infammo", g_esGeneral.g_iInfiniteAmmoReward[iPos], sSet[iPos], -1, 31);
 						g_esGeneral.g_iLadderActionsReward[iPos] = iGetClampedValue(key, "LadderActionsReward", "Ladder Actions Reward", "Ladder_Action_Reward", "ladderactions", g_esGeneral.g_iLadderActionsReward[iPos], sSet[iPos], -1, 1);
-						g_esGeneral.g_iLadyKillerReward[iPos] = iGetClampedValue(key, "LadyKillerReward", "Lady Killer Reward", "Lady_Killer_Reward", "ladykiller", g_esGeneral.g_iLadyKillerReward[iPos], sSet[iPos], -1, 1);
+						g_esGeneral.g_iLadyKillerReward[iPos] = iGetClampedValue(key, "LadyKillerReward", "Lady Killer Reward", "Lady_Killer_Reward", "ladykiller", g_esGeneral.g_iLadyKillerReward[iPos], sSet[iPos], -1, 99999);
+						g_esGeneral.g_iLaserSightReward[iPos] = iGetClampedValue(key, "LaserSightReward", "Laser Sight Reward", "Laser_Sight_Reward", "lasersight", g_esGeneral.g_iLaserSightReward[iPos], sSet[iPos], -1, 1);
 						g_esGeneral.g_iLifeLeechReward[iPos] = iGetClampedValue(key, "LifeLeechReward", "Life Leech Reward", "Life_Leech_Reward", "lifeleech", g_esGeneral.g_iLifeLeechReward[iPos], sSet[iPos], -1, MT_MAXHEALTH);
 						g_esGeneral.g_iMedicalCutsReward[iPos] = iGetClampedValue(key, "MedicalCutsReward", "Medical Cuts Reward", "Medical_Cuts_Reward", "medcuts", g_esGeneral.g_iMedicalCutsReward[iPos], sSet[iPos], -1, 1);
 						g_esGeneral.g_iMeleeRangeReward[iPos] = iGetClampedValue(key, "MeleeRangeReward", "Melee Range Reward", "Melee_Range_Reward", "meleerange", g_esGeneral.g_iMeleeRangeReward[iPos], sSet[iPos], -1, 99999);
@@ -18236,7 +18262,8 @@ void vSetTankSettings(int mode, const char[] section, const char[] subsection, c
 								g_esPlayer[iPlayer].g_iInextinguishableFireReward[iPos] = iGetClampedValue(key, "InextinguishableFireReward", "Inextinguishable Fire Reward", "Inextinguishable_Fire_Reward", "inexfire", g_esPlayer[iPlayer].g_iInextinguishableFireReward[iPos], sSet[iPos], -1, 1);
 								g_esPlayer[iPlayer].g_iInfiniteAmmoReward[iPos] = iGetClampedValue(key, "InfiniteAmmoReward", "Infinite Ammo Reward", "Infinite_Ammo_Reward", "infammo", g_esPlayer[iPlayer].g_iInfiniteAmmoReward[iPos], sSet[iPos], -1, 31);
 								g_esPlayer[iPlayer].g_iLadderActionsReward[iPos] = iGetClampedValue(key, "LadderActionsReward", "Ladder Actions Reward", "Ladder_Action_Reward", "ladderactions", g_esPlayer[iPlayer].g_iLadderActionsReward[iPos], sSet[iPos], -1, 1);
-								g_esPlayer[iPlayer].g_iLadyKillerReward[iPos] = iGetClampedValue(key, "LadyKillerReward", "Lady Killer Reward", "Lady_Killer_Reward", "ladykiller", g_esPlayer[iPlayer].g_iLadyKillerReward[iPos], sSet[iPos], -1, 1);
+								g_esPlayer[iPlayer].g_iLadyKillerReward[iPos] = iGetClampedValue(key, "LadyKillerReward", "Lady Killer Reward", "Lady_Killer_Reward", "ladykiller", g_esPlayer[iPlayer].g_iLadyKillerReward[iPos], sSet[iPos], -1, 99999);
+								g_esPlayer[iPlayer].g_iLaserSightReward[iPos] = iGetClampedValue(key, "LaserSightReward", "Laser Sight Reward", "Laser_Sight_Reward", "lasersight", g_esPlayer[iPlayer].g_iLaserSightReward[iPos], sSet[iPos], -1, 1);
 								g_esPlayer[iPlayer].g_iLifeLeechReward[iPos] = iGetClampedValue(key, "LifeLeechReward", "Life Leech Reward", "Life_Leech_Reward", "lifeleech", g_esPlayer[iPlayer].g_iLifeLeechReward[iPos], sSet[iPos], -1, MT_MAXHEALTH);
 								g_esPlayer[iPlayer].g_iMedicalCutsReward[iPos] = iGetClampedValue(key, "MedicalCutsReward", "Medical Cuts Reward", "Medical_Cuts_Reward", "medcuts", g_esPlayer[iPlayer].g_iMedicalCutsReward[iPos], sSet[iPos], -1, 1);
 								g_esPlayer[iPlayer].g_iMeleeRangeReward[iPos] = iGetClampedValue(key, "MeleeRangeReward", "Melee Range Reward", "Melee_Range_Reward", "meleerange", g_esPlayer[iPlayer].g_iMeleeRangeReward[iPos], sSet[iPos], -1, 99999);
@@ -19871,6 +19898,7 @@ void SMCParseStart_Main(SMCParser smc)
 				g_esGeneral.g_iInfiniteAmmoReward[iPos] = 31;
 				g_esGeneral.g_iLadderActionsReward[iPos] = 1;
 				g_esGeneral.g_iLadyKillerReward[iPos] = 1;
+				g_esGeneral.g_iLaserSightReward[iPos] = 1;
 				g_esGeneral.g_iLifeLeechReward[iPos] = 1;
 				g_esGeneral.g_flLoopingVoicelineInterval[iPos] = 10.0;
 				g_esGeneral.g_iMedicalCutsReward[iPos] = 1;
@@ -20006,6 +20034,7 @@ void SMCParseStart_Main(SMCParser smc)
 				g_esSpecific.g_iInfiniteAmmoReward[iPos] = -1;
 				g_esSpecific.g_iLadderActionsReward[iPos] = -1;
 				g_esSpecific.g_iLadyKillerReward[iPos] = -1;
+				g_esSpecific.g_iLaserSightReward[iPos] = -1;
 				g_esSpecific.g_iLifeLeechReward[iPos] = -1;
 				g_esSpecific.g_flLoopingVoicelineInterval[iPos] = -1.0;
 				g_esSpecific.g_iMedicalCutsReward[iPos] = -1;
@@ -20216,6 +20245,7 @@ void SMCParseStart_Main(SMCParser smc)
 					g_esTank[iIndex].g_iInfiniteAmmoReward[iPos] = -1;
 					g_esTank[iIndex].g_iLadderActionsReward[iPos] = -1;
 					g_esTank[iIndex].g_iLadyKillerReward[iPos] = -1;
+					g_esTank[iIndex].g_iLaserSightReward[iPos] = -1;
 					g_esTank[iIndex].g_iLifeLeechReward[iPos] = -1;
 					g_esTank[iIndex].g_flLoopingVoicelineInterval[iPos] = -1.0;
 					g_esTank[iIndex].g_iMedicalCutsReward[iPos] = -1;
@@ -20428,6 +20458,7 @@ void SMCParseStart_Main(SMCParser smc)
 					g_esSpecial[iIndex].g_iInfiniteAmmoReward[iPos] = -1;
 					g_esSpecial[iIndex].g_iLadderActionsReward[iPos] = -1;
 					g_esSpecial[iIndex].g_iLadyKillerReward[iPos] = -1;
+					g_esSpecial[iIndex].g_iLaserSightReward[iPos] = -1;
 					g_esSpecial[iIndex].g_iLifeLeechReward[iPos] = -1;
 					g_esSpecial[iIndex].g_flLoopingVoicelineInterval[iPos] = -1.0;
 					g_esSpecial[iIndex].g_iMedicalCutsReward[iPos] = -1;
@@ -20658,6 +20689,7 @@ void SMCParseStart_Main(SMCParser smc)
 					g_esPlayer[iPlayer].g_iInfiniteAmmoReward[iPos] = -1;
 					g_esPlayer[iPlayer].g_iLadderActionsReward[iPos] = -1;
 					g_esPlayer[iPlayer].g_iLadyKillerReward[iPos] = -1;
+					g_esPlayer[iPlayer].g_iLaserSightReward[iPos] = -1;
 					g_esPlayer[iPlayer].g_iLifeLeechReward[iPos] = -1;
 					g_esPlayer[iPlayer].g_flLoopingVoicelineInterval[iPos] = -1.0;
 					g_esPlayer[iPlayer].g_iMedicalCutsReward[iPos] = -1;
@@ -20857,6 +20889,7 @@ void SMCParseStart_Main(SMCParser smc)
 					g_esTeammate[iPlayer].g_iInfiniteAmmoReward[iPos] = -1;
 					g_esTeammate[iPlayer].g_iLadderActionsReward[iPos] = -1;
 					g_esTeammate[iPlayer].g_iLadyKillerReward[iPos] = -1;
+					g_esTeammate[iPlayer].g_iLaserSightReward[iPos] = -1;
 					g_esTeammate[iPlayer].g_iLifeLeechReward[iPos] = -1;
 					g_esTeammate[iPlayer].g_flLoopingVoicelineInterval[iPos] = -1.0;
 					g_esTeammate[iPlayer].g_iMedicalCutsReward[iPos] = -1;
@@ -26410,86 +26443,112 @@ void vGetTranslatedName(char[] buffer, int size, int tank = 0, int type = 0, int
 {
 	int iType = (type > 0) ? type : g_esTank[g_esPlayer[tank].g_iTankType].g_iRealType[0],
 		iSpecType = (tank > 0 && specType <= 0) ? g_esPlayer[tank].g_iInfectedType : specType;
-	vGetTranslatedNoName(buffer, size, iSpecType);
-
-	if (tank > 0 && bIsValidClient(tank, MT_CHECK_FAKECLIENT))
+	if (bIsValidClient(tank, MT_CHECK_FAKECLIENT))
 	{
-		char sPhrase[64], sPhrase2[64], sSteamIDFinal[64], sSpecialName[33];
+		char sName[33];
 
 		switch (iSpecType)
 		{
-			case 1, 2, 3, 4, 5, 6: strcopy(sSpecialName, sizeof sSpecialName, g_sSpecialNames[iSpecType]);
-			default: sSpecialName = "Tank";
+			case 1: strcopy(sName, sizeof sName, g_esTeammate[tank].g_sSmokerName);
+			case 2: strcopy(sName, sizeof sName, g_esTeammate[tank].g_sBoomerName);
+			case 3: strcopy(sName, sizeof sName, g_esTeammate[tank].g_sHunterName);
+			case 4: strcopy(sName, sizeof sName, g_esTeammate[tank].g_sSpitterName);
+			case 5: strcopy(sName, sizeof sName, g_esTeammate[tank].g_sJockeyName);
+			case 6: strcopy(sName, sizeof sName, g_esTeammate[tank].g_sChargerName);
+			default: strcopy(sName, sizeof sName, g_esPlayer[tank].g_sTankName);
 		}
 
-		FormatEx(sPhrase, sizeof sPhrase, "%s %s Name", g_esPlayer[tank].g_sSteamID32, sSpecialName);
-		FormatEx(sPhrase2, sizeof sPhrase2, "%s %s Name", g_esPlayer[tank].g_sSteam3ID, sSpecialName);
-		FormatEx(sSteamIDFinal, sizeof sSteamIDFinal, "%s", (TranslationPhraseExists(sPhrase) ? sPhrase : sPhrase2));
-
-		switch (sSteamIDFinal[0] != '\0' && TranslationPhraseExists(sSteamIDFinal))
+		if (sName[0] != '\0')
 		{
-			case true: strcopy(buffer, size, sSteamIDFinal);
-			case false: vGetTranslatedNoName(buffer, size, iSpecType);
-		}
-	}
-	else if (iType > 0 || tank > 0)
-	{
-		char sSpecialName[64], sName[33];
+			char sPhrase[64], sPhrase2[64], sSteamIDFinal[64], sSpecialName[33];
 
-		switch (iSpecType)
-		{
-			case 1: strcopy(sName, sizeof sName, g_esCache[tank].g_sSmokerName);
-			case 2: strcopy(sName, sizeof sName, g_esCache[tank].g_sBoomerName);
-			case 3: strcopy(sName, sizeof sName, g_esCache[tank].g_sHunterName);
-			case 4: strcopy(sName, sizeof sName, g_esCache[tank].g_sSpitterName);
-			case 5: strcopy(sName, sizeof sName, g_esCache[tank].g_sJockeyName);
-			case 6: strcopy(sName, sizeof sName, g_esCache[tank].g_sChargerName);
-			default: strcopy(sName, sizeof sName, g_esCache[tank].g_sTankName);
-		}
-
-		if (1 <= iSpecType <= 6)
-		{
-			FormatEx(sSpecialName, sizeof sSpecialName, "%s #%i Name", g_sSpecialNames[iSpecType], iType);
-
-			if (sSpecialName[0] != '\0' && !TranslationPhraseExists(sSpecialName))
+			switch (iSpecType)
 			{
-				FormatEx(sSpecialName, sizeof sSpecialName, "%s Name", sName);
+				case 1, 2, 3, 4, 5, 6: strcopy(sSpecialName, sizeof sSpecialName, g_sSpecialNames[iSpecType]);
+				default: sSpecialName = "Tank";
 			}
 
-			if (sSpecialName[0] != '\0' && !TranslationPhraseExists(sSpecialName))
-			{
-				FormatEx(sSpecialName, sizeof sSpecialName, "%s #%i", g_sSpecialNames[iSpecType], iType);
-			}
+			FormatEx(sPhrase, sizeof sPhrase, "%s %s Name", g_esPlayer[tank].g_sSteamID32, sSpecialName);
+			FormatEx(sPhrase2, sizeof sPhrase2, "%s %s Name", g_esPlayer[tank].g_sSteam3ID, sSpecialName);
+			FormatEx(sSteamIDFinal, sizeof sSteamIDFinal, "%s", (TranslationPhraseExists(sPhrase) ? sPhrase : sPhrase2));
 
-			if (sSpecialName[0] != '\0' && !TranslationPhraseExists(sSpecialName))
+			switch (sSteamIDFinal[0] != '\0' && TranslationPhraseExists(sSteamIDFinal))
 			{
-				strcopy(sSpecialName, sizeof sSpecialName, sName);
+				case true: strcopy(buffer, size, sSteamIDFinal);
+				case false: vGetTranslatedNoName(buffer, size, iSpecType);
 			}
 		}
 		else
 		{
-			FormatEx(sSpecialName, sizeof sSpecialName, "Tank #%i Name", iType);
+			vGetTranslatedNoName(buffer, size, iSpecType);
+		}
+	}
+	else
+	{
+		char sName[33];
 
-			if (sSpecialName[0] != '\0' && !TranslationPhraseExists(sSpecialName))
-			{
-				FormatEx(sSpecialName, sizeof sSpecialName, "%s Name", sName);
-			}
-
-			if (sSpecialName[0] != '\0' && !TranslationPhraseExists(sSpecialName))
-			{
-				FormatEx(sSpecialName, sizeof sSpecialName, "Tank #%i", iType);
-			}
-
-			if (sSpecialName[0] != '\0' && !TranslationPhraseExists(sSpecialName))
-			{
-				strcopy(sSpecialName, sizeof sSpecialName, sName);
-			}
+		switch (iSpecType)
+		{
+			case 1: strcopy(sName, sizeof sName, g_esSpecial[iType].g_sSmokerName);
+			case 2: strcopy(sName, sizeof sName, g_esSpecial[iType].g_sBoomerName);
+			case 3: strcopy(sName, sizeof sName, g_esSpecial[iType].g_sHunterName);
+			case 4: strcopy(sName, sizeof sName, g_esSpecial[iType].g_sSpitterName);
+			case 5: strcopy(sName, sizeof sName, g_esSpecial[iType].g_sJockeyName);
+			case 6: strcopy(sName, sizeof sName, g_esSpecial[iType].g_sChargerName);
+			default: strcopy(sName, sizeof sName, g_esTank[iType].g_sTankName);
 		}
 
-		switch (sSpecialName[0] != '\0' && TranslationPhraseExists(sSpecialName))
+		if (sName[0] != '\0')
 		{
-			case true: strcopy(buffer, size, sSpecialName);
-			case false: vGetTranslatedNoName(buffer, size, iSpecType);
+			char sSpecialName[64];
+			if (1 <= iSpecType <= 6)
+			{
+				FormatEx(sSpecialName, sizeof sSpecialName, "%s #%i Name", g_sSpecialNames[iSpecType], iType);
+
+				if (sSpecialName[0] != '\0' && !TranslationPhraseExists(sSpecialName))
+				{
+					FormatEx(sSpecialName, sizeof sSpecialName, "%s Name", sName);
+				}
+
+				if (sSpecialName[0] != '\0' && !TranslationPhraseExists(sSpecialName))
+				{
+					FormatEx(sSpecialName, sizeof sSpecialName, "%s #%i", g_sSpecialNames[iSpecType], iType);
+				}
+
+				if (sSpecialName[0] != '\0' && !TranslationPhraseExists(sSpecialName))
+				{
+					strcopy(sSpecialName, sizeof sSpecialName, sName);
+				}
+			}
+			else
+			{
+				FormatEx(sSpecialName, sizeof sSpecialName, "Tank #%i Name", iType);
+
+				if (sSpecialName[0] != '\0' && !TranslationPhraseExists(sSpecialName))
+				{
+					FormatEx(sSpecialName, sizeof sSpecialName, "%s Name", sName);
+				}
+
+				if (sSpecialName[0] != '\0' && !TranslationPhraseExists(sSpecialName))
+				{
+					FormatEx(sSpecialName, sizeof sSpecialName, "Tank #%i", iType);
+				}
+
+				if (sSpecialName[0] != '\0' && !TranslationPhraseExists(sSpecialName))
+				{
+					strcopy(sSpecialName, sizeof sSpecialName, sName);
+				}
+			}
+
+			switch (sSpecialName[0] != '\0' && TranslationPhraseExists(sSpecialName))
+			{
+				case true: strcopy(buffer, size, sSpecialName);
+				case false: vGetTranslatedNoName(buffer, size, iSpecType);
+			}
+		}
+		else
+		{
+			vGetTranslatedNoName(buffer, size, iSpecType);
 		}
 	}
 }

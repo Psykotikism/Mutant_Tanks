@@ -558,8 +558,8 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 							}
 						}
 					}
-					case MT_COMBO_POSTSPAWN: vPukeRange(tank, 0, 2, random, iPos);
-					case MT_COMBO_UPONDEATH: vPukeRange(tank, 0, 1, random, iPos);
+					case MT_COMBO_POSTSPAWN: vPukeRange(tank, 0, 1, random, iPos);
+					case MT_COMBO_UPONDEATH: vPukeRange(tank, 0, 0, random, iPos);
 				}
 
 				break;
@@ -923,7 +923,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vPukeRange(iTank, 1, 1, GetRandomFloat(0.1, 100.0));
+			vPukeRange(iTank, 1, 0, GetRandomFloat(0.1, 100.0));
 			vRemovePuke(iTank);
 		}
 	}
@@ -932,7 +932,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vPukeRange(iTank, 1, 2, GetRandomFloat(0.1, 100.0));
+			vPukeRange(iTank, 1, 1, GetRandomFloat(0.1, 100.0));
 			vRemovePuke(iTank);
 		}
 	}
@@ -1001,7 +1001,7 @@ void vPukePostTankSpawn(int tank)
 public void MT_OnPostTankSpawn(int tank)
 #endif
 {
-	vPukeRange(tank, 1, 2, GetRandomFloat(0.1, 100.0));
+	vPukeRange(tank, 1, 1, GetRandomFloat(0.1, 100.0));
 }
 
 void vPukeAbility(int tank, float random, int pos = -1)

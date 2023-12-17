@@ -1,11 +1,55 @@
 # Changelog
 
-## Version 9.0 (December 5, 2023)
+## Version 9.1 (February 6, 2024)
 
 ### Bug Fixes
 
+#### Translations
+- Fixed translation errors for Mutant type names. (Thanks to `SpannerV2` and `Mi.Cura` for reporting!)
+
+#### Abilities
+- Acid: Fixed the `Acid Death` setting.
+- Bomb: Fixed the `Bomb Death` setting.
+- Fire: Fixed the `Fire Death` setting.
+- Fling: Fixed the `Fling Death` setting.
+- Puke: Fixed the `Puke Death` setting. (Thanks to `ddd123` and `Mi.Cura` for testing and reporting!)
+- Shake: Fixed the `Shake Death` setting.
+- Shove: Fixed the `Shove Death` setting.
+
+### Changes
+
+#### Core Plugin
+- The core plugin will now attempt to fix Tanks that get stuck when they spawn.
+
+#### Settings
+- Added the `Laser Sight Reward` setting under the `Plugin Settings->Rewards`, `Tank #->Rewards`, and `STEAM_ID->Rewards` sections. (Requested by `ddd123`.)
+
+### Files
+
+#### General
+- The pre-compiled plugins included in the package are:
+	- Compiled without any of the optional dependencies.
+	- Compiled with the `SourceMod 1.12.0.7066` compiler.
+- The plugins can still be compiled with `SourceMod 1.12.0.6985` or higher.
+
+#### Updates
+- Updated config files.
+- Updated include file.
+- Updated updater file.
+
+## Version 9.0 (December 5, 2023)
+<details>
+	<summary>Click to expand!</summary>
+
+### Bug Fixes
+<details>
+	<summary>General</summary>
+
 #### General
 - Fixed translation phrase errors. (Thanks to `SpannerV2` for reporting!)
+</details>
+<details>
+	<summary>Core Plugin</summary>
 
 #### Core Plugin
 - Fixed the issue with unkillable zombies when the plugin is disabled. (Thanks to `bedildewo` for reporting!)
@@ -21,13 +65,22 @@
 - Fixed the issue with no Mutant types being chosen when the `Tank Chance`/`Special Chance` setting is less than `100.0%`. (Thanks to `SpannerV2` for reporting!)
 - Fixed the issue with some Mutant types not showing up due to the `Check Abilities` setting. (Thanks to `SpannerV2` for reporting!)
 - Fixed the `Reward` system giving rewards in some cases while disabled.
+</details>
+<details>
+	<summary>Settings</summary>
 
 #### Settings
 - Fixed several settings not being cached.
 - Fixed the override logic for several settings.
+</details>
+<details>
+	<summary>Natives & Forwards</summary>
 
 #### Natives & Forwards
 - Fixed the `MT_GetSpawnType` native only working for human-controlled Mutants.
+</details>
+<details>
+	<summary>Abilities</summary>
 
 #### Abilities
 - Fixed several abilities' plugins not compiling when used as standalone plugins.
@@ -58,11 +111,14 @@
 	- Fixed the survivor victims of Smokers, Hunters, Jockeys, and Chargers not teleporting with them.
 	- Fixed the Tank never teleporting to its thrown rock when it breaks. (Thanks to `moschinovac` for reporting!)
 	- Fixed players being stuck in the ground after teleporting.
+</details>
 
 ### Changes
+<details>
+	<summary>Core Plugin</summary>
 
 #### Core Plugin
-- The health reward now allows recipients to heal any survivor with their own fires.
+- The health reward now allows recipients to heal any survivor with their own fires, explosions, bullets, and melee hits.
 - The speed boost reward now allows recipients to throw sticky grenades that slow down special infected and mitigate their abilities. (Thanks to `BHaType` for the code!)
 - The damage boost reward now gives recipients laser sights. (Thanks to `Dragokas` for the code!)
 - The attack boost reward now lets recipients shoot rapidly with pistols. (Thanks to `epzminion` for the code!)
@@ -70,9 +126,15 @@
 - The godmode reward now prevents recipients from being nudged by teammates. (Thanks to `Lux` for the code!)
 - Added code from the [`[L4D & L4D2] Late Model Precacher`](https://forums.alliedmods.net/showthread.php?t=337273) plugin.
 - Added code that uses the [`[TF2 & L4D & L4D2] Actions`](https://forums.alliedmods.net/showthread.php?t=336374) extension to track idle Infected. (Thanks to `BHaType` for helping with the code!)
+</details>
+<details>
+	<summary>Commands</summary>
 
 #### Commands
 - The `sm_mt_config` command now only prints to the player's console instead of flooding chat.
+</details>
+<details>
+	<summary>Game Data</summary>
 
 #### Game Data
 - Added detour setups and signatures for the following functions:
@@ -88,6 +150,9 @@
 - Replaced the following functions with the `CBaseAnimating::SelectWeightedSequence` function:
 	- `CTerrorPlayer::SetMainActivity` (L4D1)
 	- `CTerrorPlayer::SelectWeightedSequence` (L4D2)
+</details>
+<details>
+	<summary>Settings</summary>
 
 #### Settings
 - Added the following settings under the `Plugin Settings->General` section:
@@ -127,16 +192,25 @@
 	- `Smoker Extra Health`
 	- `Spitter Extra Health`
 - Added the `Boomette` as a random option for the `Special Model` setting.
+</details>
+<details>
+	<summary>Translations</summary>
 
 #### Translations
 - Updated English translations.
 - Updated Russian translations. (Thanks to `JustMadMan`!)
 - Name and note translations in the `mutant_tanks_names.phrases.txt` file can now be associated with each Mutant Infected's name set by the `* Name` settings for better user experience.
+</details>
+<details>
+	<summary>Natives & Forwards</summary>
 
 #### Natives & Forwards
 - Added the `MT_GetRecordedTankType` native.
 - The `MT_GetTankType` native now has another parameter.
 - The `MT_GetSpawnType` native now has two more parameters.
+</details>
+<details>
+	<summary>Abilities</summary>
 
 #### Abilities
 - Added more options for all the `Ability Sight` settings.
@@ -197,14 +271,20 @@
 - Warp:
 	- Affected survivors are now teleported back to the team when the Mutant Infected dies.
 	- The ability no longer affects pinned survivors.
+</details>
 
 ### Files
+<details>
+	<summary>General</summary>
 
 #### General
 - The pre-compiled plugins included in the package are:
 	- Compiled without any of the optional dependencies.
 	- Compiled with the `SourceMod 1.12.0.7066` compiler.
 - The plugins can still be compiled with `SourceMod 1.12.0.6985` or higher.
+</details>
+<details>
+	<summary>Updates</summary>
 
 #### Updates
 - Updated config files.
@@ -212,6 +292,8 @@
 - Updated include file.
 - Updated translation files.
 - Updated updater file.
+</details>
+</details>
 
 ## Version 8.99 (October 10, 2023)
 <details>
@@ -4496,7 +4578,7 @@
 	<summary>Click to expand!</summary>
 
 1. Improved readability of the source code for each plugin.
-2. Added the `Aimless`, `Choke`, `Cloud`, `Drunk`, and Whirl abilities.
+2. Added the `Aimless`, `Choke`, `Cloud`, `Drunk`, and `Whirl` abilities.
 3. Added new settings for several abilities to handle timer intervals and damage values.
 4. The `Electric`, `Hurt`, and `Splash` abilities now use `SDKHooks_TakeDamage()` to damage players.
 5. The damage settings of the `Electric`, `Hurt`, and `Splash` abilities now accept float values (decimals) instead of int values (whole numbers).
