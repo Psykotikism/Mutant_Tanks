@@ -26443,7 +26443,7 @@ void vGetTranslatedName(char[] buffer, int size, int tank = 0, int type = 0, int
 {
 	int iType = (type > 0) ? type : g_esTank[g_esPlayer[tank].g_iTankType].g_iRealType[0],
 		iSpecType = (tank > 0 && specType <= 0) ? g_esPlayer[tank].g_iInfectedType : specType;
-	if (bIsValidClient(tank, MT_CHECK_FAKECLIENT))
+	if (bIsValidClient(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
 		char sName[33];
 
