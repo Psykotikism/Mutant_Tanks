@@ -22,7 +22,7 @@
 #define MT_AUTHOR "Psyk0tik"
 #define MT_AUTHOR2 "Crasher_3637"
 #define MT_DESCRIPTION "Mutant Tanks enhances the fun and excitement players get from Tank fights by creating a unique experience with every Tank."
-#define MT_VERSION "9.0"
+#define MT_VERSION "9.1"
 #define MT_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 #define MT_URL2 "https://github.com/Psykotikism/Mutant_Tanks"
 

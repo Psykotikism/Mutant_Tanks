@@ -681,8 +681,8 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 							vAcidRockBreak2(tank, weapon, random, iPos);
 						}
 					}
-					case MT_COMBO_POSTSPAWN: vAcidRange(tank, 0, 2, random, iPos);
-					case MT_COMBO_UPONDEATH: vAcidRange(tank, 0, 1, random, iPos);
+					case MT_COMBO_POSTSPAWN: vAcidRange(tank, 0, 1, random, iPos);
+					case MT_COMBO_UPONDEATH: vAcidRange(tank, 0, 0, random, iPos);
 				}
 
 				break;
@@ -1096,7 +1096,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (g_bSecondGame && MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vAcidRange(iTank, 1, 1, GetRandomFloat(0.1, 100.0));
+			vAcidRange(iTank, 1, 0, GetRandomFloat(0.1, 100.0));
 			vRemoveAcid(iTank);
 		}
 	}
@@ -1115,7 +1115,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (g_bSecondGame && MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vAcidRange(iTank, 1, 2, GetRandomFloat(0.1, 100.0));
+			vAcidRange(iTank, 1, 1, GetRandomFloat(0.1, 100.0));
 			vRemoveAcid(iTank);
 		}
 	}
@@ -1194,7 +1194,7 @@ void vAcidPostTankSpawn(int tank)
 public void MT_OnPostTankSpawn(int tank)
 #endif
 {
-	vAcidRange(tank, 1, 2, GetRandomFloat(0.1, 100.0));
+	vAcidRange(tank, 1, 1, GetRandomFloat(0.1, 100.0));
 }
 
 #if defined MT_ABILITIES_MAIN

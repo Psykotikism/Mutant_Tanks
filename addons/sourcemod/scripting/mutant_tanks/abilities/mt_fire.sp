@@ -608,8 +608,8 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 							vFireRockBreak2(tank, weapon, random, iPos);
 						}
 					}
-					case MT_COMBO_POSTSPAWN: vFireRange(tank, 0, 2, random, iPos);
-					case MT_COMBO_UPONDEATH: vFireRange(tank, 0, 1, random, iPos);
+					case MT_COMBO_POSTSPAWN: vFireRange(tank, 0, 1, random, iPos);
+					case MT_COMBO_UPONDEATH: vFireRange(tank, 0, 0, random, iPos);
 				}
 
 				break;
@@ -1009,7 +1009,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vFireRange(iTank, 1, 1, GetRandomFloat(0.1, 100.0));
+			vFireRange(iTank, 1, 0, GetRandomFloat(0.1, 100.0));
 			vRemoveFire(iTank);
 		}
 	}
@@ -1028,7 +1028,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vFireRange(iTank, 1, 2, GetRandomFloat(0.1, 100.0));
+			vFireRange(iTank, 1, 1, GetRandomFloat(0.1, 100.0));
 			vRemoveFire(iTank);
 		}
 	}
@@ -1109,7 +1109,7 @@ void vFirePostTankSpawn(int tank)
 public void MT_OnPostTankSpawn(int tank)
 #endif
 {
-	vFireRange(tank, 1, 2, GetRandomFloat(0.1, 100.0));
+	vFireRange(tank, 1, 1, GetRandomFloat(0.1, 100.0));
 }
 
 #if defined MT_ABILITIES_MAIN

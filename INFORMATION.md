@@ -1498,6 +1498,24 @@
 			// 4th number = Number of bullets to give to assistant killers.
 			"Lady Killer Reward"			"1,1,1,1"
 
+			// Give laser sight as a reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 4
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Give laser sight to killers.
+			// 2nd number = Give laser sight to assistants.
+			// 3rd number = Give laser sight to teammates.
+			// 4th number = Give laser sight to assistant killers.
+			"Laser Sight Reward"			"1,1,1,1"
+
 			// The amount of health to leech per hit as a reward to survivors.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
@@ -2188,6 +2206,7 @@
 				"Jump Height Reward"			"75.0,75.0,75.0,75.0"
 				"Ladder Actions Reward"			"1,1,1,1"
 				"Lady Killer Reward"			"1,1,1,1"
+				"Laser Sight Reward"			"1,1,1,1"
 				"Life Leech Reward"			"1,1,1,1"
 				"Medical Incisions Reward"		"1,1,1,1"
 				"Melee Range Reward"			"100,100,100,100"
@@ -4746,6 +4765,24 @@
 			// 4th number = Number of bullets to give to assistant killers.
 			"Lady Killer Reward"			"0,0,0,0"
 
+			// Give laser sight as a reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 4
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Give laser sight to killers.
+			// 2nd number = Give laser sight to assistants.
+			// 3rd number = Give laser sight to teammates.
+			// 4th number = Give laser sight to assistant killers.
+			"Laser Sight Reward"			"0,0,0,0"
+
 			// The amount of health to leech per hit as a reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
@@ -5436,6 +5473,7 @@
 				"Jump Height Reward"			"0.0,0.0,0.0,0.0"
 				"Ladder Actions Reward"			"0,0,0,0"
 				"Lady Killer Reward"			"0,0,0,0"
+				"Laser Sight Reward"			"0,0,0,0"
 				"Life Leech Reward"			"0,0,0,0"
 				"Medical Incisions Reward"		"0,0,0,0"
 				"Melee Range Reward"			"0,0,0,0"
