@@ -93,6 +93,7 @@ enum struct esLaserPlayer
 	int g_iLaserCooldown;
 	int g_iLaserDuration;
 	int g_iLaserMessage;
+	int g_iLaserMode;
 	int g_iLaserSight;
 	int g_iRequiresHumans;
 	int g_iTankType;
@@ -120,6 +121,7 @@ enum struct esLaserTeammate
 	int g_iLaserCooldown;
 	int g_iLaserDuration;
 	int g_iLaserMessage;
+	int g_iLaserMode;
 	int g_iLaserSight;
 	int g_iRequiresHumans;
 }
@@ -148,6 +150,7 @@ enum struct esLaserAbility
 	int g_iLaserCooldown;
 	int g_iLaserDuration;
 	int g_iLaserMessage;
+	int g_iLaserMode;
 	int g_iLaserSight;
 	int g_iRequiresHumans;
 }
@@ -173,6 +176,7 @@ enum struct esLaserSpecial
 	int g_iLaserCooldown;
 	int g_iLaserDuration;
 	int g_iLaserMessage;
+	int g_iLaserMode;
 	int g_iLaserSight;
 	int g_iRequiresHumans;
 }
@@ -198,6 +202,7 @@ enum struct esLaserCache
 	int g_iLaserCooldown;
 	int g_iLaserDuration;
 	int g_iLaserMessage;
+	int g_iLaserMode;
 	int g_iLaserSight;
 	int g_iRequiresHumans;
 }
@@ -513,6 +518,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esLaserAbility[iIndex].g_flLaserDamage = 5.0;
 				g_esLaserAbility[iIndex].g_iLaserDuration = 5;
 				g_esLaserAbility[iIndex].g_flLaserInterval = 1.0;
+				g_esLaserAbility[iIndex].g_iLaserMode = 0;
 				g_esLaserAbility[iIndex].g_flLaserRange = 500.0;
 				g_esLaserAbility[iIndex].g_iLaserSight = 0;
 
@@ -532,6 +538,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esLaserSpecial[iIndex].g_flLaserDamage = -1.0;
 				g_esLaserSpecial[iIndex].g_iLaserDuration = -1;
 				g_esLaserSpecial[iIndex].g_flLaserInterval = -1.0;
+				g_esLaserSpecial[iIndex].g_iLaserMode = -1;
 				g_esLaserSpecial[iIndex].g_flLaserRange = -1.0;
 				g_esLaserSpecial[iIndex].g_iLaserSight = -1;
 			}
@@ -558,6 +565,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esLaserPlayer[iPlayer].g_flLaserDamage = -1.0;
 				g_esLaserPlayer[iPlayer].g_iLaserDuration = -1;
 				g_esLaserPlayer[iPlayer].g_flLaserInterval = -1.0;
+				g_esLaserPlayer[iPlayer].g_iLaserMode = -1;
 				g_esLaserPlayer[iPlayer].g_flLaserRange = -1.0;
 				g_esLaserPlayer[iPlayer].g_iLaserSight = -1;
 
@@ -577,6 +585,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esLaserTeammate[iPlayer].g_flLaserDamage = -1.0;
 				g_esLaserTeammate[iPlayer].g_iLaserDuration = -1;
 				g_esLaserTeammate[iPlayer].g_flLaserInterval = -1.0;
+				g_esLaserTeammate[iPlayer].g_iLaserMode = -1;
 				g_esLaserTeammate[iPlayer].g_flLaserRange = -1.0;
 				g_esLaserTeammate[iPlayer].g_iLaserSight = -1;
 			}
@@ -611,6 +620,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esLaserTeammate[admin].g_flLaserDamage = flGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "LaserDamage", "Laser Damage", "Laser_Damage", "damage", g_esLaserTeammate[admin].g_flLaserDamage, value, -1.0, 99999.0);
 			g_esLaserTeammate[admin].g_iLaserDuration = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "LaserDuration", "Laser Duration", "Laser_Duration", "duration", g_esLaserTeammate[admin].g_iLaserDuration, value, -1, 99999);
 			g_esLaserTeammate[admin].g_flLaserInterval = flGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "LaserInterval", "Laser Interval", "Laser_Interval", "interval", g_esLaserTeammate[admin].g_flLaserInterval, value, -1.0, 99999.0);
+			g_esLaserTeammate[admin].g_iLaserMode = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "LaserMode", "Laser Mode", "Laser_Mode", "mode", g_esLaserTeammate[admin].g_iLaserMode, value, -1, 1);
 			g_esLaserTeammate[admin].g_flLaserRange = flGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "LaserRange", "Laser Range", "Laser_Range", "range", g_esLaserTeammate[admin].g_flLaserRange, value, -1.0, 99999.0);
 		}
 		else
@@ -632,6 +642,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esLaserPlayer[admin].g_flLaserDamage = flGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "LaserDamage", "Laser Damage", "Laser_Damage", "damage", g_esLaserPlayer[admin].g_flLaserDamage, value, -1.0, 99999.0);
 			g_esLaserPlayer[admin].g_iLaserDuration = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "LaserDuration", "Laser Duration", "Laser_Duration", "duration", g_esLaserPlayer[admin].g_iLaserDuration, value, -1, 99999);
 			g_esLaserPlayer[admin].g_flLaserInterval = flGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "LaserInterval", "Laser Interval", "Laser_Interval", "interval", g_esLaserPlayer[admin].g_flLaserInterval, value, -1.0, 99999.0);
+			g_esLaserPlayer[admin].g_iLaserMode = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "LaserMode", "Laser Mode", "Laser_Mode", "mode", g_esLaserPlayer[admin].g_iLaserMode, value, -1, 1);
 			g_esLaserPlayer[admin].g_flLaserRange = flGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "LaserRange", "Laser Range", "Laser_Range", "range", g_esLaserPlayer[admin].g_flLaserRange, value, -1.0, 99999.0);
 			g_esLaserPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 			g_esLaserPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
@@ -659,6 +670,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esLaserSpecial[type].g_flLaserDamage = flGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "LaserDamage", "Laser Damage", "Laser_Damage", "damage", g_esLaserSpecial[type].g_flLaserDamage, value, -1.0, 99999.0);
 			g_esLaserSpecial[type].g_iLaserDuration = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "LaserDuration", "Laser Duration", "Laser_Duration", "duration", g_esLaserSpecial[type].g_iLaserDuration, value, -1, 99999);
 			g_esLaserSpecial[type].g_flLaserInterval = flGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "LaserInterval", "Laser Interval", "Laser_Interval", "interval", g_esLaserSpecial[type].g_flLaserInterval, value, -1.0, 99999.0);
+			g_esLaserSpecial[type].g_iLaserMode = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "LaserMode", "Laser Mode", "Laser_Mode", "mode", g_esLaserSpecial[type].g_iLaserMode, value, -1, 1);
 			g_esLaserSpecial[type].g_flLaserRange = flGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "LaserRange", "Laser Range", "Laser_Range", "range", g_esLaserSpecial[type].g_flLaserRange, value, -1.0, 99999.0);
 		}
 		else
@@ -680,6 +692,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esLaserAbility[type].g_flLaserDamage = flGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "LaserDamage", "Laser Damage", "Laser_Damage", "damage", g_esLaserAbility[type].g_flLaserDamage, value, -1.0, 99999.0);
 			g_esLaserAbility[type].g_iLaserDuration = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "LaserDuration", "Laser Duration", "Laser_Duration", "duration", g_esLaserAbility[type].g_iLaserDuration, value, -1, 99999);
 			g_esLaserAbility[type].g_flLaserInterval = flGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "LaserInterval", "Laser Interval", "Laser_Interval", "interval", g_esLaserAbility[type].g_flLaserInterval, value, -1.0, 99999.0);
+			g_esLaserAbility[type].g_iLaserMode = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "LaserMode", "Laser Mode", "Laser_Mode", "mode", g_esLaserAbility[type].g_iLaserMode, value, -1, 1);
 			g_esLaserAbility[type].g_flLaserRange = flGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "LaserRange", "Laser Range", "Laser_Range", "range", g_esLaserAbility[type].g_flLaserRange, value, -1.0, 99999.0);
 			g_esLaserAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 			g_esLaserAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
@@ -715,6 +728,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esLaserCache[tank].g_iLaserCooldown = iGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_iLaserCooldown, g_esLaserPlayer[tank].g_iLaserCooldown, g_esLaserSpecial[iType].g_iLaserCooldown, g_esLaserAbility[iType].g_iLaserCooldown, 1);
 		g_esLaserCache[tank].g_iLaserDuration = iGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_iLaserDuration, g_esLaserPlayer[tank].g_iLaserDuration, g_esLaserSpecial[iType].g_iLaserDuration, g_esLaserAbility[iType].g_iLaserDuration, 1);
 		g_esLaserCache[tank].g_iLaserMessage = iGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_iLaserMessage, g_esLaserPlayer[tank].g_iLaserMessage, g_esLaserSpecial[iType].g_iLaserMessage, g_esLaserAbility[iType].g_iLaserMessage, 1);
+		g_esLaserCache[tank].g_iLaserMode = iGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_iLaserMode, g_esLaserPlayer[tank].g_iLaserMode, g_esLaserSpecial[iType].g_iLaserMode, g_esLaserAbility[iType].g_iLaserMode, 1);
 		g_esLaserCache[tank].g_iLaserSight = iGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_iLaserSight, g_esLaserPlayer[tank].g_iLaserSight, g_esLaserSpecial[iType].g_iLaserSight, g_esLaserAbility[iType].g_iLaserSight, 1);
 		g_esLaserCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_flOpenAreasOnly, g_esLaserPlayer[tank].g_flOpenAreasOnly, g_esLaserSpecial[iType].g_flOpenAreasOnly, g_esLaserAbility[iType].g_flOpenAreasOnly, 1);
 		g_esLaserCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_iRequiresHumans, g_esLaserPlayer[tank].g_iRequiresHumans, g_esLaserSpecial[iType].g_iRequiresHumans, g_esLaserAbility[iType].g_iRequiresHumans, 1);
@@ -736,6 +750,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esLaserCache[tank].g_iLaserCooldown = iGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_iLaserCooldown, g_esLaserAbility[iType].g_iLaserCooldown, 1);
 		g_esLaserCache[tank].g_iLaserDuration = iGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_iLaserDuration, g_esLaserAbility[iType].g_iLaserDuration, 1);
 		g_esLaserCache[tank].g_iLaserMessage = iGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_iLaserMessage, g_esLaserAbility[iType].g_iLaserMessage, 1);
+		g_esLaserCache[tank].g_iLaserMode = iGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_iLaserMode, g_esLaserAbility[iType].g_iLaserMode, 1);
 		g_esLaserCache[tank].g_iLaserSight = iGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_iLaserSight, g_esLaserAbility[iType].g_iLaserSight, 1);
 		g_esLaserCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_flOpenAreasOnly, g_esLaserAbility[iType].g_flOpenAreasOnly, 1);
 		g_esLaserCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_iRequiresHumans, g_esLaserAbility[iType].g_iRequiresHumans, 1);
@@ -1124,7 +1139,7 @@ Action tTimerLaser(Handle timer, DataPack pack)
 
 	float flRange = (iPos != -1) ? MT_GetCombinationSetting(iTank, 9, iPos) : g_esLaserCache[iTank].g_flLaserRange;
 	int iSurvivor = iLaserTarget(iTank, iTank, flRange, iPos);
-	if (iSurvivor > 0)
+	if (g_esLaserCache[iTank].g_iLaserMode == 1 && iSurvivor > 0)
 	{
 		iLaserTarget(iTank, iSurvivor, (flRange / 2.0), iPos);
 	}

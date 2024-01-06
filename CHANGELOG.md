@@ -4,6 +4,9 @@
 
 ### Bug Fixes
 
+#### Settings
+- Fixed the `Ghost Bullets Reward` setting not working properly in some cases.
+
 #### Translations
 - Fixed translation errors for Mutant type names. (Thanks to `SpannerV2` and `Mi.Cura` for reporting!)
 
@@ -23,6 +26,9 @@
 
 #### Settings
 - Added the `Laser Sight Reward` setting under the `Plugin Settings->Rewards`, `Tank #->Rewards`, and `STEAM_ID->Rewards` sections. (Requested by `ddd123`.)
+
+#### Abilities
+- Laser: Added the `Laser Mode` setting. (Requested by `ddd123`.)
 
 ### Files
 
@@ -400,8 +406,9 @@
 - Added the `Ghost Bullets Reward` setting under the `Plugin Settings->Rewards`, `Tank #->Rewards`, and `STEAM_ID->Rewards` sections. (Thanks to `epzminion` for the code!)
 - Added the `Boss Effects` setting under the `Tank #->Boss` and `STEAM_ID->Boss` sections. (Requested by `SpannerV2`.)
 - Added the `Bullet Fix` setting under the `Plugin Settings->General` section. (Thanks to `Xutax_Kamay` for the code!)
-- Added the `Intangible Body` setting under the `Plugin Settings->Enhancements`, `Tank #->Enhancements`, and `STEAM_ID->Enhancements` sections. (Requested by `Tank Rush`.)
-- Added the `Throw Rock` setting under the `Plugin Settings->Enhancements`, `Tank #->Enhancements`, and `STEAM_ID->Enhancements` sections.
+- Added the following settings under the `Plugin Settings->Enhancements`, `Tank #->Enhancements`, and `STEAM_ID->Enhancements` sections:
+	- `Intangible Body` (Requested by `Tank Rush`.)
+	- `Throw Rock`
 - Added the `Rush` section under the `Plugin Settings` section which allows to configure settings for the `Tank Rush 2` mode. (Requested by `Tank Rush`.) [Thanks to `Carl Sagan` for the code!]
 </details>
 <details>

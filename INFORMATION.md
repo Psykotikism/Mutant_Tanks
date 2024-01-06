@@ -19315,6 +19315,13 @@
 			// "forever" - 99999 seconds
 			"Laser Interval"			"1.0"
 
+			// The mode of the Mutant Tank's laser ability.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: The laser hits a single survivor target.
+			// 1: The laser hits a survivor target and their nearby teammates.
+			"Laser Mode"				"0"
+
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
@@ -19351,6 +19358,7 @@
 				"Laser Damage"				"5.0"
 				"Laser Duration"			"5"
 				"Laser Interval"			"1.0"
+				"Laser Mode"				"0"
 				"Laser Range"				"500.0"
 			}
 		}
