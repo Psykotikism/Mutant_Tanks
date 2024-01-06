@@ -23958,41 +23958,38 @@ MRESReturn mreFireBulletPre(int pThis)
 	int iSurvivor = !bIsValidEntity(pThis) ? 0 : GetEntPropEnt(pThis, Prop_Send, "m_hOwner");
 	if (bIsSurvivor(iSurvivor))
 	{
-		if (bIsDeveloper(iSurvivor, 4) || (g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_DAMAGEBOOST))
+		if (bIsDeveloper(iSurvivor, 4) || ((g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[iSurvivor].g_iRecoilDampener == 1) && !g_esGeneral.g_bPatchVerticalPunch)
 		{
-			if (g_esPlayer[iSurvivor].g_iRecoilDampener == 1 && !g_esGeneral.g_bPatchVerticalPunch)
-			{
-				g_esGeneral.g_bPatchVerticalPunch = true;
+			g_esGeneral.g_bPatchVerticalPunch = true;
 
-				int iWeapon = iGetWeaponInfoID(pThis);
-				if (iWeapon != -1)
-				{
-					Address adWeapon = view_as<Address>(iWeapon + g_esGeneral.g_iVerticalPunchOffset);
-					g_esGeneral.g_adOriginalVerticalPunch = LoadFromAddress(adWeapon, NumberType_Int32);
-					StoreToAddress(adWeapon, 0.0, NumberType_Int32, g_esGeneral.g_bUpdateWeaponInfoMemAccess);
-					g_esGeneral.g_bUpdateWeaponInfoMemAccess = false;
-				}
+			int iWeapon = iGetWeaponInfoID(pThis);
+			if (iWeapon != -1)
+			{
+				Address adWeapon = view_as<Address>(iWeapon + g_esGeneral.g_iVerticalPunchOffset);
+				g_esGeneral.g_adOriginalVerticalPunch = LoadFromAddress(adWeapon, NumberType_Int32);
+				StoreToAddress(adWeapon, 0.0, NumberType_Int32, g_esGeneral.g_bUpdateWeaponInfoMemAccess);
+				g_esGeneral.g_bUpdateWeaponInfoMemAccess = false;
 			}
+		}
 
-			if (g_esPlayer[iSurvivor].g_iGhostBullets == 1)
+		if (bIsDeveloper(iSurvivor, 4) || ((g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[iSurvivor].g_iGhostBullets == 1))
+		{
+			char sName[32];
+			static int iIndex[4] = {-1, -1, -1, -1};
+			int iLimit = g_bSecondGame ? 4 : 2;
+			for (int iPos = 0; iPos < (sizeof iIndex); iPos++)
 			{
-				char sName[32];
-				static int iIndex[4] = {-1, -1, -1, -1};
-				int iLimit = g_bSecondGame ? 4 : 2;
-				for (int iPos = 0; iPos < (sizeof iIndex); iPos++)
+				if (iPos < iLimit)
 				{
-					if (iPos < iLimit)
+					if (iIndex[iPos] == -1)
 					{
-						if (iIndex[iPos] == -1)
-						{
-							FormatEx(sName, sizeof sName, "MTPatch_TraceBullet%i", (iPos + 1));
-							iIndex[iPos] = iGetPatchIndex(sName);
-						}
+						FormatEx(sName, sizeof sName, "MTPatch_TraceBullet%i", (iPos + 1));
+						iIndex[iPos] = iGetPatchIndex(sName);
+					}
 
-						if (iIndex[iPos] != -1)
-						{
-							vInstallPatch(iIndex[iPos]);
-						}
+					if (iIndex[iPos] != -1)
+					{
+						vInstallPatch(iIndex[iPos]);
 					}
 				}
 			}
