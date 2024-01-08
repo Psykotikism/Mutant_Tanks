@@ -2803,6 +2803,8 @@ Overrides
 
 **cravenge** - За плагин [[L4D/L4D2] Vigilant Tank Behavior](https://forums.alliedmods.net/showthread.php?t=334690) и [[L4D/L4D2] MultiTanks - Improved](https://forums.alliedmods.net/showthread.php?t=303729).
 
+**NoroHime** - За плагин [[L4D2] Additional Death Messages on HUD](https://forums.alliedmods.net/showthread.php?t=344957).
+
 **Erreur 500** - За плагин [[ANY] Stuck](https://forums.alliedmods.net/showthread.php?t=243151).
 
 **Xutax_Kamay** - За плагин [[ANY] Hit Registration Fix Plugin (bullet displacement by 1 tick)](https://forums.alliedmods.net/showthread.php?t=315405).

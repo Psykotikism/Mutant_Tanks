@@ -207,6 +207,15 @@
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Bullet Fix"				"1"
 
+			// Enable HUD announcements for survivor and special infected kills.
+			// Note: Only available in Left 4 Dead 2.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be used for standard Tanks.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Hud Kills"				"0"
+
 			// Kick Mutant Infected as soon as they die.
 			// Note: Both games usually wait around 5 seconds by default before kicking infected bots.
 			// Note: Do not change this setting if you are unsure of how it works.
@@ -244,6 +253,7 @@
 			"Death Revert"				"1"
 
 			// Spawn Mutant Tanks during finales only.
+			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be used for standard Tanks.
 			// --
 			// 0: OFF, Mutant Tanks will spawn on any map.

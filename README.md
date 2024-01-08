@@ -2803,6 +2803,8 @@ Set the values in `Execute Config Types`.
 
 **cravenge** - For the [[L4D/L4D2] Vigilant Tank Behavior](https://forums.alliedmods.net/showthread.php?t=334690) and [[L4D/L4D2] MultiTanks - Improved](https://forums.alliedmods.net/showthread.php?t=303729) plugins.
 
+**NoroHime** - For the [[L4D2] Additional Death Messages on HUD](https://forums.alliedmods.net/showthread.php?t=344957) plugin.
+
 **Erreur 500** - For the [[ANY] Stuck](https://forums.alliedmods.net/showthread.php?t=243151) plugin.
 
 **Xutax_Kamay** - For the [[ANY] Hit Registration Fix Plugin (bullet displacement by 1 tick)](https://forums.alliedmods.net/showthread.php?t=315405) plugin.

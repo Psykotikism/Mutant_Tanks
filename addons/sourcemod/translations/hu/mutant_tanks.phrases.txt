@@ -734,6 +734,16 @@
 		"hu"			"Csak egyetlen esélyed lesz túlélni a HARDCORE módot!"
 	}
 
+	"HudKillInfected"
+	{
+		"hu"			"{1} megölt {2}"
+	}
+
+	"HudKillSurvivor"
+	{
+		"hu"			"{1} megölt {2}"
+	}
+
 	"HumanCooldown"
 	{
 		"hu"			"Várnod kell még{olive} {1} másodpercet{mint} mielőtt egy másik típusú Mutáns Tankra váltasz."

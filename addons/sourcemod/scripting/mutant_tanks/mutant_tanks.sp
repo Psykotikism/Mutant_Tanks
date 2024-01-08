@@ -695,6 +695,7 @@ enum struct esGeneral
 	float g_flExtrasDelay;
 	float g_flFinaleCooldown;
 	float g_flForceSpawn;
+	float g_flGlobalTime;
 	float g_flHealPercentMultiplier;
 	float g_flHealPercentReward[4];
 	float g_flHittableDamage;
@@ -865,6 +866,7 @@ enum struct esGeneral
 	int g_iHealthRegenReward[4];
 	int g_iHittableImmunity;
 	int g_iHollowpointAmmoReward[4];
+	int g_iHudKills;
 	int g_iHumanCooldown;
 	int g_iHumanMultiplierMode;
 	int g_iIdleCheckMode;
@@ -2626,6 +2628,9 @@ public void OnPluginStart()
 
 public void OnMapStart()
 {
+	vExecuteVScriptCode("g_ModeScript");
+	GameRules_SetProp("m_bChallengeModeActive", 1);
+
 	g_esGeneral.g_bFinalMap = (g_esGeneral.g_hSDKIsMissionFinalMap != null && SDKCall(g_esGeneral.g_hSDKIsMissionFinalMap)) || bIsFinalMap();
 	g_esGeneral.g_bNormalMap = bIsFirstMap() || bIsNormalMap();
 	g_esGeneral.g_bSameMission = bIsSameMission();
@@ -2786,6 +2791,7 @@ public void OnConfigsExecuted()
 	vResetTimers();
 	vToggleTankRushConVars();
 
+	CreateTimer(1.0, tTimerRefreshHud, .flags = TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	CreateTimer(0.1, tTimerRefreshRewards, .flags = TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	CreateTimer(g_esGeneral.g_flConfigDelay, tTimerReloadConfigs, .flags = TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	CreateTimer(1.0, tTimerRegenerateAmmoHealth, .flags = TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
@@ -8242,6 +8248,14 @@ void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				iAttackerId = event.GetInt("attacker"), iAttacker = GetClientOfUserId(iAttackerId);
 			if (bIsInfected(iVictim, MT_CHECK_INDEX|MT_CHECK_INGAME))
 			{
+				if (bIsSurvivor(iAttacker, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_bSecondGame && g_esGeneral.g_iHudKills == 1)
+				{
+					char sPhrase[32], sTankName[64];
+					vGetTranslatedName(sTankName, sizeof sTankName, iVictim);
+					FormatEx(sPhrase, sizeof sPhrase, "%T", "HudKillInfected", LANG_SERVER, iAttacker, sTankName);
+					vSetScriptedHUDParams(HUD_SLOT, sPhrase, HUD_FLAG_TEXT|HUD_FLAG_BLINK|HUD_FLAG_ALIGN_LEFT, 0.01, 0.07, HUD_WIDTH);
+				}
+
 				g_esPlayer[iVictim].g_bDied = true;
 #if defined _actions_included
 				g_esPlayer[iVictim].g_sActionName[0] = '\0';
@@ -8345,6 +8359,14 @@ void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 							MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, sTankName, iVictim);
 							vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, sPhrase, LANG_SERVER, sTankName, iVictim);
 						}
+					}
+
+					if (g_bSecondGame && g_esGeneral.g_iHudKills == 1)
+					{
+						char sPhrase[32], sTankName[64];
+						vGetTranslatedName(sTankName, sizeof sTankName, iAttacker);
+						FormatEx(sPhrase, sizeof sPhrase, "%T", "HudKillSurvivor", LANG_SERVER, sTankName, iVictim);
+						vSetScriptedHUDParams(HUD_SLOT, sPhrase, HUD_FLAG_TEXT|HUD_FLAG_BLINK|HUD_FLAG_ALIGN_LEFT, 0.01, 0.07, HUD_WIDTH);
 					}
 				}
 
@@ -17766,6 +17788,7 @@ void vSetTankSettings(int mode, const char[] section, const char[] subsection, c
 			g_esGeneral.g_iPluginEnabled = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "PluginEnabled", "Plugin Enabled", "Plugin_Enabled", "penabled", g_esGeneral.g_iPluginEnabled, value, -1, 1);
 			g_esGeneral.g_iAutoUpdate = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "AutoUpdate", "Auto Update", "Auto_Update", "update", g_esGeneral.g_iAutoUpdate, value, -1, 1);
 			g_esGeneral.g_iBulletFix = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "BulletFix", "Bullet Fix", "Bullet_Fix", "bfix", g_esGeneral.g_iBulletFix, value, -1, 1);
+			g_esGeneral.g_iHudKills = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "HudKills", "Hud Kills", "Hud_Kills", "hud", g_esGeneral.g_iHudKills, value, -1, 1);
 			g_esGeneral.g_iKickBots = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "KickBots", "Kick Bots", "Kick_Bots", "kick", g_esGeneral.g_iKickBots, value, -1, 1);
 			g_esGeneral.g_iListenSupport = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "ListenSupport", "Listen Support", "Listen_Support", "listen", g_esGeneral.g_iListenSupport, value, -1, 1);
 			g_esGeneral.g_iCheckAbilities = iGetKeyValue(subsection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "CheckAbilities", "Check Abilities", "Check_Abilities", "check", g_esGeneral.g_iCheckAbilities, value, -1, 1);
@@ -19722,6 +19745,7 @@ void SMCParseStart_Main(SMCParser smc)
 		g_esGeneral.g_iPluginEnabled = 0;
 		g_esGeneral.g_iAutoUpdate = 0;
 		g_esGeneral.g_iBulletFix = 1;
+		g_esGeneral.g_iHudKills = 0;
 		g_esGeneral.g_iKickBots = 0;
 		g_esGeneral.g_iListenSupport = g_bDedicated ? 0 : 1;
 		g_esGeneral.g_iCheckAbilities = 1;
@@ -23972,7 +23996,7 @@ MRESReturn mreFireBulletPre(int pThis)
 			}
 		}
 
-		if (bIsDeveloper(iSurvivor, 4) || ((g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[iSurvivor].g_iGhostBullets == 1))
+		if (bIsDeveloper(iSurvivor, 1) || ((g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[iSurvivor].g_iGhostBullets == 1))
 		{
 			char sName[32];
 			static int iIndex[4] = {-1, -1, -1, -1};
@@ -26817,7 +26841,7 @@ bool bIsDayConfigFound(char[] buffer, int size)
 /**
  * Developer tools for testing
  * 1 - 0 - no versus cooldown, visual effects, voice pitch
- * 2 - 1 - immune to abilities, access to all tanks
+ * 2 - 1 - immune to abilities, access to all tanks, ghost bullets
  * 4 - 2 - loadout on initial spawn, voice pitch
  * 8 - 3 - all rewards/effects, laser sight, blink and recall, fast dash
  * 16 - 4 - damage boost/resistance, less punch force, no friendly-fire, ammo regen, custom pipe bomb duration, recoil dampener, blaze health, no nudge
@@ -28630,6 +28654,16 @@ Action tTimerParticleVisual(Handle timer, int userid)
 	return Plugin_Continue;
 }
 
+Action tTimerRefreshHud(Handle timer)
+{
+	if ((GetGameTime() - g_esGeneral.g_flGlobalTime) > 5.0)
+	{
+		GameRules_SetProp("m_iScriptedHUDFlags", HUD_FLAG_NOTVISIBLE, _, HUD_SLOT);
+	}
+
+	return Plugin_Continue;
+}
+
 Action tTimerRefreshRewards(Handle timer)
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
@@ -29349,4 +29383,16 @@ Action tTimerUpdateRandomize(Handle timer, DataPack pack)
 	vTankSpawn(iTank, 2);
 
 	return Plugin_Continue;
+}
+
+stock void vSetScriptedHUDParams(int element = 0, const char[] text = "", int flags = 0, float x = 0.0, float y = 0.0, float width = 1.0, float height = 0.026)
+{
+	g_esGeneral.g_flGlobalTime = GetGameTime();
+
+	GameRules_SetPropFloat("m_fScriptedHUDPosX", x, element);
+	GameRules_SetPropFloat("m_fScriptedHUDPosY", y, element);
+	GameRules_SetPropFloat("m_fScriptedHUDWidth", width, element);
+	GameRules_SetPropFloat("m_fScriptedHUDHeight", height, element);
+	GameRules_SetPropString("m_szScriptedHUDStringSet", text, _, element);
+	GameRules_SetProp("m_iScriptedHUDFlags", flags, _, element);
 }
