@@ -29,7 +29,13 @@
 		"Notes"		"Core Plugin:"
 		"Notes"		"- The core plugin will now attempt to fix Tanks that get stuck when they spawn."
 		"Notes"		"Settings:"
+		"Notes"		"- Added the \"Hud Kills\" setting under the \"Plugin Settings->General\". (Exclusive to L4D2.) [Thanks to \"NoroHime\" for the code!]"
 		"Notes"		"- Added the \"Laser Sight Reward\" setting under the \"Plugin Settings->Rewards\", \"Tank #->Rewards\", and \"STEAM_ID->Rewards\" sections. (Requested by \"ddd123\".)"
+		"Notes"		"Translations:"
+		"Notes"		"- Updated English translations."
+		"Notes"		"- Updated Simplified Chinese translations."
+		"Notes"		"- Updated Hungarian translations."
+		"Notes"		"- Updated Russian translations."
 		"Notes"		"Abilities:"
 		"Notes"		"- Laser: Added the \"Laser Mode\" setting. (Requested by \"ddd123\".)"
 		"Notes"		"Files:"
@@ -41,6 +47,7 @@
 		"Notes"		"Updates:"
 		"Notes"		"- Updated config files."
 		"Notes"		"- Updated include file."
+		"Notes"		"- Updated translation files."
 		"Notes"		"- Updated updater file."
 	}
 

@@ -184,6 +184,30 @@ public void __pl_mutanttanks_SetNTVOptional()
 #define ENT_ENTRY_MASK (NUM_ENT_ENTRIES - 1)
 #define INVALID_EHANDLE_INDEX 0xFFFFFFFF
 
+// Hud flags
+#define HUD_FLAG_NONE 0 // no flag
+#define HUD_FLAG_PRESTR 1 // add a string/value pair to the beginning with the string
+#define HUD_FLAG_POSTSTR 2 // add a string/value pair to the end with the string
+#define HUD_FLAG_BEEP 4 // make the countdown timer blink
+#define HUD_FLAG_BLINK 8 // make the hud blink
+#define HUD_FLAG_AS_TIME 16 // ?
+#define HUD_FLAG_COUNTDOWN_WARN 32 // auto-blink when the timer goes under 10 seconds
+#define HUD_FLAG_NOBG 64 // no background box
+#define HUD_FLAG_ALLOWNEGTIMER 128 // allow timers to go down to negative numbers
+#define HUD_FLAG_ALIGN_LEFT 256 // move text to left
+#define HUD_FLAG_ALIGN_CENTER 512 // move text to center
+#define HUD_FLAG_ALIGN_RIGHT 768 // move text to right
+#define HUD_FLAG_TEAM_SURVIVORS 1024 // only show to the survivor team
+#define HUD_FLAG_TEAM_INFECTED 2048 // only show to the infected team
+#define HUD_FLAG_TEAM_MASK 3072 // ?
+#define HUD_FLAG_UNKNOWN1 4096 // ?
+#define HUD_FLAG_TEXT 8192 // ?
+#define HUD_FLAG_NOTVISIBLE 16384 // reserve slot data
+
+// Hud details
+#define HUD_WIDTH 0.3
+#define HUD_SLOT 4
+
 // Forwards
 /**
  * Called every second to trigger a Mutant Tank's ability.
@@ -1433,6 +1457,18 @@ stock void vDeleteEntity(int ref, float duration = 0.1)
 			AcceptEntityInput(iObject, "AddOutput");
 			AcceptEntityInput(iObject, "FireUser1");
 		}
+	}
+}
+
+stock void vExecuteVScriptCode(const char[] code)
+{
+	int iLogicScript = CreateEntityByName("logic_script");
+	if (bIsValidEntity(iLogicScript))
+	{
+		DispatchSpawn(iLogicScript);
+		SetVariantString(code);
+		AcceptEntityInput(iLogicScript, "RunScriptCode");
+		RemoveEntity(iLogicScript);
 	}
 }
 

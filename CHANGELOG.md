@@ -25,7 +25,14 @@
 - The core plugin will now attempt to fix Tanks that get stuck when they spawn.
 
 #### Settings
+- Added the `Hud Kills` setting under the `Plugin Settings->General`. (Exclusive to L4D2.) [Thanks to `NoroHime` for the code!]
 - Added the `Laser Sight Reward` setting under the `Plugin Settings->Rewards`, `Tank #->Rewards`, and `STEAM_ID->Rewards` sections. (Requested by `ddd123`.)
+
+#### Translations
+- Updated English translations.
+- Updated Simplified Chinese translations.
+- Updated Hungarian translations.
+- Updated Russian translations.
 
 #### Abilities
 - Laser: Added the `Laser Mode` setting. (Requested by `ddd123`.)
@@ -41,6 +48,7 @@
 #### Updates
 - Updated config files.
 - Updated include file.
+- Updated translation files.
 - Updated updater file.
 
 ## Version 9.0 (December 5, 2023)
