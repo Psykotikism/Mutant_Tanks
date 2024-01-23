@@ -1022,7 +1022,12 @@ void vUltimate(int tank, int pos = -1)
 		g_esUltimatePlayer[tank].g_flDamage = 0.0;
 		g_esUltimatePlayer[tank].g_iDuration = (iTime + iDuration);
 
-		ExtinguishEntity(tank);
+		if (bIsPlayerBurning(tank))
+		{
+			ExtinguishEntity(tank);
+			SetEntPropFloat(tank, Prop_Send, "m_burnPercent", 0.0);
+		}
+
 		vAttachParticle(tank, PARTICLE_ELECTRICITY, 2.0, 30.0);
 		EmitSoundToAll(SOUND_CHARGE, tank);
 		EmitSoundToAll(SOUND_EXPLOSION, tank);

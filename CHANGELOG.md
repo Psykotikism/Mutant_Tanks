@@ -11,9 +11,15 @@
 - Fixed translation errors for Mutant type names. (Thanks to `SpannerV2` and `Mi.Cura` for reporting!)
 
 #### Abilities
-- Acid: Fixed the `Acid Death` setting.
-- Bomb: Fixed the `Bomb Death` setting.
-- Fire: Fixed the `Fire Death` setting.
+- Acid:
+	- Fixed the `Acid Death` setting.
+	- Fixed the `Acid Damage` setting.
+- Bomb:
+	- Fixed the `Bomb Death` setting.
+	- Fixed the `Bomb Damage` setting.
+- Fire:
+	- Fixed the `Fire Death` setting.
+	- Fixed the `Fire Damage` setting. (Thanks to `SpannerV2` for reporting!)
 - Fling: Fixed the `Fling Death` setting.
 - Puke: Fixed the `Puke Death` setting. (Thanks to `ddd123` and `Mi.Cura` for testing and reporting!)
 - Shake: Fixed the `Shake Death` setting.
@@ -35,7 +41,15 @@
 - Updated Russian translations.
 
 #### Abilities
+- Clone: Added the `Clone Swap` setting.
+- God: The burn marks on mutants now disappear when they are extinguished.
 - Laser: Added the `Laser Mode` setting. (Requested by `ddd123`.)
+- Nullify: The burn marks on mutants now disappear when they are extinguished.
+- Pyro: The burn marks on mutants now disappear when they are extinguished.
+- Recall: The burn marks on mutants now disappear when they are extinguished.
+- Shield: The burn marks on mutants now disappear when they are extinguished.
+- Ultimate: The burn marks on mutants now disappear when they are extinguished.
+- Undead: The burn marks on mutants now disappear when they are extinguished.
 
 ### Files
 

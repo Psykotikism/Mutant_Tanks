@@ -1179,7 +1179,12 @@ void vPyroReset2(int tank)
 
 	float flSpeed = MT_GetRunSpeed(tank);
 	SetEntPropFloat(tank, Prop_Send, "m_flLaggedMovementValue", (g_bLaggedMovementInstalled ? L4D_LaggedMovement(tank, flSpeed) : flSpeed));
-	ExtinguishEntity(tank);
+
+	if (bIsPlayerBurning(tank))
+	{
+		ExtinguishEntity(tank);
+		SetEntPropFloat(tank, Prop_Send, "m_burnPercent", 0.0);
+	}
 
 	if (g_esPyroCache[tank].g_iPyroMessage == 1)
 	{

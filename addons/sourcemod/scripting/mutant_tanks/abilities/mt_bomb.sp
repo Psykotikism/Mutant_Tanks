@@ -479,7 +479,7 @@ Action OnBombTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 				}
 			}
 
-			if (((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA)) && (g_esBombCache[attacker].g_iBombAbility > 0 || g_esBombCache[attacker].g_iBombDeath > 0 || g_esBombCache[attacker].g_iBombHit > 0 || g_esBombCache[attacker].g_iBombRockBreak > 0))
+			if (((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA)) && (g_esBombCache[attacker].g_iBombAbility > 0 || g_esBombCache[attacker].g_iBombDeath > 0 || g_esBombCache[attacker].g_iBombHit > 0 || g_esBombCache[attacker].g_iBombRockBreak > 0) && g_esBombCache[attacker].g_flBombDamage > 0.0)
 			{
 				damage = MT_GetScaledDamage(g_esBombCache[attacker].g_flBombDamage);
 

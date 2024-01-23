@@ -1164,15 +1164,18 @@ void vDrugHit(int survivor, int tank, float random, float chance, int enabled, i
 				}
 
 				float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 6, pos) : g_esDrugCache[tank].g_flDrugInterval;
-				DataPack dpDrug;
-				CreateDataTimer(flInterval, tTimerDrug, dpDrug, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-				dpDrug.WriteCell(GetClientUserId(survivor));
-				dpDrug.WriteCell(GetClientUserId(tank));
-				dpDrug.WriteCell(g_esDrugPlayer[tank].g_iTankType);
-				dpDrug.WriteCell(messages);
-				dpDrug.WriteCell(enabled);
-				dpDrug.WriteCell(pos);
-				dpDrug.WriteCell(iTime);
+				if (flInterval > 0.0)
+				{
+					DataPack dpDrug;
+					CreateDataTimer(flInterval, tTimerDrug, dpDrug, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+					dpDrug.WriteCell(GetClientUserId(survivor));
+					dpDrug.WriteCell(GetClientUserId(tank));
+					dpDrug.WriteCell(g_esDrugPlayer[tank].g_iTankType);
+					dpDrug.WriteCell(messages);
+					dpDrug.WriteCell(enabled);
+					dpDrug.WriteCell(pos);
+					dpDrug.WriteCell(iTime);
+				}
 
 				vScreenEffect(survivor, tank, g_esDrugCache[tank].g_iDrugEffect, flags);
 

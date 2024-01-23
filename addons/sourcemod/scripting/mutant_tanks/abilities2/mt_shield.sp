@@ -683,6 +683,7 @@ Action OnShieldTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 			if ((damagetype & DMG_BURN) || (damagetype & DMG_DIRECT))
 			{
 				ExtinguishEntity(victim);
+				SetEntPropFloat(victim, Prop_Send, "m_burnPercent", 0.0);
 			}
 
 			if (((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && !(g_esShieldCache[victim].g_iShieldType & MT_SHIELD_MELEE))
@@ -1529,7 +1530,12 @@ void vShieldAbility(int tank, bool shield)
 						g_esShieldPlayer[tank].g_iCooldown2 = -1;
 
 						vShield(tank);
-						ExtinguishEntity(tank);
+
+						if (bIsPlayerBurning(tank))
+						{
+							ExtinguishEntity(tank);
+							SetEntPropFloat(tank, Prop_Send, "m_burnPercent", 0.0);
+						}
 
 						if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esShieldCache[tank].g_iHumanAbility == 1)
 						{

@@ -451,6 +451,7 @@ Action OnNullifyTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 					if ((damagetype & DMG_BURN) || (damagetype & DMG_DIRECT))
 					{
 						ExtinguishEntity(victim);
+						SetEntPropFloat(victim, Prop_Send, "m_burnPercent", 0.0);
 					}
 
 					if ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB))
