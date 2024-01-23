@@ -2628,9 +2628,6 @@ public void OnPluginStart()
 
 public void OnMapStart()
 {
-	vExecuteVScriptCode("g_ModeScript");
-	GameRules_SetProp("m_bChallengeModeActive", 1);
-
 	g_esGeneral.g_bFinalMap = (g_esGeneral.g_hSDKIsMissionFinalMap != null && SDKCall(g_esGeneral.g_hSDKIsMissionFinalMap)) || bIsFinalMap();
 	g_esGeneral.g_bNormalMap = bIsFirstMap() || bIsNormalMap();
 	g_esGeneral.g_bSameMission = bIsSameMission();
@@ -2665,6 +2662,9 @@ public void OnMapStart()
 	{
 		case true:
 		{
+			vExecuteVScriptCode("g_ModeScript");
+			GameRules_SetProp("m_bChallengeModeActive", 1);
+
 			PrecacheModel(MODEL_FIREWORKCRATE, true);
 			PrecacheModel(MODEL_TANK_L4D1, true);
 			PrecacheModel(MODEL_SMOKER_L4D1, true);
@@ -8253,7 +8253,7 @@ void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 					char sPhrase[32], sTankName[64];
 					vGetTranslatedName(sTankName, sizeof sTankName, iVictim);
 					FormatEx(sPhrase, sizeof sPhrase, "%T", "HudKillInfected", LANG_SERVER, iAttacker, sTankName);
-					vSetScriptedHUDParams(HUD_SLOT, sPhrase, HUD_FLAG_TEXT|HUD_FLAG_BLINK|HUD_FLAG_ALIGN_LEFT, 0.01, 0.07, HUD_WIDTH);
+					vSetScriptedHud(HUD_SLOT, sPhrase, HUD_FLAG_TEXT|HUD_FLAG_BLINK|HUD_FLAG_ALIGN_LEFT, 0.01, 0.07, HUD_WIDTH);
 				}
 
 				g_esPlayer[iVictim].g_bDied = true;
@@ -8366,7 +8366,7 @@ void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 						char sPhrase[32], sTankName[64];
 						vGetTranslatedName(sTankName, sizeof sTankName, iAttacker);
 						FormatEx(sPhrase, sizeof sPhrase, "%T", "HudKillSurvivor", LANG_SERVER, sTankName, iVictim);
-						vSetScriptedHUDParams(HUD_SLOT, sPhrase, HUD_FLAG_TEXT|HUD_FLAG_BLINK|HUD_FLAG_ALIGN_LEFT, 0.01, 0.07, HUD_WIDTH);
+						vSetScriptedHud(HUD_SLOT, sPhrase, HUD_FLAG_TEXT|HUD_FLAG_BLINK|HUD_FLAG_ALIGN_LEFT, 0.01, 0.07, HUD_WIDTH);
 					}
 				}
 
@@ -13894,6 +13894,7 @@ void vResetTank2(int tank, bool full = true)
 void vResetTank3(int tank)
 {
 	ExtinguishEntity(tank);
+	SetEntPropFloat(tank, Prop_Send, "m_burnPercent", 0.0);
 	EmitSoundToAll(SOUND_ELECTRICITY, tank);
 	vAttachParticle(tank, PARTICLE_ELECTRICITY, 2.0, 30.0);
 	vResetTankSpeed(tank);
@@ -22113,6 +22114,7 @@ Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 					if (bBlockFire)
 					{
 						ExtinguishEntity(victim);
+						SetEntPropFloat(victim, Prop_Send, "m_burnPercent", 0.0);
 
 						if (!bBlockBullets && ((damagetype & DMG_BULLET) || (damagetype & DMG_BUCKSHOT)))
 						{
@@ -26328,6 +26330,23 @@ void vRespawnInfectedPlayers(bool extra = true)
 	}
 }
 
+void vSetScriptedHud(int element = 0, const char[] text = "", int flags = 0, float x = 0.0, float y = 0.0, float width = 1.0, float height = 0.026)
+{
+	if (!g_bSecondGame)
+	{
+		return;
+	}
+
+	g_esGeneral.g_flGlobalTime = GetGameTime();
+
+	GameRules_SetPropFloat("m_fScriptedHUDPosX", x, element);
+	GameRules_SetPropFloat("m_fScriptedHUDPosY", y, element);
+	GameRules_SetPropFloat("m_fScriptedHUDWidth", width, element);
+	GameRules_SetPropFloat("m_fScriptedHUDHeight", height, element);
+	GameRules_SetPropString("m_szScriptedHUDStringSet", text, _, element);
+	GameRules_SetProp("m_iScriptedHUDFlags", flags, _, element);
+}
+
 void vSetSurvivorLastLife(int survivor)
 {
 	if (g_bSecondGame)
@@ -28656,6 +28675,11 @@ Action tTimerParticleVisual(Handle timer, int userid)
 
 Action tTimerRefreshHud(Handle timer)
 {
+	if (!g_bSecondGame)
+	{
+		return Plugin_Stop;
+	}
+
 	if ((GetGameTime() - g_esGeneral.g_flGlobalTime) > 5.0)
 	{
 		GameRules_SetProp("m_iScriptedHUDFlags", HUD_FLAG_NOTVISIBLE, _, HUD_SLOT);
@@ -29383,16 +29407,4 @@ Action tTimerUpdateRandomize(Handle timer, DataPack pack)
 	vTankSpawn(iTank, 2);
 
 	return Plugin_Continue;
-}
-
-stock void vSetScriptedHUDParams(int element = 0, const char[] text = "", int flags = 0, float x = 0.0, float y = 0.0, float width = 1.0, float height = 0.026)
-{
-	g_esGeneral.g_flGlobalTime = GetGameTime();
-
-	GameRules_SetPropFloat("m_fScriptedHUDPosX", x, element);
-	GameRules_SetPropFloat("m_fScriptedHUDPosY", y, element);
-	GameRules_SetPropFloat("m_fScriptedHUDWidth", width, element);
-	GameRules_SetPropFloat("m_fScriptedHUDHeight", height, element);
-	GameRules_SetPropString("m_szScriptedHUDStringSet", text, _, element);
-	GameRules_SetProp("m_iScriptedHUDFlags", flags, _, element);
 }

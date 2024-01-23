@@ -362,6 +362,16 @@
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
 			// --
+			// L4D1: The default maximum value is "1.0" for each type of special infected.
+			// L4D2: The default maximum value is different for each type of special infected.
+			// Smoker - 0.30
+			// Boomer - 0.12
+			// Hunter - 0.35
+			// Spitter - 0.15
+			// Jockey - 0.40
+			// Charger - 0.40
+			// Tank - 1.0
+			// --
 			// -1.0: OFF
 			// 0.0: Random
 			// 0.01-1.0: Burn percentage
@@ -3628,6 +3638,16 @@
 			// The burnt percentage of the Mutant Tank when it spawns.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
 			// Note: This setting can be overridden for specific players.
+			// --
+			// L4D1: The default maximum value is "1.0" for each type of special infected.
+			// L4D2: The default maximum value is different for each type of special infected.
+			// Smoker - 0.30
+			// Boomer - 0.12
+			// Hunter - 0.35
+			// Spitter - 0.15
+			// Jockey - 0.40
+			// Charger - 0.40
+			// Tank - 1.0
 			// --
 			// -1.0: OFF
 			// 0.0: Random
@@ -10600,6 +10620,19 @@
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Clone Replace"				"1"
 
+			// The Mutant Tank swaps places with one of its clones every time this many seconds passes.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.1
+			// Maximum: 99999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Clone Swap"				"1.0"
+
 			// The type of the Mutant Tank's clone.
 			// Note: Chosen types that also have the Clone ability will be replaced with the Mutant Tank's own type to prevent bugs.
 			// Note: This setting can be overridden for specific players.
@@ -10649,6 +10682,7 @@
 				"Clone Mode"				"0"
 				"Clone Remove"				"1"
 				"Clone Replace"				"1"
+				"Clone Swap"				"1.0"
 				"Clone Type"				"0-0"
 			}
 		}

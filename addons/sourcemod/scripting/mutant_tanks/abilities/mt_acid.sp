@@ -549,7 +549,7 @@ Action OnAcidTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 				}
 			}
 
-			if (StrEqual(sClassname, "insect_swarm") && (g_esAcidCache[attacker].g_iAcidAbility > 0 || g_esAcidCache[attacker].g_iAcidDeath > 0 || g_esAcidCache[attacker].g_iAcidHit > 0 || g_esAcidCache[attacker].g_iAcidRockBreak > 0))
+			if (StrEqual(sClassname, "insect_swarm") && (g_esAcidCache[attacker].g_iAcidAbility > 0 || g_esAcidCache[attacker].g_iAcidDeath > 0 || g_esAcidCache[attacker].g_iAcidHit > 0 || g_esAcidCache[attacker].g_iAcidRockBreak > 0) && g_esAcidCache[attacker].g_flAcidDamage > 0.0)
 			{
 				damage = MT_GetScaledDamage(g_esAcidCache[attacker].g_flAcidDamage);
 

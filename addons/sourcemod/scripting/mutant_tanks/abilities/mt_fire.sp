@@ -476,7 +476,7 @@ Action OnFireTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 				}
 			}
 
-			if ((damagetype & DMG_BURN) && (g_esFireCache[attacker].g_iFireAbility > 0 || g_esFireCache[attacker].g_iFireDeath > 0 || g_esFireCache[attacker].g_iFireHit > 0 || g_esFireCache[attacker].g_iFireRockBreak > 0))
+			if ((damagetype & DMG_BURN) && (g_esFireCache[attacker].g_iFireAbility > 0 || g_esFireCache[attacker].g_iFireDeath > 0 || g_esFireCache[attacker].g_iFireHit > 0 || g_esFireCache[attacker].g_iFireRockBreak > 0) && g_esFireCache[attacker].g_flFireDamage > 0.0)
 			{
 				damage = MT_GetScaledDamage(g_esFireCache[attacker].g_flFireDamage);
 

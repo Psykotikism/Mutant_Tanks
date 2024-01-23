@@ -1322,7 +1322,12 @@ void vRecallRewind(int player, float threshold, int lifetime, int mode, int clea
 				if (cleanse == 1)
 				{
 					MT_UnvomitPlayer(player);
-					ExtinguishEntity(player);
+
+					if (bIsPlayerBurning(player))
+					{
+						ExtinguishEntity(player);
+						SetEntPropFloat(player, Prop_Send, "m_burnPercent", 0.0);
+					}
 				}
 			}
 		}

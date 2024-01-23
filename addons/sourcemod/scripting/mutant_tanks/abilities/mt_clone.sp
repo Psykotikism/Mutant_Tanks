@@ -68,6 +68,7 @@ enum struct esClonePlayer
 
 	float g_flCloneChance;
 	float g_flCloneLifetime;
+	float g_flCloneSwap;
 	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 
@@ -101,6 +102,7 @@ enum struct esCloneTeammate
 {
 	float g_flCloneChance;
 	float g_flCloneLifetime;
+	float g_flCloneSwap;
 	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 
@@ -127,6 +129,7 @@ enum struct esCloneAbility
 {
 	float g_flCloneChance;
 	float g_flCloneLifetime;
+	float g_flCloneSwap;
 	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 
@@ -155,6 +158,7 @@ enum struct esCloneSpecial
 {
 	float g_flCloneChance;
 	float g_flCloneLifetime;
+	float g_flCloneSwap;
 	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 
@@ -181,6 +185,7 @@ enum struct esCloneCache
 {
 	float g_flCloneChance;
 	float g_flCloneLifetime;
+	float g_flCloneSwap;
 	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 
@@ -526,6 +531,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esCloneAbility[iIndex].g_iCloneMode = 0;
 				g_esCloneAbility[iIndex].g_iCloneRemove = 1;
 				g_esCloneAbility[iIndex].g_iCloneReplace = 1;
+				g_esCloneAbility[iIndex].g_flCloneSwap = 1.0;
 
 				g_esCloneSpecial[iIndex].g_flCloseAreasOnly = -1.0;
 				g_esCloneSpecial[iIndex].g_iComboAbility = -1;
@@ -546,6 +552,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esCloneSpecial[iIndex].g_iCloneMode = -1;
 				g_esCloneSpecial[iIndex].g_iCloneRemove = -1;
 				g_esCloneSpecial[iIndex].g_iCloneReplace = -1;
+				g_esCloneSpecial[iIndex].g_flCloneSwap = -1.0;
 			}
 		}
 		case 3:
@@ -572,6 +579,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esClonePlayer[iPlayer].g_iCloneMode = -1;
 				g_esClonePlayer[iPlayer].g_iCloneRemove = -1;
 				g_esClonePlayer[iPlayer].g_iCloneReplace = -1;
+				g_esClonePlayer[iPlayer].g_flCloneSwap = -1.0;
 
 				g_esCloneTeammate[iPlayer].g_flCloseAreasOnly = -1.0;
 				g_esCloneTeammate[iPlayer].g_iComboAbility = -1;
@@ -592,6 +600,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esCloneTeammate[iPlayer].g_iCloneMode = -1;
 				g_esCloneTeammate[iPlayer].g_iCloneRemove = -1;
 				g_esCloneTeammate[iPlayer].g_iCloneReplace = -1;
+				g_esCloneTeammate[iPlayer].g_flCloneSwap = -1.0;
 			}
 		}
 	}
@@ -624,6 +633,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esCloneTeammate[admin].g_iCloneMode = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneMode", "Clone Mode", "Clone_Mode", "mode", g_esCloneTeammate[admin].g_iCloneMode, value, -1, 1);
 			g_esCloneTeammate[admin].g_iCloneRemove = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneRemove", "Clone Remove", "Clone_Remove", "remove", g_esCloneTeammate[admin].g_iCloneRemove, value, -1, 1);
 			g_esCloneTeammate[admin].g_iCloneReplace = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneReplace", "Clone Replace", "Clone_Replace", "replace", g_esCloneTeammate[admin].g_iCloneReplace, value, -1, 1);
+			g_esCloneTeammate[admin].g_flCloneSwap = flGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneSwap", "Clone Swap", "Clone_Swap", "swap", g_esCloneTeammate[admin].g_flCloneSwap, value, -1.0, 99999.0);
 		}
 		else
 		{
@@ -644,6 +654,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esClonePlayer[admin].g_iCloneMode = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneMode", "Clone Mode", "Clone_Mode", "mode", g_esClonePlayer[admin].g_iCloneMode, value, -1, 1);
 			g_esClonePlayer[admin].g_iCloneRemove = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneRemove", "Clone Remove", "Clone_Remove", "remove", g_esClonePlayer[admin].g_iCloneRemove, value, -1, 1);
 			g_esClonePlayer[admin].g_iCloneReplace = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneReplace", "Clone Replace", "Clone_Replace", "replace", g_esClonePlayer[admin].g_iCloneReplace, value, -1, 1);
+			g_esClonePlayer[admin].g_flCloneSwap = flGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneSwap", "Clone Swap", "Clone_Swap", "swap", g_esClonePlayer[admin].g_flCloneSwap, value, -1.0, 99999.0);
 			g_esClonePlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		}
 
@@ -691,6 +702,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esCloneSpecial[type].g_iCloneMode = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneMode", "Clone Mode", "Clone_Mode", "mode", g_esCloneSpecial[type].g_iCloneMode, value, -1, 1);
 			g_esCloneSpecial[type].g_iCloneRemove = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneRemove", "Clone Remove", "Clone_Remove", "remove", g_esCloneSpecial[type].g_iCloneRemove, value, -1, 1);
 			g_esCloneSpecial[type].g_iCloneReplace = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneReplace", "Clone Replace", "Clone_Replace", "replace", g_esCloneSpecial[type].g_iCloneReplace, value, -1, 1);
+			g_esCloneSpecial[type].g_flCloneSwap = flGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneSwap", "Clone Swap", "Clone_Swap", "swap", g_esCloneSpecial[type].g_flCloneSwap, value, -1.0, 99999.0);
 		}
 		else
 		{
@@ -711,6 +723,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esCloneAbility[type].g_iCloneMode = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneMode", "Clone Mode", "Clone_Mode", "mode", g_esCloneAbility[type].g_iCloneMode, value, -1, 1);
 			g_esCloneAbility[type].g_iCloneRemove = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneRemove", "Clone Remove", "Clone_Remove", "remove", g_esCloneAbility[type].g_iCloneRemove, value, -1, 1);
 			g_esCloneAbility[type].g_iCloneReplace = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneReplace", "Clone Replace", "Clone_Replace", "replace", g_esCloneAbility[type].g_iCloneReplace, value, -1, 1);
+			g_esCloneAbility[type].g_flCloneSwap = flGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneSwap", "Clone Swap", "Clone_Swap", "swap", g_esCloneAbility[type].g_flCloneSwap, value, -1.0, 99999.0);
 			g_esCloneAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		}
 
@@ -753,6 +766,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	{
 		g_esCloneCache[tank].g_flCloneChance = flGetSubSettingValue(apply, bHuman, g_esCloneTeammate[tank].g_flCloneChance, g_esClonePlayer[tank].g_flCloneChance, g_esCloneSpecial[iType].g_flCloneChance, g_esCloneAbility[iType].g_flCloneChance, 1);
 		g_esCloneCache[tank].g_flCloneLifetime = flGetSubSettingValue(apply, bHuman, g_esCloneTeammate[tank].g_flCloneLifetime, g_esClonePlayer[tank].g_flCloneLifetime, g_esCloneSpecial[iType].g_flCloneLifetime, g_esCloneAbility[iType].g_flCloneLifetime, 1);
+		g_esCloneCache[tank].g_flCloneSwap = flGetSubSettingValue(apply, bHuman, g_esCloneTeammate[tank].g_flCloneSwap, g_esClonePlayer[tank].g_flCloneSwap, g_esCloneSpecial[iType].g_flCloneSwap, g_esCloneAbility[iType].g_flCloneSwap, 1);
 		g_esCloneCache[tank].g_iCloneAbility = iGetSubSettingValue(apply, bHuman, g_esCloneTeammate[tank].g_iCloneAbility, g_esClonePlayer[tank].g_iCloneAbility, g_esCloneSpecial[iType].g_iCloneAbility, g_esCloneAbility[iType].g_iCloneAbility, 1);
 		g_esCloneCache[tank].g_iCloneAmount = iGetSubSettingValue(apply, bHuman, g_esCloneTeammate[tank].g_iCloneAmount, g_esClonePlayer[tank].g_iCloneAmount, g_esCloneSpecial[iType].g_iCloneAmount, g_esCloneAbility[iType].g_iCloneAmount, 1);
 		g_esCloneCache[tank].g_iCloneCooldown = iGetSubSettingValue(apply, bHuman, g_esCloneTeammate[tank].g_iCloneCooldown, g_esClonePlayer[tank].g_iCloneCooldown, g_esCloneSpecial[iType].g_iCloneCooldown, g_esCloneAbility[iType].g_iCloneCooldown, 1);
@@ -775,6 +789,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	{
 		g_esCloneCache[tank].g_flCloneChance = flGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_flCloneChance, g_esCloneAbility[iType].g_flCloneChance, 1);
 		g_esCloneCache[tank].g_flCloneLifetime = flGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_flCloneLifetime, g_esCloneAbility[iType].g_flCloneLifetime, 1);
+		g_esCloneCache[tank].g_flCloneSwap = flGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_flCloneSwap, g_esCloneAbility[iType].g_flCloneSwap, 1);
 		g_esCloneCache[tank].g_iCloneAbility = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iCloneAbility, g_esCloneAbility[iType].g_iCloneAbility, 1);
 		g_esCloneCache[tank].g_iCloneAmount = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iCloneAmount, g_esCloneAbility[iType].g_iCloneAmount, 1);
 		g_esCloneCache[tank].g_iCloneCooldown = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iCloneCooldown, g_esCloneAbility[iType].g_iCloneCooldown, 1);
@@ -1067,6 +1082,14 @@ void vClone(int tank)
 							CreateTimer(g_esCloneCache[tank].g_flCloneLifetime, tTimerKillClone, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
 						}
 
+						if (g_esCloneCache[tank].g_flCloneSwap > 0.0)
+						{
+							DataPack dpSwap;
+							CreateDataTimer(g_esCloneCache[tank].g_flCloneSwap, tTimerSwapClone, dpSwap, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+							dpSwap.WriteCell(GetClientUserId(tank));
+							dpSwap.WriteCell(GetClientUserId(iTank));
+						}
+
 						int iNewHealth = iClamp(g_esCloneCache[tank].g_iCloneHealth, 1, MT_MAXHEALTH);
 						SetEntProp(iTank, Prop_Data, "m_iHealth", iNewHealth);
 						SetEntProp(iTank, Prop_Data, "m_iMaxHealth", iNewHealth);
@@ -1226,4 +1249,46 @@ void tTimerKillClone(Handle timer, int userid)
 	}
 
 	ForcePlayerSuicide(iTank);
+}
+
+Action tTimerSwapClone(Handle timer, DataPack pack)
+{
+	pack.Reset();
+
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	if (!MT_IsTankSupported(iTank) || g_esClonePlayer[iTank].g_bCloned)
+	{
+		return Plugin_Stop;
+	}
+
+	int iClone = GetClientOfUserId(pack.ReadCell());
+	if (!MT_IsTankSupported(iClone) || !g_esClonePlayer[iClone].g_bCloned)
+	{
+		return Plugin_Stop;
+	}
+
+	float flTankPos[3], flTankAngles[3];
+	GetClientAbsOrigin(iTank, flTankPos);
+	GetClientAbsAngles(iTank, flTankAngles);
+
+	if (bIsPlayerBurning(iTank))
+	{
+		ExtinguishEntity(iTank);
+		SetEntPropFloat(iTank, Prop_Send, "m_burnPercent", 0.0);
+	}
+
+	float flClonePos[3], flCloneAngles[3];
+	GetClientAbsOrigin(iClone, flClonePos);
+	GetClientAbsAngles(iClone, flCloneAngles);
+
+	if (bIsPlayerBurning(iClone))
+	{
+		ExtinguishEntity(iClone);
+		SetEntPropFloat(iClone, Prop_Send, "m_burnPercent", 0.0);
+	}
+
+	TeleportEntity(iTank, flClonePos, flCloneAngles);
+	TeleportEntity(iClone, flTankPos, flTankAngles);
+
+	return Plugin_Continue;
 }
