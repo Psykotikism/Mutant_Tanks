@@ -37,6 +37,7 @@
 		"Notes"		"Settings:"
 		"Notes"		"- Added the \"Hud Kills\" setting under the \"Plugin Settings->General\". (Exclusive to L4D2.) [Thanks to \"NoroHime\" for the code!]"
 		"Notes"		"- Added the \"Laser Sight Reward\" setting under the \"Plugin Settings->Rewards\", \"Tank #->Rewards\", and \"STEAM_ID->Rewards\" sections. (Requested by \"ddd123\".)"
+		"Notes"		"- Added the \"Finale Mode\" setting under the \"Plugin Settings->Waves\" section. (Thanks to \"SpannerV2\" for the idea!)"
 		"Notes"		"Translations:"
 		"Notes"		"- Updated English translations."
 		"Notes"		"- Updated Simplified Chinese translations."

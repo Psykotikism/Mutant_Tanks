@@ -853,6 +853,7 @@ enum struct esGeneral
 	int g_iFinaleAmount;
 	int g_iFinaleMaxTypes[11];
 	int g_iFinaleMinTypes[11];
+	int g_iFinaleMode;
 	int g_iFinalesOnly;
 	int g_iFinaleWave[11];
 	int g_iFireImmunity;
@@ -13459,8 +13460,8 @@ void vMutateTank(int tank, int specType, int type, bool blind)
 				{
 					switch (g_esGeneral.g_bFinalMap)
 					{
-						case true: iType = iChooseInfected(tank, 1, g_esGeneral.g_iFinaleMinTypes[g_esGeneral.g_iTankWave], g_esGeneral.g_iFinaleMaxTypes[g_esGeneral.g_iTankWave]);
-						case false: iType = (g_esGeneral.g_bNormalMap && g_esGeneral.g_iRegularMode == 1 && g_esGeneral.g_iRegularWave == 1) ? iChooseInfected(tank, 1, g_esGeneral.g_iRegularMinType, g_esGeneral.g_iRegularMaxType) : iChooseInfected(tank, 1);
+						case true: iType = (g_esGeneral.g_iFinaleMode == 1) ? iChooseInfected(tank, 1, g_esGeneral.g_iFinaleMinTypes[g_esGeneral.g_iTankWave], g_esGeneral.g_iFinaleMaxTypes[g_esGeneral.g_iTankWave]) : iChooseInfected(tank, 1);
+						case false: iType = (g_esGeneral.g_iRegularMode == 1 && g_esGeneral.g_iRegularWave == 1) ? iChooseInfected(tank, 1, g_esGeneral.g_iRegularMinType, g_esGeneral.g_iRegularMaxType) : iChooseInfected(tank, 1);
 					}
 				}
 
@@ -17876,6 +17877,7 @@ void vSetTankSettings(int mode, const char[] section, const char[] subsection, c
 			g_esGeneral.g_iRegularMode = iGetKeyValue(subsection, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, key, "RegularMode", "Regular Mode", "Regular_Mode", "regmode", g_esGeneral.g_iRegularMode, value, -1, 1);
 			g_esGeneral.g_iRegularWave = iGetKeyValue(subsection, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, key, "RegularWave", "Regular Wave", "Regular_Wave", "regwave", g_esGeneral.g_iRegularWave, value, -1, 1);
 			g_esGeneral.g_iFinaleAmount = iGetKeyValue(subsection, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, key, "FinaleAmount", "Finale Amount", "Finale_Amount", "finamount", g_esGeneral.g_iFinaleAmount, value, -1, 32);
+			g_esGeneral.g_iFinaleMode = iGetKeyValue(subsection, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, key, "FinaleMode", "Finale Mode", "Finale_Mode", "finmode", g_esGeneral.g_iFinaleMode, value, -1, 1);
 			g_esGeneral.g_iRushTypes = iGetKeyValue(subsection, MT_CONFIG_SECTION_RUSH, MT_CONFIG_SECTION_RUSH, MT_CONFIG_SECTION_RUSH, MT_CONFIG_SECTION_RUSH, key, "RushTypes", "Rush Types", "Rush_Types", "types", g_esGeneral.g_iRushTypes, value, -1, 127);
 			g_esGeneral.g_iCommonLimit = iGetKeyValue(subsection, MT_CONFIG_SECTION_RUSH, MT_CONFIG_SECTION_RUSH, MT_CONFIG_SECTION_RUSH, MT_CONFIG_SECTION_RUSH, key, "CommonLimit", "Common Limit", "Common_Limit", "climit", g_esGeneral.g_iCommonLimit, value, -1, 100);
 			g_esGeneral.g_flCoopDelay = flGetKeyValue(subsection, MT_CONFIG_SECTION_RUSH, MT_CONFIG_SECTION_RUSH, MT_CONFIG_SECTION_RUSH, MT_CONFIG_SECTION_RUSH, key, "CoopDelay", "Coop Delay", "Coop_Delay", "delay", g_esGeneral.g_flCoopDelay, value, -1.0, 99999.0);
@@ -19868,6 +19870,7 @@ void SMCParseStart_Main(SMCParser smc)
 		g_esGeneral.g_iRegularMode = 0;
 		g_esGeneral.g_iRegularWave = 0;
 		g_esGeneral.g_iFinaleAmount = 0;
+		g_esGeneral.g_iFinaleMode = 0;
 		g_esGeneral.g_iRushTypes = 0;
 		g_esGeneral.g_iCommonLimit = 0;
 		g_esGeneral.g_flCoopDelay = 60.0;

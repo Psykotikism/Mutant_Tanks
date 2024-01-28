@@ -3154,8 +3154,8 @@
 			// Note: This setting does not need the "Regular Wave" setting to be enabled.
 			// Note: Do not change this setting if you are unsure of how it works.
 			// --
-			// 0: Wait for a Tank to spawn before spawning extra Tanks. (Recommended)
-			// 1: Use "Regular Wave" to spawn Tanks.
+			// 0: Wait for a Tank to spawn before spawning extra Tanks and use the global "Type Range" setting. (Recommended)
+			// 1: Use "Regular Wave" to spawn Tanks and use the "Regular Type" setting.
 			"Regular Mode"				"0"
 
 			// The type of Mutant Tank that will spawn.
@@ -3201,6 +3201,13 @@
 			// 0: OFF, no limit (no Tanks will be kicked by this setting).
 			// 1-32: ON, the number of Tanks that are allowed to spawn (unless the limit for "Finale Waves" is lower).
 			"Finale Amount"				"0"
+
+			// The mode of the finale wave spawner.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// --
+			// 0: Use the global "Type Range" setting. (Recommended)
+			// 1: Use the "Finale Types" setting.
+			"Finale Mode"				"0"
 
 			// The types of Mutant Tanks that can spawn in each wave.
 			// Note: If the chosen type is not available, a random type will be chosen in its place.
