@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2024  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -683,7 +683,6 @@ Action OnShieldTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 			if ((damagetype & DMG_BURN) || (damagetype & DMG_DIRECT))
 			{
 				ExtinguishEntity(victim);
-				SetEntPropFloat(victim, Prop_Send, "m_burnPercent", 0.0);
 			}
 
 			if (((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && !(g_esShieldCache[victim].g_iShieldType & MT_SHIELD_MELEE))
@@ -1530,12 +1529,7 @@ void vShieldAbility(int tank, bool shield)
 						g_esShieldPlayer[tank].g_iCooldown2 = -1;
 
 						vShield(tank);
-
-						if (bIsPlayerBurning(tank))
-						{
-							ExtinguishEntity(tank);
-							SetEntPropFloat(tank, Prop_Send, "m_burnPercent", 0.0);
-						}
+						ExtinguishEntity(tank);
 
 						if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esShieldCache[tank].g_iHumanAbility == 1)
 						{

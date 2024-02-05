@@ -10638,7 +10638,7 @@
 			// "second" - 1 second
 			// "minute" - 1 minute
 			// "forever" - 99999 seconds
-			"Clone Swap"				"1.0"
+			"Clone Swap"				"5.0"
 
 			// The type of the Mutant Tank's clone.
 			// Note: Chosen types that also have the Clone ability will be replaced with the Mutant Tank's own type to prevent bugs.
@@ -10689,7 +10689,7 @@
 				"Clone Mode"				"0"
 				"Clone Remove"				"1"
 				"Clone Replace"				"1"
-				"Clone Swap"				"1.0"
+				"Clone Swap"				"5.0"
 				"Clone Type"				"0-0"
 			}
 		}

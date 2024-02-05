@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2024  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -1022,12 +1022,7 @@ void vUltimate(int tank, int pos = -1)
 		g_esUltimatePlayer[tank].g_flDamage = 0.0;
 		g_esUltimatePlayer[tank].g_iDuration = (iTime + iDuration);
 
-		if (bIsPlayerBurning(tank))
-		{
-			ExtinguishEntity(tank);
-			SetEntPropFloat(tank, Prop_Send, "m_burnPercent", 0.0);
-		}
-
+		ExtinguishEntity(tank);
 		vAttachParticle(tank, PARTICLE_ELECTRICITY, 2.0, 30.0);
 		EmitSoundToAll(SOUND_CHARGE, tank);
 		EmitSoundToAll(SOUND_EXPLOSION, tank);

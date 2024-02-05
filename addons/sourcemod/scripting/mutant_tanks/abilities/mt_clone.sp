@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2024  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -531,7 +531,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esCloneAbility[iIndex].g_iCloneMode = 0;
 				g_esCloneAbility[iIndex].g_iCloneRemove = 1;
 				g_esCloneAbility[iIndex].g_iCloneReplace = 1;
-				g_esCloneAbility[iIndex].g_flCloneSwap = 1.0;
+				g_esCloneAbility[iIndex].g_flCloneSwap = 5.0;
 
 				g_esCloneSpecial[iIndex].g_flCloseAreasOnly = -1.0;
 				g_esCloneSpecial[iIndex].g_iComboAbility = -1;
@@ -1271,21 +1271,9 @@ Action tTimerSwapClone(Handle timer, DataPack pack)
 	GetClientAbsOrigin(iTank, flTankPos);
 	GetClientAbsAngles(iTank, flTankAngles);
 
-	if (bIsPlayerBurning(iTank))
-	{
-		ExtinguishEntity(iTank);
-		SetEntPropFloat(iTank, Prop_Send, "m_burnPercent", 0.0);
-	}
-
 	float flClonePos[3], flCloneAngles[3];
 	GetClientAbsOrigin(iClone, flClonePos);
 	GetClientAbsAngles(iClone, flCloneAngles);
-
-	if (bIsPlayerBurning(iClone))
-	{
-		ExtinguishEntity(iClone);
-		SetEntPropFloat(iClone, Prop_Send, "m_burnPercent", 0.0);
-	}
 
 	TeleportEntity(iTank, flClonePos, flCloneAngles);
 	TeleportEntity(iClone, flTankPos, flTankAngles);
