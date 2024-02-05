@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2024  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -423,7 +423,6 @@ Action OnGodTakeDamage(int victim, int &attacker, int &inflictor, float &damage,
 			if ((damagetype & DMG_BURN) || (damagetype & DMG_DIRECT))
 			{
 				ExtinguishEntity(victim);
-				SetEntPropFloat(victim, Prop_Send, "m_burnPercent", 0.0);
 			}
 
 			if ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB))

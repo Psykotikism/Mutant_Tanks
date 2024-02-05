@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2024  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -378,13 +378,8 @@ Action OnUndeadTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 				MT_TankMaxHealth(victim, 3, (iMaxHealth + iNewHealth));
 				SetEntProp(victim, Prop_Data, "m_iHealth", iNewHealth);
 				MT_UnvomitPlayer(victim);
+				ExtinguishEntity(victim);
 				EmitSoundToAll(SOUND_CHARGE, victim);
-
-				if (bIsPlayerBurning(victim))
-				{
-					ExtinguishEntity(victim);
-					SetEntPropFloat(victim, Prop_Send, "m_burnPercent", 0.0);
-				}
 
 				int iTime = GetTime();
 				if (g_esUndeadPlayer[victim].g_iCooldown == -1 || g_esUndeadPlayer[victim].g_iCooldown <= iTime)

@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2024  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13895,7 +13895,6 @@ void vResetTank2(int tank, bool full = true)
 void vResetTank3(int tank)
 {
 	ExtinguishEntity(tank);
-	SetEntPropFloat(tank, Prop_Send, "m_burnPercent", 0.0);
 	EmitSoundToAll(SOUND_ELECTRICITY, tank);
 	vAttachParticle(tank, PARTICLE_ELECTRICITY, 2.0, 30.0);
 	vResetTankSpeed(tank);
@@ -22117,7 +22116,6 @@ Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 					if (bBlockFire)
 					{
 						ExtinguishEntity(victim);
-						SetEntPropFloat(victim, Prop_Send, "m_burnPercent", 0.0);
 
 						if (!bBlockBullets && ((damagetype & DMG_BULLET) || (damagetype & DMG_BUCKSHOT)))
 						{
