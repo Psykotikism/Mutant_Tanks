@@ -43,14 +43,7 @@
 
 #### Abilities
 - Clone: Added the `Clone Swap` setting.
-- God: The burn marks on mutants now disappear when they are extinguished.
 - Laser: Added the `Laser Mode` setting. (Requested by `ddd123`.)
-- Nullify: The burn marks on mutants now disappear when they are extinguished.
-- Pyro: The burn marks on mutants now disappear when they are extinguished.
-- Recall: The burn marks on mutants now disappear when they are extinguished.
-- Shield: The burn marks on mutants now disappear when they are extinguished.
-- Ultimate: The burn marks on mutants now disappear when they are extinguished.
-- Undead: The burn marks on mutants now disappear when they are extinguished.
 
 ### Files
 
