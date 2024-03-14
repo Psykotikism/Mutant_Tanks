@@ -855,6 +855,20 @@
 			}
 
 			/**
+			 * CThrow::UpdateAbility()
+			 *
+			 * Note: Detouring as a pre-hook for changing "z_tank_throw_force" per Tank before a rock is thrown.
+			 * Note: Detouring as a post-hook for changing "z_tank_throw_force" back to default after a rock is thrown.
+			 **/
+			"MTDetour_CThrow::UpdateAbility"
+			{
+				"signature"	"CThrow::UpdateAbility"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+			}
+
+			/**
 			 * CWeaponSpawn::Use(CBaseEntity *, CBaseEntity *, USE_TYPE, float)
 			 *
 			 * Note: Detouring as a pre-hook for patching weapon switches to secondary slots per player.
@@ -917,7 +931,9 @@
 			 * TankAttack::TryToThrowRock(Tank *)
 			 *
 			 * Note: Detouring as a pre-hook for patching attack choice per Tank.
+			 * Note: Detouring as a pre-hook for changing "z_tank_throw_force" per Tank before a rock is thrown.
 			 * Note: Detouring as a post-hook for removing patch for attack choice.
+			 * Note: Detouring as a post-hook for changing "z_tank_throw_force" back to default after a rock is thrown.
 			 **/
 			"MTDetour_TankAttack::TryToThrowRock"
 			{
@@ -3816,6 +3832,25 @@
 				"mac"		"@_ZN13CTerrorWeapon8TrySwingEfff"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\xFF\x2A\x84\x2A\x0F\x85\x2A\x2A\x2A\x2A\x55"
 						/* ? ? ? ? ? ? 8B ? 8B 90 ? ? ? ? FF ? 84 ? 0F 85 ? ? ? ? 55 */
+			}
+
+			/**
+			 * CThrow::UpdateAbility()
+			 *
+			 * How to find on Windows:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2. In IDA Pro, go to the ".rdata" section of the Windows binary.
+			 * 3. Search for "CThrow::`vftable'" to jump to the "CThrow" vtable.
+			 * 4. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 5. Look for the target function in the Windows binary.
+			 **/
+			"CThrow::UpdateAbility"
+			{
+				"library"	"server"
+				"linux"		"@_ZN6CThrow13UpdateAbilityEv"
+				"mac"		"@_ZN6CThrow13UpdateAbilityEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x57\x8B\x2A\xD8\x9F\x2A\x2A\x2A\x2A\xDF\x2A\xF6\x2A\x2A\x0F"
+						/* ? ? ? ? ? ? ? ? 57 8B ? D8 9F ? ? ? ? DF ? F6 ? ? 0F */
 			}
 
 			/**
@@ -7423,6 +7458,25 @@
 				"mac"		"@_ZN13CTerrorWeapon8TrySwingEfff"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8B\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\xFF\x2A\x84\x2A\x0F\x85\x2A\x2A\x2A\x2A\x53"
 						/* ? ? ? ? ? ? 56 8B ? 8B ? 8B 90 ? ? ? ? FF ? 84 ? 0F 85 ? ? ? ? 53 */
+			}
+
+			/**
+			 * CThrow::UpdateAbility()
+			 *
+			 * How to find on Windows:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2. In IDA Pro, go to the ".rdata" section of the Windows binary.
+			 * 3. Search for "CThrow::`vftable'" to jump to the "CThrow" vtable.
+			 * 4. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 5. Look for the target function in the Windows binary.
+			 **/
+			"CThrow::UpdateAbility"
+			{
+				"library"	"server"
+				"linux"		"@_ZN6CThrow13UpdateAbilityEv"
+				"mac"		"@_ZN6CThrow13UpdateAbilityEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x57\x8B\x2A\x8B\x87\x2A\x2A\x2A\x2A\x89"
+						/* ? ? ? ? ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 57 8B ? 8B 87 ? ? ? ? 89 */
 			}
 
 			/**
