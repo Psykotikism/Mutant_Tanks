@@ -734,16 +734,6 @@
 		"chi"			"在硬核模式下,你只有一次生存机会！"
 	}
 
-	"HudKillInfected"
-	{
-		"chi"			"{1} 杀死了 {2}"
-	}
-
-	"HudKillSurvivor"
-	{
-		"chi"			"{1} 杀死了 {2}"
-	}
-
 	"HumanCooldown"
 	{
 		"chi"			"你需要等待{olive} {1} 秒{mint} 才能变更为其他突变坦克类型。"

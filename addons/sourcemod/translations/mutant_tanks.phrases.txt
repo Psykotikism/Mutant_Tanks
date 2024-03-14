@@ -795,18 +795,6 @@
 		"en"			"You only get one chance to survive on HARDCORE mode!"
 	}
 
-	"HudKillInfected"
-	{
-		"#format"		"{1:N},{2:t}"
-		"en"			"{1} killed {2}"
-	}
-
-	"HudKillSurvivor"
-	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{1} killed {2}"
-	}
-
 	"HumanCooldown"
 	{
 		"#format"		"{1:i}"

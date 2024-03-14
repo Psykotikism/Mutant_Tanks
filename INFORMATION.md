@@ -207,15 +207,6 @@
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Bullet Fix"				"1"
 
-			// Enable HUD announcements for survivor and special infected kills.
-			// Note: Only available in Left 4 Dead 2.
-			// Note: Do not change this setting if you are unsure of how it works.
-			// Note: This setting can be used for standard Tanks.
-			// --
-			// 0/"disabled"/"false"/"off"/"no": OFF
-			// 1/"enabled"/"true"/"on"/"yes": ON
-			"Hud Kills"				"0"
-
 			// Kick Mutant Infected as soon as they die.
 			// Note: Both games usually wait around 5 seconds by default before kicking infected bots.
 			// Note: Do not change this setting if you are unsure of how it works.
@@ -2895,6 +2886,22 @@
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Sweep Fist"				"0"
+
+			// Every Mutant Tank's rock throws have this much force.
+			// Note: Low values like "500.0" and high values like "5000.0" will cause rocks to miss by a huge margin. This is a game limitation, not a plugin issue.
+			// Note: The value "1000.0" has been tested to be a stable value for the Tank's rock throw force.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
+			// --
+			// OFF: -1.0
+			// Minimum: 0.0
+			// Maximum: 99999.0
+			// --
+			// Keywords:
+			// "nodmg"/"friendly"/"harmless" - 0.0 force
+			// "weakest" - 1.0 force
+			// "strongest" - 99999.0 force
+			"Throw Force"				"-1.0"
 
 			// Every Mutant Tank throws a rock every time this many seconds passes.
 			// Note: This setting can be used for standard Tanks.
@@ -7149,6 +7156,22 @@
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Sweep Fist"				"0"
+
+			// The Mutant Tank's rock throws have this much force.
+			// Note: Low values like "500.0" and high values like "5000.0" will cause rocks to miss by a huge margin. This is a game limitation, not a plugin issue.
+			// Note: The value "1000.0" has been tested to be a stable value for the Tank's rock throw force.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Enhancements" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// OFF: -1.0
+			// Minimum: 0.0
+			// Maximum: 99999.0
+			// --
+			// Keywords:
+			// "nodmg"/"friendly"/"harmless" - 0.0 force
+			// "weakest" - 1.0 force
+			// "strongest" - 99999.0 force
+			"Throw Force"				"-1.0"
 
 			// The Mutant Tank throws a rock every time this many seconds passes.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Enhancements" section.

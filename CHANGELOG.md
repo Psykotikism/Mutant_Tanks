@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 9.1 (February 14, 2024)
+## Version 9.1 (March 14, 2024)
 
 ### Bug Fixes
 
@@ -31,7 +31,7 @@
 - The core plugin will now attempt to fix Tanks that get stuck when they spawn.
 
 #### Settings
-- Added the `Hud Kills` setting under the `Plugin Settings->General`. (Exclusive to L4D2.) [Thanks to `NoroHime` for the code!]
+- Added the `Throw Force` setting under the `Plugin Settings->Enhancements`, `Tank #->Enhancements`, and `STEAM_ID->Enhancements` sections. (Requested by `xcd222`.)
 - Added the `Laser Sight Reward` setting under the `Plugin Settings->Rewards`, `Tank #->Rewards`, and `STEAM_ID->Rewards` sections. (Requested by `ddd123`.)
 - Added the `Finale Mode` setting under the `Plugin Settings->Waves` section. (Thanks to `SpannerV2` for the idea!)
 
@@ -62,6 +62,7 @@
 
 #### Updates
 - Updated config files.
+- Updated gamedata file.
 - Updated include file.
 - Updated translation files.
 - Updated updater file.
