@@ -219,6 +219,11 @@
 		"hu"			"Plugin Beállítások"
 	}
 
+	"MTSurvivorsItem"
+	{
+		"hu"			"Túlélők"
+	}
+
 	"MTVersionMenu"
 	{
 		"hu"			"Mutáns Tankok Verzió"

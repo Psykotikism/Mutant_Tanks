@@ -46,6 +46,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 
 #define MT_GAMEDATA "mutant_tanks"
+
+#define SOUND_HEARTBEAT "player/heartbeatloop.wav"
 #else
 	#if MT_BURY_COMPILE_METHOD == 1
 		#error This file must be compiled as a standalone plugin.
@@ -295,6 +297,8 @@ void vBuryMapStart()
 public void OnMapStart()
 #endif
 {
+	PrecacheSound(SOUND_HEARTBEAT, true);
+
 	vBuryReset();
 }
 
@@ -1018,10 +1022,14 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	}
 	else if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
 	{
-		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+		int iUserId = event.GetInt("userid"), iPlayer = GetClientOfUserId(iUserId);
+		if (MT_IsTankSupported(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vRemoveBury(iTank);
+			vRemoveBury(iPlayer);
+		}
+		else if (bIsSurvivor(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME))
+		{
+			vStopHeartbeat(iPlayer, SOUND_HEARTBEAT);
 		}
 	}
 	else if (StrEqual(name, "player_now_it"))
@@ -1349,6 +1357,7 @@ void vStopBury(int survivor, int tank)
 	if (bIsPlayerIncapacitated(survivor))
 	{
 		SDKCall(g_hSDKRevive, survivor);
+		StopSound(survivor, SNDCHAN_STATIC, SOUND_HEARTBEAT);
 
 		if (g_esBuryCache[tank].g_flBuryBuffer > 0.0)
 		{

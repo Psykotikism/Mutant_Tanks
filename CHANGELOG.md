@@ -1,39 +1,28 @@
 # Changelog
 
-## Version 9.1 (March 20, 2024)
+## Version 9.2 (September 1, 2024)
 
 ### Bug Fixes
 
-#### Settings
-- Fixed the `Ghost Bullets Reward` setting not working properly in some cases.
-
-#### Translations
-- Fixed translation errors for Mutant type names. (Thanks to `SpannerV2` and `Mi.Cura` for reporting!)
+#### Core Plugin
+- Fixed the looping heartbeat sound effect after reviving a survivor multiple times.
 
 #### Abilities
-- Acid:
-	- Fixed the `Acid Death` setting.
-	- Fixed the `Acid Damage` setting.
-- Bomb:
-	- Fixed the `Bomb Death` setting.
-	- Fixed the `Bomb Damage` setting.
-- Fire:
-	- Fixed the `Fire Death` setting.
-	- Fixed the `Fire Damage` setting. (Thanks to `SpannerV2` for reporting!)
-- Fling: Fixed the `Fling Death` setting.
-- Puke: Fixed the `Puke Death` setting. (Thanks to `ddd123` and `Mi.Cura` for testing and reporting!)
-- Shake: Fixed the `Shake Death` setting.
-- Shove: Fixed the `Shove Death` setting.
+- Fixed the `* Pin`, `* Pin Chance`, and `* Pin Cooldown` settings not working for the following abilities:
+	- Acid
+	- Bomb
+	- Fire
+	- Gravity
+	- Medic
+	- Warp
+- Bury: Fixed the looping heartbeat sound effect after reviving a survivor multiple times. (Thanks to `Dudus1st` for reporting!)
+- Throw: Fixed thrown special infected not having any velocity. (Thanks to `Mi.Cura` for testing and reporting!)
 
 ### Changes
 
-#### Core Plugin
-- The core plugin will now attempt to fix Tanks that get stuck when they spawn.
-
-#### Settings
-- Added the `Throw Force` setting under the `Plugin Settings->Enhancements`, `Tank #->Enhancements`, and `STEAM_ID->Enhancements` sections. (Requested by `xcd222`.)
-- Added the `Laser Sight Reward` setting under the `Plugin Settings->Rewards`, `Tank #->Rewards`, and `STEAM_ID->Rewards` sections. (Requested by `ddd123`.)
-- Added the `Finale Mode` setting under the `Plugin Settings->Waves` section. (Thanks to `SpannerV2` for the idea!)
+#### Game Data
+- L4D1: Updated some offsets for the `1.0.4.3` update.
+- L4D2: Updated some signatures and offsets for the `2.2.3.5` update.
 
 #### Translations
 - Updated English translations.
@@ -42,8 +31,7 @@
 - Updated Russian translations.
 
 #### Abilities
-- Clone: Added the `Clone Swap` setting.
-- Laser: Added the `Laser Mode` setting. (Requested by `ddd123`.)
+- Gravity: Added the `Gravity Mode` setting.
 
 ### Files
 
@@ -59,6 +47,96 @@
 - Updated include file.
 - Updated translation files.
 - Updated updater file.
+
+## Version 9.1 (March 20, 2024)
+<details>
+	<summary>Click to expand!</summary>
+
+### Bug Fixes
+<details>
+	<summary>Settings</summary>
+
+#### Settings
+- Fixed the `Ghost Bullets Reward` setting not working properly in some cases.
+</details>
+<details>
+	<summary>Translations</summary>
+
+#### Translations
+- Fixed translation errors for Mutant type names. (Thanks to `SpannerV2` and `Mi.Cura` for reporting!)
+</details>
+<details>
+	<summary>Abilities</summary>
+
+#### Abilities
+- Acid:
+	- Fixed the `Acid Death` setting.
+	- Fixed the `Acid Damage` setting.
+- Bomb:
+	- Fixed the `Bomb Death` setting.
+	- Fixed the `Bomb Damage` setting.
+- Fire:
+	- Fixed the `Fire Death` setting.
+	- Fixed the `Fire Damage` setting. (Thanks to `SpannerV2` for reporting!)
+- Fling: Fixed the `Fling Death` setting.
+- Puke: Fixed the `Puke Death` setting. (Thanks to `ddd123` and `Mi.Cura` for testing and reporting!)
+- Shake: Fixed the `Shake Death` setting.
+- Shove: Fixed the `Shove Death` setting.
+</details>
+
+### Changes
+<details>
+	<summary>Core Plugin</summary>
+
+#### Core Plugin
+- The core plugin will now attempt to fix Tanks that get stuck when they spawn.
+</details>
+<details>
+	<summary>Settings</summary>
+
+#### Settings
+- Added the `Throw Force` setting under the `Plugin Settings->Enhancements`, `Tank #->Enhancements`, and `STEAM_ID->Enhancements` sections. (Requested by `xcd222`.)
+- Added the `Laser Sight Reward` setting under the `Plugin Settings->Rewards`, `Tank #->Rewards`, and `STEAM_ID->Rewards` sections. (Requested by `ddd123`.)
+- Added the `Finale Mode` setting under the `Plugin Settings->Waves` section. (Thanks to `SpannerV2` for the idea!)
+</details>
+<details>
+	<summary>Translations</summary>
+
+#### Translations
+- Updated English translations.
+- Updated Simplified Chinese translations.
+- Updated Hungarian translations.
+- Updated Russian translations.
+</details>
+<details>
+	<summary>Abilities</summary>
+
+#### Abilities
+- Clone: Added the `Clone Swap` setting.
+- Laser: Added the `Laser Mode` setting. (Requested by `ddd123`.)
+</details>
+
+### Files
+<details>
+	<summary>General</summary>
+
+#### General
+- The pre-compiled plugins included in the package are:
+	- Compiled without any of the optional dependencies.
+	- Compiled with the `SourceMod 1.12.0.7066` compiler.
+- The plugins can still be compiled with `SourceMod 1.12.0.6985` or higher.
+</details>
+<details>
+	<summary>Updates</summary>
+
+#### Updates
+- Updated config files.
+- Updated gamedata file.
+- Updated include file.
+- Updated translation files.
+- Updated updater file.
+</details>
+</details>
 
 ## Version 9.0 (December 5, 2023)
 <details>

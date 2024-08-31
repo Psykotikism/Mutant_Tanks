@@ -219,6 +219,11 @@
 		"chi"			"插件设置"
 	}
 
+	"MTSurvivorsItem"
+	{
+		"chi"			"幸存者"
+	}
+
 	"MTVersionMenu"
 	{
 		"chi"			"突变坦克版本"

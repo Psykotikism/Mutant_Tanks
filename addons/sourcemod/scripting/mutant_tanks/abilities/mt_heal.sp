@@ -1111,10 +1111,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		}
 		else if (bIsSurvivor(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			StopSound(iPlayer, SNDCHAN_STATIC, SOUND_HEARTBEAT);
-			StopSound(iPlayer, SNDCHAN_STATIC, SOUND_HEARTBEAT);
-			StopSound(iPlayer, SNDCHAN_STATIC, SOUND_HEARTBEAT);
-			StopSound(iPlayer, SNDCHAN_STATIC, SOUND_HEARTBEAT);
+			vStopHeartbeat(iPlayer, SOUND_HEARTBEAT);
 		}
 	}
 	else if (StrEqual(name, "player_now_it"))

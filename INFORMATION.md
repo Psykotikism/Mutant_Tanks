@@ -40,6 +40,13 @@
 </details>
 
 <details>
+	<summary>Survivor Settings</summary>
+
+- [Survivor Settings](#survivor-settings)
+	- TBA
+</details>
+
+<details>
 	<summary>Tank Settings</summary>
 
 - [Tank Settings](#tank-settings)
@@ -3494,6 +3501,21 @@
 			// 128: Finale stages
 			"Execute Config Types"			"0"
 		}
+	}
+}
+```
+</details>
+
+### Survivor Settings
+<details>
+	<summary>Click to expand!</summary>
+
+```
+"Mutant Tanks"
+{
+	"Survivors"
+	{
+		// To be added...
 	}
 }
 ```
@@ -15165,6 +15187,13 @@
 			// "survivor"/"hurt" - 2
 			"Gravity Hit Mode"			"0"
 
+			// The mode of the Mutant Tank's gravity ability.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: The Mutant Tank changes the survivors' gravity.
+			// 1: The Mutant Tank turns the survivors' into temporary black holes.
+			"Gravity Mode"				"0"
+
 			// The radius of the Mutant Tank's gravity.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -15290,6 +15319,7 @@
 				"Gravity Force"				"-50.0"
 				"Gravity Hit"				"0"
 				"Gravity Hit Mode"			"0"
+				"Gravity Mode"				"0"
 				"Gravity Pin"				"0"
 				"Gravity Pin Chance"			"33.3"
 				"Gravity Pin Cooldown"			"0"

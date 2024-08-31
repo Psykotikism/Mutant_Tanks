@@ -129,6 +129,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define SOUND_ELECTRICITY "items/suitchargeok1.wav"
 #define SOUND_EXPLOSION2 "weapons/grenade_launcher/grenadefire/grenade_launcher_explode_2.wav" // Only available in L4D2
 #define SOUND_EXPLOSION1 "animation/van_inside_debris.wav" // Only used in L4D1
+#define SOUND_HEARTBEAT "player/heartbeatloop.wav"
 #define SOUND_LADYKILLER "ui/alert_clink.wav"
 #define SOUND_METAL "physics/metal/metal_solid_impact_hard5.wav"
 #define SOUND_NULL "common/null.wav"
@@ -229,6 +230,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_CONFIG_SECTION_SETTINGS2 "Plugin Settings"
 #define MT_CONFIG_SECTION_SETTINGS3 "Plugin_Settings"
 #define MT_CONFIG_SECTION_SETTINGS4 "settings"
+#define MT_CONFIG_SECTION_SURVIVORS "Survivors"
 #define MT_CONFIG_SECTION_GENERAL "General"
 #define MT_CONFIG_SECTION_ANNOUNCE "Announcements"
 #define MT_CONFIG_SECTION_ANNOUNCE2 "announce"
@@ -428,6 +430,7 @@ enum ConfigState
 	ConfigState_None, // no section yet
 	ConfigState_Start, // reached "Mutant Tanks" section
 	ConfigState_Settings, // reached "Plugin Settings" section
+	ConfigState_Survivors, // reached "Survivors" section
 	ConfigState_Type, // reached "Tank #" section
 	ConfigState_Admin, // reached "STEAM_"/"[U:" section
 	ConfigState_Specific, // reached specific sections
@@ -2691,6 +2694,7 @@ public void OnMapStart()
 	PrecacheSound(SOUND_DAMAGE2, true);
 	PrecacheSound(SOUND_DEATH, true);
 	PrecacheSound(SOUND_ELECTRICITY, true);
+	PrecacheSound(SOUND_HEARTBEAT, true);
 	PrecacheSound(SOUND_METAL, true);
 	PrecacheSound(SOUND_NULL, true);
 	PrecacheSound(SOUND_SPAWN, true);
@@ -6406,6 +6410,12 @@ int iConfigMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 
 				return RedrawMenuItem(sMenuOption);
 			}
+			else if (StrEqual(sInfo, MT_CONFIG_SECTION_SURVIVORS, false))
+			{
+				FormatEx(sMenuOption, sizeof sMenuOption, "%T", "MTSurvivorsItem", param1);
+
+				return RedrawMenuItem(sMenuOption);
+			}
 		}
 	}
 
@@ -8334,6 +8344,7 @@ void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			else if (bIsSurvivor(iVictim, MT_CHECK_INDEX|MT_CHECK_INGAME))
 			{
 				vRemoveLaserSight(iVictim);
+				vStopHeartbeat(iVictim, SOUND_HEARTBEAT);
 
 				if (bIsValidClient(iVictim, MT_CHECK_FAKECLIENT) && g_esGeneral.g_iRushTypes > 0 && g_esGeneral.g_iHardcoreMode == 1)
 				{
@@ -11554,6 +11565,7 @@ void vReviveSurvivor(int survivor)
 	if (g_esGeneral.g_hSDKRevive != null)
 	{
 		SDKCall(g_esGeneral.g_hSDKRevive, survivor);
+		StopSound(survivor, SNDCHAN_STATIC, SOUND_HEARTBEAT);
 	}
 }
 
@@ -13550,7 +13562,12 @@ void vMutateTank(int tank, int specType, int type, bool blind)
 		}
 	}
 
-	vFixPlayerPosition(tank);
+	float flVelocity[3];
+	GetEntPropVector(tank, Prop_Data, "m_vecVelocity", flVelocity);
+	if (flVelocity[0] == 0.0 && flVelocity[1] == 0.0 && flVelocity[2] == 0.0)
+	{
+		vFixPlayerPosition(tank);
+	}
 
 	g_esGeneral.g_bBlindType = false;
 	g_esGeneral.g_bForceSpawned = false;
@@ -18127,7 +18144,7 @@ void vSetTankSettings(int mode, const char[] section, const char[] subsection, c
 		}
 	}
 
-	if ((mode == -1 || mode == 3) && (!strncmp(section, "STEAM_", 6, false) || !strncmp("0:", section, 2) || !strncmp("1:", section, 2) || (!strncmp(section, "[U:", 3) && section[strlen(section) - 1] == ']')))
+	if ((mode == -1 || mode == 3) && (StrEqual(section, MT_CONFIG_SECTION_SURVIVORS, false) || !strncmp(section, "STEAM_", 6, false) || !strncmp("0:", section, 2) || !strncmp("1:", section, 2) || (!strncmp(section, "[U:", 3) && section[strlen(section) - 1] == ']')))
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
@@ -18494,6 +18511,12 @@ void vSetTankSettings(int mode, const char[] section, const char[] subsection, c
 
 					break;
 				}
+				/*else if (StrEqual(section, MT_CONFIG_SECTION_SURVIVORS, false) && // steam ids, survivor names, client numbers)
+				{
+					// TO-DO: add settings for survivor passive abilities aka infinite rewards on-spawn
+
+					break;
+				}*/
 			}
 		}
 	}
@@ -19282,9 +19305,9 @@ SMCResult SMCNewSection_Config(SMCParser smc, const char[] name, bool opt_quotes
 		return SMCParse_Continue;
 	}
 
-	if (StrEqual(name, MT_CONFIG_SECTION_SETTINGS, false) || StrEqual(name, MT_CONFIG_SECTION_SETTINGS2, false) || StrEqual(name, MT_CONFIG_SECTION_SETTINGS3, false) || StrEqual(name, MT_CONFIG_SECTION_SETTINGS4, false) || !strncmp(name, "STEAM_", 6, false)
-		|| !strncmp("0:", name, 2) || !strncmp("1:", name, 2) || (!strncmp(name, "[U:", 3) && name[strlen(name) - 1] == ']') || StrEqual(name, "all", false) || FindCharInString(name, ',') != -1 || FindCharInString(name, '-') != -1
-		|| !strncmp(name, "Tank", 4, false) || name[0] == '#' || IsCharNumeric(name[0]))
+	if (StrEqual(name, MT_CONFIG_SECTION_SETTINGS, false) || StrEqual(name, MT_CONFIG_SECTION_SETTINGS2, false) || StrEqual(name, MT_CONFIG_SECTION_SETTINGS3, false) || StrEqual(name, MT_CONFIG_SECTION_SETTINGS4, false)
+		|| StrEqual(name, MT_CONFIG_SECTION_SURVIVORS, false) || !strncmp(name, "STEAM_", 6, false) || !strncmp("0:", name, 2) || !strncmp("1:", name, 2) || (!strncmp(name, "[U:", 3) && name[strlen(name) - 1] == ']')
+		|| StrEqual(name, "all", false) || FindCharInString(name, ',') != -1 || FindCharInString(name, '-') != -1 || !strncmp(name, "Tank", 4, false) || name[0] == '#' || IsCharNumeric(name[0]))
 	{
 		g_esGeneral.g_alSections.PushString(name);
 	}
@@ -19378,6 +19401,16 @@ SMCResult SMCNewSection_Parser(SMCParser smc, const char[] name, bool opt_quotes
 				case false: vLogMessage(MT_LOG_SERVER, false, (opt_quotes) ? ("%7s \"%s\"\n%7s {") : ("%7s %s\n%7s {"), "", name, "");
 			}
 		}
+		else if (StrEqual(name, MT_CONFIG_SECTION_SURVIVORS, false) && StrContains(name, g_esGeneral.g_sSection, false) != -1)
+		{
+			g_esGeneral.g_csState2 = ConfigState_Survivors;
+
+			switch (bHuman)
+			{
+				case true: MT_PrintToConsole(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%7s \"%s\"\n%7s {") : ("%7s %s\n%7s {"), "", name, "");
+				case false: vLogMessage(MT_LOG_SERVER, false, (opt_quotes) ? ("%7s \"%s\"\n%7s {") : ("%7s %s\n%7s {"), "", name, "");
+			}
+		}
 		else if (g_esGeneral.g_iSection > 0 && (!strncmp(name, "Tank", 4, false) || name[0] == '#' || IsCharNumeric(name[0]) || StrEqual(name, "all", false) || FindCharInString(name, ',') != -1 || FindCharInString(name, '-') != -1))
 		{
 			char sSection[33], sIndex[5], sType[5];
@@ -19426,7 +19459,7 @@ SMCResult SMCNewSection_Parser(SMCParser smc, const char[] name, bool opt_quotes
 			g_esGeneral.g_iIgnoreLevel2++;
 		}
 	}
-	else if (g_esGeneral.g_csState2 == ConfigState_Settings || g_esGeneral.g_csState2 == ConfigState_Type || g_esGeneral.g_csState2 == ConfigState_Admin)
+	else if (g_esGeneral.g_csState2 == ConfigState_Settings || g_esGeneral.g_csState2 == ConfigState_Survivors || g_esGeneral.g_csState2 == ConfigState_Type || g_esGeneral.g_csState2 == ConfigState_Admin)
 	{
 		g_esGeneral.g_csState2 = ConfigState_Specific;
 
@@ -19529,6 +19562,16 @@ SMCResult SMCEndSection_Parser(SMCParser smc)
 				case false: vLogMessage(MT_LOG_SERVER, false, "%15s }", "");
 			}
 		}
+		else if (StrContains(MT_CONFIG_SECTION_SURVIVORS, g_esGeneral.g_sSection, false) != -1)
+		{
+			g_esGeneral.g_csState2 = ConfigState_Survivors;
+
+			switch (bHuman)
+			{
+				case true: MT_PrintToConsole(g_esGeneral.g_iParserViewer, "%15s }", "");
+				case false: vLogMessage(MT_LOG_SERVER, false, "%15s }", "");
+			}
+		}
 		else if (g_esGeneral.g_iSection > 0 && (!strncmp(g_esGeneral.g_sSection, "Tank", 4, false) || g_esGeneral.g_sSection[0] == '#' || IsCharNumeric(g_esGeneral.g_sSection[0]) || StrEqual(g_esGeneral.g_sSection, "all", false) || FindCharInString(g_esGeneral.g_sSection, ',') != -1 || FindCharInString(g_esGeneral.g_sSection, '-') != -1))
 		{
 			g_esGeneral.g_csState2 = ConfigState_Type;
@@ -19560,7 +19603,7 @@ SMCResult SMCEndSection_Parser(SMCParser smc)
 			}
 		}
 	}
-	else if (g_esGeneral.g_csState2 == ConfigState_Settings || g_esGeneral.g_csState2 == ConfigState_Type || g_esGeneral.g_csState2 == ConfigState_Admin)
+	else if (g_esGeneral.g_csState2 == ConfigState_Settings || g_esGeneral.g_csState2 == ConfigState_Survivors || g_esGeneral.g_csState2 == ConfigState_Type || g_esGeneral.g_csState2 == ConfigState_Admin)
 	{
 		g_esGeneral.g_csState2 = ConfigState_Start;
 
@@ -21023,6 +21066,12 @@ SMCResult SMCNewSection_Main(SMCParser smc, const char[] name, bool opt_quotes)
 
 			strcopy(g_esGeneral.g_sCurrentSection, sizeof esGeneral::g_sCurrentSection, name);
 		}
+		else if (StrEqual(name, MT_CONFIG_SECTION_SURVIVORS, false))
+		{
+			g_esGeneral.g_csState = ConfigState_Survivors;
+
+			strcopy(g_esGeneral.g_sCurrentSection, sizeof esGeneral::g_sCurrentSection, name);
+		}
 		else if (!strncmp(name, "Tank", 4, false) || name[0] == '#' || IsCharNumeric(name[0]) || StrEqual(name, "all", false) || FindCharInString(name, ',') != -1 || FindCharInString(name, '-') != -1)
 		{
 			g_esGeneral.g_csState = ConfigState_Type;
@@ -21081,7 +21130,7 @@ SMCResult SMCNewSection_Main(SMCParser smc, const char[] name, bool opt_quotes)
 			g_esGeneral.g_iIgnoreLevel++;
 		}
 	}
-	else if (g_esGeneral.g_csState == ConfigState_Settings || g_esGeneral.g_csState == ConfigState_Type || g_esGeneral.g_csState == ConfigState_Admin)
+	else if (g_esGeneral.g_csState == ConfigState_Settings || g_esGeneral.g_csState == ConfigState_Survivors || g_esGeneral.g_csState == ConfigState_Type || g_esGeneral.g_csState == ConfigState_Admin)
 	{
 		g_esGeneral.g_csState = ConfigState_Specific;
 
@@ -21205,6 +21254,10 @@ SMCResult SMCEndSection_Main(SMCParser smc)
 		{
 			g_esGeneral.g_csState = ConfigState_Settings;
 		}
+		else if (StrEqual(g_esGeneral.g_sCurrentSection, MT_CONFIG_SECTION_SURVIVORS, false))
+		{
+			g_esGeneral.g_csState = ConfigState_Survivors;
+		}
 		else if (!strncmp(g_esGeneral.g_sCurrentSection, "Tank", 4, false) || g_esGeneral.g_sCurrentSection[0] == '#' || IsCharNumeric(g_esGeneral.g_sCurrentSection[0]) || StrEqual(g_esGeneral.g_sCurrentSection, "all", false) || FindCharInString(g_esGeneral.g_sCurrentSection, ',') != -1 || FindCharInString(g_esGeneral.g_sCurrentSection, '-') != -1)
 		{
 			g_esGeneral.g_csState = ConfigState_Type;
@@ -21214,7 +21267,7 @@ SMCResult SMCEndSection_Main(SMCParser smc)
 			g_esGeneral.g_csState = ConfigState_Admin;
 		}
 	}
-	else if (g_esGeneral.g_csState == ConfigState_Settings || g_esGeneral.g_csState == ConfigState_Type || g_esGeneral.g_csState == ConfigState_Admin)
+	else if (g_esGeneral.g_csState == ConfigState_Settings || g_esGeneral.g_csState == ConfigState_Survivors || g_esGeneral.g_csState == ConfigState_Type || g_esGeneral.g_csState == ConfigState_Admin)
 	{
 		g_esGeneral.g_csState = ConfigState_Start;
 	}
