@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 9.2 (September 1, 2024)
+## Version 9.2 (September 8, 2024)
 
 ### Bug Fixes
 
@@ -24,12 +24,6 @@
 - L4D1: Updated some offsets for the `1.0.4.3` update.
 - L4D2: Updated some signatures and offsets for the `2.2.3.5` update.
 
-#### Translations
-- Updated English translations.
-- Updated Simplified Chinese translations.
-- Updated Hungarian translations.
-- Updated Russian translations.
-
 #### Abilities
 - Gravity: Added the `Gravity Mode` setting.
 
@@ -45,7 +39,6 @@
 - Updated config files.
 - Updated gamedata file.
 - Updated include file.
-- Updated translation files.
 - Updated updater file.
 
 ## Version 9.1 (March 20, 2024)

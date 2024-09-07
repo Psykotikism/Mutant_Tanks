@@ -10,7 +10,7 @@
 
 		"Notes"		"AlliedModders forum thread: https://forums.alliedmods.net/showthread.php?t=302140"
 		"Notes"		"GitHub repository: https://github.com/Psykotikism/Mutant_Tanks"
-		"Notes"		"Release date: 9-1-2024"
+		"Notes"		"Release date: 9-8-2024"
 		"Notes"		"Changes in v9.2:"
 		"Notes"		"Bug Fixes:"
 		"Notes"		"Core Plugin:"
@@ -29,11 +29,6 @@
 		"Notes"		"Game Data:"
 		"Notes"		"- L4D1: Updated some offsets for the \"1.0.4.3\" update."
 		"Notes"		"- L4D2: Updated some signatures and offsets for the \"2.2.3.5\" update."
-		"Notes"		"Translations:"
-		"Notes"		"- Updated English translations."
-		"Notes"		"- Updated Simplified Chinese translations."
-		"Notes"		"- Updated Hungarian translations."
-		"Notes"		"- Updated Russian translations."
 		"Notes"		"Abilities:"
 		"Notes"		"- Gravity: Added the \"Gravity Mode\" setting."
 		"Notes"		"Files:"
@@ -46,7 +41,6 @@
 		"Notes"		"- Updated config files."
 		"Notes"		"- Updated gamedata file."
 		"Notes"		"- Updated include file."
-		"Notes"		"- Updated translation files."
 		"Notes"		"- Updated updater file."
 	}
 
