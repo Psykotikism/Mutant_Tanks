@@ -227,11 +227,6 @@
 		"en"			"Plugin Settings"
 	}
 
-	"MTSurvivorsItem"
-	{
-		"en"			"Survivors"
-	}
-
 	"MTVersionMenu"
 	{
 		"en"			"Mutant Tanks Version"

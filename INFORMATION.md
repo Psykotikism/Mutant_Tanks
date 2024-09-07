@@ -40,13 +40,6 @@
 </details>
 
 <details>
-	<summary>Survivor Settings</summary>
-
-- [Survivor Settings](#survivor-settings)
-	- TBA
-</details>
-
-<details>
 	<summary>Tank Settings</summary>
 
 - [Tank Settings](#tank-settings)
@@ -3501,21 +3494,6 @@
 			// 128: Finale stages
 			"Execute Config Types"			"0"
 		}
-	}
-}
-```
-</details>
-
-### Survivor Settings
-<details>
-	<summary>Click to expand!</summary>
-
-```
-"Mutant Tanks"
-{
-	"Survivors"
-	{
-		// To be added...
 	}
 }
 ```
