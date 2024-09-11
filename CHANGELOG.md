@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 9.2 (September 8, 2024)
+## Version 9.2 (September 10, 2024)
 
 ### Bug Fixes
 
