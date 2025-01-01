@@ -1,6 +1,6 @@
 /**
- * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2024  Alfred "Psyk0tik" Llagas
+ * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -28,6 +28,8 @@ public Plugin myinfo =
 };
 
 bool g_bDedicated, g_bSecondGame;
+
+int g_iGraphicsLevel;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -608,7 +610,9 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esTrackPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esTrackPlayer[tank].g_iTankType = apply ? type : 0;
 	int iType = g_esTrackPlayer[tank].g_iTankTypeRecorded;
-
+#if !defined MT_ABILITIES_MAIN2
+	g_iGraphicsLevel = MT_GetGraphicsLevel();
+#endif
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		g_esTrackCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esTrackTeammate[tank].g_flCloseAreasOnly, g_esTrackPlayer[tank].g_flCloseAreasOnly, g_esTrackSpecial[iType].g_flCloseAreasOnly, g_esTrackAbility[iType].g_flCloseAreasOnly, 1);
@@ -791,7 +795,7 @@ public void MT_OnRockThrow(int tank, int rock)
 
 void vSetTrackGlow(int rock, int color, bool flashing, int min, int max, int type)
 {
-	if (!g_bSecondGame)
+	if (!g_bSecondGame || g_iGraphicsLevel <= 1)
 	{
 		return;
 	}
@@ -1096,7 +1100,7 @@ void vTrackThink(int rock)
 					int iGlowColor[4];
 					MT_GetTankColors(iTank, 2, iGlowColor[0], iGlowColor[1], iGlowColor[2], iGlowColor[3]);
 
-					switch (iGlowColor[0] == -2 && iGlowColor[1] == -2 && iGlowColor[2] == -2)
+					switch (iGlowColor[0] == -2 && iGlowColor[1] == -2 && iGlowColor[2] == -2 && g_iGraphicsLevel > 2)
 					{
 						case true:
 						{
@@ -1117,7 +1121,7 @@ void vTrackThink(int rock)
 
 void OnTrackPreThinkPost(int tank)
 {
-	if (!g_bSecondGame || !MT_IsTankSupported(tank) || !MT_IsCustomTankSupported(tank) || !g_esTrackPlayer[tank].g_bRainbowColor)
+	if (!g_bSecondGame || !MT_IsTankSupported(tank) || !MT_IsCustomTankSupported(tank) || !g_esTrackPlayer[tank].g_bRainbowColor || g_iGraphicsLevel <= 2)
 	{
 		g_esTrackPlayer[tank].g_bRainbowColor = false;
 
@@ -1223,14 +1227,14 @@ int iGetRockTarget(float pos[3], float angles[3], int tank)
 	return iTarget;
 }
 
-void tTimerTrack(Handle timer, DataPack pack)
+Action tTimerTrack(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iRock = EntRefToEntIndex(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || iRock == INVALID_ENT_REFERENCE || !bIsValidEntity(iRock))
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
@@ -1238,7 +1242,7 @@ void tTimerTrack(Handle timer, DataPack pack)
 	{
 		g_esTrackPlayer[iTank].g_bActivated = false;
 
-		return;
+		return Plugin_Stop;
 	}
 
 	SDKUnhook(iRock, SDKHook_Think, OnTrackThink);
@@ -1257,4 +1261,6 @@ void tTimerTrack(Handle timer, DataPack pack)
 			MT_PrintToChat(iTank, "%s %t", MT_TAG3, "TrackHuman4", (g_esTrackPlayer[iTank].g_iCooldown - iTime));
 		}
 	}
+
+	return Plugin_Continue;
 }

@@ -1,6 +1,6 @@
 /**
- * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2024  Alfred "Psyk0tik" Llagas
+ * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -10,7 +10,7 @@
  **/
 
 #define MT_ABILITIES_MAIN2
-#define MT_ABILITIES_GROUP2 3 // 0: NONE, 1: Only include first half (1-20), 2: Only include second half (21-39), 3: ALL
+#define MT_ABILITIES_GROUP2 3 // 0: NONE, 1: Only include first half (1-15), 2: Only include second half (16-31), 3: ALL
 #define MT_ABILITIES_COMPILER_MESSAGE2 1 // 0: NONE, 1: Display warning messages about excluded abilities, 2: Display error messages about excluded abilities
 
 #include <sourcemod>
@@ -45,8 +45,10 @@ public Plugin myinfo =
 #define MODEL_ROADCREW "models/infected/common_male_roadcrew.mdl"
 #define MODEL_SHIELD "models/props_unique/airport/atlas_break_ball.mdl"
 
+#define PARTICLE_BASHED "screen_bashed"
 #define PARTICLE_BLOOD "boomer_explode_D"
 #define PARTICLE_ELECTRICITY "electrical_arc_01_system"
+#define PARTICLE_LIGHTNING "storm_lightning_01"
 #define PARTICLE_VOMIT "boomer_vomit"
 
 #define SOUND_CHARGE "items/suitchargeok1.wav"
@@ -55,6 +57,8 @@ public Plugin myinfo =
 #define SOUND_ELECTRICITY2 "ambient/energy/zap7.wav"
 #define SOUND_EXPLOSION "ambient/explosions/explode_2.wav"
 #define SOUND_FIRE "weapons/molotov/fire_ignite_1.wav"
+#define SOUND_GROAN1 "ambient/random_amb_sfx/metalscrapeverb08.wav"
+#define SOUND_GROAN2 "ambient/random_amb_sounds/randbridgegroan_03.wav" // Only available in L4D2
 #define SOUND_GROWL1 "player/tank/voice/growl/hulk_growl_1.wav" // Only available in L4D1
 #define SOUND_GROWL2 "player/tank/voice/growl/tank_climb_01.wav" // Only available in L4D2
 #define SOUND_LAUNCH "player/boomer/explode/explo_medium_14.wav"
@@ -71,53 +75,56 @@ public Plugin myinfo =
 
 bool g_bDedicated, g_bLaggedMovementInstalled, g_bLateLoad, g_bSecondGame;
 
+int g_iGraphicsLevel;
+
 #undef REQUIRE_PLUGIN
 #if MT_ABILITIES_GROUP2 == 1 || MT_ABILITIES_GROUP2 == 3
+	#tryinclude "mutant_tanks/abilities2/mt_lag.sp"
+	#tryinclude "mutant_tanks/abilities2/mt_laser.sp"
+	#tryinclude "mutant_tanks/abilities2/mt_lightning.sp"
 	#tryinclude "mutant_tanks/abilities2/mt_medic.sp"
 	#tryinclude "mutant_tanks/abilities2/mt_meteor.sp"
 	#tryinclude "mutant_tanks/abilities2/mt_minion.sp"
-	#tryinclude "mutant_tanks/abilities2/mt_necro.sp"
 	#tryinclude "mutant_tanks/abilities2/mt_nullify.sp"
 	#tryinclude "mutant_tanks/abilities2/mt_omni.sp"
 	#tryinclude "mutant_tanks/abilities2/mt_panic.sp"
-	#tryinclude "mutant_tanks/abilities2/mt_pimp.sp"
 	#tryinclude "mutant_tanks/abilities2/mt_puke.sp"
 	#tryinclude "mutant_tanks/abilities2/mt_pyro.sp"
 	#tryinclude "mutant_tanks/abilities2/mt_quiet.sp"
 	#tryinclude "mutant_tanks/abilities2/mt_recall.sp"
 	#tryinclude "mutant_tanks/abilities2/mt_recoil.sp"
 	#tryinclude "mutant_tanks/abilities2/mt_regen.sp"
+#endif
+#if MT_ABILITIES_GROUP2 == 2 || MT_ABILITIES_GROUP2 == 3
 	#tryinclude "mutant_tanks/abilities2/mt_respawn.sp"
 	#tryinclude "mutant_tanks/abilities2/mt_restart.sp"
 	#tryinclude "mutant_tanks/abilities2/mt_rock.sp"
-	#tryinclude "mutant_tanks/abilities2/mt_rocket.sp"
-	#tryinclude "mutant_tanks/abilities2/mt_shake.sp"
 	#tryinclude "mutant_tanks/abilities2/mt_shield.sp"
-#endif
-#if MT_ABILITIES_GROUP2 == 2 || MT_ABILITIES_GROUP2 == 3
 	#tryinclude "mutant_tanks/abilities2/mt_shove.sp"
 	#tryinclude "mutant_tanks/abilities2/mt_slow.sp"
 	#tryinclude "mutant_tanks/abilities2/mt_smash.sp"
-	#tryinclude "mutant_tanks/abilities2/mt_smite.sp"
-	#tryinclude "mutant_tanks/abilities2/mt_spam.sp"
-	#tryinclude "mutant_tanks/abilities2/mt_splash.sp"
-	#tryinclude "mutant_tanks/abilities2/mt_splatter.sp"
 	#tryinclude "mutant_tanks/abilities2/mt_throw.sp"
 	#tryinclude "mutant_tanks/abilities2/mt_track.sp"
 	#tryinclude "mutant_tanks/abilities2/mt_ultimate.sp"
 	#tryinclude "mutant_tanks/abilities2/mt_undead.sp"
-	#tryinclude "mutant_tanks/abilities2/mt_vampire.sp"
 	#tryinclude "mutant_tanks/abilities2/mt_vision.sp"
 	#tryinclude "mutant_tanks/abilities2/mt_warp.sp"
 	#tryinclude "mutant_tanks/abilities2/mt_whirl.sp"
 	#tryinclude "mutant_tanks/abilities2/mt_witch.sp"
-	#tryinclude "mutant_tanks/abilities2/mt_xiphos.sp"
 	#tryinclude "mutant_tanks/abilities2/mt_yell.sp"
-	#tryinclude "mutant_tanks/abilities2/mt_zombie.sp"
 #endif
 #define REQUIRE_PLUGIN
 
 #if MT_ABILITIES_COMPILER_MESSAGE2 == 1
+	#if !defined MT_MENU_LAG
+		#warning The "Lag" (mt_lag.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_LASER
+		#warning The "Laser" (mt_laser.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_LIGHTNING
+		#warning The "Lightning" (mt_lightning.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
 	#if !defined MT_MENU_MEDIC
 		#warning The "Medic" (mt_medic.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
 	#endif
@@ -127,9 +134,6 @@ bool g_bDedicated, g_bLaggedMovementInstalled, g_bLateLoad, g_bSecondGame;
 	#if !defined MT_MENU_MINION
 		#warning The "Minion" (mt_minion.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
 	#endif
-	#if !defined MT_MENU_NECRO
-		#warning The "Necro" (mt_necro.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
-	#endif
 	#if !defined MT_MENU_NULLIFY
 		#warning The "Nullify" (mt_nullify.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
 	#endif
@@ -138,9 +142,6 @@ bool g_bDedicated, g_bLaggedMovementInstalled, g_bLateLoad, g_bSecondGame;
 	#endif
 	#if !defined MT_MENU_PANIC
 		#warning The "Panic" (mt_panic.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
-	#endif
-	#if !defined MT_MENU_PIMP
-		#warning The "Pimp" (mt_pimp.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
 	#endif
 	#if !defined MT_MENU_PUKE
 		#warning The "Puke" (mt_puke.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
@@ -169,12 +170,6 @@ bool g_bDedicated, g_bLaggedMovementInstalled, g_bLateLoad, g_bSecondGame;
 	#if !defined MT_MENU_ROCK
 		#warning The "Rock" (mt_rock.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
 	#endif
-	#if !defined MT_MENU_ROCKET
-		#warning The "Rocket" (mt_rocket.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
-	#endif
-	#if !defined MT_MENU_SHAKE
-		#warning The "Shake" (mt_shake.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
-	#endif
 	#if !defined MT_MENU_SHIELD
 		#warning The "Shield" (mt_shield.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
 	#endif
@@ -186,18 +181,6 @@ bool g_bDedicated, g_bLaggedMovementInstalled, g_bLateLoad, g_bSecondGame;
 	#endif
 	#if !defined MT_MENU_SMASH
 		#warning The "Smash" (mt_smash.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
-	#endif
-	#if !defined MT_MENU_SMITE
-		#warning The "Smite" (mt_smite.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
-	#endif
-	#if !defined MT_MENU_SPAM
-		#warning The "Spam" (mt_spam.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
-	#endif
-	#if !defined MT_MENU_SPLASH
-		#warning The "Splash" (mt_splash.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
-	#endif
-	#if !defined MT_MENU_SPLATTER
-		#warning The "Splatter" (mt_splatter.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
 	#endif
 	#if !defined MT_MENU_THROW
 		#warning The "Throw" (mt_throw.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
@@ -211,9 +194,6 @@ bool g_bDedicated, g_bLaggedMovementInstalled, g_bLateLoad, g_bSecondGame;
 	#if !defined MT_MENU_UNDEAD
 		#warning The "Undead" (mt_undead.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
 	#endif
-	#if !defined MT_MENU_VAMPIRE
-		#warning The "Vampire" (mt_vampire.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
-	#endif
 	#if !defined MT_MENU_VISION
 		#warning The "Vision" (mt_vision.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
 	#endif
@@ -226,17 +206,20 @@ bool g_bDedicated, g_bLaggedMovementInstalled, g_bLateLoad, g_bSecondGame;
 	#if !defined MT_MENU_WITCH
 		#warning The "Witch" (mt_witch.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
 	#endif
-	#if !defined MT_MENU_XIPHOS
-		#warning The "Xiphos" (mt_xiphos.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
-	#endif
 	#if !defined MT_MENU_YELL
 		#warning The "Yell" (mt_yell.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
 	#endif
-	#if !defined MT_MENU_ZOMBIE
-		#warning The "Zombie" (mt_zombie.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
-	#endif
 #endif
 #if MT_ABILITIES_COMPILER_MESSAGE2 == 2
+	#if !defined MT_MENU_LAG
+		#error The "Lag" (mt_lag.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_LASER
+		#error The "Laser" (mt_laser.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_LIGHTNING
+		#error The "Lightning" (mt_lightning.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
 	#if !defined MT_MENU_MEDIC
 		#error The "Medic" (mt_medic.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
 	#endif
@@ -246,9 +229,6 @@ bool g_bDedicated, g_bLaggedMovementInstalled, g_bLateLoad, g_bSecondGame;
 	#if !defined MT_MENU_MINION
 		#error The "Minion" (mt_minion.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
 	#endif
-	#if !defined MT_MENU_NECRO
-		#error The "Necro" (mt_necro.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
-	#endif
 	#if !defined MT_MENU_NULLIFY
 		#error The "Nullify" (mt_nullify.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
 	#endif
@@ -257,9 +237,6 @@ bool g_bDedicated, g_bLaggedMovementInstalled, g_bLateLoad, g_bSecondGame;
 	#endif
 	#if !defined MT_MENU_PANIC
 		#error The "Panic" (mt_panic.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
-	#endif
-	#if !defined MT_MENU_PIMP
-		#error The "Pimp" (mt_pimp.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
 	#endif
 	#if !defined MT_MENU_PUKE
 		#error The "Puke" (mt_puke.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
@@ -288,12 +265,6 @@ bool g_bDedicated, g_bLaggedMovementInstalled, g_bLateLoad, g_bSecondGame;
 	#if !defined MT_MENU_ROCK
 		#error The "Rock" (mt_rock.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
 	#endif
-	#if !defined MT_MENU_ROCKET
-		#error The "Rocket" (mt_rocket.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
-	#endif
-	#if !defined MT_MENU_SHAKE
-		#error The "Shake" (mt_shake.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
-	#endif
 	#if !defined MT_MENU_SHIELD
 		#error The "Shield" (mt_shield.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
 	#endif
@@ -305,18 +276,6 @@ bool g_bDedicated, g_bLaggedMovementInstalled, g_bLateLoad, g_bSecondGame;
 	#endif
 	#if !defined MT_MENU_SMASH
 		#error The "Smash" (mt_smash.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
-	#endif
-	#if !defined MT_MENU_SMITE
-		#error The "Smite" (mt_smite.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
-	#endif
-	#if !defined MT_MENU_SPAM
-		#error The "Spam" (mt_spam.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
-	#endif
-	#if !defined MT_MENU_SPLASH
-		#error The "Splash" (mt_splash.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
-	#endif
-	#if !defined MT_MENU_SPLATTER
-		#error The "Splatter" (mt_splatter.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
 	#endif
 	#if !defined MT_MENU_THROW
 		#error The "Throw" (mt_throw.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
@@ -330,9 +289,6 @@ bool g_bDedicated, g_bLaggedMovementInstalled, g_bLateLoad, g_bSecondGame;
 	#if !defined MT_MENU_UNDEAD
 		#error The "Undead" (mt_undead.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
 	#endif
-	#if !defined MT_MENU_VAMPIRE
-		#error The "Vampire" (mt_vampire.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
-	#endif
 	#if !defined MT_MENU_VISION
 		#error The "Vision" (mt_vision.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
 	#endif
@@ -345,14 +301,8 @@ bool g_bDedicated, g_bLaggedMovementInstalled, g_bLateLoad, g_bSecondGame;
 	#if !defined MT_MENU_WITCH
 		#error The "Witch" (mt_witch.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
 	#endif
-	#if !defined MT_MENU_XIPHOS
-		#error The "Xiphos" (mt_xiphos.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
-	#endif
 	#if !defined MT_MENU_YELL
 		#error The "Yell" (mt_yell.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
-	#endif
-	#if !defined MT_MENU_ZOMBIE
-		#error The "Zombie" (mt_zombie.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
 	#endif
 #endif
 
@@ -425,7 +375,7 @@ public void OnPluginStart()
 	LoadTranslations("mutant_tanks.phrases");
 	LoadTranslations("mutant_tanks_names.phrases");
 
-	RegConsoleCmd("sm_mt_ability2", cmdAbilityInfo2, "View information about each ability (M-Z).");
+	RegConsoleCmd("sm_mt_ability2", cmdAbilityInfo2, "View information about each ability (L-Z).");
 
 	vAbilitySetup(0);
 
@@ -485,17 +435,18 @@ public void OnEntityCreated(int entity, const char[] classname)
 #if defined MT_MENU_METEOR
 	vMeteorEntityCreated(entity, classname);
 #endif
-#if defined MT_MENU_ROCKET
-	vRocketEntityCreated(entity, classname);
-#endif
 #if defined MT_MENU_SHIELD
 	vShieldEntityCreated(entity, classname);
 #endif
 #if defined MT_MENU_SMASH
 	vSmashEntityCreated(entity, classname);
 #endif
-#if defined MT_MENU_SMITE
-	vSmiteEntityCreated(entity, classname);
+}
+
+public void OnEntityDestroyed(int entity)
+{
+#if defined MT_MENU_THROW
+	vThrowEntityDestroyed(entity);
 #endif
 }
 
@@ -545,6 +496,15 @@ Action cmdAbilityInfo2(int client, int args)
 
 public void MT_OnDisplayMenu(Menu menu)
 {
+#if defined MT_MENU_LAG
+	vLagDisplayMenu(menu);
+#endif
+#if defined MT_MENU_LASER
+	vLaserDisplayMenu(menu);
+#endif
+#if defined MT_MENU_LIGHTNING
+	vLightningDisplayMenu(menu);
+#endif
 #if defined MT_MENU_MEDIC
 	vMedicDisplayMenu(menu);
 #endif
@@ -554,9 +514,6 @@ public void MT_OnDisplayMenu(Menu menu)
 #if defined MT_MENU_MINION
 	vMinionDisplayMenu(menu);
 #endif
-#if defined MT_MENU_NECRO
-	vNecroDisplayMenu(menu);
-#endif
 #if defined MT_MENU_NULLIFY
 	vNullifyDisplayMenu(menu);
 #endif
@@ -565,9 +522,6 @@ public void MT_OnDisplayMenu(Menu menu)
 #endif
 #if defined MT_MENU_PANIC
 	vPanicDisplayMenu(menu);
-#endif
-#if defined MT_MENU_PIMP
-	vPimpDisplayMenu(menu);
 #endif
 #if defined MT_MENU_PUKE
 	vPukeDisplayMenu(menu);
@@ -596,12 +550,6 @@ public void MT_OnDisplayMenu(Menu menu)
 #if defined MT_MENU_ROCK
 	vRockDisplayMenu(menu);
 #endif
-#if defined MT_MENU_ROCKET
-	vRocketDisplayMenu(menu);
-#endif
-#if defined MT_MENU_SHAKE
-	vShakeDisplayMenu(menu);
-#endif
 #if defined MT_MENU_SHIELD
 	vShieldDisplayMenu(menu);
 #endif
@@ -613,18 +561,6 @@ public void MT_OnDisplayMenu(Menu menu)
 #endif
 #if defined MT_MENU_SMASH
 	vSmashDisplayMenu(menu);
-#endif
-#if defined MT_MENU_SMITE
-	vSmiteDisplayMenu(menu);
-#endif
-#if defined MT_MENU_SPAM
-	vSpamDisplayMenu(menu);
-#endif
-#if defined MT_MENU_SPLASH
-	vSplashDisplayMenu(menu);
-#endif
-#if defined MT_MENU_SPLATTER
-	vSplatterDisplayMenu(menu);
 #endif
 #if defined MT_MENU_THROW
 	vThrowDisplayMenu(menu);
@@ -638,9 +574,6 @@ public void MT_OnDisplayMenu(Menu menu)
 #if defined MT_MENU_UNDEAD
 	vUndeadDisplayMenu(menu);
 #endif
-#if defined MT_MENU_VAMPIRE
-	vVampireDisplayMenu(menu);
-#endif
 #if defined MT_MENU_VISION
 	vVisionDisplayMenu(menu);
 #endif
@@ -653,19 +586,22 @@ public void MT_OnDisplayMenu(Menu menu)
 #if defined MT_MENU_WITCH
 	vWitchDisplayMenu(menu);
 #endif
-#if defined MT_MENU_XIPHOS
-	vXiphosDisplayMenu(menu);
-#endif
 #if defined MT_MENU_YELL
 	vYellDisplayMenu(menu);
-#endif
-#if defined MT_MENU_ZOMBIE
-	vZombieDisplayMenu(menu);
 #endif
 }
 
 public void MT_OnMenuItemSelected(int client, const char[] info)
 {
+#if defined MT_MENU_LAG
+	vLagMenuItemSelected(client, info);
+#endif
+#if defined MT_MENU_LASER
+	vLaserMenuItemSelected(client, info);
+#endif
+#if defined MT_MENU_LIGHTNING
+	vLightningMenuItemSelected(client, info);
+#endif
 #if defined MT_MENU_MEDIC
 	vMedicMenuItemSelected(client, info);
 #endif
@@ -675,9 +611,6 @@ public void MT_OnMenuItemSelected(int client, const char[] info)
 #if defined MT_MENU_MINION
 	vMinionMenuItemSelected(client, info);
 #endif
-#if defined MT_MENU_NECRO
-	vNecroMenuItemSelected(client, info);
-#endif
 #if defined MT_MENU_NULLIFY
 	vNullifyMenuItemSelected(client, info);
 #endif
@@ -686,9 +619,6 @@ public void MT_OnMenuItemSelected(int client, const char[] info)
 #endif
 #if defined MT_MENU_PANIC
 	vPanicMenuItemSelected(client, info);
-#endif
-#if defined MT_MENU_PIMP
-	vPimpMenuItemSelected(client, info);
 #endif
 #if defined MT_MENU_PUKE
 	vPukeMenuItemSelected(client, info);
@@ -717,12 +647,6 @@ public void MT_OnMenuItemSelected(int client, const char[] info)
 #if defined MT_MENU_ROCK
 	vRockMenuItemSelected(client, info);
 #endif
-#if defined MT_MENU_ROCKET
-	vRocketMenuItemSelected(client, info);
-#endif
-#if defined MT_MENU_SHAKE
-	vShakeMenuItemSelected(client, info);
-#endif
 #if defined MT_MENU_SHIELD
 	vShieldMenuItemSelected(client, info);
 #endif
@@ -734,18 +658,6 @@ public void MT_OnMenuItemSelected(int client, const char[] info)
 #endif
 #if defined MT_MENU_SMASH
 	vSmashMenuItemSelected(client, info);
-#endif
-#if defined MT_MENU_SMITE
-	vSmiteMenuItemSelected(client, info);
-#endif
-#if defined MT_MENU_SPAM
-	vSpamMenuItemSelected(client, info);
-#endif
-#if defined MT_MENU_SPLASH
-	vSplashMenuItemSelected(client, info);
-#endif
-#if defined MT_MENU_SPLATTER
-	vSplatterMenuItemSelected(client, info);
 #endif
 #if defined MT_MENU_THROW
 	vThrowMenuItemSelected(client, info);
@@ -759,9 +671,6 @@ public void MT_OnMenuItemSelected(int client, const char[] info)
 #if defined MT_MENU_UNDEAD
 	vUndeadMenuItemSelected(client, info);
 #endif
-#if defined MT_MENU_VAMPIRE
-	vVampireMenuItemSelected(client, info);
-#endif
 #if defined MT_MENU_VISION
 	vVisionMenuItemSelected(client, info);
 #endif
@@ -774,19 +683,22 @@ public void MT_OnMenuItemSelected(int client, const char[] info)
 #if defined MT_MENU_WITCH
 	vWitchMenuItemSelected(client, info);
 #endif
-#if defined MT_MENU_XIPHOS
-	vXiphosMenuItemSelected(client, info);
-#endif
 #if defined MT_MENU_YELL
 	vYellMenuItemSelected(client, info);
-#endif
-#if defined MT_MENU_ZOMBIE
-	vZombieMenuItemSelected(client, info);
 #endif
 }
 
 public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
 {
+#if defined MT_MENU_LAG
+	vLagMenuItemDisplayed(client, info, buffer, size);
+#endif
+#if defined MT_MENU_LASER
+	vLaserMenuItemDisplayed(client, info, buffer, size);
+#endif
+#if defined MT_MENU_LIGHTNING
+	vLightningMenuItemDisplayed(client, info, buffer, size);
+#endif
 #if defined MT_MENU_MEDIC
 	vMedicMenuItemDisplayed(client, info, buffer, size);
 #endif
@@ -796,9 +708,6 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 #if defined MT_MENU_MINION
 	vMinionMenuItemDisplayed(client, info, buffer, size);
 #endif
-#if defined MT_MENU_NECRO
-	vNecroMenuItemDisplayed(client, info, buffer, size);
-#endif
 #if defined MT_MENU_NULLIFY
 	vNullifyMenuItemDisplayed(client, info, buffer, size);
 #endif
@@ -807,9 +716,6 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 #endif
 #if defined MT_MENU_PANIC
 	vPanicMenuItemDisplayed(client, info, buffer, size);
-#endif
-#if defined MT_MENU_PIMP
-	vPimpMenuItemDisplayed(client, info, buffer, size);
 #endif
 #if defined MT_MENU_PUKE
 	vPukeMenuItemDisplayed(client, info, buffer, size);
@@ -838,12 +744,6 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 #if defined MT_MENU_ROCK
 	vRockMenuItemDisplayed(client, info, buffer, size);
 #endif
-#if defined MT_MENU_ROCKET
-	vRocketMenuItemDisplayed(client, info, buffer, size);
-#endif
-#if defined MT_MENU_SHAKE
-	vShakeMenuItemDisplayed(client, info, buffer, size);
-#endif
 #if defined MT_MENU_SHIELD
 	vShieldMenuItemDisplayed(client, info, buffer, size);
 #endif
@@ -855,18 +755,6 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 #endif
 #if defined MT_MENU_SMASH
 	vSmashMenuItemDisplayed(client, info, buffer, size);
-#endif
-#if defined MT_MENU_SMITE
-	vSmiteMenuItemDisplayed(client, info, buffer, size);
-#endif
-#if defined MT_MENU_SPAM
-	vSpamMenuItemDisplayed(client, info, buffer, size);
-#endif
-#if defined MT_MENU_SPLASH
-	vSplashMenuItemDisplayed(client, info, buffer, size);
-#endif
-#if defined MT_MENU_SPLATTER
-	vSplatterMenuItemDisplayed(client, info, buffer, size);
 #endif
 #if defined MT_MENU_THROW
 	vThrowMenuItemDisplayed(client, info, buffer, size);
@@ -880,9 +768,6 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 #if defined MT_MENU_UNDEAD
 	vUndeadMenuItemDisplayed(client, info, buffer, size);
 #endif
-#if defined MT_MENU_VAMPIRE
-	vVampireMenuItemDisplayed(client, info, buffer, size);
-#endif
 #if defined MT_MENU_VISION
 	vVisionMenuItemDisplayed(client, info, buffer, size);
 #endif
@@ -895,14 +780,8 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 #if defined MT_MENU_WITCH
 	vWitchMenuItemDisplayed(client, info, buffer, size);
 #endif
-#if defined MT_MENU_XIPHOS
-	vXiphosMenuItemDisplayed(client, info, buffer, size);
-#endif
 #if defined MT_MENU_YELL
 	vYellMenuItemDisplayed(client, info, buffer, size);
-#endif
-#if defined MT_MENU_ZOMBIE
-	vZombieMenuItemDisplayed(client, info, buffer, size);
 #endif
 }
 
@@ -912,9 +791,6 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	{
 		return Plugin_Continue;
 	}
-#if defined MT_MENU_NECRO
-	vNecroPlayerRunCmd(client);
-#endif
 #if defined MT_MENU_OMNI
 	vOmniPlayerRunCmd(client);
 #endif
@@ -923,6 +799,9 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 #endif
 #if defined MT_MENU_RECALL
 	vRecallPlayerRunCmd(client, buttons);
+#endif
+#if defined MT_MENU_PYRO
+	vRespawnPlayerRunCmd(client);
 #endif
 #if defined MT_MENU_SHIELD
 	vShieldPlayerRunCmd(client);
@@ -935,6 +814,15 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 public void MT_OnPluginCheck(ArrayList list)
 {
+#if defined MT_MENU_LAG
+	vLagPluginCheck(list);
+#endif
+#if defined MT_MENU_LASER
+	vLaserPluginCheck(list);
+#endif
+#if defined MT_MENU_LIGHTNING
+	vLightningPluginCheck(list);
+#endif
 #if defined MT_MENU_MEDIC
 	vMedicPluginCheck(list);
 #endif
@@ -944,9 +832,6 @@ public void MT_OnPluginCheck(ArrayList list)
 #if defined MT_MENU_MINION
 	vMinionPluginCheck(list);
 #endif
-#if defined MT_MENU_NECRO
-	vNecroPluginCheck(list);
-#endif
 #if defined MT_MENU_NULLIFY
 	vNullifyPluginCheck(list);
 #endif
@@ -955,9 +840,6 @@ public void MT_OnPluginCheck(ArrayList list)
 #endif
 #if defined MT_MENU_PANIC
 	vPanicPluginCheck(list);
-#endif
-#if defined MT_MENU_PIMP
-	vPimpPluginCheck(list);
 #endif
 #if defined MT_MENU_PUKE
 	vPukePluginCheck(list);
@@ -986,12 +868,6 @@ public void MT_OnPluginCheck(ArrayList list)
 #if defined MT_MENU_ROCK
 	vRockPluginCheck(list);
 #endif
-#if defined MT_MENU_ROCKET
-	vRocketPluginCheck(list);
-#endif
-#if defined MT_MENU_SHAKE
-	vShakePluginCheck(list);
-#endif
 #if defined MT_MENU_SHIELD
 	vShieldPluginCheck(list);
 #endif
@@ -1003,18 +879,6 @@ public void MT_OnPluginCheck(ArrayList list)
 #endif
 #if defined MT_MENU_SMASH
 	vSmashPluginCheck(list);
-#endif
-#if defined MT_MENU_SMITE
-	vSmitePluginCheck(list);
-#endif
-#if defined MT_MENU_SPAM
-	vSpamPluginCheck(list);
-#endif
-#if defined MT_MENU_SPLASH
-	vSplashPluginCheck(list);
-#endif
-#if defined MT_MENU_SPLATTER
-	vSplatterPluginCheck(list);
 #endif
 #if defined MT_MENU_THROW
 	vThrowPluginCheck(list);
@@ -1028,9 +892,6 @@ public void MT_OnPluginCheck(ArrayList list)
 #if defined MT_MENU_UNDEAD
 	vUndeadPluginCheck(list);
 #endif
-#if defined MT_MENU_VAMPIRE
-	vVampirePluginCheck(list);
-#endif
 #if defined MT_MENU_VISION
 	vVisionPluginCheck(list);
 #endif
@@ -1043,19 +904,22 @@ public void MT_OnPluginCheck(ArrayList list)
 #if defined MT_MENU_WITCH
 	vWitchPluginCheck(list);
 #endif
-#if defined MT_MENU_XIPHOS
-	vXiphosPluginCheck(list);
-#endif
 #if defined MT_MENU_YELL
 	vYellPluginCheck(list);
-#endif
-#if defined MT_MENU_ZOMBIE
-	vZombiePluginCheck(list);
 #endif
 }
 
 public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 {
+#if defined MT_MENU_LAG
+	vLagAbilityCheck(list, list2, list3, list4);
+#endif
+#if defined MT_MENU_LASER
+	vLaserAbilityCheck(list, list2, list3, list4);
+#endif
+#if defined MT_MENU_LIGHTNING
+	vLightningAbilityCheck(list, list2, list3, list4);
+#endif
 #if defined MT_MENU_MEDIC
 	vMedicAbilityCheck(list, list2, list3, list4);
 #endif
@@ -1065,9 +929,6 @@ public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, 
 #if defined MT_MENU_MINION
 	vMinionAbilityCheck(list, list2, list3, list4);
 #endif
-#if defined MT_MENU_NECRO
-	vNecroAbilityCheck(list, list2, list3, list4);
-#endif
 #if defined MT_MENU_NULLIFY
 	vNullifyAbilityCheck(list, list2, list3, list4);
 #endif
@@ -1076,9 +937,6 @@ public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, 
 #endif
 #if defined MT_MENU_PANIC
 	vPanicAbilityCheck(list, list2, list3, list4);
-#endif
-#if defined MT_MENU_PIMP
-	vPimpAbilityCheck(list, list2, list3, list4);
 #endif
 #if defined MT_MENU_PUKE
 	vPukeAbilityCheck(list, list2, list3, list4);
@@ -1107,12 +965,6 @@ public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, 
 #if defined MT_MENU_ROCK
 	vRockAbilityCheck(list, list2, list3, list4);
 #endif
-#if defined MT_MENU_ROCKET
-	vRocketAbilityCheck(list, list2, list3, list4);
-#endif
-#if defined MT_MENU_SHAKE
-	vShakeAbilityCheck(list, list2, list3, list4);
-#endif
 #if defined MT_MENU_SHIELD
 	vShieldAbilityCheck(list, list2, list3, list4);
 #endif
@@ -1124,18 +976,6 @@ public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, 
 #endif
 #if defined MT_MENU_SMASH
 	vSmashAbilityCheck(list, list2, list3, list4);
-#endif
-#if defined MT_MENU_SMITE
-	vSmiteAbilityCheck(list, list2, list3, list4);
-#endif
-#if defined MT_MENU_SPAM
-	vSpamAbilityCheck(list, list2, list3, list4);
-#endif
-#if defined MT_MENU_SPLASH
-	vSplashAbilityCheck(list, list2, list3, list4);
-#endif
-#if defined MT_MENU_SPLATTER
-	vSplatterAbilityCheck(list, list2, list3, list4);
 #endif
 #if defined MT_MENU_THROW
 	vThrowAbilityCheck(list, list2, list3, list4);
@@ -1149,9 +989,6 @@ public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, 
 #if defined MT_MENU_UNDEAD
 	vUndeadAbilityCheck(list, list2, list3, list4);
 #endif
-#if defined MT_MENU_VAMPIRE
-	vVampireAbilityCheck(list, list2, list3, list4);
-#endif
 #if defined MT_MENU_VISION
 	vVisionAbilityCheck(list, list2, list3, list4);
 #endif
@@ -1164,19 +1001,22 @@ public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, 
 #if defined MT_MENU_WITCH
 	vWitchAbilityCheck(list, list2, list3, list4);
 #endif
-#if defined MT_MENU_XIPHOS
-	vXiphosAbilityCheck(list, list2, list3, list4);
-#endif
 #if defined MT_MENU_YELL
 	vYellAbilityCheck(list, list2, list3, list4);
-#endif
-#if defined MT_MENU_ZOMBIE
-	vZombieAbilityCheck(list, list2, list3, list4);
 #endif
 }
 
 public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
 {
+#if defined MT_MENU_LAG
+	vLagCombineAbilities(tank, type, random, combo, survivor, classname);
+#endif
+#if defined MT_MENU_LASER
+	vLaserCombineAbilities(tank, type, random, combo);
+#endif
+#if defined MT_MENU_LIGHTNING
+	vLightningCombineAbilities(tank, type, random, combo);
+#endif
 #if defined MT_MENU_MEDIC
 	vMedicCombineAbilities(tank, type, random, combo, weapon);
 #endif
@@ -1186,9 +1026,6 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 #if defined MT_MENU_MINION
 	vMinionCombineAbilities(tank, type, random, combo);
 #endif
-#if defined MT_MENU_NECRO
-	vNecroCombineAbilities(tank, type, random, combo);
-#endif
 #if defined MT_MENU_NULLIFY
 	vNullifyCombineAbilities(tank, type, random, combo, survivor, classname);
 #endif
@@ -1197,9 +1034,6 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 #endif
 #if defined MT_MENU_PANIC
 	vPanicCombineAbilities(tank, type, random, combo);
-#endif
-#if defined MT_MENU_PIMP
-	vPimpCombineAbilities(tank, type, random, combo, survivor, classname);
 #endif
 #if defined MT_MENU_PUKE
 	vPukeCombineAbilities(tank, type, random, combo, survivor, classname);
@@ -1225,12 +1059,6 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 #if defined MT_MENU_ROCK
 	vRockCombineAbilities(tank, type, random, combo);
 #endif
-#if defined MT_MENU_ROCKET
-	vRocketCombineAbilities(tank, type, random, combo, survivor, classname);
-#endif
-#if defined MT_MENU_SHAKE
-	vShakeCombineAbilities(tank, type, random, combo, survivor, classname);
-#endif
 #if defined MT_MENU_SHIELD
 	vShieldCombineAbilities(tank, type, random, combo);
 #endif
@@ -1242,18 +1070,6 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 #endif
 #if defined MT_MENU_SMASH
 	vSmashCombineAbilities(tank, type, random, combo, survivor, classname);
-#endif
-#if defined MT_MENU_SMITE
-	vSmiteCombineAbilities(tank, type, random, combo, survivor, classname);
-#endif
-#if defined MT_MENU_SPAM
-	vSpamCombineAbilities(tank, type, random, combo);
-#endif
-#if defined MT_MENU_SPLASH
-	vSplashCombineAbilities(tank, type, random, combo);
-#endif
-#if defined MT_MENU_SPLATTER
-	vSplatterCombineAbilities(tank, type, random, combo, survivor, classname);
 #endif
 #if defined MT_MENU_THROW
 	vThrowCombineAbilities(tank, type, random, combo, weapon);
@@ -1282,13 +1098,19 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 #if defined MT_MENU_YELL
 	vYellCombineAbilities(tank, type, random, combo);
 #endif
-#if defined MT_MENU_ZOMBIE
-	vZombieCombineAbilities(tank, type, random, combo);
-#endif
 }
 
 public void MT_OnConfigsLoad(int mode)
 {
+#if defined MT_MENU_LAG
+	vLagConfigsLoad(mode);
+#endif
+#if defined MT_MENU_LASER
+	vLaserConfigsLoad(mode);
+#endif
+#if defined MT_MENU_LIGHTNING
+	vLightningConfigsLoad(mode);
+#endif
 #if defined MT_MENU_MEDIC
 	vMedicConfigsLoad(mode);
 #endif
@@ -1298,9 +1120,6 @@ public void MT_OnConfigsLoad(int mode)
 #if defined MT_MENU_MINION
 	vMinionConfigsLoad(mode);
 #endif
-#if defined MT_MENU_NECRO
-	vNecroConfigsLoad(mode);
-#endif
 #if defined MT_MENU_NULLIFY
 	vNullifyConfigsLoad(mode);
 #endif
@@ -1309,9 +1128,6 @@ public void MT_OnConfigsLoad(int mode)
 #endif
 #if defined MT_MENU_PANIC
 	vPanicConfigsLoad(mode);
-#endif
-#if defined MT_MENU_PIMP
-	vPimpConfigsLoad(mode);
 #endif
 #if defined MT_MENU_PUKE
 	vPukeConfigsLoad(mode);
@@ -1340,12 +1156,6 @@ public void MT_OnConfigsLoad(int mode)
 #if defined MT_MENU_ROCK
 	vRockConfigsLoad(mode);
 #endif
-#if defined MT_MENU_ROCKET
-	vRocketConfigsLoad(mode);
-#endif
-#if defined MT_MENU_SHAKE
-	vShakeConfigsLoad(mode);
-#endif
 #if defined MT_MENU_SHIELD
 	vShieldConfigsLoad(mode);
 #endif
@@ -1357,18 +1167,6 @@ public void MT_OnConfigsLoad(int mode)
 #endif
 #if defined MT_MENU_SMASH
 	vSmashConfigsLoad(mode);
-#endif
-#if defined MT_MENU_SMITE
-	vSmiteConfigsLoad(mode);
-#endif
-#if defined MT_MENU_SPAM
-	vSpamConfigsLoad(mode);
-#endif
-#if defined MT_MENU_SPLASH
-	vSplashConfigsLoad(mode);
-#endif
-#if defined MT_MENU_SPLATTER
-	vSplatterConfigsLoad(mode);
 #endif
 #if defined MT_MENU_THROW
 	vThrowConfigsLoad(mode);
@@ -1382,9 +1180,6 @@ public void MT_OnConfigsLoad(int mode)
 #if defined MT_MENU_UNDEAD
 	vUndeadConfigsLoad(mode);
 #endif
-#if defined MT_MENU_VAMPIRE
-	vVampireConfigsLoad(mode);
-#endif
 #if defined MT_MENU_VISION
 	vVisionConfigsLoad(mode);
 #endif
@@ -1397,19 +1192,22 @@ public void MT_OnConfigsLoad(int mode)
 #if defined MT_MENU_WITCH
 	vWitchConfigsLoad(mode);
 #endif
-#if defined MT_MENU_XIPHOS
-	vXiphosConfigsLoad(mode);
-#endif
 #if defined MT_MENU_YELL
 	vYellConfigsLoad(mode);
-#endif
-#if defined MT_MENU_ZOMBIE
-	vZombieConfigsLoad(mode);
 #endif
 }
 
 public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 {
+#if defined MT_MENU_LAG
+	vLagConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+#endif
+#if defined MT_MENU_LASER
+	vLaserConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+#endif
+#if defined MT_MENU_LIGHTNING
+	vLightningConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+#endif
 #if defined MT_MENU_MEDIC
 	vMedicConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
@@ -1419,9 +1217,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 #if defined MT_MENU_MINION
 	vMinionConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
-#if defined MT_MENU_NECRO
-	vNecroConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
-#endif
 #if defined MT_MENU_NULLIFY
 	vNullifyConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
@@ -1430,9 +1225,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 #endif
 #if defined MT_MENU_PANIC
 	vPanicConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
-#endif
-#if defined MT_MENU_PIMP
-	vPimpConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 #if defined MT_MENU_PUKE
 	vPukeConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
@@ -1461,12 +1253,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 #if defined MT_MENU_ROCK
 	vRockConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
-#if defined MT_MENU_ROCKET
-	vRocketConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
-#endif
-#if defined MT_MENU_SHAKE
-	vShakeConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
-#endif
 #if defined MT_MENU_SHIELD
 	vShieldConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
@@ -1478,18 +1264,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 #endif
 #if defined MT_MENU_SMASH
 	vSmashConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
-#endif
-#if defined MT_MENU_SMITE
-	vSmiteConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
-#endif
-#if defined MT_MENU_SPAM
-	vSpamConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
-#endif
-#if defined MT_MENU_SPLASH
-	vSplashConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
-#endif
-#if defined MT_MENU_SPLATTER
-	vSplatterConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 #if defined MT_MENU_THROW
 	vThrowConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
@@ -1503,9 +1277,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 #if defined MT_MENU_UNDEAD
 	vUndeadConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
-#if defined MT_MENU_VAMPIRE
-	vVampireConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
-#endif
 #if defined MT_MENU_VISION
 	vVisionConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
@@ -1518,19 +1289,23 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 #if defined MT_MENU_WITCH
 	vWitchConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
-#if defined MT_MENU_XIPHOS
-	vXiphosConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
-#endif
 #if defined MT_MENU_YELL
 	vYellConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
-#endif
-#if defined MT_MENU_ZOMBIE
-	vZombieConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 }
 
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
+	g_iGraphicsLevel = MT_GetGraphicsLevel();
+#if defined MT_MENU_LAG
+	vLagSettingsCached(tank, apply, type);
+#endif
+#if defined MT_MENU_LASER
+	vLaserSettingsCached(tank, apply, type);
+#endif
+#if defined MT_MENU_LIGHTNING
+	vLightningSettingsCached(tank, apply, type);
+#endif
 #if defined MT_MENU_MEDIC
 	vMedicSettingsCached(tank, apply, type);
 #endif
@@ -1540,9 +1315,6 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #if defined MT_MENU_MINION
 	vMinionSettingsCached(tank, apply, type);
 #endif
-#if defined MT_MENU_NECRO
-	vNecroSettingsCached(tank, apply, type);
-#endif
 #if defined MT_MENU_NULLIFY
 	vNullifySettingsCached(tank, apply, type);
 #endif
@@ -1551,9 +1323,6 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 #if defined MT_MENU_PANIC
 	vPanicSettingsCached(tank, apply, type);
-#endif
-#if defined MT_MENU_PIMP
-	vPimpSettingsCached(tank, apply, type);
 #endif
 #if defined MT_MENU_PUKE
 	vPukeSettingsCached(tank, apply, type);
@@ -1582,12 +1351,6 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #if defined MT_MENU_ROCK
 	vRockSettingsCached(tank, apply, type);
 #endif
-#if defined MT_MENU_ROCKET
-	vRocketSettingsCached(tank, apply, type);
-#endif
-#if defined MT_MENU_SHAKE
-	vShakeSettingsCached(tank, apply, type);
-#endif
 #if defined MT_MENU_SHIELD
 	vShieldSettingsCached(tank, apply, type);
 #endif
@@ -1599,18 +1362,6 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 #if defined MT_MENU_SMASH
 	vSmashSettingsCached(tank, apply, type);
-#endif
-#if defined MT_MENU_SMITE
-	vSmiteSettingsCached(tank, apply, type);
-#endif
-#if defined MT_MENU_SPAM
-	vSpamSettingsCached(tank, apply, type);
-#endif
-#if defined MT_MENU_SPLASH
-	vSplashSettingsCached(tank, apply, type);
-#endif
-#if defined MT_MENU_SPLATTER
-	vSplatterSettingsCached(tank, apply, type);
 #endif
 #if defined MT_MENU_THROW
 	vThrowSettingsCached(tank, apply, type);
@@ -1624,9 +1375,6 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #if defined MT_MENU_UNDEAD
 	vUndeadSettingsCached(tank, apply, type);
 #endif
-#if defined MT_MENU_VAMPIRE
-	vVampireSettingsCached(tank, apply, type);
-#endif
 #if defined MT_MENU_VISION
 	vVisionSettingsCached(tank, apply, type);
 #endif
@@ -1639,19 +1387,22 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #if defined MT_MENU_WITCH
 	vWitchSettingsCached(tank, apply, type);
 #endif
-#if defined MT_MENU_XIPHOS
-	vXiphosSettingsCached(tank, apply, type);
-#endif
 #if defined MT_MENU_YELL
 	vYellSettingsCached(tank, apply, type);
-#endif
-#if defined MT_MENU_ZOMBIE
-	vZombieSettingsCached(tank, apply, type);
 #endif
 }
 
 public void MT_OnCopyStats(int oldTank, int newTank)
 {
+#if defined MT_MENU_LAG
+	vLagCopyStats(oldTank, newTank);
+#endif
+#if defined MT_MENU_LASER
+	vLaserCopyStats(oldTank, newTank);
+#endif
+#if defined MT_MENU_LIGHTNING
+	vLightningCopyStats(oldTank, newTank);
+#endif
 #if defined MT_MENU_MEDIC
 	vMedicCopyStats(oldTank, newTank);
 #endif
@@ -1661,9 +1412,6 @@ public void MT_OnCopyStats(int oldTank, int newTank)
 #if defined MT_MENU_MINION
 	vMinionCopyStats(oldTank, newTank);
 #endif
-#if defined MT_MENU_NECRO
-	vNecroCopyStats(oldTank, newTank);
-#endif
 #if defined MT_MENU_NULLIFY
 	vNullifyCopyStats(oldTank, newTank);
 #endif
@@ -1672,9 +1420,6 @@ public void MT_OnCopyStats(int oldTank, int newTank)
 #endif
 #if defined MT_MENU_PANIC
 	vPanicCopyStats(oldTank, newTank);
-#endif
-#if defined MT_MENU_PIMP
-	vPimpCopyStats(oldTank, newTank);
 #endif
 #if defined MT_MENU_PUKE
 	vPukeCopyStats(oldTank, newTank);
@@ -1703,12 +1448,6 @@ public void MT_OnCopyStats(int oldTank, int newTank)
 #if defined MT_MENU_ROCK
 	vRockCopyStats(oldTank, newTank);
 #endif
-#if defined MT_MENU_ROCKET
-	vRocketCopyStats(oldTank, newTank);
-#endif
-#if defined MT_MENU_SHAKE
-	vShakeCopyStats(oldTank, newTank);
-#endif
 #if defined MT_MENU_SHIELD
 	vShieldCopyStats(oldTank, newTank);
 #endif
@@ -1720,18 +1459,6 @@ public void MT_OnCopyStats(int oldTank, int newTank)
 #endif
 #if defined MT_MENU_SMASH
 	vSmashCopyStats(oldTank, newTank);
-#endif
-#if defined MT_MENU_SMITE
-	vSmiteCopyStats(oldTank, newTank);
-#endif
-#if defined MT_MENU_SPAM
-	vSpamCopyStats(oldTank, newTank);
-#endif
-#if defined MT_MENU_SPLASH
-	vSplashCopyStats(oldTank, newTank);
-#endif
-#if defined MT_MENU_SPLATTER
-	vSplatterCopyStats(oldTank, newTank);
 #endif
 #if defined MT_MENU_THROW
 	vThrowCopyStats(oldTank, newTank);
@@ -1760,9 +1487,6 @@ public void MT_OnCopyStats(int oldTank, int newTank)
 #if defined MT_MENU_YELL
 	vYellCopyStats(oldTank, newTank);
 #endif
-#if defined MT_MENU_ZOMBIE
-	vZombieCopyStats(oldTank, newTank);
-#endif
 }
 
 public void MT_OnHookEvent(bool hooked)
@@ -1777,6 +1501,15 @@ public void MT_OnHookEvent(bool hooked)
 
 public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
+#if defined MT_MENU_LAG
+	vLagEventFired(event, name);
+#endif
+#if defined MT_MENU_LASER
+	vLaserEventFired(event, name);
+#endif
+#if defined MT_MENU_LIGHTNING
+	vLightningEventFired(event, name);
+#endif
 #if defined MT_MENU_MEDIC
 	vMedicEventFired(event, name);
 #endif
@@ -1786,9 +1519,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 #if defined MT_MENU_MINION
 	vMinionEventFired(event, name);
 #endif
-#if defined MT_MENU_NECRO
-	vNecroEventFired(event, name);
-#endif
 #if defined MT_MENU_NULLIFY
 	vNullifyEventFired(event, name);
 #endif
@@ -1797,9 +1527,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 #endif
 #if defined MT_MENU_PANIC
 	vPanicEventFired(event, name);
-#endif
-#if defined MT_MENU_PIMP
-	vPimpEventFired(event, name);
 #endif
 #if defined MT_MENU_PUKE
 	vPukeEventFired(event, name);
@@ -1828,12 +1555,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 #if defined MT_MENU_ROCK
 	vRockEventFired(event, name);
 #endif
-#if defined MT_MENU_ROCKET
-	vRocketEventFired(event, name);
-#endif
-#if defined MT_MENU_SHAKE
-	vShakeEventFired(event, name);
-#endif
 #if defined MT_MENU_SHIELD
 	vShieldEventFired(event, name);
 #endif
@@ -1845,18 +1566,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 #endif
 #if defined MT_MENU_SMASH
 	vSmashEventFired(event, name);
-#endif
-#if defined MT_MENU_SMITE
-	vSmiteEventFired(event, name);
-#endif
-#if defined MT_MENU_SPAM
-	vSpamEventFired(event, name);
-#endif
-#if defined MT_MENU_SPLASH
-	vSplashEventFired(event, name);
-#endif
-#if defined MT_MENU_SPLATTER
-	vSplatterEventFired(event, name);
 #endif
 #if defined MT_MENU_THROW
 	vThrowEventFired(event, name);
@@ -1885,9 +1594,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 #if defined MT_MENU_YELL
 	vYellEventFired(event, name);
 #endif
-#if defined MT_MENU_ZOMBIE
-	vZombieEventFired(event, name);
-#endif
 }
 
 public void MT_OnAbilityActivated(int tank)
@@ -1897,6 +1603,15 @@ public void MT_OnAbilityActivated(int tank)
 
 public void MT_OnButtonPressed(int tank, int button)
 {
+#if defined MT_MENU_LAG
+	vLagButtonPressed(tank, button);
+#endif
+#if defined MT_MENU_LASER
+	vLaserButtonPressed(tank, button);
+#endif
+#if defined MT_MENU_LIGHTNING
+	vLightningButtonPressed(tank, button);
+#endif
 #if defined MT_MENU_MEDIC
 	vMedicButtonPressed(tank, button);
 #endif
@@ -1906,9 +1621,6 @@ public void MT_OnButtonPressed(int tank, int button)
 #if defined MT_MENU_MINION
 	vMinionButtonPressed(tank, button);
 #endif
-#if defined MT_MENU_NECRO
-	vNecroButtonPressed(tank, button);
-#endif
 #if defined MT_MENU_NULLIFY
 	vNullifyButtonPressed(tank, button);
 #endif
@@ -1917,9 +1629,6 @@ public void MT_OnButtonPressed(int tank, int button)
 #endif
 #if defined MT_MENU_PANIC
 	vPanicButtonPressed(tank, button);
-#endif
-#if defined MT_MENU_PIMP
-	vPimpButtonPressed(tank, button);
 #endif
 #if defined MT_MENU_PUKE
 	vPukeButtonPressed(tank, button);
@@ -1948,12 +1657,6 @@ public void MT_OnButtonPressed(int tank, int button)
 #if defined MT_MENU_ROCK
 	vRockButtonPressed(tank, button);
 #endif
-#if defined MT_MENU_ROCKET
-	vRocketButtonPressed(tank, button);
-#endif
-#if defined MT_MENU_SHAKE
-	vShakeButtonPressed(tank, button);
-#endif
 #if defined MT_MENU_SHIELD
 	vShieldButtonPressed(tank, button);
 #endif
@@ -1965,18 +1668,6 @@ public void MT_OnButtonPressed(int tank, int button)
 #endif
 #if defined MT_MENU_SMASH
 	vSmashButtonPressed(tank, button);
-#endif
-#if defined MT_MENU_SMITE
-	vSmiteButtonPressed(tank, button);
-#endif
-#if defined MT_MENU_SPAM
-	vSpamButtonPressed(tank, button);
-#endif
-#if defined MT_MENU_SPLASH
-	vSplashButtonPressed(tank, button);
-#endif
-#if defined MT_MENU_SPLATTER
-	vSplatterButtonPressed(tank, button);
 #endif
 #if defined MT_MENU_THROW
 	vThrowButtonPressed(tank, button);
@@ -2005,21 +1696,21 @@ public void MT_OnButtonPressed(int tank, int button)
 #if defined MT_MENU_YELL
 	vYellButtonPressed(tank, button);
 #endif
-#if defined MT_MENU_ZOMBIE
-	vZombieButtonPressed(tank, button);
-#endif
 }
 
 public void MT_OnButtonReleased(int tank, int button)
 {
+#if defined MT_MENU_LASER
+	vLaserButtonReleased(tank, button);
+#endif
+#if defined MT_MENU_LIGHTNING
+	vLightningButtonReleased(tank, button);
+#endif
 #if defined MT_MENU_MEDIC
 	vMedicButtonReleased(tank, button);
 #endif
 #if defined MT_MENU_METEOR
 	vMeteorButtonReleased(tank, button);
-#endif
-#if defined MT_MENU_NECRO
-	vNecroButtonReleased(tank, button);
 #endif
 #if defined MT_MENU_OMNI
 	vOmniButtonReleased(tank, button);
@@ -2033,17 +1724,14 @@ public void MT_OnButtonReleased(int tank, int button)
 #if defined MT_MENU_REGEN
 	vRegenButtonReleased(tank, button);
 #endif
+#if defined MT_MENU_PANIC
+	vRespawnButtonReleased(tank, button);
+#endif
 #if defined MT_MENU_ROCK
 	vRockButtonReleased(tank, button);
 #endif
 #if defined MT_MENU_SHIELD
 	vShieldButtonReleased(tank, button);
-#endif
-#if defined MT_MENU_SPAM
-	vSpamButtonReleased(tank, button);
-#endif
-#if defined MT_MENU_SPLASH
-	vSplashButtonReleased(tank, button);
 #endif
 #if defined MT_MENU_WARP
 	vWarpButtonReleased(tank, button);
@@ -2051,13 +1739,19 @@ public void MT_OnButtonReleased(int tank, int button)
 #if defined MT_MENU_YELL
 	vYellButtonReleased(tank, button);
 #endif
-#if defined MT_MENU_ZOMBIE
-	vZombieButtonReleased(tank, button);
-#endif
 }
 
 public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 {
+#if defined MT_MENU_LAG
+	vLagChangeType(tank, oldType);
+#endif
+#if defined MT_MENU_LASER
+	vLaserChangeType(tank, oldType);
+#endif
+#if defined MT_MENU_LIGHTNING
+	vLightningChangeType(tank, oldType);
+#endif
 #if defined MT_MENU_MEDIC
 	vMedicChangeType(tank, oldType);
 #endif
@@ -2067,17 +1761,11 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #if defined MT_MENU_MINION
 	vMinionChangeType(tank, oldType);
 #endif
-#if defined MT_MENU_NECRO
-	vNecroChangeType(tank, oldType);
-#endif
 #if defined MT_MENU_NULLIFY
 	vNullifyChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_PANIC
 	vPanicChangeType(tank, oldType);
-#endif
-#if defined MT_MENU_PIMP
-	vPimpChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_PUKE
 	vPukeChangeType(tank, oldType);
@@ -2106,12 +1794,6 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #if defined MT_MENU_ROCK
 	vRockChangeType(tank, oldType);
 #endif
-#if defined MT_MENU_ROCKET
-	vRocketChangeType(tank, oldType);
-#endif
-#if defined MT_MENU_SHAKE
-	vShakeChangeType(tank, oldType);
-#endif
 #if defined MT_MENU_SHIELD
 	vShieldChangeType(tank, oldType);
 #endif
@@ -2123,18 +1805,6 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 #if defined MT_MENU_SMASH
 	vSmashChangeType(tank, oldType);
-#endif
-#if defined MT_MENU_SMITE
-	vSmiteChangeType(tank, oldType);
-#endif
-#if defined MT_MENU_SPAM
-	vSpamChangeType(tank, oldType);
-#endif
-#if defined MT_MENU_SPLASH
-	vSplashChangeType(tank, oldType);
-#endif
-#if defined MT_MENU_SPLATTER
-	vSplatterChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_THROW
 	vThrowChangeType(tank, oldType);
@@ -2163,9 +1833,6 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #if defined MT_MENU_YELL
 	vYellChangeType(tank, oldType);
 #endif
-#if defined MT_MENU_ZOMBIE
-	vZombieChangeType(tank, oldType);
-#endif
 }
 
 public void MT_OnPostTankSpawn(int tank)
@@ -2183,23 +1850,14 @@ public Action MT_OnFatalFalling(int survivor)
 
 public void MT_OnPlayerEventKilled(int victim, int attacker)
 {
-#if defined MT_MENU_NECRO
-	vNecroPlayerEventKilled(victim);
-#endif
 #if defined MT_MENU_RECALL
 	vRecallPlayerEventKilled(victim);
 #endif
 #if defined MT_MENU_RESPAWN
 	vRespawnPlayerEventKilled(victim);
 #endif
-#if defined MT_MENU_ROCKET
-	vRocketPlayerEventKilled(victim, attacker);
-#endif
 #if defined MT_MENU_SMASH
 	vSmashPlayerEventKilled(victim, attacker);
-#endif
-#if defined MT_MENU_SMITE
-	vSmitePlayerEventKilled(victim, attacker);
 #endif
 #if defined MT_MENU_WARP
 	vWarpPlayerEventKilled(victim);
@@ -2279,6 +1937,15 @@ public void MT_OnRockBreak(int tank, int rock)
 
 void vAbilityMenu(int client, const char[] name)
 {
+#if defined MT_MENU_LAG
+	vLagMenu(client, name, 0);
+#endif
+#if defined MT_MENU_LASER
+	vLaserMenu(client, name, 0);
+#endif
+#if defined MT_MENU_LIGHTNING
+	vLightningMenu(client, name, 0);
+#endif
 #if defined MT_MENU_MEDIC
 	vMedicMenu(client, name, 0);
 #endif
@@ -2288,9 +1955,6 @@ void vAbilityMenu(int client, const char[] name)
 #if defined MT_MENU_MINION
 	vMinionMenu(client, name, 0);
 #endif
-#if defined MT_MENU_NECRO
-	vNecroMenu(client, name, 0);
-#endif
 #if defined MT_MENU_NULLIFY
 	vNullifyMenu(client, name, 0);
 #endif
@@ -2299,9 +1963,6 @@ void vAbilityMenu(int client, const char[] name)
 #endif
 #if defined MT_MENU_PANIC
 	vPanicMenu(client, name, 0);
-#endif
-#if defined MT_MENU_PIMP
-	vPimpMenu(client, name, 0);
 #endif
 #if defined MT_MENU_PUKE
 	vPukeMenu(client, name, 0);
@@ -2330,12 +1991,6 @@ void vAbilityMenu(int client, const char[] name)
 #if defined MT_MENU_ROCK
 	vRockMenu(client, name, 0);
 #endif
-#if defined MT_MENU_ROCKET
-	vRocketMenu(client, name, 0);
-#endif
-#if defined MT_MENU_SHAKE
-	vShakeMenu(client, name, 0);
-#endif
 #if defined MT_MENU_SHIELD
 	vShieldMenu(client, name, 0);
 #endif
@@ -2347,18 +2002,6 @@ void vAbilityMenu(int client, const char[] name)
 #endif
 #if defined MT_MENU_SMASH
 	vSmashMenu(client, name, 0);
-#endif
-#if defined MT_MENU_SMITE
-	vSmiteMenu(client, name, 0);
-#endif
-#if defined MT_MENU_SPAM
-	vSpamMenu(client, name, 0);
-#endif
-#if defined MT_MENU_SPLASH
-	vSplashMenu(client, name, 0);
-#endif
-#if defined MT_MENU_SPLATTER
-	vSplatterMenu(client, name, 0);
 #endif
 #if defined MT_MENU_THROW
 	vThrowMenu(client, name, 0);
@@ -2372,9 +2015,6 @@ void vAbilityMenu(int client, const char[] name)
 #if defined MT_MENU_UNDEAD
 	vUndeadMenu(client, name, 0);
 #endif
-#if defined MT_MENU_VAMPIRE
-	vVampireMenu(client, name, 0);
-#endif
 #if defined MT_MENU_VISION
 	vVisionMenu(client, name, 0);
 #endif
@@ -2387,14 +2027,8 @@ void vAbilityMenu(int client, const char[] name)
 #if defined MT_MENU_WITCH
 	vWitchMenu(client, name, 0);
 #endif
-#if defined MT_MENU_XIPHOS
-	vXiphosMenu(client, name, 0);
-#endif
 #if defined MT_MENU_YELL
 	vYellMenu(client, name, 0);
-#endif
-#if defined MT_MENU_ZOMBIE
-	vZombieMenu(client, name, 0);
 #endif
 	bool bLog = false;
 	if (bLog)
@@ -2405,6 +2039,30 @@ void vAbilityMenu(int client, const char[] name)
 
 void vAbilityPlayer(int type, int client)
 {
+#if defined MT_MENU_LAG
+	switch (type)
+	{
+		case 0: vLagClientPutInServer(client);
+		case 2: vLagClientDisconnect_Post(client);
+		case 3: vLagAbilityActivated(client);
+	}
+#endif
+#if defined MT_MENU_LASER
+	switch (type)
+	{
+		case 0: vLaserClientPutInServer(client);
+		case 2: vLaserClientDisconnect_Post(client);
+		case 3: vLaserAbilityActivated(client);
+	}
+#endif
+#if defined MT_MENU_LIGHTNING
+	switch (type)
+	{
+		case 0: vLightningClientPutInServer(client);
+		case 2: vLightningClientDisconnect_Post(client);
+		case 3: vLightningAbilityActivated(client);
+	}
+#endif
 #if defined MT_MENU_MEDIC
 	switch (type)
 	{
@@ -2428,14 +2086,6 @@ void vAbilityPlayer(int type, int client)
 		case 1: vMinionClientDisconnect(client);
 		case 2: vMinionClientDisconnect_Post(client);
 		case 3: vMinionAbilityActivated(client);
-	}
-#endif
-#if defined MT_MENU_NECRO
-	switch (type)
-	{
-		case 0: vNecroClientPutInServer(client);
-		case 2: vNecroClientDisconnect_Post(client);
-		case 3: vNecroAbilityActivated(client);
 	}
 #endif
 #if defined MT_MENU_NULLIFY
@@ -2462,14 +2112,6 @@ void vAbilityPlayer(int type, int client)
 		case 2: vPanicClientDisconnect_Post(client);
 		case 3: vPanicAbilityActivated(client);
 		case 4: vPanicPostTankSpawn(client);
-	}
-#endif
-#if defined MT_MENU_PIMP
-	switch (type)
-	{
-		case 0: vPimpClientPutInServer(client);
-		case 2: vPimpClientDisconnect_Post(client);
-		case 3: vPimpAbilityActivated(client);
 	}
 #endif
 #if defined MT_MENU_PUKE
@@ -2527,6 +2169,7 @@ void vAbilityPlayer(int type, int client)
 	{
 		case 0: vRespawnClientPutInServer(client);
 		case 2: vRespawnClientDisconnect_Post(client);
+		case 3: vRespawnAbilityActivated(client);
 	}
 #endif
 #if defined MT_MENU_RESTART
@@ -2543,23 +2186,6 @@ void vAbilityPlayer(int type, int client)
 		case 0: vRockClientPutInServer(client);
 		case 2: vRockClientDisconnect_Post(client);
 		case 3: vRockAbilityActivated(client);
-	}
-#endif
-#if defined MT_MENU_ROCKET
-	switch (type)
-	{
-		case 0: vRocketClientPutInServer(client);
-		case 2: vRocketClientDisconnect_Post(client);
-		case 3: vRocketAbilityActivated(client);
-	}
-#endif
-#if defined MT_MENU_SHAKE
-	switch (type)
-	{
-		case 0: vShakeClientPutInServer(client);
-		case 2: vShakeClientDisconnect_Post(client);
-		case 3: vShakeAbilityActivated(client);
-		case 4: vShakePostTankSpawn(client);
 	}
 #endif
 #if defined MT_MENU_SHIELD
@@ -2595,38 +2221,6 @@ void vAbilityPlayer(int type, int client)
 		case 3: vSmashAbilityActivated(client);
 	}
 #endif
-#if defined MT_MENU_SMITE
-	switch (type)
-	{
-		case 0: vSmiteClientPutInServer(client);
-		case 2: vSmiteClientDisconnect_Post(client);
-		case 3: vSmiteAbilityActivated(client);
-	}
-#endif
-#if defined MT_MENU_SPAM
-	switch (type)
-	{
-		case 0: vSpamClientPutInServer(client);
-		case 2: vSpamClientDisconnect_Post(client);
-		case 3: vSpamAbilityActivated(client);
-	}
-#endif
-#if defined MT_MENU_SPLASH
-	switch (type)
-	{
-		case 0: vSplashClientPutInServer(client);
-		case 2: vSplashClientDisconnect_Post(client);
-		case 3: vSplashAbilityActivated(client);
-	}
-#endif
-#if defined MT_MENU_SPLATTER
-	switch (type)
-	{
-		case 0: vSplatterClientPutInServer(client);
-		case 2: vSplatterClientDisconnect_Post(client);
-		case 3: vSplatterAbilityActivated(client);
-	}
-#endif
 #if defined MT_MENU_THROW
 	switch (type)
 	{
@@ -2657,18 +2251,13 @@ void vAbilityPlayer(int type, int client)
 		case 3: vUndeadAbilityActivated(client);
 	}
 #endif
-#if defined MT_MENU_VAMPIRE
-	if (type == 0)
-	{
-		vVampireClientPutInServer(client);
-	}
-#endif
 #if defined MT_MENU_VISION
 	switch (type)
 	{
 		case 0: vVisionClientPutInServer(client);
 		case 2: vVisionClientDisconnect_Post(client);
 		case 3: vVisionAbilityActivated(client);
+		case 4: vVisionPostTankSpawn(client);
 	}
 #endif
 #if defined MT_MENU_WARP
@@ -2697,27 +2286,12 @@ void vAbilityPlayer(int type, int client)
 		case 4: vWitchPostTankSpawn(client);
 	}
 #endif
-#if defined MT_MENU_XIPHOS
-	if (type == 0)
-	{
-		vXiphosClientPutInServer(client);
-	}
-#endif
 #if defined MT_MENU_YELL
 	switch (type)
 	{
 		case 0: vYellClientPutInServer(client);
 		case 2: vYellClientDisconnect_Post(client);
 		case 3: vYellAbilityActivated(client);
-	}
-#endif
-#if defined MT_MENU_ZOMBIE
-	switch (type)
-	{
-		case 0: vZombieClientPutInServer(client);
-		case 2: vZombieClientDisconnect_Post(client);
-		case 3: vZombieAbilityActivated(client);
-		case 4: vZombiePostTankSpawn(client);
 	}
 #endif
 	bool bLog = false;
@@ -2729,6 +2303,27 @@ void vAbilityPlayer(int type, int client)
 
 void vAbilitySetup(int type)
 {
+#if defined MT_MENU_LAG
+	switch (type)
+	{
+		case 1: vLagMapStart();
+		case 2: vLagMapEnd();
+	}
+#endif
+#if defined MT_MENU_LASER
+	switch (type)
+	{
+		case 1: vLaserMapStart();
+		case 2: vLaserMapEnd();
+	}
+#endif
+#if defined MT_MENU_LIGHTNING
+	switch (type)
+	{
+		case 1: vLightningMapStart();
+		case 2: vLightningMapEnd();
+	}
+#endif
 #if defined MT_MENU_MEDIC
 	switch (type)
 	{
@@ -2751,13 +2346,6 @@ void vAbilitySetup(int type)
 		case 3: vMinionPluginEnd();
 	}
 #endif
-#if defined MT_MENU_NECRO
-	switch (type)
-	{
-		case 1: vNecroMapStart();
-		case 2: vNecroMapEnd();
-	}
-#endif
 #if defined MT_MENU_NULLIFY
 	switch (type)
 	{
@@ -2777,13 +2365,6 @@ void vAbilitySetup(int type)
 	{
 		case 1: vPanicMapStart();
 		case 2: vPanicMapEnd();
-	}
-#endif
-#if defined MT_MENU_PIMP
-	switch (type)
-	{
-		case 1: vPimpMapStart();
-		case 2: vPimpMapEnd();
 	}
 #endif
 #if defined MT_MENU_PUKE
@@ -2850,21 +2431,6 @@ void vAbilitySetup(int type)
 		case 2: vRockMapEnd();
 	}
 #endif
-#if defined MT_MENU_ROCKET
-	switch (type)
-	{
-		case 1: vRocketMapStart();
-		case 2: vRocketMapEnd();
-		case 3: vRocketPluginEnd();
-	}
-#endif
-#if defined MT_MENU_SHAKE
-	switch (type)
-	{
-		case 1: vShakeMapStart();
-		case 2: vShakeMapEnd();
-	}
-#endif
 #if defined MT_MENU_SHIELD
 	switch (type)
 	{
@@ -2894,34 +2460,7 @@ void vAbilitySetup(int type)
 	{
 		case 1: vSmashMapStart();
 		case 2: vSmashMapEnd();
-	}
-#endif
-#if defined MT_MENU_SMITE
-	switch (type)
-	{
-		case 1: vSmiteMapStart();
-		case 2: vSmiteMapEnd();
-	}
-#endif
-#if defined MT_MENU_SPAM
-	switch (type)
-	{
-		case 1: vSpamMapStart();
-		case 2: vSpamMapEnd();
-	}
-#endif
-#if defined MT_MENU_SPLASH
-	switch (type)
-	{
-		case 1: vSplashMapStart();
-		case 2: vSplashMapEnd();
-	}
-#endif
-#if defined MT_MENU_SPLATTER
-	switch (type)
-	{
-		case 1: vSplatterMapStart();
-		case 2: vSplatterMapEnd();
+		case 3: vSmashPluginEnd();
 	}
 #endif
 #if defined MT_MENU_THROW
@@ -2958,6 +2497,7 @@ void vAbilitySetup(int type)
 #if defined MT_MENU_VISION
 	switch (type)
 	{
+		case 0: vVisionPluginStart();
 		case 1: vVisionMapStart();
 		case 2: vVisionMapEnd();
 		case 3: vVisionPluginEnd();
@@ -2990,13 +2530,6 @@ void vAbilitySetup(int type)
 	{
 		case 1: vYellMapStart();
 		case 2: vYellMapEnd();
-	}
-#endif
-#if defined MT_MENU_ZOMBIE
-	switch (type)
-	{
-		case 1: vZombieMapStart();
-		case 2: vZombieMapEnd();
 	}
 #endif
 	bool bLog = false;

@@ -1,6 +1,6 @@
 /**
- * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2024  Alfred "Psyk0tik" Llagas
+ * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -28,6 +28,8 @@ public Plugin myinfo =
 };
 
 bool g_bDedicated, g_bLateLoad;
+
+int g_iGraphicsLevel;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -454,8 +456,12 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 				g_esRecallPlayer[client].g_flLastRecall[0] = flCurrentTime + 5.0;
 
 				MT_TeleportPlayerAhead(client, flOrigin, flEyeAngles, NULL_VECTOR, flDirection, 150.0);
-				vAttachParticle(client, PARTICLE_ELECTRICITY, 0.75, 30.0);
 				vForceVocalize(client, "PlayerLaugh");
+
+				if (g_iGraphicsLevel > 2)
+				{
+					vAttachParticle(client, PARTICLE_ELECTRICITY, 0.75, 30.0);
+				}
 			}
 		}
 		else if (buttons & IN_RELOAD)
@@ -751,7 +757,9 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esRecallPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esRecallPlayer[tank].g_iTankType = apply ? type : 0;
 	int iType = g_esRecallPlayer[tank].g_iTankTypeRecorded;
-
+#if !defined MT_ABILITIES_MAIN2
+	g_iGraphicsLevel = MT_GetGraphicsLevel();
+#endif
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		g_esRecallCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_flCloseAreasOnly, g_esRecallPlayer[tank].g_flCloseAreasOnly, g_esRecallSpecial[iType].g_flCloseAreasOnly, g_esRecallAbility[iType].g_flCloseAreasOnly, 1);
@@ -1073,7 +1081,7 @@ void vRecallAbility(int tank, bool main)
 			{
 				if (!bIsInfected(tank, MT_CHECK_FAKECLIENT) || (g_esRecallPlayer[tank].g_iAmmoCount2 < g_esRecallCache[tank].g_iHumanAmmo && g_esRecallCache[tank].g_iHumanAmmo > 0))
 				{
-					if (MT_GetRandomFloat(0.0, 100.0) <= g_esRecallCache[tank].g_flRecallRewindChance)
+					if (GetRandomFloat(0.1, 100.0) <= g_esRecallCache[tank].g_flRecallRewindChance)
 					{
 						vRecallRewind(tank, g_esRecallCache[tank].g_flRecallRewindThreshold, g_esRecallCache[tank].g_iRecallRewindLifetime, g_esRecallCache[tank].g_iRecallRewindMode, g_esRecallCache[tank].g_iRecallRewindCleanse);
 					}
@@ -1105,7 +1113,7 @@ void vRecallAbility(int tank, bool main)
 				{
 					if (g_esRecallPlayer[tank].g_iCount < g_esRecallCache[tank].g_iRecallBlinkCount)
 					{
-						if (MT_GetRandomFloat(0.0, 100.0) <= g_esRecallCache[tank].g_flRecallBlinkChance)
+						if (GetRandomFloat(0.1, 100.0) <= g_esRecallCache[tank].g_flRecallBlinkChance)
 						{
 							g_esRecallPlayer[tank].g_iCount++;
 
@@ -1168,7 +1176,11 @@ void vRecallAbility(int tank, bool main)
 							}
 
 							MT_TeleportPlayerAhead(tank, flOrigin, flEyeAngles, NULL_VECTOR, flDirection, g_esRecallCache[tank].g_flRecallBlinkRange);
-							vAttachParticle(iVictim, PARTICLE_ELECTRICITY, 0.75, 30.0);
+
+							if (g_iGraphicsLevel > 2)
+							{
+								vAttachParticle(iVictim, PARTICLE_ELECTRICITY, 0.75, 30.0);
+							}
 
 							if (bIsPlayerStuck(tank))
 							{
@@ -1317,7 +1329,11 @@ void vRecallRewind(int player, float threshold, int lifetime, int mode, int clea
 
 				TeleportEntity(player, flNewPos, flEyeAngles);
 				vFixPlayerPosition(player);
-				vAttachParticle(iVictim, PARTICLE_ELECTRICITY, 0.75, 30.0);
+
+				if (g_iGraphicsLevel > 2)
+				{
+					vAttachParticle(iVictim, PARTICLE_ELECTRICITY, 0.75, 30.0);
+				}
 
 				if (cleanse == 1)
 				{

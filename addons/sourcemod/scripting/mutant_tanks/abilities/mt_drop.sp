@@ -1,6 +1,6 @@
 /**
- * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2024  Alfred "Psyk0tik" Llagas
+ * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -22,7 +22,7 @@ public Plugin myinfo =
 {
 	name = "[MT] Drop Ability",
 	author = MT_AUTHOR,
-	description = "The Mutant Tank drops weapons upon death.",
+	description = "The Mutant Tank drops weapons and gives survivors items upon death.",
 	version = MT_VERSION,
 	url = MT_URL
 };
@@ -49,6 +49,10 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 
 #define MT_GAMEDATA "mutant_tanks"
+
+#define MODEL_FIREWORKCRATE "models/props_junk/explosive_box001.mdl" // Only available in L4D2
+#define MODEL_OXYGENTANK "models/props_equipment/oxygentank01.mdl"
+#define MODEL_PROPANETANK "models/props_junk/propanecanister001a.mdl"
 #else
 	#if MT_DROP_COMPILE_METHOD == 1
 		#error This file must be compiled as a standalone plugin.
@@ -219,6 +223,8 @@ enum struct esDropGeneral
 	ConVar g_cvMTSniperRifleAmmo;
 
 	Handle g_hSDKGetMaxClip1;
+
+	int g_iDropWeapon[2048];
 }
 
 esDropGeneral g_esDropGeneral;
@@ -226,12 +232,19 @@ esDropGeneral g_esDropGeneral;
 enum struct esDropPlayer
 {
 	bool g_bActivated;
+	bool g_bActivated2;
 
+	char g_sDropLoadout[325];
+	char g_sDropPinata[325];
 	char g_sDropWeaponName[32];
+	char g_sGiveLoadout[325];
 
 	float g_flCloseAreasOnly;
 	float g_flDropChance;
 	float g_flDropClipChance;
+	float g_flDropPinataChance;
+	float g_flDropWeaponBoost;
+	float g_flDropWeaponResistance;
 	float g_flDropWeaponScale;
 	float g_flOpenAreasOnly;
 
@@ -241,8 +254,12 @@ enum struct esDropPlayer
 	int g_iDropCount;
 	int g_iDropMessage;
 	int g_iDropHandPosition;
+	int g_iDropItemMode;
 	int g_iDropMode;
+	int g_iDropPinataBody;
+	int g_iGiveMode;
 	int g_iHumanAbility;
+	int g_iImmunityFlags;
 	int g_iRequiresHumans;
 	int g_iTankType;
 	int g_iTankTypeRecorded;
@@ -254,11 +271,16 @@ esDropPlayer g_esDropPlayer[MAXPLAYERS + 1];
 
 enum struct esDropTeammate
 {
+	char g_sDropLoadout[325];
+	char g_sDropPinata[325];
 	char g_sDropWeaponName[32];
 
 	float g_flCloseAreasOnly;
 	float g_flDropChance;
 	float g_flDropClipChance;
+	float g_flDropPinataChance;
+	float g_flDropWeaponBoost;
+	float g_flDropWeaponResistance;
 	float g_flDropWeaponScale;
 	float g_flOpenAreasOnly;
 
@@ -267,7 +289,9 @@ enum struct esDropTeammate
 	int g_iDropCount;
 	int g_iDropMessage;
 	int g_iDropHandPosition;
+	int g_iDropItemMode;
 	int g_iDropMode;
+	int g_iDropPinataBody;
 	int g_iHumanAbility;
 	int g_iRequiresHumans;
 }
@@ -276,11 +300,16 @@ esDropTeammate g_esDropTeammate[MAXPLAYERS + 1];
 
 enum struct esDropAbility
 {
+	char g_sDropLoadout[325];
+	char g_sDropPinata[325];
 	char g_sDropWeaponName[32];
 
 	float g_flCloseAreasOnly;
 	float g_flDropChance;
 	float g_flDropClipChance;
+	float g_flDropPinataChance;
+	float g_flDropWeaponBoost;
+	float g_flDropWeaponResistance;
 	float g_flDropWeaponScale;
 	float g_flOpenAreasOnly;
 
@@ -290,8 +319,11 @@ enum struct esDropAbility
 	int g_iDropCount;
 	int g_iDropMessage;
 	int g_iDropHandPosition;
+	int g_iDropItemMode;
 	int g_iDropMode;
+	int g_iDropPinataBody;
 	int g_iHumanAbility;
+	int g_iImmunityFlags;
 	int g_iRequiresHumans;
 }
 
@@ -299,11 +331,16 @@ esDropAbility g_esDropAbility[MT_MAXTYPES + 1];
 
 enum struct esDropSpecial
 {
+	char g_sDropLoadout[325];
+	char g_sDropPinata[325];
 	char g_sDropWeaponName[32];
 
 	float g_flCloseAreasOnly;
 	float g_flDropChance;
 	float g_flDropClipChance;
+	float g_flDropPinataChance;
+	float g_flDropWeaponBoost;
+	float g_flDropWeaponResistance;
 	float g_flDropWeaponScale;
 	float g_flOpenAreasOnly;
 
@@ -312,7 +349,9 @@ enum struct esDropSpecial
 	int g_iDropCount;
 	int g_iDropMessage;
 	int g_iDropHandPosition;
+	int g_iDropItemMode;
 	int g_iDropMode;
+	int g_iDropPinataBody;
 	int g_iHumanAbility;
 	int g_iRequiresHumans;
 }
@@ -321,11 +360,16 @@ esDropSpecial g_esDropSpecial[MT_MAXTYPES + 1];
 
 enum struct esDropCache
 {
+	char g_sDropLoadout[325];
+	char g_sDropPinata[325];
 	char g_sDropWeaponName[32];
 
 	float g_flCloseAreasOnly;
 	float g_flDropChance;
 	float g_flDropClipChance;
+	float g_flDropPinataChance;
+	float g_flDropWeaponBoost;
+	float g_flDropWeaponResistance;
 	float g_flDropWeaponScale;
 	float g_flOpenAreasOnly;
 
@@ -334,12 +378,16 @@ enum struct esDropCache
 	int g_iDropCount;
 	int g_iDropMessage;
 	int g_iDropHandPosition;
+	int g_iDropItemMode;
 	int g_iDropMode;
+	int g_iDropPinataBody;
 	int g_iHumanAbility;
 	int g_iRequiresHumans;
 }
 
 esDropCache g_esDropCache[MAXPLAYERS + 1];
+
+int g_iDropDeathModelOwner = 0;
 
 #if defined MT_ABILITIES_MAIN
 void vDropAllPluginsLoaded(GameData gdMutantTanks)
@@ -390,10 +438,10 @@ public void OnPluginStart()
 #endif
 {
 	g_esDropGeneral.g_cvMTAssaultRifleAmmo = FindConVar("ammo_assaultrifle_max");
-	g_esDropGeneral.g_cvMTAutoShotgunAmmo = g_bSecondGame ? FindConVar("ammo_autoshotgun_max") : FindConVar("ammo_buckshot_max");
+	g_esDropGeneral.g_cvMTAutoShotgunAmmo = (g_bSecondGame ? FindConVar("ammo_autoshotgun_max") : FindConVar("ammo_buckshot_max"));
 	g_esDropGeneral.g_cvMTGrenadeLauncherAmmo = FindConVar("ammo_grenadelauncher_max");
 	g_esDropGeneral.g_cvMTHuntingRifleAmmo = FindConVar("ammo_huntingrifle_max");
-	g_esDropGeneral.g_cvMTShotgunAmmo = g_bSecondGame ? FindConVar("ammo_shotgun_max") : FindConVar("ammo_buckshot_max");
+	g_esDropGeneral.g_cvMTShotgunAmmo = (g_bSecondGame ? FindConVar("ammo_shotgun_max") : FindConVar("ammo_buckshot_max"));
 	g_esDropGeneral.g_cvMTSMGAmmo = FindConVar("ammo_smg_max");
 	g_esDropGeneral.g_cvMTSniperRifleAmmo = FindConVar("ammo_sniperrifle_max");
 #if !defined MT_ABILITIES_MAIN
@@ -445,6 +493,7 @@ void vDropClientPutInServer(int client)
 public void OnClientPutInServer(int client)
 #endif
 {
+	SDKHook(client, SDKHook_OnTakeDamage, OnDropTakeDamage);
 	vDropReset2(client);
 }
 
@@ -594,6 +643,121 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 }
 
 #if defined MT_ABILITIES_MAIN
+void vDropEntityCreated(int entity, const char[] classname)
+#else
+public void OnEntityCreated(int entity, const char[] classname)
+#endif
+{
+	if (bIsValidEntity(entity) && StrEqual(classname, "survivor_death_model"))
+	{
+		int iOwner = GetClientOfUserId(g_iDropDeathModelOwner);
+		if (bIsValidClient(iOwner))
+		{
+			SDKHook(entity, SDKHook_SpawnPost, OnDropModelSpawnPost);
+		}
+
+		g_iDropDeathModelOwner = 0;
+	}
+}
+
+#if defined MT_ABILITIES_MAIN
+void vDropEntityDestroyed(int entity)
+#else
+public void OnEntityDestroyed(int entity)
+#endif
+{
+	if (bIsValidEntity(entity))
+	{
+		g_esDropGeneral.g_iDropWeapon[entity] = INVALID_ENT_REFERENCE;
+	}
+}
+
+void OnDropModelSpawnPost(int model)
+{
+	g_iDropDeathModelOwner = 0;
+
+	SDKUnhook(model, SDKHook_SpawnPost, OnDropModelSpawnPost);
+
+	if (!bIsValidEntity(model))
+	{
+		return;
+	}
+
+	RemoveEntity(model);
+}
+
+Action OnDropTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+{
+	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
+	{
+		char sClassname[32];
+		if (bIsValidEntity(inflictor))
+		{
+			GetEntityClassname(inflictor, sClassname, sizeof sClassname);
+		}
+
+		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && bIsSurvivor(victim))
+		{
+			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esDropAbility[g_esDropPlayer[attacker].g_iTankTypeRecorded].g_iAccessFlags, g_esDropPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esDropPlayer[attacker].g_iTankType, g_esDropAbility[g_esDropPlayer[attacker].g_iTankTypeRecorded].g_iImmunityFlags, g_esDropPlayer[victim].g_iImmunityFlags))
+			{
+				return Plugin_Continue;
+			}
+
+			bool bCaught = bIsSurvivorCaught(victim);
+			if ((bIsSpecialInfected(attacker) && (bCaught || (!bCaught && (damagetype & DMG_CLUB)) || (bIsSpitter(attacker) && StrEqual(sClassname, "insect_swarm")))) || StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
+			{
+				int iWeapon = iGetSurvivorActiveWeapon(attacker);
+				if (iWeapon > MaxClients)
+				{
+					if (iWeapon == EntRefToEntIndex(g_esDropGeneral.g_iDropWeapon[iWeapon]))
+					{
+						damage *= g_esDropCache[attacker].g_flDropWeaponResistance;
+
+						return Plugin_Changed;
+					}
+				}
+			}
+		}
+		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && bIsSurvivor(attacker))
+		{
+			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esDropAbility[g_esDropPlayer[victim].g_iTankTypeRecorded].g_iAccessFlags, g_esDropPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esDropPlayer[victim].g_iTankType, g_esDropAbility[g_esDropPlayer[victim].g_iTankTypeRecorded].g_iImmunityFlags, g_esDropPlayer[attacker].g_iImmunityFlags))
+			{
+				return Plugin_Continue;
+			}
+
+			int iWeapon = iGetSurvivorActiveWeapon(attacker);
+			if (iWeapon > MaxClients)
+			{
+				if (iWeapon == EntRefToEntIndex(g_esDropGeneral.g_iDropWeapon[iWeapon]))
+				{
+					damage *= g_esDropCache[attacker].g_flDropWeaponBoost;
+
+					return Plugin_Changed;
+				}
+			}
+		}
+	}
+
+	return Plugin_Continue;
+}
+
+Action OnDropTakeDamage2(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+{
+	return Plugin_Handled;
+}
+
+void OnDropUse(int entity, int activator, int caller, UseType type, float value)
+{
+	if (!bIsValidEntity(entity))
+	{
+		return;
+	}
+
+	SDKUnhook(entity, SDKHook_OnTakeDamage, OnDropTakeDamage2);
+	SDKUnhook(entity, SDKHook_Use, OnDropUse);
+}
+
+#if defined MT_ABILITIES_MAIN
 void vDropPluginCheck(ArrayList list)
 #else
 public void MT_OnPluginCheck(ArrayList list)
@@ -633,7 +797,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_DROP_SECTION4);
 	if (StrContains(sCombo, sSet[0], false) != -1 || StrContains(sCombo, sSet[1], false) != -1 || StrContains(sCombo, sSet[2], false) != -1 || StrContains(sCombo, sSet[3], false) != -1)
 	{
-		if (type == MT_COMBO_UPONDEATH && g_esDropCache[tank].g_iDropAbility == 1 && g_esDropCache[tank].g_iComboAbility == 1 && g_esDropPlayer[tank].g_bActivated)
+		if (type == MT_COMBO_UPONDEATH && g_esDropCache[tank].g_iDropAbility > 0 && g_esDropCache[tank].g_iComboAbility == 1 && g_esDropPlayer[tank].g_bActivated)
 		{
 			char sAbilities[320], sSubset[10][32];
 			strcopy(sAbilities, sizeof sAbilities, combo);
@@ -648,7 +812,15 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 
 					switch (flDelay)
 					{
-						case 0.0: vDropWeapon(tank, 0, random, iPos);
+						case 0.0:
+						{
+							if ((g_esDropCache[tank].g_iDropAbility == 2 || g_esDropCache[tank].g_iDropAbility == 3) && random <= MT_GetCombinationSetting(tank, 1, iPos))
+							{
+								g_esDropPlayer[tank].g_bActivated2 = true;
+							}
+
+							vDropWeapon(tank, 0, random, iPos);
+						}
 						default:
 						{
 							DataPack dpCombo;
@@ -679,6 +851,7 @@ public void MT_OnConfigsLoad(int mode)
 			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
 			{
 				g_esDropAbility[iIndex].g_iAccessFlags = 0;
+				g_esDropAbility[iIndex].g_iImmunityFlags = 0;
 				g_esDropAbility[iIndex].g_flCloseAreasOnly = 0.0;
 				g_esDropAbility[iIndex].g_iComboAbility = 0;
 				g_esDropAbility[iIndex].g_iHumanAbility = 0;
@@ -690,8 +863,15 @@ public void MT_OnConfigsLoad(int mode)
 				g_esDropAbility[iIndex].g_flDropClipChance = 33.3;
 				g_esDropAbility[iIndex].g_iDropCount = 1;
 				g_esDropAbility[iIndex].g_iDropHandPosition = 0;
+				g_esDropAbility[iIndex].g_sDropLoadout = "rifle,pistol,first_aid_kit,pain_pills";
+				g_esDropAbility[iIndex].g_iDropItemMode = 0;
 				g_esDropAbility[iIndex].g_iDropMode = 0;
+				g_esDropAbility[iIndex].g_sDropPinata[0] = '\0';
+				g_esDropAbility[iIndex].g_iDropPinataBody = 1;
+				g_esDropAbility[iIndex].g_flDropPinataChance = 33.3;
+				g_esDropAbility[iIndex].g_flDropWeaponBoost = 0.0;
 				g_esDropAbility[iIndex].g_sDropWeaponName[0] = '\0';
+				g_esDropAbility[iIndex].g_flDropWeaponResistance = 0.0;
 				g_esDropAbility[iIndex].g_flDropWeaponScale = 1.0;
 
 				g_esDropSpecial[iIndex].g_flCloseAreasOnly = -1.0;
@@ -705,8 +885,15 @@ public void MT_OnConfigsLoad(int mode)
 				g_esDropSpecial[iIndex].g_flDropClipChance = -1.0;
 				g_esDropSpecial[iIndex].g_iDropCount = -1;
 				g_esDropSpecial[iIndex].g_iDropHandPosition = -1;
+				g_esDropSpecial[iIndex].g_sDropLoadout[0] = '\0';
+				g_esDropSpecial[iIndex].g_iDropItemMode = -1;
 				g_esDropSpecial[iIndex].g_iDropMode = -1;
+				g_esDropSpecial[iIndex].g_sDropPinata[0] = '\0';
+				g_esDropSpecial[iIndex].g_iDropPinataBody = -1;
+				g_esDropSpecial[iIndex].g_flDropPinataChance = -1.0;
+				g_esDropSpecial[iIndex].g_flDropWeaponBoost = 0.0;
 				g_esDropSpecial[iIndex].g_sDropWeaponName[0] = '\0';
+				g_esDropSpecial[iIndex].g_flDropWeaponResistance = 0.0;
 				g_esDropSpecial[iIndex].g_flDropWeaponScale = -1.0;
 			}
 		}
@@ -715,6 +902,7 @@ public void MT_OnConfigsLoad(int mode)
 			for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 			{
 				g_esDropPlayer[iPlayer].g_iAccessFlags = -1;
+				g_esDropPlayer[iPlayer].g_iImmunityFlags = -1;
 				g_esDropPlayer[iPlayer].g_flCloseAreasOnly = -1.0;
 				g_esDropPlayer[iPlayer].g_iComboAbility = -1;
 				g_esDropPlayer[iPlayer].g_iHumanAbility = -1;
@@ -726,8 +914,15 @@ public void MT_OnConfigsLoad(int mode)
 				g_esDropPlayer[iPlayer].g_flDropClipChance = -1.0;
 				g_esDropPlayer[iPlayer].g_iDropCount = -1;
 				g_esDropPlayer[iPlayer].g_iDropHandPosition = -1;
+				g_esDropPlayer[iPlayer].g_sDropLoadout[0] = '\0';
+				g_esDropPlayer[iPlayer].g_iDropItemMode = -1;
 				g_esDropPlayer[iPlayer].g_iDropMode = -1;
+				g_esDropPlayer[iPlayer].g_sDropPinata[0] = '\0';
+				g_esDropPlayer[iPlayer].g_iDropPinataBody = -1;
+				g_esDropPlayer[iPlayer].g_flDropPinataChance = -1.0;
+				g_esDropPlayer[iPlayer].g_flDropWeaponBoost = -1.0;
 				g_esDropPlayer[iPlayer].g_sDropWeaponName[0] = '\0';
+				g_esDropPlayer[iPlayer].g_flDropWeaponResistance = -1.0;
 				g_esDropPlayer[iPlayer].g_flDropWeaponScale = -1.0;
 
 				g_esDropTeammate[iPlayer].g_flCloseAreasOnly = -1.0;
@@ -741,8 +936,15 @@ public void MT_OnConfigsLoad(int mode)
 				g_esDropTeammate[iPlayer].g_flDropClipChance = -1.0;
 				g_esDropTeammate[iPlayer].g_iDropCount = -1;
 				g_esDropTeammate[iPlayer].g_iDropHandPosition = -1;
+				g_esDropTeammate[iPlayer].g_sDropLoadout[0] = '\0';
+				g_esDropTeammate[iPlayer].g_iDropItemMode = -1;
 				g_esDropTeammate[iPlayer].g_iDropMode = -1;
+				g_esDropTeammate[iPlayer].g_sDropPinata[0] = '\0';
+				g_esDropTeammate[iPlayer].g_iDropPinataBody = -1;
+				g_esDropTeammate[iPlayer].g_flDropPinataChance = -1.0;
+				g_esDropTeammate[iPlayer].g_flDropWeaponBoost = -1.0;
 				g_esDropTeammate[iPlayer].g_sDropWeaponName[0] = '\0';
+				g_esDropTeammate[iPlayer].g_flDropWeaponResistance = -1.0;
 				g_esDropTeammate[iPlayer].g_flDropWeaponScale = -1.0;
 			}
 		}
@@ -764,15 +966,22 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esDropTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esDropTeammate[admin].g_iHumanAbility, value, -1, 2);
 			g_esDropTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esDropTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esDropTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esDropTeammate[admin].g_iRequiresHumans, value, -1, 32);
-			g_esDropTeammate[admin].g_iDropAbility = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esDropTeammate[admin].g_iDropAbility, value, -1, 1);
+			g_esDropTeammate[admin].g_iDropAbility = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esDropTeammate[admin].g_iDropAbility, value, -1, 3);
 			g_esDropTeammate[admin].g_iDropMessage = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esDropTeammate[admin].g_iDropMessage, value, -1, 1);
 			g_esDropTeammate[admin].g_flDropChance = flGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropChance", "Drop Chance", "Drop_Chance", "chance", g_esDropTeammate[admin].g_flDropChance, value, -1.0, 100.0);
 			g_esDropTeammate[admin].g_flDropClipChance = flGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropClipChance", "Drop Clip Chance", "Drop_Clip_Chance", "clipchance", g_esDropTeammate[admin].g_flDropClipChance, value, -1.0, 100.0);
 			g_esDropTeammate[admin].g_iDropCount = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropCount", "Drop Count", "Drop_Count", "count", g_esDropTeammate[admin].g_iDropCount, value, -1, 32);
 			g_esDropTeammate[admin].g_iDropHandPosition = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropHandPosition", "Drop Hand Position", "Drop_Hand_Position", "handpos", g_esDropTeammate[admin].g_iDropHandPosition, value, -1, 3);
+			g_esDropTeammate[admin].g_iDropItemMode = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropItemMode", "Drop Item Mode", "Drop_Item_Mode", "itemmode", g_esDropTeammate[admin].g_iDropItemMode, value, -1, 3);
 			g_esDropTeammate[admin].g_iDropMode = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropMode", "Drop Mode", "Drop_Mode", "mode", g_esDropTeammate[admin].g_iDropMode, value, -1, 2);
+			g_esDropTeammate[admin].g_iDropPinataBody = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropPinataBody", "Drop Pinata Body", "Drop_Pinata_Body", "pinatabody", g_esDropTeammate[admin].g_iDropPinataBody, value, -1, 1);
+			g_esDropTeammate[admin].g_flDropPinataChance = flGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropPinataChance", "Drop Pinata Chance", "Drop_Pinata_Chance", "pinatachance", g_esDropTeammate[admin].g_flDropPinataChance, value, -1.0, 100.0);
+			g_esDropTeammate[admin].g_flDropWeaponBoost = flGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropWeaponBoost", "Drop Weapon Boost", "Drop_Weapon_Boost", "weaponboost", g_esDropTeammate[admin].g_flDropWeaponBoost, value, -1.0, 99999.0);
+			g_esDropTeammate[admin].g_flDropWeaponResistance = flGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropWeaponResistance", "Drop Weapon Resistance", "Drop_Weapon_Resistance", "weaponres", g_esDropTeammate[admin].g_flDropWeaponResistance, value, -1.0, 1.0);
 			g_esDropTeammate[admin].g_flDropWeaponScale = flGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropWeaponScale", "Drop Weapon Scale", "Drop_Weapon_Scale", "weaponscale", g_esDropTeammate[admin].g_flDropWeaponScale, value, -1.0, 2.0);
 
+			vGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropLoadout", "Drop Loadout", "Drop_Loadout", "loadout", g_esDropTeammate[admin].g_sDropLoadout, sizeof esDropTeammate::g_sDropLoadout, value);
+			vGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropPinata", "Drop Pinata", "Drop_Pinata", "pinata", g_esDropTeammate[admin].g_sDropPinata, sizeof esDropTeammate::g_sDropPinata, value);
 			vGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropWeaponName", "Drop Weapon Name", "Drop_Weapon_Name", "weaponname", g_esDropTeammate[admin].g_sDropWeaponName, sizeof esDropTeammate::g_sDropWeaponName, value);
 		}
 		else
@@ -782,16 +991,24 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esDropPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esDropPlayer[admin].g_iHumanAbility, value, -1, 2);
 			g_esDropPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esDropPlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esDropPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esDropPlayer[admin].g_iRequiresHumans, value, -1, 32);
-			g_esDropPlayer[admin].g_iDropAbility = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esDropPlayer[admin].g_iDropAbility, value, -1, 1);
+			g_esDropPlayer[admin].g_iDropAbility = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esDropPlayer[admin].g_iDropAbility, value, -1, 3);
 			g_esDropPlayer[admin].g_iDropMessage = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esDropPlayer[admin].g_iDropMessage, value, -1, 1);
 			g_esDropPlayer[admin].g_flDropChance = flGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropChance", "Drop Chance", "Drop_Chance", "chance", g_esDropPlayer[admin].g_flDropChance, value, -1.0, 100.0);
 			g_esDropPlayer[admin].g_flDropClipChance = flGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropClipChance", "Drop Clip Chance", "Drop_Clip_Chance", "clipchance", g_esDropPlayer[admin].g_flDropClipChance, value, -1.0, 100.0);
 			g_esDropPlayer[admin].g_iDropCount = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropCount", "Drop Count", "Drop_Count", "count", g_esDropPlayer[admin].g_iDropCount, value, -1, 32);
 			g_esDropPlayer[admin].g_iDropHandPosition = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropHandPosition", "Drop Hand Position", "Drop_Hand_Position", "handpos", g_esDropPlayer[admin].g_iDropHandPosition, value, -1, 3);
+			g_esDropPlayer[admin].g_iDropItemMode = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropItemMode", "Drop Item Mode", "Drop_Item_Mode", "itemmode", g_esDropPlayer[admin].g_iDropItemMode, value, -1, 3);
 			g_esDropPlayer[admin].g_iDropMode = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropMode", "Drop Mode", "Drop_Mode", "mode", g_esDropPlayer[admin].g_iDropMode, value, -1, 2);
+			g_esDropPlayer[admin].g_iDropPinataBody = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropPinataBody", "Drop Pinata Body", "Drop_Pinata_Body", "pinatabody", g_esDropPlayer[admin].g_iDropPinataBody, value, -1, 1);
+			g_esDropPlayer[admin].g_flDropPinataChance = flGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropPinataChance", "Drop Pinata Chance", "Drop_Pinata_Chance", "pinatachance", g_esDropPlayer[admin].g_flDropPinataChance, value, -1.0, 100.0);
+			g_esDropPlayer[admin].g_flDropWeaponBoost = flGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropWeaponBoost", "Drop Weapon Boost", "Drop_Weapon_Boost", "weaponboost", g_esDropPlayer[admin].g_flDropWeaponBoost, value, -1.0, 99999.0);
+			g_esDropPlayer[admin].g_flDropWeaponResistance = flGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropWeaponResistance", "Drop Weapon Resistance", "Drop_Weapon_Resistance", "weaponres", g_esDropPlayer[admin].g_flDropWeaponResistance, value, -1.0, 1.0);
 			g_esDropPlayer[admin].g_flDropWeaponScale = flGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropWeaponScale", "Drop Weapon Scale", "Drop_Weapon_Scale", "weaponscale", g_esDropPlayer[admin].g_flDropWeaponScale, value, -1.0, 2.0);
 			g_esDropPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+			g_esDropPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 
+			vGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropLoadout", "Drop Loadout", "Drop_Loadout", "loadout", g_esDropPlayer[admin].g_sDropLoadout, sizeof esDropPlayer::g_sDropLoadout, value);
+			vGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropPinata", "Drop Pinata", "Drop_Pinata", "pinata", g_esDropPlayer[admin].g_sDropPinata, sizeof esDropPlayer::g_sDropPinata, value);
 			vGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropWeaponName", "Drop Weapon Name", "Drop_Weapon_Name", "weaponname", g_esDropPlayer[admin].g_sDropWeaponName, sizeof esDropPlayer::g_sDropWeaponName, value);
 		}
 	}
@@ -805,15 +1022,22 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esDropSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esDropSpecial[type].g_iHumanAbility, value, -1, 2);
 			g_esDropSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esDropSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esDropSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esDropSpecial[type].g_iRequiresHumans, value, -1, 32);
-			g_esDropSpecial[type].g_iDropAbility = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esDropSpecial[type].g_iDropAbility, value, -1, 1);
+			g_esDropSpecial[type].g_iDropAbility = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esDropSpecial[type].g_iDropAbility, value, -1, 3);
 			g_esDropSpecial[type].g_iDropMessage = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esDropSpecial[type].g_iDropMessage, value, -1, 1);
 			g_esDropSpecial[type].g_flDropChance = flGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropChance", "Drop Chance", "Drop_Chance", "chance", g_esDropSpecial[type].g_flDropChance, value, -1.0, 100.0);
 			g_esDropSpecial[type].g_flDropClipChance = flGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropClipChance", "Drop Clip Chance", "Drop_Clip_Chance", "clipchance", g_esDropSpecial[type].g_flDropClipChance, value, -1.0, 100.0);
 			g_esDropSpecial[type].g_iDropCount = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropCount", "Drop Count", "Drop_Count", "count", g_esDropSpecial[type].g_iDropCount, value, -1, 32);
 			g_esDropSpecial[type].g_iDropHandPosition = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropHandPosition", "Drop Hand Position", "Drop_Hand_Position", "handpos", g_esDropSpecial[type].g_iDropHandPosition, value, -1, 3);
+			g_esDropSpecial[type].g_iDropItemMode = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropItemMode", "Drop Item Mode", "Drop_Item_Mode", "itemmode", g_esDropSpecial[type].g_iDropItemMode, value, -1, 3);
 			g_esDropSpecial[type].g_iDropMode = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropMode", "Drop Mode", "Drop_Mode", "mode", g_esDropSpecial[type].g_iDropMode, value, -1, 2);
+			g_esDropSpecial[type].g_iDropPinataBody = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropPinataBody", "Drop Pinata Body", "Drop_Pinata_Body", "pinatabody", g_esDropSpecial[type].g_iDropPinataBody, value, -1, 1);
+			g_esDropSpecial[type].g_flDropPinataChance = flGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropPinataChance", "Drop Pinata Chance", "Drop_Pinata_Chance", "pinatachance", g_esDropSpecial[type].g_flDropPinataChance, value, -1.0, 100.0);
+			g_esDropSpecial[type].g_flDropWeaponBoost = flGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropWeaponBoost", "Drop Weapon Boost", "Drop_Weapon_Boost", "weaponboost", g_esDropSpecial[type].g_flDropWeaponBoost, value, -1.0, 99999.0);
+			g_esDropSpecial[type].g_flDropWeaponResistance = flGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropWeaponResistance", "Drop Weapon Resistance", "Drop_Weapon_Resistance", "weaponres", g_esDropSpecial[type].g_flDropWeaponResistance, value, -1.0, 1.0);
 			g_esDropSpecial[type].g_flDropWeaponScale = flGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropWeaponScale", "Drop Weapon Scale", "Drop_Weapon_Scale", "weaponscale", g_esDropSpecial[type].g_flDropWeaponScale, value, -1.0, 2.0);
 
+			vGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropLoadout", "Drop Loadout", "Drop_Loadout", "loadout", g_esDropSpecial[type].g_sDropLoadout, sizeof esDropSpecial::g_sDropLoadout, value);
+			vGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropPinata", "Drop Pinata", "Drop_Pinata", "pinata", g_esDropSpecial[type].g_sDropPinata, sizeof esDropSpecial::g_sDropPinata, value);
 			vGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropWeaponName", "Drop Weapon Name", "Drop_Weapon_Name", "weaponname", g_esDropSpecial[type].g_sDropWeaponName, sizeof esDropSpecial::g_sDropWeaponName, value);
 		}
 		else
@@ -823,16 +1047,24 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esDropAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esDropAbility[type].g_iHumanAbility, value, -1, 2);
 			g_esDropAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esDropAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esDropAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esDropAbility[type].g_iRequiresHumans, value, -1, 32);
-			g_esDropAbility[type].g_iDropAbility = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esDropAbility[type].g_iDropAbility, value, -1, 1);
+			g_esDropAbility[type].g_iDropAbility = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esDropAbility[type].g_iDropAbility, value, -1, 3);
 			g_esDropAbility[type].g_iDropMessage = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esDropAbility[type].g_iDropMessage, value, -1, 1);
 			g_esDropAbility[type].g_flDropChance = flGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropChance", "Drop Chance", "Drop_Chance", "chance", g_esDropAbility[type].g_flDropChance, value, -1.0, 100.0);
 			g_esDropAbility[type].g_flDropClipChance = flGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropClipChance", "Drop Clip Chance", "Drop_Clip_Chance", "clipchance", g_esDropAbility[type].g_flDropClipChance, value, -1.0, 100.0);
 			g_esDropAbility[type].g_iDropCount = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropCount", "Drop Count", "Drop_Count", "count", g_esDropAbility[type].g_iDropCount, value, -1, 32);
 			g_esDropAbility[type].g_iDropHandPosition = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropHandPosition", "Drop Hand Position", "Drop_Hand_Position", "handpos", g_esDropAbility[type].g_iDropHandPosition, value, -1, 3);
+			g_esDropAbility[type].g_iDropItemMode = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropItemMode", "Drop Item Mode", "Drop_Item_Mode", "itemmode", g_esDropAbility[type].g_iDropItemMode, value, -1, 3);
 			g_esDropAbility[type].g_iDropMode = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropMode", "Drop Mode", "Drop_Mode", "mode", g_esDropAbility[type].g_iDropMode, value, -1, 2);
+			g_esDropAbility[type].g_iDropPinataBody = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropPinataBody", "Drop Pinata Body", "Drop_Pinata_Body", "pinatabody", g_esDropAbility[type].g_iDropPinataBody, value, -1, 1);
+			g_esDropAbility[type].g_flDropPinataChance = flGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropPinataChance", "Drop Pinata Chance", "Drop_Pinata_Chance", "pinatachance", g_esDropAbility[type].g_flDropPinataChance, value, -1.0, 100.0);
+			g_esDropAbility[type].g_flDropWeaponBoost = flGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropWeaponBoost", "Drop Weapon Boost", "Drop_Weapon_Boost", "weaponboost", g_esDropAbility[type].g_flDropWeaponBoost, value, -1.0, 99999.0);
+			g_esDropAbility[type].g_flDropWeaponResistance = flGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropWeaponResistance", "Drop Weapon Resistance", "Drop_Weapon_Resistance", "weaponres", g_esDropAbility[type].g_flDropWeaponResistance, value, -1.0, 1.0);
 			g_esDropAbility[type].g_flDropWeaponScale = flGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropWeaponScale", "Drop Weapon Scale", "Drop_Weapon_Scale", "weaponscale", g_esDropAbility[type].g_flDropWeaponScale, value, -1.0, 2.0);
 			g_esDropAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+			g_esDropAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 
+			vGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropLoadout", "Drop Loadout", "Drop_Loadout", "loadout", g_esDropAbility[type].g_sDropLoadout, sizeof esDropAbility::g_sDropLoadout, value);
+			vGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropPinata", "Drop Pinata", "Drop_Pinata", "pinata", g_esDropAbility[type].g_sDropPinata, sizeof esDropAbility::g_sDropPinata, value);
 			vGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "DropWeaponName", "Drop Weapon Name", "Drop_Weapon_Name", "weaponname", g_esDropAbility[type].g_sDropWeaponName, sizeof esDropAbility::g_sDropWeaponName, value);
 		}
 	}
@@ -855,16 +1087,23 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esDropCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_iComboAbility, g_esDropPlayer[tank].g_iComboAbility, g_esDropSpecial[iType].g_iComboAbility, g_esDropAbility[iType].g_iComboAbility, 1);
 		g_esDropCache[tank].g_flDropChance = flGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_flDropChance, g_esDropPlayer[tank].g_flDropChance, g_esDropSpecial[iType].g_flDropChance, g_esDropAbility[iType].g_flDropChance, 1);
 		g_esDropCache[tank].g_flDropClipChance = flGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_flDropClipChance, g_esDropPlayer[tank].g_flDropClipChance, g_esDropSpecial[iType].g_flDropClipChance, g_esDropAbility[iType].g_flDropClipChance, 1);
+		g_esDropCache[tank].g_flDropPinataChance = flGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_flDropPinataChance, g_esDropPlayer[tank].g_flDropPinataChance, g_esDropSpecial[iType].g_flDropPinataChance, g_esDropAbility[iType].g_flDropPinataChance, 1);
+		g_esDropCache[tank].g_flDropWeaponBoost = flGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_flDropWeaponBoost, g_esDropPlayer[tank].g_flDropWeaponBoost, g_esDropSpecial[iType].g_flDropWeaponBoost, g_esDropAbility[iType].g_flDropWeaponBoost, 1);
+		g_esDropCache[tank].g_flDropWeaponResistance = flGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_flDropWeaponResistance, g_esDropPlayer[tank].g_flDropWeaponResistance, g_esDropSpecial[iType].g_flDropWeaponResistance, g_esDropAbility[iType].g_flDropWeaponResistance, 1);
 		g_esDropCache[tank].g_flDropWeaponScale = flGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_flDropWeaponScale, g_esDropPlayer[tank].g_flDropWeaponScale, g_esDropSpecial[iType].g_flDropWeaponScale, g_esDropAbility[iType].g_flDropWeaponScale, 1);
 		g_esDropCache[tank].g_iDropAbility = iGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_iDropAbility, g_esDropPlayer[tank].g_iDropAbility, g_esDropSpecial[iType].g_iDropAbility, g_esDropAbility[iType].g_iDropAbility, 1);
 		g_esDropCache[tank].g_iDropCount = iGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_iDropCount, g_esDropPlayer[tank].g_iDropCount, g_esDropSpecial[iType].g_iDropCount, g_esDropAbility[iType].g_iDropCount, 1);
 		g_esDropCache[tank].g_iDropMessage = iGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_iDropMessage, g_esDropPlayer[tank].g_iDropMessage, g_esDropSpecial[iType].g_iDropMessage, g_esDropAbility[iType].g_iDropMessage, 1);
 		g_esDropCache[tank].g_iDropHandPosition = iGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_iDropHandPosition, g_esDropPlayer[tank].g_iDropHandPosition, g_esDropSpecial[iType].g_iDropHandPosition, g_esDropAbility[iType].g_iDropHandPosition, 1);
+		g_esDropCache[tank].g_iDropItemMode = iGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_iDropItemMode, g_esDropPlayer[tank].g_iDropItemMode, g_esDropSpecial[iType].g_iDropItemMode, g_esDropAbility[iType].g_iDropItemMode, 1);
 		g_esDropCache[tank].g_iDropMode = iGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_iDropMode, g_esDropPlayer[tank].g_iDropMode, g_esDropSpecial[iType].g_iDropMode, g_esDropAbility[iType].g_iDropMode, 1);
+		g_esDropCache[tank].g_iDropPinataBody = iGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_iDropPinataBody, g_esDropPlayer[tank].g_iDropPinataBody, g_esDropSpecial[iType].g_iDropPinataBody, g_esDropAbility[iType].g_iDropPinataBody, 1);
 		g_esDropCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_iHumanAbility, g_esDropPlayer[tank].g_iHumanAbility, g_esDropSpecial[iType].g_iHumanAbility, g_esDropAbility[iType].g_iHumanAbility, 1);
 		g_esDropCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_flOpenAreasOnly, g_esDropPlayer[tank].g_flOpenAreasOnly, g_esDropSpecial[iType].g_flOpenAreasOnly, g_esDropAbility[iType].g_flOpenAreasOnly, 1);
 		g_esDropCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esDropTeammate[tank].g_iRequiresHumans, g_esDropPlayer[tank].g_iRequiresHumans, g_esDropSpecial[iType].g_iRequiresHumans, g_esDropAbility[iType].g_iRequiresHumans, 1);
 
+		vGetSubSettingValue(apply, bHuman, g_esDropCache[tank].g_sDropLoadout, sizeof esDropCache::g_sDropLoadout, g_esDropTeammate[tank].g_sDropLoadout, g_esDropPlayer[tank].g_sDropLoadout, g_esDropSpecial[iType].g_sDropLoadout, g_esDropAbility[iType].g_sDropLoadout);
+		vGetSubSettingValue(apply, bHuman, g_esDropCache[tank].g_sDropPinata, sizeof esDropCache::g_sDropPinata, g_esDropTeammate[tank].g_sDropPinata, g_esDropPlayer[tank].g_sDropPinata, g_esDropSpecial[iType].g_sDropPinata, g_esDropAbility[iType].g_sDropPinata);
 		vGetSubSettingValue(apply, bHuman, g_esDropCache[tank].g_sDropWeaponName, sizeof esDropCache::g_sDropWeaponName, g_esDropTeammate[tank].g_sDropWeaponName, g_esDropPlayer[tank].g_sDropWeaponName, g_esDropSpecial[iType].g_sDropWeaponName, g_esDropAbility[iType].g_sDropWeaponName);
 	}
 	else
@@ -873,16 +1112,23 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esDropCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_iComboAbility, g_esDropAbility[iType].g_iComboAbility, 1);
 		g_esDropCache[tank].g_flDropChance = flGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_flDropChance, g_esDropAbility[iType].g_flDropChance, 1);
 		g_esDropCache[tank].g_flDropClipChance = flGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_flDropClipChance, g_esDropAbility[iType].g_flDropClipChance, 1);
+		g_esDropCache[tank].g_flDropPinataChance = flGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_flDropPinataChance, g_esDropAbility[iType].g_flDropPinataChance, 1);
+		g_esDropCache[tank].g_flDropWeaponBoost = flGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_flDropWeaponBoost, g_esDropAbility[iType].g_flDropWeaponBoost, 1);
+		g_esDropCache[tank].g_flDropWeaponResistance = flGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_flDropWeaponResistance, g_esDropAbility[iType].g_flDropWeaponResistance, 1);
 		g_esDropCache[tank].g_flDropWeaponScale = flGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_flDropWeaponScale, g_esDropAbility[iType].g_flDropWeaponScale, 1);
 		g_esDropCache[tank].g_iDropAbility = iGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_iDropAbility, g_esDropAbility[iType].g_iDropAbility, 1);
 		g_esDropCache[tank].g_iDropCount = iGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_iDropCount, g_esDropAbility[iType].g_iDropCount, 1);
 		g_esDropCache[tank].g_iDropMessage = iGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_iDropMessage, g_esDropAbility[iType].g_iDropMessage, 1);
 		g_esDropCache[tank].g_iDropHandPosition = iGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_iDropHandPosition, g_esDropAbility[iType].g_iDropHandPosition, 1);
+		g_esDropCache[tank].g_iDropItemMode = iGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_iDropItemMode, g_esDropAbility[iType].g_iDropItemMode, 1);
 		g_esDropCache[tank].g_iDropMode = iGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_iDropMode, g_esDropAbility[iType].g_iDropMode, 1);
+		g_esDropCache[tank].g_iDropPinataBody = iGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_iDropPinataBody, g_esDropAbility[iType].g_iDropPinataBody, 1);
 		g_esDropCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_iHumanAbility, g_esDropAbility[iType].g_iHumanAbility, 1);
 		g_esDropCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_flOpenAreasOnly, g_esDropAbility[iType].g_flOpenAreasOnly, 1);
 		g_esDropCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_iRequiresHumans, g_esDropAbility[iType].g_iRequiresHumans, 1);
 
+		vGetSettingValue(apply, bHuman, g_esDropCache[tank].g_sDropLoadout, sizeof esDropCache::g_sDropLoadout, g_esDropPlayer[tank].g_sDropLoadout, g_esDropAbility[iType].g_sDropLoadout);
+		vGetSettingValue(apply, bHuman, g_esDropCache[tank].g_sDropPinata, sizeof esDropCache::g_sDropPinata, g_esDropPlayer[tank].g_sDropPinata, g_esDropAbility[iType].g_sDropPinata);
 		vGetSettingValue(apply, bHuman, g_esDropCache[tank].g_sDropWeaponName, sizeof esDropCache::g_sDropWeaponName, g_esDropPlayer[tank].g_sDropWeaponName, g_esDropAbility[iType].g_sDropWeaponName);
 	}
 }
@@ -917,11 +1163,19 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "bot_player_replace"))
 	{
 		int iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId),
-			iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId);
-		if (bIsValidClient(iBot) && bIsInfected(iTank))
+			iPlayerId = event.GetInt("player"), iPlayer = GetClientOfUserId(iPlayerId);
+		if (bIsValidClient(iBot))
 		{
-			vDropCopyStats2(iBot, iTank);
-			vRemoveDrop(iBot);
+			if (bIsInfected(iPlayer))
+			{
+				vDropCopyStats2(iBot, iPlayer);
+				vRemoveDrop(iBot);
+			}
+			else if (bIsSurvivor(iPlayer))
+			{
+				g_esDropPlayer[iPlayer].g_iGiveMode = g_esDropPlayer[iBot].g_iGiveMode;
+				g_esDropPlayer[iPlayer].g_sGiveLoadout = g_esDropPlayer[iBot].g_sGiveLoadout;
+			}
 		}
 	}
 	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
@@ -930,25 +1184,89 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	}
 	else if (StrEqual(name, "player_bot_replace"))
 	{
-		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
+		int iPlayerId = event.GetInt("player"), iPlayer = GetClientOfUserId(iPlayerId),
 			iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);
-		if (bIsValidClient(iTank) && bIsInfected(iBot))
+		if (bIsValidClient(iPlayer))
 		{
-			vDropCopyStats2(iTank, iBot);
-			vRemoveDrop(iTank);
+			if (bIsInfected(iBot))
+			{
+				vDropCopyStats2(iPlayer, iBot);
+				vRemoveDrop(iPlayer);
+			}
+			else if (bIsSurvivor(iBot))
+			{
+				g_esDropPlayer[iBot].g_iGiveMode = g_esDropPlayer[iPlayer].g_iGiveMode;
+				g_esDropPlayer[iBot].g_sGiveLoadout = g_esDropPlayer[iPlayer].g_sGiveLoadout;
+			}
 		}
 	}
 	else if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(iTank) && g_esDropPlayer[iTank].g_bActivated)
+		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(iTank))
 		{
-			if (MT_HasAdminAccess(iTank) || bHasAdminAccess(iTank, g_esDropAbility[g_esDropPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esDropPlayer[iTank].g_iAccessFlags))
+			if (g_esDropPlayer[iTank].g_bActivated)
 			{
-				vDropWeapon(iTank, 1, GetRandomFloat(0.1, 100.0));
+				if (MT_HasAdminAccess(iTank) || bHasAdminAccess(iTank, g_esDropAbility[g_esDropPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esDropPlayer[iTank].g_iAccessFlags))
+				{
+					vDropWeapon(iTank, 1, GetRandomFloat(0.1, 100.0));
+				}
+
+				vDropReset2(iTank);
 			}
 
-			vDropReset2(iTank);
+			if (g_esDropPlayer[iTank].g_bActivated2)
+			{
+				vDropAbility(iTank);
+			}
+		}
+	}
+	else if (StrEqual(name, "revive_success"))
+	{
+		int iSurvivorId = event.GetInt("userid"), iSurvivor = GetClientOfUserId(iSurvivorId);
+		if (bIsSurvivor(iSurvivor) && g_esDropPlayer[iSurvivor].g_iGiveMode >= 0 && g_esDropPlayer[iSurvivor].g_sGiveLoadout[0] != '\0')
+		{
+			char sItems[5][64];
+			ReplaceString(g_esDropPlayer[iSurvivor].g_sGiveLoadout, sizeof esDropPlayer::g_sGiveLoadout, " ", "");
+			ExplodeString(g_esDropPlayer[iSurvivor].g_sGiveLoadout, ",", sItems, sizeof sItems, sizeof sItems[]);
+
+			switch (g_esDropPlayer[iSurvivor].g_iGiveMode)
+			{
+				case 0: vCheatCommand(iSurvivor, "give", sItems[MT_GetRandomInt(1, (sizeof sItems)) - 1]);
+				case 1: vDropLoadout(iSurvivor, g_esDropPlayer[iSurvivor].g_sGiveLoadout, sItems, sizeof sItems);
+			}
+
+			vDropReset2(iSurvivor);
+		}
+	}
+}
+
+#if defined MT_ABILITIES_MAIN
+void vDropPlayerEventKilled(int victim, int attacker)
+#else
+public void MT_OnPlayerEventKilled(int victim, int attacker)
+#endif
+{
+	if (bIsSurvivor(victim, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsTankSupported(attacker, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(attacker) && (g_esDropCache[attacker].g_iDropAbility == 2 || g_esDropCache[attacker].g_iDropAbility == 3) && g_esDropCache[attacker].g_sDropPinata[0] != '\0' && GetRandomFloat(0.1, 100.0) <= g_esDropCache[attacker].g_flDropPinataChance)
+	{
+		float flPos[3];
+		GetClientAbsOrigin(victim, flPos);
+		flPos[2] += 50.0;
+
+		char sItems[5][64];
+		ReplaceString(g_esDropCache[attacker].g_sDropPinata, sizeof esDropCache::g_sDropPinata, " ", "");
+		ExplodeString(g_esDropCache[attacker].g_sDropPinata, ",", sItems, sizeof sItems, sizeof sItems[]);
+		for (int iItem = 0; iItem < (sizeof sItems); iItem++)
+		{
+			if (sItems[iItem][0] != '\0')
+			{
+				vSpawnItem(sItems[iItem], flPos);
+			}
+		}
+
+		if (g_esDropCache[attacker].g_iDropPinataBody == 1)
+		{
+			g_iDropDeathModelOwner = GetClientUserId(victim);
 		}
 	}
 }
@@ -964,9 +1282,17 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!bIsInfected(tank, MT_CHECK_FAKECLIENT) || g_esDropCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esDropCache[tank].g_iDropAbility == 1 && !g_esDropPlayer[tank].g_bActivated)
+	if (MT_IsTankSupported(tank) && (!bIsInfected(tank, MT_CHECK_FAKECLIENT) || g_esDropCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esDropCache[tank].g_iDropAbility > 0)
 	{
-		RequestFrame(vDropFrame, GetClientUserId(tank));
+		if ((g_esDropCache[tank].g_iDropAbility == 1 || g_esDropCache[tank].g_iDropAbility == 3) && !g_esDropPlayer[tank].g_bActivated)
+		{
+			RequestFrame(vDropFrame, GetClientUserId(tank));
+		}
+
+		if ((g_esDropCache[tank].g_iDropAbility == 2 || g_esDropCache[tank].g_iDropAbility == 3) && g_esDropCache[tank].g_iComboAbility == 0 && GetRandomFloat(0.1, 100.0) <= g_esDropCache[tank].g_flDropChance && !g_esDropPlayer[tank].g_bActivated2)
+		{
+			g_esDropPlayer[tank].g_bActivated2 = true;
+		}
 	}
 }
 
@@ -983,17 +1309,25 @@ public void MT_OnButtonPressed(int tank, int button)
 			return;
 		}
 
-		if ((button & MT_SPECIAL_KEY2) && g_esDropCache[tank].g_iDropAbility == 1 && g_esDropCache[tank].g_iHumanAbility == 1)
+		if ((button & MT_SPECIAL_KEY2) && g_esDropCache[tank].g_iDropAbility > 0 && g_esDropCache[tank].g_iHumanAbility == 1)
 		{
-			switch (g_esDropPlayer[tank].g_bActivated)
+			if (g_esDropPlayer[tank].g_bActivated || g_esDropPlayer[tank].g_bActivated2)
 			{
-				case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "DropHuman2");
-				case false:
+				MT_PrintToChat(tank, "%s %t", MT_TAG3, "DropHuman2");
+			}
+			else
+			{
+				if ((g_esDropCache[tank].g_iDropAbility == 1 || g_esDropCache[tank].g_iDropAbility == 3) && !g_esDropPlayer[tank].g_bActivated)
 				{
 					RequestFrame(vDropFrame, GetClientUserId(tank));
-
-					MT_PrintToChat(tank, "%s %t", MT_TAG3, "DropHuman");
 				}
+
+				if ((g_esDropCache[tank].g_iDropAbility == 2 || g_esDropCache[tank].g_iDropAbility == 3) && !g_esDropPlayer[tank].g_bActivated2)
+				{
+					g_esDropPlayer[tank].g_bActivated2 = true;
+				}
+
+				MT_PrintToChat(tank, "%s %t", MT_TAG3, "DropHuman");
 			}
 		}
 	}
@@ -1011,12 +1345,86 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 	}
 
 	vDropWeapon(tank, 1, GetRandomFloat(0.1, 100.0));
+
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esDropAbility[g_esDropPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esDropPlayer[tank].g_iAccessFlags)) || g_esDropCache[tank].g_iHumanAbility == 0))
+	{
+		return;
+	}
+
+	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && (g_esDropCache[tank].g_iDropAbility == 2 || g_esDropCache[tank].g_iDropAbility == 3))
+	{
+		vDropAbility(tank);
+	}
+}
+
+void vDropAbility(int tank)
+{
+	g_esDropPlayer[tank].g_bActivated2 = false;
+
+	if (bIsAreaNarrow(tank, g_esDropCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esDropCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esDropPlayer[tank].g_iTankType, tank) || (g_esDropCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esDropCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esDropAbility[g_esDropPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esDropPlayer[tank].g_iAccessFlags)))
+	{
+		return;
+	}
+
+	char sItems[5][64];
+	ReplaceString(g_esDropCache[tank].g_sDropLoadout, sizeof esDropCache::g_sDropLoadout, " ", "");
+	ExplodeString(g_esDropCache[tank].g_sDropLoadout, ",", sItems, sizeof sItems, sizeof sItems[]);
+
+	switch (g_esDropCache[tank].g_iDropItemMode)
+	{
+		case 0, 1:
+		{
+			for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+			{
+				if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esDropPlayer[tank].g_iTankType, g_esDropAbility[g_esDropPlayer[tank].g_iTankTypeRecorded].g_iImmunityFlags, g_esDropPlayer[iSurvivor].g_iImmunityFlags))
+				{
+					switch (bIsSurvivorDisabled(iSurvivor))
+					{
+						case true:
+						{
+							g_esDropPlayer[iSurvivor].g_iGiveMode = g_esDropCache[tank].g_iDropItemMode;
+							strcopy(g_esDropPlayer[iSurvivor].g_sGiveLoadout, sizeof esDropPlayer::g_sGiveLoadout, g_esDropCache[tank].g_sDropLoadout);
+						}
+						case false:
+						{
+							switch (g_esDropCache[tank].g_iDropItemMode)
+							{
+								case 0: vCheatCommand(iSurvivor, "give", sItems[MT_GetRandomInt(1, (sizeof sItems)) - 1]);
+								case 1: vDropLoadout(iSurvivor, g_esDropCache[tank].g_sDropLoadout, sItems, sizeof sItems);
+							}
+						}
+					}
+				}
+			}
+		}
+		case 2: vCheatCommand(tank, "give", sItems[MT_GetRandomInt(1, (sizeof sItems)) - 1]);
+		case 3: vDropLoadout(tank, g_esDropCache[tank].g_sDropLoadout, sItems, sizeof sItems);
+	}
+
+	if (g_esDropCache[tank].g_iDropMessage == 1)
+	{
+		char sTankName[64];
+		MT_GetTankName(tank, sTankName);
+		MT_PrintToChatAll("%s %t", MT_TAG2, "Drop3", sTankName);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Drop3", LANG_SERVER, sTankName);
+	}
+}
+
+void vDropLoadout(int survivor, const char[] loadout, const char[][] list, int size)
+{
+	for (int iItem = 0; iItem < size; iItem++)
+	{
+		if (StrContains(loadout, list[iItem]) != -1 && list[iItem][0] != '\0')
+		{
+			vCheatCommand(survivor, "give", list[iItem]);
+		}
+	}
 }
 
 void vDropWeapon(int tank, int value, float random, int pos = -1)
 {
 	float flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 1, pos) : g_esDropCache[tank].g_flDropChance;
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(tank) && g_esDropCache[tank].g_iDropAbility == 1 && random <= flChance && bIsValidEntRef(g_esDropPlayer[tank].g_iWeapon))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(tank) && (g_esDropCache[tank].g_iDropAbility == 1 || g_esDropCache[tank].g_iDropAbility == 3) && random <= flChance && bIsValidEntRef(g_esDropPlayer[tank].g_iWeapon))
 	{
 		if (g_esDropCache[tank].g_iComboAbility == value || bIsAreaNarrow(tank, g_esDropCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esDropCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esDropPlayer[tank].g_iTankType, tank) || (g_esDropCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esDropCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esDropAbility[g_esDropPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esDropPlayer[tank].g_iAccessFlags)))
 		{
@@ -1081,6 +1489,8 @@ void vDropWeapon(int tank, int value, float random, int pos = -1)
 					{
 						SetEntProp(iDrop, Prop_Send, "m_iExtraPrimaryAmmo", iAmmo);
 					}
+
+					g_esDropGeneral.g_iDropWeapon[iDrop] = EntIndexToEntRef(iDrop);
 				}
 			}
 
@@ -1102,6 +1512,8 @@ void vDropWeapon(int tank, int value, float random, int pos = -1)
 					DispatchKeyValue(iDrop, "melee_script_name", sWeapon);
 					TeleportEntity(iDrop, flPos, flAngles);
 					DispatchSpawn(iDrop);
+
+					g_esDropGeneral.g_iDropWeapon[iDrop] = EntIndexToEntRef(iDrop);
 				}
 			}
 
@@ -1121,6 +1533,7 @@ void vDropWeapon(int tank, int value, float random, int pos = -1)
 void vDropCopyStats2(int oldTank, int newTank)
 {
 	g_esDropPlayer[newTank].g_bActivated = g_esDropPlayer[oldTank].g_bActivated;
+	g_esDropPlayer[newTank].g_bActivated2 = g_esDropPlayer[oldTank].g_bActivated2;
 	g_esDropPlayer[newTank].g_iWeapon = g_esDropPlayer[oldTank].g_iWeapon;
 	g_esDropPlayer[newTank].g_iWeaponIndex = g_esDropPlayer[oldTank].g_iWeaponIndex;
 }
@@ -1155,8 +1568,11 @@ void vDropReset()
 void vDropReset2(int tank)
 {
 	g_esDropPlayer[tank].g_bActivated = false;
+	g_esDropPlayer[tank].g_bActivated2 = false;
+	g_esDropPlayer[tank].g_iGiveMode = -1;
 	g_esDropPlayer[tank].g_iWeapon = INVALID_ENT_REFERENCE;
 	g_esDropPlayer[tank].g_iWeaponIndex = 0;
+	g_esDropPlayer[tank].g_sGiveLoadout[0] = '\0';
 }
 
 int iGetNamedWeapon(int tank)
@@ -1167,7 +1583,7 @@ int iGetNamedWeapon(int tank)
 	}
 
 	char sName[32];
-	int iSize = g_bSecondGame ? (sizeof g_sWeaponClasses2) : (sizeof g_sWeaponClasses);
+	int iSize = (g_bSecondGame ? (sizeof g_sWeaponClasses2) : (sizeof g_sWeaponClasses));
 	for (int iPos = 0; iPos < iSize; iPos++)
 	{
 		strcopy(sName, sizeof sName, (g_bSecondGame ? g_sWeaponClasses2[iPos] : g_sWeaponClasses[iPos]));
@@ -1191,7 +1607,7 @@ int iGetRandomWeapon(int tank)
 		case 2: iDropValue = MT_GetRandomInt(19, 32);
 	}
 
-	return g_bSecondGame ? iDropValue : MT_GetRandomInt(0, 5);
+	return (g_bSecondGame ? iDropValue : MT_GetRandomInt(0, 5));
 }
 
 void vDropFrame(int userid)
@@ -1345,19 +1761,136 @@ void vDropFrame(int userid)
 	}
 }
 
-void tTimerDropCombo(Handle timer, DataPack pack)
+void vSpawnItem(const char[] name, float pos[3])
+{
+	char sClassname[32];
+	int iItem = -1, iType = 0;
+	if (StrEqual(name, "gascan") || StrEqual(name, "propanetank") || StrEqual(name, "oxygentank") || StrEqual(name, "fireworkcrate"))
+	{
+		iType = 1;
+	}
+	else if (StrEqual(name, "grenade_launcher") || strncmp(name, "pistol", 6) == 0 || strncmp(name, "rifle", 6) != -1
+		|| strncmp(name, "smg", 3) == 0 || strncmp(name, "shotgun", 7) != -1 || strncmp(name, "sniper", 6) == 0)
+	{
+		iType = 2;
+	}
+	else if (StrEqual(name, "molotov") || StrEqual(name, "pipe_bomb") || StrEqual(name, "vomitjar") || StrEqual(name, "first_aid_kit")
+		|| StrEqual(name, "defibrillator") || strncmp(name, "upgrade", 7) != -1 || StrEqual(name, "pain_pills") || StrEqual(name, "adrenaline"))
+	{
+		iType = 3;
+	}
+	else
+	{
+		iType = 4;
+	}
+
+	switch (iType)
+	{
+		case 1:
+		{
+			FormatEx(sClassname, sizeof sClassname, "weapon_%s", name);
+
+			switch (StrEqual(sClassname[7], "gascan"))
+			{
+				case true: iItem = CreateEntityByName(sClassname);
+				case false:
+				{
+					iItem = CreateEntityByName("prop_physics");
+					if (bIsValidEntity(iItem))
+					{
+						if (StrEqual(name, "fireworkcrate"))
+						{
+							SetEntityModel(iItem, MODEL_FIREWORKCRATE);
+						}
+						else if (StrEqual(name, "oxygentank"))
+						{
+							SetEntityModel(iItem, MODEL_OXYGENTANK);
+						}
+						else if (StrEqual(name, "propanetank"))
+						{
+							SetEntityModel(iItem, MODEL_PROPANETANK);
+						}
+					}
+				}
+			}
+
+			if (bIsValidEntity(iItem))
+			{
+				SDKHook(iItem, SDKHook_OnTakeDamage, OnDropTakeDamage2);
+				SDKHook(iItem, SDKHook_Use, OnDropUse);
+				CreateTimer(3.0, tTimerRemoveDropHooks, EntIndexToEntRef(iItem), TIMER_FLAG_NO_MAPCHANGE);
+			}
+		}
+		case 2, 3:
+		{
+			FormatEx(sClassname, sizeof sClassname, "weapon_%s", name);
+			iItem = CreateEntityByName(sClassname);
+		}
+		case 4:
+		{
+			iItem = CreateEntityByName("weapon_melee");
+			if (bIsValidEntity(iItem))
+			{
+				DispatchKeyValue(iItem, "melee_script_name", name);
+			}
+		}
+	}
+
+	if (bIsValidEntity(iItem))
+	{
+		TeleportEntity(iItem, pos);
+		DispatchSpawn(iItem);
+		ActivateEntity(iItem);
+
+		if (iType == 2)
+		{
+			if (strncmp(name, "rifle", 6) == 0)
+			{
+				SetEntProp(iItem, Prop_Send, "m_iExtraPrimaryAmmo", 300);
+			}
+			else if (strncmp(name, "smg", 3) == 0)
+			{
+				SetEntProp(iItem, Prop_Send, "m_iExtraPrimaryAmmo", 600);
+			}
+			else if (StrEqual(name, "autoshotgun") || StrEqual(name, "shotgun_spas"))
+			{
+				SetEntProp(iItem, Prop_Send, "m_iExtraPrimaryAmmo", 100);
+			}
+			else if (StrEqual(name, "pumpshotgun") || StrEqual(name, "shotgun_chrome"))
+			{
+				SetEntProp(iItem, Prop_Send, "m_iExtraPrimaryAmmo", 50);
+			}
+			else if (StrEqual(name, "hunting_rifle") || strncmp(name, "sniper", 6) == 0)
+			{
+				SetEntProp(iItem, Prop_Send, "m_iExtraPrimaryAmmo", 150);
+			}
+		}
+	}
+}
+
+Action tTimerDropCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esDropAbility[g_esDropPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esDropPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esDropPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esDropCache[iTank].g_iDropAbility == 0 || g_esDropPlayer[iTank].g_bActivated)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esDropAbility[g_esDropPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esDropPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esDropPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esDropCache[iTank].g_iDropAbility == 0)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
-	float flRandom = pack.ReadFloat();
-	int iPos = pack.ReadCell();
-	vDropWeapon(iTank, 0, flRandom, iPos);
+	if (g_esDropCache[iTank].g_iDropAbility == 1 || g_esDropCache[iTank].g_iDropAbility == 3)
+	{
+		float flRandom = pack.ReadFloat();
+		int iPos = pack.ReadCell();
+		vDropWeapon(iTank, 0, flRandom, iPos);
+	}
+
+	if (g_esDropCache[iTank].g_iDropAbility == 2 || g_esDropCache[iTank].g_iDropAbility == 3)
+	{
+		g_esDropPlayer[iTank].g_bActivated2 = true;
+	}
+
+	return Plugin_Continue;
 }
 
 Action tTimerDropRenderWeapon(Handle timer, DataPack pack)
@@ -1373,6 +1906,20 @@ Action tTimerDropRenderWeapon(Handle timer, DataPack pack)
 	int iAlpha = GetEntData(iTank, (GetEntSendPropOffs(iTank, "m_clrRender") + 3), 1);
 	SetEntityRenderMode(iWeapon, GetEntityRenderMode(iTank));
 	SetEntData(iWeapon, (GetEntSendPropOffs(iWeapon, "m_clrRender") + 3), iAlpha, 1, true);
+
+	return Plugin_Continue;
+}
+
+Action tTimerRemoveDropHooks(Handle timer, int ref)
+{
+	int iItem = EntRefToEntIndex(ref);
+	if (!bIsValidEntity(iItem))
+	{
+		return Plugin_Stop;
+	}
+
+	SDKUnhook(iItem, SDKHook_OnTakeDamage, OnDropTakeDamage2);
+	SDKUnhook(iItem, SDKHook_Use, OnDropUse);
 
 	return Plugin_Continue;
 }

@@ -1,6 +1,6 @@
 /**
- * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2024  Alfred "Psyk0tik" Llagas
+ * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -1245,35 +1245,37 @@ void vDrunkReset3(int tank)
 	g_esDrunkPlayer[tank].g_iRangeCooldown = -1;
 }
 
-void tTimerDrunkCombo(Handle timer, DataPack pack)
+Action tTimerDrunkCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esDrunkAbility[g_esDrunkPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esDrunkPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esDrunkPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esDrunkCache[iTank].g_iDrunkAbility == 0)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vDrunkAbility(iTank, flRandom, iPos);
+
+	return Plugin_Continue;
 }
 
-void tTimerDrunkCombo2(Handle timer, DataPack pack)
+Action tTimerDrunkCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor) || g_esDrunkPlayer[iSurvivor].g_bAffected)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esDrunkAbility[g_esDrunkPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esDrunkPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esDrunkPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esDrunkCache[iTank].g_iDrunkHit == 0)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
@@ -1288,6 +1290,8 @@ void tTimerDrunkCombo2(Handle timer, DataPack pack)
 	{
 		vDrunkHit(iSurvivor, iTank, flRandom, flChance, g_esDrunkCache[iTank].g_iDrunkHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
+
+	return Plugin_Continue;
 }
 
 Action tTimerDrunkSpeed(Handle timer, DataPack pack)
@@ -1377,13 +1381,15 @@ Action tTimerDrunkTurn(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-void tTimerStopDrunkSpeed(Handle timer, int userid)
+Action tTimerStopDrunkSpeed(Handle timer, int userid)
 {
 	int iSurvivor = GetClientOfUserId(userid);
 	if (!bIsSurvivor(iSurvivor))
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", (g_bLaggedMovementInstalled ? L4D_LaggedMovement(iSurvivor, 1.0, true) : 1.0));
+
+	return Plugin_Continue;
 }

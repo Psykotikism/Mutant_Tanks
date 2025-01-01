@@ -1,6 +1,6 @@
 /**
- * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2024  Alfred "Psyk0tik" Llagas
+ * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -28,6 +28,8 @@ public Plugin myinfo =
 };
 
 bool g_bDedicated, g_bLateLoad;
+
+int g_iGraphicsLevel;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -829,7 +831,9 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esDrugPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esDrugPlayer[tank].g_iTankType = apply ? type : 0;
 	int iType = g_esDrugPlayer[tank].g_iTankTypeRecorded;
-
+#if !defined MT_ABILITIES_MAIN
+	g_iGraphicsLevel = MT_GetGraphicsLevel();
+#endif
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		g_esDrugCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esDrugTeammate[tank].g_flCloseAreasOnly, g_esDrugPlayer[tank].g_flCloseAreasOnly, g_esDrugSpecial[iType].g_flCloseAreasOnly, g_esDrugAbility[iType].g_flCloseAreasOnly, 1);
@@ -1029,6 +1033,11 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 
 void vDrug(int survivor, bool toggle, float angles[20])
 {
+	if (g_iGraphicsLevel <= 0)
+	{
+		return;
+	}
+
 	float flAngles[3];
 	GetClientEyeAngles(survivor, flAngles);
 	flAngles[2] = toggle ? angles[MT_GetRandomInt(0, 100) % 20] : 0.0;
@@ -1266,35 +1275,37 @@ void vDrugReset3(int tank)
 	g_esDrugPlayer[tank].g_iRangeCooldown = -1;
 }
 
-void tTimerDrugCombo(Handle timer, DataPack pack)
+Action tTimerDrugCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esDrugAbility[g_esDrugPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esDrugPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esDrugPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esDrugCache[iTank].g_iDrugAbility == 0)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vDrugAbility(iTank, flRandom, iPos);
+
+	return Plugin_Continue;
 }
 
-void tTimerDrugCombo2(Handle timer, DataPack pack)
+Action tTimerDrugCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor) || g_esDrugPlayer[iSurvivor].g_bAffected)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esDrugAbility[g_esDrugPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esDrugPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esDrugPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esDrugCache[iTank].g_iDrugHit == 0)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
@@ -1309,6 +1320,8 @@ void tTimerDrugCombo2(Handle timer, DataPack pack)
 	{
 		vDrugHit(iSurvivor, iTank, flRandom, flChance, g_esDrugCache[iTank].g_iDrugHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
+
+	return Plugin_Continue;
 }
 
 Action tTimerDrug(Handle timer, DataPack pack)

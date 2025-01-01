@@ -1,6 +1,6 @@
 /**
- * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2024  Alfred "Psyk0tik" Llagas
+ * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -22,7 +22,7 @@
 #define MT_AUTHOR "Psyk0tik"
 #define MT_AUTHOR2 "Crasher_3637"
 #define MT_DESCRIPTION "Mutant Tanks enhances the fun and excitement players get from Tank fights by creating a unique experience with every Tank."
-#define MT_VERSION "9.2"
+#define MT_VERSION "9.3"
 #define MT_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 #define MT_URL2 "https://github.com/Psykotikism/Mutant_Tanks"
 
@@ -43,6 +43,7 @@ public void __pl_mutanttanks_SetNTVOptional()
 	MarkNativeAsOptional("MT_CanTypeSpawn");
 	MarkNativeAsOptional("MT_DeafenPlayer");
 	MarkNativeAsOptional("MT_DetonateTankRock");
+	MarkNativeAsOptional("MT_DoesSurvivorHavePassiveType");
 	MarkNativeAsOptional("MT_DoesSurvivorHaveRewardType");
 	MarkNativeAsOptional("MT_DoesTypeRequireHumans");
 	MarkNativeAsOptional("MT_GetAccessFlags");
@@ -51,6 +52,7 @@ public void __pl_mutanttanks_SetNTVOptional()
 	MarkNativeAsOptional("MT_GetCurrentFinaleWave");
 	MarkNativeAsOptional("MT_GetGlowRange");
 	MarkNativeAsOptional("MT_GetGlowType");
+	MarkNativeAsOptional("MT_GetGraphicsLevel");
 	MarkNativeAsOptional("MT_GetImmunityFlags");
 	MarkNativeAsOptional("MT_GetMaxType");
 	MarkNativeAsOptional("MT_GetMinType");
@@ -96,6 +98,7 @@ public void __pl_mutanttanks_SetNTVOptional()
 
 // Constants
 #define MT_MAXABILITIES 100
+#define MT_MAXSURVIVORS 8
 #define MT_MAXTYPES 500
 #define MT_MAXHEALTH 1000000
 #define MT_MAX_HEALTH_REDUCTION -1000000
@@ -147,6 +150,30 @@ public void __pl_mutanttanks_SetNTVOptional()
 #define MT_MESSAGE_RANGE (1 << 1) // range ability
 #define MT_MESSAGE_SPECIAL (1 << 2) // special ability
 #define MT_MESSAGE_SPECIAL2 (1 << 3) // special ability #2
+
+// Passive flags
+#define MT_PASSIVE_HEALTH (1 << 0) // health passive
+#define MT_PASSIVE_SPEEDBOOST (1 << 1) // speed boost passive
+#define MT_PASSIVE_DAMAGEBOOST (1 << 2) // damage boost passive
+#define MT_PASSIVE_ATTACKBOOST (1 << 3) // attack boost passive
+#define MT_PASSIVE_AMMO (1 << 4) // ammo passive
+#define MT_PASSIVE_ITEM (1 << 5) // item passive
+#define MT_PASSIVE_GODMODE (1 << 6) // god mode passive
+#define MT_PASSIVE_REFILL (1 << 7) // refill passive
+#define MT_PASSIVE_RESPAWN (1 << 8) // respawn passive
+#define MT_PASSIVE_INFAMMO (1 << 9) // infinite primary ammo passive
+#define MT_PASSIVE_DEVELOPER (1 << 10) // access level 1
+#define MT_PASSIVE_DEVELOPER2 (1 << 11) // access level 2
+#define MT_PASSIVE_DEVELOPER3 (1 << 12) // access level 3
+#define MT_PASSIVE_DEVELOPER4 (1 << 13) // access level 4
+#define MT_PASSIVE_DEVELOPER5 (1 << 14) // access level 5
+#define MT_PASSIVE_DEVELOPER6 (1 << 15) // access level 6
+#define MT_PASSIVE_DEVELOPER7 (1 << 16) // access level 7
+#define MT_PASSIVE_DEVELOPER8 (1 << 17) // access level 8
+#define MT_PASSIVE_DEVELOPER9 (1 << 18) // access level 9
+#define MT_PASSIVE_DEVELOPER10 (1 << 19) // access level 10
+#define MT_PASSIVE_DEVELOPER11 (1 << 20) // access level 11
+#define MT_PASSIVE_DEVELOPER12 (1 << 21) // access level 12
 
 // Reward flags
 #define MT_REWARD_HEALTH (1 << 0) // health reward
@@ -464,6 +491,21 @@ forward void MT_OnRockThrow(int tank, int rock);
 forward void MT_OnSettingsCached(int tank, bool apply, int type);
 
 /**
+ * Called when a passive is given to or taken away from a survivor.
+ * Use this forward to give or take away passives.
+ *
+ * @param survivor		Client index of the survivor.
+ * @param type			1 = Health, 2 = Damage boost, 4 = Speed boost, 8 = Ammo, 16 = Item, 32 = God mode, 64 = Health and ammo refill, 128 = Respawn,
+ * 					255 = All eight passives, 256-2147483647 = Reserved for third-party plugins
+ * @param apply			True if the passive is given, false otherwise.
+ * @param weaponOnly		True if the passive is given to weapons only, false otherwise.
+ * @param weaponIndex		Type index of the weapon.
+ *
+ * @return			Plugin_Handled to prevent giving or taking passives, Plugin_Continue to allow.
+ **/
+forward Action MT_OnToggleSurvivorPassive(int survivor, int &type, bool apply, bool weaponOnly, int weaponIndex);
+
+/**
  * Called when a Mutant Tank type has been chosen.
  * Use this forward to check or change the chosen type.
  *
@@ -504,6 +546,18 @@ native void MT_DeafenPlayer(int player);
  * @error			Invalid entity index.
  **/
 native void MT_DetonateTankRock(int rock);
+
+/**
+ * Returns if a certain survivor has a passive type active.
+ *
+ * @param survivor		Client index of the survivor.
+ * @param type			1 = Health, 2 = Damage boost, 4 = Speed boost, 8 = Ammo, 16 = Item, 32 = God mode, 64 = Health and ammo refill,
+ * 					128 = Respawn, 255 = All eight passives, 256-2147483647 = Reserved for third-party plugins
+ *
+ * @return			True if the survivor has the passive type active, false otherwise.
+ * @error			Invalid client index, client is not in-game, or type is 0 or less.
+ **/
+native bool MT_DoesSurvivorHavePassiveType(int survivor, int type);
 
 /**
  * Returns if a certain survivor has a reward type active.
@@ -591,6 +645,13 @@ native int MT_GetGlowRange(int tank, bool mode);
  * @error			Invalid client index or client is not in-game.
  **/
 native int MT_GetGlowType(int tank);
+
+/**
+ * Returns the current graphics level.
+ *
+ * @return			The current graphics level.
+ **/
+native int MT_GetGraphicsLevel();
 
 /**
  * Returns the current immunity flags set by the core plugin.
@@ -894,10 +955,11 @@ native void MT_ShoveBySurvivor(int player, int survivor, float direction[3]);
  *
  * @param tank			Client index of the Tank.
  * @param type			Mutant Tank type.
+ * @param specType		Special Infected type.
  *
  * @error			Invalid client index, client is not in-game, or type is 0 or less.
  **/
-native void MT_SpawnTank(int tank, int type);
+native void MT_SpawnTank(int tank, int type, int specType = 0);
 
 /**
  * Staggers a player from a certain direction.
@@ -1111,7 +1173,7 @@ forward void ST_Spawn(int client);
 #pragma deprecated Use the MT_CanTypeSpawn() native instead.
 stock bool MT_CanTankSpawn(int type)
 {
-	return MT_CanTypeSpawn(type, (bIsSecondGame() ? 8 : 5));
+	return MT_CanTypeSpawn(type, 8);
 }
 
 /**
@@ -1202,7 +1264,7 @@ stock void ST_PropsColors(int tank, int mode, int &red, int &green, int &blue, i
 #pragma deprecated Use the MT_CanTypeSpawn() native instead.
 stock bool ST_SpawnEnabled(int type)
 {
-	return MT_CanTypeSpawn(type, (bIsSecondGame() ? 8 : 5));
+	return MT_CanTypeSpawn(type, 8);
 }
 
 /**
@@ -1596,7 +1658,7 @@ stock void vRemoveWeapons(int survivor)
 
 stock void vScreenEffect(int survivor, int tank, int mode, int flags = MT_ATTACK_MELEE|MT_ATTACK_CLAW, int red = -1, int green = -1, int blue = -1, int alpha = -1, int type1 = MT_FADE_IN, int type2 = MT_FADE_PURGE)
 {
-	if (mode & flags)
+	if ((mode & flags) && MT_GetGraphicsLevel() > 0)
 	{
 		int iColor[4];
 		MT_GetTankColors(tank, MT_GetRandomInt(1, 2), iColor[0], iColor[1], iColor[2], iColor[3]);
@@ -1665,9 +1727,26 @@ stock void vSetEntityParent(int entity, int parent, bool owner = false)
 	}
 }
 
+stock void vSetSurvivorLastLife(int survivor, int reviveCount, bool setHealth, float tempHealth = 0.0)
+{
+	if (setHealth)
+	{
+		SetEntProp(survivor, Prop_Data, "m_iHealth", 1);
+		vSetTempHealth(survivor, tempHealth);
+	}
+
+	SetEntProp(survivor, Prop_Send, "m_currentReviveCount", reviveCount);
+	SetEntProp(survivor, Prop_Send, "m_isGoingToDie", 1);
+
+	if (bIsSecondGame())
+	{
+		SetEntProp(survivor, Prop_Send, "m_bIsOnThirdStrike", 1);
+	}
+}
+
 stock void vSetTempHealth(int survivor, float health)
 {
-	SetEntPropFloat(survivor, Prop_Send, "m_healthBuffer", (health < 0.0) ? 0.0 : health);
+	SetEntPropFloat(survivor, Prop_Send, "m_healthBuffer", ((health < 0.0) ? 0.0 : health));
 	SetEntPropFloat(survivor, Prop_Send, "m_healthBufferTime", GetGameTime());
 }
 
@@ -1696,7 +1775,7 @@ stock void vSetWounds(int common, int type = -1)
 	}
 }
 
-stock void vSpawnBreakProp(int tank, float pos[3], float offset, const char[] model)
+stock void vSpawnBreakProp(int owner, float pos[3], float offset, const char[] model)
 {
 	int iProp = CreateEntityByName("prop_physics");
 	if (bIsValidEntity(iProp))
@@ -1708,8 +1787,8 @@ stock void vSpawnBreakProp(int tank, float pos[3], float offset, const char[] mo
 		TeleportEntity(iProp, pos);
 		DispatchSpawn(iProp);
 
-		SetEntPropEnt(iProp, Prop_Data, "m_hOwnerEntity", tank);
-		SetEntPropEnt(iProp, Prop_Data, "m_hPhysicsAttacker", tank);
+		SetEntPropEnt(iProp, Prop_Data, "m_hOwnerEntity", owner);
+		SetEntPropEnt(iProp, Prop_Data, "m_hPhysicsAttacker", owner);
 		SetEntPropFloat(iProp, Prop_Data, "m_flLastPhysicsInfluenceTime", GetGameTime());
 
 		SetEntProp(iProp, Prop_Send, "m_CollisionGroup", 1);
@@ -1718,7 +1797,7 @@ stock void vSpawnBreakProp(int tank, float pos[3], float offset, const char[] mo
 
 		DataPack dpProp = new DataPack();
 		dpProp.WriteCell(EntIndexToEntRef(iProp));
-		dpProp.WriteCell(GetClientUserId(tank));
+		dpProp.WriteCell(GetClientUserId(owner));
 		RequestFrame(vBreakProp, dpProp);
 	}
 }
@@ -1726,12 +1805,12 @@ stock void vSpawnBreakProp(int tank, float pos[3], float offset, const char[] mo
 void vBreakProp(DataPack pack)
 {
 	pack.Reset();
-	int iProp = EntRefToEntIndex(pack.ReadCell()), iTank = GetClientOfUserId(pack.ReadCell());
+	int iProp = EntRefToEntIndex(pack.ReadCell()), iOwner = GetClientOfUserId(pack.ReadCell());
 	delete pack;
 
-	if (bIsValidEntity(iProp) && bIsInfected(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	if (bIsValidEntity(iProp) && bIsValidClient(iOwner))
 	{
-		AcceptEntityInput(iProp, "Break", iTank);
+		AcceptEntityInput(iProp, "Break", iOwner);
 	}
 }
 
@@ -2225,6 +2304,20 @@ stock bool bHasIdlePlayer(int survivor)
 	return false;
 }
 
+stock bool bHasSpecialAmmo(int weapon, int type)
+{
+	if (weapon > MaxClients)
+	{
+		int iUpgrades = GetEntProp(weapon, Prop_Send, "m_upgradeBitVec");
+		if ((type != 2 && (iUpgrades & MT_UPGRADE_INCENDIARY)) || (type != 1 && (iUpgrades & MT_UPGRADE_EXPLOSIVE)))
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 stock bool bIsAdminImmune(int admin, int type, int flags, int flags2)
 {
 	if (!bIsHumanSurvivor(admin))
@@ -2365,7 +2458,7 @@ stock bool bIsFinalMap()
 
 stock bool bIsGunWeapon(int survivor)
 {
-	int iWeapon = GetEntPropEnt(survivor, Prop_Send, "m_hActiveWeapon");
+	int iWeapon = iGetSurvivorActiveWeapon(survivor);
 	if (iWeapon > MaxClients)
 	{
 		int iSlot = GetPlayerWeaponSlot(survivor, 0),
@@ -2465,6 +2558,11 @@ stock bool bIsPlayerInThirdPerson(int player, int flags = MT_CHECK_INDEX|MT_CHEC
 		{
 			case 28, 29, 30, 31, 47, 48, 49, 50, 51, 73, 74, 75, 76, 77: return true;
 		}
+
+		if (bIsPlayerIncapacitated(player))
+		{
+			return true;
+		}
 	}
 	else if (bIsSurvivor(player, flags))
 	{
@@ -2477,51 +2575,51 @@ stock bool bIsPlayerInThirdPerson(int player, int flags = MT_CHECK_INDEX|MT_CHEC
 			{
 				case 'b': // Nick
 				{
-					return iSequence == 626 || iSequence == 625 || iSequence == 624 || iSequence == 623 || iSequence == 622 || iSequence == 621 || iSequence == 661
+					return (iSequence == 626 || iSequence == 625 || iSequence == 624 || iSequence == 623 || iSequence == 622 || iSequence == 621 || iSequence == 661
 						|| iSequence == 662 || iSequence == 664 || iSequence == 665 || iSequence == 666 || iSequence == 667 || iSequence == 668 || iSequence == 670
-						|| iSequence == 671 || iSequence == 672 || iSequence == 673 || iSequence == 674 || iSequence == 620 || iSequence == 680 || iSequence == 616;
+						|| iSequence == 671 || iSequence == 672 || iSequence == 673 || iSequence == 674 || iSequence == 620 || iSequence == 680 || iSequence == 616);
 				}
 				case 'd': // Rochelle
 				{
-					return iSequence == 674 || iSequence == 678 || iSequence == 679 || iSequence == 630 || iSequence == 631 || iSequence == 632 || iSequence == 633 || iSequence == 634
+					return (iSequence == 674 || iSequence == 678 || iSequence == 679 || iSequence == 630 || iSequence == 631 || iSequence == 632 || iSequence == 633 || iSequence == 634
 						|| iSequence == 668 || iSequence == 677 || iSequence == 681 || iSequence == 680 || iSequence == 676 || iSequence == 675 || iSequence == 673
-						|| iSequence == 672 || iSequence == 671 || iSequence == 670 || iSequence == 687 || iSequence == 629 || iSequence == 625 || iSequence == 616;
+						|| iSequence == 672 || iSequence == 671 || iSequence == 670 || iSequence == 687 || iSequence == 629 || iSequence == 625 || iSequence == 616);
 				}
 				case 'c': // Coach
 				{
-					return iSequence == 656 || iSequence == 622 || iSequence == 623 || iSequence == 624 || iSequence == 625 || iSequence == 626 || iSequence == 663
+					return (iSequence == 656 || iSequence == 622 || iSequence == 623 || iSequence == 624 || iSequence == 625 || iSequence == 626 || iSequence == 663
 						|| iSequence == 662 || iSequence == 661 || iSequence == 660 || iSequence == 659 || iSequence == 658 || iSequence == 657 || iSequence == 654
-						|| iSequence == 653 || iSequence == 652 || iSequence == 651 || iSequence == 621 || iSequence == 620 || iSequence == 669 || iSequence == 615;
+						|| iSequence == 653 || iSequence == 652 || iSequence == 651 || iSequence == 621 || iSequence == 620 || iSequence == 669 || iSequence == 615);
 				}
 				case 'h': // Ellis
 				{
-					return iSequence == 625 || iSequence == 675 || iSequence == 626 || iSequence == 627 || iSequence == 628 || iSequence == 629 || iSequence == 630 || iSequence == 631
+					return (iSequence == 625 || iSequence == 675 || iSequence == 626 || iSequence == 627 || iSequence == 628 || iSequence == 629 || iSequence == 630 || iSequence == 631
 						|| iSequence == 678 || iSequence == 677 || iSequence == 676 || iSequence == 575 || iSequence == 674 || iSequence == 673 || iSequence == 672 || iSequence == 671
-						|| iSequence == 670 || iSequence == 669 || iSequence == 668 || iSequence == 667 || iSequence == 666 || iSequence == 665 || iSequence == 684 || iSequence == 621;
+						|| iSequence == 670 || iSequence == 669 || iSequence == 668 || iSequence == 667 || iSequence == 666 || iSequence == 665 || iSequence == 684 || iSequence == 621);
 				}
 				case 'v': // Bill
 				{
-					return iSequence == 528 || iSequence == 759 || iSequence == 763 || iSequence == 764 || iSequence == 529 || iSequence == 530 || iSequence == 531 || iSequence == 532
+					return (iSequence == 528 || iSequence == 759 || iSequence == 763 || iSequence == 764 || iSequence == 529 || iSequence == 530 || iSequence == 531 || iSequence == 532
 						|| iSequence == 533 || iSequence == 534 || iSequence == 753 || iSequence == 676 || iSequence == 675 || iSequence == 761 || iSequence == 758 || iSequence == 757
-						|| iSequence == 756 || iSequence == 755 || iSequence == 754 || iSequence == 527 || iSequence == 772 || iSequence == 762 || iSequence == 522;
+						|| iSequence == 756 || iSequence == 755 || iSequence == 754 || iSequence == 527 || iSequence == 772 || iSequence == 762 || iSequence == 522);
 				}
 				case 'n': // Zoey
 				{
-					return iSequence == 537 || iSequence == 819 || iSequence == 823 || iSequence == 824 || iSequence == 538 || iSequence == 539 || iSequence == 540 || iSequence == 541
+					return (iSequence == 537 || iSequence == 819 || iSequence == 823 || iSequence == 824 || iSequence == 538 || iSequence == 539 || iSequence == 540 || iSequence == 541
 						|| iSequence == 542 || iSequence == 543 || iSequence == 813 || iSequence == 828 || iSequence == 825 || iSequence == 822 || iSequence == 821 || iSequence == 820
-						|| iSequence == 818 || iSequence == 817 || iSequence == 816 || iSequence == 815 || iSequence == 814 || iSequence == 536 || iSequence == 809 || iSequence == 572;
+						|| iSequence == 818 || iSequence == 817 || iSequence == 816 || iSequence == 815 || iSequence == 814 || iSequence == 536 || iSequence == 809 || iSequence == 572);
 				}
 				case 'e': // Francis
 				{
-					return iSequence == 532 || iSequence == 533 || iSequence == 534 || iSequence == 535 || iSequence == 536 || iSequence == 537 || iSequence == 769 || iSequence == 768
+					return (iSequence == 532 || iSequence == 533 || iSequence == 534 || iSequence == 535 || iSequence == 536 || iSequence == 537 || iSequence == 769 || iSequence == 768
 						|| iSequence == 767 || iSequence == 766 || iSequence == 765 || iSequence == 764 || iSequence == 763 || iSequence == 762 || iSequence == 761 || iSequence == 760
-						|| iSequence == 759 || iSequence == 758 || iSequence == 757 || iSequence == 756 || iSequence == 531 || iSequence == 530 || iSequence == 775 || iSequence == 525;
+						|| iSequence == 759 || iSequence == 758 || iSequence == 757 || iSequence == 756 || iSequence == 531 || iSequence == 530 || iSequence == 775 || iSequence == 525);
 				}
 				case 'a': // Louis
 				{
-					return iSequence == 529 || iSequence == 530 || iSequence == 531 || iSequence == 532 || iSequence == 533 || iSequence == 534 || iSequence == 766 || iSequence == 765
+					return (iSequence == 529 || iSequence == 530 || iSequence == 531 || iSequence == 532 || iSequence == 533 || iSequence == 534 || iSequence == 766 || iSequence == 765
 						|| iSequence == 764 || iSequence == 763 || iSequence == 762 || iSequence == 761 || iSequence == 760 || iSequence == 759 || iSequence == 758 || iSequence == 757
-						|| iSequence == 756 || iSequence == 755 || iSequence == 754 || iSequence == 753 || iSequence == 527 || iSequence == 772 || iSequence == 528 || iSequence == 522;
+						|| iSequence == 756 || iSequence == 755 || iSequence == 754 || iSequence == 753 || iSequence == 527 || iSequence == 772 || iSequence == 528 || iSequence == 522);
 				}
 			}
 		}
@@ -2529,15 +2627,20 @@ stock bool bIsPlayerInThirdPerson(int player, int flags = MT_CHECK_INDEX|MT_CHEC
 		{
 			switch (sModel[29])
 			{
-				case 'v': return iSequence == 535 || iSequence == 537 || iSequence == 539 || iSequence == 540 || iSequence == 541; // Bill
-				case 'n': return iSequence == 517 || iSequence == 519 || iSequence == 521 || iSequence == 522 || iSequence == 523; // Zoey
-				case 'e': return iSequence == 536 || iSequence == 538 || iSequence == 540 || iSequence == 541 || iSequence == 542; // Francis
-				case 'a': return iSequence == 535 || iSequence == 537 || iSequence == 539 || iSequence == 540 || iSequence == 541; // Louis
+				case 'v': return (iSequence == 535 || iSequence == 537 || iSequence == 539 || iSequence == 540 || iSequence == 541); // Bill
+				case 'n': return (iSequence == 517 || iSequence == 519 || iSequence == 521 || iSequence == 522 || iSequence == 523); // Zoey
+				case 'e': return (iSequence == 536 || iSequence == 538 || iSequence == 540 || iSequence == 541 || iSequence == 542); // Francis
+				case 'a': return (iSequence == 535 || iSequence == 537 || iSequence == 539 || iSequence == 540 || iSequence == 541); // Louis
 			}
+		}
+
+		if (bIsSurvivorHelping(player) || bIsSurvivorHanging(player) || bIsSurvivorCaught(player))
+		{
+			return true;
 		}
 	}
 
-	return bIsPlayerIncapacitated(player) || (bIsSecondGame() && GetEntPropFloat(player, Prop_Send, "m_TimeForceExternalView") > GetGameTime()) || GetEntPropFloat(player, Prop_Send, "m_staggerTimer", 1) > -1.0 || GetEntPropEnt(player, Prop_Send, "m_hViewEntity") > 0;
+	return ((bIsSecondGame() && GetEntPropFloat(player, Prop_Send, "m_TimeForceExternalView") > GetGameTime()) || GetEntPropFloat(player, Prop_Send, "m_staggerTimer", 1) > -1.0 || GetEntPropEnt(player, Prop_Send, "m_hViewEntity") > 0);
 }
 
 stock bool bIsPlayerPositionFixed(int client, float radius, float zAxis, bool noVelocity = true)
@@ -2672,6 +2775,11 @@ stock bool bIsSurvivorHanging(int survivor)
 	return !!GetEntProp(survivor, Prop_Send, "m_isHangingFromLedge") || !!GetEntProp(survivor, Prop_Send, "m_isFallingFromLedge");
 }
 
+stock bool bIsSurvivorHelping(int survivor)
+{
+	return (bIsSecondGame() && GetEntPropEnt(survivor, Prop_Send, "m_useActionTarget") > 0) || GetEntPropEnt(survivor, Prop_Send, "m_reviveOwner") > 0 || GetEntPropEnt(survivor, Prop_Send, "m_reviveTarget") > 0;
+}
+
 stock bool bIsTank(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
 {
 	int iClass = bIsSecondGame() ? 8 : 5;
@@ -2745,12 +2853,13 @@ stock bool bIsVisiblePosition(float pos1[3], float pos2[3], int entity, int type
 	return true;
 }
 
-stock bool bIsVisibleToPlayer(int player, int target, int type, float playerPos[3] = NULL_VECTOR, float targetPos[3] = NULL_VECTOR, float range = 0.0, float threshold = 0.73)
+stock bool bIsVisibleToPlayer(int player, int target = 0, int type = -1, float playerPos[3] = NULL_VECTOR, float targetPos[3] = NULL_VECTOR, float range = 0.0, float threshold = 0.73)
 {
 	bool bReturn = true;
 
 	switch (type)
 	{
+		case -1: return !!GetEntProp(player, Prop_Send, "m_hasVisibleThreats");
 		case 0: return true;
 		case 1, 2, 3, 4, 5:
 		{
@@ -3519,7 +3628,7 @@ stock float flGetTempHealth(int survivor, float decayRate)
 {
 	float flTempHealth = GetEntPropFloat(survivor, Prop_Send, "m_healthBuffer");
 	flTempHealth -= (GetGameTime() - GetEntPropFloat(survivor, Prop_Send, "m_healthBufferTime")) * decayRate;
-	return (flTempHealth < 0.0) ? 0.0 : flTempHealth;
+	return ((flTempHealth < 0.0) ? 0.0 : flTempHealth);
 }
 
 stock int iGetAdminFlagsValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, const char[] value)
@@ -3605,6 +3714,22 @@ stock int iGetIdlePlayer(int bot)
 	}
 
 	return 0;
+}
+
+stock int iGetIncapacitatedCount(bool human = false)
+{
+	bool bValidPlayer = false;
+	int iCount = 0;
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		bValidPlayer = human ? bIsHumanSurvivor(iSurvivor) : bIsSurvivor(iSurvivor);
+		if (bValidPlayer && bIsSurvivorDisabled(iSurvivor))
+		{
+			iCount++;
+		}
+	}
+
+	return iCount;
 }
 
 stock int iGetInfectedCount(bool human = false, int flags = MT_CHECK_INGAME)
@@ -3937,7 +4062,7 @@ stock int iGetListenServerHost(int client, bool dedicated)
 	return client;
 }
 
-stock int iGetNearestCommonInfected(int tank, float pos[3], float range)
+stock int iGetNearestCommonInfected(float pos[3], float range)
 {
 	float flCommonPos[3];
 	int iCommonCount = 0, iCommon = -1;
@@ -4181,6 +4306,11 @@ stock int iGetSubSettingValue(bool apply, bool human, int teamVal, int playerVal
 	}
 
 	return (overrideLevel == 1) ? -1 : 0;
+}
+
+stock int iGetSurvivorActiveWeapon(int survivor)
+{
+	return GetEntPropEnt(survivor, Prop_Send, "m_hActiveWeapon");
 }
 
 stock int iGetSurvivorAttacker(int survivor)

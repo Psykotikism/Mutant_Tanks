@@ -1,6 +1,6 @@
 /**
- * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2024  Alfred "Psyk0tik" Llagas
+ * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -28,6 +28,8 @@ public Plugin myinfo =
 };
 
 bool g_bDedicated, g_bSecondGame;
+
+int g_iGraphicsLevel;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -464,7 +466,15 @@ int iGunnerMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esGunnerCache[param1].g_iGunnerAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
 				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esGunnerCache[param1].g_iHumanAmmo - g_esGunnerPlayer[param1].g_iAmmoCount), g_esGunnerCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esGunnerCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
+				case 3:
+				{
+					switch (g_esGunnerCache[param1].g_iHumanMode)
+					{
+						case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtonMode1");
+						case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtonMode2");
+						case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtonMode3");
+					}
+				}
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", ((g_esGunnerCache[param1].g_iHumanAbility == 1) ? g_esGunnerCache[param1].g_iHumanCooldown : g_esGunnerCache[param1].g_iGunnerCooldown));
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "GunnerDetails");
 				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration", g_esGunnerCache[param1].g_flGunnerDuration);
@@ -777,7 +787,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esGunnerTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esGunnerTeammate[admin].g_iHumanAbility, value, -1, 2);
 			g_esGunnerTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esGunnerTeammate[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esGunnerTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esGunnerTeammate[admin].g_iHumanCooldown, value, -1, 99999);
-			g_esGunnerTeammate[admin].g_iHumanMode = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGunnerTeammate[admin].g_iHumanMode, value, -1, 1);
+			g_esGunnerTeammate[admin].g_iHumanMode = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGunnerTeammate[admin].g_iHumanMode, value, -1, 2);
 			g_esGunnerTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esGunnerTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esGunnerTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGunnerTeammate[admin].g_iRequiresHumans, value, -1, 32);
 			g_esGunnerTeammate[admin].g_iGunnerAbility = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esGunnerTeammate[admin].g_iGunnerAbility, value, -1, 1);
@@ -804,7 +814,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esGunnerPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esGunnerPlayer[admin].g_iHumanAbility, value, -1, 2);
 			g_esGunnerPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esGunnerPlayer[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esGunnerPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esGunnerPlayer[admin].g_iHumanCooldown, value, -1, 99999);
-			g_esGunnerPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGunnerPlayer[admin].g_iHumanMode, value, -1, 1);
+			g_esGunnerPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGunnerPlayer[admin].g_iHumanMode, value, -1, 2);
 			g_esGunnerPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esGunnerPlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esGunnerPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGunnerPlayer[admin].g_iRequiresHumans, value, -1, 32);
 			g_esGunnerPlayer[admin].g_iGunnerAbility = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esGunnerPlayer[admin].g_iGunnerAbility, value, -1, 1);
@@ -837,7 +847,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esGunnerSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esGunnerSpecial[type].g_iHumanAbility, value, -1, 2);
 			g_esGunnerSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esGunnerSpecial[type].g_iHumanAmmo, value, -1, 99999);
 			g_esGunnerSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esGunnerSpecial[type].g_iHumanCooldown, value, -1, 99999);
-			g_esGunnerSpecial[type].g_iHumanMode = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGunnerSpecial[type].g_iHumanMode, value, -1, 1);
+			g_esGunnerSpecial[type].g_iHumanMode = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGunnerSpecial[type].g_iHumanMode, value, -1, 2);
 			g_esGunnerSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esGunnerSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esGunnerSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGunnerSpecial[type].g_iRequiresHumans, value, -1, 32);
 			g_esGunnerSpecial[type].g_iGunnerAbility = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esGunnerSpecial[type].g_iGunnerAbility, value, -1, 1);
@@ -864,7 +874,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esGunnerAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esGunnerAbility[type].g_iHumanAbility, value, -1, 2);
 			g_esGunnerAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esGunnerAbility[type].g_iHumanAmmo, value, -1, 99999);
 			g_esGunnerAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esGunnerAbility[type].g_iHumanCooldown, value, -1, 99999);
-			g_esGunnerAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGunnerAbility[type].g_iHumanMode, value, -1, 1);
+			g_esGunnerAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGunnerAbility[type].g_iHumanMode, value, -1, 2);
 			g_esGunnerAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esGunnerAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esGunnerAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGunnerAbility[type].g_iRequiresHumans, value, -1, 32);
 			g_esGunnerAbility[type].g_iGunnerAbility = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esGunnerAbility[type].g_iGunnerAbility, value, -1, 1);
@@ -899,7 +909,9 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esGunnerPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esGunnerPlayer[tank].g_iTankType = apply ? type : 0;
 	int iType = g_esGunnerPlayer[tank].g_iTankTypeRecorded;
-
+#if !defined MT_ABILITIES_MAIN
+	g_iGraphicsLevel = MT_GetGraphicsLevel();
+#endif
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		g_esGunnerCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_flCloseAreasOnly, g_esGunnerPlayer[tank].g_flCloseAreasOnly, g_esGunnerSpecial[iType].g_flCloseAreasOnly, g_esGunnerAbility[iType].g_flCloseAreasOnly, 1);
@@ -1080,10 +1092,10 @@ public void MT_OnButtonPressed(int tank, int button)
 
 		if ((button & MT_MAIN_KEY) && g_esGunnerCache[tank].g_iGunnerAbility == 1 && g_esGunnerCache[tank].g_iHumanAbility == 1)
 		{
-			int iTime = GetTime();
+			int iHumanMode = g_esGunnerCache[tank].g_iHumanMode, iTime = GetTime();
 			bool bRecharging = g_esGunnerPlayer[tank].g_iCooldown != -1 && g_esGunnerPlayer[tank].g_iCooldown >= iTime;
 
-			switch (g_esGunnerCache[tank].g_iHumanMode)
+			switch (iHumanMode)
 			{
 				case 0:
 				{
@@ -1100,9 +1112,9 @@ public void MT_OnButtonPressed(int tank, int button)
 						MT_PrintToChat(tank, "%s %t", MT_TAG3, "GunnerHuman4", (g_esGunnerPlayer[tank].g_iCooldown - iTime));
 					}
 				}
-				case 1:
+				case 1, 2:
 				{
-					if (g_esGunnerPlayer[tank].g_iAmmoCount < g_esGunnerCache[tank].g_iHumanAmmo && g_esGunnerCache[tank].g_iHumanAmmo > 0)
+					if ((iHumanMode == 2 && g_esGunnerPlayer[tank].g_bActivated) || (g_esGunnerPlayer[tank].g_iAmmoCount < g_esGunnerCache[tank].g_iHumanAmmo && g_esGunnerCache[tank].g_iHumanAmmo > 0))
 					{
 						if (!g_esGunnerPlayer[tank].g_bActivated && !bRecharging)
 						{
@@ -1114,7 +1126,15 @@ public void MT_OnButtonPressed(int tank, int button)
 						}
 						else if (g_esGunnerPlayer[tank].g_bActivated)
 						{
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "GunnerHuman3");
+							switch (iHumanMode)
+							{
+								case 1: MT_PrintToChat(tank, "%s %t", MT_TAG3, "GunnerHuman3");
+								case 2:
+								{
+									vGunnerReset2(tank);
+									vGunnerReset3(tank);
+								}
+							}
 						}
 						else if (bRecharging)
 						{
@@ -1183,7 +1203,7 @@ void vGunner(int tank)
 
 void vGunner2(int tank)
 {
-	int iType = g_esGunnerCache[tank].g_iGunnerGunType, iDifference = g_bSecondGame ? 1 : 13;
+	int iType = g_esGunnerCache[tank].g_iGunnerGunType, iDifference = (g_bSecondGame ? 1 : 13);
 	g_esGunnerPlayer[tank].g_iGunType = (iType > 0) ? (iType - 1) : MT_GetRandomInt(0, (sizeof g_sWeaponModels - iDifference));
 
 	float flAngles[3], flOrigin[3], flPos[3];
@@ -1306,7 +1326,7 @@ void vGunner3(int tank, float time, float duration)
 
 				if (iTargetType == 0 || (iTargetType & MT_GUNNER_COMMON))
 				{
-					g_esGunnerPlayer[tank].g_iCommonEnemy = iGetNearestCommonInfected(tank, flPos, flRange);
+					g_esGunnerPlayer[tank].g_iCommonEnemy = iGetNearestCommonInfected(flPos, flRange);
 				}
 			}
 
@@ -1527,8 +1547,11 @@ void vGunner4(int tank, int target, int drone, float pos[3], float origin[3])
 			ScaleVector(flVector2, 36.0);
 			SubtractVectors(origin, flVector2, g_esGunnerPlayer[tank].g_flEnemyOrigin);
 
-			TE_SetupBeamPoints(g_esGunnerPlayer[tank].g_flEnemyOrigin, flPos, g_iGunnerSprite, 0, 0, 0, 0.06, 0.01, (g_bSecondGame ? 0.08 : 0.3), 1, 0.0, {200, 200, 200, 230}, 0);
-			TE_SendToAll();
+			if (g_iGraphicsLevel > 1)
+			{
+				TE_SetupBeamPoints(g_esGunnerPlayer[tank].g_flEnemyOrigin, flPos, g_iGunnerSprite, 0, 0, 0, 0.06, 0.01, (g_bSecondGame ? 0.08 : 0.3), 1, 0.0, {200, 200, 200, 230}, 0);
+				TE_SendToAll();
+			}
 
 			EmitSoundToAll(g_sWeaponSounds[g_esGunnerPlayer[tank].g_iGunType], SOUND_FROM_WORLD, SNDCHAN_WEAPON, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, SNDPITCH_NORMAL, .origin = origin, .updatePos = false);
 		}
@@ -1561,7 +1584,7 @@ void vGunnerAbility(int tank)
 
 void OnGunnerPreThinkPost(int tank)
 {
-	if (!g_bSecondGame || !MT_IsTankSupported(tank) || !MT_IsCustomTankSupported(tank) || !g_esGunnerPlayer[tank].g_bRainbowColor)
+	if (!g_bSecondGame || !MT_IsTankSupported(tank) || !MT_IsCustomTankSupported(tank) || !g_esGunnerPlayer[tank].g_bRainbowColor || g_iGraphicsLevel <= 2)
 	{
 		g_esGunnerPlayer[tank].g_bRainbowColor = false;
 
@@ -1677,7 +1700,7 @@ void vGunnerReset3(int tank)
 
 void vSetGunnerGlow(int drone, int color, bool flashing, int min, int max, int type)
 {
-	if (!g_bSecondGame)
+	if (!g_bSecondGame || g_iGraphicsLevel <= 1)
 	{
 		return;
 	}
@@ -1689,13 +1712,15 @@ void vSetGunnerGlow(int drone, int color, bool flashing, int min, int max, int t
 	SetEntProp(drone, Prop_Send, "m_iGlowType", type);
 }
 
-void tTimerGunnerCombo(Handle timer, int userid)
+Action tTimerGunnerCombo(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esGunnerAbility[g_esGunnerPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esGunnerPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esGunnerPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esGunnerCache[iTank].g_iGunnerAbility == 0 || g_esGunnerPlayer[iTank].g_bActivated)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	vGunner(iTank);
+
+	return Plugin_Continue;
 }

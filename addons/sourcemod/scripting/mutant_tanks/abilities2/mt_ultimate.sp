@@ -1,6 +1,6 @@
 /**
- * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2024  Alfred "Psyk0tik" Llagas
+ * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -28,6 +28,8 @@ public Plugin myinfo =
 };
 
 bool g_bDedicated, g_bLateLoad, g_bSecondGame;
+
+int g_iGraphicsLevel;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -815,7 +817,9 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esUltimatePlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esUltimatePlayer[tank].g_iTankType = apply ? type : 0;
 	int iType = g_esUltimatePlayer[tank].g_iTankTypeRecorded;
-
+#if !defined MT_ABILITIES_MAIN2
+	g_iGraphicsLevel = MT_GetGraphicsLevel();
+#endif
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		g_esUltimateCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esUltimateTeammate[tank].g_flCloseAreasOnly, g_esUltimatePlayer[tank].g_flCloseAreasOnly, g_esUltimateSpecial[iType].g_flCloseAreasOnly, g_esUltimateAbility[iType].g_flCloseAreasOnly, 1);
@@ -1022,8 +1026,12 @@ void vUltimate(int tank, int pos = -1)
 		g_esUltimatePlayer[tank].g_flDamage = 0.0;
 		g_esUltimatePlayer[tank].g_iDuration = (iTime + iDuration);
 
+		if (g_iGraphicsLevel > 2)
+		{
+			vAttachParticle(tank, PARTICLE_ELECTRICITY, 2.0, 30.0);
+		}
+
 		ExtinguishEntity(tank);
-		vAttachParticle(tank, PARTICLE_ELECTRICITY, 2.0, 30.0);
 		EmitSoundToAll(SOUND_CHARGE, tank);
 		EmitSoundToAll(SOUND_EXPLOSION, tank);
 
@@ -1126,16 +1134,18 @@ void vUltimateReset()
 	}
 }
 
-void tTimerUltimateCombo(Handle timer, DataPack pack)
+Action tTimerUltimateCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esUltimateAbility[g_esUltimatePlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esUltimatePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esUltimatePlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esUltimateCache[iTank].g_iUltimateAbility == 0 || g_esUltimatePlayer[iTank].g_bActivated)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	int iPos = pack.ReadCell();
 	vUltimate(iTank, iPos);
+
+	return Plugin_Continue;
 }

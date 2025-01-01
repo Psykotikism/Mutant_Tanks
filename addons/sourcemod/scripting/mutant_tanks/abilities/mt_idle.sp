@@ -1,6 +1,6 @@
 /**
- * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2024  Alfred "Psyk0tik" Llagas
+ * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -1154,35 +1154,37 @@ void vIdleReset()
 	}
 }
 
-void tTimerIdleCombo(Handle timer, DataPack pack)
+Action tTimerIdleCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esIdleAbility[g_esIdlePlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esIdlePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esIdlePlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esIdleCache[iTank].g_iIdleAbility == 0)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vIdleAbility(iTank, flRandom, iPos);
+
+	return Plugin_Continue;
 }
 
-void tTimerIdleCombo2(Handle timer, DataPack pack)
+Action tTimerIdleCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor))
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esIdleAbility[g_esIdlePlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esIdlePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esIdlePlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esIdleCache[iTank].g_iIdleHit == 0)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
@@ -1197,4 +1199,6 @@ void tTimerIdleCombo2(Handle timer, DataPack pack)
 	{
 		vIdleHit(iSurvivor, iTank, flRandom, flChance, g_esIdleCache[iTank].g_iIdleHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
+
+	return Plugin_Continue;
 }

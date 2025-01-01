@@ -1,6 +1,6 @@
 /**
- * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2024  Alfred "Psyk0tik" Llagas
+ * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -22,12 +22,14 @@ public Plugin myinfo =
 {
 	name = "[MT] Hurt Ability",
 	author = MT_AUTHOR,
-	description = "The Mutant Tank repeatedly hurts survivors.",
+	description = "The Mutant Tank repeatedly hurts or pimp slaps survivors.",
 	version = MT_VERSION,
 	url = MT_URL
 };
 
 bool g_bDedicated, g_bLateLoad, g_bSecondGame;
+
+int g_iGraphicsLevel;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -96,6 +98,7 @@ enum struct esHurtPlayer
 	int g_iHurtHit;
 	int g_iHurtHitMode;
 	int g_iHurtMessage;
+	int g_iHurtMode;
 	int g_iHurtRangeCooldown;
 	int g_iHurtSight;
 	int g_iImmunityFlags;
@@ -130,6 +133,7 @@ enum struct esHurtTeammate
 	int g_iHurtHit;
 	int g_iHurtHitMode;
 	int g_iHurtMessage;
+	int g_iHurtMode;
 	int g_iHurtRangeCooldown;
 	int g_iHurtSight;
 	int g_iRequiresHumans;
@@ -160,6 +164,7 @@ enum struct esHurtAbility
 	int g_iHurtHit;
 	int g_iHurtHitMode;
 	int g_iHurtMessage;
+	int g_iHurtMode;
 	int g_iHurtRangeCooldown;
 	int g_iHurtSight;
 	int g_iImmunityFlags;
@@ -190,6 +195,7 @@ enum struct esHurtSpecial
 	int g_iHurtHit;
 	int g_iHurtHitMode;
 	int g_iHurtMessage;
+	int g_iHurtMode;
 	int g_iHurtRangeCooldown;
 	int g_iHurtSight;
 	int g_iRequiresHumans;
@@ -219,6 +225,7 @@ enum struct esHurtCache
 	int g_iHurtHit;
 	int g_iHurtHitMode;
 	int g_iHurtMessage;
+	int g_iHurtMode;
 	int g_iHurtRangeCooldown;
 	int g_iHurtSight;
 	int g_iRequiresHumans;
@@ -615,6 +622,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esHurtAbility[iIndex].g_iHurtHit = 0;
 				g_esHurtAbility[iIndex].g_iHurtHitMode = 0;
 				g_esHurtAbility[iIndex].g_flHurtInterval = 1.0;
+				g_esHurtAbility[iIndex].g_iHurtMode = 0;
 				g_esHurtAbility[iIndex].g_flHurtRange = 150.0;
 				g_esHurtAbility[iIndex].g_flHurtRangeChance = 15.0;
 				g_esHurtAbility[iIndex].g_iHurtRangeCooldown = 0;
@@ -638,6 +646,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esHurtSpecial[iIndex].g_iHurtHit = -1;
 				g_esHurtSpecial[iIndex].g_iHurtHitMode = -1;
 				g_esHurtSpecial[iIndex].g_flHurtInterval = -1.0;
+				g_esHurtSpecial[iIndex].g_iHurtMode = -1;
 				g_esHurtSpecial[iIndex].g_flHurtRange = -1.0;
 				g_esHurtSpecial[iIndex].g_flHurtRangeChance = -1.0;
 				g_esHurtSpecial[iIndex].g_iHurtRangeCooldown = -1;
@@ -668,6 +677,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esHurtPlayer[iPlayer].g_iHurtHit = -1;
 				g_esHurtPlayer[iPlayer].g_iHurtHitMode = -1;
 				g_esHurtPlayer[iPlayer].g_flHurtInterval = -1.0;
+				g_esHurtPlayer[iPlayer].g_iHurtMode = -1;
 				g_esHurtPlayer[iPlayer].g_flHurtRange = -1.0;
 				g_esHurtPlayer[iPlayer].g_flHurtRangeChance = -1.0;
 				g_esHurtPlayer[iPlayer].g_iHurtRangeCooldown = -1;
@@ -691,6 +701,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esHurtTeammate[iPlayer].g_iHurtHit = -1;
 				g_esHurtTeammate[iPlayer].g_iHurtHitMode = -1;
 				g_esHurtTeammate[iPlayer].g_flHurtInterval = -1.0;
+				g_esHurtTeammate[iPlayer].g_iHurtMode = -1;
 				g_esHurtTeammate[iPlayer].g_flHurtRange = -1.0;
 				g_esHurtTeammate[iPlayer].g_flHurtRangeChance = -1.0;
 				g_esHurtTeammate[iPlayer].g_iHurtRangeCooldown = -1;
@@ -729,6 +740,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esHurtTeammate[admin].g_iHurtHit = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtHit", "Hurt Hit", "Hurt_Hit", "hit", g_esHurtTeammate[admin].g_iHurtHit, value, -1, 1);
 			g_esHurtTeammate[admin].g_iHurtHitMode = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtHitMode", "Hurt Hit Mode", "Hurt_Hit_Mode", "hitmode", g_esHurtTeammate[admin].g_iHurtHitMode, value, -1, 2);
 			g_esHurtTeammate[admin].g_flHurtInterval = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtInterval", "Hurt Interval", "Hurt_Interval", "interval", g_esHurtTeammate[admin].g_flHurtInterval, value, -1.0, 99999.0);
+			g_esHurtTeammate[admin].g_iHurtMode = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtMode", "Hurt Mode", "Hurt_Mode", "mode", g_esHurtTeammate[admin].g_iHurtMode, value, -1, 3);
 			g_esHurtTeammate[admin].g_flHurtRange = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtRange", "Hurt Range", "Hurt_Range", "range", g_esHurtTeammate[admin].g_flHurtRange, value, -1.0, 99999.0);
 			g_esHurtTeammate[admin].g_flHurtRangeChance = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtRangeChance", "Hurt Range Chance", "Hurt_Range_Chance", "rangechance", g_esHurtTeammate[admin].g_flHurtRangeChance, value, -1.0, 100.0);
 			g_esHurtTeammate[admin].g_iHurtRangeCooldown = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtRangeCooldown", "Hurt Range Cooldown", "Hurt_Range_Cooldown", "rangecooldown", g_esHurtTeammate[admin].g_iHurtRangeCooldown, value, -1, 99999);
@@ -754,6 +766,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esHurtPlayer[admin].g_iHurtHit = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtHit", "Hurt Hit", "Hurt_Hit", "hit", g_esHurtPlayer[admin].g_iHurtHit, value, -1, 1);
 			g_esHurtPlayer[admin].g_iHurtHitMode = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtHitMode", "Hurt Hit Mode", "Hurt_Hit_Mode", "hitmode", g_esHurtPlayer[admin].g_iHurtHitMode, value, -1, 2);
 			g_esHurtPlayer[admin].g_flHurtInterval = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtInterval", "Hurt Interval", "Hurt_Interval", "interval", g_esHurtPlayer[admin].g_flHurtInterval, value, -1.0, 99999.0);
+			g_esHurtPlayer[admin].g_iHurtMode = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtMode", "Hurt Mode", "Hurt_Mode", "mode", g_esHurtPlayer[admin].g_iHurtMode, value, -1, 3);
 			g_esHurtPlayer[admin].g_flHurtRange = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtRange", "Hurt Range", "Hurt_Range", "range", g_esHurtPlayer[admin].g_flHurtRange, value, -1.0, 99999.0);
 			g_esHurtPlayer[admin].g_flHurtRangeChance = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtRangeChance", "Hurt Range Chance", "Hurt_Range_Chance", "rangechance", g_esHurtPlayer[admin].g_flHurtRangeChance, value, -1.0, 100.0);
 			g_esHurtPlayer[admin].g_iHurtRangeCooldown = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtRangeCooldown", "Hurt Range Cooldown", "Hurt_Range_Cooldown", "rangecooldown", g_esHurtPlayer[admin].g_iHurtRangeCooldown, value, -1, 99999);
@@ -785,6 +798,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esHurtSpecial[type].g_iHurtHit = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtHit", "Hurt Hit", "Hurt_Hit", "hit", g_esHurtSpecial[type].g_iHurtHit, value, -1, 1);
 			g_esHurtSpecial[type].g_iHurtHitMode = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtHitMode", "Hurt Hit Mode", "Hurt_Hit_Mode", "hitmode", g_esHurtSpecial[type].g_iHurtHitMode, value, -1, 2);
 			g_esHurtSpecial[type].g_flHurtInterval = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtInterval", "Hurt Interval", "Hurt_Interval", "interval", g_esHurtSpecial[type].g_flHurtInterval, value, -1.0, 99999.0);
+			g_esHurtSpecial[type].g_iHurtMode = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtMode", "Hurt Mode", "Hurt_Mode", "mode", g_esHurtSpecial[type].g_iHurtMode, value, -1, 3);
 			g_esHurtSpecial[type].g_flHurtRange = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtRange", "Hurt Range", "Hurt_Range", "range", g_esHurtSpecial[type].g_flHurtRange, value, -1.0, 99999.0);
 			g_esHurtSpecial[type].g_flHurtRangeChance = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtRangeChance", "Hurt Range Chance", "Hurt_Range_Chance", "rangechance", g_esHurtSpecial[type].g_flHurtRangeChance, value, -1.0, 100.0);
 			g_esHurtSpecial[type].g_iHurtRangeCooldown = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtRangeCooldown", "Hurt Range Cooldown", "Hurt_Range_Cooldown", "rangecooldown", g_esHurtSpecial[type].g_iHurtRangeCooldown, value, -1, 99999);
@@ -810,6 +824,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esHurtAbility[type].g_iHurtHit = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtHit", "Hurt Hit", "Hurt_Hit", "hit", g_esHurtAbility[type].g_iHurtHit, value, -1, 1);
 			g_esHurtAbility[type].g_iHurtHitMode = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtHitMode", "Hurt Hit Mode", "Hurt_Hit_Mode", "hitmode", g_esHurtAbility[type].g_iHurtHitMode, value, -1, 2);
 			g_esHurtAbility[type].g_flHurtInterval = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtInterval", "Hurt Interval", "Hurt_Interval", "interval", g_esHurtAbility[type].g_flHurtInterval, value, -1.0, 99999.0);
+			g_esHurtAbility[type].g_iHurtMode = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtMode", "Hurt Mode", "Hurt_Mode", "mode", g_esHurtAbility[type].g_iHurtMode, value, -1, 3);
 			g_esHurtAbility[type].g_flHurtRange = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtRange", "Hurt Range", "Hurt_Range", "range", g_esHurtAbility[type].g_flHurtRange, value, -1.0, 99999.0);
 			g_esHurtAbility[type].g_flHurtRangeChance = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtRangeChance", "Hurt Range Chance", "Hurt_Range_Chance", "rangechance", g_esHurtAbility[type].g_flHurtRangeChance, value, -1.0, 100.0);
 			g_esHurtAbility[type].g_iHurtRangeCooldown = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtRangeCooldown", "Hurt Range Cooldown", "Hurt_Range_Cooldown", "rangecooldown", g_esHurtAbility[type].g_iHurtRangeCooldown, value, -1, 99999);
@@ -829,7 +844,9 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esHurtPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esHurtPlayer[tank].g_iTankType = apply ? type : 0;
 	int iType = g_esHurtPlayer[tank].g_iTankTypeRecorded;
-
+#if !defined MT_ABILITIES_MAIN
+	g_iGraphicsLevel = MT_GetGraphicsLevel();
+#endif
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		g_esHurtCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_flCloseAreasOnly, g_esHurtPlayer[tank].g_flCloseAreasOnly, g_esHurtSpecial[iType].g_flCloseAreasOnly, g_esHurtAbility[iType].g_flCloseAreasOnly, 1);
@@ -850,6 +867,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esHurtCache[tank].g_iHurtHit = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHurtHit, g_esHurtPlayer[tank].g_iHurtHit, g_esHurtSpecial[iType].g_iHurtHit, g_esHurtAbility[iType].g_iHurtHit, 1);
 		g_esHurtCache[tank].g_iHurtHitMode = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHurtHitMode, g_esHurtPlayer[tank].g_iHurtHitMode, g_esHurtSpecial[iType].g_iHurtHitMode, g_esHurtAbility[iType].g_iHurtHitMode, 1);
 		g_esHurtCache[tank].g_iHurtMessage = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHurtMessage, g_esHurtPlayer[tank].g_iHurtMessage, g_esHurtSpecial[iType].g_iHurtMessage, g_esHurtAbility[iType].g_iHurtMessage, 1);
+		g_esHurtCache[tank].g_iHurtMode = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHurtMode, g_esHurtPlayer[tank].g_iHurtMode, g_esHurtSpecial[iType].g_iHurtMode, g_esHurtAbility[iType].g_iHurtMode, 1);
 		g_esHurtCache[tank].g_iHurtRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHurtRangeCooldown, g_esHurtPlayer[tank].g_iHurtRangeCooldown, g_esHurtSpecial[iType].g_iHurtRangeCooldown, g_esHurtAbility[iType].g_iHurtRangeCooldown, 1);
 		g_esHurtCache[tank].g_iHurtSight = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHurtSight, g_esHurtPlayer[tank].g_iHurtSight, g_esHurtSpecial[iType].g_iHurtSight, g_esHurtAbility[iType].g_iHurtSight, 1);
 		g_esHurtCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_flOpenAreasOnly, g_esHurtPlayer[tank].g_flOpenAreasOnly, g_esHurtSpecial[iType].g_flOpenAreasOnly, g_esHurtAbility[iType].g_flOpenAreasOnly, 1);
@@ -875,6 +893,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esHurtCache[tank].g_iHurtHit = iGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_iHurtHit, g_esHurtAbility[iType].g_iHurtHit, 1);
 		g_esHurtCache[tank].g_iHurtHitMode = iGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_iHurtHitMode, g_esHurtAbility[iType].g_iHurtHitMode, 1);
 		g_esHurtCache[tank].g_iHurtMessage = iGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_iHurtMessage, g_esHurtAbility[iType].g_iHurtMessage, 1);
+		g_esHurtCache[tank].g_iHurtMode = iGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_iHurtMode, g_esHurtAbility[iType].g_iHurtMode, 1);
 		g_esHurtCache[tank].g_iHurtRangeCooldown = iGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_iHurtRangeCooldown, g_esHurtAbility[iType].g_iHurtRangeCooldown, 1);
 		g_esHurtCache[tank].g_iHurtSight = iGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_iHurtSight, g_esHurtAbility[iType].g_iHurtSight, 1);
 		g_esHurtCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esHurtPlayer[tank].g_flOpenAreasOnly, g_esHurtAbility[iType].g_flOpenAreasOnly, 1);
@@ -1137,8 +1156,17 @@ void vHurtHit(int survivor, int tank, float random, float chance, int enabled, i
 				{
 					char sTankName[64];
 					MT_GetTankName(tank, sTankName);
-					MT_PrintToChatAll("%s %t", MT_TAG2, "Hurt", sTankName, survivor);
-					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Hurt", LANG_SERVER, sTankName, survivor);
+					if (g_esHurtCache[tank].g_iHurtMode == 0 || g_esHurtCache[tank].g_iHurtMode == 1)
+					{
+						MT_PrintToChatAll("%s %t", MT_TAG2, "Hurt", sTankName, survivor);
+						MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Hurt", LANG_SERVER, sTankName, survivor);
+					}
+
+					if (g_esHurtCache[tank].g_iHurtMode == 0 || g_esHurtCache[tank].g_iHurtMode == 2)
+					{
+						MT_PrintToChatAll("%s %t", MT_TAG2, "Hurt3", sTankName, survivor);
+						MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Hurt3", LANG_SERVER, sTankName, survivor);
+					}
 				}
 			}
 			else if ((flags & MT_ATTACK_RANGE) && (g_esHurtPlayer[tank].g_iRangeCooldown == -1 || g_esHurtPlayer[tank].g_iRangeCooldown <= iTime))
@@ -1201,8 +1229,17 @@ void vHurtReset2(int survivor, int tank, int messages)
 
 	if (g_esHurtCache[tank].g_iHurtMessage & messages)
 	{
-		MT_PrintToChatAll("%s %t", MT_TAG2, "Hurt2", survivor);
-		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Hurt2", LANG_SERVER, survivor);
+		if (g_esHurtCache[tank].g_iHurtMode == 0 || g_esHurtCache[tank].g_iHurtMode == 1)
+		{
+			MT_PrintToChatAll("%s %t", MT_TAG2, "Hurt2", survivor);
+			MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Hurt2", LANG_SERVER, survivor);
+		}
+
+		if (g_esHurtCache[tank].g_iHurtMode == 0 || g_esHurtCache[tank].g_iHurtMode == 2)
+		{
+			MT_PrintToChatAll("%s %t", MT_TAG2, "Hurt4", survivor);
+			MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Hurt4", LANG_SERVER, survivor);
+		}
 	}
 }
 
@@ -1216,35 +1253,37 @@ void vHurtReset3(int tank)
 	g_esHurtPlayer[tank].g_iRangeCooldown = -1;
 }
 
-void tTimerHurtCombo(Handle timer, DataPack pack)
+Action tTimerHurtCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esHurtAbility[g_esHurtPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esHurtPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esHurtPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esHurtCache[iTank].g_iHurtAbility == 0)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vHurtAbility(iTank, flRandom, iPos);
+
+	return Plugin_Continue;
 }
 
-void tTimerHurtCombo2(Handle timer, DataPack pack)
+Action tTimerHurtCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor) || g_esHurtPlayer[iSurvivor].g_bAffected)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esHurtAbility[g_esHurtPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esHurtPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esHurtPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esHurtCache[iTank].g_iHurtHit == 0)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
@@ -1259,6 +1298,8 @@ void tTimerHurtCombo2(Handle timer, DataPack pack)
 	{
 		vHurtHit(iSurvivor, iTank, flRandom, flChance, g_esHurtCache[iTank].g_iHurtHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
+
+	return Plugin_Continue;
 }
 
 Action tTimerHurt(Handle timer, DataPack pack)
@@ -1300,11 +1341,22 @@ Action tTimerHurt(Handle timer, DataPack pack)
 	float flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 3, iPos) : g_esHurtCache[iTank].g_flHurtDamage;
 	if (flDamage > 0.0)
 	{
-		vDamagePlayer(iSurvivor, iTank, MT_GetScaledDamage(flDamage));
-	}
+		if (g_esHurtCache[iTank].g_iHurtMode == 0 || g_esHurtCache[iTank].g_iHurtMode == 1)
+		{
+			vDamagePlayer(iSurvivor, iTank, MT_GetScaledDamage(flDamage));
+			EmitSoundToAll(SOUND_ATTACK, iSurvivor);
+		}
 
-	vAttachParticle(iSurvivor, PARTICLE_BLOOD, 0.1);
-	EmitSoundToAll(SOUND_ATTACK, iSurvivor);
+		if (g_esHurtCache[iTank].g_iHurtMode == 0 || g_esHurtCache[iTank].g_iHurtMode == 2)
+		{
+			SlapPlayer(iSurvivor, RoundToNearest(MT_GetScaledDamage(flDamage)), true);
+		}
+
+		if (g_iGraphicsLevel > 2)
+		{
+			vAttachParticle(iSurvivor, PARTICLE_BLOOD, 0.1);
+		}
+	}
 
 	return Plugin_Continue;
 }

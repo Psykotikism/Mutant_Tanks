@@ -1,6 +1,6 @@
 /**
- * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2024  Alfred "Psyk0tik" Llagas
+ * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -80,10 +80,12 @@ enum struct esMinionPlayer
 	int g_iMinionAbility;
 	int g_iMinionAmount;
 	int g_iMinionCooldown;
+	int g_iMinionFilter;
+	int g_iMinionMaxType;
 	int g_iMinionMessage;
+	int g_iMinionMinType;
 	int g_iMinionRemove;
 	int g_iMinionReplace;
-	int g_iMinionTypes;
 	int g_iOwner;
 	int g_iRequiresHumans;
 	int g_iTankType;
@@ -106,10 +108,12 @@ enum struct esMinionTeammate
 	int g_iMinionAbility;
 	int g_iMinionAmount;
 	int g_iMinionCooldown;
+	int g_iMinionFilter;
+	int g_iMinionMaxType;
 	int g_iMinionMessage;
+	int g_iMinionMinType;
 	int g_iMinionRemove;
 	int g_iMinionReplace;
-	int g_iMinionTypes;
 	int g_iRequiresHumans;
 }
 
@@ -131,10 +135,12 @@ enum struct esMinionAbility
 	int g_iMinionAbility;
 	int g_iMinionAmount;
 	int g_iMinionCooldown;
+	int g_iMinionFilter;
+	int g_iMinionMaxType;
 	int g_iMinionMessage;
+	int g_iMinionMinType;
 	int g_iMinionRemove;
 	int g_iMinionReplace;
-	int g_iMinionTypes;
 	int g_iRequiresHumans;
 }
 
@@ -154,10 +160,12 @@ enum struct esMinionSpecial
 	int g_iMinionAbility;
 	int g_iMinionAmount;
 	int g_iMinionCooldown;
+	int g_iMinionFilter;
+	int g_iMinionMaxType;
 	int g_iMinionMessage;
+	int g_iMinionMinType;
 	int g_iMinionRemove;
 	int g_iMinionReplace;
-	int g_iMinionTypes;
 	int g_iRequiresHumans;
 }
 
@@ -177,10 +185,12 @@ enum struct esMinionCache
 	int g_iMinionAbility;
 	int g_iMinionAmount;
 	int g_iMinionCooldown;
+	int g_iMinionFilter;
+	int g_iMinionMaxType;
 	int g_iMinionMessage;
+	int g_iMinionMinType;
 	int g_iMinionRemove;
 	int g_iMinionReplace;
-	int g_iMinionTypes;
 	int g_iRequiresHumans;
 }
 
@@ -485,10 +495,12 @@ public void MT_OnConfigsLoad(int mode)
 				g_esMinionAbility[iIndex].g_iMinionAmount = 5;
 				g_esMinionAbility[iIndex].g_flMinionChance = 33.3;
 				g_esMinionAbility[iIndex].g_iMinionCooldown = 0;
+				g_esMinionAbility[iIndex].g_iMinionFilter = 0;
 				g_esMinionAbility[iIndex].g_flMinionLifetime = 0.0;
+				g_esMinionAbility[iIndex].g_iMinionMaxType = 0;
+				g_esMinionAbility[iIndex].g_iMinionMinType = 0;
 				g_esMinionAbility[iIndex].g_iMinionRemove = 1;
 				g_esMinionAbility[iIndex].g_iMinionReplace = 1;
-				g_esMinionAbility[iIndex].g_iMinionTypes = 0;
 
 				g_esMinionSpecial[iIndex].g_flCloseAreasOnly = -1.0;
 				g_esMinionSpecial[iIndex].g_iComboAbility = -1;
@@ -502,10 +514,12 @@ public void MT_OnConfigsLoad(int mode)
 				g_esMinionSpecial[iIndex].g_iMinionAmount = -1;
 				g_esMinionSpecial[iIndex].g_flMinionChance = -1.0;
 				g_esMinionSpecial[iIndex].g_iMinionCooldown = -1;
+				g_esMinionSpecial[iIndex].g_iMinionFilter = -1;
 				g_esMinionSpecial[iIndex].g_flMinionLifetime = -1.0;
+				g_esMinionSpecial[iIndex].g_iMinionMaxType = -1;
+				g_esMinionSpecial[iIndex].g_iMinionMinType = -1;
 				g_esMinionSpecial[iIndex].g_iMinionRemove = -1;
 				g_esMinionSpecial[iIndex].g_iMinionReplace = -1;
-				g_esMinionSpecial[iIndex].g_iMinionTypes = -1;
 			}
 		}
 		case 3:
@@ -525,10 +539,12 @@ public void MT_OnConfigsLoad(int mode)
 				g_esMinionPlayer[iPlayer].g_iMinionAmount = -1;
 				g_esMinionPlayer[iPlayer].g_flMinionChance = -1.0;
 				g_esMinionPlayer[iPlayer].g_iMinionCooldown = -1;
+				g_esMinionPlayer[iPlayer].g_iMinionFilter = -1;
 				g_esMinionPlayer[iPlayer].g_flMinionLifetime = -1.0;
+				g_esMinionPlayer[iPlayer].g_iMinionMaxType = -1;
+				g_esMinionPlayer[iPlayer].g_iMinionMinType = -1;
 				g_esMinionPlayer[iPlayer].g_iMinionRemove = -1;
 				g_esMinionPlayer[iPlayer].g_iMinionReplace = -1;
-				g_esMinionPlayer[iPlayer].g_iMinionTypes = -1;
 
 				g_esMinionTeammate[iPlayer].g_flCloseAreasOnly = -1.0;
 				g_esMinionTeammate[iPlayer].g_iComboAbility = -1;
@@ -542,10 +558,12 @@ public void MT_OnConfigsLoad(int mode)
 				g_esMinionTeammate[iPlayer].g_iMinionAmount = -1;
 				g_esMinionTeammate[iPlayer].g_flMinionChance = -1.0;
 				g_esMinionTeammate[iPlayer].g_iMinionCooldown = -1;
+				g_esMinionTeammate[iPlayer].g_iMinionFilter = -1;
 				g_esMinionTeammate[iPlayer].g_flMinionLifetime = -1.0;
+				g_esMinionTeammate[iPlayer].g_iMinionMaxType = -1;
+				g_esMinionTeammate[iPlayer].g_iMinionMinType = -1;
 				g_esMinionTeammate[iPlayer].g_iMinionRemove = -1;
 				g_esMinionTeammate[iPlayer].g_iMinionReplace = -1;
-				g_esMinionTeammate[iPlayer].g_iMinionTypes = -1;
 			}
 		}
 	}
@@ -573,10 +591,10 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esMinionTeammate[admin].g_iMinionAmount = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionAmount", "Minion Amount", "Minion_Amount", "amount", g_esMinionTeammate[admin].g_iMinionAmount, value, -1, 15);
 			g_esMinionTeammate[admin].g_flMinionChance = flGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionChance", "Minion Chance", "Minion_Chance", "chance", g_esMinionTeammate[admin].g_flMinionChance, value, -1.0, 100.0);
 			g_esMinionTeammate[admin].g_iMinionCooldown = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionCooldown", "Minion Cooldown", "Minion_Cooldown", "cooldown", g_esMinionTeammate[admin].g_iMinionCooldown, value, -1, 99999);
+			g_esMinionTeammate[admin].g_iMinionFilter = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionFilter", "Minion Filter", "Minion_Filter", "filter", g_esMinionTeammate[admin].g_iMinionFilter, value, -1, 63);
 			g_esMinionTeammate[admin].g_flMinionLifetime = flGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionLifetime", "Minion Lifetime", "Minion_Lifetime", "lifetime", g_esMinionTeammate[admin].g_flMinionLifetime, value, -1.0, 99999.0);
 			g_esMinionTeammate[admin].g_iMinionRemove = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionRemove", "Minion Remove", "Minion_Remove", "remove", g_esMinionTeammate[admin].g_iMinionRemove, value, -1, 1);
 			g_esMinionTeammate[admin].g_iMinionReplace = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionReplace", "Minion Replace", "Minion_Replace", "replace", g_esMinionTeammate[admin].g_iMinionReplace, value, -1, 1);
-			g_esMinionTeammate[admin].g_iMinionTypes = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionTypes", "Minion Types", "Minion_Types", "types", g_esMinionTeammate[admin].g_iMinionTypes, value, -1, 63);
 		}
 		else
 		{
@@ -592,11 +610,33 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esMinionPlayer[admin].g_iMinionAmount = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionAmount", "Minion Amount", "Minion_Amount", "amount", g_esMinionPlayer[admin].g_iMinionAmount, value, -1, 15);
 			g_esMinionPlayer[admin].g_flMinionChance = flGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionChance", "Minion Chance", "Minion_Chance", "chance", g_esMinionPlayer[admin].g_flMinionChance, value, -1.0, 100.0);
 			g_esMinionPlayer[admin].g_iMinionCooldown = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionCooldown", "Minion Cooldown", "Minion_Cooldown", "cooldown", g_esMinionPlayer[admin].g_iMinionCooldown, value, -1, 99999);
+			g_esMinionPlayer[admin].g_iMinionFilter = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionFilter", "Minion Filter", "Minion_Filter", "filter", g_esMinionPlayer[admin].g_iMinionFilter, value, -1, 63);
 			g_esMinionPlayer[admin].g_flMinionLifetime = flGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionLifetime", "Minion Lifetime", "Minion_Lifetime", "lifetime", g_esMinionPlayer[admin].g_flMinionLifetime, value, -1.0, 99999.0);
 			g_esMinionPlayer[admin].g_iMinionRemove = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionRemove", "Minion Remove", "Minion_Remove", "remove", g_esMinionPlayer[admin].g_iMinionRemove, value, -1, 1);
 			g_esMinionPlayer[admin].g_iMinionReplace = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionReplace", "Minion Replace", "Minion_Replace", "replace", g_esMinionPlayer[admin].g_iMinionReplace, value, -1, 1);
-			g_esMinionPlayer[admin].g_iMinionTypes = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionTypes", "Minion Types", "Minion_Types", "types", g_esMinionPlayer[admin].g_iMinionTypes, value, -1, 63);
 			g_esMinionPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		}
+
+		if (StrEqual(subsection, MT_MINION_SECTION, false) || StrEqual(subsection, MT_MINION_SECTION2, false) || StrEqual(subsection, MT_MINION_SECTION3, false) || StrEqual(subsection, MT_MINION_SECTION4, false))
+		{
+			if (StrEqual(key, "MinionType", false) || StrEqual(key, "Minion Type", false) || StrEqual(key, "Minion_Type", false) || StrEqual(key, "type", false))
+			{
+				char sValue[10], sRange[2][5];
+				strcopy(sValue, sizeof sValue, value);
+				ReplaceString(sValue, sizeof sValue, " ", "");
+				ExplodeString(sValue, "-", sRange, sizeof sRange, sizeof sRange[]);
+
+				if (special && specsection[0] != '\0')
+				{
+					g_esMinionTeammate[admin].g_iMinionMinType = (sRange[0][0] != '\0') ? iClamp(StringToInt(sRange[0]), 0, MT_MAXTYPES) : g_esMinionTeammate[admin].g_iMinionMinType;
+					g_esMinionTeammate[admin].g_iMinionMaxType = (sRange[1][0] != '\0') ? iClamp(StringToInt(sRange[1]), 0, MT_MAXTYPES) : g_esMinionTeammate[admin].g_iMinionMaxType;
+				}
+				else
+				{
+					g_esMinionPlayer[admin].g_iMinionMinType = (sRange[0][0] != '\0') ? iClamp(StringToInt(sRange[0]), 0, MT_MAXTYPES) : g_esMinionPlayer[admin].g_iMinionMinType;
+					g_esMinionPlayer[admin].g_iMinionMaxType = (sRange[1][0] != '\0') ? iClamp(StringToInt(sRange[1]), 0, MT_MAXTYPES) : g_esMinionPlayer[admin].g_iMinionMaxType;
+				}
+			}
 		}
 	}
 
@@ -616,10 +656,10 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esMinionSpecial[type].g_iMinionAmount = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionAmount", "Minion Amount", "Minion_Amount", "amount", g_esMinionSpecial[type].g_iMinionAmount, value, -1, 15);
 			g_esMinionSpecial[type].g_flMinionChance = flGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionChance", "Minion Chance", "Minion_Chance", "chance", g_esMinionSpecial[type].g_flMinionChance, value, -1.0, 100.0);
 			g_esMinionSpecial[type].g_iMinionCooldown = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionCooldown", "Minion Cooldown", "Minion_Cooldown", "cooldown", g_esMinionSpecial[type].g_iMinionCooldown, value, -1, 99999);
+			g_esMinionSpecial[type].g_iMinionFilter = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionFilter", "Minion Filter", "Minion_Filter", "filter", g_esMinionSpecial[type].g_iMinionFilter, value, -1, 63);
 			g_esMinionSpecial[type].g_flMinionLifetime = flGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionLifetime", "Minion Lifetime", "Minion_Lifetime", "lifetime", g_esMinionSpecial[type].g_flMinionLifetime, value, -1.0, 99999.0);
 			g_esMinionSpecial[type].g_iMinionRemove = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionRemove", "Minion Remove", "Minion_Remove", "remove", g_esMinionSpecial[type].g_iMinionRemove, value, -1, 1);
 			g_esMinionSpecial[type].g_iMinionReplace = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionReplace", "Minion Replace", "Minion_Replace", "replace", g_esMinionSpecial[type].g_iMinionReplace, value, -1, 1);
-			g_esMinionSpecial[type].g_iMinionTypes = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionTypes", "Minion Types", "Minion_Types", "types", g_esMinionSpecial[type].g_iMinionTypes, value, -1, 63);
 		}
 		else
 		{
@@ -635,11 +675,33 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esMinionAbility[type].g_iMinionAmount = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionAmount", "Minion Amount", "Minion_Amount", "amount", g_esMinionAbility[type].g_iMinionAmount, value, -1, 15);
 			g_esMinionAbility[type].g_flMinionChance = flGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionChance", "Minion Chance", "Minion_Chance", "chance", g_esMinionAbility[type].g_flMinionChance, value, -1.0, 100.0);
 			g_esMinionAbility[type].g_iMinionCooldown = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionCooldown", "Minion Cooldown", "Minion_Cooldown", "cooldown", g_esMinionAbility[type].g_iMinionCooldown, value, -1, 99999);
+			g_esMinionAbility[type].g_iMinionFilter = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionFilter", "Minion Filter", "Minion_Filter", "filter", g_esMinionAbility[type].g_iMinionFilter, value, -1, 63);
 			g_esMinionAbility[type].g_flMinionLifetime = flGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionLifetime", "Minion Lifetime", "Minion_Lifetime", "lifetime", g_esMinionAbility[type].g_flMinionLifetime, value, -1.0, 99999.0);
 			g_esMinionAbility[type].g_iMinionRemove = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionRemove", "Minion Remove", "Minion_Remove", "remove", g_esMinionAbility[type].g_iMinionRemove, value, -1, 1);
 			g_esMinionAbility[type].g_iMinionReplace = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionReplace", "Minion Replace", "Minion_Replace", "replace", g_esMinionAbility[type].g_iMinionReplace, value, -1, 1);
-			g_esMinionAbility[type].g_iMinionTypes = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionTypes", "Minion Types", "Minion_Types", "types", g_esMinionAbility[type].g_iMinionTypes, value, -1, 63);
 			g_esMinionAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		}
+
+		if (StrEqual(subsection, MT_MINION_SECTION, false) || StrEqual(subsection, MT_MINION_SECTION2, false) || StrEqual(subsection, MT_MINION_SECTION3, false) || StrEqual(subsection, MT_MINION_SECTION4, false))
+		{
+			if (StrEqual(key, "MinionType", false) || StrEqual(key, "Minion Type", false) || StrEqual(key, "Minion_Type", false) || StrEqual(key, "type", false))
+			{
+				char sValue[10], sRange[2][5];
+				strcopy(sValue, sizeof sValue, value);
+				ReplaceString(sValue, sizeof sValue, " ", "");
+				ExplodeString(sValue, "-", sRange, sizeof sRange, sizeof sRange[]);
+
+				if (special && specsection[0] != '\0')
+				{
+					g_esMinionSpecial[type].g_iMinionMinType = (sRange[0][0] != '\0') ? iClamp(StringToInt(sRange[0]), 0, MT_MAXTYPES) : g_esMinionSpecial[type].g_iMinionMinType;
+					g_esMinionSpecial[type].g_iMinionMaxType = (sRange[1][0] != '\0') ? iClamp(StringToInt(sRange[1]), 0, MT_MAXTYPES) : g_esMinionSpecial[type].g_iMinionMaxType;
+				}
+				else
+				{
+					g_esMinionAbility[type].g_iMinionMinType = (sRange[0][0] != '\0') ? iClamp(StringToInt(sRange[0]), 0, MT_MAXTYPES) : g_esMinionAbility[type].g_iMinionMinType;
+					g_esMinionAbility[type].g_iMinionMaxType = (sRange[1][0] != '\0') ? iClamp(StringToInt(sRange[1]), 0, MT_MAXTYPES) : g_esMinionAbility[type].g_iMinionMaxType;
+				}
+			}
 		}
 	}
 }
@@ -667,10 +729,12 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esMinionCache[tank].g_iMinionAbility = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iMinionAbility, g_esMinionPlayer[tank].g_iMinionAbility, g_esMinionSpecial[iType].g_iMinionAbility, g_esMinionAbility[iType].g_iMinionAbility, 1);
 		g_esMinionCache[tank].g_iMinionAmount = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iMinionAmount, g_esMinionPlayer[tank].g_iMinionAmount, g_esMinionSpecial[iType].g_iMinionAmount, g_esMinionAbility[iType].g_iMinionAmount, 1);
 		g_esMinionCache[tank].g_iMinionCooldown = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iMinionCooldown, g_esMinionPlayer[tank].g_iMinionCooldown, g_esMinionSpecial[iType].g_iMinionCooldown, g_esMinionAbility[iType].g_iMinionCooldown, 1);
+		g_esMinionCache[tank].g_iMinionFilter = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iMinionFilter, g_esMinionPlayer[tank].g_iMinionFilter, g_esMinionSpecial[iType].g_iMinionFilter, g_esMinionAbility[iType].g_iMinionFilter, 1);
+		g_esMinionCache[tank].g_iMinionMaxType = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iMinionMaxType, g_esMinionPlayer[tank].g_iMinionMaxType, g_esMinionSpecial[iType].g_iMinionMaxType, g_esMinionAbility[iType].g_iMinionMaxType, 1);
 		g_esMinionCache[tank].g_iMinionMessage = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iMinionMessage, g_esMinionPlayer[tank].g_iMinionMessage, g_esMinionSpecial[iType].g_iMinionMessage, g_esMinionAbility[iType].g_iMinionMessage, 1);
+		g_esMinionCache[tank].g_iMinionMinType = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iMinionMinType, g_esMinionPlayer[tank].g_iMinionMinType, g_esMinionSpecial[iType].g_iMinionMinType, g_esMinionAbility[iType].g_iMinionMinType, 1);
 		g_esMinionCache[tank].g_iMinionRemove = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iMinionRemove, g_esMinionPlayer[tank].g_iMinionRemove, g_esMinionSpecial[iType].g_iMinionRemove, g_esMinionAbility[iType].g_iMinionRemove, 1);
 		g_esMinionCache[tank].g_iMinionReplace = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iMinionReplace, g_esMinionPlayer[tank].g_iMinionReplace, g_esMinionSpecial[iType].g_iMinionReplace, g_esMinionAbility[iType].g_iMinionReplace, 1);
-		g_esMinionCache[tank].g_iMinionTypes = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iMinionTypes, g_esMinionPlayer[tank].g_iMinionTypes, g_esMinionSpecial[iType].g_iMinionTypes, g_esMinionAbility[iType].g_iMinionTypes, 1);
 		g_esMinionCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_flOpenAreasOnly, g_esMinionPlayer[tank].g_flOpenAreasOnly, g_esMinionSpecial[iType].g_flOpenAreasOnly, g_esMinionAbility[iType].g_flOpenAreasOnly, 1);
 		g_esMinionCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iRequiresHumans, g_esMinionPlayer[tank].g_iRequiresHumans, g_esMinionSpecial[iType].g_iRequiresHumans, g_esMinionAbility[iType].g_iRequiresHumans, 1);
 	}
@@ -686,10 +750,12 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esMinionCache[tank].g_iMinionAbility = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iMinionAbility, g_esMinionAbility[iType].g_iMinionAbility, 1);
 		g_esMinionCache[tank].g_iMinionAmount = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iMinionAmount, g_esMinionAbility[iType].g_iMinionAmount, 1);
 		g_esMinionCache[tank].g_iMinionCooldown = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iMinionCooldown, g_esMinionAbility[iType].g_iMinionCooldown, 1);
+		g_esMinionCache[tank].g_iMinionFilter = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iMinionFilter, g_esMinionAbility[iType].g_iMinionFilter, 1);
+		g_esMinionCache[tank].g_iMinionMaxType = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iMinionMaxType, g_esMinionAbility[iType].g_iMinionMaxType, 1);
 		g_esMinionCache[tank].g_iMinionMessage = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iMinionMessage, g_esMinionAbility[iType].g_iMinionMessage, 1);
+		g_esMinionCache[tank].g_iMinionMinType = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iMinionMinType, g_esMinionAbility[iType].g_iMinionMinType, 1);
 		g_esMinionCache[tank].g_iMinionRemove = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iMinionRemove, g_esMinionAbility[iType].g_iMinionRemove, 1);
 		g_esMinionCache[tank].g_iMinionReplace = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iMinionReplace, g_esMinionAbility[iType].g_iMinionReplace, 1);
-		g_esMinionCache[tank].g_iMinionTypes = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iMinionTypes, g_esMinionAbility[iType].g_iMinionTypes, 1);
 		g_esMinionCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_flOpenAreasOnly, g_esMinionAbility[iType].g_flOpenAreasOnly, 1);
 		g_esMinionCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iRequiresHumans, g_esMinionAbility[iType].g_iRequiresHumans, 1);
 	}
@@ -902,41 +968,10 @@ void vMinion(int tank)
 						}
 					}
 
-					int iTypeCount = 0, iTypes[6], iFlag = 0;
-					for (int iBit = 0; iBit < (sizeof iTypes); iBit++)
+					switch (g_esMinionCache[tank].g_iMinionMinType == 0 || g_esMinionCache[tank].g_iMinionMaxType == 0)
 					{
-						iFlag = (1 << iBit);
-						if (!(g_esMinionCache[tank].g_iMinionTypes & iFlag))
-						{
-							continue;
-						}
-
-						iTypes[iTypeCount] = iFlag;
-						iTypeCount++;
-					}
-
-					int iType = (iTypeCount > 0) ? iTypes[MT_GetRandomInt(0, (iTypeCount - 1))] : iTypes[0];
-
-					switch (iType)
-					{
-						case 1: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "smoker");
-						case 2: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "boomer");
-						case 4: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "hunter");
-						case 8: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", g_bSecondGame ? "spitter" : "boomer");
-						case 16: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", g_bSecondGame ? "jockey" : "hunter");
-						case 32: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", g_bSecondGame ? "charger" : "smoker");
-						default:
-						{
-							switch (MT_GetRandomInt(1, (sizeof iTypes)))
-							{
-								case 1: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "smoker");
-								case 2: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "boomer");
-								case 3: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "hunter");
-								case 4: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", g_bSecondGame ? "spitter" : "boomer");
-								case 5: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", g_bSecondGame ? "jockey" : "hunter");
-								case 6: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", g_bSecondGame ? "charger" : "smoker");
-							}
-						}
+						case true: vMinion2(tank);
+						case false: vMinion2(tank, g_esMinionCache[tank].g_iMinionMinType, g_esMinionCache[tank].g_iMinionMaxType);
 					}
 
 					int iSpecial = 0;
@@ -993,6 +1028,74 @@ void vMinion(int tank)
 			}
 
 			delete hTrace;
+		}
+	}
+}
+
+void vMinion2(int tank, int min = 0, int max = 0)
+{
+	if (bIsAreaNarrow(tank, g_esMinionCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esMinionCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esMinionPlayer[tank].g_iTankType, tank) || (g_esMinionCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esMinionCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esMinionAbility[g_esMinionPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esMinionPlayer[tank].g_iAccessFlags)))
+	{
+		return;
+	}
+
+	int iMin = (min > 0) ? min : MT_GetMinType(),
+		iMax = (max > 0) ? max : MT_GetMaxType(),
+		iSpecType = iGetInfectedType(tank), iType = iMin,
+		iTypeCount = 0, iTankTypes[MT_MAXTYPES + 1];
+
+	if (iMin != iMax)
+	{
+		for (int iIndex = iMin; iIndex <= iMax; iIndex++)
+		{
+			if (!MT_IsTypeEnabled(iIndex, tank) || !MT_CanTypeSpawn(iIndex, iSpecType) || MT_DoesTypeRequireHumans(iIndex, tank))
+			{
+				continue;
+			}
+
+			iTankTypes[iTypeCount + 1] = iIndex;
+			iTypeCount++;
+		}
+
+		iType = (iTypeCount > 0) ? iTankTypes[MT_GetRandomInt(1, iTypeCount)] : g_esMinionPlayer[tank].g_iTankType;
+	}
+
+	int iTypes[6], iFlag = 0;
+	iSpecType = 0;
+	iTypeCount = 0;
+	for (int iBit = 0; iBit < (sizeof iTypes); iBit++)
+	{
+		iFlag = (1 << iBit);
+		if (!(g_esMinionCache[tank].g_iMinionFilter & iFlag))
+		{
+			continue;
+		}
+
+		iTypes[iTypeCount] = iFlag;
+		iTypeCount++;
+	}
+
+	iSpecType = (iTypeCount > 0) ? iTypes[MT_GetRandomInt(0, (iTypeCount - 1))] : iTypes[0];
+
+	switch (iSpecType)
+	{
+		case 1: MT_SpawnTank(tank, iType, 1);
+		case 2: MT_SpawnTank(tank, iType, 2);
+		case 4: MT_SpawnTank(tank, iType, 3);
+		case 8: MT_SpawnTank(tank, iType, (g_bSecondGame ? 4 : 2));
+		case 16: MT_SpawnTank(tank, iType, (g_bSecondGame ? 5 : 3));
+		case 32: MT_SpawnTank(tank, iType, (g_bSecondGame ? 6 : 1));
+		default:
+		{
+			switch (MT_GetRandomInt(1, (sizeof iTypes)))
+			{
+				case 1: MT_SpawnTank(tank, iType, 1);
+				case 2: MT_SpawnTank(tank, iType, 2);
+				case 3: MT_SpawnTank(tank, iType, 3);
+				case 4: MT_SpawnTank(tank, iType, (g_bSecondGame ? 4 : 2));
+				case 5: MT_SpawnTank(tank, iType, (g_bSecondGame ? 5 : 3));
+				case 6: MT_SpawnTank(tank, iType, (g_bSecondGame ? 6 : 1));
+			}
 		}
 	}
 }
@@ -1067,24 +1170,28 @@ void vMinionReset()
 	}
 }
 
-void tTimerMinionCombo(Handle timer, int userid)
+Action tTimerMinionCombo(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esMinionAbility[g_esMinionPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esMinionPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esMinionPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esMinionCache[iTank].g_iMinionAbility == 0)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	vMinion(iTank);
+
+	return Plugin_Continue;
 }
 
-void tTimerKillMinion(Handle timer, int userid)
+Action tTimerKillMinion(Handle timer, int userid)
 {
 	int iSpecial = GetClientOfUserId(userid);
 	if (!bIsSpecialInfected(iSpecial) || !g_esMinionPlayer[iSpecial].g_bMinion)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	ForcePlayerSuicide(iSpecial);
+
+	return Plugin_Continue;
 }

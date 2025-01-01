@@ -1,6 +1,6 @@
 /**
- * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2024  Alfred "Psyk0tik" Llagas
+ * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -429,7 +429,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	{
 		TeleportEntity(client, .angles = g_esAimlessPlayer[client].g_flAngle);
 
-		int iWeapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+		int iWeapon = iGetSurvivorActiveWeapon(client);
 		if (iWeapon > MaxClients)
 		{
 			if (g_esAimlessPlayer[client].g_bForced && GetPlayerWeaponSlot(client, 0) == iWeapon)
@@ -1159,7 +1159,7 @@ void vAimlessHit(int survivor, int tank, float random, float chance, int enabled
 				float flDuration = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esAimlessCache[tank].g_flAimlessDuration;
 				if (flDuration > 0.0)
 				{
-					int iWeapon = GetEntPropEnt(survivor, Prop_Send, "m_hActiveWeapon");
+					int iWeapon = iGetSurvivorActiveWeapon(survivor);
 					if (iWeapon > MaxClients)
 					{
 						g_esAimlessPlayer[survivor].g_flDuration = GetGameTime() + flDuration;
@@ -1270,35 +1270,37 @@ void vStopAimless(int survivor)
 	SetEntPropFloat(survivor, Prop_Send, "m_flNextAttack", 1.0);
 }
 
-void tTimerAimlessCombo(Handle timer, DataPack pack)
+Action tTimerAimlessCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAimlessAbility[g_esAimlessPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esAimlessPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esAimlessPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esAimlessCache[iTank].g_iAimlessAbility == 0)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vAimlessAbility(iTank, flRandom, iPos);
+
+	return Plugin_Continue;
 }
 
-void tTimerAimlessCombo2(Handle timer, DataPack pack)
+Action tTimerAimlessCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor) || g_esAimlessPlayer[iSurvivor].g_bAffected)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAimlessAbility[g_esAimlessPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esAimlessPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esAimlessPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esAimlessCache[iTank].g_iAimlessHit == 0)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
@@ -1313,9 +1315,11 @@ void tTimerAimlessCombo2(Handle timer, DataPack pack)
 	{
 		vAimlessHit(iSurvivor, iTank, flRandom, flChance, g_esAimlessCache[iTank].g_iAimlessHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
+
+	return Plugin_Continue;
 }
 
-void tTimerStopAimless(Handle timer, DataPack pack)
+Action tTimerStopAimless(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1326,7 +1330,7 @@ void tTimerStopAimless(Handle timer, DataPack pack)
 		g_esAimlessPlayer[iSurvivor].g_bForced = false;
 		g_esAimlessPlayer[iSurvivor].g_iOwner = -1;
 
-		return;
+		return Plugin_Stop;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
@@ -1334,7 +1338,7 @@ void tTimerStopAimless(Handle timer, DataPack pack)
 	{
 		vStopAimless(iSurvivor);
 
-		return;
+		return Plugin_Stop;
 	}
 
 	vStopAimless(iSurvivor);
@@ -1345,4 +1349,6 @@ void tTimerStopAimless(Handle timer, DataPack pack)
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Aimless2", iSurvivor);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Aimless2", LANG_SERVER, iSurvivor);
 	}
+
+	return Plugin_Continue;
 }

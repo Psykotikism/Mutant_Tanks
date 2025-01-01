@@ -1,6 +1,6 @@
 /**
- * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2024  Alfred "Psyk0tik" Llagas
+ * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -1184,35 +1184,37 @@ void vInvertReset2(int tank)
 	g_esInvertPlayer[tank].g_iRangeCooldown = -1;
 }
 
-void tTimerInvertCombo(Handle timer, DataPack pack)
+Action tTimerInvertCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esInvertAbility[g_esInvertPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esInvertPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esInvertPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esInvertCache[iTank].g_iInvertAbility == 0)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vInvertAbility(iTank, flRandom, iPos);
+
+	return Plugin_Continue;
 }
 
-void tTimerInvertCombo2(Handle timer, DataPack pack)
+Action tTimerInvertCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor) || g_esInvertPlayer[iSurvivor].g_bAffected)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esInvertAbility[g_esInvertPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esInvertPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esInvertPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esInvertCache[iTank].g_iInvertHit == 0)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
@@ -1227,9 +1229,11 @@ void tTimerInvertCombo2(Handle timer, DataPack pack)
 	{
 		vInvertHit(iSurvivor, iTank, flRandom, flChance, g_esInvertCache[iTank].g_iInvertHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
+
+	return Plugin_Continue;
 }
 
-void tTimerStopInvert(Handle timer, DataPack pack)
+Action tTimerStopInvert(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1239,7 +1243,7 @@ void tTimerStopInvert(Handle timer, DataPack pack)
 		g_esInvertPlayer[iSurvivor].g_bAffected = false;
 		g_esInvertPlayer[iSurvivor].g_iOwner = -1;
 
-		return;
+		return Plugin_Stop;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
@@ -1248,7 +1252,7 @@ void tTimerStopInvert(Handle timer, DataPack pack)
 		g_esInvertPlayer[iSurvivor].g_bAffected = false;
 		g_esInvertPlayer[iSurvivor].g_iOwner = -1;
 
-		return;
+		return Plugin_Stop;
 	}
 
 	g_esInvertPlayer[iSurvivor].g_bAffected = false;
@@ -1260,4 +1264,6 @@ void tTimerStopInvert(Handle timer, DataPack pack)
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Invert2", iSurvivor);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Invert2", LANG_SERVER, iSurvivor);
 	}
+
+	return Plugin_Continue;
 }

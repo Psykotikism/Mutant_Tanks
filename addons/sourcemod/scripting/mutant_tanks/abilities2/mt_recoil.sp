@@ -1,6 +1,6 @@
 /**
- * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2024  Alfred "Psyk0tik" Llagas
+ * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -1184,35 +1184,37 @@ void vRecoilReset2(int tank)
 	g_esRecoilPlayer[tank].g_iRangeCooldown = -1;
 }
 
-void tTimerRecoilCombo(Handle timer, DataPack pack)
+Action tTimerRecoilCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esRecoilAbility[g_esRecoilPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esRecoilPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esRecoilPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esRecoilCache[iTank].g_iRecoilAbility == 0)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vRecoilAbility(iTank, flRandom, iPos);
+
+	return Plugin_Continue;
 }
 
-void tTimerRecoilCombo2(Handle timer, DataPack pack)
+Action tTimerRecoilCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor) || g_esRecoilPlayer[iSurvivor].g_bAffected)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esRecoilAbility[g_esRecoilPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esRecoilPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esRecoilPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esRecoilCache[iTank].g_iRecoilHit == 0)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
@@ -1227,9 +1229,11 @@ void tTimerRecoilCombo2(Handle timer, DataPack pack)
 	{
 		vRecoilHit(iSurvivor, iTank, flRandom, flChance, g_esRecoilCache[iTank].g_iRecoilHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
+
+	return Plugin_Continue;
 }
 
-void tTimerStopRecoil(Handle timer, DataPack pack)
+Action tTimerStopRecoil(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1239,7 +1243,7 @@ void tTimerStopRecoil(Handle timer, DataPack pack)
 		g_esRecoilPlayer[iSurvivor].g_bAffected = false;
 		g_esRecoilPlayer[iSurvivor].g_iOwner = -1;
 
-		return;
+		return Plugin_Stop;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
@@ -1248,7 +1252,7 @@ void tTimerStopRecoil(Handle timer, DataPack pack)
 		g_esRecoilPlayer[iSurvivor].g_bAffected = false;
 		g_esRecoilPlayer[iSurvivor].g_iOwner = -1;
 
-		return;
+		return Plugin_Stop;
 	}
 
 	g_esRecoilPlayer[iSurvivor].g_bAffected = false;
@@ -1260,4 +1264,6 @@ void tTimerStopRecoil(Handle timer, DataPack pack)
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Recoil2", iSurvivor);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Recoil2", LANG_SERVER, iSurvivor);
 	}
+
+	return Plugin_Continue;
 }

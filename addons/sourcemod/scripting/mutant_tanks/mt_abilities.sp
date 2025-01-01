@@ -1,6 +1,6 @@
 /**
- * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2024  Alfred "Psyk0tik" Llagas
+ * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -10,7 +10,7 @@
  **/
 
 #define MT_ABILITIES_MAIN
-#define MT_ABILITIES_GROUP 3 // 0: NONE, 1: Only include first half (1-20), 2: Only include second half (21-39), 3: ALL
+#define MT_ABILITIES_GROUP 3 // 0: NONE, 1: Only include first half (1-15), 2: Only include second half (16-31), 3: ALL
 #define MT_ABILITIES_COMPILER_MESSAGE 1 // 0: NONE, 1: Display warning messages about excluded abilities, 2: Display error messages about excluded abilities
 
 #include <sourcemod>
@@ -47,11 +47,9 @@ public Plugin myinfo =
 #define MODEL_TIRES "models/props_vehicles/tire001c_car.mdl"
 #define MODEL_TREE_TRUNK "models/props_foliage/tree_trunk.mdl"
 
-#define PARTICLE_BASHED "screen_bashed"
 #define PARTICLE_BLOOD "boomer_explode_D"
 #define PARTICLE_ELECTRICITY "electrical_arc_01_system"
 #define PARTICLE_ELECTRICITY2 "electrical_arc_01_parent"
-#define PARTICLE_LIGHTNING "storm_lightning_01"
 #define PARTICLE_SMOKE "smoker_smokecloud"
 
 #define SOUND_ATTACK "player/pz/voice/attack/zombiedog_attack2.wav"
@@ -65,17 +63,11 @@ public Plugin myinfo =
 #define SOUND_ELECTRICITY2 "ambient/energy/zap7.wav"
 #define SOUND_EXPLODE1 "weapons/hegrenade/explode4.wav"
 #define SOUND_EXPLODE2 "weapons/grenade_launcher/grenadefire/grenade_launcher_explode_1.wav" // Only available in L4D2
-#define SOUND_GROAN2 "ambient/random_amb_sounds/randbridgegroan_03.wav" // Only available in L4D2
-#define SOUND_GROAN1 "ambient/random_amb_sfx/metalscrapeverb08.wav"
-#define SOUND_GROWL1 "player/tank/voice/growl/hulk_growl_1.wav" // Only available in L4D1
-#define SOUND_GROWL2 "player/tank/voice/growl/tank_climb_01.wav" // Only available in L4D2
 #define SOUND_HEARTBEAT "player/heartbeatloop.wav"
 #define SOUND_HIT "animation/van_inside_hit_wall.wav"
 #define SOUND_METAL "physics/metal/metal_solid_impact_hard5.wav"
 #define SOUND_PAIN1 "player/tank/voice/pain/tank_fire_04.wav"
 #define SOUND_PAIN2 "player/tank/voice/pain/tank_fire_08.wav" // Only available in L4D2
-#define SOUND_SMASH1 "player/tank/hit/hulk_punch_1.wav"
-#define SOUND_SMASH2 "player/charger/hit/charger_smash_02.wav" // Only available in L4D2
 
 #define SPRITE_EXPLODE "sprites/zerogxplode.spr"
 #define SPRITE_LASER "sprites/laser.vmt"
@@ -83,13 +75,14 @@ public Plugin myinfo =
 
 bool g_bDedicated, g_bLaggedMovementInstalled, g_bLateLoad, g_bSecondGame;
 
+int g_iGraphicsLevel;
+
 #undef REQUIRE_PLUGIN
 #if MT_ABILITIES_GROUP == 1 || MT_ABILITIES_GROUP == 3
 	#tryinclude "mutant_tanks/abilities/mt_absorb.sp"
 	#tryinclude "mutant_tanks/abilities/mt_acid.sp"
 	#tryinclude "mutant_tanks/abilities/mt_aimless.sp"
 	#tryinclude "mutant_tanks/abilities/mt_ammo.sp"
-	#tryinclude "mutant_tanks/abilities/mt_blind.sp"
 	#tryinclude "mutant_tanks/abilities/mt_bomb.sp"
 	#tryinclude "mutant_tanks/abilities/mt_bury.sp"
 	#tryinclude "mutant_tanks/abilities/mt_car.sp"
@@ -101,31 +94,24 @@ bool g_bDedicated, g_bLaggedMovementInstalled, g_bLateLoad, g_bSecondGame;
 	#tryinclude "mutant_tanks/abilities/mt_drunk.sp"
 	#tryinclude "mutant_tanks/abilities/mt_electric.sp"
 	#tryinclude "mutant_tanks/abilities/mt_enforce.sp"
+#endif
+#if MT_ABILITIES_GROUP == 2 || MT_ABILITIES_GROUP == 3
 	#tryinclude "mutant_tanks/abilities/mt_fast.sp"
 	#tryinclude "mutant_tanks/abilities/mt_fire.sp"
 	#tryinclude "mutant_tanks/abilities/mt_fling.sp"
 	#tryinclude "mutant_tanks/abilities/mt_fly.sp"
-#endif
-#if MT_ABILITIES_GROUP == 2 || MT_ABILITIES_GROUP == 3
 	#tryinclude "mutant_tanks/abilities/mt_fragile.sp"
 	#tryinclude "mutant_tanks/abilities/mt_ghost.sp"
 	#tryinclude "mutant_tanks/abilities/mt_god.sp"
 	#tryinclude "mutant_tanks/abilities/mt_gravity.sp"
 	#tryinclude "mutant_tanks/abilities/mt_gunner.sp"
 	#tryinclude "mutant_tanks/abilities/mt_heal.sp"
-	#tryinclude "mutant_tanks/abilities/mt_hit.sp"
 	#tryinclude "mutant_tanks/abilities/mt_hurt.sp"
 	#tryinclude "mutant_tanks/abilities/mt_hypno.sp"
 	#tryinclude "mutant_tanks/abilities/mt_ice.sp"
 	#tryinclude "mutant_tanks/abilities/mt_idle.sp"
 	#tryinclude "mutant_tanks/abilities/mt_invert.sp"
-	#tryinclude "mutant_tanks/abilities/mt_item.sp"
 	#tryinclude "mutant_tanks/abilities/mt_jump.sp"
-	#tryinclude "mutant_tanks/abilities/mt_kamikaze.sp"
-	#tryinclude "mutant_tanks/abilities/mt_lag.sp"
-	#tryinclude "mutant_tanks/abilities/mt_laser.sp"
-	#tryinclude "mutant_tanks/abilities/mt_leech.sp"
-	#tryinclude "mutant_tanks/abilities/mt_lightning.sp"
 #endif
 #define REQUIRE_PLUGIN
 
@@ -141,9 +127,6 @@ bool g_bDedicated, g_bLaggedMovementInstalled, g_bLateLoad, g_bSecondGame;
 	#endif
 	#if !defined MT_MENU_AMMO
 		#warning The "Ammo" (mt_ammo.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
-	#endif
-	#if !defined MT_MENU_BLIND
-		#warning The "Blind" (mt_blind.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
 	#endif
 	#if !defined MT_MENU_BOMB
 		#warning The "Bomb" (mt_bomb.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
@@ -208,9 +191,6 @@ bool g_bDedicated, g_bLaggedMovementInstalled, g_bLateLoad, g_bSecondGame;
 	#if !defined MT_MENU_HEAL
 		#warning The "Heal" (mt_heal.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
 	#endif
-	#if !defined MT_MENU_HIT
-		#warning The "Hit" (mt_hit.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
-	#endif
 	#if !defined MT_MENU_HURT
 		#warning The "Hurt" (mt_hurt.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
 	#endif
@@ -226,26 +206,8 @@ bool g_bDedicated, g_bLaggedMovementInstalled, g_bLateLoad, g_bSecondGame;
 	#if !defined MT_MENU_INVERT
 		#warning The "Invert" (mt_invert.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
 	#endif
-	#if !defined MT_MENU_ITEM
-		#warning The "Item" (mt_item.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
-	#endif
 	#if !defined MT_MENU_JUMP
 		#warning The "Jump" (mt_jump.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
-	#endif
-	#if !defined MT_MENU_KAMIKAZE
-		#warning The "Kamikaze" (mt_kamikaze.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
-	#endif
-	#if !defined MT_MENU_LAG
-		#warning The "Lag" (mt_lag.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
-	#endif
-	#if !defined MT_MENU_LASER
-		#warning The "Laser" (mt_laser.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
-	#endif
-	#if !defined MT_MENU_LEECH
-		#warning The "Leech" (mt_leech.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
-	#endif
-	#if !defined MT_MENU_LIGHTNING
-		#warning The "Lightning" (mt_lightning.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
 	#endif
 #endif
 #if MT_ABILITIES_COMPILER_MESSAGE == 2
@@ -260,9 +222,6 @@ bool g_bDedicated, g_bLaggedMovementInstalled, g_bLateLoad, g_bSecondGame;
 	#endif
 	#if !defined MT_MENU_AMMO
 		#error The "Ammo" (mt_ammo.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
-	#endif
-	#if !defined MT_MENU_BLIND
-		#error The "Blind" (mt_blind.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
 	#endif
 	#if !defined MT_MENU_BOMB
 		#error The "Bomb" (mt_bomb.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
@@ -327,9 +286,6 @@ bool g_bDedicated, g_bLaggedMovementInstalled, g_bLateLoad, g_bSecondGame;
 	#if !defined MT_MENU_HEAL
 		#error The "Heal" (mt_heal.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
 	#endif
-	#if !defined MT_MENU_HIT
-		#error The "Hit" (mt_hit.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
-	#endif
 	#if !defined MT_MENU_HURT
 		#error The "Hurt" (mt_hurt.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
 	#endif
@@ -345,26 +301,8 @@ bool g_bDedicated, g_bLaggedMovementInstalled, g_bLateLoad, g_bSecondGame;
 	#if !defined MT_MENU_INVERT
 		#error The "Invert" (mt_invert.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
 	#endif
-	#if !defined MT_MENU_ITEM
-		#error The "Item" (mt_item.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
-	#endif
 	#if !defined MT_MENU_JUMP
 		#error The "Jump" (mt_jump.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
-	#endif
-	#if !defined MT_MENU_KAMIKAZE
-		#error The "Kamikaze" (mt_kamikaze.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
-	#endif
-	#if !defined MT_MENU_LAG
-		#error The "Lag" (mt_lag.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
-	#endif
-	#if !defined MT_MENU_LASER
-		#error The "Laser" (mt_laser.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
-	#endif
-	#if !defined MT_MENU_LEECH
-		#error The "Leech" (mt_leech.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
-	#endif
-	#if !defined MT_MENU_LIGHTNING
-		#error The "Lightning" (mt_lightning.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
 	#endif
 #endif
 
@@ -469,7 +407,7 @@ public void OnPluginStart()
 	LoadTranslations("mutant_tanks.phrases");
 	LoadTranslations("mutant_tanks_names.phrases");
 
-	RegConsoleCmd("sm_mt_ability", cmdAbilityInfo, "View information about each ability (A-L).");
+	RegConsoleCmd("sm_mt_ability", cmdAbilityInfo, "View information about each ability (A-J).");
 
 	vAbilitySetup(0);
 
@@ -524,11 +462,18 @@ public void MT_OnPluginUpdate()
 
 public void OnEntityCreated(int entity, const char[] classname)
 {
-#if defined MT_MENU_ITEM
-	vItemEntityCreated(entity, classname);
+#if defined MT_MENU_DROP
+	vDropEntityCreated(entity, classname);
 #endif
-#if defined MT_MENU_KAMIKAZE
-	vKamikazeEntityCreated(entity, classname);
+}
+
+public void OnEntityDestroyed(int entity)
+{
+#if defined MT_MENU_CAR
+	vCarEntityDestroyed(entity);
+#endif
+#if defined MT_MENU_DROP
+	vDropEntityDestroyed(entity);
 #endif
 }
 
@@ -589,9 +534,6 @@ public void MT_OnDisplayMenu(Menu menu)
 #endif
 #if defined MT_MENU_AMMO
 	vAmmoDisplayMenu(menu);
-#endif
-#if defined MT_MENU_BLIND
-	vBlindDisplayMenu(menu);
 #endif
 #if defined MT_MENU_BOMB
 	vBombDisplayMenu(menu);
@@ -656,9 +598,6 @@ public void MT_OnDisplayMenu(Menu menu)
 #if defined MT_MENU_HEAL
 	vHealDisplayMenu(menu);
 #endif
-#if defined MT_MENU_HIT
-	vHitDisplayMenu(menu);
-#endif
 #if defined MT_MENU_HURT
 	vHurtDisplayMenu(menu);
 #endif
@@ -674,26 +613,8 @@ public void MT_OnDisplayMenu(Menu menu)
 #if defined MT_MENU_INVERT
 	vInvertDisplayMenu(menu);
 #endif
-#if defined MT_MENU_ITEM
-	vItemDisplayMenu(menu);
-#endif
 #if defined MT_MENU_JUMP
 	vJumpDisplayMenu(menu);
-#endif
-#if defined MT_MENU_KAMIKAZE
-	vKamikazeDisplayMenu(menu);
-#endif
-#if defined MT_MENU_LAG
-	vLagDisplayMenu(menu);
-#endif
-#if defined MT_MENU_LASER
-	vLaserDisplayMenu(menu);
-#endif
-#if defined MT_MENU_LEECH
-	vLeechDisplayMenu(menu);
-#endif
-#if defined MT_MENU_LIGHTNING
-	vLightningDisplayMenu(menu);
 #endif
 }
 
@@ -710,9 +631,6 @@ public void MT_OnMenuItemSelected(int client, const char[] info)
 #endif
 #if defined MT_MENU_AMMO
 	vAmmoMenuItemSelected(client, info);
-#endif
-#if defined MT_MENU_BLIND
-	vBlindMenuItemSelected(client, info);
 #endif
 #if defined MT_MENU_BOMB
 	vBombMenuItemSelected(client, info);
@@ -777,9 +695,6 @@ public void MT_OnMenuItemSelected(int client, const char[] info)
 #if defined MT_MENU_HEAL
 	vHealMenuItemSelected(client, info);
 #endif
-#if defined MT_MENU_HIT
-	vHitMenuItemSelected(client, info);
-#endif
 #if defined MT_MENU_HURT
 	vHurtMenuItemSelected(client, info);
 #endif
@@ -795,26 +710,8 @@ public void MT_OnMenuItemSelected(int client, const char[] info)
 #if defined MT_MENU_INVERT
 	vInvertMenuItemSelected(client, info);
 #endif
-#if defined MT_MENU_ITEM
-	vItemMenuItemSelected(client, info);
-#endif
 #if defined MT_MENU_JUMP
 	vJumpMenuItemSelected(client, info);
-#endif
-#if defined MT_MENU_KAMIKAZE
-	vKamikazeMenuItemSelected(client, info);
-#endif
-#if defined MT_MENU_LAG
-	vLagMenuItemSelected(client, info);
-#endif
-#if defined MT_MENU_LASER
-	vLaserMenuItemSelected(client, info);
-#endif
-#if defined MT_MENU_LEECH
-	vLeechMenuItemSelected(client, info);
-#endif
-#if defined MT_MENU_LIGHTNING
-	vLightningMenuItemSelected(client, info);
 #endif
 }
 
@@ -831,9 +728,6 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 #endif
 #if defined MT_MENU_AMMO
 	vAmmoMenuItemDisplayed(client, info, buffer, size);
-#endif
-#if defined MT_MENU_BLIND
-	vBlindMenuItemDisplayed(client, info, buffer, size);
 #endif
 #if defined MT_MENU_BOMB
 	vBombMenuItemDisplayed(client, info, buffer, size);
@@ -898,9 +792,6 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 #if defined MT_MENU_HEAL
 	vHealMenuItemDisplayed(client, info, buffer, size);
 #endif
-#if defined MT_MENU_HIT
-	vHitMenuItemDisplayed(client, info, buffer, size);
-#endif
 #if defined MT_MENU_HURT
 	vHurtMenuItemDisplayed(client, info, buffer, size);
 #endif
@@ -916,26 +807,8 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 #if defined MT_MENU_INVERT
 	vInvertMenuItemDisplayed(client, info, buffer, size);
 #endif
-#if defined MT_MENU_ITEM
-	vItemMenuItemDisplayed(client, info, buffer, size);
-#endif
 #if defined MT_MENU_JUMP
 	vJumpMenuItemDisplayed(client, info, buffer, size);
-#endif
-#if defined MT_MENU_KAMIKAZE
-	vKamikazeMenuItemDisplayed(client, info, buffer, size);
-#endif
-#if defined MT_MENU_LAG
-	vLagMenuItemDisplayed(client, info, buffer, size);
-#endif
-#if defined MT_MENU_LASER
-	vLaserMenuItemDisplayed(client, info, buffer, size);
-#endif
-#if defined MT_MENU_LEECH
-	vLeechMenuItemDisplayed(client, info, buffer, size);
-#endif
-#if defined MT_MENU_LIGHTNING
-	vLightningMenuItemDisplayed(client, info, buffer, size);
 #endif
 }
 
@@ -1015,9 +888,6 @@ public void MT_OnPluginCheck(ArrayList list)
 #if defined MT_MENU_AMMO
 	vAmmoPluginCheck(list);
 #endif
-#if defined MT_MENU_BLIND
-	vBlindPluginCheck(list);
-#endif
 #if defined MT_MENU_BOMB
 	vBombPluginCheck(list);
 #endif
@@ -1081,9 +951,6 @@ public void MT_OnPluginCheck(ArrayList list)
 #if defined MT_MENU_HEAL
 	vHealPluginCheck(list);
 #endif
-#if defined MT_MENU_HIT
-	vHitPluginCheck(list);
-#endif
 #if defined MT_MENU_HURT
 	vHurtPluginCheck(list);
 #endif
@@ -1099,26 +966,8 @@ public void MT_OnPluginCheck(ArrayList list)
 #if defined MT_MENU_INVERT
 	vInvertPluginCheck(list);
 #endif
-#if defined MT_MENU_ITEM
-	vItemPluginCheck(list);
-#endif
 #if defined MT_MENU_JUMP
 	vJumpPluginCheck(list);
-#endif
-#if defined MT_MENU_KAMIKAZE
-	vKamikazePluginCheck(list);
-#endif
-#if defined MT_MENU_LAG
-	vLagPluginCheck(list);
-#endif
-#if defined MT_MENU_LASER
-	vLaserPluginCheck(list);
-#endif
-#if defined MT_MENU_LEECH
-	vLeechPluginCheck(list);
-#endif
-#if defined MT_MENU_LIGHTNING
-	vLightningPluginCheck(list);
 #endif
 }
 
@@ -1135,9 +984,6 @@ public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, 
 #endif
 #if defined MT_MENU_AMMO
 	vAmmoAbilityCheck(list, list2, list3, list4);
-#endif
-#if defined MT_MENU_BLIND
-	vBlindAbilityCheck(list, list2, list3, list4);
 #endif
 #if defined MT_MENU_BOMB
 	vBombAbilityCheck(list, list2, list3, list4);
@@ -1202,9 +1048,6 @@ public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, 
 #if defined MT_MENU_HEAL
 	vHealAbilityCheck(list, list2, list3, list4);
 #endif
-#if defined MT_MENU_HIT
-	vHitAbilityCheck(list, list2, list3, list4);
-#endif
 #if defined MT_MENU_HURT
 	vHurtAbilityCheck(list, list2, list3, list4);
 #endif
@@ -1220,26 +1063,8 @@ public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, 
 #if defined MT_MENU_INVERT
 	vInvertAbilityCheck(list, list2, list3, list4);
 #endif
-#if defined MT_MENU_ITEM
-	vItemAbilityCheck(list, list2, list3, list4);
-#endif
 #if defined MT_MENU_JUMP
 	vJumpAbilityCheck(list, list2, list3, list4);
-#endif
-#if defined MT_MENU_KAMIKAZE
-	vKamikazeAbilityCheck(list, list2, list3, list4);
-#endif
-#if defined MT_MENU_LAG
-	vLagAbilityCheck(list, list2, list3, list4);
-#endif
-#if defined MT_MENU_LASER
-	vLaserAbilityCheck(list, list2, list3, list4);
-#endif
-#if defined MT_MENU_LEECH
-	vLeechAbilityCheck(list, list2, list3, list4);
-#endif
-#if defined MT_MENU_LIGHTNING
-	vLightningAbilityCheck(list, list2, list3, list4);
 #endif
 }
 
@@ -1256,9 +1081,6 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 #endif
 #if defined MT_MENU_AMMO
 	vAmmoCombineAbilities(tank, type, random, combo, survivor, classname);
-#endif
-#if defined MT_MENU_BLIND
-	vBlindCombineAbilities(tank, type, random, combo, survivor, classname);
 #endif
 #if defined MT_MENU_BOMB
 	vBombCombineAbilities(tank, type, random, combo, survivor, weapon, classname);
@@ -1338,26 +1160,8 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 #if defined MT_MENU_INVERT
 	vInvertCombineAbilities(tank, type, random, combo, survivor, classname);
 #endif
-#if defined MT_MENU_ITEM
-	vItemCombineAbilities(tank, type, random, combo);
-#endif
 #if defined MT_MENU_JUMP
 	vJumpCombineAbilities(tank, type, random, combo, survivor, classname);
-#endif
-#if defined MT_MENU_KAMIKAZE
-	vKamikazeCombineAbilities(tank, type, random, combo, survivor, classname);
-#endif
-#if defined MT_MENU_LAG
-	vLagCombineAbilities(tank, type, random, combo, survivor, classname);
-#endif
-#if defined MT_MENU_LASER
-	vLaserCombineAbilities(tank, type, random, combo);
-#endif
-#if defined MT_MENU_LEECH
-	vLeechCombineAbilities(tank, type, random, combo, survivor, classname);
-#endif
-#if defined MT_MENU_LIGHTNING
-	vLightningCombineAbilities(tank, type, random, combo);
 #endif
 }
 
@@ -1374,9 +1178,6 @@ public void MT_OnConfigsLoad(int mode)
 #endif
 #if defined MT_MENU_AMMO
 	vAmmoConfigsLoad(mode);
-#endif
-#if defined MT_MENU_BLIND
-	vBlindConfigsLoad(mode);
 #endif
 #if defined MT_MENU_BOMB
 	vBombConfigsLoad(mode);
@@ -1441,9 +1242,6 @@ public void MT_OnConfigsLoad(int mode)
 #if defined MT_MENU_HEAL
 	vHealConfigsLoad(mode);
 #endif
-#if defined MT_MENU_HIT
-	vHitConfigsLoad(mode);
-#endif
 #if defined MT_MENU_HURT
 	vHurtConfigsLoad(mode);
 #endif
@@ -1459,26 +1257,8 @@ public void MT_OnConfigsLoad(int mode)
 #if defined MT_MENU_INVERT
 	vInvertConfigsLoad(mode);
 #endif
-#if defined MT_MENU_ITEM
-	vItemConfigsLoad(mode);
-#endif
 #if defined MT_MENU_JUMP
 	vJumpConfigsLoad(mode);
-#endif
-#if defined MT_MENU_KAMIKAZE
-	vKamikazeConfigsLoad(mode);
-#endif
-#if defined MT_MENU_LAG
-	vLagConfigsLoad(mode);
-#endif
-#if defined MT_MENU_LASER
-	vLaserConfigsLoad(mode);
-#endif
-#if defined MT_MENU_LEECH
-	vLeechConfigsLoad(mode);
-#endif
-#if defined MT_MENU_LIGHTNING
-	vLightningConfigsLoad(mode);
 #endif
 }
 
@@ -1495,9 +1275,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 #endif
 #if defined MT_MENU_AMMO
 	vAmmoConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
-#endif
-#if defined MT_MENU_BLIND
-	vBlindConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 #if defined MT_MENU_BOMB
 	vBombConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
@@ -1562,9 +1339,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 #if defined MT_MENU_HEAL
 	vHealConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
-#if defined MT_MENU_HIT
-	vHitConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
-#endif
 #if defined MT_MENU_HURT
 	vHurtConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
@@ -1580,31 +1354,14 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 #if defined MT_MENU_INVERT
 	vInvertConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
-#if defined MT_MENU_ITEM
-	vItemConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
-#endif
 #if defined MT_MENU_JUMP
 	vJumpConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
-#endif
-#if defined MT_MENU_KAMIKAZE
-	vKamikazeConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
-#endif
-#if defined MT_MENU_LAG
-	vLagConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
-#endif
-#if defined MT_MENU_LASER
-	vLaserConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
-#endif
-#if defined MT_MENU_LEECH
-	vLeechConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
-#endif
-#if defined MT_MENU_LIGHTNING
-	vLightningConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 }
 
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
+	g_iGraphicsLevel = MT_GetGraphicsLevel();
 #if defined MT_MENU_ABSORB
 	vAbsorbSettingsCached(tank, apply, type);
 #endif
@@ -1616,9 +1373,6 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 #if defined MT_MENU_AMMO
 	vAmmoSettingsCached(tank, apply, type);
-#endif
-#if defined MT_MENU_BLIND
-	vBlindSettingsCached(tank, apply, type);
 #endif
 #if defined MT_MENU_BOMB
 	vBombSettingsCached(tank, apply, type);
@@ -1683,9 +1437,6 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #if defined MT_MENU_HEAL
 	vHealSettingsCached(tank, apply, type);
 #endif
-#if defined MT_MENU_HIT
-	vHitSettingsCached(tank, apply, type);
-#endif
 #if defined MT_MENU_HURT
 	vHurtSettingsCached(tank, apply, type);
 #endif
@@ -1701,26 +1452,8 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #if defined MT_MENU_INVERT
 	vInvertSettingsCached(tank, apply, type);
 #endif
-#if defined MT_MENU_ITEM
-	vItemSettingsCached(tank, apply, type);
-#endif
 #if defined MT_MENU_JUMP
 	vJumpSettingsCached(tank, apply, type);
-#endif
-#if defined MT_MENU_KAMIKAZE
-	vKamikazeSettingsCached(tank, apply, type);
-#endif
-#if defined MT_MENU_LAG
-	vLagSettingsCached(tank, apply, type);
-#endif
-#if defined MT_MENU_LASER
-	vLaserSettingsCached(tank, apply, type);
-#endif
-#if defined MT_MENU_LEECH
-	vLeechSettingsCached(tank, apply, type);
-#endif
-#if defined MT_MENU_LIGHTNING
-	vLightningSettingsCached(tank, apply, type);
 #endif
 }
 
@@ -1737,9 +1470,6 @@ public void MT_OnCopyStats(int oldTank, int newTank)
 #endif
 #if defined MT_MENU_AMMO
 	vAmmoCopyStats(oldTank, newTank);
-#endif
-#if defined MT_MENU_BLIND
-	vBlindCopyStats(oldTank, newTank);
 #endif
 #if defined MT_MENU_BOMB
 	vBombCopyStats(oldTank, newTank);
@@ -1819,26 +1549,8 @@ public void MT_OnCopyStats(int oldTank, int newTank)
 #if defined MT_MENU_INVERT
 	vInvertCopyStats(oldTank, newTank);
 #endif
-#if defined MT_MENU_ITEM
-	vItemCopyStats(oldTank, newTank);
-#endif
 #if defined MT_MENU_JUMP
 	vJumpCopyStats(oldTank, newTank);
-#endif
-#if defined MT_MENU_KAMIKAZE
-	vKamikazeCopyStats(oldTank, newTank);
-#endif
-#if defined MT_MENU_LAG
-	vLagCopyStats(oldTank, newTank);
-#endif
-#if defined MT_MENU_LASER
-	vLaserCopyStats(oldTank, newTank);
-#endif
-#if defined MT_MENU_LEECH
-	vLeechCopyStats(oldTank, newTank);
-#endif
-#if defined MT_MENU_LIGHTNING
-	vLightningCopyStats(oldTank, newTank);
 #endif
 }
 
@@ -1865,9 +1577,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 #endif
 #if defined MT_MENU_AMMO
 	vAmmoEventFired(event, name);
-#endif
-#if defined MT_MENU_BLIND
-	vBlindEventFired(event, name);
 #endif
 #if defined MT_MENU_BOMB
 	vBombEventFired(event, name);
@@ -1947,26 +1656,8 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 #if defined MT_MENU_INVERT
 	vInvertEventFired(event, name);
 #endif
-#if defined MT_MENU_ITEM
-	vItemEventFired(event, name);
-#endif
 #if defined MT_MENU_JUMP
 	vJumpEventFired(event, name);
-#endif
-#if defined MT_MENU_KAMIKAZE
-	vKamikazeEventFired(event, name);
-#endif
-#if defined MT_MENU_LAG
-	vLagEventFired(event, name);
-#endif
-#if defined MT_MENU_LASER
-	vLaserEventFired(event, name);
-#endif
-#if defined MT_MENU_LEECH
-	vLeechEventFired(event, name);
-#endif
-#if defined MT_MENU_LIGHTNING
-	vLightningEventFired(event, name);
 #endif
 }
 
@@ -1988,9 +1679,6 @@ public void MT_OnButtonPressed(int tank, int button)
 #endif
 #if defined MT_MENU_AMMO
 	vAmmoButtonPressed(tank, button);
-#endif
-#if defined MT_MENU_BLIND
-	vBlindButtonPressed(tank, button);
 #endif
 #if defined MT_MENU_BOMB
 	vBombButtonPressed(tank, button);
@@ -2070,26 +1758,8 @@ public void MT_OnButtonPressed(int tank, int button)
 #if defined MT_MENU_INVERT
 	vInvertButtonPressed(tank, button);
 #endif
-#if defined MT_MENU_ITEM
-	vItemButtonPressed(tank, button);
-#endif
 #if defined MT_MENU_JUMP
 	vJumpButtonPressed(tank, button);
-#endif
-#if defined MT_MENU_KAMIKAZE
-	vKamikazeButtonPressed(tank, button);
-#endif
-#if defined MT_MENU_LAG
-	vLagButtonPressed(tank, button);
-#endif
-#if defined MT_MENU_LASER
-	vLaserButtonPressed(tank, button);
-#endif
-#if defined MT_MENU_LEECH
-	vLeechButtonPressed(tank, button);
-#endif
-#if defined MT_MENU_LIGHTNING
-	vLightningButtonPressed(tank, button);
 #endif
 }
 
@@ -2131,12 +1801,6 @@ public void MT_OnButtonReleased(int tank, int button)
 #if defined MT_MENU_JUMP
 	vJumpButtonReleased(tank, button);
 #endif
-#if defined MT_MENU_LASER
-	vLaserButtonReleased(tank, button);
-#endif
-#if defined MT_MENU_LIGHTNING
-	vLightningButtonReleased(tank, button);
-#endif
 }
 
 public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
@@ -2152,9 +1816,6 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 #if defined MT_MENU_AMMO
 	vAmmoChangeType(tank, oldType);
-#endif
-#if defined MT_MENU_BLIND
-	vBlindChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_BOMB
 	vBombChangeType(tank, oldType);
@@ -2234,26 +1895,8 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #if defined MT_MENU_INVERT
 	vInvertChangeType(tank, oldType);
 #endif
-#if defined MT_MENU_ITEM
-	vItemChangeType(tank, oldType);
-#endif
 #if defined MT_MENU_JUMP
 	vJumpChangeType(tank, oldType);
-#endif
-#if defined MT_MENU_KAMIKAZE
-	vKamikazeChangeType(tank, oldType);
-#endif
-#if defined MT_MENU_LAG
-	vLagChangeType(tank, oldType);
-#endif
-#if defined MT_MENU_LASER
-	vLaserChangeType(tank, oldType);
-#endif
-#if defined MT_MENU_LEECH
-	vLeechChangeType(tank, oldType);
-#endif
-#if defined MT_MENU_LIGHTNING
-	vLightningChangeType(tank, oldType);
 #endif
 }
 
@@ -2275,11 +1918,8 @@ public Action MT_OnFatalFalling(int survivor)
 
 public void MT_OnPlayerEventKilled(int victim, int attacker)
 {
-#if defined MT_MENU_ITEM
-	vItemPlayerEventKilled(victim, attacker);
-#endif
-#if defined MT_MENU_KAMIKAZE
-	vKamikazePlayerEventKilled(victim, attacker);
+#if defined MT_MENU_DROP
+	vDropPlayerEventKilled(victim, attacker);
 #endif
 }
 
@@ -2363,9 +2003,6 @@ void vAbilityMenu(int client, const char[] name)
 #if defined MT_MENU_AMMO
 	vAmmoMenu(client, name, 0);
 #endif
-#if defined MT_MENU_BLIND
-	vBlindMenu(client, name, 0);
-#endif
 #if defined MT_MENU_BOMB
 	vBombMenu(client, name, 0);
 #endif
@@ -2429,9 +2066,6 @@ void vAbilityMenu(int client, const char[] name)
 #if defined MT_MENU_HEAL
 	vHealMenu(client, name, 0);
 #endif
-#if defined MT_MENU_HIT
-	vHitMenu(client, name, 0);
-#endif
 #if defined MT_MENU_HURT
 	vHurtMenu(client, name, 0);
 #endif
@@ -2447,26 +2081,8 @@ void vAbilityMenu(int client, const char[] name)
 #if defined MT_MENU_INVERT
 	vInvertMenu(client, name, 0);
 #endif
-#if defined MT_MENU_ITEM
-	vItemMenu(client, name, 0);
-#endif
 #if defined MT_MENU_JUMP
 	vJumpMenu(client, name, 0);
-#endif
-#if defined MT_MENU_KAMIKAZE
-	vKamikazeMenu(client, name, 0);
-#endif
-#if defined MT_MENU_LAG
-	vLagMenu(client, name, 0);
-#endif
-#if defined MT_MENU_LASER
-	vLaserMenu(client, name, 0);
-#endif
-#if defined MT_MENU_LEECH
-	vLeechMenu(client, name, 0);
-#endif
-#if defined MT_MENU_LIGHTNING
-	vLightningMenu(client, name, 0);
 #endif
 	bool bLog = false;
 	if (bLog)
@@ -2508,14 +2124,6 @@ void vAbilityPlayer(int type, int client)
 		case 0: vAmmoClientPutInServer(client);
 		case 2: vAmmoClientDisconnect_Post(client);
 		case 3: vAmmoAbilityActivated(client);
-	}
-#endif
-#if defined MT_MENU_BLIND
-	switch (type)
-	{
-		case 0: vBlindClientPutInServer(client);
-		case 2: vBlindClientDisconnect_Post(client);
-		case 3: vBlindAbilityActivated(client);
 	}
 #endif
 #if defined MT_MENU_BOMB
@@ -2692,12 +2300,6 @@ void vAbilityPlayer(int type, int client)
 		case 3: vHealAbilityActivated(client);
 	}
 #endif
-#if defined MT_MENU_HIT
-	if (type == 0)
-	{
-		vHitClientPutInServer(client);
-	}
-#endif
 #if defined MT_MENU_HURT
 	switch (type)
 	{
@@ -2739,60 +2341,12 @@ void vAbilityPlayer(int type, int client)
 		case 3: vInvertAbilityActivated(client);
 	}
 #endif
-#if defined MT_MENU_ITEM
-	switch (type)
-	{
-		case 0: vItemClientPutInServer(client);
-		case 2: vItemClientDisconnect_Post(client);
-		case 3: vItemAbilityActivated(client);
-	}
-#endif
 #if defined MT_MENU_JUMP
 	switch (type)
 	{
 		case 0: vJumpClientPutInServer(client);
 		case 2: vJumpClientDisconnect_Post(client);
 		case 3: vJumpAbilityActivated(client);
-	}
-#endif
-#if defined MT_MENU_KAMIKAZE
-	switch (type)
-	{
-		case 0: vKamikazeClientPutInServer(client);
-		case 2: vKamikazeClientDisconnect_Post(client);
-		case 3: vKamikazeAbilityActivated(client);
-	}
-#endif
-#if defined MT_MENU_LAG
-	switch (type)
-	{
-		case 0: vLagClientPutInServer(client);
-		case 2: vLagClientDisconnect_Post(client);
-		case 3: vLagAbilityActivated(client);
-	}
-#endif
-#if defined MT_MENU_LASER
-	switch (type)
-	{
-		case 0: vLaserClientPutInServer(client);
-		case 2: vLaserClientDisconnect_Post(client);
-		case 3: vLaserAbilityActivated(client);
-	}
-#endif
-#if defined MT_MENU_LEECH
-	switch (type)
-	{
-		case 0: vLeechClientPutInServer(client);
-		case 2: vLeechClientDisconnect_Post(client);
-		case 3: vLeechAbilityActivated(client);
-	}
-#endif
-#if defined MT_MENU_LIGHTNING
-	switch (type)
-	{
-		case 0: vLightningClientPutInServer(client);
-		case 2: vLightningClientDisconnect_Post(client);
-		case 3: vLightningAbilityActivated(client);
 	}
 #endif
 	bool bLog = false;
@@ -2830,15 +2384,6 @@ void vAbilitySetup(int type)
 	{
 		case 1: vAmmoMapStart();
 		case 2: vAmmoMapEnd();
-	}
-#endif
-#if defined MT_MENU_BLIND
-	switch (type)
-	{
-		case 0: vBlindPluginStart();
-		case 1: vBlindMapStart();
-		case 2: vBlindMapEnd();
-		case 3: vBlindPluginEnd();
 	}
 #endif
 #if defined MT_MENU_BOMB
@@ -3038,53 +2583,11 @@ void vAbilitySetup(int type)
 		case 2: vInvertMapEnd();
 	}
 #endif
-#if defined MT_MENU_ITEM
-	switch (type)
-	{
-		case 1: vItemMapStart();
-		case 2: vItemMapEnd();
-	}
-#endif
 #if defined MT_MENU_JUMP
 	switch (type)
 	{
 		case 1: vJumpMapStart();
 		case 2: vJumpMapEnd();
-	}
-#endif
-#if defined MT_MENU_KAMIKAZE
-	switch (type)
-	{
-		case 1: vKamikazeMapStart();
-		case 2: vKamikazeMapEnd();
-	}
-#endif
-#if defined MT_MENU_LAG
-	switch (type)
-	{
-		case 1: vLagMapStart();
-		case 2: vLagMapEnd();
-	}
-#endif
-#if defined MT_MENU_LASER
-	switch (type)
-	{
-		case 1: vLaserMapStart();
-		case 2: vLaserMapEnd();
-	}
-#endif
-#if defined MT_MENU_LEECH
-	switch (type)
-	{
-		case 1: vLeechMapStart();
-		case 2: vLeechMapEnd();
-	}
-#endif
-#if defined MT_MENU_LIGHTNING
-	switch (type)
-	{
-		case 1: vLightningMapStart();
-		case 2: vLightningMapEnd();
 	}
 #endif
 	bool bLog = false;

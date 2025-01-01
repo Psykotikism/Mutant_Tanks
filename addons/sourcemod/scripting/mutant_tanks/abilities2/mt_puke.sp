@@ -1,6 +1,6 @@
 /**
- * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2024  Alfred "Psyk0tik" Llagas
+ * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -28,6 +28,8 @@ public Plugin myinfo =
 };
 
 bool g_bDedicated, g_bLateLoad;
+
+int g_iGraphicsLevel;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -814,7 +816,9 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esPukePlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esPukePlayer[tank].g_iTankType = apply ? type : 0;
 	int iType = g_esPukePlayer[tank].g_iTankTypeRecorded;
-
+#if !defined MT_ABILITIES_MAIN2
+	g_iGraphicsLevel = MT_GetGraphicsLevel();
+#endif
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		g_esPukeCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_flCloseAreasOnly, g_esPukePlayer[tank].g_flCloseAreasOnly, g_esPukeSpecial[iType].g_flCloseAreasOnly, g_esPukeAbility[iType].g_flCloseAreasOnly, 1);
@@ -1044,7 +1048,7 @@ void vPukeAbility(int tank, float random, int pos = -1)
 				MT_PrintToChat(tank, "%s %t", MT_TAG3, "PukeHuman4");
 			}
 		}
-		else if (random <= flChance)
+		else if (random <= flChance && g_iGraphicsLevel > 2)
 		{
 			iCreateParticle(tank, PARTICLE_VOMIT, view_as<float>({0.0, 0.0, 70.0}), view_as<float>({-90.0, 0.0, 0.0}), 0.95, 1.0);
 		}
@@ -1159,8 +1163,11 @@ void vPukeRange(int tank, int value, int bit, float random, int pos = -1)
 			return;
 		}
 
-		vAttachParticle(tank, PARTICLE_BLOOD, 0.1);
-		iCreateParticle(tank, PARTICLE_VOMIT, view_as<float>({0.0, 0.0, 70.0}), view_as<float>({-90.0, 0.0, 0.0}), 0.95, 1.0);
+		if (g_iGraphicsLevel > 2)
+		{
+			vAttachParticle(tank, PARTICLE_BLOOD, 0.1);
+			iCreateParticle(tank, PARTICLE_VOMIT, view_as<float>({0.0, 0.0, 70.0}), view_as<float>({-90.0, 0.0, 0.0}), 0.95, 1.0);
+		}
 
 		float flTankPos[3], flSurvivorPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
@@ -1209,35 +1216,37 @@ void vPukeReset()
 	}
 }
 
-void tTimerPukeCombo(Handle timer, DataPack pack)
+Action tTimerPukeCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esPukeAbility[g_esPukePlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esPukePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPukePlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esPukeCache[iTank].g_iPukeAbility == 0)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vPukeAbility(iTank, flRandom, iPos);
+
+	return Plugin_Continue;
 }
 
-void tTimerPukeCombo2(Handle timer, DataPack pack)
+Action tTimerPukeCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor))
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esPukeAbility[g_esPukePlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esPukePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPukePlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esPukeCache[iTank].g_iPukeHit == 0)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
@@ -1252,44 +1261,50 @@ void tTimerPukeCombo2(Handle timer, DataPack pack)
 	{
 		vPukeHit(iSurvivor, iTank, flRandom, flChance, g_esPukeCache[iTank].g_iPukeHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
+
+	return Plugin_Continue;
 }
 
-void tTimerPukeHit(Handle timer, DataPack pack)
+Action tTimerPukeHit(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor))
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esPukeAbility[g_esPukePlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esPukePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPukePlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esPukeCache[iTank].g_iPukeAbility == 0)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	int iFlags = pack.ReadCell();
 	MT_VomitPlayer(iSurvivor, iTank);
 	vScreenEffect(iSurvivor, iTank, g_esPukeCache[iTank].g_iPukeEffect, iFlags);
+
+	return Plugin_Continue;
 }
 
-void tTimerPukeRange(Handle timer, DataPack pack)
+Action tTimerPukeRange(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor))
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !bIsValidClient(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	MT_VomitPlayer(iSurvivor, iTank);
+
+	return Plugin_Continue;
 }

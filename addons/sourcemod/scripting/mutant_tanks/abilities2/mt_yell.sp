@@ -1,6 +1,6 @@
 /**
- * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2024  Alfred "Psyk0tik" Llagas
+ * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -28,6 +28,8 @@ public Plugin myinfo =
 };
 
 bool g_bDedicated, g_bSecondGame;
+
+int g_iGraphicsLevel;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -374,7 +376,15 @@ int iYellMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esYellCache[param1].g_iYellAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
 				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esYellCache[param1].g_iHumanAmmo - g_esYellPlayer[param1].g_iAmmoCount), g_esYellCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esYellCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
+				case 3:
+				{
+					switch (g_esYellCache[param1].g_iHumanMode)
+					{
+						case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtonMode1");
+						case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtonMode2");
+						case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtonMode3");
+					}
+				}
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", ((g_esYellCache[param1].g_iHumanAbility == 1) ? g_esYellCache[param1].g_iHumanCooldown : g_esYellCache[param1].g_iYellCooldown));
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "YellDetails");
 				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", ((g_esYellCache[param1].g_iHumanAbility == 1) ? g_esYellCache[param1].g_iHumanDuration : g_esYellCache[param1].g_iYellDuration));
@@ -659,7 +669,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esYellTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esYellTeammate[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esYellTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esYellTeammate[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esYellTeammate[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esYellTeammate[admin].g_iHumanDuration, value, -1, 99999);
-			g_esYellTeammate[admin].g_iHumanMode = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esYellTeammate[admin].g_iHumanMode, value, -1, 1);
+			g_esYellTeammate[admin].g_iHumanMode = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esYellTeammate[admin].g_iHumanMode, value, -1, 2);
 			g_esYellTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esYellTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esYellTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esYellTeammate[admin].g_iRequiresHumans, value, -1, 32);
 			g_esYellTeammate[admin].g_iYellAbility = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esYellTeammate[admin].g_iYellAbility, value, -1, 1);
@@ -682,7 +692,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esYellPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esYellPlayer[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esYellPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esYellPlayer[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esYellPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esYellPlayer[admin].g_iHumanDuration, value, -1, 99999);
-			g_esYellPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esYellPlayer[admin].g_iHumanMode, value, -1, 1);
+			g_esYellPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esYellPlayer[admin].g_iHumanMode, value, -1, 2);
 			g_esYellPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esYellPlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esYellPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esYellPlayer[admin].g_iRequiresHumans, value, -1, 32);
 			g_esYellPlayer[admin].g_iYellAbility = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esYellPlayer[admin].g_iYellAbility, value, -1, 1);
@@ -711,7 +721,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esYellSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esYellSpecial[type].g_iHumanAmmo, value, -1, 99999);
 			g_esYellSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esYellSpecial[type].g_iHumanCooldown, value, -1, 99999);
 			g_esYellSpecial[type].g_iHumanDuration = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esYellSpecial[type].g_iHumanDuration, value, -1, 99999);
-			g_esYellSpecial[type].g_iHumanMode = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esYellSpecial[type].g_iHumanMode, value, -1, 1);
+			g_esYellSpecial[type].g_iHumanMode = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esYellSpecial[type].g_iHumanMode, value, -1, 2);
 			g_esYellSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esYellSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esYellSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esYellSpecial[type].g_iRequiresHumans, value, -1, 32);
 			g_esYellSpecial[type].g_iYellAbility = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esYellSpecial[type].g_iYellAbility, value, -1, 1);
@@ -734,7 +744,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esYellAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esYellAbility[type].g_iHumanAmmo, value, -1, 99999);
 			g_esYellAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esYellAbility[type].g_iHumanCooldown, value, -1, 99999);
 			g_esYellAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esYellAbility[type].g_iHumanDuration, value, -1, 99999);
-			g_esYellAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esYellAbility[type].g_iHumanMode, value, -1, 1);
+			g_esYellAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esYellAbility[type].g_iHumanMode, value, -1, 2);
 			g_esYellAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esYellAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esYellAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esYellAbility[type].g_iRequiresHumans, value, -1, 32);
 			g_esYellAbility[type].g_iYellAbility = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esYellAbility[type].g_iYellAbility, value, -1, 1);
@@ -764,7 +774,9 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esYellPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esYellPlayer[tank].g_iTankType = apply ? type : 0;
 	int iType = g_esYellPlayer[tank].g_iTankTypeRecorded;
-
+#if !defined MT_ABILITIES_MAIN2
+	g_iGraphicsLevel = MT_GetGraphicsLevel();
+#endif
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		g_esYellCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esYellTeammate[tank].g_flCloseAreasOnly, g_esYellPlayer[tank].g_flCloseAreasOnly, g_esYellSpecial[iType].g_flCloseAreasOnly, g_esYellAbility[iType].g_flCloseAreasOnly, 1);
@@ -906,10 +918,10 @@ public void MT_OnButtonPressed(int tank, int button)
 
 		if ((button & MT_MAIN_KEY) && g_esYellCache[tank].g_iYellAbility == 1 && g_esYellCache[tank].g_iHumanAbility == 1)
 		{
-			int iTime = GetTime();
+			int iHumanMode = g_esYellCache[tank].g_iHumanMode, iTime = GetTime();
 			bool bRecharging = g_esYellPlayer[tank].g_iCooldown != -1 && g_esYellPlayer[tank].g_iCooldown >= iTime;
 
-			switch (g_esYellCache[tank].g_iHumanMode)
+			switch (iHumanMode)
 			{
 				case 0:
 				{
@@ -926,9 +938,9 @@ public void MT_OnButtonPressed(int tank, int button)
 						MT_PrintToChat(tank, "%s %t", MT_TAG3, "YellHuman4", (g_esYellPlayer[tank].g_iCooldown - iTime));
 					}
 				}
-				case 1:
+				case 1, 2:
 				{
-					if (g_esYellPlayer[tank].g_iAmmoCount < g_esYellCache[tank].g_iHumanAmmo && g_esYellCache[tank].g_iHumanAmmo > 0)
+					if ((iHumanMode == 2 && g_esYellPlayer[tank].g_bActivated) || (g_esYellPlayer[tank].g_iAmmoCount < g_esYellCache[tank].g_iHumanAmmo && g_esYellCache[tank].g_iHumanAmmo > 0))
 					{
 						if (!g_esYellPlayer[tank].g_bActivated && !bRecharging)
 						{
@@ -940,7 +952,15 @@ public void MT_OnButtonPressed(int tank, int button)
 						}
 						else if (g_esYellPlayer[tank].g_bActivated)
 						{
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "YellHuman3");
+							switch (iHumanMode)
+							{
+								case 1: MT_PrintToChat(tank, "%s %t", MT_TAG3, "YellHuman3");
+								case 2:
+								{
+									vYellReset2(tank);
+									vYellReset3(tank);
+								}
+							}
 						}
 						else if (bRecharging)
 						{
@@ -1100,18 +1120,20 @@ void vYellReset3(int tank)
 	}
 }
 
-void tTimerYellCombo(Handle timer, DataPack pack)
+Action tTimerYellCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esYellAbility[g_esYellPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esYellPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esYellPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esYellCache[iTank].g_iYellAbility == 0 || g_esYellPlayer[iTank].g_bActivated)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	int iPos = pack.ReadCell();
 	vYell(iTank, iPos);
+
+	return Plugin_Continue;
 }
 
 Action tTimerYell(Handle timer, DataPack pack)
@@ -1183,8 +1205,11 @@ Action tTimerYell(Handle timer, DataPack pack)
 		}
 	}
 
-	TE_SetupBeamRingPoint(flTankPos, 10.0, (flRange * 2.0), g_iBeamSprite, g_iHaloSprite, 0, 50, 1.0, 88.0, 3.0, iBeamColor, 1000, 0);
-	TE_SendToAll();
+	if (g_iGraphicsLevel > 2)
+	{
+		TE_SetupBeamRingPoint(flTankPos, 10.0, (flRange * 2.0), g_iBeamSprite, g_iHaloSprite, 0, 50, 1.0, 88.0, 3.0, iBeamColor, 1000, 0);
+		TE_SendToAll();
+	}
 
 	return Plugin_Continue;
 }

@@ -1,6 +1,6 @@
 /**
- * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2024  Alfred "Psyk0tik" Llagas
+ * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -28,6 +28,8 @@ public Plugin myinfo =
 };
 
 bool g_bDedicated, g_bLaggedMovementInstalled, g_bLateLoad;
+
+int g_iGraphicsLevel;
 
 /**
  * Third-party natives
@@ -869,7 +871,9 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esElectricPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esElectricPlayer[tank].g_iTankType = apply ? type : 0;
 	int iType = g_esElectricPlayer[tank].g_iTankTypeRecorded;
-
+#if !defined MT_ABILITIES_MAIN
+	g_iGraphicsLevel = MT_GetGraphicsLevel();
+#endif
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		g_esElectricCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esElectricTeammate[tank].g_flCloseAreasOnly, g_esElectricPlayer[tank].g_flCloseAreasOnly, g_esElectricSpecial[iType].g_flCloseAreasOnly, g_esElectricAbility[iType].g_flCloseAreasOnly, 1);
@@ -1064,7 +1068,11 @@ public void MT_OnPostTankSpawn(int tank)
 
 void vElectric(int survivor, int tank, bool main, int pos = -1)
 {
-	vAttachParticle(survivor, PARTICLE_ELECTRICITY, 2.0, 30.0);
+	if (g_iGraphicsLevel > 2)
+	{
+		vAttachParticle(survivor, PARTICLE_ELECTRICITY, 2.0, 30.0);
+	}
+
 	EmitSoundToAll(g_sElectricSounds[MT_GetRandomInt(0, (sizeof g_sElectricSounds - 1))], survivor);
 
 	float flDamage = (pos != -1) ? MT_GetCombinationSetting(tank, 3, pos) : g_esElectricCache[tank].g_flElectricDamage;
@@ -1195,7 +1203,11 @@ void vElectricHit(int survivor, int tank, float random, float chance, int enable
 					dpElectric.WriteCell(iTime);
 				}
 
-				vAttachParticle(survivor, PARTICLE_ELECTRICITY2, 2.0, 30.0);
+				if (g_iGraphicsLevel > 2)
+				{
+					vAttachParticle(survivor, PARTICLE_ELECTRICITY2, 2.0, 30.0);
+				}
+
 				vScreenEffect(survivor, tank, g_esElectricCache[tank].g_iElectricEffect, flags);
 
 				if (g_esElectricCache[tank].g_iElectricMessage & messages)
@@ -1227,7 +1239,7 @@ void vElectricHit(int survivor, int tank, float random, float chance, int enable
 
 void vElectricRange(int tank)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(tank) && g_esElectricCache[tank].g_iElectricAbility == 1)
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(tank) && g_esElectricCache[tank].g_iElectricAbility == 1 && g_iGraphicsLevel > 2)
 	{
 		if (bIsAreaNarrow(tank, g_esElectricCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esElectricCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esElectricPlayer[tank].g_iTankType, tank) || (g_esElectricCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esElectricCache[tank].g_iRequiresHumans) || (bIsInfected(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esElectricAbility[g_esElectricPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esElectricPlayer[tank].g_iAccessFlags)) || g_esElectricCache[tank].g_iHumanAbility == 0)))
 		{
@@ -1296,35 +1308,37 @@ void vElectricReset3(int tank)
 	g_esElectricPlayer[tank].g_iRangeCooldown = -1;
 }
 
-void tTimerElectricCombo(Handle timer, DataPack pack)
+Action tTimerElectricCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esElectricAbility[g_esElectricPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esElectricPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esElectricPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esElectricCache[iTank].g_iElectricAbility == 0)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vElectricAbility(iTank, flRandom, iPos);
+
+	return Plugin_Continue;
 }
 
-void tTimerElectricCombo2(Handle timer, DataPack pack)
+Action tTimerElectricCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor) || g_esElectricPlayer[iSurvivor].g_bAffected)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esElectricAbility[g_esElectricPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esElectricPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esElectricPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esElectricCache[iTank].g_iElectricHit == 0)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
@@ -1339,6 +1353,8 @@ void tTimerElectricCombo2(Handle timer, DataPack pack)
 	{
 		vElectricHit(iSurvivor, iTank, flRandom, flChance, g_esElectricCache[iTank].g_iElectricHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
+
+	return Plugin_Continue;
 }
 
 Action tTimerElectric(Handle timer, DataPack pack)

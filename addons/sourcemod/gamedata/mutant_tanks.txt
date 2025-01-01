@@ -2377,7 +2377,7 @@
 			}
 
 			/**
-			 * CBaseAbility::CreateForPlayer(CTerrorPlayer *)
+			 * CBaseAbility::CreateForPlayer(CTerrorPlayer*)
 			 *
 			 * How to find on Windows:
 			 * 1. Search for any of the following strings:
@@ -5624,7 +5624,7 @@
 			}
 
 			/**
-			 * CBaseAbility::CreateForPlayer(CTerrorPlayer *)
+			 * CBaseAbility::CreateForPlayer(CTerrorPlayer*)
 			 *
 			 * How to find on Windows:
 			 * 1. Search for any of the following strings:
@@ -5913,6 +5913,25 @@
 				"mac"		"@_ZN12CFirstAidKit16OnActionCompleteEP13CTerrorPlayerP11CBaseEntity"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x56\x57\x8B\x2A\x2A\x85\x2A\x74\x2A\x8B\x2A\x8B\x90"
 						/* ? ? ? ? ? ? 53 56 57 8B ? ? 85 ? 74 ? 8B ? 8B 90 */
+			}
+
+			/**
+			 * CGrenadeLauncher::LaunchGrenade(CTerrorPlayer*)
+			 *
+			 * Note: Used for calling the function.
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "CGrenadeLauncher_Projectile spawned at %f %f %f, velocity %f %f %f\n" string.
+			 * 2. The string can only be found in "CGrenadeLauncher_Projectile::Create".
+			 * 3. The only function that calls "CGrenadeLauncher_Projectile::Create" should be this function.
+			 **/
+			"CGrenadeLauncher::LaunchGrenade"
+			{
+				"library"	"server"
+				"linux"		"@_ZN16CGrenadeLauncher13LaunchGrenadeEP13CTerrorPlayer"
+				"mac"		"@_ZN16CGrenadeLauncher13LaunchGrenadeEP13CTerrorPlayer"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x56\x8B\x2A\x2A\x57\x8B\x2A\x8D"
+						/* ? ? ? ? ? ? 83 ? ? 83 ? ? 55 8B ? ? 89 ? ? ? 8B ? 81 EC ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 56 8B ? ? 57 8B ? 8D */
 			}
 
 			/**

@@ -232,6 +232,16 @@
 		"en"			"Mutant Tanks Version"
 	}
 
+	"MTWarnRusher"
+	{
+		"en"			"Group up with your team before you get hunted down!"
+	}
+
+	"MTWarnSlacker"
+	{
+		"en"			"Catch up to your team before you get hunted down!"
+	}
+
 	"Ammunition"
 	{
 		"en"			"Ammunition"
@@ -261,12 +271,17 @@
 
 	"AbilityButtonMode1"
 	{
-		"en"			"Press button(s) to activate your abilit(y/ies)."
+		"en"			"Press button(s) to activate your abilities."
 	}
 
 	"AbilityButtonMode2"
 	{
-		"en"			"Hold button(s) down to use your abilit(y/ies)."
+		"en"			"Hold button(s) down to use your abilities."
+	}
+
+	"AbilityButtonMode3"
+	{
+		"en"			"Press button(s) to toggle your abilities."
 	}
 
 	"Buttons"
@@ -1112,6 +1127,11 @@
 		"en"			"Tank"
 	}
 
+	"NoNameBill"
+	{
+		"en"			"Bill"
+	}
+
 	"NoNameBoomer"
 	{
 		"en"			"Boomer"
@@ -1122,6 +1142,26 @@
 		"en"			"Charger"
 	}
 
+	"NoNameCoach"
+	{
+		"en"			"Coach"
+	}
+
+	"NoNameCommon"
+	{
+		"en"			"Common"
+	}
+
+	"NoNameEllis"
+	{
+		"en"			"Ellis"
+	}
+
+	"NoNameFrancis"
+	{
+		"en"			"Francis"
+	}
+
 	"NoNameHunter"
 	{
 		"en"			"Hunter"
@@ -1130,6 +1170,21 @@
 	"NoNameJockey"
 	{
 		"en"			"Jockey"
+	}
+
+	"NoNameLouis"
+	{
+		"en"			"Louis"
+	}
+
+	"NoNameNick"
+	{
+		"en"			"Nick"
+	}
+
+	"NoNameRochelle"
+	{
+		"en"			"Rochelle"
 	}
 
 	"NoNameSmoker"
@@ -1145,6 +1200,11 @@
 	"NoNameWitch"
 	{
 		"en"			"Witch"
+	}
+
+	"NoNameZoey"
+	{
+		"en"			"Zoey"
 	}
 
 	"NoNote"
@@ -1423,12 +1483,6 @@
 	}
 
 	"RewardLadyKiller"
-	{
-		"#format"		"{1:i}"
-		"en"			"{1}{default} use(s) of{mint} Lady Killer"
-	}
-
-	"RewardLadyKiller2"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your{mint} Lady Killer{default} has{yellow} {1}{default} use(s) left."
@@ -2019,66 +2073,6 @@
 		"en"			"Ammo Ability"
 	}
 
-	"Blind"
-	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} blinded{olive} {2}{mint}!"
-	}
-
-	"Blind2"
-	{
-		"#format"		"{1:N}"
-		"en"			"{olive}{1}{mint} is no longer blind!"
-	}
-
-	"BlindAmmo"
-	{
-		"en"			"You've used up all your blind range ability's ammo."
-	}
-
-	"BlindDetails"
-	{
-		"en"			"You blind survivors."
-	}
-
-	"BlindHuman"
-	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your blind ability!"
-	}
-
-	"BlindHuman2"
-	{
-		"en"			"Your blind ability failed to activate. Try again."
-	}
-
-	"BlindHuman3"
-	{
-		"#format"		"{1:i}"
-		"en"			"Your blind ability still needs another{yellow} {1} second(s){mint} to recharge."
-	}
-
-	"BlindHuman4"
-	{
-		"en"			"There are no survivors nearby to use your blind ability on."
-	}
-
-	"BlindHuman5"
-	{
-		"#format"		"{1:i}"
-		"en"			"Your blind ability ended and needs to recharge for{yellow} {1} second(s){mint}."
-	}
-
-	"BlindMenu"
-	{
-		"en"			"Blind Ability Information"
-	}
-
-	"BlindMenu2"
-	{
-		"en"			"Blind Ability"
-	}
-
 	"Bomb"
 	{
 		"#format"		"{1:t},{2:N}"
@@ -2450,19 +2444,25 @@
 		"en"			"{olive}{1}{mint} dropped a melee weapon!"
 	}
 
+	"Drop3"
+	{
+		"#format"		"{1:t}"
+		"en"			"{olive}{1}{mint} gave the survivors{yellow} items{mint}!"
+	}
+
 	"DropDetails"
 	{
-		"en"			"You drop a weapon upon death."
+		"en"			"You drop a weapon and give survivors items upon death."
 	}
 
 	"DropHuman"
 	{
-		"en"			"You will drop a weapon when you die!"
+		"en"			"You will give survivors items when you die!"
 	}
 
 	"DropHuman2"
 	{
-		"en"			"You will already drop a weapon upon death."
+		"en"			"You will already give survivors items upon death."
 	}
 
 	"DropMenu"
@@ -3422,21 +3422,6 @@
 		"en"			"Heal Ability"
 	}
 
-	"HitDetails"
-	{
-		"en"			"You only take damage on certain parts of your body."
-	}
-
-	"HitMenu"
-	{
-		"en"			"Hit Ability Information"
-	}
-
-	"HitMenu2"
-	{
-		"en"			"Hit Ability"
-	}
-
 	"Hurt"
 	{
 		"#format"		"{1:t},{2:N}"
@@ -3449,6 +3434,18 @@
 		"en"			"{olive}{1}{mint} is no longer hurting!"
 	}
 
+	"Hurt3"
+	{
+		"#format"		"{1:t},{2:N}"
+		"en"			"{olive}{1}{mint} is pimp slapping{olive} {2}{mint}!"
+	}
+
+	"Hurt4"
+	{
+		"#format"		"{1:N}"
+		"en"			"{olive}{1}{mint} is no longer being pimp slapped!"
+	}
+
 	"HurtAmmo"
 	{
 		"en"			"You've used up all your hurt range ability's ammo."
@@ -3456,7 +3453,7 @@
 
 	"HurtDetails"
 	{
-		"en"			"You repeatedly hurt survivors."
+		"en"			"You repeatedly hurt or pimp slap survivors."
 	}
 
 	"HurtHuman"
@@ -3731,37 +3728,6 @@
 		"en"			"Invert Ability"
 	}
 
-	"Item"
-	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} gave the survivors{yellow} items{mint}!"
-	}
-
-	"ItemDetails"
-	{
-		"en"			"You give survivors items upon death."
-	}
-
-	"ItemHuman"
-	{
-		"en"			"You will give survivors items when you die!"
-	}
-
-	"ItemHuman2"
-	{
-		"en"			"You will already give survivors items upon death."
-	}
-
-	"ItemMenu"
-	{
-		"en"			"Item Ability Information"
-	}
-
-	"ItemMenu2"
-	{
-		"en"			"Item Ability"
-	}
-
 	"Jump"
 	{
 		"#format"		"{1:t},{2:N}"
@@ -3854,42 +3820,6 @@
 	"JumpMenu2"
 	{
 		"en"			"Jump Ability"
-	}
-
-	"Kamikaze"
-	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} just went kamikaze on{olive} {2}{mint}!"
-	}
-
-	"KamikazeDetails"
-	{
-		"en"			"You kill yourself along with a survivor victim."
-	}
-
-	"KamikazeHuman"
-	{
-		"en"			"You activated your kamikaze ability!"
-	}
-
-	"KamikazeHuman2"
-	{
-		"en"			"Your kamikaze ability failed to activate. Try again."
-	}
-
-	"KamikazeHuman3"
-	{
-		"en"			"There are no survivors nearby to use your kamikaze ability on."
-	}
-
-	"KamikazeMenu"
-	{
-		"en"			"Kamikaze Ability Information"
-	}
-
-	"KamikazeMenu2"
-	{
-		"en"			"Kamikaze Ability"
 	}
 
 	"Lag"
@@ -4012,66 +3942,6 @@
 		"en"			"Laser Ability"
 	}
 
-	"Leech"
-	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} is{yellow} leeching health{mint} off of{olive} {2}{mint}!"
-	}
-
-	"Leech2"
-	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} is no longer{yellow} leeching health{mint} off of{olive} {2}{mint}!"
-	}
-
-	"LeechAmmo"
-	{
-		"en"			"You've used up all your leech range ability's ammo."
-	}
-
-	"LeechDetails"
-	{
-		"en"			"You leech health off of survivors."
-	}
-
-	"LeechHuman"
-	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your leech ability!"
-	}
-
-	"LeechHuman2"
-	{
-		"en"			"Your leech ability failed to activate. Try again."
-	}
-
-	"LeechHuman3"
-	{
-		"#format"		"{1:i}"
-		"en"			"Your leech ability still needs another{yellow} {1} second(s){mint} to recharge."
-	}
-
-	"LeechHuman4"
-	{
-		"en"			"There are no survivors nearby to use your leech ability on."
-	}
-
-	"LeechHuman5"
-	{
-		"#format"		"{1:i}"
-		"en"			"Your leech ability ended and needs to recharge for{yellow} {1} second(s){mint}."
-	}
-
-	"LeechMenu"
-	{
-		"en"			"Leech Ability Information"
-	}
-
-	"LeechMenu2"
-	{
-		"en"			"Leech Ability"
-	}
-
 	"Lightning"
 	{
 		"#format"		"{1:t}"
@@ -4163,7 +4033,7 @@
 
 	"MedicDetails"
 	{
-		"en"			"You heal nearby special infected."
+		"en"			"You heal nearby special infected only take damage on certain parts of your body."
 	}
 
 	"MedicHuman"
@@ -4318,60 +4188,6 @@
 		"en"			"Minion Ability"
 	}
 
-	"Necro"
-	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} resurrected nearby special infected!"
-	}
-
-	"NecroAmmo"
-	{
-		"en"			"You've used up all your necro ability's ammo."
-	}
-
-	"NecroDetails"
-	{
-		"en"			"You resurrect nearby special infected that die."
-	}
-
-	"NecroHuman"
-	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your necro ability!"
-	}
-
-	"NecroHuman2"
-	{
-		"en"			"Your necro ability failed to activate. Try again."
-	}
-
-	"NecroHuman3"
-	{
-		"en"			"You already activated your necro ability."
-	}
-
-	"NecroHuman4"
-	{
-		"#format"		"{1:i}"
-		"en"			"Your necro ability still needs another{yellow} {1} second(s){mint} to recharge."
-	}
-
-	"NecroHuman5"
-	{
-		"#format"		"{1:i}"
-		"en"			"Your necro ability ended and needs to recharge for{yellow} {1} second(s){mint}."
-	}
-
-	"NecroMenu"
-	{
-		"en"			"Necro Ability Information"
-	}
-
-	"NecroMenu2"
-	{
-		"en"			"Necro Ability"
-	}
-
 	"Nullify"
 	{
 		"#format"		"{1:t},{2:N}"
@@ -4511,7 +4327,7 @@
 
 	"PanicDetails"
 	{
-		"en"			"You start panic events."
+		"en"			"You start panic events and spawn zombies."
 	}
 
 	"PanicHuman"
@@ -4550,66 +4366,6 @@
 	"PanicMenu2"
 	{
 		"en"			"Panic Ability"
-	}
-
-	"Pimp"
-	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} is pimp slapping{olive} {2}{mint}!"
-	}
-
-	"Pimp2"
-	{
-		"#format"		"{1:N}"
-		"en"			"{olive}{1}{mint} is no longer being pimp slapped!"
-	}
-
-	"PimpAmmo"
-	{
-		"en"			"You've used up all your pimp slap range ability's ammo."
-	}
-
-	"PimpDetails"
-	{
-		"en"			"You pimp slap survivors."
-	}
-
-	"PimpHuman"
-	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your pimp slap ability!"
-	}
-
-	"PimpHuman2"
-	{
-		"en"			"Your pimp slap ability failed to activate. Try again."
-	}
-
-	"PimpHuman3"
-	{
-		"#format"		"{1:i}"
-		"en"			"Your pimp slap ability still needs another{yellow} {1} second(s){mint} to recharge."
-	}
-
-	"PimpHuman4"
-	{
-		"en"			"There are no survivors nearby to use your pimp slap ability on."
-	}
-
-	"PimpHuman5"
-	{
-		"#format"		"{1:i}"
-		"en"			"Your pimp slap ability ended and needs to recharge for{yellow} {1} second(s){mint}."
-	}
-
-	"PimpMenu"
-	{
-		"en"			"Pimp Ability Information"
-	}
-
-	"PimpMenu2"
-	{
-		"en"			"Pimp Ability"
 	}
 
 	"Puke"
@@ -4953,6 +4709,18 @@
 		"en"			"{olive}{1}{mint} stopped regenerating health!"
 	}
 
+	"Regen3"
+	{
+		"#format"		"{1:t},{2:N}"
+		"en"			"{olive}{1}{mint} stole some health from{olive} {2}{mint}!"
+	}
+
+	"Regen4"
+	{
+		"#format"		"{1:N},{2:t}"
+		"en"			"{olive}{1}{mint} stole some health from{olive} {2}{mint}!"
+	}
+
 	"RegenAmmo"
 	{
 		"en"			"You've used up all your regen ability's ammo."
@@ -4960,7 +4728,7 @@
 
 	"RegenDetails"
 	{
-		"en"			"You regenerate health."
+		"en"			"You leech health off of survivors, regenerate health, gain health from hurting survivors, and can steal health from survivors and vice-versa."
 	}
 
 	"RegenHuman"
@@ -5004,30 +4772,69 @@
 	"Respawn"
 	{
 		"#format"		"{1:t}"
+		"en"			"{olive}{1}{mint} resurrected nearby special infected!"
+	}
+
+	"Respawn2"
+	{
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} just respawned itself!"
 	}
 
 	"RespawnAmmo"
+	{
+		"en"			"You've used up all your necro ability's ammo."
+	}
+
+	"RespawnAmmo2"
 	{
 		"en"			"You've used up all your respawns."
 	}
 
 	"RespawnDetails"
 	{
-		"en"			"You respawn upon death."
+		"en"			"You respawn upon death and resurrect nearby special infected that die."
 	}
 
 	"RespawnHuman"
 	{
-		"en"			"You will respawn when you die!"
+		"#format"		"{1:i},{2:i}"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your necro ability!"
 	}
 
 	"RespawnHuman2"
 	{
-		"en"			"You will already respawn upon death."
+		"en"			"Your necro ability failed to activate. Try again."
 	}
 
 	"RespawnHuman3"
+	{
+		"en"			"You already activated your necro ability."
+	}
+
+	"RespawnHuman4"
+	{
+		"#format"		"{1:i}"
+		"en"			"Your necro ability still needs another{yellow} {1} second(s){mint} to recharge."
+	}
+
+	"RespawnHuman5"
+	{
+		"#format"		"{1:i}"
+		"en"			"Your necro ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+	}
+
+	"RespawnHuman6"
+	{
+		"en"			"You will respawn when you die!"
+	}
+
+	"RespawnHuman7"
+	{
+		"en"			"You will already respawn upon death."
+	}
+
+	"RespawnHuman8"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your respawns!"
@@ -5100,13 +4907,13 @@
 	"Rock"
 	{
 		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} started a{yellow} rock shower{mint}!"
+		"en"			"{olive}{1}{mint} is spamming rocks!"
 	}
 
 	"Rock2"
 	{
 		"#format"		"{1:t}"
-		"en"			"{olive}{1}'s{mint} rock shower ended!"
+		"en"			"{olive}{1}{mint} is no longer spamming rocks!"
 	}
 
 	"RockAmmo"
@@ -5116,35 +4923,35 @@
 
 	"RockDetails"
 	{
-		"en"			"You create rock showers."
+		"en"			"You create rock showers and spam rocks at survivors."
 	}
 
 	"RockHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your rock showers!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your rock spammer ability!"
 	}
 
 	"RockHuman2"
 	{
-		"en"			"Your rock shower failed to activate. Try again."
+		"en"			"Your rock spammer ability failed to activate. Try again."
 	}
 
 	"RockHuman3"
 	{
-		"en"			"You already activated your rock shower."
+		"en"			"You already activated your rock spammer ability."
 	}
 
 	"RockHuman4"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your rock shower ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"Your rock spammer ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"RockHuman5"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your rock shower ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"en"			"Your rock spammer ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"RockMenu"
@@ -5155,120 +4962,6 @@
 	"RockMenu2"
 	{
 		"en"			"Rock Ability"
-	}
-
-	"Rocket"
-	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} sent{olive} {2}{mint} into space!"
-	}
-
-	"RocketAmmo"
-	{
-		"en"			"You've used up all your rocket range ability's ammo."
-	}
-
-	"RocketDetails"
-	{
-		"en"			"You send survivors into space."
-	}
-
-	"RocketHuman"
-	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your rocket ability!"
-	}
-
-	"RocketHuman2"
-	{
-		"en"			"Your rocket ability failed to activate. Try again."
-	}
-
-	"RocketHuman3"
-	{
-		"#format"		"{1:i}"
-		"en"			"Your rocket ability still needs another{yellow} {1} second(s){mint} to recharge."
-	}
-
-	"RocketHuman4"
-	{
-		"en"			"There are no survivors nearby to use your rocket ability on."
-	}
-
-	"RocketHuman5"
-	{
-		"#format"		"{1:i}"
-		"en"			"Your rocket ability ended and needs to recharge for{yellow} {1} second(s){mint}."
-	}
-
-	"RocketMenu"
-	{
-		"en"			"Rocket Ability Information"
-	}
-
-	"RocketMenu2"
-	{
-		"en"			"Rocket Ability"
-	}
-
-	"Shake"
-	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} is shaking{olive} {2}{mint}!"
-	}
-
-	"Shake2"
-	{
-		"#format"		"{1:N}"
-		"en"			"{olive}{1}{mint} is no longer shaking!"
-	}
-
-	"ShakeAmmo"
-	{
-		"en"			"You've used up all your shake range ability's ammo."
-	}
-
-	"ShakeDetails"
-	{
-		"en"			"You shake the survivors' screens."
-	}
-
-	"ShakeHuman"
-	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your shake ability!"
-	}
-
-	"ShakeHuman2"
-	{
-		"en"			"Your shake ability failed to activate. Try again."
-	}
-
-	"ShakeHuman3"
-	{
-		"#format"		"{1:i}"
-		"en"			"Your shake ability still needs another{yellow} {1} second(s){mint} to recharge."
-	}
-
-	"ShakeHuman4"
-	{
-		"en"			"There are no survivors nearby to use your shake ability on."
-	}
-
-	"ShakeHuman5"
-	{
-		"#format"		"{1:i}"
-		"en"			"Your shake ability ended and needs to recharge for{yellow} {1} second(s){mint}."
-	}
-
-	"ShakeMenu"
-	{
-		"en"			"Shake Ability Information"
-	}
-
-	"ShakeMenu2"
-	{
-		"en"			"Shake Ability"
 	}
 
 	"Shield"
@@ -5463,6 +5156,24 @@
 		"en"			"{olive}{1}{mint} smashed{olive} {2}{mint} to death!"
 	}
 
+	"Smash2"
+	{
+		"#format"		"{1:t},{2:N}"
+		"en"			"{olive}{1}{mint} just went kamikaze on{olive} {2}{mint}!"
+	}
+
+	"Smash3"
+	{
+		"#format"		"{1:t},{2:N}"
+		"en"			"{olive}{1}{mint} sent{olive} {2}{mint} into space!"
+	}
+
+	"Smash4"
+	{
+		"#format"		"{1:t},{2:N}"
+		"en"			"{olive}{1}{mint} smited{olive} {2}{mint}!"
+	}
+
 	"SmashAmmo"
 	{
 		"en"			"You've used up all your smash range ability's ammo."
@@ -5470,7 +5181,7 @@
 
 	"SmashDetails"
 	{
-		"en"			"You smash survivors to death."
+		"en"			"You send survivors into space, smash survivors to death, smite survivors, and kill yourself along with a survivor victim."
 	}
 
 	"SmashHuman"
@@ -5509,240 +5220,6 @@
 	"SmashMenu2"
 	{
 		"en"			"Smash Ability"
-	}
-
-	"Smite"
-	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} smited{olive} {2}{mint}!"
-	}
-
-	"SmiteAmmo"
-	{
-		"en"			"You've used up all your smite range ability's ammo."
-	}
-
-	"SmiteDetails"
-	{
-		"en"			"You smite survivors."
-	}
-
-	"SmiteHuman"
-	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your smite ability!"
-	}
-
-	"SmiteHuman2"
-	{
-		"en"			"Your smite ability failed to activate. Try again."
-	}
-
-	"SmiteHuman3"
-	{
-		"#format"		"{1:i}"
-		"en"			"Your smite ability still needs another{yellow} {1} second(s){mint} to recharge."
-	}
-
-	"SmiteHuman4"
-	{
-		"en"			"There are no survivors nearby to use your smite ability on."
-	}
-
-	"SmiteHuman5"
-	{
-		"#format"		"{1:i}"
-		"en"			"Your smite ability ended and needs to recharge for{yellow} {1} second(s){mint}."
-	}
-
-	"SmiteMenu"
-	{
-		"en"			"Smite Ability Information"
-	}
-
-	"SmiteMenu2"
-	{
-		"en"			"Smite Ability"
-	}
-
-	"Spam"
-	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} is spamming rocks!"
-	}
-
-	"Spam2"
-	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} is no longer spamming rocks!"
-	}
-
-	"SpamAmmo"
-	{
-		"en"			"You've used up all your spam ability's ammo."
-	}
-
-	"SpamDetails"
-	{
-		"en"			"You spam rocks at survivors."
-	}
-
-	"SpamHuman"
-	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your rock spammer ability!"
-	}
-
-	"SpamHuman2"
-	{
-		"en"			"Your rock spammer ability failed to activate. Try again."
-	}
-
-	"SpamHuman3"
-	{
-		"en"			"You already activated your rock spammer ability."
-	}
-
-	"SpamHuman4"
-	{
-		"#format"		"{1:i}"
-		"en"			"Your rock spammer ability still needs another{yellow} {1} second(s){mint} to recharge."
-	}
-
-	"SpamHuman5"
-	{
-		"#format"		"{1:i}"
-		"en"			"Your rock spammer ability ended and needs to recharge for{yellow} {1} second(s){mint}."
-	}
-
-	"SpamMenu"
-	{
-		"en"			"Spam Ability Information"
-	}
-
-	"SpamMenu2"
-	{
-		"en"			"Spam Ability"
-	}
-
-	"Splash"
-	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} is splashing damage at nearby survivors!"
-	}
-
-	"Splash2"
-	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} is no longer splashing damage at nearby survivors!"
-	}
-
-	"SplashAmmo"
-	{
-		"en"			"You've used up all your splash ability's ammo."
-	}
-
-	"SplashDetails"
-	{
-		"en"			"You constantly deal splash damage to nearby survivors."
-	}
-
-	"SplashHuman"
-	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your splash ability!"
-	}
-
-	"SplashHuman2"
-	{
-		"en"			"Your splash ability failed to activate. Try again."
-	}
-
-	"SplashHuman3"
-	{
-		"en"			"You already activated your splash ability."
-	}
-
-	"SplashHuman4"
-	{
-		"#format"		"{1:i}"
-		"en"			"Your splash ability still needs another{yellow} {1} second(s){mint} to recharge."
-	}
-
-	"SplashHuman5"
-	{
-		"#format"		"{1:i}"
-		"en"			"Your splash ability ended and needs to recharge for{yellow} {1} second(s){mint}."
-	}
-
-	"SplashMenu"
-	{
-		"en"			"Splash Ability Information"
-	}
-
-	"SplashMenu2"
-	{
-		"en"			"Splash Ability"
-	}
-
-	"Splatter"
-	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} is splattering{olive} {2}'s{mint} screen!"
-	}
-
-	"Splatter2"
-	{
-		"#format"		"{1:N}"
-		"en"			"{olive}{1}'s{mint} screen is no longer being splattered{mint}!"
-	}
-
-	"SplatterAmmo"
-	{
-		"en"			"You've used up all your splatter ability's ammo."
-	}
-
-	"SplatterDetails"
-	{
-		"en"			"You splatter the survivors' screens."
-	}
-
-	"SplatterHuman"
-	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your splatter ability!"
-	}
-
-	"SplatterHuman2"
-	{
-		"en"			"Your splatter ability failed to activate. Try again."
-	}
-
-	"SplatterHuman3"
-	{
-		"#format"		"{1:i}"
-		"en"			"Your splatter ability still needs another{yellow} {1} second(s){mint} to recharge."
-	}
-
-	"SplatterHuman4"
-	{
-		"en"			"There are no survivors nearby to use your splatter ability on."
-	}
-
-	"SplatterHuman5"
-	{
-		"#format"		"{1:i}"
-		"en"			"Your splatter ability ended and needs to recharge for{yellow} {1} second(s){mint}."
-	}
-
-	"SplatterMenu"
-	{
-		"en"			"Splatter Ability Information"
-	}
-
-	"SplatterMenu2"
-	{
-		"en"			"Splatter Ability"
 	}
 
 	"Throw"
@@ -5992,34 +5469,49 @@
 		"en"			"Undead Ability"
 	}
 
-	"Vampire"
+	"Vision"
 	{
 		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} stole some health from{olive} {2}{mint}!"
+		"en"			"{olive}{1}{mint} blinded{olive} {2}{mint}!"
 	}
 
-	"VampireDetails"
+	"Vision2"
 	{
-		"en"			"You gain health from hurting survivors."
+		"#format"		"{1:N}"
+		"en"			"{olive}{1}{mint} is no longer blind!"
 	}
 
-	"VampireMenu"
+	"Vision3"
 	{
-		"en"			"Vampire Ability Information"
+		"#format"		"{1:t},{2:N}"
+		"en"			"{olive}{1}{mint} is shaking{olive} {2}{mint}!"
 	}
 
-	"VampireMenu2"
+	"Vision4"
 	{
-		"en"			"Vampire Ability"
+		"#format"		"{1:N}"
+		"en"			"{olive}{1}{mint} is no longer shaking!"
 	}
 
-	"Vision"
+	"Vision5"
+	{
+		"#format"		"{1:t},{2:N}"
+		"en"			"{olive}{1}{mint} is splattering{olive} {2}'s{mint} screen!"
+	}
+
+	"Vision6"
+	{
+		"#format"		"{1:N}"
+		"en"			"{olive}{1}'s{mint} screen is no longer being splattered{mint}!"
+	}
+
+	"Vision7"
 	{
 		"#format"		"{1:t},{2:N},{3:i}"
 		"en"			"{olive}{1}{mint} changed{olive} {2}'s{mint} vision to{yellow} {3}{mint} FOV!"
 	}
 
-	"Vision2"
+	"Vision8"
 	{
 		"#format"		"{1:N},{2:i}"
 		"en"			"{olive}{1}'s{mint} vision changed back to{yellow} {2}{mint} FOV!"
@@ -6032,7 +5524,7 @@
 
 	"VisionDetails"
 	{
-		"en"			"You change the survivors' field of view."
+		"en"			"You blind survivors, shake the survivors' screens, splatter the survivors' screens, and change the survivors' field of view."
 	}
 
 	"VisionHuman"
@@ -6282,33 +5774,6 @@
 		"en"			"Witch Ability"
 	}
 
-	"Xiphos"
-	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} stole some health from{olive} {2}{mint}!"
-	}
-
-	"Xiphos2"
-	{
-		"#format"		"{1:N},{2:t}"
-		"en"			"{olive}{1}{mint} stole some health from{olive} {2}{mint}!"
-	}
-
-	"XiphosDetails"
-	{
-		"en"			"You can steal health from survivors and vice-versa."
-	}
-
-	"XiphosMenu"
-	{
-		"en"			"Xiphos Ability Information"
-	}
-
-	"XiphosMenu2"
-	{
-		"en"			"Xiphos Ability"
-	}
-
 	"Yell"
 	{
 		"#format"		"{1:t}"
@@ -6367,65 +5832,5 @@
 	"YellMenu2"
 	{
 		"en"			"Yell Ability"
-	}
-
-	"Zombie"
-	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} will spawn zombies periodically!"
-	}
-
-	"Zombie2"
-	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} spawned{yellow} zombies{mint}!"
-	}
-
-	"ZombieAmmo"
-	{
-		"en"			"You've used up all your zombie spawner ability's ammo."
-	}
-
-	"ZombieDetails"
-	{
-		"en"			"You spawn zombies."
-	}
-
-	"ZombieHuman"
-	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your zombie spawner ability!"
-	}
-
-	"ZombieHuman2"
-	{
-		"en"			"Your zombie spawner ability failed to activate. Try again."
-	}
-
-	"ZombieHuman3"
-	{
-		"en"			"You already activated your zombie spawner ability."
-	}
-
-	"ZombieHuman4"
-	{
-		"#format"		"{1:i}"
-		"en"			"Your zombie spawner ability still needs another{yellow} {1} second(s){mint} to recharge."
-	}
-
-	"ZombieHuman5"
-	{
-		"#format"		"{1:i}"
-		"en"			"Your zombie spawner ability ended and needs to recharge for{yellow} {1} second(s){mint}."
-	}
-
-	"ZombieMenu"
-	{
-		"en"			"Zombie Ability Information"
-	}
-
-	"ZombieMenu2"
-	{
-		"en"			"Zombie Ability"
 	}
 }
