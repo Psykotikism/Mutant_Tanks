@@ -1,6 +1,6 @@
 /**
- * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2024  Alfred "Psyk0tik" Llagas
+ * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -28,6 +28,8 @@ public Plugin myinfo =
 };
 
 bool g_bDedicated, g_bLateLoad, g_bSecondGame;
+
+int g_iGraphicsLevel;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -879,7 +881,9 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esRestartPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esRestartPlayer[tank].g_iTankType = apply ? type : 0;
 	int iType = g_esRestartPlayer[tank].g_iTankTypeRecorded;
-
+#if !defined MT_ABILITIES_MAIN2
+	g_iGraphicsLevel = MT_GetGraphicsLevel();
+#endif
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		g_esRestartCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_flCloseAreasOnly, g_esRestartPlayer[tank].g_flCloseAreasOnly, g_esRestartSpecial[iType].g_flCloseAreasOnly, g_esRestartAbility[iType].g_flCloseAreasOnly, 1);
@@ -1244,8 +1248,12 @@ void vRestartHit(int survivor, int tank, float random, float chance, int enabled
 				ExplodeString(g_esRestartCache[tank].g_sRestartLoadout, ",", sItems, sizeof sItems, sizeof sItems[]);
 				MT_RespawnSurvivor(survivor);
 				vRemoveWeapons(survivor);
-				vAttachParticle(survivor, PARTICLE_ELECTRICITY, 1.0);
 				EmitSoundToAll(SOUND_ELECTRICITY, survivor);
+
+				if (g_iGraphicsLevel > 2)
+				{
+					vAttachParticle(survivor, PARTICLE_ELECTRICITY, 1.0);
+				}
 
 				for (int iItem = 0; iItem < (sizeof sItems); iItem++)
 				{
@@ -1376,35 +1384,37 @@ bool bIsSurvivorInCheckpoint(int survivor, bool start)
 	return bReturn || bReturn2;
 }
 
-void tTimerRestartCombo(Handle timer, DataPack pack)
+Action tTimerRestartCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esRestartAbility[g_esRestartPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esRestartPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esRestartPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esRestartCache[iTank].g_iRestartAbility == 0)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vRestartAbility(iTank, flRandom, iPos);
+
+	return Plugin_Continue;
 }
 
-void tTimerRestartCombo2(Handle timer, DataPack pack)
+Action tTimerRestartCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor))
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esRestartAbility[g_esRestartPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esRestartPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esRestartPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esRestartCache[iTank].g_iRestartHit == 0)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
@@ -1419,4 +1429,6 @@ void tTimerRestartCombo2(Handle timer, DataPack pack)
 	{
 		vRestartHit(iSurvivor, iTank, flRandom, flChance, g_esRestartCache[iTank].g_iRestartHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
+
+	return Plugin_Continue;
 }

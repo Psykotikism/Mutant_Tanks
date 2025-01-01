@@ -1,6 +1,6 @@
 /**
- * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2024  Alfred "Psyk0tik" Llagas
+ * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -443,7 +443,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	{
 		TeleportEntity(client, .angles = g_esChokePlayer[client].g_flAngle);
 
-		int iWeapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+		int iWeapon = iGetSurvivorActiveWeapon(client);
 		if (iWeapon > MaxClients && g_esChokePlayer[client].g_flDuration > 0.0)
 		{
 			SetEntPropFloat(iWeapon, Prop_Send, "m_flNextPrimaryAttack", g_esChokePlayer[client].g_flDuration);
@@ -1189,7 +1189,7 @@ void vChokeHit(int survivor, int tank, float random, float chance, int enabled, 
 					flDuration = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : float(g_esChokeCache[tank].g_iChokeDuration);
 				if (flDelay > 0.0)
 				{
-					int iWeapon = GetEntPropEnt(survivor, Prop_Send, "m_hActiveWeapon");
+					int iWeapon = iGetSurvivorActiveWeapon(survivor);
 					if (iWeapon > MaxClients)
 					{
 						g_esChokePlayer[survivor].g_flDuration = GetGameTime() + flDelay + flDuration + 1.0;
@@ -1316,35 +1316,37 @@ void vChokeReset3(int tank)
 	g_esChokePlayer[tank].g_iRangeCooldown = -1;
 }
 
-void tTimerChokeCombo(Handle timer, DataPack pack)
+Action tTimerChokeCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esChokeAbility[g_esChokePlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esChokePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esChokePlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esChokeCache[iTank].g_iChokeAbility == 0)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vChokeAbility(iTank, flRandom, iPos);
+
+	return Plugin_Continue;
 }
 
-void tTimerChokeCombo2(Handle timer, DataPack pack)
+Action tTimerChokeCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsHumanSurvivor(iSurvivor) || g_esChokePlayer[iSurvivor].g_bAffected)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esChokeAbility[g_esChokePlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esChokePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esChokePlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esChokeCache[iTank].g_iChokeHit == 0)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
@@ -1359,9 +1361,11 @@ void tTimerChokeCombo2(Handle timer, DataPack pack)
 	{
 		vChokeHit(iSurvivor, iTank, flRandom, flChance, g_esChokeCache[iTank].g_iChokeHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
+
+	return Plugin_Continue;
 }
 
-void tTimerChokeLaunch(Handle timer, DataPack pack)
+Action tTimerChokeLaunch(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1371,7 +1375,7 @@ void tTimerChokeLaunch(Handle timer, DataPack pack)
 		g_esChokePlayer[iSurvivor].g_bAffected = false;
 		g_esChokePlayer[iSurvivor].g_iOwner = -1;
 
-		return;
+		return Plugin_Stop;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell(), iChokeEnabled = pack.ReadCell();
@@ -1380,7 +1384,7 @@ void tTimerChokeLaunch(Handle timer, DataPack pack)
 		g_esChokePlayer[iSurvivor].g_bAffected = false;
 		g_esChokePlayer[iSurvivor].g_iOwner = -1;
 
-		return;
+		return Plugin_Stop;
 	}
 
 	g_esChokePlayer[iSurvivor].g_bBlockFall = g_esChokeCache[iTank].g_iChokeBlock == 1;
@@ -1399,6 +1403,8 @@ void tTimerChokeLaunch(Handle timer, DataPack pack)
 	dpChokeDamage.WriteCell(iChokeEnabled);
 	dpChokeDamage.WriteCell(iPos);
 	dpChokeDamage.WriteCell(GetTime());
+
+	return Plugin_Continue;
 }
 
 Action tTimerChokeDamage(Handle timer, DataPack pack)
@@ -1450,13 +1456,15 @@ Action tTimerChokeDamage(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-void tTimerChokeGravityReset(Handle timer, int userid)
+Action tTimerChokeGravityReset(Handle timer, int userid)
 {
 	int iSurvivor = GetClientOfUserId(userid);
 	if (!bIsSurvivor(iSurvivor))
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	SetEntityGravity(iSurvivor, 1.0);
+
+	return Plugin_Continue;
 }

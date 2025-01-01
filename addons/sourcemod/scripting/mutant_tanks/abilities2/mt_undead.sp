@@ -1,6 +1,6 @@
 /**
- * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2024  Alfred "Psyk0tik" Llagas
+ * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -885,13 +885,15 @@ void vUndeadReset()
 	}
 }
 
-void tTimerUndeadCombo(Handle timer, int userid)
+Action tTimerUndeadCombo(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esUndeadAbility[g_esUndeadPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esUndeadPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esUndeadPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esUndeadCache[iTank].g_iUndeadAbility == 0 || g_esUndeadPlayer[iTank].g_bActivated)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	vUndead(iTank);
+
+	return Plugin_Continue;
 }

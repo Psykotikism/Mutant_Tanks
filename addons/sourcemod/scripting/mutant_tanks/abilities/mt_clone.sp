@@ -1,6 +1,6 @@
 /**
- * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2024  Alfred "Psyk0tik" Llagas
+ * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -79,8 +79,8 @@ enum struct esClonePlayer
 	int g_iCloneCooldown;
 	int g_iCloneHealth;
 	int g_iCloneMaxType;
-	int g_iCloneMinType;
 	int g_iCloneMessage;
+	int g_iCloneMinType;
 	int g_iCloneMode;
 	int g_iCloneRemove;
 	int g_iCloneReplace;
@@ -111,8 +111,8 @@ enum struct esCloneTeammate
 	int g_iCloneCooldown;
 	int g_iCloneHealth;
 	int g_iCloneMaxType;
-	int g_iCloneMinType;
 	int g_iCloneMessage;
+	int g_iCloneMinType;
 	int g_iCloneMode;
 	int g_iCloneRemove;
 	int g_iCloneReplace;
@@ -139,8 +139,8 @@ enum struct esCloneAbility
 	int g_iCloneCooldown;
 	int g_iCloneHealth;
 	int g_iCloneMaxType;
-	int g_iCloneMinType;
 	int g_iCloneMessage;
+	int g_iCloneMinType;
 	int g_iCloneMode;
 	int g_iCloneRemove;
 	int g_iCloneReplace;
@@ -167,8 +167,8 @@ enum struct esCloneSpecial
 	int g_iCloneCooldown;
 	int g_iCloneHealth;
 	int g_iCloneMaxType;
-	int g_iCloneMinType;
 	int g_iCloneMessage;
+	int g_iCloneMinType;
 	int g_iCloneMode;
 	int g_iCloneRemove;
 	int g_iCloneReplace;
@@ -194,8 +194,8 @@ enum struct esCloneCache
 	int g_iCloneCooldown;
 	int g_iCloneHealth;
 	int g_iCloneMaxType;
-	int g_iCloneMinType;
 	int g_iCloneMessage;
+	int g_iCloneMinType;
 	int g_iCloneMode;
 	int g_iCloneRemove;
 	int g_iCloneReplace;
@@ -772,8 +772,8 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esCloneCache[tank].g_iCloneCooldown = iGetSubSettingValue(apply, bHuman, g_esCloneTeammate[tank].g_iCloneCooldown, g_esClonePlayer[tank].g_iCloneCooldown, g_esCloneSpecial[iType].g_iCloneCooldown, g_esCloneAbility[iType].g_iCloneCooldown, 1);
 		g_esCloneCache[tank].g_iCloneHealth = iGetSubSettingValue(apply, bHuman, g_esCloneTeammate[tank].g_iCloneHealth, g_esClonePlayer[tank].g_iCloneHealth, g_esCloneSpecial[iType].g_iCloneHealth, g_esCloneAbility[iType].g_iCloneHealth, 1);
 		g_esCloneCache[tank].g_iCloneMaxType = iGetSubSettingValue(apply, bHuman, g_esCloneTeammate[tank].g_iCloneMaxType, g_esClonePlayer[tank].g_iCloneMaxType, g_esCloneSpecial[iType].g_iCloneMaxType, g_esCloneAbility[iType].g_iCloneMaxType, 1);
-		g_esCloneCache[tank].g_iCloneMinType = iGetSubSettingValue(apply, bHuman, g_esCloneTeammate[tank].g_iCloneMinType, g_esClonePlayer[tank].g_iCloneMinType, g_esCloneSpecial[iType].g_iCloneMinType, g_esCloneAbility[iType].g_iCloneMinType, 1);
 		g_esCloneCache[tank].g_iCloneMessage = iGetSubSettingValue(apply, bHuman, g_esCloneTeammate[tank].g_iCloneMessage, g_esClonePlayer[tank].g_iCloneMessage, g_esCloneSpecial[iType].g_iCloneMessage, g_esCloneAbility[iType].g_iCloneMessage, 1);
+		g_esCloneCache[tank].g_iCloneMinType = iGetSubSettingValue(apply, bHuman, g_esCloneTeammate[tank].g_iCloneMinType, g_esClonePlayer[tank].g_iCloneMinType, g_esCloneSpecial[iType].g_iCloneMinType, g_esCloneAbility[iType].g_iCloneMinType, 1);
 		g_esCloneCache[tank].g_iCloneMode = iGetSubSettingValue(apply, bHuman, g_esCloneTeammate[tank].g_iCloneMode, g_esClonePlayer[tank].g_iCloneMode, g_esCloneSpecial[iType].g_iCloneMode, g_esCloneAbility[iType].g_iCloneMode, 1);
 		g_esCloneCache[tank].g_iCloneRemove = iGetSubSettingValue(apply, bHuman, g_esCloneTeammate[tank].g_iCloneRemove, g_esClonePlayer[tank].g_iCloneRemove, g_esCloneSpecial[iType].g_iCloneRemove, g_esCloneAbility[iType].g_iCloneRemove, 1);
 		g_esCloneCache[tank].g_iCloneReplace = iGetSubSettingValue(apply, bHuman, g_esCloneTeammate[tank].g_iCloneReplace, g_esClonePlayer[tank].g_iCloneReplace, g_esCloneSpecial[iType].g_iCloneReplace, g_esCloneAbility[iType].g_iCloneReplace, 1);
@@ -795,8 +795,8 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esCloneCache[tank].g_iCloneCooldown = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iCloneCooldown, g_esCloneAbility[iType].g_iCloneCooldown, 1);
 		g_esCloneCache[tank].g_iCloneHealth = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iCloneHealth, g_esCloneAbility[iType].g_iCloneHealth, 1);
 		g_esCloneCache[tank].g_iCloneMaxType = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iCloneMaxType, g_esCloneAbility[iType].g_iCloneMaxType, 1);
-		g_esCloneCache[tank].g_iCloneMinType = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iCloneMinType, g_esCloneAbility[iType].g_iCloneMinType, 1);
 		g_esCloneCache[tank].g_iCloneMessage = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iCloneMessage, g_esCloneAbility[iType].g_iCloneMessage, 1);
+		g_esCloneCache[tank].g_iCloneMinType = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iCloneMinType, g_esCloneAbility[iType].g_iCloneMinType, 1);
 		g_esCloneCache[tank].g_iCloneMode = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iCloneMode, g_esCloneAbility[iType].g_iCloneMode, 1);
 		g_esCloneCache[tank].g_iCloneRemove = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iCloneRemove, g_esCloneAbility[iType].g_iCloneRemove, 1);
 		g_esCloneCache[tank].g_iCloneReplace = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iCloneReplace, g_esCloneAbility[iType].g_iCloneReplace, 1);
@@ -1128,6 +1128,7 @@ void vClone2(int tank, int min = 0, int max = 0)
 		iMax = (max > 0) ? max : MT_GetMaxType(),
 		iSpecType = iGetInfectedType(tank), iType = iMin,
 		iTypeCount = 0, iTankTypes[MT_MAXTYPES + 1];
+
 	if (iMin != iMax)
 	{
 		for (int iIndex = iMin; iIndex <= iMax; iIndex++)
@@ -1144,7 +1145,7 @@ void vClone2(int tank, int min = 0, int max = 0)
 		iType = (iTypeCount > 0) ? iTankTypes[MT_GetRandomInt(1, iTypeCount)] : g_esClonePlayer[tank].g_iTankType;
 	}
 
-	MT_SpawnTank(tank, iType);
+	MT_SpawnTank(tank, iType, iSpecType);
 }
 
 void vCloneAbility(int tank)
@@ -1229,26 +1230,30 @@ void vCloneReset()
 	}
 }
 
-void tTimerCloneCombo(Handle timer, int userid)
+Action tTimerCloneCombo(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esCloneAbility[g_esClonePlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esClonePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esClonePlayer[iTank].g_iTankType, iTank) || g_esClonePlayer[iTank].g_bCloned || g_esCloneCache[iTank].g_iCloneAbility == 0)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	vClone(iTank);
+
+	return Plugin_Continue;
 }
 
-void tTimerKillClone(Handle timer, int userid)
+Action tTimerKillClone(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
 	if (!MT_IsTankSupported(iTank) || !g_esClonePlayer[iTank].g_bCloned)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	ForcePlayerSuicide(iTank);
+
+	return Plugin_Continue;
 }
 
 Action tTimerSwapClone(Handle timer, DataPack pack)

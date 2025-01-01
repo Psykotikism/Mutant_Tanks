@@ -54,6 +54,11 @@
 		"hu"			"Elnyelő Boszorka"
 	}
 
+	"Common #1 Name"
+	{
+		"hu"			"Elnyelő Fertőzöttek"
+	}
+
 	"Tank #1"
 	{
 		"hu"			"{mint}Ez a Tank elnyeli a sebzések nagy részét amit kap."
@@ -92,6 +97,11 @@
 	"Witch #1"
 	{
 		"hu"			"{mint}Ez a Boszorka elnyeli a sebzések nagy részét amit kap."
+	}
+
+	"Common #1"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek elnyeli a sebzések nagy részét amit kap."
 	}
 
 	"Tank #2 Name"
@@ -134,6 +144,11 @@
 		"hu"			"Savas Boszorka"
 	}
 
+	"Common #2 Name"
+	{
+		"hu"			"Savas Fertőzöttek"
+	}
+
 	"Tank #2"
 	{
 		"hu"			"{mint}Ez a Tank savas pocsolyákat hozhat létre a túlélők alatt."
@@ -172,6 +187,11 @@
 	"Witch #2"
 	{
 		"hu"			"{mint}Ez a Boszorka savas pocsolyákat hozhat létre a túlélők alatt."
+	}
+
+	"Common #2"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek savas pocsolyákat hozhat létre a túlélők alatt."
 	}
 
 	"Tank #3 Name"
@@ -214,6 +234,11 @@
 		"hu"			"Céltalan Boszorka"
 	}
 
+	"Common #3 Name"
+	{
+		"hu"			"Céltalan Fertőzöttek"
+	}
+
 	"Tank #3"
 	{
 		"hu"			"{mint}Ez a Tank megakadályozza a túlélőket a célzásban."
@@ -252,6 +277,11 @@
 	"Witch #3"
 	{
 		"hu"			"{mint}Ez a Boszorka megakadályozza a túlélőket a célzásban."
+	}
+
+	"Common #3"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek megakadályozza a túlélőket a célzásban."
 	}
 
 	"Tank #4 Name"
@@ -294,6 +324,11 @@
 		"hu"			"Lőszer Boszorka"
 	}
 
+	"Common #4 Name"
+	{
+		"hu"			"Lőszer Fertőzöttek"
+	}
+
 	"Tank #4"
 	{
 		"hu"			"{mint}Ez a Tank ellophat tőled egy kis lőszert, vagy az egészet."
@@ -332,6 +367,11 @@
 	"Witch #4"
 	{
 		"hu"			"{mint}Ez a Boszorka ellophat tőled egy kis lőszert, vagy az egészet."
+	}
+
+	"Common #4"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek ellophat tőled egy kis lőszert, vagy az egészet."
 	}
 
 	"Tank #5 Name"
@@ -374,6 +414,11 @@
 		"hu"			"Vak Boszorka"
 	}
 
+	"Common #5 Name"
+	{
+		"hu"			"Vak Fertőzöttek"
+	}
+
 	"Tank #5"
 	{
 		"hu"			"{mint}Ez a Tank megvakíthatja a túlélőket."
@@ -412,6 +457,11 @@
 	"Witch #5"
 	{
 		"hu"			"{mint}Ez a Boszorka megvakíthatja a túlélőket."
+	}
+
+	"Common #5"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek megvakíthatja a túlélőket."
 	}
 
 	"Tank #6 Name"
@@ -454,6 +504,11 @@
 		"hu"			"Bombázó Boszorka"
 	}
 
+	"Common #6 Name"
+	{
+		"hu"			"Bombázó Fertőzöttek"
+	}
+
 	"Tank #6"
 	{
 		"hu"			"{mint}Ez a Tank robbanásokat okozhat és immunis a robbanásokra."
@@ -492,6 +547,11 @@
 	"Witch #6"
 	{
 		"hu"			"{mint}Ez a Boszorka robbanásokat okozhat és immunis a robbanásokra."
+	}
+
+	"Common #6"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek robbanásokat okozhat és immunis a robbanásokra."
 	}
 
 	"Tank #7 Name"
@@ -534,6 +594,11 @@
 		"hu"			"Pukkancs Boszorka"
 	}
 
+	"Common #7 Name"
+	{
+		"hu"			"Pukkancs Fertőzöttek"
+	}
+
 	"Tank #7"
 	{
 		"hu"			"{mint}Ez a Tank pukkancsokat hozhat létre, és dobhat is párat a túlélők felé."
@@ -572,6 +637,11 @@
 	"Witch #7"
 	{
 		"hu"			"{mint}Ez a Boszorka pukkancsokat hozhat létre."
+	}
+
+	"Common #7"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek pukkancsokat hozhat létre."
 	}
 
 	"Tank #8 Name"
@@ -614,6 +684,11 @@
 		"hu"			"Golyóálló Boszorka"
 	}
 
+	"Common #8 Name"
+	{
+		"hu"			"Golyóálló Fertőzöttek"
+	}
+
 	"Tank #8"
 	{
 		"hu"			"{mint}Ez a Tank immunis a lőszer sebzésre."
@@ -652,6 +727,11 @@
 	"Witch #8"
 	{
 		"hu"			"{mint}Ez a Boszorka immunis a lőszer sebzésre."
+	}
+
+	"Common #8"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek immunis a lőszer sebzésre."
 	}
 
 	"Tank #9 Name"
@@ -694,6 +774,11 @@
 		"hu"			"Eltemető Boszorka"
 	}
 
+	"Common #9 Name"
+	{
+		"hu"			"Eltemető Fertőzöttek"
+	}
+
 	"Tank #9"
 	{
 		"hu"			"{mint}Ez a Tank eltemetheti a túlélőket."
@@ -732,6 +817,11 @@
 	"Witch #9"
 	{
 		"hu"			"{mint}Ez a Boszorka eltemetheti a túlélőket."
+	}
+
+	"Common #9"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek eltemetheti a túlélőket."
 	}
 
 	"Tank #10 Name"
@@ -774,6 +864,11 @@
 		"hu"			"Autó Boszorka"
 	}
 
+	"Common #10 Name"
+	{
+		"hu"			"Autó Fertőzöttek"
+	}
+
 	"Tank #10"
 	{
 		"hu"			"{mint}Ez a Tank autókat dobhat a túlélők felé. Az autók eltűnnek 30mp után."
@@ -812,6 +907,11 @@
 	"Witch #10"
 	{
 		"hu"			"{mint}Ez a Boszorka autókat záporokat indít. Az autók eltűnnek 30mp után."
+	}
+
+	"Common #10"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek autókat záporokat indít. Az autók eltűnnek 30mp után."
 	}
 
 	"Tank #11 Name"
@@ -854,6 +954,11 @@
 		"hu"			"Rohanó Boszorka"
 	}
 
+	"Common #11 Name"
+	{
+		"hu"			"Rohanó Fertőzöttek"
+	}
+
 	"Tank #11"
 	{
 		"hu"			"{mint}Ez a Tank rohanókat hozhat létre, és dobhat is párat a túlélők felé."
@@ -892,6 +997,11 @@
 	"Witch #11"
 	{
 		"hu"			"{mint}Ez a Boszorka rohanókat hozhat létre."
+	}
+
+	"Common #11"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek rohanókat hozhat létre."
 	}
 
 	"Tank #12 Name"
@@ -934,6 +1044,11 @@
 		"hu"			"Elzáró Boszorka"
 	}
 
+	"Common #12 Name"
+	{
+		"hu"			"Elzáró Fertőzöttek"
+	}
+
 	"Tank #12"
 	{
 		"hu"			"{mint}Ez a Tank fojtogatja a túlélőket a levegőben."
@@ -972,6 +1087,11 @@
 	"Witch #12"
 	{
 		"hu"			"{mint}Ez a Boszorka fojtogatja a túlélőket a levegőben."
+	}
+
+	"Common #12"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek fojtogatja a túlélőket a levegőben."
 	}
 
 	"Tank #13 Name"
@@ -1014,6 +1134,11 @@
 		"hu"			"Klón Boszorka"
 	}
 
+	"Common #13 Name"
+	{
+		"hu"			"Klón Fertőzöttek"
+	}
+
 	"Tank #13"
 	{
 		"hu"			"{mint}Ez a Tank klónokat hozhat létre, és dobhat is párat a túlélők felé."
@@ -1052,6 +1177,11 @@
 	"Witch #13"
 	{
 		"hu"			"{mint}Ez a Boszorka klónokat hozhat létre."
+	}
+
+	"Common #13"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek klónokat hozhat létre."
 	}
 
 	"Tank #14 Name"
@@ -1094,6 +1224,11 @@
 		"hu"			"Felhős Boszorka"
 	}
 
+	"Common #14 Name"
+	{
+		"hu"			"Felhős Fertőzöttek"
+	}
+
 	"Tank #14"
 	{
 		"hu"			"{mint}Ez a Tank füstfelhőket hoz létre, ami sebzi a benne lévő túlélőket"
@@ -1132,6 +1267,11 @@
 	"Witch #14"
 	{
 		"hu"			"{mint}Ez a Boszorka füstfelhőket hoz létre, ami sebzi a benne lévő túlélőket"
+	}
+
+	"Common #14"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek füstfelhőket hoz létre, ami sebzi a benne lévő túlélőket"
 	}
 
 	"Tank #15 Name"
@@ -1174,6 +1314,11 @@
 		"hu"			"Dobó Boszorka"
 	}
 
+	"Common #15 Name"
+	{
+		"hu"			"Dobó Fertőzöttek"
+	}
+
 	"Tank #15"
 	{
 		"hu"			"{mint}Ez a Tank véletlenszerű fegyvereket dob a halála után."
@@ -1212,6 +1357,11 @@
 	"Witch #15"
 	{
 		"hu"			"{mint}Ez a Boszorka véletlenszerű fegyvereket dob a halála után."
+	}
+
+	"Common #15"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek véletlenszerű fegyvereket dob a halála után."
 	}
 
 	"Tank #16 Name"
@@ -1254,6 +1404,11 @@
 		"hu"			"Drogozó Boszorka"
 	}
 
+	"Common #16 Name"
+	{
+		"hu"			"Drogozó Fertőzöttek"
+	}
+
 	"Tank #16"
 	{
 		"hu"			"{mint}Ez a Tank bedrogozhatja a túlélőket."
@@ -1292,6 +1447,11 @@
 	"Witch #16"
 	{
 		"hu"			"{mint}Ez a Boszorka bedrogozhatja a túlélőket."
+	}
+
+	"Common #16"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek bedrogozhatja a túlélőket."
 	}
 
 	"Tank #17 Name"
@@ -1334,6 +1494,11 @@
 		"hu"			"Részeg Boszorka"
 	}
 
+	"Common #17 Name"
+	{
+		"hu"			"Részeg Fertőzöttek"
+	}
+
 	"Tank #17"
 	{
 		"hu"			"{mint}Ez a Tank részeggé teheti a túlélőket."
@@ -1372,6 +1537,11 @@
 	"Witch #17"
 	{
 		"hu"			"{mint}Ez a Boszorka részeggé teheti a túlélőket."
+	}
+
+	"Common #17"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek részeggé teheti a túlélőket."
 	}
 
 	"Tank #18 Name"
@@ -1414,6 +1584,11 @@
 		"hu"			"Elektromos Boszorka"
 	}
 
+	"Common #18 Name"
+	{
+		"hu"			"Elektromos Fertőzöttek"
+	}
+
 	"Tank #18"
 	{
 		"hu"			"{mint}Ez a Tank megrázhatja a túlélőket."
@@ -1452,6 +1627,11 @@
 	"Witch #18"
 	{
 		"hu"			"{mint}Ez a Boszorka megrázhatja a túlélőket."
+	}
+
+	"Common #18"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek megrázhatja a túlélőket."
 	}
 
 	"Tank #19 Name"
@@ -1494,6 +1674,11 @@
 		"hu"			"Végrehajtó Boszorka"
 	}
 
+	"Common #19 Name"
+	{
+		"hu"			"Végrehajtó Fertőzöttek"
+	}
+
 	"Tank #19"
 	{
 		"hu"			"{mint}Ez a Tank ráveheti a túlélőket arra hogy bizonyos fegyvereket használjanak egy bizonyos ideig."
@@ -1532,6 +1717,11 @@
 	"Witch #19"
 	{
 		"hu"			"{mint}Ez a Boszorka ráveheti a túlélőket arra hogy bizonyos fegyvereket használjanak egy bizonyos ideig."
+	}
+
+	"Common #19"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek ráveheti a túlélőket arra hogy bizonyos fegyvereket használjanak egy bizonyos ideig."
 	}
 
 	"Tank #20 Name"
@@ -1574,6 +1764,11 @@
 		"hu"			"Gyors Boszorka"
 	}
 
+	"Common #20 Name"
+	{
+		"hu"			"Gyors Fertőzöttek"
+	}
+
 	"Tank #20"
 	{
 		"hu"			"{mint}Ez a Tank olyan gyorsan fut mint Flash."
@@ -1612,6 +1807,11 @@
 	"Witch #20"
 	{
 		"hu"			"{mint}Ez a Boszorka olyan gyorsan fut mint Flash."
+	}
+
+	"Common #20"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek olyan gyorsan fut mint Flash."
 	}
 
 	"Tank #21 Name"
@@ -1654,6 +1854,11 @@
 		"hu"			"Tűzálló Boszorka"
 	}
 
+	"Common #21 Name"
+	{
+		"hu"			"Tűzálló Fertőzöttek"
+	}
+
 	"Tank #21"
 	{
 		"hu"			"{mint}Ez a Tank tüzeket hozhat létre és immunis a tűzre."
@@ -1692,6 +1897,11 @@
 	"Witch #21"
 	{
 		"hu"			"{mint}Ez a Boszorka tüzeket hozhat létre és immunis a tűzre."
+	}
+
+	"Common #21"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek tüzeket hozhat létre és immunis a tűzre."
 	}
 
 	"Tank #22 Name"
@@ -1734,6 +1944,11 @@
 		"hu"			"Hajító Boszorka"
 	}
 
+	"Common #22 Name"
+	{
+		"hu"			"Hajító Fertőzöttek"
+	}
+
 	"Tank #22"
 	{
 		"hu"			"{mint}Ez a Tank elhajítja a túlélőket a levegőbe."
@@ -1772,6 +1987,11 @@
 	"Witch #22"
 	{
 		"hu"			"{mint}Ez a Boszorka elhajítja a túlélőket a levegőbe."
+	}
+
+	"Common #22"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek elhajítja a túlélőket a levegőbe."
 	}
 
 	"Tank #23 Name"
@@ -1814,6 +2034,11 @@
 		"hu"			"Repülő Boszorka"
 	}
 
+	"Common #23 Name"
+	{
+		"hu"			"Repülő Fertőzöttek"
+	}
+
 	"Tank #23"
 	{
 		"hu"			"{mint}Ez a Tank körbe-körbe repül, áldozatokat keresve."
@@ -1852,6 +2077,11 @@
 	"Witch #23"
 	{
 		"hu"			"{mint}Ez a Boszorka körbe-körbe repül, áldozatokat keresve."
+	}
+
+	"Common #23"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek körbe-körbe repül, áldozatokat keresve."
 	}
 
 	"Tank #24 Name"
@@ -1894,6 +2124,11 @@
 		"hu"			"Törékeny Boszorka"
 	}
 
+	"Common #24 Name"
+	{
+		"hu"			"Törékeny Fertőzöttek"
+	}
+
 	"Tank #24"
 	{
 		"hu"			"{mint}Ez a Tank érzékenyebb a sebzésre, de közben többet sebez és gyorsabban fut."
@@ -1932,6 +2167,11 @@
 	"Witch #24"
 	{
 		"hu"			"{mint}Ez a Boszorka érzékenyebb a sebzésre, de közben többet sebez és gyorsabban fut."
+	}
+
+	"Common #24"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek érzékenyebb a sebzésre, de közben többet sebez és gyorsabban fut."
 	}
 
 	"Tank #25 Name"
@@ -1974,6 +2214,11 @@
 		"hu"			"Szellem Boszorka"
 	}
 
+	"Common #25 Name"
+	{
+		"hu"			"Szellem Fertőzöttek"
+	}
+
 	"Tank #25"
 	{
 		"hu"			"{mint}Ez a Tank álcázhatja magát és lefegyverezheti a túlélőket."
@@ -2012,6 +2257,11 @@
 	"Witch #25"
 	{
 		"hu"			"{mint}Ez a Boszorka álcázhatja magát és lefegyverezheti a túlélőket."
+	}
+
+	"Common #25"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek álcázhatja magát és lefegyverezheti a túlélőket."
 	}
 
 	"Tank #26 Name"
@@ -2054,6 +2304,11 @@
 		"hu"			"Isteni Boszorka"
 	}
 
+	"Common #26 Name"
+	{
+		"hu"			"Isteni Fertőzöttek"
+	}
+
 	"Tank #26"
 	{
 		"hu"			"{mint}Ez a Tank ideiglenes legyőzhetetlenséget kaphat."
@@ -2092,6 +2347,11 @@
 	"Witch #26"
 	{
 		"hu"			"{mint}Ez a Boszorka ideiglenes legyőzhetetlenséget kaphat."
+	}
+
+	"Common #26"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek ideiglenes legyőzhetetlenséget kaphat."
 	}
 
 	"Tank #27 Name"
@@ -2134,6 +2394,11 @@
 		"hu"			"Gravitációs Boszorka"
 	}
 
+	"Common #27 Name"
+	{
+		"hu"			"Gravitációs Fertőzöttek"
+	}
+
 	"Tank #27"
 	{
 		"hu"			"{mint}Ez a Tank magához húzhatja a túlélőket és a fertőzötteket és csökkentheti a túlélők gravitációját."
@@ -2172,6 +2437,11 @@
 	"Witch #27"
 	{
 		"hu"			"{mint}Ez a Boszorka magához húzhatja a túlélőket és a fertőzötteket és csökkentheti a túlélők gravitációját."
+	}
+
+	"Common #27"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek magához húzhatja a túlélőket és a fertőzötteket és csökkentheti a túlélők gravitációját."
 	}
 
 	"Tank #28 Name"
@@ -2214,6 +2484,11 @@
 		"hu"			"Tüzér Boszorka"
 	}
 
+	"Common #28 Name"
+	{
+		"hu"			"Tüzér Fertőzöttek"
+	}
+
 	"Tank #28"
 	{
 		"hu"			"{mint}Ez a Tank képes felfegyverkezni és lövéseket leadni a túlélőkre."
@@ -2252,6 +2527,11 @@
 	"Witch #28"
 	{
 		"hu"			"{mint}Ez a Boszorka képes felfegyverkezni és lövéseket leadni a túlélőkre."
+	}
+
+	"Common #28"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek képes felfegyverkezni és lövéseket leadni a túlélőkre."
 	}
 
 	"Tank #29 Name"
@@ -2294,6 +2574,11 @@
 		"hu"			"Egészséges Boszorka"
 	}
 
+	"Common #29 Name"
+	{
+		"hu"			"Egészséges Fertőzöttek"
+	}
+
 	"Tank #29"
 	{
 		"hu"			"{mint}Ez a Tank ideiglenes életerőt adhat a túlélőknek, és életerőt nyelhet el a közeli fertőzöttektől."
@@ -2332,6 +2617,11 @@
 	"Witch #29"
 	{
 		"hu"			"{mint}Ez a Boszorka ideiglenes életerőt adhat a túlélőknek, és életerőt nyelhet el a közeli fertőzöttektől."
+	}
+
+	"Common #29"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek ideiglenes életerőt adhat a túlélőknek, és életerőt nyelhet el a közeli fertőzöttektől."
 	}
 
 	"Tank #30 Name"
@@ -2374,6 +2664,11 @@
 		"hu"			"Ütős Boszorka"
 	}
 
+	"Common #30 Name"
+	{
+		"hu"			"Ütős Fertőzöttek"
+	}
+
 	"Tank #30"
 	{
 		"hu"			"{mint}Ez a Tank csak a fejlövés sebzi."
@@ -2412,6 +2707,11 @@
 	"Witch #30"
 	{
 		"hu"			"{mint}Ez a Boszorka csak a fejlövés sebzi."
+	}
+
+	"Common #30"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek csak a fejlövés sebzi."
 	}
 
 	"Tank #31 Name"
@@ -2454,6 +2754,11 @@
 		"hu"			"Vadász Boszorka"
 	}
 
+	"Common #31 Name"
+	{
+		"hu"			"Vadász Fertőzöttek"
+	}
+
 	"Tank #31"
 	{
 		"hu"			"{mint}Ez a Tank Vadászokat hozhat létre, és dobhat is párat a túlélők felé."
@@ -2492,6 +2797,11 @@
 	"Witch #31"
 	{
 		"hu"			"{mint}Ez a Boszorka Vadászokat hozhat létre."
+	}
+
+	"Common #31"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek Vadászokat hozhat létre."
 	}
 
 	"Tank #32 Name"
@@ -2534,6 +2844,11 @@
 		"hu"			"Bántó Boszorka"
 	}
 
+	"Common #32 Name"
+	{
+		"hu"			"Bántó Fertőzöttek"
+	}
+
 	"Tank #32"
 	{
 		"hu"			"{mint}Ez a Tank folyamatosan bántja a túlélőket egy bizonyos időn belül."
@@ -2572,6 +2887,11 @@
 	"Witch #32"
 	{
 		"hu"			"{mint}Ez a Boszorka folyamatosan bántja a túlélőket egy bizonyos időn belül."
+	}
+
+	"Common #32"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek folyamatosan bántja a túlélőket egy bizonyos időn belül."
 	}
 
 	"Tank #33 Name"
@@ -2614,6 +2934,11 @@
 		"hu"			"Hipnotizáló Boszorka"
 	}
 
+	"Common #33 Name"
+	{
+		"hu"			"Hipnotizáló Fertőzöttek"
+	}
+
 	"Tank #33"
 	{
 		"hu"			"{mint}Ez a Tank hipnotizálhatja a túlélőket, hogy magukat vagy a társaikat támadják."
@@ -2652,6 +2977,11 @@
 	"Witch #33"
 	{
 		"hu"			"{mint}Ez a Boszorka hipnotizálhatja a túlélőket, hogy magukat vagy a társaikat támadják."
+	}
+
+	"Common #33"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek hipnotizálhatja a túlélőket, hogy magukat vagy a társaikat támadják."
 	}
 
 	"Tank #34 Name"
@@ -2694,6 +3024,11 @@
 		"hu"			"Fagyos Boszorka"
 	}
 
+	"Common #34 Name"
+	{
+		"hu"			"Fagyos Fertőzöttek"
+	}
+
 	"Tank #34"
 	{
 		"hu"			"{mint}Ez a Tank megfagyasztja a túlélőket."
@@ -2732,6 +3067,11 @@
 	"Witch #34"
 	{
 		"hu"			"{mint}Ez a Boszorka megfagyasztja a túlélőket."
+	}
+
+	"Common #34"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek megfagyasztja a túlélőket."
 	}
 
 	"Tank #35 Name"
@@ -2774,6 +3114,11 @@
 		"hu"			"Tétlen Boszorka"
 	}
 
+	"Common #35 Name"
+	{
+		"hu"			"Tétlen Fertőzöttek"
+	}
+
 	"Tank #35"
 	{
 		"hu"			"{mint}Ez a Tank ráveheti a túlélőket arra hogy szünetet tartsanak. (Botokra ez nem hat.)"
@@ -2812,6 +3157,11 @@
 	"Witch #35"
 	{
 		"hu"			"{mint}Ez a Boszorka ráveheti a túlélőket arra hogy szünetet tartsanak. (Botokra ez nem hat.)"
+	}
+
+	"Common #35"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek ráveheti a túlélőket arra hogy szünetet tartsanak. (Botokra ez nem hat.)"
 	}
 
 	"Tank #36 Name"
@@ -2854,6 +3204,11 @@
 		"hu"			"Felcserélő Boszorka"
 	}
 
+	"Common #36 Name"
+	{
+		"hu"			"Felcserélő Fertőzöttek"
+	}
+
 	"Tank #36"
 	{
 		"hu"			"{mint}Ez a Tank felcserélheti a túlélők irányítási gombjait."
@@ -2892,6 +3247,11 @@
 	"Witch #36"
 	{
 		"hu"			"{mint}Ez a Boszorka felcserélheti a túlélők irányítási gombjait."
+	}
+
+	"Common #36"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek felcserélheti a túlélők irányítási gombjait."
 	}
 
 	"Tank #37 Name"
@@ -2934,6 +3294,11 @@
 		"hu"			"Áru Boszorka"
 	}
 
+	"Common #37 Name"
+	{
+		"hu"			"Áru Fertőzöttek"
+	}
+
 	"Tank #37"
 	{
 		"hu"			"{mint}Ez a Tank árukat adhat a túlélőknek miután meghalt."
@@ -2972,6 +3337,11 @@
 	"Witch #37"
 	{
 		"hu"			"{mint}Ez a Boszorka árukat adhat a túlélőknek miután meghalt."
+	}
+
+	"Common #37"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek árukat adhat a túlélőknek miután meghalt."
 	}
 
 	"Tank #38 Name"
@@ -3014,6 +3384,11 @@
 		"hu"			"Zsoké Boszorka"
 	}
 
+	"Common #38 Name"
+	{
+		"hu"			"Zsoké Fertőzöttek"
+	}
+
 	"Tank #38"
 	{
 		"hu"			"{mint}Ez a Tank Zsokékat hozhat létre és dobhat egy párat a túlélők felé is."
@@ -3052,6 +3427,11 @@
 	"Witch #38"
 	{
 		"hu"			"{mint}Ez a Boszorka Zsokékat hozhat létre és dobhat egy párat a túlélők felé is."
+	}
+
+	"Common #38"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek Zsokékat hozhat létre és dobhat egy párat a túlélők felé is."
 	}
 
 	"Tank #39 Name"
@@ -3094,6 +3474,11 @@
 		"hu"			"Ugró Boszorka"
 	}
 
+	"Common #39 Name"
+	{
+		"hu"			"Ugró Fertőzöttek"
+	}
+
 	"Tank #39"
 	{
 		"hu"			"{mint}Ez a Tank időszakosan ugrálhat és ráveheti a túlélőket a kontrollálhatatlan ugrálásra is."
@@ -3132,6 +3517,11 @@
 	"Witch #39"
 	{
 		"hu"			"{mint}Ez a Boszorka időszakosan ugrálhat és ráveheti a túlélőket a kontrollálhatatlan ugrálásra is."
+	}
+
+	"Common #39"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek időszakosan ugrálhat és ráveheti a túlélőket a kontrollálhatatlan ugrálásra is."
 	}
 
 	"Tank #40 Name"
@@ -3174,6 +3564,11 @@
 		"hu"			"Öngyilkos Boszorka"
 	}
 
+	"Common #40 Name"
+	{
+		"hu"			"Öngyilkos Fertőzöttek"
+	}
+
 	"Tank #40"
 	{
 		"hu"			"{mint}Ez a Tank megölheti magát, vihet egy túlélő áldozatot is."
@@ -3212,6 +3607,11 @@
 	"Witch #40"
 	{
 		"hu"			"{mint}Ez a Boszorka megölheti magát, vihet egy túlélő áldozatot is."
+	}
+
+	"Common #40"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek megölheti magát, vihet egy túlélő áldozatot is."
 	}
 
 	"Tank #41 Name"
@@ -3254,6 +3654,11 @@
 		"hu"			"Késleltető Boszorka"
 	}
 
+	"Common #41 Name"
+	{
+		"hu"			"Késleltető Fertőzöttek"
+	}
+
 	"Tank #41"
 	{
 		"hu"			"{mint}Ez a Tank késleltetheti a túlélőket."
@@ -3292,6 +3697,11 @@
 	"Witch #41"
 	{
 		"hu"			"{mint}Ez a Boszorka késleltetheti a túlélőket."
+	}
+
+	"Common #41"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek késleltetheti a túlélőket."
 	}
 
 	"Tank #42 Name"
@@ -3334,6 +3744,11 @@
 		"hu"			"Lézer Boszorka"
 	}
 
+	"Common #42 Name"
+	{
+		"hu"			"Lézer Fertőzöttek"
+	}
+
 	"Tank #42"
 	{
 		"hu"			"{mint}Ez a Tank lézereket lőhet a túlélők felé."
@@ -3372,6 +3787,11 @@
 	"Witch #42"
 	{
 		"hu"			"{mint}Ez a Boszorka lézereket lőhet a túlélők felé."
+	}
+
+	"Common #42"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek lézereket lőhet a túlélők felé."
 	}
 
 	"Tank #43 Name"
@@ -3414,6 +3834,11 @@
 		"hu"			"Pióca Boszorka"
 	}
 
+	"Common #43 Name"
+	{
+		"hu"			"Pióca Fertőzöttek"
+	}
+
 	"Tank #43"
 	{
 		"hu"			"{mint}Ez a Tank életet szívhat el a túlélőktől."
@@ -3452,6 +3877,11 @@
 	"Witch #43"
 	{
 		"hu"			"{mint}Ez a Boszorka életet szívhat el a túlélőktől."
+	}
+
+	"Common #43"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek életet szívhat el a túlélőktől."
 	}
 
 	"Tank #44 Name"
@@ -3494,6 +3924,11 @@
 		"hu"			"Villám Boszorka"
 	}
 
+	"Common #44 Name"
+	{
+		"hu"			"Villám Fertőzöttek"
+	}
+
 	"Tank #44"
 	{
 		"hu"			"{mint}Ez a Tank villám viharokat indít."
@@ -3532,6 +3967,11 @@
 	"Witch #44"
 	{
 		"hu"			"{mint}Ez a Boszorka villám viharokat indít."
+	}
+
+	"Common #44"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek villám viharokat indít."
 	}
 
 	"Tank #45 Name"
@@ -3574,6 +4014,11 @@
 		"hu"			"Gyógyító Boszorka"
 	}
 
+	"Common #45 Name"
+	{
+		"hu"			"Gyógyító Fertőzöttek"
+	}
+
 	"Tank #45"
 	{
 		"hu"			"{mint}Ez a Tank gyógyítja a közeli speciális fertőzötteket a halála pillanatában."
@@ -3612,6 +4057,11 @@
 	"Witch #45"
 	{
 		"hu"			"{mint}Ez a Boszorka gyógyítja a közeli speciális fertőzötteket a halála pillanatában."
+	}
+
+	"Common #45"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek gyógyítja a közeli speciális fertőzötteket a halála pillanatában."
 	}
 
 	"Tank #46 Name"
@@ -3654,6 +4104,11 @@
 		"hu"			"Meteor Boszorka"
 	}
 
+	"Common #46 Name"
+	{
+		"hu"			"Meteor Fertőzöttek"
+	}
+
 	"Tank #46"
 	{
 		"hu"			"{mint}Ez a Tank meteor záport indíthat, meteorokkal ami elég és felrobban pár másodperc múlva."
@@ -3692,6 +4147,11 @@
 	"Witch #46"
 	{
 		"hu"			"{mint}Ez a Boszorka meteor záport indíthat, meteorokkal ami elég és felrobban pár másodperc múlva."
+	}
+
+	"Common #46"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek meteor záport indíthat, meteorokkal ami elég és felrobban pár másodperc múlva."
 	}
 
 	"Tank #47 Name"
@@ -3734,6 +4194,11 @@
 		"hu"			"Nekromanta Boszorka"
 	}
 
+	"Common #47 Name"
+	{
+		"hu"			"Nekromanta Fertőzöttek"
+	}
+
 	"Tank #47"
 	{
 		"hu"			"{mint}Ez a Tank visszahozhatja a halott speciális fertőzötteket."
@@ -3772,6 +4237,11 @@
 	"Witch #47"
 	{
 		"hu"			"{mint}Ez a Boszorka visszahozhatja a halott speciális fertőzötteket."
+	}
+
+	"Common #47"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek visszahozhatja a halott speciális fertőzötteket."
 	}
 
 	"Tank #48 Name"
@@ -3814,6 +4284,11 @@
 		"hu"			"Hatástalanító Boszorka"
 	}
 
+	"Common #48 Name"
+	{
+		"hu"			"Hatástalanító Fertőzöttek"
+	}
+
 	"Tank #48"
 	{
 		"hu"			"{mint}Ez a Tank hatástalanítja a túlélők sebzését, ezáltal védve önmagát."
@@ -3852,6 +4327,11 @@
 	"Witch #48"
 	{
 		"hu"			"{mint}Ez a Boszorka hatástalanítja a túlélők sebzését, ezáltal védve önmagát."
+	}
+
+	"Common #48"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek hatástalanítja a túlélők sebzését, ezáltal védve önmagát."
 	}
 
 	"Tank #49 Name"
@@ -3894,6 +4374,11 @@
 		"hu"			"Mindenható Boszorka"
 	}
 
+	"Common #49 Name"
+	{
+		"hu"			"Mindenható Fertőzöttek"
+	}
+
 	"Tank #49"
 	{
 		"hu"			"{mint}Ez a Tank hozzáfér a többi közel lévő Mutáns Tank képességeihez."
@@ -3932,6 +4417,11 @@
 	"Witch #49"
 	{
 		"hu"			"{mint}Ez a Boszorka hozzáfér a többi közel lévő Mutáns Boszorka képességeihez."
+	}
+
+	"Common #49"
+	{
+		"hu"			"{mint}Ez a Boszorka hozzáfér a többi közel lévő Mutáns Fertőzöttek képességeihez."
 	}
 
 	"Tank #50 Name"
@@ -3974,6 +4464,11 @@
 		"hu"			"Pánik Boszorka"
 	}
 
+	"Common #50 Name"
+	{
+		"hu"			"Pánik Fertőzöttek"
+	}
+
 	"Tank #50"
 	{
 		"hu"			"{mint}Ez a Tank pánik eseményt indíthat, nagyon sok zombival."
@@ -4012,6 +4507,11 @@
 	"Witch #50"
 	{
 		"hu"			"{mint}Ez a Boszorka pánik eseményt indíthat, nagyon sok zombival."
+	}
+
+	"Common #50"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek pánik eseményt indíthat, nagyon sok zombival."
 	}
 
 	"Tank #51 Name"
@@ -4054,6 +4554,11 @@
 		"hu"			"Háziállat Boszorka"
 	}
 
+	"Common #51 Name"
+	{
+		"hu"			"Háziállat Fertőzöttek"
+	}
+
 	"Tank #51"
 	{
 		"hu"			"{mint}Ez a Tank lojális a túlélőkhöz és szeret öleléseket adni."
@@ -4092,6 +4597,11 @@
 	"Witch #51"
 	{
 		"hu"			"{mint}Ez a Boszorka lojális a túlélőkhöz és szeret öleléseket adni."
+	}
+
+	"Common #51"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek lojális a túlélőkhöz és szeret öleléseket adni."
 	}
 
 	"Tank #52 Name"
@@ -4134,6 +4644,11 @@
 		"hu"			"Csapdosó Boszorka"
 	}
 
+	"Common #52 Name"
+	{
+		"hu"			"Csapdosó Fertőzöttek"
+	}
+
 	"Tank #52"
 	{
 		"hu"			"{mint}Ez a Tank folyamatosan csapdossa a túlélőket, megmutatja nekik ki a főnök."
@@ -4172,6 +4687,11 @@
 	"Witch #52"
 	{
 		"hu"			"{mint}Ez a Boszorka folyamatosan csapdossa a túlélőket, megmutatja nekik ki a főnök."
+	}
+
+	"Common #52"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek folyamatosan csapdossa a túlélőket, megmutatja nekik ki a főnök."
 	}
 
 	"Tank #53 Name"
@@ -4214,6 +4734,11 @@
 		"hu"			"Platina Boszorka"
 	}
 
+	"Common #53 Name"
+	{
+		"hu"			"Platina Fertőzöttek"
+	}
+
 	"Tank #53"
 	{
 		"hu"			"{mint}Ez a Tank immunis a közelharci sebzésre."
@@ -4252,6 +4777,11 @@
 	"Witch #53"
 	{
 		"hu"			"{mint}Ez a Boszorka immunis a közelharci sebzésre."
+	}
+
+	"Common #53"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek immunis a közelharci sebzésre."
 	}
 
 	"Tank #54 Name"
@@ -4294,6 +4824,11 @@
 		"hu"			"Hányó Boszorka"
 	}
 
+	"Common #54 Name"
+	{
+		"hu"			"Hányó Fertőzöttek"
+	}
+
 	"Tank #54"
 	{
 		"hu"			"{mint}Ez a Tank lehányhatja a túlélőket."
@@ -4332,6 +4867,11 @@
 	"Witch #54"
 	{
 		"hu"			"{mint}Ez a Boszorka lehányhatja a túlélőket."
+	}
+
+	"Common #54"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek lehányhatja a túlélőket."
 	}
 
 	"Tank #55 Name"
@@ -4374,6 +4914,11 @@
 		"hu"			"Piromániás Boszorka"
 	}
 
+	"Common #55 Name"
+	{
+		"hu"			"Piromániás Fertőzöttek"
+	}
+
 	"Tank #55"
 	{
 		"hu"			"{mint}Ez a Tank gyorsabb lesz ha felgyújtják."
@@ -4412,6 +4957,11 @@
 	"Witch #55"
 	{
 		"hu"			"{mint}Ez a Boszorka gyorsabb lesz ha felgyújtják."
+	}
+
+	"Common #55"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek gyorsabb lesz ha felgyújtják."
 	}
 
 	"Tank #56 Name"
@@ -4454,6 +5004,11 @@
 		"hu"			"Csendes Boszorka"
 	}
 
+	"Common #56 Name"
+	{
+		"hu"			"Csendes Fertőzöttek"
+	}
+
 	"Tank #56"
 	{
 		"hu"			"{mint}Ez a Tank lenémíthatja magát a túlélők elől."
@@ -4492,6 +5047,11 @@
 	"Witch #56"
 	{
 		"hu"			"{mint}Ez a Boszorka lenémíthatja magát a túlélők elől."
+	}
+
+	"Common #56"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek lenémíthatja magát a túlélők elől."
 	}
 
 	"Tank #57 Name"
@@ -4534,6 +5094,11 @@
 		"hu"			"Visszahívás Boszorka"
 	}
 
+	"Common #57 Name"
+	{
+		"hu"			"Visszahívás Fertőzöttek"
+	}
+
 	"Tank #57"
 	{
 		"hu"			"{mint}Ez a Tank képes az időutazásra, ezzel bosszantva a túlélőket."
@@ -4572,6 +5137,11 @@
 	"Witch #57"
 	{
 		"hu"			"{mint}Ez a Boszorka képes az időutazásra, ezzel bosszantva a túlélőket."
+	}
+
+	"Common #57"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek képes az időutazásra, ezzel bosszantva a túlélőket."
 	}
 
 	"Tank #58 Name"
@@ -4614,6 +5184,11 @@
 		"hu"			"Visszarúgó Boszorka"
 	}
 
+	"Common #58 Name"
+	{
+		"hu"			"Visszarúgó Fertőzöttek"
+	}
+
 	"Tank #58"
 	{
 		"hu"			"{mint}Ez a Tank erős visszarúgást adhat a túlélőknek."
@@ -4652,6 +5227,11 @@
 	"Witch #58"
 	{
 		"hu"			"{mint}Ez a Boszorka erős visszarúgást adhat a túlélőknek."
+	}
+
+	"Common #58"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek erős visszarúgást adhat a túlélőknek."
 	}
 
 	"Tank #59 Name"
@@ -4694,6 +5274,11 @@
 		"hu"			"Regeneráló Boszorka"
 	}
 
+	"Common #59 Name"
+	{
+		"hu"			"Regeneráló Fertőzöttek"
+	}
+
 	"Tank #59"
 	{
 		"hu"			"{mint}Ez a Tank életerőt regenerál minden másodpercben."
@@ -4732,6 +5317,11 @@
 	"Witch #59"
 	{
 		"hu"			"{mint}Ez a Boszorka életerőt regenerál minden másodpercben."
+	}
+
+	"Common #59"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek életerőt regenerál minden másodpercben."
 	}
 
 	"Tank #60 Name"
@@ -4774,6 +5364,11 @@
 		"hu"			"Újjászülető Boszorka"
 	}
 
+	"Common #60 Name"
+	{
+		"hu"			"Újjászülető Fertőzöttek"
+	}
+
 	"Tank #60"
 	{
 		"hu"			"{mint}Ez a Tank újjászülethet a halála pillanatában."
@@ -4812,6 +5407,11 @@
 	"Witch #60"
 	{
 		"hu"			"{mint}Ez a Boszorka újjászülethet a halála pillanatában."
+	}
+
+	"Common #60"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek újjászülethet a halála pillanatában."
 	}
 
 	"Tank #61 Name"
@@ -4854,6 +5454,11 @@
 		"hu"			"Újraindító Boszorka"
 	}
 
+	"Common #61 Name"
+	{
+		"hu"			"Újraindító Fertőzöttek"
+	}
+
 	"Tank #61"
 	{
 		"hu"			"{mint}Ez a Tank ráveheti a túlélőket arra, hogy új felszereléssel kezdjenek előröl."
@@ -4892,6 +5497,11 @@
 	"Witch #61"
 	{
 		"hu"			"{mint}Ez a Boszorka ráveheti a túlélőket arra, hogy új felszereléssel kezdjenek előröl."
+	}
+
+	"Common #61"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek ráveheti a túlélőket arra, hogy új felszereléssel kezdjenek előröl."
 	}
 
 	"Tank #62 Name"
@@ -4934,6 +5544,11 @@
 		"hu"			"Szikla Boszorka"
 	}
 
+	"Common #62 Name"
+	{
+		"hu"			"Szikla Fertőzöttek"
+	}
+
 	"Tank #62"
 	{
 		"hu"			"{mint}Ez a Tank szikla záporokat indít."
@@ -4972,6 +5587,11 @@
 	"Witch #62"
 	{
 		"hu"			"{mint}Ez a Boszorka szikla záporokat indít."
+	}
+
+	"Common #62"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek szikla záporokat indít."
 	}
 
 	"Tank #63 Name"
@@ -5014,6 +5634,11 @@
 		"hu"			"Rakétaszakértő Boszorka"
 	}
 
+	"Common #63 Name"
+	{
+		"hu"			"Rakétaszakértő Fertőzöttek"
+	}
+
 	"Tank #63"
 	{
 		"hu"			"{mint}Ez a Tank az űrbe küldheti a túlélőket."
@@ -5052,6 +5677,11 @@
 	"Witch #63"
 	{
 		"hu"			"{mint}Ez a Boszorka az űrbe küldheti a túlélőket."
+	}
+
+	"Common #63"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek az űrbe küldheti a túlélőket."
 	}
 
 	"Tank #64 Name"
@@ -5094,6 +5724,11 @@
 		"hu"			"Öndobó Boszorka"
 	}
 
+	"Common #64 Name"
+	{
+		"hu"			"Öndobó Fertőzöttek"
+	}
+
 	"Tank #64"
 	{
 		"hu"			"{mint}Ez a Tank eldobhatja magát a túlélők felé."
@@ -5132,6 +5767,11 @@
 	"Witch #64"
 	{
 		"hu"			"{mint}Ez a Boszorka eldobhatja magát a túlélők felé."
+	}
+
+	"Common #64"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek eldobhatja magát a túlélők felé."
 	}
 
 	"Tank #65 Name"
@@ -5174,6 +5814,11 @@
 		"hu"			"Rázó Boszorka"
 	}
 
+	"Common #65 Name"
+	{
+		"hu"			"Rázó Fertőzöttek"
+	}
+
 	"Tank #65"
 	{
 		"hu"			"{mint}Ez a Tank megrázza a túlélők képernyőjét."
@@ -5212,6 +5857,11 @@
 	"Witch #65"
 	{
 		"hu"			"{mint}Ez a Boszorka megrázza a túlélők képernyőjét."
+	}
+
+	"Common #65"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek megrázza a túlélők képernyőjét."
 	}
 
 	"Tank #66 Name"
@@ -5254,6 +5904,11 @@
 		"hu"			"Pajzs Boszorka"
 	}
 
+	"Common #66 Name"
+	{
+		"hu"			"Pajzs Fertőzöttek"
+	}
+
 	"Tank #66"
 	{
 		"hu"			"{mint}Ez a Tank egy pajzzsal születik, propán tartályokat vagy benzines kannákat dobál. Ezek segítségével a túlélők áttörhetnek a pajzson."
@@ -5292,6 +5947,11 @@
 	"Witch #66"
 	{
 		"hu"			"{mint}Ez a Boszorka egy pajzzsal születik."
+	}
+
+	"Common #66"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek egy pajzzsal születik."
 	}
 
 	"Tank #67 Name"
@@ -5334,6 +5994,11 @@
 		"hu"			"Lökő Boszorka"
 	}
 
+	"Common #67 Name"
+	{
+		"hu"			"Lökő Fertőzöttek"
+	}
+
 	"Tank #67"
 	{
 		"hu"			"{mint}Ez a Tank mindenhova lökdösi a túlélőket."
@@ -5372,6 +6037,11 @@
 	"Witch #67"
 	{
 		"hu"			"{mint}Ez a Boszorka mindenhova lökdösi a túlélőket."
+	}
+
+	"Common #67"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek mindenhova lökdösi a túlélőket."
 	}
 
 	"Tank #68 Name"
@@ -5414,6 +6084,11 @@
 		"hu"			"Lassú Boszorka"
 	}
 
+	"Common #68 Name"
+	{
+		"hu"			"Lassú Fertőzöttek"
+	}
+
 	"Tank #68"
 	{
 		"hu"			"{mint}Ez a Tank letudja lassítani a túlélőket."
@@ -5452,6 +6127,11 @@
 	"Witch #68"
 	{
 		"hu"			"{mint}Ez a Boszorka letudja lassítani a túlélőket."
+	}
+
+	"Common #68"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek letudja lassítani a túlélőket."
 	}
 
 	"Tank #69 Name"
@@ -5494,6 +6174,11 @@
 		"hu"			"Zúzó Boszorka"
 	}
 
+	"Common #69 Name"
+	{
+		"hu"			"Zúzó Fertőzöttek"
+	}
+
 	"Tank #69"
 	{
 		"hu"			"{mint}Ez a Tank a halálba tudja zúzni a túlélőket."
@@ -5532,6 +6217,11 @@
 	"Witch #69"
 	{
 		"hu"			"{mint}Ez a Boszorka a halálba tudja zúzni a túlélőket."
+	}
+
+	"Common #69"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek a halálba tudja zúzni a túlélőket."
 	}
 
 	"Tank #70 Name"
@@ -5574,6 +6264,11 @@
 		"hu"			"Lecsapó Boszorka"
 	}
 
+	"Common #70 Name"
+	{
+		"hu"			"Lecsapó Fertőzöttek"
+	}
+
 	"Tank #70"
 	{
 		"hu"			"{mint}Ez a Tank letudja csapni a túlélőket, ezzel azonnali halált okozva."
@@ -5612,6 +6307,11 @@
 	"Witch #70"
 	{
 		"hu"			"{mint}Ez a Boszorka letudja csapni a túlélőket, ezzel azonnali halált okozva."
+	}
+
+	"Common #70"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek letudja csapni a túlélőket, ezzel azonnali halált okozva."
 	}
 
 	"Tank #71 Name"
@@ -5654,6 +6354,11 @@
 		"hu"			"Füstös Boszorka"
 	}
 
+	"Common #71 Name"
+	{
+		"hu"			"Füstös Fertőzöttek"
+	}
+
 	"Tank #71"
 	{
 		"hu"			"{mint}Ez a Tank tud Füstösöket létrehozni, és dobni is egy párat a túlélők felé."
@@ -5692,6 +6397,11 @@
 	"Witch #71"
 	{
 		"hu"			"{mint}Ez a Boszorka tud Füstösöket létrehozni, és dobni is egy párat a túlélők felé."
+	}
+
+	"Common #71"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek tud Füstösöket létrehozni, és dobni is egy párat a túlélők felé."
 	}
 
 	"Tank #72 Name"
@@ -5734,6 +6444,11 @@
 		"hu"			"Kéretlen Boszorka"
 	}
 
+	"Common #72 Name"
+	{
+		"hu"			"Kéretlen Fertőzöttek"
+	}
+
 	"Tank #72"
 	{
 		"hu"			"{mint}Ez a Tank folyamatosan sziklákat dobál a túlélők felé."
@@ -5772,6 +6487,11 @@
 	"Witch #72"
 	{
 		"hu"			"{mint}Ez a Boszorka folyamatosan sziklákat dobál a túlélők felé."
+	}
+
+	"Common #72"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek folyamatosan sziklákat dobál a túlélők felé."
 	}
 
 	"Tank #73 Name"
@@ -5814,6 +6534,11 @@
 		"hu"			"Speciális Boszorka"
 	}
 
+	"Common #73 Name"
+	{
+		"hu"			"Speciális Fertőzöttek"
+	}
+
 	"Tank #73"
 	{
 		"hu"			"{mint}Ez a Tank tud létrehozni véletlenszerű speciális fertőzötteket, és dobni is egy párat a túlélők felé."
@@ -5852,6 +6577,11 @@
 	"Witch #73"
 	{
 		"hu"			"{mint}Ez a Boszorka tud létrehozni véletlenszerű speciális fertőzötteket."
+	}
+
+	"Common #73"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek tud létrehozni véletlenszerű speciális fertőzötteket."
 	}
 
 	"Tank #74 Name"
@@ -5894,6 +6624,11 @@
 		"hu"			"köpködő Boszorka"
 	}
 
+	"Common #74 Name"
+	{
+		"hu"			"köpködő Fertőzöttek"
+	}
+
 	"Tank #74"
 	{
 		"hu"			"{mint}Ez a Tank tud Köpködőket létrehozni, és dobni is egy párat a túlélők felé."
@@ -5932,6 +6667,11 @@
 	"Witch #74"
 	{
 		"hu"			"{mint}Ez a Boszorka tud Köpködőket létrehozni."
+	}
+
+	"Common #74"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek tud Köpködőket létrehozni."
 	}
 
 	"Tank #75 Name"
@@ -5974,6 +6714,11 @@
 		"hu"			"Területsebző Boszorka"
 	}
 
+	"Common #75 Name"
+	{
+		"hu"			"Területsebző Fertőzöttek"
+	}
+
 	"Tank #75"
 	{
 		"hu"			"{mint}Ez a Tank területi sebzést okoz egy bizonyos távolságon belül."
@@ -6012,6 +6757,11 @@
 	"Witch #75"
 	{
 		"hu"			"{mint}Ez a Boszorka területi sebzést okoz egy bizonyos távolságon belül."
+	}
+
+	"Common #75"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek területi sebzést okoz egy bizonyos távolságon belül."
 	}
 
 	"Tank #76 Name"
@@ -6054,6 +6804,11 @@
 		"hu"			"Fröcskölő Boszorka"
 	}
 
+	"Common #76 Name"
+	{
+		"hu"			"Fröcskölő Fertőzöttek"
+	}
+
 	"Tank #76"
 	{
 		"hu"			"{mint}Ez a Tank mindenki képernyőjét befröcsköli."
@@ -6092,6 +6847,11 @@
 	"Witch #76"
 	{
 		"hu"			"{mint}Ez a Boszorka mindenki képernyőjét befröcsköli."
+	}
+
+	"Common #76"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek mindenki képernyőjét befröcsköli."
 	}
 
 	"Tank #77 Name"
@@ -6134,6 +6894,11 @@
 		"hu"			"Eldobó Boszorka"
 	}
 
+	"Common #77 Name"
+	{
+		"hu"			"Eldobó Fertőzöttek"
+	}
+
 	"Tank #77"
 	{
 		"hu"			"{mint}Ez a Tank tud dobni autókat, speciális fertőzötteket, Tankokat, Boszorkákat, és saját magát!"
@@ -6172,6 +6937,11 @@
 	"Witch #77"
 	{
 		"hu"			"{mint}Ez a Boszorka tud dobni autókat, speciális fertőzötteket, Tankokat, Boszorkákat, és saját magát!"
+	}
+
+	"Common #77"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek tud dobni autókat, speciális fertőzötteket, Tankokat, Boszorkákat, és saját magát!"
 	}
 
 	"Tank #78 Name"
@@ -6214,6 +6984,11 @@
 		"hu"			"Követő Boszorka"
 	}
 
+	"Common #78 Name"
+	{
+		"hu"			"Követő Fertőzöttek"
+	}
+
 	"Tank #78"
 	{
 		"hu"			"{mint}Ez a Tank olyan sziklákat dob, ami követi a közelben lévő túlélőket."
@@ -6252,6 +7027,11 @@
 	"Witch #78"
 	{
 		"hu"			"{mint}Ez a Boszorka olyan sziklákat dob, ami követi a közelben lévő túlélőket."
+	}
+
+	"Common #78"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek olyan sziklákat dob, ami követi a közelben lévő túlélőket."
 	}
 
 	"Tank #79 Name"
@@ -6294,6 +7074,11 @@
 		"hu"			"Végső Boszorka"
 	}
 
+	"Common #79 Name"
+	{
+		"hu"			"Végső Fertőzöttek"
+	}
+
 	"Tank #79"
 	{
 		"hu"			"{mint}Ez a Tank ideiglenes halhatatlanságot és sebzést növelést kap, amikor már kevés az életereje."
@@ -6332,6 +7117,11 @@
 	"Witch #79"
 	{
 		"hu"			"{mint}Ez a Boszorka ideiglenes halhatatlanságot és sebzést növelést kap, amikor már kevés az életereje."
+	}
+
+	"Common #79"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek ideiglenes halhatatlanságot és sebzést növelést kap, amikor már kevés az életereje."
 	}
 
 	"Tank #80 Name"
@@ -6374,6 +7164,11 @@
 		"hu"			"Halhatatlan Boszorka"
 	}
 
+	"Common #80 Name"
+	{
+		"hu"			"Halhatatlan Fertőzöttek"
+	}
+
 	"Tank #80"
 	{
 		"hu"			"{mint}Ez a Tank visszanyeri a teljes életerejét, amikor már közel jár a halálhoz."
@@ -6412,6 +7207,11 @@
 	"Witch #80"
 	{
 		"hu"			"{mint}Ez a Boszorka visszanyeri a teljes életerejét, amikor már közel jár a halálhoz."
+	}
+
+	"Common #80"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek visszanyeri a teljes életerejét, amikor már közel jár a halálhoz."
 	}
 
 	"Tank #81 Name"
@@ -6454,6 +7254,11 @@
 		"hu"			"Vámpír Boszorka"
 	}
 
+	"Common #81 Name"
+	{
+		"hu"			"Vámpír Fertőzöttek"
+	}
+
 	"Tank #81"
 	{
 		"hu"			"{mint}Ez a Tank életerőt lophat a túlélőktől."
@@ -6492,6 +7297,11 @@
 	"Witch #81"
 	{
 		"hu"			"{mint}Ez a Boszorka életerőt lophat a túlélőktől."
+	}
+
+	"Common #81"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek életerőt lophat a túlélőktől."
 	}
 
 	"Tank #82 Name"
@@ -6534,6 +7344,11 @@
 		"hu"			"Vizuális Boszorka"
 	}
 
+	"Common #82 Name"
+	{
+		"hu"			"Vizuális Fertőzöttek"
+	}
+
 	"Tank #82"
 	{
 		"hu"			"{mint}Ez a Tank megváltoztatja a túlélők látómezejét."
@@ -6572,6 +7387,11 @@
 	"Witch #82"
 	{
 		"hu"			"{mint}Ez a Boszorka megváltoztatja a túlélők látómezejét."
+	}
+
+	"Common #82"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek megváltoztatja a túlélők látómezejét."
 	}
 
 	"Tank #83 Name"
@@ -6614,6 +7434,11 @@
 		"hu"			"Teleportáló Boszorka"
 	}
 
+	"Common #83 Name"
+	{
+		"hu"			"Teleportáló Fertőzöttek"
+	}
+
 	"Tank #83"
 	{
 		"hu"			"{mint}Ez a Tank véletlenszerűen egy túlélőhöz teleportál."
@@ -6652,6 +7477,11 @@
 	"Witch #83"
 	{
 		"hu"			"{mint}Ez a Boszorka véletlenszerűen egy túlélőhöz teleportál."
+	}
+
+	"Common #83"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek véletlenszerűen egy túlélőhöz teleportál."
 	}
 
 	"Tank #84 Name"
@@ -6694,6 +7524,11 @@
 		"hu"			"Örvénylő Boszorka"
 	}
 
+	"Common #84 Name"
+	{
+		"hu"			"Örvénylő Fertőzöttek"
+	}
+
 	"Tank #84"
 	{
 		"hu"			"{mint}Ez a Tank megpörgeti a túlélőket."
@@ -6732,6 +7567,11 @@
 	"Witch #84"
 	{
 		"hu"			"{mint}Ez a Boszorka megpörgeti a túlélőket."
+	}
+
+	"Common #84"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek megpörgeti a túlélőket."
 	}
 
 	"Tank #85 Name"
@@ -6774,6 +7614,11 @@
 		"hu"			"Boszorka Boszorka"
 	}
 
+	"Common #85 Name"
+	{
+		"hu"			"Boszorka Fertőzöttek"
+	}
+
 	"Tank #85"
 	{
 		"hu"			"{mint}Ez a Tank Boszorkává alakítja a közeli fertőzötteket, és dob is párat a túlélők felé."
@@ -6812,6 +7657,11 @@
 	"Witch #85"
 	{
 		"hu"			"{mint}Ez a Boszorka Boszorkává alakítja a közeli fertőzötteket."
+	}
+
+	"Common #85"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek Boszorkává alakítja a közeli fertőzötteket."
 	}
 
 	"Tank #86 Name"
@@ -6854,6 +7704,11 @@
 		"hu"			"Xiphos Boszorka"
 	}
 
+	"Common #86 Name"
+	{
+		"hu"			"Xiphos Fertőzöttek"
+	}
+
 	"Tank #86"
 	{
 		"hu"			"{mint}Ez a Tank tud életerőt lopni a túlélőktől és fordítva."
@@ -6892,6 +7747,11 @@
 	"Witch #86"
 	{
 		"hu"			"{mint}Ez a Boszorka tud életerőt lopni a túlélőktől és fordítva."
+	}
+
+	"Common #86"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek tud életerőt lopni a túlélőktől és fordítva."
 	}
 
 	"Tank #87 Name"
@@ -6934,6 +7794,11 @@
 		"hu"			"Üvöltő Boszorka"
 	}
 
+	"Common #87 Name"
+	{
+		"hu"			"Üvöltő Fertőzöttek"
+	}
+
 	"Tank #87"
 	{
 		"hu"			"{mint}Ez a Tank tud üvölteni, így megsüketítve a túlélőket."
@@ -6972,6 +7837,11 @@
 	"Witch #87"
 	{
 		"hu"			"{mint}Ez a Boszorka tud üvölteni, így megsüketítve a túlélőket."
+	}
+
+	"Common #87"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek tud üvölteni, így megsüketítve a túlélőket."
 	}
 
 	"Tank #88 Name"
@@ -7014,6 +7884,11 @@
 		"hu"			"Zombi Boszorka"
 	}
 
+	"Common #88 Name"
+	{
+		"hu"			"Zombi Fertőzöttek"
+	}
+
 	"Tank #88"
 	{
 		"hu"			"{mint}Ez a Tank hordákat hoz létre."
@@ -7052,6 +7927,11 @@
 	"Witch #88"
 	{
 		"hu"			"{mint}Ez a Boszorka hordákat hoz létre."
+	}
+
+	"Common #88"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek hordákat hoz létre."
 	}
 
 	"Tank #89 Name"
@@ -7094,6 +7974,11 @@
 		"hu"			"Armageddon Boszorka"
 	}
 
+	"Common #89 Name"
+	{
+		"hu"			"Armageddon Fertőzöttek"
+	}
+
 	"Tank #89"
 	{
 		"hu"			"{mint}Ez a Tank immunis a robbanásokra, magához húzza a túlélőket és fertőzötteket, meteor záport indít."
@@ -7132,6 +8017,11 @@
 	"Witch #89"
 	{
 		"hu"			"{mint}Ez a Boszorka immunis a robbanásokra, magához húzza a túlélőket és fertőzötteket, meteor záport indít."
+	}
+
+	"Common #89"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek immunis a robbanásokra, magához húzza a túlélőket és fertőzötteket, meteor záport indít."
 	}
 
 	"Tank #90 Name"
@@ -7174,6 +8064,11 @@
 		"hu"			"Főnök Boszorka"
 	}
 
+	"Common #90 Name"
+	{
+		"hu"			"Főnök Fertőzöttek"
+	}
+
 	"Tank #90"
 	{
 		"hu"			"{mint}Tűz immunitás, gyors, álcázza magát, lefegyverzi a túlélőket, magához húzza és megváltoztatja a túlélők gravitációját, időszakosan ugrik, meteor záport indít, pajzzsal születik, lecsapja a túlélőket, túlélőkhöz teleportál, és Boszorkákat/zombikat hozz létre."
@@ -7210,6 +8105,11 @@
 	}
 
 	"Witch #90"
+	{
+		"hu"			"{mint}Tűz immunitás, gyors, álcázza magát, lefegyverzi a túlélőket, magához húzza és megváltoztatja a túlélők gravitációját, időszakosan ugrik, meteor záport indít, pajzzsal születik, lecsapja a túlélőket, túlélőkhöz teleportál, és Boszorkákat/zombikat hozz létre."
+	}
+
+	"Common #90"
 	{
 		"hu"			"{mint}Tűz immunitás, gyors, álcázza magát, lefegyverzi a túlélőket, magához húzza és megváltoztatja a túlélők gravitációját, időszakosan ugrik, meteor záport indít, pajzzsal születik, lecsapja a túlélőket, túlélőkhöz teleportál, és Boszorkákat/zombikat hozz létre."
 	}
@@ -7254,6 +8154,11 @@
 		"hu"			"Kobalt Boszorka"
 	}
 
+	"Common #91 Name"
+	{
+		"hu"			"Kobalt Fertőzöttek"
+	}
+
 	"Tank #91"
 	{
 		"hu"			"{mint}Ez a Tank immunis a tűzre és nagyon gyorsan fut."
@@ -7292,6 +8197,11 @@
 	"Witch #91"
 	{
 		"hu"			"{mint}Ez a Boszorka immunis a tűzre és nagyon gyorsan fut."
+	}
+
+	"Common #91"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek immunis a tűzre és nagyon gyorsan fut."
 	}
 
 	"Tank #92 Name"
@@ -7334,6 +8244,11 @@
 		"hu"			"Elterelő Boszorka"
 	}
 
+	"Common #92 Name"
+	{
+		"hu"			"Elterelő Fertőzöttek"
+	}
+
 	"Tank #92"
 	{
 		"hu"			"{mint}Ez a Tank időszakosan ugrik, ráveszi a túlélőket arra hogy kontrollálhatatlanul ugráljanak, és a túlélőkhöz teleportál."
@@ -7372,6 +8287,11 @@
 	"Witch #92"
 	{
 		"hu"			"{mint}Ez a Boszorka időszakosan ugrik, ráveszi a túlélőket arra hogy kontrollálhatatlanul ugráljanak, és a túlélőkhöz teleportál."
+	}
+
+	"Common #92"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek időszakosan ugrik, ráveszi a túlélőket arra hogy kontrollálhatatlanul ugráljanak, és a túlélőkhöz teleportál."
 	}
 
 	"Tank #93 Name"
@@ -7414,6 +8334,11 @@
 		"hu"			"Visszaverő Boszorka"
 	}
 
+	"Common #93 Name"
+	{
+		"hu"			"Visszaverő Fertőzöttek"
+	}
+
 	"Tank #93"
 	{
 		"hu"			"{mint}Ez a Tank ellöki magától a túlélőket."
@@ -7452,6 +8377,11 @@
 	"Witch #93"
 	{
 		"hu"			"{mint}Ez a Boszorka ellöki magától a túlélőket."
+	}
+
+	"Common #93"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek ellöki magától a túlélőket."
 	}
 
 	"Tank #94 Name"
@@ -7494,6 +8424,11 @@
 		"hu"			"Flash Boszorka"
 	}
 
+	"Common #94 Name"
+	{
+		"hu"			"Flash Fertőzöttek"
+	}
+
 	"Tank #94"
 	{
 		"hu"			"{mint}Ez a Tank nagyon gyorsan tud futni, elektromosságot dob a túlélőkre, lelassítja az időt maga körül, miközben ideiglenesen legyőzhetetlen."
@@ -7532,6 +8467,11 @@
 	"Witch #94"
 	{
 		"hu"			"{mint}Ez a Boszorka nagyon gyorsan tud futni, lelassítja az időt maga körül, miközben ideiglenesen legyőzhetetlen."
+	}
+
+	"Common #94"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek nagyon gyorsan tud futni, lelassítja az időt maga körül, miközben ideiglenesen legyőzhetetlen."
 	}
 
 	"Tank #95 Name"
@@ -7574,6 +8514,11 @@
 		"hu"			"Góliát Boszorka"
 	}
 
+	"Common #95 Name"
+	{
+		"hu"			"Góliát Fertőzöttek"
+	}
+
 	"Tank #95"
 	{
 		"hu"			"{mint}Tűz immunitás, lassan mozog, ideiglenes életerőt ad a túlélőknek, életerőt szív el a közeli fertőzöttektől, pajzzsal születik, és lecsapja a túlélőket."
@@ -7610,6 +8555,11 @@
 	}
 
 	"Witch #95"
+	{
+		"hu"			"{mint}Tűz immunitás, lassan mozog, ideiglenes életerőt ad a túlélőknek, életerőt szív el a közeli fertőzöttektől, pajzzsal születik, és lecsapja a túlélőket."
+	}
+
+	"Common #95"
 	{
 		"hu"			"{mint}Tűz immunitás, lassan mozog, ideiglenes életerőt ad a túlélőknek, életerőt szív el a közeli fertőzöttektől, pajzzsal születik, és lecsapja a túlélőket."
 	}
@@ -7654,6 +8604,11 @@
 		"hu"			"Hallucináció Boszorka"
 	}
 
+	"Common #96 Name"
+	{
+		"hu"			"Hallucináció Fertőzöttek"
+	}
+
 	"Tank #96"
 	{
 		"hu"			"{mint}Tűz immunitás, álcázza magát, és a túlélőkhöz teleportál."
@@ -7690,6 +8645,11 @@
 	}
 
 	"Witch #96"
+	{
+		"hu"			"{mint}Tűz immunitás, álcázza magát, és a túlélőkhöz teleportál."
+	}
+
+	"Common #96"
 	{
 		"hu"			"{mint}Tűz immunitás, álcázza magát, és a túlélőkhöz teleportál."
 	}
@@ -7734,6 +8694,11 @@
 		"hu"			"Mém Boszorka"
 	}
 
+	"Common #97 Name"
+	{
+		"hu"			"Mém Fertőzöttek"
+	}
+
 	"Tank #97"
 	{
 		"hu"			"{mint}Tűz immunitás, sebzés elnyelés, gyorsan fut, álcázza magát, magához vonzza a túlélőket és megváltoztatja a gravitációjukat, magasra ugrik, meteor záport indít, lecsapja a túlélőket, sziklákat dobál folyamatosan, túlélőkhöz teleportál, és Boszorkákat/zombikat hoz létre."
@@ -7770,6 +8735,11 @@
 	}
 
 	"Witch #97"
+	{
+		"hu"			"{mint}Tűz immunitás, sebzés elnyelés, gyorsan fut, álcázza magát, magához vonzza a túlélőket és megváltoztatja a gravitációjukat, magasra ugrik, meteor záport indít, lecsapja a túlélőket, sziklákat dobál folyamatosan, túlélőkhöz teleportál, és Boszorkákat/zombikat hoz létre."
+	}
+
+	"Common #97"
 	{
 		"hu"			"{mint}Tűz immunitás, sebzés elnyelés, gyorsan fut, álcázza magát, magához vonzza a túlélőket és megváltoztatja a gravitációjukat, magasra ugrik, meteor záport indít, lecsapja a túlélőket, sziklákat dobál folyamatosan, túlélőkhöz teleportál, és Boszorkákat/zombikat hoz létre."
 	}
@@ -7814,6 +8784,11 @@
 		"hu"			"Káprázat Boszorka"
 	}
 
+	"Common #98 Name"
+	{
+		"hu"			"Káprázat Fertőzöttek"
+	}
+
 	"Tank #98"
 	{
 		"hu"			"{mint}Ez a Tank immunis a tűzre, gyorsan fut, és a túlélőkhöz teleportál."
@@ -7852,6 +8827,11 @@
 	"Witch #98"
 	{
 		"hu"			"{mint}Ez a Boszorka immunis a tűzre, gyorsan fut, és a túlélőkhöz teleportál."
+	}
+
+	"Common #98"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek immunis a tűzre, gyorsan fut, és a túlélőkhöz teleportál."
 	}
 
 	"Tank #99 Name"
@@ -7894,6 +8874,11 @@
 		"hu"			"Kísértet Boszorka"
 	}
 
+	"Common #99 Name"
+	{
+		"hu"			"Kísértet Fertőzöttek"
+	}
+
 	"Tank #99"
 	{
 		"hu"			"{mint}Ez a Tank immunis a tűzre, gyorsan fut, álcázza magát, és a túlélőkhöz teleportál."
@@ -7932,6 +8917,11 @@
 	"Witch #99"
 	{
 		"hu"			"{mint}Ez a Boszorka immunis a tűzre, gyorsan fut, álcázza magát, és a túlélőkhöz teleportál."
+	}
+
+	"Common #99"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek immunis a tűzre, gyorsan fut, álcázza magát, és a túlélőkhöz teleportál."
 	}
 
 	"Tank #100 Name"
@@ -7974,6 +8964,11 @@
 		"hu"			"Elmebeteg Boszorka"
 	}
 
+	"Common #100 Name"
+	{
+		"hu"			"Elmebeteg Fertőzöttek"
+	}
+
 	"Tank #100"
 	{
 		"hu"			"{mint}Ez a Tank ideiglenes életerőt ad a túlélőknek, életerőt szív el a közeli fertőzöttektől, meteor záport indít, pajzzsal születik, és a túlélőkhöz teleportál."
@@ -8012,6 +9007,11 @@
 	"Witch #100"
 	{
 		"hu"			"{mint}Ez a Boszorka ideiglenes életerőt ad a túlélőknek, életerőt szív el a közeli fertőzöttektől, meteor záport indít, pajzzsal születik, és a túlélőkhöz teleportál."
+	}
+
+	"Common #100"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek ideiglenes életerőt ad a túlélőknek, életerőt szív el a közeli fertőzöttektől, meteor záport indít, pajzzsal születik, és a túlélőkhöz teleportál."
 	}
 
 	"Tank #101 Name"
@@ -8054,6 +9054,11 @@
 		"hu"			"Fordító Boszorka"
 	}
 
+	"Common #101 Name"
+	{
+		"hu"			"Fordító Fertőzöttek"
+	}
+
 	"Tank #101"
 	{
 		"hu"			"{mint}Ez a Tank immunis a tűzre, nagyon gyorsan fut, és teleportál a túlélőkhöz."
@@ -8092,6 +9097,11 @@
 	"Witch #101"
 	{
 		"hu"			"{mint}Ez a Boszorka immunis a tűzre, nagyon gyorsan fut, és teleportál a túlélőkhöz."
+	}
+
+	"Common #101"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek immunis a tűzre, nagyon gyorsan fut, és teleportál a túlélőkhöz."
 	}
 
 	"Tank #102 Name"
@@ -8134,6 +9144,11 @@
 		"hu"			"Létrehozó Boszorka"
 	}
 
+	"Common #102 Name"
+	{
+		"hu"			"Létrehozó Fertőzöttek"
+	}
+
 	"Tank #102"
 	{
 		"hu"			"{mint}Ez a Tank zombikat hoz létre egy füstfelhő mögött."
@@ -8172,6 +9187,11 @@
 	"Witch #102"
 	{
 		"hu"			"{mint}Ez a Boszorka zombikat hoz létre egy füstfelhő mögött."
+	}
+
+	"Common #102"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek zombikat hoz létre egy füstfelhő mögött."
 	}
 
 	"Tank #103 Name"
@@ -8214,6 +9234,11 @@
 		"hu"			"Közelítő Boszorka"
 	}
 
+	"Common #103 Name"
+	{
+		"hu"			"Közelítő Fertőzöttek"
+	}
+
 	"Tank #103"
 	{
 		"hu"			"{mint}Ez a Tank immunis a tűzre, nagyon gyorsan fut, és teleportál a túlélőkhöz."
@@ -8252,6 +9277,11 @@
 	"Witch #103"
 	{
 		"hu"			"{mint}Ez a Boszorka immunis a tűzre, nagyon gyorsan fut, és teleportál a túlélőkhöz."
+	}
+
+	"Common #103"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek immunis a tűzre, nagyon gyorsan fut, és teleportál a túlélőkhöz."
 	}
 
 	"Tank #104 Name"
@@ -8294,6 +9324,11 @@
 		"hu"			"Csapda Boszorka"
 	}
 
+	"Common #104 Name"
+	{
+		"hu"			"Csapda Fertőzöttek"
+	}
+
 	"Tank #104"
 	{
 		"hu"			"{mint}Ez a Tank nem az aminek látszik."
@@ -8332,6 +9367,11 @@
 	"Witch #104"
 	{
 		"hu"			"{mint}Ez a Boszorka nem az aminek látszik."
+	}
+
+	"Common #104"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek nem az aminek látszik."
 	}
 
 	"Tank #105 Name"
@@ -8374,6 +9414,11 @@
 		"hu"			"Félelemkeltő Boszorka"
 	}
 
+	"Common #105 Name"
+	{
+		"hu"			"Félelemkeltő Fertőzöttek"
+	}
+
 	"Tank #105"
 	{
 		"hu"			"{mint}Ez a Tank megtudja részben vakítani a túlélőket."
@@ -8412,6 +9457,11 @@
 	"Witch #105"
 	{
 		"hu"			"{mint}Ez a Boszorka megtudja részben vakítani a túlélőket."
+	}
+
+	"Common #105"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek megtudja részben vakítani a túlélőket."
 	}
 
 	"Tank #106 Name"
@@ -8454,6 +9504,11 @@
 		"hu"			"Fanatikus Boszorka"
 	}
 
+	"Common #106 Name"
+	{
+		"hu"			"Fanatikus Fertőzöttek"
+	}
+
 	"Tank #106"
 	{
 		"hu"			"{mint}Ez a Tank részben bedrogozza és bántja a túlélőket."
@@ -8492,6 +9547,11 @@
 	"Witch #106"
 	{
 		"hu"			"{mint}Ez a Boszorka részben bedrogozza és bántja a túlélőket."
+	}
+
+	"Common #106"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek részben bedrogozza és bántja a túlélőket."
 	}
 
 	"Tank #107 Name"
@@ -8534,6 +9594,11 @@
 		"hu"			"Remegő Boszorka"
 	}
 
+	"Common #107 Name"
+	{
+		"hu"			"Remegő Fertőzöttek"
+	}
+
 	"Tank #107"
 	{
 		"hu"			"{mint}Ez a Tank odadobja a sziklákat a túlélőkre."
@@ -8572,6 +9637,11 @@
 	"Witch #107"
 	{
 		"hu"			"{mint}Ez a Boszorka odadobja a sziklákat a túlélőkre."
+	}
+
+	"Common #107"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek odadobja a sziklákat a túlélőkre."
 	}
 
 	"Tank #108 Name"
@@ -8614,6 +9684,11 @@
 		"hu"			"Elmeb3teg Boszorka"
 	}
 
+	"Common #108 Name"
+	{
+		"hu"			"Elmeb3teg Fertőzöttek"
+	}
+
 	"Tank #108"
 	{
 		"hu"			"{mint}Ez a Tank extra sebzést okozz, nagyon gyorsan fut miközben álcázza magát és lelassítja a túlélőket."
@@ -8652,6 +9727,11 @@
 	"Witch #108"
 	{
 		"hu"			"{mint}Ez a Boszorka extra sebzést okozz, nagyon gyorsan fut miközben álcázza magát és lelassítja a túlélőket."
+	}
+
+	"Common #108"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek extra sebzést okozz, nagyon gyorsan fut miközben álcázza magát és lelassítja a túlélőket."
 	}
 
 	"Tank #109 Name"
@@ -8694,6 +9774,11 @@
 		"hu"			"Apokalipszis Boszorka"
 	}
 
+	"Common #109 Name"
+	{
+		"hu"			"Apokalipszis Fertőzöttek"
+	}
+
 	"Tank #109"
 	{
 		"hu"			"{mint}Ez a Tank immunis a tűzre, kicsit gyorsabban fut, meteor záport, pánik eseményt, és szikla záport indít."
@@ -8732,6 +9817,11 @@
 	"Witch #109"
 	{
 		"hu"			"{mint}Ez a Boszorka immunis a tűzre, kicsit gyorsabban fut, meteor záport, pánik eseményt, és szikla záport indít."
+	}
+
+	"Common #109"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek immunis a tűzre, kicsit gyorsabban fut, meteor záport, pánik eseményt, és szikla záport indít."
 	}
 
 	"Tank #110 Name"
@@ -8774,6 +9864,11 @@
 		"hu"			"Darth Vader Boszorka"
 	}
 
+	"Common #110 Name"
+	{
+		"hu"			"Darth Vader Fertőzöttek"
+	}
+
 	"Tank #110"
 	{
 		"hu"			"{mint}Ez Darth Vader... És ő egy... Mutáns Tank az erővel!"
@@ -8812,6 +9907,11 @@
 	"Witch #110"
 	{
 		"hu"			"{mint}Ez Darth Vader... És ő egy... Mutáns Boszorka az erővel!"
+	}
+
+	"Common #110"
+	{
+		"hu"			"{mint}Ez Darth Vader... És ő egy... Mutáns Fertőzöttek az erővel!"
 	}
 
 	"Tank #111 Name"
@@ -8854,6 +9954,11 @@
 		"hu"			"Drog Szenvedélye Boszorka"
 	}
 
+	"Common #111 Name"
+	{
+		"hu"			"Drog Szenvedélye Fertőzöttek"
+	}
+
 	"Tank #111"
 	{
 		"hu"			"{mint}Ennek a Tanknak fertőző a szenvedélye."
@@ -8892,6 +9997,11 @@
 	"Witch #111"
 	{
 		"hu"			"{mint}Ennek a Boszorkanak fertőző a szenvedélye."
+	}
+
+	"Common #111"
+	{
+		"hu"			"{mint}Ennek a Fertőzötteknak fertőző a szenvedélye."
 	}
 
 	"Tank #112 Name"
@@ -8934,6 +10044,11 @@
 		"hu"			"SokSzerencsét Boszorka"
 	}
 
+	"Common #112 Name"
+	{
+		"hu"			"SokSzerencsét Fertőzöttek"
+	}
+
 	"Tank #112"
 	{
 		"hu"			"{mint}Ez a Tank immunis a tűzre, nagyon gyorsan fut, és a túlélőkhöz tud teleportálni."
@@ -8972,6 +10087,11 @@
 	"Witch #112"
 	{
 		"hu"			"{mint}Ez a Boszorka immunis a tűzre, nagyon gyorsan fut, és a túlélőkhöz tud teleportálni."
+	}
+
+	"Common #112"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek immunis a tűzre, nagyon gyorsan fut, és a túlélőkhöz tud teleportálni."
 	}
 
 	"Tank #113 Name"
@@ -9014,6 +10134,11 @@
 		"hu"			"Zord Kaszás Boszorka"
 	}
 
+	"Common #113 Name"
+	{
+		"hu"			"Zord Kaszás Fertőzöttek"
+	}
+
 	"Tank #113"
 	{
 		"hu"			"{mint}Ez a Tank egy kicsit gyorsabban fut, eltemeti a túlélőket, álcázza magát, túlélőkhöz teleportál."
@@ -9052,6 +10177,11 @@
 	"Witch #113"
 	{
 		"hu"			"{mint}Ez a Boszorka egy kicsit gyorsabban fut, eltemeti a túlélőket, álcázza magát, túlélőkhöz teleportál."
+	}
+
+	"Common #113"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek egy kicsit gyorsabban fut, eltemeti a túlélőket, álcázza magát, túlélőkhöz teleportál."
 	}
 
 	"Tank #114 Name"
@@ -9094,6 +10224,11 @@
 		"hu"			"Horda Boszorka"
 	}
 
+	"Common #114 Name"
+	{
+		"hu"			"Horda Fertőzöttek"
+	}
+
 	"Tank #114"
 	{
 		"hu"			"{mint}Ez a Tank pánik eseményt indíthat és lehányhatja a túlélőket hogy segítsen."
@@ -9132,6 +10267,11 @@
 	"Witch #114"
 	{
 		"hu"			"{mint}Ez a Boszorka pánik eseményt indíthat és lehányhatja a túlélőket hogy segítsen."
+	}
+
+	"Common #114"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek pánik eseményt indíthat és lehányhatja a túlélőket hogy segítsen."
 	}
 
 	"Tank #115 Name"
@@ -9174,6 +10314,11 @@
 		"hu"			"Hulk Boszorka"
 	}
 
+	"Common #115 Name"
+	{
+		"hu"			"Hulk Fertőzöttek"
+	}
+
 	"Tank #115"
 	{
 		"hu"			"{mint}Bemutatom a Hihetetlen Hulk-ot! Ennek a Tanknak nagyrészt olyan képességei vannak mint Hulk-nak!"
@@ -9212,6 +10357,11 @@
 	"Witch #115"
 	{
 		"hu"			"{mint}Bemutatom a Hihetetlen Hulk-ot! Ennek a Boszorkanak nagyrészt olyan képességei vannak mint Hulk-nak!"
+	}
+
+	"Common #115"
+	{
+		"hu"			"{mint}Bemutatom a Hihetetlen Hulk-ot! Ennek a Fertőzötteknak nagyrészt olyan képességei vannak mint Hulk-nak!"
 	}
 
 	"Tank #116 Name"
@@ -9254,6 +10404,11 @@
 		"hu"			"Nindzsa Boszorka"
 	}
 
+	"Common #116 Name"
+	{
+		"hu"			"Nindzsa Fertőzöttek"
+	}
+
 	"Tank #116"
 	{
 		"hu"			"{mint}Ez a Tank tud teleportálni, csendben mozogni, és tudja álcázni magát. Légy óvatos!"
@@ -9292,6 +10447,11 @@
 	"Witch #116"
 	{
 		"hu"			"{mint}Ez a Boszorka tud teleportálni, csendben mozogni, és tudja álcázni magát. Légy óvatos!"
+	}
+
+	"Common #116"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek tud teleportálni, csendben mozogni, és tudja álcázni magát. Légy óvatos!"
 	}
 
 	"Tank #117 Name"
@@ -9334,6 +10494,11 @@
 		"hu"			"Zen Boszorka"
 	}
 
+	"Common #117 Name"
+	{
+		"hu"			"Zen Fertőzöttek"
+	}
+
 	"Tank #117"
 	{
 		"hu"			"{mint}Ez a Tank éppen meditál, túl elfoglalt hogy foglalkozzon veled."
@@ -9374,6 +10539,11 @@
 		"hu"			"{mint}Ez a Boszorka éppen meditál, túl elfoglalt hogy foglalkozzon veled."
 	}
 
+	"Common #117"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek éppen meditál, túl elfoglalt hogy foglalkozzon veled."
+	}
+
 	"Tank #118 Name"
 	{
 		"hu"			"A Főnök (1. Alak)"
@@ -9410,6 +10580,11 @@
 	}
 
 	"Witch #118 Name"
+	{
+		"hu"			"A Főnök (1. Alak)"
+	}
+
+	"Common #118 Name"
 	{
 		"hu"			"A Főnök (1. Alak)"
 	}
@@ -9454,6 +10629,11 @@
 		"hu"			"{mint}Ez a Boszorka időszakosan teleportál egy túlélőkhöz."
 	}
 
+	"Common #118"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek időszakosan teleportál egy túlélőkhöz."
+	}
+
 	"Tank #119 Name"
 	{
 		"hu"			"Acél Hűbérúr (2. Alak)"
@@ -9490,6 +10670,11 @@
 	}
 
 	"Witch #119 Name"
+	{
+		"hu"			"Acél Hűbérúr (2. Alak)"
+	}
+
+	"Common #119 Name"
 	{
 		"hu"			"Acél Hűbérúr (2. Alak)"
 	}
@@ -9534,6 +10719,11 @@
 		"hu"			"{mint}Ez a Boszorka egy kicsit gyorsabban fut, immunis a közelharcra, erősebb a szokásosnál, megváltoztathatja a túlélők gravitációját, időszakosan teleportál egy túlélőhöz."
 	}
 
+	"Common #119"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek egy kicsit gyorsabban fut, immunis a közelharcra, erősebb a szokásosnál, megváltoztathatja a túlélők gravitációját, időszakosan teleportál egy túlélőhöz."
+	}
+
 	"Tank #120 Name"
 	{
 		"hu"			"Éjjeli Orvvadász (3. Alak)"
@@ -9570,6 +10760,11 @@
 	}
 
 	"Witch #120 Name"
+	{
+		"hu"			"Éjjeli Orvvadász (3. Alak)"
+	}
+
+	"Common #120 Name"
 	{
 		"hu"			"Éjjeli Orvvadász (3. Alak)"
 	}
@@ -9614,6 +10809,11 @@
 		"hu"			"{mint}Ez a Boszorka egy kicsit gyorsabban fut, immunis a tűzre, gyengébb a szokásosnál, megvakítja a túlélőket, láthatatlanná tud válni, időszakosan teleportál egy túlélőhöz."
 	}
 
+	"Common #120"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek egy kicsit gyorsabban fut, immunis a tűzre, gyengébb a szokásosnál, megvakítja a túlélőket, láthatatlanná tud válni, időszakosan teleportál egy túlélőhöz."
+	}
+
 	"Tank #121 Name"
 	{
 		"hu"			"Tűz Szelleme (4. Alak)"
@@ -9650,6 +10850,11 @@
 	}
 
 	"Witch #121 Name"
+	{
+		"hu"			"Tűz Szelleme (4. Alak)"
+	}
+
+	"Common #121 Name"
 	{
 		"hu"			"Tűz Szelleme (4. Alak)"
 	}
@@ -9694,6 +10899,11 @@
 		"hu"			"{mint}Ez a Boszorka egy kicsit gyorsabban fut, immunis a tűzre, erősebb a szokásosnál, tüzet okoz, ideiglenes életerőt ad a túlélőknek, időszakosan ugrál, időszakosan teleportál egy túlélőhöz."
 	}
 
+	"Common #121"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek egy kicsit gyorsabban fut, immunis a tűzre, erősebb a szokásosnál, tüzet okoz, ideiglenes életerőt ad a túlélőknek, időszakosan ugrál, időszakosan teleportál egy túlélőhöz."
+	}
+
 	"Tank #122 Name"
 	{
 		"hu"			"Randomizáló Tank"
@@ -9732,6 +10942,11 @@
 	"Witch #122 Name"
 	{
 		"hu"			"Randomizáló Boszorka"
+	}
+
+	"Common #122 Name"
+	{
+		"hu"			"Randomizáló Fertőzöttek"
 	}
 
 	"Tank #122"
@@ -9774,6 +10989,11 @@
 		"hu"			"{mint}Ez a Boszorka véletlenszerűen átalakul egy másik típusú Mutáns Boszorkaká, a sebzése megnő. Légy óvatos..."
 	}
 
+	"Common #122"
+	{
+		"hu"			"{mint}Ez a Boszorka véletlenszerűen átalakul egy másik típusú Mutáns Fertőzöttekká, a sebzése megnő. Légy óvatos..."
+	}
+
 	"Tank #123 Name"
 	{
 		"hu"			"Alakváltó Tank"
@@ -9812,6 +11032,11 @@
 	"Witch #123 Name"
 	{
 		"hu"			"Alakváltó Boszorka"
+	}
+
+	"Common #123 Name"
+	{
+		"hu"			"Alakváltó Fertőzöttek"
 	}
 
 	"Tank #123"
@@ -9854,6 +11079,11 @@
 		"hu"			"{mint}Ez a Boszorka át tud alakulni egy másik típusú Mutáns Boszorkaká. Ne becsüld le..."
 	}
 
+	"Common #123"
+	{
+		"hu"			"{mint}Ez a Boszorka át tud alakulni egy másik típusú Mutáns Fertőzöttekká. Ne becsüld le..."
+	}
+
 	"Tank #124 Name"
 	{
 		"hu"			"Villanó Tank"
@@ -9892,6 +11122,11 @@
 	"Witch #124 Name"
 	{
 		"hu"			"Villanó Boszorka"
+	}
+
+	"Common #124 Name"
+	{
+		"hu"			"Villanó Fertőzöttek"
 	}
 
 	"Tank #124"
@@ -9934,6 +11169,11 @@
 		"hu"			"{mint}Ez a Boszorka villanásokat okoz, amitől ő maga, de mindenki más is megbénul akit megsebez."
 	}
 
+	"Common #124"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek villanásokat okoz, amitől ő maga, de mindenki más is megbénul akit megsebez."
+	}
+
 	"Tank #125 Name"
 	{
 		"hu"			"Mocsárember Tank"
@@ -9972,6 +11212,11 @@
 	"Witch #125 Name"
 	{
 		"hu"			"Mocsárember Boszorka"
+	}
+
+	"Common #125 Name"
+	{
+		"hu"			"Mocsárember Fertőzöttek"
 	}
 
 	"Tank #125"
@@ -10014,6 +11259,11 @@
 		"hu"			"{mint}Ez a Boszorka ugyanolyan bosszantó mint bármelyik sárember."
 	}
 
+	"Common #125"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek ugyanolyan bosszantó mint bármelyik sárember."
+	}
+
 	"Tank #126 Name"
 	{
 		"hu"			"Végjáték Tank"
@@ -10054,6 +11304,11 @@
 		"hu"			"Végjáték Boszorka"
 	}
 
+	"Common #126 Name"
+	{
+		"hu"			"Végjáték Fertőzöttek"
+	}
+
 	"Tank #126"
 	{
 		"hu"			"{mint}Viszlát mindenki!"
@@ -10090,6 +11345,11 @@
 	}
 
 	"Witch #126"
+	{
+		"hu"			"{mint}Viszlát mindenki!"
+	}
+
+	"Common #126"
 	{
 		"hu"			"{mint}Viszlát mindenki!"
 	}
@@ -10134,6 +11394,11 @@
 		"hu"			"Játékos Boszorka"
 	}
 
+	"Common #127 Name"
+	{
+		"hu"			"Játékos Fertőzöttek"
+	}
+
 	"Tank #127"
 	{
 		"hu"			"{mint}Ez a Tank nem okoz sebzést. Csak játszani szeretne!"
@@ -10172,6 +11437,11 @@
 	"Witch #127"
 	{
 		"hu"			"{mint}Ez a Boszorka nem okoz sebzést. Csak játszani szeretne!"
+	}
+
+	"Common #127"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek nem okoz sebzést. Csak játszani szeretne!"
 	}
 
 	"Tank #128 Name"
@@ -10214,6 +11484,11 @@
 		"hu"			"Bosszantó Boszorka"
 	}
 
+	"Common #128 Name"
+	{
+		"hu"			"Bosszantó Fertőzöttek"
+	}
+
 	"Tank #128"
 	{
 		"hu"			"{mint}Ez a Tank egyszerűen csak nem megy el."
@@ -10252,6 +11527,1631 @@
 	"Witch #128"
 	{
 		"hu"			"{mint}Ez a Boszorka egyszerűen csak nem megy el."
+	}
+
+	"Common #128"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek egyszerűen csak nem megy el."
+	}
+
+	"Tank #129 Name"
+	{
+		"hu"			"Sipow Tank"
+	}
+
+	"Boomer #129 Name"
+	{
+		"hu"			"Sipow Pukkancs"
+	}
+
+	"Charger #129 Name"
+	{
+		"hu"			"Sipow Rohanó"
+	}
+
+	"Hunter #129 Name"
+	{
+		"hu"			"Sipow Vadász"
+	}
+
+	"Jockey #129 Name"
+	{
+		"hu"			"Sipow Zsoké"
+	}
+
+	"Smoker #129 Name"
+	{
+		"hu"			"Sipow Füstös"
+	}
+
+	"Spitter #129 Name"
+	{
+		"hu"			"Sipow Köpködő"
+	}
+
+	"Witch #129 Name"
+	{
+		"hu"			"Sipow Boszorka"
+	}
+
+	"Common #129 Name"
+	{
+		"hu"			"Sipow Fertőzöttek"
+	}
+
+	"Tank #129"
+	{
+		"hu"			"{mint}Ez a Tank savas tócsákat hozhat létre a túlélők alatt, és meteorzáport indíthat el meteoritokkal, amelyek néhány másodperc múlva égnek és felrobbannak."
+	}
+
+	"Boomer #129"
+	{
+		"hu"			"{mint}Ez a Pukkancs savas tócsákat hozhat létre a túlélők alatt, és meteorzáport indíthat el meteoritokkal, amelyek néhány másodperc múlva égnek és felrobbannak."
+	}
+
+	"Charger #129"
+	{
+		"hu"			"{mint}Ez a Rohanó savas tócsákat hozhat létre a túlélők alatt, és meteorzáport indíthat el meteoritokkal, amelyek néhány másodperc múlva égnek és felrobbannak."
+	}
+
+	"Hunter #129"
+	{
+		"hu"			"{mint}Ez a Vadász savas tócsákat hozhat létre a túlélők alatt, és meteorzáport indíthat el meteoritokkal, amelyek néhány másodperc múlva égnek és felrobbannak."
+	}
+
+	"Jockey #129"
+	{
+		"hu"			"{mint}Ez a Zsoké savas tócsákat hozhat létre a túlélők alatt, és meteorzáport indíthat el meteoritokkal, amelyek néhány másodperc múlva égnek és felrobbannak."
+	}
+
+	"Smoker #129"
+	{
+		"hu"			"{mint}Ez a Füstös savas tócsákat hozhat létre a túlélők alatt, és meteorzáport indíthat el meteoritokkal, amelyek néhány másodperc múlva égnek és felrobbannak."
+	}
+
+	"Spitter #129"
+	{
+		"hu"			"{mint}Ez a Köpködő savas tócsákat hozhat létre a túlélők alatt, és meteorzáport indíthat el meteoritokkal, amelyek néhány másodperc múlva égnek és felrobbannak."
+	}
+
+	"Witch #129"
+	{
+		"hu"			"{mint}Ez a Boszorka savas tócsákat hozhat létre a túlélők alatt, és meteorzáport indíthat el meteoritokkal, amelyek néhány másodperc múlva égnek és felrobbannak."
+	}
+
+	"Common #129"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek savas tócsákat hozhat létre a túlélők alatt, és meteorzáport indíthat el meteoritokkal, amelyek néhány másodperc múlva égnek és felrobbannak."
+	}
+
+	"Tank #130 Name"
+	{
+		"hu"			"Gonosz Tank"
+	}
+
+	"Boomer #130 Name"
+	{
+		"hu"			"Gonosz Pukkancs"
+	}
+
+	"Charger #130 Name"
+	{
+		"hu"			"Gonosz Rohanó"
+	}
+
+	"Hunter #130 Name"
+	{
+		"hu"			"Gonosz Vadász"
+	}
+
+	"Jockey #130 Name"
+	{
+		"hu"			"Gonosz Zsoké"
+	}
+
+	"Smoker #130 Name"
+	{
+		"hu"			"Gonosz Füstös"
+	}
+
+	"Spitter #130 Name"
+	{
+		"hu"			"Gonosz Köpködő"
+	}
+
+	"Witch #130 Name"
+	{
+		"hu"			"Gonosz Boszorka"
+	}
+
+	"Common #130 Name"
+	{
+		"hu"			"Gonosz Fertőzöttek"
+	}
+
+	"Tank #130"
+	{
+		"hu"			"{mint}Ez a Tank a lávába küldhet, de nem hagy semmit meghalni!"
+	}
+
+	"Boomer #130"
+	{
+		"hu"			"{mint}Ez a Pukkancs a lávába küldhet, de nem hagy semmit meghalni!"
+	}
+
+	"Charger #130"
+	{
+		"hu"			"{mint}Ez a Rohanó a lávába küldhet, de nem hagy semmit meghalni!"
+	}
+
+	"Hunter #130"
+	{
+		"hu"			"{mint}Ez a Vadász a lávába küldhet, de nem hagy semmit meghalni!"
+	}
+
+	"Jockey #130"
+	{
+		"hu"			"{mint}Ez a Zsoké a lávába küldhet, de nem hagy semmit meghalni!"
+	}
+
+	"Smoker #130"
+	{
+		"hu"			"{mint}Ez a Füstös a lávába küldhet, de nem hagy semmit meghalni!"
+	}
+
+	"Spitter #130"
+	{
+		"hu"			"{mint}Ez a Köpködő a lávába küldhet, de nem hagy semmit meghalni!"
+	}
+
+	"Witch #130"
+	{
+		"hu"			"{mint}Ez a Boszorka a lávába küldhet, de nem hagy semmit meghalni!"
+	}
+
+	"Common #130"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek a lávába küldhet, de nem hagy semmit meghalni!"
+	}
+
+	"Tank #131 Name"
+	{
+		"hu"			"Biztos úr Tank"
+	}
+
+	"Boomer #131 Name"
+	{
+		"hu"			"Biztos úr Pukkancs"
+	}
+
+	"Charger #131 Name"
+	{
+		"hu"			"Biztos úr Rohanó"
+	}
+
+	"Hunter #131 Name"
+	{
+		"hu"			"Biztos úr Vadász"
+	}
+
+	"Jockey #131 Name"
+	{
+		"hu"			"Biztos úr Zsoké"
+	}
+
+	"Smoker #131 Name"
+	{
+		"hu"			"Biztos úr Füstös"
+	}
+
+	"Spitter #131 Name"
+	{
+		"hu"			"Biztos úr Köpködő"
+	}
+
+	"Witch #131 Name"
+	{
+		"hu"			"Biztos úr Boszorka"
+	}
+
+	"Common #131 Name"
+	{
+		"hu"			"Biztos úr Fertőzötteket"
+	}
+
+	"Tank #131 Note"
+	{
+		"hu"			"{mint}Ez a Tank és az egész rendőrség azért van itt, hogy érvényt szerezzen a törvénynek!"
+	}
+
+	"Boomer #131 Note"
+	{
+		"hu"			"{mint}Ez a Pukkancs és az egész rendőrség azért van itt, hogy érvényt szerezzen a törvénynek!"
+	}
+
+	"Charger #131 Note"
+	{
+		"hu"			"{mint}Ez a Rohanó és az egész rendőrség azért van itt, hogy érvényt szerezzen a törvénynek!"
+	}
+
+	"Hunter #131 Note"
+	{
+		"hu"			"{mint}Ez a Vadász és az egész rendőrség azért van itt, hogy érvényt szerezzen a törvénynek!"
+	}
+
+	"Jockey #131 Note"
+	{
+		"hu"			"{mint}Ez a Zsoké és az egész rendőrség azért van itt, hogy érvényt szerezzen a törvénynek!"
+	}
+
+	"Smoker #131 Note"
+	{
+		"hu"			"{mint}Ez a Füstös és az egész rendőrség azért van itt, hogy érvényt szerezzen a törvénynek!"
+	}
+
+	"Spitter #131 Note"
+	{
+		"hu"			"{mint}Ez a Köpködő és az egész rendőrség azért van itt, hogy érvényt szerezzen a törvénynek!"
+	}
+
+	"Witch #131 Note"
+	{
+		"hu"			"{mint}Ez a Boszorka és az egész rendőrség azért van itt, hogy érvényt szerezzen a törvénynek!"
+	}
+
+	"Common #131 Note"
+	{
+		"hu"			"{mint}Ez a Fertőzötteket és az egész rendőrség azért van itt, hogy érvényt szerezzen a törvénynek!"
+	}
+
+	"Tank #132 Name"
+	{
+		"hu"			"Maffia Tank"
+	}
+
+	"Boomer #132 Name"
+	{
+		"hu"			"Maffia Pukkancs"
+	}
+
+	"Charger #132 Name"
+	{
+		"hu"			"Maffia Rohanó"
+	}
+
+	"Hunter #132 Name"
+	{
+		"hu"			"Maffia Vadász"
+	}
+
+	"Jockey #132 Name"
+	{
+		"hu"			"Maffia Zsoké"
+	}
+
+	"Smoker #132 Name"
+	{
+		"hu"			"Maffia Füstös"
+	}
+
+	"Spitter #132 Name"
+	{
+		"hu"			"Maffia Köpködő"
+	}
+
+	"Witch #132 Name"
+	{
+		"hu"			"Maffia Boszorka"
+	}
+
+	"Common #132 Name"
+	{
+		"hu"			"Maffia Fertőzötteket"
+	}
+
+	"Tank #132 Note"
+	{
+		"hu"			"{mint}Ez a Tank a maffia tagja!"
+	}
+
+	"Boomer #132 Note"
+	{
+		"hu"			"{mint}Ez a Pukkancs a maffia tagja!"
+	}
+
+	"Charger #132 Note"
+	{
+		"hu"			"{mint}Ez a Rohanó a maffia tagja!"
+	}
+
+	"Hunter #132 Note"
+	{
+		"hu"			"{mint}Ez a Vadász a maffia tagja!"
+	}
+
+	"Jockey #132 Note"
+	{
+		"hu"			"{mint}Ez a Zsoké a maffia tagja!"
+	}
+
+	"Smoker #132 Note"
+	{
+		"hu"			"{mint}Ez a Füstös a maffia tagja!"
+	}
+
+	"Spitter #132 Note"
+	{
+		"hu"			"{mint}Ez a Köpködő a maffia tagja!"
+	}
+
+	"Witch #132 Note"
+	{
+		"hu"			"{mint}Ez a Boszorka a maffia tagja!"
+	}
+
+	"Common #132 Note"
+	{
+		"hu"			"{mint}Ez a Fertőzötteket a maffia tagja!"
+	}
+
+	"Tank #133 Name"
+	{
+		"hu"			"Frankenstein Tank"
+	}
+
+	"Boomer #133 Name"
+	{
+		"hu"			"Frankenstein Pukkancs"
+	}
+
+	"Charger #133 Name"
+	{
+		"hu"			"Frankenstein Rohanó"
+	}
+
+	"Hunter #133 Name"
+	{
+		"hu"			"Frankenstein Vadász"
+	}
+
+	"Jockey #133 Name"
+	{
+		"hu"			"Frankenstein Zsoké"
+	}
+
+	"Smoker #133 Name"
+	{
+		"hu"			"Frankenstein Füstös"
+	}
+
+	"Spitter #133 Name"
+	{
+		"hu"			"Frankenstein Köpködő"
+	}
+
+	"Witch #133 Name"
+	{
+		"hu"			"Frankenstein Boszorka"
+	}
+
+	"Common #133 Name"
+	{
+		"hu"			"Frankenstein Fertőzötteket"
+	}
+
+	"Tank #133 Note"
+	{
+		"hu"			"{mint}Ez a Tank Frankenstein mutánsa!"
+	}
+
+	"Boomer #133 Note"
+	{
+		"hu"			"{mint}Ez a Pukkancs Frankenstein mutánsa!"
+	}
+
+	"Charger #133 Note"
+	{
+		"hu"			"{mint}Ez a Rohanó Frankenstein mutánsa!"
+	}
+
+	"Hunter #133 Note"
+	{
+		"hu"			"{mint}Ez a Vadász Frankenstein mutánsa!"
+	}
+
+	"Jockey #133 Note"
+	{
+		"hu"			"{mint}Ez a Zsoké Frankenstein mutánsa!"
+	}
+
+	"Smoker #133 Note"
+	{
+		"hu"			"{mint}Ez a Füstös Frankenstein mutánsa!"
+	}
+
+	"Spitter #133 Note"
+	{
+		"hu"			"{mint}Ez a Köpködő Frankenstein mutánsa!"
+	}
+
+	"Witch #133 Note"
+	{
+		"hu"			"{mint}Ez a Boszorka Frankenstein mutánsa!"
+	}
+
+	"Common #133 Note"
+	{
+		"hu"			"{mint}Ez a Fertőzötteket Frankenstein mutánsa!"
+	}
+
+	"Tank #134 Name"
+	{
+		"hu"			"Prototípus Tank"
+	}
+
+	"Boomer #134 Name"
+	{
+		"hu"			"Prototípus Pukkancs"
+	}
+
+	"Charger #134 Name"
+	{
+		"hu"			"Prototípus Rohanó"
+	}
+
+	"Hunter #134 Name"
+	{
+		"hu"			"Prototípus Vadász"
+	}
+
+	"Jockey #134 Name"
+	{
+		"hu"			"Prototípus Zsoké"
+	}
+
+	"Smoker #134 Name"
+	{
+		"hu"			"Prototípus Füstös"
+	}
+
+	"Spitter #134 Name"
+	{
+		"hu"			"Prototípus Köpködő"
+	}
+
+	"Witch #134 Name"
+	{
+		"hu"			"Prototípus Boszorka"
+	}
+
+	"Common #134 Name"
+	{
+		"hu"			"Prototípus Fertőzötteket"
+	}
+
+	"Tank #134 Note"
+	{
+		"hu"			"{mint}Ez a Tank improvizál, alkalmazkodik, és minden helyzetet leküzd."
+	}
+
+	"Boomer #134 Note"
+	{
+		"hu"			"{mint}Ez a Pukkancs improvizál, alkalmazkodik, és minden helyzetet leküzd."
+	}
+
+	"Charger #134 Note"
+	{
+		"hu"			"{mint}Ez a Rohanó improvizál, alkalmazkodik, és minden helyzetet leküzd."
+	}
+
+	"Hunter #134 Note"
+	{
+		"hu"			"{mint}Ez a Vadász improvizál, alkalmazkodik, és minden helyzetet leküzd."
+	}
+
+	"Jockey #134 Note"
+	{
+		"hu"			"{mint}Ez a Zsoké improvizál, alkalmazkodik, és minden helyzetet leküzd."
+	}
+
+	"Smoker #134 Note"
+	{
+		"hu"			"{mint}Ez a Füstös improvizál, alkalmazkodik, és minden helyzetet leküzd."
+	}
+
+	"Spitter #134 Note"
+	{
+		"hu"			"{mint}Ez a Köpködő improvizál, alkalmazkodik, és minden helyzetet leküzd."
+	}
+
+	"Witch #134 Note"
+	{
+		"hu"			"{mint}Ez a Boszorka improvizál, alkalmazkodik, és minden helyzetet leküzd."
+	}
+
+	"Common #134 Note"
+	{
+		"hu"			"{mint}Ez a Fertőzötteket improvizál, alkalmazkodik, és minden helyzetet leküzd."
+	}
+
+	"Tank #135 Name"
+	{
+		"hu"			"Zeusz Tank"
+	}
+
+	"Boomer #135 Name"
+	{
+		"hu"			"Zeusz Pukkancs"
+	}
+
+	"Charger #135 Name"
+	{
+		"hu"			"Zeusz Rohanó"
+	}
+
+	"Hunter #135 Name"
+	{
+		"hu"			"Zeusz Vadász"
+	}
+
+	"Jockey #135 Name"
+	{
+		"hu"			"Zeusz Zsoké"
+	}
+
+	"Smoker #135 Name"
+	{
+		"hu"			"Zeusz Füstös"
+	}
+
+	"Spitter #135 Name"
+	{
+		"hu"			"Zeusz Köpködő"
+	}
+
+	"Witch #135 Name"
+	{
+		"hu"			"Zeusz Boszorka"
+	}
+
+	"Common #135 Name"
+	{
+		"hu"			"Zeusz Fertőzötteket"
+	}
+
+	"Tank #135 Note"
+	{
+		"hu"			"{mint}Ez a Tank villámokat lő ki az ujjbegyeiből!!"
+	}
+
+	"Boomer #135 Note"
+	{
+		"hu"			"{mint}Ez a Pukkancs villámokat lő ki az ujjbegyeiből!!"
+	}
+
+	"Charger #135 Note"
+	{
+		"hu"			"{mint}Ez a Rohanó villámokat lő ki az ujjbegyeiből!!"
+	}
+
+	"Hunter #135 Note"
+	{
+		"hu"			"{mint}Ez a Vadász villámokat lő ki az ujjbegyeiből!!"
+	}
+
+	"Jockey #135 Note"
+	{
+		"hu"			"{mint}Ez a Zsoké villámokat lő ki az ujjbegyeiből!!"
+	}
+
+	"Smoker #135 Note"
+	{
+		"hu"			"{mint}Ez a Füstös villámokat lő ki az ujjbegyeiből!!"
+	}
+
+	"Spitter #135 Note"
+	{
+		"hu"			"{mint}Ez a Köpködő villámokat lő ki az ujjbegyeiből!!"
+	}
+
+	"Witch #135 Note"
+	{
+		"hu"			"{mint}Ez a Boszorka villámokat lő ki az ujjbegyeiből!!"
+	}
+
+	"Common #135 Note"
+	{
+		"hu"			"{mint}Ez a Fertőzötteket villámokat lő ki az ujjbegyeiből!!"
+	}
+
+	"Tank #136 Name"
+	{
+		"hu"			"Röppálya Tank"
+	}
+
+	"Boomer #136 Name"
+	{
+		"hu"			"Röppálya Pukkancs"
+	}
+
+	"Charger #136 Name"
+	{
+		"hu"			"Röppálya Rohanó"
+	}
+
+	"Hunter #136 Name"
+	{
+		"hu"			"Röppálya Vadász"
+	}
+
+	"Jockey #136 Name"
+	{
+		"hu"			"Röppálya Zsoké"
+	}
+
+	"Smoker #136 Name"
+	{
+		"hu"			"Röppálya Füstös"
+	}
+
+	"Spitter #136 Name"
+	{
+		"hu"			"Röppálya Köpködő"
+	}
+
+	"Witch #136 Name"
+	{
+		"hu"			"Röppálya Boszorka"
+	}
+
+	"Common #136 Name"
+	{
+		"hu"			"Röppálya Fertőzötteket"
+	}
+
+	"Tank #136 Note"
+	{
+		"hu"			"{mint}Ez a Tank a sebességet használja, hogy megváltoztassa az élettartamod röppályáját."
+	}
+
+	"Boomer #136 Note"
+	{
+		"hu"			"{mint}Ez a Pukkancs a sebességet használja, hogy megváltoztassa az élettartamod röppályáját."
+	}
+
+	"Charger #136 Note"
+	{
+		"hu"			"{mint}Ez a Rohanó a sebességet használja, hogy megváltoztassa az élettartamod röppályáját."
+	}
+
+	"Hunter #136 Note"
+	{
+		"hu"			"{mint}Ez a Vadász a sebességet használja, hogy megváltoztassa az élettartamod röppályáját."
+	}
+
+	"Jockey #136 Note"
+	{
+		"hu"			"{mint}Ez a Zsoké a sebességet használja, hogy megváltoztassa az élettartamod röppályáját."
+	}
+
+	"Smoker #136 Note"
+	{
+		"hu"			"{mint}Ez a Füstös a sebességet használja, hogy megváltoztassa az élettartamod röppályáját."
+	}
+
+	"Spitter #136 Note"
+	{
+		"hu"			"{mint}Ez a Köpködő a sebességet használja, hogy megváltoztassa az élettartamod röppályáját."
+	}
+
+	"Witch #136 Note"
+	{
+		"hu"			"{mint}Ez a Boszorka a sebességet használja, hogy megváltoztassa az élettartamod röppályáját."
+	}
+
+	"Common #136 Note"
+	{
+		"hu"			"{mint}Ez a Fertőzötteket a sebességet használja, hogy megváltoztassa az élettartamod röppályáját."
+	}
+
+	"Tank #137 Name"
+	{
+		"hu"			"Tűzgát Tank"
+	}
+
+	"Boomer #137 Name"
+	{
+		"hu"			"Tűzgát Pukkancs"
+	}
+
+	"Charger #137 Name"
+	{
+		"hu"			"Tűzgát Rohanó"
+	}
+
+	"Hunter #137 Name"
+	{
+		"hu"			"Tűzgát Vadász"
+	}
+
+	"Jockey #137 Name"
+	{
+		"hu"			"Tűzgát Zsoké"
+	}
+
+	"Smoker #137 Name"
+	{
+		"hu"			"Tűzgát Füstös"
+	}
+
+	"Spitter #137 Name"
+	{
+		"hu"			"Tűzgát Köpködő"
+	}
+
+	"Witch #137 Name"
+	{
+		"hu"			"Tűzgát Boszorka"
+	}
+
+	"Common #137 Name"
+	{
+		"hu"			"Tűzgát Fertőzötteket"
+	}
+
+	"Tank #137 Note"
+	{
+		"hu"			"{mint}Ez a Tank nem kegyelmez semmilyen leállási idővel."
+	}
+
+	"Boomer #137 Note"
+	{
+		"hu"			"{mint}Ez a Pukkancs nem kegyelmez semmilyen leállási idővel."
+	}
+
+	"Charger #137 Note"
+	{
+		"hu"			"{mint}Ez a Rohanó nem kegyelmez semmilyen leállási idővel."
+	}
+
+	"Hunter #137 Note"
+	{
+		"hu"			"{mint}Ez a Vadász nem kegyelmez semmilyen leállási idővel."
+	}
+
+	"Jockey #137 Note"
+	{
+		"hu"			"{mint}Ez a Zsoké nem kegyelmez semmilyen leállási idővel."
+	}
+
+	"Smoker #137 Note"
+	{
+		"hu"			"{mint}Ez a Füstös nem kegyelmez semmilyen leállási idővel."
+	}
+
+	"Spitter #137 Note"
+	{
+		"hu"			"{mint}Ez a Köpködő nem kegyelmez semmilyen leállási idővel."
+	}
+
+	"Witch #137 Note"
+	{
+		"hu"			"{mint}Ez a Boszorka nem kegyelmez semmilyen leállási idővel."
+	}
+
+	"Common #137 Note"
+	{
+		"hu"			"{mint}Ez a Fertőzötteket nem kegyelmez semmilyen leállási idővel."
+	}
+
+	"Tank #138 Name"
+	{
+		"hu"			"Gyűjtő Tank"
+	}
+
+	"Boomer #138 Name"
+	{
+		"hu"			"Gyűjtő Pukkancs"
+	}
+
+	"Charger #138 Name"
+	{
+		"hu"			"Gyűjtő Rohanó"
+	}
+
+	"Hunter #138 Name"
+	{
+		"hu"			"Gyűjtő Vadász"
+	}
+
+	"Jockey #138 Name"
+	{
+		"hu"			"Gyűjtő Zsoké"
+	}
+
+	"Smoker #138 Name"
+	{
+		"hu"			"Gyűjtő Füstös"
+	}
+
+	"Spitter #138 Name"
+	{
+		"hu"			"Gyűjtő Köpködő"
+	}
+
+	"Witch #138 Name"
+	{
+		"hu"			"Gyűjtő Boszorka"
+	}
+
+	"Common #138 Name"
+	{
+		"hu"			"Gyűjtő Fertőzötteket"
+	}
+
+	"Tank #138 Note"
+	{
+		"hu"			"{mint}Ez a Tank szeretne felvenni téged a gyűjteményébe..."
+	}
+
+	"Boomer #138 Note"
+	{
+		"hu"			"{mint}Ez a Pukkancs szeretne felvenni téged a gyűjteményébe..."
+	}
+
+	"Charger #138 Note"
+	{
+		"hu"			"{mint}Ez a Rohanó szeretne felvenni téged a gyűjteményébe..."
+	}
+
+	"Hunter #138 Note"
+	{
+		"hu"			"{mint}Ez a Vadász szeretne felvenni téged a gyűjteményébe..."
+	}
+
+	"Jockey #138 Note"
+	{
+		"hu"			"{mint}Ez a Zsoké szeretne felvenni téged a gyűjteményébe..."
+	}
+
+	"Smoker #138 Note"
+	{
+		"hu"			"{mint}Ez a Füstös szeretne felvenni téged a gyűjteményébe..."
+	}
+
+	"Spitter #138 Note"
+	{
+		"hu"			"{mint}Ez a Köpködő szeretne felvenni téged a gyűjteményébe..."
+	}
+
+	"Witch #138 Note"
+	{
+		"hu"			"{mint}Ez a Boszorka szeretne felvenni téged a gyűjteményébe..."
+	}
+
+	"Common #138 Note"
+	{
+		"hu"			"{mint}Ez a Fertőzötteket szeretne felvenni téged a gyűjteményébe..."
+	}
+
+	"Tank #139 Name"
+	{
+		"hu"			"Időjáró Tank"
+	}
+
+	"Boomer #139 Name"
+	{
+		"hu"			"Időjáró Pukkancs"
+	}
+
+	"Charger #139 Name"
+	{
+		"hu"			"Időjáró Rohanó"
+	}
+
+	"Hunter #139 Name"
+	{
+		"hu"			"Időjáró Vadász"
+	}
+
+	"Jockey #139 Name"
+	{
+		"hu"			"Időjáró Zsoké"
+	}
+
+	"Smoker #139 Name"
+	{
+		"hu"			"Időjáró Füstös"
+	}
+
+	"Spitter #139 Name"
+	{
+		"hu"			"Időjáró Köpködő"
+	}
+
+	"Witch #139 Name"
+	{
+		"hu"			"Időjáró Boszorka"
+	}
+
+	"Common #139 Name"
+	{
+		"hu"			"Időjáró Fertőzötteket"
+	}
+
+	"Tank #139 Note"
+	{
+		"hu"			"{mint}Ez a Tank minden időben létezik."
+	}
+
+	"Boomer #139 Note"
+	{
+		"hu"			"{mint}Ez a Pukkancs minden időben létezik."
+	}
+
+	"Charger #139 Note"
+	{
+		"hu"			"{mint}Ez a Rohanó minden időben létezik."
+	}
+
+	"Hunter #139 Note"
+	{
+		"hu"			"{mint}Ez a Vadász minden időben létezik."
+	}
+
+	"Jockey #139 Note"
+	{
+		"hu"			"{mint}Ez a Zsoké minden időben létezik."
+	}
+
+	"Smoker #139 Note"
+	{
+		"hu"			"{mint}Ez a Füstös minden időben létezik."
+	}
+
+	"Spitter #139 Note"
+	{
+		"hu"			"{mint}Ez a Köpködő minden időben létezik."
+	}
+
+	"Witch #139 Note"
+	{
+		"hu"			"{mint}Ez a Boszorka minden időben létezik."
+	}
+
+	"Common #139 Note"
+	{
+		"hu"			"{mint}Ez a Fertőzötteket minden időben létezik."
+	}
+
+	"Tank #140 Name"
+	{
+		"hu"			"Sebesség Démon Tank"
+	}
+
+	"Boomer #140 Name"
+	{
+		"hu"			"Sebesség Démon Pukkancs"
+	}
+
+	"Charger #140 Name"
+	{
+		"hu"			"Sebesség Démon Rohanó"
+	}
+
+	"Hunter #140 Name"
+	{
+		"hu"			"Sebesség Démon Vadász"
+	}
+
+	"Jockey #140 Name"
+	{
+		"hu"			"Sebesség Démon Zsoké"
+	}
+
+	"Smoker #140 Name"
+	{
+		"hu"			"Sebesség Démon Füstös"
+	}
+
+	"Spitter #140 Name"
+	{
+		"hu"			"Sebesség Démon Köpködő"
+	}
+
+	"Witch #140 Name"
+	{
+		"hu"			"Sebesség Démon Boszorka"
+	}
+
+	"Common #140 Name"
+	{
+		"hu"			"Sebesség Démon Fertőzötteket"
+	}
+
+	"Tank #140 Note"
+	{
+		"hu"			"{mint}Ez a Tank mindenhol tűznyomot hagy, ahová csak megy..."
+	}
+
+	"Boomer #140 Note"
+	{
+		"hu"			"{mint}Ez a Pukkancs mindenhol tűznyomot hagy, ahová csak megy..."
+	}
+
+	"Charger #140 Note"
+	{
+		"hu"			"{mint}Ez a Rohanó mindenhol tűznyomot hagy, ahová csak megy..."
+	}
+
+	"Hunter #140 Note"
+	{
+		"hu"			"{mint}Ez a Vadász mindenhol tűznyomot hagy, ahová csak megy..."
+	}
+
+	"Jockey #140 Note"
+	{
+		"hu"			"{mint}Ez a Zsoké mindenhol tűznyomot hagy, ahová csak megy..."
+	}
+
+	"Smoker #140 Note"
+	{
+		"hu"			"{mint}Ez a Füstös mindenhol tűznyomot hagy, ahová csak megy..."
+	}
+
+	"Spitter #140 Note"
+	{
+		"hu"			"{mint}Ez a Köpködő mindenhol tűznyomot hagy, ahová csak megy..."
+	}
+
+	"Witch #140 Note"
+	{
+		"hu"			"{mint}Ez a Boszorka mindenhol tűznyomot hagy, ahová csak megy..."
+	}
+
+	"Common #140 Note"
+	{
+		"hu"			"{mint}Ez a Fertőzötteket mindenhol tűznyomot hagy, ahová csak megy..."
+	}
+
+	"Tank #141 Name"
+	{
+		"hu"			"Pusztító Tank"
+	}
+
+	"Boomer #141 Name"
+	{
+		"hu"			"Pusztító Pukkancs"
+	}
+
+	"Charger #141 Name"
+	{
+		"hu"			"Pusztító Rohanó"
+	}
+
+	"Hunter #141 Name"
+	{
+		"hu"			"Pusztító Vadász"
+	}
+
+	"Jockey #141 Name"
+	{
+		"hu"			"Pusztító Zsoké"
+	}
+
+	"Smoker #141 Name"
+	{
+		"hu"			"Pusztító Füstös"
+	}
+
+	"Spitter #141 Name"
+	{
+		"hu"			"Pusztító Köpködő"
+	}
+
+	"Witch #141 Name"
+	{
+		"hu"			"Pusztító Boszorka"
+	}
+
+	"Common #141 Name"
+	{
+		"hu"			"Pusztító Fertőzötteket"
+	}
+
+	"Tank #141 Note"
+	{
+		"hu"			"{mint}Ez a Tank mindent felrobbant, ami az útjába kerül!"
+	}
+
+	"Boomer #141 Note"
+	{
+		"hu"			"{mint}Ez a Pukkancs mindent felrobbant, ami az útjába kerül!"
+	}
+
+	"Charger #141 Note"
+	{
+		"hu"			"{mint}Ez a Rohanó mindent felrobbant, ami az útjába kerül!"
+	}
+
+	"Hunter #141 Note"
+	{
+		"hu"			"{mint}Ez a Vadász mindent felrobbant, ami az útjába kerül!"
+	}
+
+	"Jockey #141 Note"
+	{
+		"hu"			"{mint}Ez a Zsoké mindent felrobbant, ami az útjába kerül!"
+	}
+
+	"Smoker #141 Note"
+	{
+		"hu"			"{mint}Ez a Füstös mindent felrobbant, ami az útjába kerül!"
+	}
+
+	"Spitter #141 Note"
+	{
+		"hu"			"{mint}Ez a Köpködő mindent felrobbant, ami az útjába kerül!"
+	}
+
+	"Witch #141 Note"
+	{
+		"hu"			"{mint}Ez a Boszorka mindent felrobbant, ami az útjába kerül!"
+	}
+
+	"Common #141 Note"
+	{
+		"hu"			"{mint}Ez a Fertőzötteket mindent felrobbant, ami az útjába kerül!"
+	}
+
+	"Tank #142 Name"
+	{
+		"hu"			"Ramattra Tank"
+	}
+
+	"Boomer #142 Name"
+	{
+		"hu"			"Ramattra Pukkancs"
+	}
+
+	"Charger #142 Name"
+	{
+		"hu"			"Ramattra Rohanó"
+	}
+
+	"Hunter #142 Name"
+	{
+		"hu"			"Ramattra Vadász"
+	}
+
+	"Jockey #142 Name"
+	{
+		"hu"			"Ramattra Zsoké"
+	}
+
+	"Smoker #142 Name"
+	{
+		"hu"			"Ramattra Füstös"
+	}
+
+	"Spitter #142 Name"
+	{
+		"hu"			"Ramattra Köpködő"
+	}
+
+	"Witch #142 Name"
+	{
+		"hu"			"Ramattra Boszorka"
+	}
+
+	"Common #142 Name"
+	{
+		"hu"			"Ramattra Fertőzöttek"
+	}
+
+	"Tank #142"
+	{
+		"hu"			"{mint}Ettől a Tank-tol ÚGY FOGSZ SZENVEDNI AHOGY Ő SZENVEDETT!"
+	}
+
+	"Boomer #142"
+	{
+		"hu"			"{mint}Ettől a Pukkancs-tol ÚGY FOGSZ SZENVEDNI AHOGY Ő SZENVEDETT!"
+	}
+
+	"Charger #142"
+	{
+		"hu"			"{mint}Ettől a Rohanó-tol ÚGY FOGSZ SZENVEDNI AHOGY Ő SZENVEDETT!"
+	}
+
+	"Hunter #142"
+	{
+		"hu"			"{mint}Ettől a Vadász-tol ÚGY FOGSZ SZENVEDNI AHOGY Ő SZENVEDETT!"
+	}
+
+	"Jockey #142"
+	{
+		"hu"			"{mint}Ettől a Zsoké-tol ÚGY FOGSZ SZENVEDNI AHOGY Ő SZENVEDETT!"
+	}
+
+	"Smoker #142"
+	{
+		"hu"			"{mint}Ettől a Füstös-tol ÚGY FOGSZ SZENVEDNI AHOGY Ő SZENVEDETT!"
+	}
+
+	"Spitter #142"
+	{
+		"hu"			"{mint}Ettől a Köpködő-tol ÚGY FOGSZ SZENVEDNI AHOGY Ő SZENVEDETT!"
+	}
+
+	"Witch #142"
+	{
+		"hu"			"{mint}Ettől a Boszorka-tol ÚGY FOGSZ SZENVEDNI AHOGY Ő SZENVEDETT!"
+	}
+
+	"Common #142"
+	{
+		"hu"			"{mint}Ettől a Fertőzöttek-tol ÚGY FOGSZ SZENVEDNI AHOGY Ő SZENVEDETT!"
+	}
+
+	"Tank #143 Name"
+	{
+		"hu"			"Szigma Tank"
+	}
+
+	"Boomer #143 Name"
+	{
+		"hu"			"Szigma Pukkancs"
+	}
+
+	"Charger #143 Name"
+	{
+		"hu"			"Szigma Rohanó"
+	}
+
+	"Hunter #143 Name"
+	{
+		"hu"			"Szigma Vadász"
+	}
+
+	"Jockey #143 Name"
+	{
+		"hu"			"Szigma Zsoké"
+	}
+
+	"Smoker #143 Name"
+	{
+		"hu"			"Szigma Füstös"
+	}
+
+	"Spitter #143 Name"
+	{
+		"hu"			"Szigma Köpködő"
+	}
+
+	"Witch #143 Name"
+	{
+		"hu"			"Szigma Boszorka"
+	}
+
+	"Common #143 Name"
+	{
+		"hu"			"Szigma Fertőzöttek"
+	}
+
+	"Tank #143"
+	{
+		"hu"			"{mint}Ez a Tank képes irányítani a gravitációt és sok sérülést elnyelni."
+	}
+
+	"Boomer #143"
+	{
+		"hu"			"{mint}Ez a Pukkancs képes irányítani a gravitációt és sok sérülést elnyelni."
+	}
+
+	"Charger #143"
+	{
+		"hu"			"{mint}Ez a Rohanó képes irányítani a gravitációt és sok sérülést elnyelni."
+	}
+
+	"Hunter #143"
+	{
+		"hu"			"{mint}Ez a Vadász képes irányítani a gravitációt és sok sérülést elnyelni."
+	}
+
+	"Jockey #143"
+	{
+		"hu"			"{mint}Ez a Zsoké képes irányítani a gravitációt és sok sérülést elnyelni."
+	}
+
+	"Smoker #143"
+	{
+		"hu"			"{mint}Ez a Füstös képes irányítani a gravitációt és sok sérülést elnyelni."
+	}
+
+	"Spitter #143"
+	{
+		"hu"			"{mint}Ez a Köpködő képes irányítani a gravitációt és sok sérülést elnyelni."
+	}
+
+	"Witch #143"
+	{
+		"hu"			"{mint}Ez a Boszorka képes irányítani a gravitációt és sok sérülést elnyelni."
+	}
+
+	"Common #143"
+	{
+		"hu"			"{mint}Ez a Fertőzöttek képes irányítani a gravitációt és sok sérülést elnyelni."
+	}
+
+	"Tank #144 Name"
+	{
+		"hu"			"Zarya Tank"
+	}
+
+	"Boomer #144 Name"
+	{
+		"hu"			"Zarya Pukkancs"
+	}
+
+	"Charger #144 Name"
+	{
+		"hu"			"Zarya Rohanó"
+	}
+
+	"Hunter #144 Name"
+	{
+		"hu"			"Zarya Vadász"
+	}
+
+	"Jockey #144 Name"
+	{
+		"hu"			"Zarya Zsoké"
+	}
+
+	"Smoker #144 Name"
+	{
+		"hu"			"Zarya Füstös"
+	}
+
+	"Spitter #144 Name"
+	{
+		"hu"			"Zarya Köpködő"
+	}
+
+	"Witch #144 Name"
+	{
+		"hu"			"Zarya Boszorka"
+	}
+
+	"Common #144 Name"
+	{
+		"hu"			"Zarya Fertőzötteket"
+	}
+
+	"Tank #144 Note"
+	{
+		"hu"			"{mint}Ez a Tank képes irányítani a gravitációt, a bejövő sebzést páncélzattá és sebzésfokozóvá alakítani, valamint a közeli fertőzöttek életerejét elnyelni."
+	}
+
+	"Boomer #144 Note"
+	{
+		"hu"			"{mint}Ez a Pukkancs képes irányítani a gravitációt, a bejövő sebzést páncélzattá és sebzésfokozóvá alakítani, valamint a közeli fertőzöttek életerejét elnyelni."
+	}
+
+	"Charger #144 Note"
+	{
+		"hu"			"{mint}Ez a Rohanó képes irányítani a gravitációt, a bejövő sebzést páncélzattá és sebzésfokozóvá alakítani, valamint a közeli fertőzöttek életerejét elnyelni."
+	}
+
+	"Hunter #144 Note"
+	{
+		"hu"			"{mint}Ez a Vadász képes irányítani a gravitációt, a bejövő sebzést páncélzattá és sebzésfokozóvá alakítani, valamint a közeli fertőzöttek életerejét elnyelni."
+	}
+
+	"Jockey #144 Note"
+	{
+		"hu"			"{mint}Ez a Zsoké képes irányítani a gravitációt, a bejövő sebzést páncélzattá és sebzésfokozóvá alakítani, valamint a közeli fertőzöttek életerejét elnyelni."
+	}
+
+	"Smoker #144 Note"
+	{
+		"hu"			"{mint}Ez a Füstös képes irányítani a gravitációt, a bejövő sebzést páncélzattá és sebzésfokozóvá alakítani, valamint a közeli fertőzöttek életerejét elnyelni."
+	}
+
+	"Spitter #144 Note"
+	{
+		"hu"			"{mint}Ez a Köpködő képes irányítani a gravitációt, a bejövő sebzést páncélzattá és sebzésfokozóvá alakítani, valamint a közeli fertőzöttek életerejét elnyelni."
+	}
+
+	"Witch #144 Note"
+	{
+		"hu"			"{mint}Ez a Boszorka képes irányítani a gravitációt, a bejövő sebzést páncélzattá és sebzésfokozóvá alakítani, valamint a közeli fertőzöttek életerejét elnyelni."
+	}
+
+	"Common #144 Note"
+	{
+		"hu"			"{mint}Ez a Fertőzötteket képes irányítani a gravitációt, a bejövő sebzést páncélzattá és sebzésfokozóvá alakítani, valamint a közeli fertőzöttek életerejét elnyelni."
+	}
+
+	"Tank #145 Name"
+	{
+		"hu"			"Laza Tank"
+	}
+
+	"Boomer #145 Name"
+	{
+		"hu"			"Laza Pukkancs"
+	}
+
+	"Charger #145 Name"
+	{
+		"hu"			"Laza Rohanó"
+	}
+
+	"Hunter #145 Name"
+	{
+		"hu"			"Laza Vadász"
+	}
+
+	"Jockey #145 Name"
+	{
+		"hu"			"Laza Zsoké"
+	}
+
+	"Smoker #145 Name"
+	{
+		"hu"			"Laza Füstös"
+	}
+
+	"Spitter #145 Name"
+	{
+		"hu"			"Laza Köpködő"
+	}
+
+	"Witch #145 Name"
+	{
+		"hu"			"Laza Boszorka"
+	}
+
+	"Common #145 Name"
+	{
+		"hu"			"Laza Fertőzötteket"
+	}
+
+	"Tank #145 Note"
+	{
+		"hu"			"{mint}Ez a Tank megbünteti a lemaradókat!"
+	}
+
+	"Boomer #145 Note"
+	{
+		"hu"			"{mint}Ez a Pukkancs megbünteti a lemaradókat!"
+	}
+
+	"Charger #145 Note"
+	{
+		"hu"			"{mint}Ez a Rohanó megbünteti a lemaradókat!"
+	}
+
+	"Hunter #145 Note"
+	{
+		"hu"			"{mint}Ez a Vadász megbünteti a lemaradókat!"
+	}
+
+	"Jockey #145 Note"
+	{
+		"hu"			"{mint}Ez a Zsoké megbünteti a lemaradókat!"
+	}
+
+	"Smoker #145 Note"
+	{
+		"hu"			"{mint}Ez a Füstös megbünteti a lemaradókat!"
+	}
+
+	"Spitter #145 Note"
+	{
+		"hu"			"{mint}Ez a Köpködő megbünteti a lemaradókat!"
+	}
+
+	"Witch #145 Note"
+	{
+		"hu"			"{mint}Ez a Boszorka megbünteti a lemaradókat!"
+	}
+
+	"Common #145 Note"
+	{
+		"hu"			"{mint}Ez a Fertőzötteket megbünteti a lemaradókat!"
+	}
+
+	"Tank #146 Name"
+	{
+		"hu"			"Siető Tank"
+	}
+
+	"Boomer #146 Name"
+	{
+		"hu"			"Siető Pukkancs"
+	}
+
+	"Charger #146 Name"
+	{
+		"hu"			"Siető Rohanó"
+	}
+
+	"Hunter #146 Name"
+	{
+		"hu"			"Siető Vadász"
+	}
+
+	"Jockey #146 Name"
+	{
+		"hu"			"Siető Zsoké"
+	}
+
+	"Smoker #146 Name"
+	{
+		"hu"			"Siető Füstös"
+	}
+
+	"Spitter #146 Name"
+	{
+		"hu"			"Siető Köpködő"
+	}
+
+	"Witch #146 Name"
+	{
+		"hu"			"Siető Boszorka"
+	}
+
+	"Common #146 Name"
+	{
+		"hu"			"Siető Fertőzötteket"
+	}
+
+	"Tank #146 Note"
+	{
+		"hu"			"{mint}Ez a Tank megbünteti azokat, akik előreszaladtak!"
+	}
+
+	"Boomer #146 Note"
+	{
+		"hu"			"{mint}Ez a Pukkancs megbünteti azokat, akik előreszaladtak!"
+	}
+
+	"Charger #146 Note"
+	{
+		"hu"			"{mint}Ez a Rohanó megbünteti azokat, akik előreszaladtak!"
+	}
+
+	"Hunter #146 Note"
+	{
+		"hu"			"{mint}Ez a Vadász megbünteti azokat, akik előreszaladtak!"
+	}
+
+	"Jockey #146 Note"
+	{
+		"hu"			"{mint}Ez a Zsoké megbünteti azokat, akik előreszaladtak!"
+	}
+
+	"Smoker #146 Note"
+	{
+		"hu"			"{mint}Ez a Füstös megbünteti azokat, akik előreszaladtak!"
+	}
+
+	"Spitter #146 Note"
+	{
+		"hu"			"{mint}Ez a Köpködő megbünteti azokat, akik előreszaladtak!"
+	}
+
+	"Witch #146 Note"
+	{
+		"hu"			"{mint}Ez a Boszorka megbünteti azokat, akik előreszaladtak!"
+	}
+
+	"Common #146 Note"
+	{
+		"hu"			"{mint}Ez a Fertőzötteket megbünteti azokat, akik előreszaladtak!"
 	}
 
 	// Ez egy valós Steam32ID. Ne töröld! Ez csak egy példa.
@@ -10324,16 +13224,6 @@
 	// "STEAM_0:1:23456789 Spitter"
 	// {
 	//	"hu"			"{mint}Ez a Köpködő valaki irányítja."
-	// }
-	//
-	// "STEAM_0:1:23456789 Witch Name"
-	// {
-	//	"hu"			"Boszorka"
-	// }
-	//
-	// "STEAM_0:1:23456789 Witch"
-	// {
-	//	"hu"			"{mint}Ez a Boszorka valaki irányítja."
 	// }
 	// --
 	// Adj saját kifejezést a saját Mutáns Tankjaidnak lentebb!

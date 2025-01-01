@@ -1,6 +1,6 @@
 /**
- * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2024  Alfred "Psyk0tik" Llagas
+ * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -50,8 +50,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 
 #define MT_GAMEDATA "mutant_tanks"
-
-#define PARTICLE_BLOOD "boomer_explode_D"
 #else
 	#if MT_FLING_COMPILE_METHOD == 1
 		#error This file must be compiled as a standalone plugin.
@@ -308,8 +306,6 @@ void vFlingMapStart()
 public void OnMapStart()
 #endif
 {
-	iPrecacheParticle(PARTICLE_BLOOD);
-
 	vFlingReset();
 }
 
@@ -1287,35 +1283,37 @@ void vFlingReset()
 	}
 }
 
-void tTimerFlingCombo(Handle timer, DataPack pack)
+Action tTimerFlingCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!g_bSecondGame || !MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esFlingAbility[g_esFlingPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esFlingPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esFlingPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esFlingCache[iTank].g_iFlingAbility == 0)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vFlingAbility(iTank, flRandom, iPos);
+
+	return Plugin_Continue;
 }
 
-void tTimerFlingCombo2(Handle timer, DataPack pack)
+Action tTimerFlingCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!g_bSecondGame || !bIsSurvivor(iSurvivor))
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esFlingAbility[g_esFlingPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esFlingPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esFlingPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esFlingCache[iTank].g_iFlingHit == 0)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
@@ -1330,4 +1328,6 @@ void tTimerFlingCombo2(Handle timer, DataPack pack)
 	{
 		vFlingHit(iSurvivor, iTank, flRandom, flChance, g_esFlingCache[iTank].g_iFlingHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
+
+	return Plugin_Continue;
 }

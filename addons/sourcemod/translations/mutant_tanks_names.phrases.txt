@@ -54,6 +54,11 @@
 		"en"			"Absorber Witch"
 	}
 
+	"Common #1 Name"
+	{
+		"en"			"Absorber Common"
+	}
+
 	"Tank #1"
 	{
 		"en"			"{mint}This Tank can absorb most of the damage it receives."
@@ -92,6 +97,11 @@
 	"Witch #1"
 	{
 		"en"			"{mint}This Witch can absorb most of the damage it receives."
+	}
+
+	"Common #1"
+	{
+		"en"			"{mint}This Common can absorb most of the damage it receives."
 	}
 
 	"Tank #2 Name"
@@ -134,6 +144,11 @@
 		"en"			"Acidic Witch"
 	}
 
+	"Common #2 Name"
+	{
+		"en"			"Acidic Common"
+	}
+
 	"Tank #2"
 	{
 		"en"			"{mint}This Tank can create acid puddles underneath survivors."
@@ -172,6 +187,11 @@
 	"Witch #2"
 	{
 		"en"			"{mint}This Witch can create acid puddles underneath survivors."
+	}
+
+	"Common #2"
+	{
+		"en"			"{mint}This Common can create acid puddles underneath survivors."
 	}
 
 	"Tank #3 Name"
@@ -214,6 +234,11 @@
 		"en"			"Aimless Witch"
 	}
 
+	"Common #3 Name"
+	{
+		"en"			"Aimless Common"
+	}
+
 	"Tank #3"
 	{
 		"en"			"{mint}This Tank can prevent survivors from aiming."
@@ -252,6 +277,11 @@
 	"Witch #3"
 	{
 		"en"			"{mint}This Witch can prevent survivors from aiming."
+	}
+
+	"Common #3"
+	{
+		"en"			"{mint}This Common can prevent survivors from aiming."
 	}
 
 	"Tank #4 Name"
@@ -294,6 +324,11 @@
 		"en"			"Ammo Witch"
 	}
 
+	"Common #4 Name"
+	{
+		"en"			"Ammo Common"
+	}
+
 	"Tank #4"
 	{
 		"en"			"{mint}This Tank can steal some or all of your ammunition."
@@ -332,6 +367,11 @@
 	"Witch #4"
 	{
 		"en"			"{mint}This Witch can steal some or all of your ammunition."
+	}
+
+	"Common #4"
+	{
+		"en"			"{mint}This Common can steal some or all of your ammunition."
 	}
 
 	"Tank #5 Name"
@@ -374,6 +414,11 @@
 		"en"			"Blind Witch"
 	}
 
+	"Common #5 Name"
+	{
+		"en"			"Blind Common"
+	}
+
 	"Tank #5"
 	{
 		"en"			"{mint}This Tank can blind survivors."
@@ -412,6 +457,11 @@
 	"Witch #5"
 	{
 		"en"			"{mint}This Witch can blind survivors."
+	}
+
+	"Common #5"
+	{
+		"en"			"{mint}This Common can blind survivors."
 	}
 
 	"Tank #6 Name"
@@ -454,6 +504,11 @@
 		"en"			"Bomber Witch"
 	}
 
+	"Common #6 Name"
+	{
+		"en"			"Bomber Common"
+	}
+
 	"Tank #6"
 	{
 		"en"			"{mint}This Tank can cause explosions and is immune to explosive damage."
@@ -492,6 +547,11 @@
 	"Witch #6"
 	{
 		"en"			"{mint}This Witch can cause explosions and is immune to explosive damage."
+	}
+
+	"Common #6"
+	{
+		"en"			"{mint}This Common can cause explosions and is immune to explosive damage."
 	}
 
 	"Tank #7 Name"
@@ -534,6 +594,11 @@
 		"en"			"Boomer Witch"
 	}
 
+	"Common #7 Name"
+	{
+		"en"			"Boomer Common"
+	}
+
 	"Tank #7"
 	{
 		"en"			"{mint}This Tank can spawn Boomers behind it and throw some at survivors too."
@@ -572,6 +637,11 @@
 	"Witch #7"
 	{
 		"en"			"{mint}This Witch can spawn Boomers behind it."
+	}
+
+	"Common #7"
+	{
+		"en"			"{mint}This Common can spawn Boomers behind it."
 	}
 
 	"Tank #8 Name"
@@ -614,6 +684,11 @@
 		"en"			"Bulletproof Witch"
 	}
 
+	"Common #8 Name"
+	{
+		"en"			"Bulletproof Common"
+	}
+
 	"Tank #8"
 	{
 		"en"			"{mint}This Tank is immune to bullet damage."
@@ -652,6 +727,11 @@
 	"Witch #8"
 	{
 		"en"			"{mint}This Witch is immune to bullet damage."
+	}
+
+	"Common #8"
+	{
+		"en"			"{mint}This Common is immune to bullet damage."
 	}
 
 	"Tank #9 Name"
@@ -694,6 +774,11 @@
 		"en"			"Burier Witch"
 	}
 
+	"Common #9 Name"
+	{
+		"en"			"Burier Common"
+	}
+
 	"Tank #9"
 	{
 		"en"			"{mint}This Tank can bury survivors."
@@ -732,6 +817,11 @@
 	"Witch #9"
 	{
 		"en"			"{mint}This Witch can bury survivors."
+	}
+
+	"Common #9"
+	{
+		"en"			"{mint}This Common can bury survivors."
 	}
 
 	"Tank #10 Name"
@@ -774,6 +864,11 @@
 		"en"			"Car Witch"
 	}
 
+	"Common #10 Name"
+	{
+		"en"			"Car Common"
+	}
+
 	"Tank #10"
 	{
 		"en"			"{mint}This Tank can throw cars at survivors. The cars disappear after 30 seconds."
@@ -812,6 +907,11 @@
 	"Witch #10"
 	{
 		"en"			"{mint}This Witch can start car showers. The cars disappear after 30 seconds."
+	}
+
+	"Common #10"
+	{
+		"en"			"{mint}This Common can start car showers. The cars disappear after 30 seconds."
 	}
 
 	"Tank #11 Name"
@@ -854,6 +954,11 @@
 		"en"			"Charger Witch"
 	}
 
+	"Common #11 Name"
+	{
+		"en"			"Charger Common"
+	}
+
 	"Tank #11"
 	{
 		"en"			"{mint}This Tank can spawn Chargers behind it and throw some at survivors too."
@@ -892,6 +997,11 @@
 	"Witch #11"
 	{
 		"en"			"{mint}This Witch can spawn Chargers behind it."
+	}
+
+	"Common #11"
+	{
+		"en"			"{mint}This Common can spawn Chargers behind it."
 	}
 
 	"Tank #12 Name"
@@ -934,6 +1044,11 @@
 		"en"			"Choker Witch"
 	}
 
+	"Common #12 Name"
+	{
+		"en"			"Choker Common"
+	}
+
 	"Tank #12"
 	{
 		"en"			"{mint}This Tank can choke survivors in the air."
@@ -972,6 +1087,11 @@
 	"Witch #12"
 	{
 		"en"			"{mint}This Witch can choke survivors in the air."
+	}
+
+	"Common #12"
+	{
+		"en"			"{mint}This Common can choke survivors in the air."
 	}
 
 	"Tank #13 Name"
@@ -1014,6 +1134,11 @@
 		"en"			"Clone Witch"
 	}
 
+	"Common #13 Name"
+	{
+		"en"			"Clone Common"
+	}
+
 	"Tank #13"
 	{
 		"en"			"{mint}This Tank can spawn clones behind it and throw some at survivors too."
@@ -1052,6 +1177,11 @@
 	"Witch #13"
 	{
 		"en"			"{mint}This Witch can spawn clones behind it."
+	}
+
+	"Common #13"
+	{
+		"en"			"{mint}This Common can spawn clones behind it."
 	}
 
 	"Tank #14 Name"
@@ -1094,6 +1224,11 @@
 		"en"			"Cloudy Witch"
 	}
 
+	"Common #14 Name"
+	{
+		"en"			"Cloudy Common"
+	}
+
 	"Tank #14"
 	{
 		"en"			"{mint}This Tank can emit clouds of smoke that damage survivors caught in them."
@@ -1132,6 +1267,11 @@
 	"Witch #14"
 	{
 		"en"			"{mint}This Witch can emit clouds of smoke that damage survivors caught in them."
+	}
+
+	"Common #14"
+	{
+		"en"			"{mint}This Common can emit clouds of smoke that damage survivors caught in them."
 	}
 
 	"Tank #15 Name"
@@ -1174,6 +1314,11 @@
 		"en"			"Dropper Witch"
 	}
 
+	"Common #15 Name"
+	{
+		"en"			"Dropper Common"
+	}
+
 	"Tank #15"
 	{
 		"en"			"{mint}This Tank can drop a random weapon upon death."
@@ -1212,6 +1357,11 @@
 	"Witch #15"
 	{
 		"en"			"{mint}This Witch can drop a random weapon upon death."
+	}
+
+	"Common #15"
+	{
+		"en"			"{mint}This Common can drop a random weapon upon death."
 	}
 
 	"Tank #16 Name"
@@ -1254,6 +1404,11 @@
 		"en"			"Drugger Witch"
 	}
 
+	"Common #16 Name"
+	{
+		"en"			"Drugger Common"
+	}
+
 	"Tank #16"
 	{
 		"en"			"{mint}This Tank can drug survivors."
@@ -1292,6 +1447,11 @@
 	"Witch #16"
 	{
 		"en"			"{mint}This Witch can drug survivors."
+	}
+
+	"Common #16"
+	{
+		"en"			"{mint}This Common can drug survivors."
 	}
 
 	"Tank #17 Name"
@@ -1334,6 +1494,11 @@
 		"en"			"Drunk Witch"
 	}
 
+	"Common #17 Name"
+	{
+		"en"			"Drunk Common"
+	}
+
 	"Tank #17"
 	{
 		"en"			"{mint}This Tank can make survivors drunk."
@@ -1372,6 +1537,11 @@
 	"Witch #17"
 	{
 		"en"			"{mint}This Witch can make survivors drunk."
+	}
+
+	"Common #17"
+	{
+		"en"			"{mint}This Common can make survivors drunk."
 	}
 
 	"Tank #18 Name"
@@ -1414,6 +1584,11 @@
 		"en"			"Electric Witch"
 	}
 
+	"Common #18 Name"
+	{
+		"en"			"Electric Common"
+	}
+
 	"Tank #18"
 	{
 		"en"			"{mint}This Tank can electrocute survivors."
@@ -1452,6 +1627,11 @@
 	"Witch #18"
 	{
 		"en"			"{mint}This Witch can electrocute survivors."
+	}
+
+	"Common #18"
+	{
+		"en"			"{mint}This Common can electrocute survivors."
 	}
 
 	"Tank #19 Name"
@@ -1494,6 +1674,11 @@
 		"en"			"Enforcer Witch"
 	}
 
+	"Common #19 Name"
+	{
+		"en"			"Enforcer Common"
+	}
+
 	"Tank #19"
 	{
 		"en"			"{mint}This Tank can force survivors to equip a specific weapon slot for a certain period of time."
@@ -1532,6 +1717,11 @@
 	"Witch #19"
 	{
 		"en"			"{mint}This Witch can force survivors to equip a specific weapon slot for a certain period of time."
+	}
+
+	"Common #19"
+	{
+		"en"			"{mint}This Common can force survivors to equip a specific weapon slot for a certain period of time."
 	}
 
 	"Tank #20 Name"
@@ -1574,6 +1764,11 @@
 		"en"			"Fast Witch"
 	}
 
+	"Common #20 Name"
+	{
+		"en"			"Fast Common"
+	}
+
 	"Tank #20"
 	{
 		"en"			"{mint}This Tank can run really fast like the Flash."
@@ -1612,6 +1807,11 @@
 	"Witch #20"
 	{
 		"en"			"{mint}This Witch can run really fast like the Flash."
+	}
+
+	"Common #20"
+	{
+		"en"			"{mint}This Common can run really fast like the Flash."
 	}
 
 	"Tank #21 Name"
@@ -1654,6 +1854,11 @@
 		"en"			"Fireproof Witch"
 	}
 
+	"Common #21 Name"
+	{
+		"en"			"Fireproof Common"
+	}
+
 	"Tank #21"
 	{
 		"en"			"{mint}This Tank can start fires and is immune to fire damage."
@@ -1692,6 +1897,11 @@
 	"Witch #21"
 	{
 		"en"			"{mint}This Witch can start fires and is immune to fire damage."
+	}
+
+	"Common #21"
+	{
+		"en"			"{mint}This Common can start fires and is immune to fire damage."
 	}
 
 	"Tank #22 Name"
@@ -1734,6 +1944,11 @@
 		"en"			"Flinger Witch"
 	}
 
+	"Common #22 Name"
+	{
+		"en"			"Flinger Common"
+	}
+
 	"Tank #22"
 	{
 		"en"			"{mint}This Tank can fling survivors away or into the air."
@@ -1772,6 +1987,11 @@
 	"Witch #22"
 	{
 		"en"			"{mint}This Witch can fling survivors away or into the air."
+	}
+
+	"Common #22"
+	{
+		"en"			"{mint}This Common can fling survivors away or into the air."
 	}
 
 	"Tank #23 Name"
@@ -1814,6 +2034,11 @@
 		"en"			"Flying Witch"
 	}
 
+	"Common #23 Name"
+	{
+		"en"			"Flying Common"
+	}
+
 	"Tank #23"
 	{
 		"en"			"{mint}This Tank flies around looking for victims."
@@ -1852,6 +2077,11 @@
 	"Witch #23"
 	{
 		"en"			"{mint}This Witch flies around looking for victims."
+	}
+
+	"Common #23"
+	{
+		"en"			"{mint}This Common flies around looking for victims."
 	}
 
 	"Tank #24 Name"
@@ -1894,6 +2124,11 @@
 		"en"			"Fragile Witch"
 	}
 
+	"Common #24 Name"
+	{
+		"en"			"Fragile Common"
+	}
+
 	"Tank #24"
 	{
 		"en"			"{mint}This Tank takes extra damage while dealing more damage and running faster."
@@ -1932,6 +2167,11 @@
 	"Witch #24"
 	{
 		"en"			"{mint}This Witch takes extra damage while dealing more damage and running faster."
+	}
+
+	"Common #24"
+	{
+		"en"			"{mint}This Common takes extra damage while dealing more damage and running faster."
 	}
 
 	"Tank #25 Name"
@@ -1974,6 +2214,11 @@
 		"en"			"Ghost Witch"
 	}
 
+	"Common #25 Name"
+	{
+		"en"			"Ghost Common"
+	}
+
 	"Tank #25"
 	{
 		"en"			"{mint}This Tank can cloak itself and disarm survivors."
@@ -2012,6 +2257,11 @@
 	"Witch #25"
 	{
 		"en"			"{mint}This Witch can cloak itself and disarm survivors."
+	}
+
+	"Common #25"
+	{
+		"en"			"{mint}This Common can cloak itself and disarm survivors."
 	}
 
 	"Tank #26 Name"
@@ -2054,6 +2304,11 @@
 		"en"			"Godly Witch"
 	}
 
+	"Common #26 Name"
+	{
+		"en"			"Godly Common"
+	}
+
 	"Tank #26"
 	{
 		"en"			"{mint}This Tank can gain temporary invincibility."
@@ -2092,6 +2347,11 @@
 	"Witch #26"
 	{
 		"en"			"{mint}This Witch can gain temporary invincibility."
+	}
+
+	"Common #26"
+	{
+		"en"			"{mint}This Common can gain temporary invincibility."
 	}
 
 	"Tank #27 Name"
@@ -2134,6 +2394,11 @@
 		"en"			"Gravity Witch"
 	}
 
+	"Common #27 Name"
+	{
+		"en"			"Gravity Common"
+	}
+
 	"Tank #27"
 	{
 		"en"			"{mint}This Tank can pull survivors and infected towards it and lower survivors' gravity."
@@ -2172,6 +2437,11 @@
 	"Witch #27"
 	{
 		"en"			"{mint}This Witch can pull survivors and infected towards it and lower survivors' gravity."
+	}
+
+	"Common #27"
+	{
+		"en"			"{mint}This Common can pull survivors and infected towards it and lower survivors' gravity."
 	}
 
 	"Tank #28 Name"
@@ -2214,6 +2484,11 @@
 		"en"			"Gunner Witch"
 	}
 
+	"Common #28 Name"
+	{
+		"en"			"Gunner Common"
+	}
+
 	"Tank #28"
 	{
 		"en"			"{mint}This Tank can arm itself with guns and fire gunshots at survivors."
@@ -2252,6 +2527,11 @@
 	"Witch #28"
 	{
 		"en"			"{mint}This Witch can arm itself with guns and fire gunshots at survivors."
+	}
+
+	"Common #28"
+	{
+		"en"			"{mint}This Common can arm itself with guns and fire gunshots at survivors."
 	}
 
 	"Tank #29 Name"
@@ -2294,6 +2574,11 @@
 		"en"			"Healthy Witch"
 	}
 
+	"Common #29 Name"
+	{
+		"en"			"Healthy Common"
+	}
+
 	"Tank #29"
 	{
 		"en"			"{mint}This Tank can give survivors temporary health, and it can absorb health from nearby infected."
@@ -2332,6 +2617,11 @@
 	"Witch #29"
 	{
 		"en"			"{mint}This Witch can give survivors temporary health, and it can absorb health from nearby infected."
+	}
+
+	"Common #29"
+	{
+		"en"			"{mint}This Common can give survivors temporary health, and it can absorb health from nearby infected."
 	}
 
 	"Tank #30 Name"
@@ -2374,6 +2664,11 @@
 		"en"			"Hitter Witch"
 	}
 
+	"Common #30 Name"
+	{
+		"en"			"Hitter Common"
+	}
+
 	"Tank #30"
 	{
 		"en"			"{mint}This Tank can only be damaged by headshots."
@@ -2412,6 +2707,11 @@
 	"Witch #30"
 	{
 		"en"			"{mint}This Witch can only be damaged by headshots."
+	}
+
+	"Common #30"
+	{
+		"en"			"{mint}This Common can only be damaged by headshots."
 	}
 
 	"Tank #31 Name"
@@ -2454,6 +2754,11 @@
 		"en"			"Hunter Witch"
 	}
 
+	"Common #31 Name"
+	{
+		"en"			"Hunter Common"
+	}
+
 	"Tank #31"
 	{
 		"en"			"{mint}This Tank can spawn Hunters behind it and throw some at survivors too."
@@ -2492,6 +2797,11 @@
 	"Witch #31"
 	{
 		"en"			"{mint}This Witch can spawn Hunters behind it."
+	}
+
+	"Common #31"
+	{
+		"en"			"{mint}This Common can spawn Hunters behind it."
 	}
 
 	"Tank #32 Name"
@@ -2534,6 +2844,11 @@
 		"en"			"Hurtful Witch"
 	}
 
+	"Common #32 Name"
+	{
+		"en"			"Hurtful Common"
+	}
+
 	"Tank #32"
 	{
 		"en"			"{mint}This Tank can constantly hurt survivors for a certain period of time."
@@ -2572,6 +2887,11 @@
 	"Witch #32"
 	{
 		"en"			"{mint}This Witch can constantly hurt survivors for a certain period of time."
+	}
+
+	"Common #32"
+	{
+		"en"			"{mint}This Common can constantly hurt survivors for a certain period of time."
 	}
 
 	"Tank #33 Name"
@@ -2614,6 +2934,11 @@
 		"en"			"Hypnotizer Witch"
 	}
 
+	"Common #33 Name"
+	{
+		"en"			"Hypnotizer Common"
+	}
+
 	"Tank #33"
 	{
 		"en"			"{mint}This Tank can hypnotize survivors to hurt themselves or their teammates."
@@ -2652,6 +2977,11 @@
 	"Witch #33"
 	{
 		"en"			"{mint}This Witch can hypnotize survivors to hurt themselves or their teammates."
+	}
+
+	"Common #33"
+	{
+		"en"			"{mint}This Common can hypnotize survivors to hurt themselves or their teammates."
 	}
 
 	"Tank #34 Name"
@@ -2694,6 +3024,11 @@
 		"en"			"Icy Witch"
 	}
 
+	"Common #34 Name"
+	{
+		"en"			"Icy Common"
+	}
+
 	"Tank #34"
 	{
 		"en"			"{mint}This Tank can freeze survivors."
@@ -2732,6 +3067,11 @@
 	"Witch #34"
 	{
 		"en"			"{mint}This Witch can freeze survivors."
+	}
+
+	"Common #34"
+	{
+		"en"			"{mint}This Common can freeze survivors."
 	}
 
 	"Tank #35 Name"
@@ -2774,6 +3114,11 @@
 		"en"			"Idler Witch"
 	}
 
+	"Common #35 Name"
+	{
+		"en"			"Idler Common"
+	}
+
 	"Tank #35"
 	{
 		"en"			"{mint}This Tank can make survivors go idle. (This doesn't affect bots.)"
@@ -2812,6 +3157,11 @@
 	"Witch #35"
 	{
 		"en"			"{mint}This Witch can make survivors go idle. (This doesn't affect bots.)"
+	}
+
+	"Common #35"
+	{
+		"en"			"{mint}This Common can make survivors go idle. (This doesn't affect bots.)"
 	}
 
 	"Tank #36 Name"
@@ -2854,6 +3204,11 @@
 		"en"			"Inverter Witch"
 	}
 
+	"Common #36 Name"
+	{
+		"en"			"Inverter Common"
+	}
+
 	"Tank #36"
 	{
 		"en"			"{mint}This Tank can invert survivors' movement keys."
@@ -2892,6 +3247,11 @@
 	"Witch #36"
 	{
 		"en"			"{mint}This Witch can invert survivors' movement keys."
+	}
+
+	"Common #36"
+	{
+		"en"			"{mint}This Common can invert survivors' movement keys."
 	}
 
 	"Tank #37 Name"
@@ -2934,6 +3294,11 @@
 		"en"			"Item Witch"
 	}
 
+	"Common #37 Name"
+	{
+		"en"			"Item Common"
+	}
+
 	"Tank #37"
 	{
 		"en"			"{mint}This Tank can give survivors items upon death."
@@ -2972,6 +3337,11 @@
 	"Witch #37"
 	{
 		"en"			"{mint}This Witch can give survivors items upon death."
+	}
+
+	"Common #37"
+	{
+		"en"			"{mint}This Common can give survivors items upon death."
 	}
 
 	"Tank #38 Name"
@@ -3014,6 +3384,11 @@
 		"en"			"Jockey Witch"
 	}
 
+	"Common #38 Name"
+	{
+		"en"			"Jockey Common"
+	}
+
 	"Tank #38"
 	{
 		"en"			"{mint}This Tank can spawn Jockeys behind it and throw some at survivors too."
@@ -3052,6 +3427,11 @@
 	"Witch #38"
 	{
 		"en"			"{mint}This Witch can spawn Jockeys behind it."
+	}
+
+	"Common #38"
+	{
+		"en"			"{mint}This Common can spawn Jockeys behind it."
 	}
 
 	"Tank #39 Name"
@@ -3094,6 +3474,11 @@
 		"en"			"Jumper Witch"
 	}
 
+	"Common #39 Name"
+	{
+		"en"			"Jumper Common"
+	}
+
 	"Tank #39"
 	{
 		"en"			"{mint}This Tank can jump periodically and make survivors jump uncontrollably."
@@ -3132,6 +3517,11 @@
 	"Witch #39"
 	{
 		"en"			"{mint}This Witch can jump periodically and make survivors jump uncontrollably."
+	}
+
+	"Common #39"
+	{
+		"en"			"{mint}This Common can jump periodically and make survivors jump uncontrollably."
 	}
 
 	"Tank #40 Name"
@@ -3174,6 +3564,11 @@
 		"en"			"Kamikaze Witch"
 	}
 
+	"Common #40 Name"
+	{
+		"en"			"Kamikaze Common"
+	}
+
 	"Tank #40"
 	{
 		"en"			"{mint}This Tank can kill itself along with a survivor victim."
@@ -3212,6 +3607,11 @@
 	"Witch #40"
 	{
 		"en"			"{mint}This Witch can kill itself along with a survivor victim."
+	}
+
+	"Common #40"
+	{
+		"en"			"{mint}This Common can kill itself along with a survivor victim."
 	}
 
 	"Tank #41 Name"
@@ -3254,6 +3654,11 @@
 		"en"			"Lagger Witch"
 	}
 
+	"Common #41 Name"
+	{
+		"en"			"Lagger Common"
+	}
+
 	"Tank #41"
 	{
 		"en"			"{mint}This Tank can make survivors lag."
@@ -3292,6 +3697,11 @@
 	"Witch #41"
 	{
 		"en"			"{mint}This Witch can make survivors lag."
+	}
+
+	"Common #41"
+	{
+		"en"			"{mint}This Common can make survivors lag."
 	}
 
 	"Tank #42 Name"
@@ -3334,6 +3744,11 @@
 		"en"			"Laser Witch"
 	}
 
+	"Common #42 Name"
+	{
+		"en"			"Laser Common"
+	}
+
 	"Tank #42"
 	{
 		"en"			"{mint}This Tank can shoot lasers at survivors."
@@ -3372,6 +3787,11 @@
 	"Witch #42"
 	{
 		"en"			"{mint}This Witch can shoot lasers at survivors."
+	}
+
+	"Common #42"
+	{
+		"en"			"{mint}This Common can shoot lasers at survivors."
 	}
 
 	"Tank #43 Name"
@@ -3414,6 +3834,11 @@
 		"en"			"Leecher Witch"
 	}
 
+	"Common #43 Name"
+	{
+		"en"			"Leecher Common"
+	}
+
 	"Tank #43"
 	{
 		"en"			"{mint}This Tank can leech off health from survivors."
@@ -3452,6 +3877,11 @@
 	"Witch #43"
 	{
 		"en"			"{mint}This Witch can leech off health from survivors."
+	}
+
+	"Common #43"
+	{
+		"en"			"{mint}This Common can leech off health from survivors."
 	}
 
 	"Tank #44 Name"
@@ -3494,6 +3924,11 @@
 		"en"			"Lightning Witch"
 	}
 
+	"Common #44 Name"
+	{
+		"en"			"Lightning Common"
+	}
+
 	"Tank #44"
 	{
 		"en"			"{mint}This Tank creates lightning storms."
@@ -3532,6 +3967,11 @@
 	"Witch #44"
 	{
 		"en"			"{mint}This Witch creates lightning storms."
+	}
+
+	"Common #44"
+	{
+		"en"			"{mint}This Common creates lightning storms."
 	}
 
 	"Tank #45 Name"
@@ -3574,6 +4014,11 @@
 		"en"			"Medic Witch"
 	}
 
+	"Common #45 Name"
+	{
+		"en"			"Medic Common"
+	}
+
 	"Tank #45"
 	{
 		"en"			"{mint}This Tank can heal nearby special infected upon death."
@@ -3612,6 +4057,11 @@
 	"Witch #45"
 	{
 		"en"			"{mint}This Witch can heal nearby special infected upon death."
+	}
+
+	"Common #45"
+	{
+		"en"			"{mint}This Common can heal nearby special infected upon death."
 	}
 
 	"Tank #46 Name"
@@ -3654,6 +4104,11 @@
 		"en"			"Meteor Witch"
 	}
 
+	"Common #46 Name"
+	{
+		"en"			"Meteor Common"
+	}
+
 	"Tank #46"
 	{
 		"en"			"{mint}This Tank can start meteor showers with meteorites that burn and explode after a few seconds."
@@ -3692,6 +4147,11 @@
 	"Witch #46"
 	{
 		"en"			"{mint}This Witch can start meteor showers with meteorites that burn and explode after a few seconds."
+	}
+
+	"Common #46"
+	{
+		"en"			"{mint}This Common can start meteor showers with meteorites that burn and explode after a few seconds."
 	}
 
 	"Tank #47 Name"
@@ -3734,6 +4194,11 @@
 		"en"			"Necromancer Witch"
 	}
 
+	"Common #47 Name"
+	{
+		"en"			"Necromancer Common"
+	}
+
 	"Tank #47"
 	{
 		"en"			"{mint}This Tank can resurrect dead special infected."
@@ -3772,6 +4237,11 @@
 	"Witch #47"
 	{
 		"en"			"{mint}This Witch can resurrect dead special infected."
+	}
+
+	"Common #47"
+	{
+		"en"			"{mint}This Common can resurrect dead special infected."
 	}
 
 	"Tank #48 Name"
@@ -3814,6 +4284,11 @@
 		"en"			"Nullifier Witch"
 	}
 
+	"Common #48 Name"
+	{
+		"en"			"Nullifier Common"
+	}
+
 	"Tank #48"
 	{
 		"en"			"{mint}This Tank can nullify survivors' damage to protect itself from damage."
@@ -3852,6 +4327,11 @@
 	"Witch #48"
 	{
 		"en"			"{mint}This Witch can nullify survivors' damage to protect itself from damage."
+	}
+
+	"Common #48"
+	{
+		"en"			"{mint}This Common can nullify survivors' damage to protect itself from damage."
 	}
 
 	"Tank #49 Name"
@@ -3894,6 +4374,11 @@
 		"en"			"Omni Witch"
 	}
 
+	"Common #49 Name"
+	{
+		"en"			"Omni Common"
+	}
+
 	"Tank #49"
 	{
 		"en"			"{mint}This Tank can access other nearby Mutant Tanks' abilities."
@@ -3932,6 +4417,11 @@
 	"Witch #49"
 	{
 		"en"			"{mint}This Witch can access other nearby Mutant Witches' abilities."
+	}
+
+	"Common #49"
+	{
+		"en"			"{mint}This Common can access other nearby Mutant Witches' abilities."
 	}
 
 	"Tank #50 Name"
@@ -3974,6 +4464,11 @@
 		"en"			"Panic Witch"
 	}
 
+	"Common #50 Name"
+	{
+		"en"			"Panic Common"
+	}
+
 	"Tank #50"
 	{
 		"en"			"{mint}This Tank can start panic events with hordes of zombies."
@@ -4012,6 +4507,11 @@
 	"Witch #50"
 	{
 		"en"			"{mint}This Witch can start panic events with hordes of zombies."
+	}
+
+	"Common #50"
+	{
+		"en"			"{mint}This Common can start panic events with hordes of zombies."
 	}
 
 	"Tank #51 Name"
@@ -4054,6 +4554,11 @@
 		"en"			"Pet Witch"
 	}
 
+	"Common #51 Name"
+	{
+		"en"			"Pet Common"
+	}
+
 	"Tank #51"
 	{
 		"en"			"{mint}This Tank is loyal to the survivors and loves to give hugs."
@@ -4092,6 +4597,11 @@
 	"Witch #51"
 	{
 		"en"			"{mint}This Witch is loyal to the survivors and loves to give hugs."
+	}
+
+	"Common #51"
+	{
+		"en"			"{mint}This Common is loyal to the survivors and loves to give hugs."
 	}
 
 	"Tank #52 Name"
@@ -4134,6 +4644,11 @@
 		"en"			"Pimp Witch"
 	}
 
+	"Common #52 Name"
+	{
+		"en"			"Pimp Common"
+	}
+
 	"Tank #52"
 	{
 		"en"			"{mint}This Tank can pimp slap survivors repeatedly to show them who's boss."
@@ -4172,6 +4687,11 @@
 	"Witch #52"
 	{
 		"en"			"{mint}This Witch can pimp slap survivors repeatedly to show them who's boss."
+	}
+
+	"Common #52"
+	{
+		"en"			"{mint}This Common can pimp slap survivors repeatedly to show them who's boss."
 	}
 
 	"Tank #53 Name"
@@ -4214,6 +4734,11 @@
 		"en"			"Platinum Witch"
 	}
 
+	"Common #53 Name"
+	{
+		"en"			"Platinum Common"
+	}
+
 	"Tank #53"
 	{
 		"en"			"{mint}This Tank is immune to melee damage."
@@ -4252,6 +4777,11 @@
 	"Witch #53"
 	{
 		"en"			"{mint}This Witch is immune to melee damage."
+	}
+
+	"Common #53"
+	{
+		"en"			"{mint}This Common is immune to melee damage."
 	}
 
 	"Tank #54 Name"
@@ -4294,6 +4824,11 @@
 		"en"			"Puke Witch"
 	}
 
+	"Common #54 Name"
+	{
+		"en"			"Puke Common"
+	}
+
 	"Tank #54"
 	{
 		"en"			"{mint}This Tank can puke on survivors."
@@ -4332,6 +4867,11 @@
 	"Witch #54"
 	{
 		"en"			"{mint}This Witch can puke on survivors."
+	}
+
+	"Common #54"
+	{
+		"en"			"{mint}This Common can puke on survivors."
 	}
 
 	"Tank #55 Name"
@@ -4374,6 +4914,11 @@
 		"en"			"Pyromaniac Witch"
 	}
 
+	"Common #55 Name"
+	{
+		"en"			"Pyromaniac Common"
+	}
+
 	"Tank #55"
 	{
 		"en"			"{mint}This Tank gains a speed boost when set on fire."
@@ -4412,6 +4957,11 @@
 	"Witch #55"
 	{
 		"en"			"{mint}This Witch gains a speed boost when set on fire."
+	}
+
+	"Common #55"
+	{
+		"en"			"{mint}This Common gains a speed boost when set on fire."
 	}
 
 	"Tank #56 Name"
@@ -4454,6 +5004,11 @@
 		"en"			"Quiet Witch"
 	}
 
+	"Common #56 Name"
+	{
+		"en"			"Quiet Common"
+	}
+
 	"Tank #56"
 	{
 		"en"			"{mint}This Tank can silence itself from survivors."
@@ -4492,6 +5047,11 @@
 	"Witch #56"
 	{
 		"en"			"{mint}This Witch can silence itself from survivors."
+	}
+
+	"Common #56"
+	{
+		"en"			"{mint}This Common can silence itself from survivors."
 	}
 
 	"Tank #57 Name"
@@ -4534,6 +5094,11 @@
 		"en"			"Recall Witch"
 	}
 
+	"Common #57 Name"
+	{
+		"en"			"Recall Common"
+	}
+
 	"Tank #57"
 	{
 		"en"			"{mint}This Tank can time travel to annoy survivors."
@@ -4572,6 +5137,11 @@
 	"Witch #57"
 	{
 		"en"			"{mint}This Witch can time travel to annoy survivors."
+	}
+
+	"Common #57"
+	{
+		"en"			"{mint}This Common can time travel to annoy survivors."
 	}
 
 	"Tank #58 Name"
@@ -4614,6 +5184,11 @@
 		"en"			"Recoil Witch"
 	}
 
+	"Common #58 Name"
+	{
+		"en"			"Recoil Common"
+	}
+
 	"Tank #58"
 	{
 		"en"			"{mint}This Tank can give survivors high gun recoil."
@@ -4652,6 +5227,11 @@
 	"Witch #58"
 	{
 		"en"			"{mint}This Witch can give survivors high gun recoil."
+	}
+
+	"Common #58"
+	{
+		"en"			"{mint}This Common can give survivors high gun recoil."
 	}
 
 	"Tank #59 Name"
@@ -4694,6 +5274,11 @@
 		"en"			"Regenerative Witch"
 	}
 
+	"Common #59 Name"
+	{
+		"en"			"Regenerative Common"
+	}
+
 	"Tank #59"
 	{
 		"en"			"{mint}This Tank regenerates health every second."
@@ -4732,6 +5317,11 @@
 	"Witch #59"
 	{
 		"en"			"{mint}This Witch regenerates health every second."
+	}
+
+	"Common #59"
+	{
+		"en"			"{mint}This Common regenerates health every second."
 	}
 
 	"Tank #60 Name"
@@ -4774,6 +5364,11 @@
 		"en"			"Respawner Witch"
 	}
 
+	"Common #60 Name"
+	{
+		"en"			"Respawner Common"
+	}
+
 	"Tank #60"
 	{
 		"en"			"{mint}This Tank can respawn upon death."
@@ -4812,6 +5407,11 @@
 	"Witch #60"
 	{
 		"en"			"{mint}This Witch can respawn upon death."
+	}
+
+	"Common #60"
+	{
+		"en"			"{mint}This Common can respawn upon death."
 	}
 
 	"Tank #61 Name"
@@ -4854,6 +5454,11 @@
 		"en"			"Restarter Witch"
 	}
 
+	"Common #61 Name"
+	{
+		"en"			"Restarter Common"
+	}
+
 	"Tank #61"
 	{
 		"en"			"{mint}This Tank can force survivors to restart with a new loadout."
@@ -4892,6 +5497,11 @@
 	"Witch #61"
 	{
 		"en"			"{mint}This Witch can force survivors to restart with a new loadout."
+	}
+
+	"Common #61"
+	{
+		"en"			"{mint}This Common can force survivors to restart with a new loadout."
 	}
 
 	"Tank #62 Name"
@@ -4934,6 +5544,11 @@
 		"en"			"Rock Witch"
 	}
 
+	"Common #62 Name"
+	{
+		"en"			"Rock Common"
+	}
+
 	"Tank #62"
 	{
 		"en"			"{mint}This Tank can start rock showers."
@@ -4972,6 +5587,11 @@
 	"Witch #62"
 	{
 		"en"			"{mint}This Witch can start rock showers."
+	}
+
+	"Common #62"
+	{
+		"en"			"{mint}This Common can start rock showers."
 	}
 
 	"Tank #63 Name"
@@ -5014,6 +5634,11 @@
 		"en"			"Rocketeer Witch"
 	}
 
+	"Common #63 Name"
+	{
+		"en"			"Rocketeer Common"
+	}
+
 	"Tank #63"
 	{
 		"en"			"{mint}This Tank can send survivors into space."
@@ -5052,6 +5677,11 @@
 	"Witch #63"
 	{
 		"en"			"{mint}This Witch can send survivors into space."
+	}
+
+	"Common #63"
+	{
+		"en"			"{mint}This Common can send survivors into space."
 	}
 
 	"Tank #64 Name"
@@ -5094,6 +5724,11 @@
 		"en"			"Self-throwing Witch"
 	}
 
+	"Common #64 Name"
+	{
+		"en"			"Self-throwing Common"
+	}
+
 	"Tank #64"
 	{
 		"en"			"{mint}This Tank can throw itself towards survivors."
@@ -5132,6 +5767,11 @@
 	"Witch #64"
 	{
 		"en"			"{mint}This Witch can throw itself towards survivors."
+	}
+
+	"Common #64"
+	{
+		"en"			"{mint}This Common can throw itself towards survivors."
 	}
 
 	"Tank #65 Name"
@@ -5174,6 +5814,11 @@
 		"en"			"Shaker Witch"
 	}
 
+	"Common #65 Name"
+	{
+		"en"			"Shaker Common"
+	}
+
 	"Tank #65"
 	{
 		"en"			"{mint}This Tank can shake survivors' screens."
@@ -5212,6 +5857,11 @@
 	"Witch #65"
 	{
 		"en"			"{mint}This Witch can shake survivors' screens."
+	}
+
+	"Common #65"
+	{
+		"en"			"{mint}This Common can shake survivors' screens."
 	}
 
 	"Tank #66 Name"
@@ -5254,6 +5904,11 @@
 		"en"			"Shield Witch"
 	}
 
+	"Common #66 Name"
+	{
+		"en"			"Shield Common"
+	}
+
 	"Tank #66"
 	{
 		"en"			"{mint}This Tank spawns with a shield and throws propane tanks or gas cans which survivors can use to break the shield."
@@ -5292,6 +5947,11 @@
 	"Witch #66"
 	{
 		"en"			"{mint}This Witch spawns with a shield."
+	}
+
+	"Common #66"
+	{
+		"en"			"{mint}This Common spawns with a shield."
 	}
 
 	"Tank #67 Name"
@@ -5334,6 +5994,11 @@
 		"en"			"Shover Witch"
 	}
 
+	"Common #67 Name"
+	{
+		"en"			"Shover Common"
+	}
+
 	"Tank #67"
 	{
 		"en"			"{mint}This Tank can shove survivors around."
@@ -5372,6 +6037,11 @@
 	"Witch #67"
 	{
 		"en"			"{mint}This Witch can shove survivors around."
+	}
+
+	"Common #67"
+	{
+		"en"			"{mint}This Common can shove survivors around."
 	}
 
 	"Tank #68 Name"
@@ -5414,6 +6084,11 @@
 		"en"			"Slow Witch"
 	}
 
+	"Common #68 Name"
+	{
+		"en"			"Slow Common"
+	}
+
 	"Tank #68"
 	{
 		"en"			"{mint}This Tank can slow survivors down."
@@ -5452,6 +6127,11 @@
 	"Witch #68"
 	{
 		"en"			"{mint}This Witch can slow survivors down."
+	}
+
+	"Common #68"
+	{
+		"en"			"{mint}This Common can slow survivors down."
 	}
 
 	"Tank #69 Name"
@@ -5494,6 +6174,11 @@
 		"en"			"Smasher Witch"
 	}
 
+	"Common #69 Name"
+	{
+		"en"			"Smasher Common"
+	}
+
 	"Tank #69"
 	{
 		"en"			"{mint}This Tank can smash survivors to death."
@@ -5532,6 +6217,11 @@
 	"Witch #69"
 	{
 		"en"			"{mint}This Witch can smash survivors to death."
+	}
+
+	"Common #69"
+	{
+		"en"			"{mint}This Common can smash survivors to death."
 	}
 
 	"Tank #70 Name"
@@ -5574,6 +6264,11 @@
 		"en"			"Smiter Witch"
 	}
 
+	"Common #70 Name"
+	{
+		"en"			"Smiter Common"
+	}
+
 	"Tank #70"
 	{
 		"en"			"{mint}This Tank can smite survivors for an instant kill."
@@ -5612,6 +6307,11 @@
 	"Witch #70"
 	{
 		"en"			"{mint}This Witch can smite survivors for an instant kill."
+	}
+
+	"Common #70"
+	{
+		"en"			"{mint}This Common can smite survivors for an instant kill."
 	}
 
 	"Tank #71 Name"
@@ -5654,6 +6354,11 @@
 		"en"			"Smoker Witch"
 	}
 
+	"Common #71 Name"
+	{
+		"en"			"Smoker Common"
+	}
+
 	"Tank #71"
 	{
 		"en"			"{mint}This Tank can spawn Smokers behind it and throw some at survivors too."
@@ -5692,6 +6397,11 @@
 	"Witch #71"
 	{
 		"en"			"{mint}This Witch can spawn Smokers behind it."
+	}
+
+	"Common #71"
+	{
+		"en"			"{mint}This Common can spawn Smokers behind it."
 	}
 
 	"Tank #72 Name"
@@ -5734,6 +6444,11 @@
 		"en"			"Spammer Witch"
 	}
 
+	"Common #72 Name"
+	{
+		"en"			"Spammer Common"
+	}
+
 	"Tank #72"
 	{
 		"en"			"{mint}This Tank can spam rocks at survivors."
@@ -5772,6 +6487,11 @@
 	"Witch #72"
 	{
 		"en"			"{mint}This Witch can spam rocks at survivors."
+	}
+
+	"Common #72"
+	{
+		"en"			"{mint}This Common can spam rocks at survivors."
 	}
 
 	"Tank #73 Name"
@@ -5814,6 +6534,11 @@
 		"en"			"Special Witch"
 	}
 
+	"Common #73 Name"
+	{
+		"en"			"Special Common"
+	}
+
 	"Tank #73"
 	{
 		"en"			"{mint}This Tank can spawn random special infected behind it and throw some at survivors too."
@@ -5852,6 +6577,11 @@
 	"Witch #73"
 	{
 		"en"			"{mint}This Witch can spawn random special infected behind it."
+	}
+
+	"Common #73"
+	{
+		"en"			"{mint}This Common can spawn random special infected behind it."
 	}
 
 	"Tank #74 Name"
@@ -5894,6 +6624,11 @@
 		"en"			"Spitter Witch"
 	}
 
+	"Common #74 Name"
+	{
+		"en"			"Spitter Common"
+	}
+
 	"Tank #74"
 	{
 		"en"			"{mint}This Tank can spawn Spitters behind it and throw some at survivors too."
@@ -5932,6 +6667,11 @@
 	"Witch #74"
 	{
 		"en"			"{mint}This Witch can spawn Spitters behind it."
+	}
+
+	"Common #74"
+	{
+		"en"			"{mint}This Common can spawn Spitters behind it."
 	}
 
 	"Tank #75 Name"
@@ -5974,6 +6714,11 @@
 		"en"			"Splasher Witch"
 	}
 
+	"Common #75 Name"
+	{
+		"en"			"Splasher Common"
+	}
+
 	"Tank #75"
 	{
 		"en"			"{mint}This Tank can release a splash of damage within a certain radius."
@@ -6012,6 +6757,11 @@
 	"Witch #75"
 	{
 		"en"			"{mint}This Witch can release a splash of damage within a certain radius."
+	}
+
+	"Common #75"
+	{
+		"en"			"{mint}This Common can release a splash of damage within a certain radius."
 	}
 
 	"Tank #76 Name"
@@ -6054,6 +6804,11 @@
 		"en"			"Splatter Witch"
 	}
 
+	"Common #76 Name"
+	{
+		"en"			"Splatter Common"
+	}
+
 	"Tank #76"
 	{
 		"en"			"{mint}This Tank can cover everyone's screens with splatters."
@@ -6092,6 +6847,11 @@
 	"Witch #76"
 	{
 		"en"			"{mint}This Witch can cover everyone's screens with splatters."
+	}
+
+	"Common #76"
+	{
+		"en"			"{mint}This Common can cover everyone's screens with splatters."
 	}
 
 	"Tank #77 Name"
@@ -6134,6 +6894,11 @@
 		"en"			"Thrower Witch"
 	}
 
+	"Common #77 Name"
+	{
+		"en"			"Thrower Common"
+	}
+
 	"Tank #77"
 	{
 		"en"			"{mint}This Tank can throw cars, special infected, Tanks, Witches, and itself!"
@@ -6172,6 +6937,11 @@
 	"Witch #77"
 	{
 		"en"			"{mint}This Witch can throw cars, special infected, Tanks, Witches, and itself!"
+	}
+
+	"Common #77"
+	{
+		"en"			"{mint}This Common can throw cars, special infected, Tanks, Witches, and itself!"
 	}
 
 	"Tank #78 Name"
@@ -6214,6 +6984,11 @@
 		"en"			"Tracker Witch"
 	}
 
+	"Common #78 Name"
+	{
+		"en"			"Tracker Common"
+	}
+
 	"Tank #78"
 	{
 		"en"			"{mint}This Tank throws rocks which can track nearby survivors."
@@ -6252,6 +7027,11 @@
 	"Witch #78"
 	{
 		"en"			"{mint}This Witch throws rocks which can track nearby survivors."
+	}
+
+	"Common #78"
+	{
+		"en"			"{mint}This Common throws rocks which can track nearby survivors."
 	}
 
 	"Tank #79 Name"
@@ -6294,6 +7074,11 @@
 		"en"			"Ultimate Witch"
 	}
 
+	"Common #79 Name"
+	{
+		"en"			"Ultimate Common"
+	}
+
 	"Tank #79"
 	{
 		"en"			"{mint}This Tank gains temporary godmode and damage boost when low on health."
@@ -6332,6 +7117,11 @@
 	"Witch #79"
 	{
 		"en"			"{mint}This Witch gains temporary godmode and damage boost when low on health."
+	}
+
+	"Common #79"
+	{
+		"en"			"{mint}This Common gains temporary godmode and damage boost when low on health."
 	}
 
 	"Tank #80 Name"
@@ -6374,6 +7164,11 @@
 		"en"			"Undead Witch"
 	}
 
+	"Common #80 Name"
+	{
+		"en"			"Undead Common"
+	}
+
 	"Tank #80"
 	{
 		"en"			"{mint}This Tank regains full HP when close to dying."
@@ -6412,6 +7207,11 @@
 	"Witch #80"
 	{
 		"en"			"{mint}This Witch regains full HP when close to dying."
+	}
+
+	"Common #80"
+	{
+		"en"			"{mint}This Common regains full HP when close to dying."
 	}
 
 	"Tank #81 Name"
@@ -6454,6 +7254,11 @@
 		"en"			"Vampire Witch"
 	}
 
+	"Common #81 Name"
+	{
+		"en"			"Vampire Common"
+	}
+
 	"Tank #81"
 	{
 		"en"			"{mint}This Tank can steal health from survivors."
@@ -6492,6 +7297,11 @@
 	"Witch #81"
 	{
 		"en"			"{mint}This Witch can steal health from survivors."
+	}
+
+	"Common #81"
+	{
+		"en"			"{mint}This Common can steal health from survivors."
 	}
 
 	"Tank #82 Name"
@@ -6534,6 +7344,11 @@
 		"en"			"Visual Witch"
 	}
 
+	"Common #82 Name"
+	{
+		"en"			"Visual Common"
+	}
+
 	"Tank #82"
 	{
 		"en"			"{mint}This Tank can change the FOV of survivors."
@@ -6572,6 +7387,11 @@
 	"Witch #82"
 	{
 		"en"			"{mint}This Witch can change the FOV of survivors."
+	}
+
+	"Common #82"
+	{
+		"en"			"{mint}This Common can change the FOV of survivors."
 	}
 
 	"Tank #83 Name"
@@ -6614,6 +7434,11 @@
 		"en"			"Warper Witch"
 	}
 
+	"Common #83 Name"
+	{
+		"en"			"Warper Common"
+	}
+
 	"Tank #83"
 	{
 		"en"			"{mint}This Tank can warp to a random survivor."
@@ -6652,6 +7477,11 @@
 	"Witch #83"
 	{
 		"en"			"{mint}This Witch can warp to a random survivor."
+	}
+
+	"Common #83"
+	{
+		"en"			"{mint}This Common can warp to a random survivor."
 	}
 
 	"Tank #84 Name"
@@ -6694,6 +7524,11 @@
 		"en"			"Whirler Witch"
 	}
 
+	"Common #84 Name"
+	{
+		"en"			"Whirler Common"
+	}
+
 	"Tank #84"
 	{
 		"en"			"{mint}This Tank can make survivors whirl."
@@ -6732,6 +7567,11 @@
 	"Witch #84"
 	{
 		"en"			"{mint}This Witch can make survivors whirl."
+	}
+
+	"Common #84"
+	{
+		"en"			"{mint}This Common can make survivors whirl."
 	}
 
 	"Tank #85 Name"
@@ -6774,6 +7614,11 @@
 		"en"			"Witch Witch"
 	}
 
+	"Common #85 Name"
+	{
+		"en"			"Witch Common"
+	}
+
 	"Tank #85"
 	{
 		"en"			"{mint}This Tank can convert nearby common infected into Witches and throw some at survivors too."
@@ -6812,6 +7657,11 @@
 	"Witch #85"
 	{
 		"en"			"{mint}This Witch can convert nearby common infected into Witches."
+	}
+
+	"Common #85"
+	{
+		"en"			"{mint}This Common can convert nearby common infected into Witches."
 	}
 
 	"Tank #86 Name"
@@ -6854,6 +7704,11 @@
 		"en"			"Xiphos Witch"
 	}
 
+	"Common #86 Name"
+	{
+		"en"			"Xiphos Common"
+	}
+
 	"Tank #86"
 	{
 		"en"			"{mint}This Tank can steal health from survivors and vice-versa."
@@ -6892,6 +7747,11 @@
 	"Witch #86"
 	{
 		"en"			"{mint}This Witch can steal health from survivors and vice-versa."
+	}
+
+	"Common #86"
+	{
+		"en"			"{mint}This Common can steal health from survivors and vice-versa."
 	}
 
 	"Tank #87 Name"
@@ -6934,6 +7794,11 @@
 		"en"			"Yeller Witch"
 	}
 
+	"Common #87 Name"
+	{
+		"en"			"Yeller Common"
+	}
+
 	"Tank #87"
 	{
 		"en"			"{mint}This Tank can yell to defean survivors."
@@ -6972,6 +7837,11 @@
 	"Witch #87"
 	{
 		"en"			"{mint}This Witch can yell to defean survivors."
+	}
+
+	"Common #87"
+	{
+		"en"			"{mint}This Common can yell to defean survivors."
 	}
 
 	"Tank #88 Name"
@@ -7014,6 +7884,11 @@
 		"en"			"Zombie Witch"
 	}
 
+	"Common #88 Name"
+	{
+		"en"			"Zombie Common"
+	}
+
 	"Tank #88"
 	{
 		"en"			"{mint}This Tank can create a mob of zombies within the area."
@@ -7052,6 +7927,11 @@
 	"Witch #88"
 	{
 		"en"			"{mint}This Witch can create a mob of zombies within the area."
+	}
+
+	"Common #88"
+	{
+		"en"			"{mint}This Common can create a mob of zombies within the area."
 	}
 
 	"Tank #89 Name"
@@ -7094,6 +7974,11 @@
 		"en"			"Armageddon Witch"
 	}
 
+	"Common #89 Name"
+	{
+		"en"			"Armageddon Common"
+	}
+
 	"Tank #89"
 	{
 		"en"			"{mint}This Tank is immune to explosives, can pull survivors and infected towards it, and can start meteor showers."
@@ -7132,6 +8017,11 @@
 	"Witch #89"
 	{
 		"en"			"{mint}This Witch is immune to explosives, can pull survivors and infected towards it, and can start meteor showers."
+	}
+
+	"Common #89"
+	{
+		"en"			"{mint}This Common is immune to explosives, can pull survivors and infected towards it, and can start meteor showers."
 	}
 
 	"Tank #90 Name"
@@ -7174,6 +8064,11 @@
 		"en"			"Boss Witch"
 	}
 
+	"Common #90 Name"
+	{
+		"en"			"Boss Common"
+	}
+
 	"Tank #90"
 	{
 		"en"			"{mint}Fire immunity, fast, cloak itself, disarm survivors, pull survivors in and change their gravity, jump periodically, start meteor showers, spawn with a shield, smite survivors, warp to survivors, and spawn Witches/zombies."
@@ -7210,6 +8105,11 @@
 	}
 
 	"Witch #90"
+	{
+		"en"			"{mint}Fire immunity, fast, cloak itself, disarm survivors, pull survivors in and change their gravity, jump periodically, start meteor showers, spawn with a shield, smite survivors, warp to survivors, and spawn Witches/zombies."
+	}
+
+	"Common #90"
 	{
 		"en"			"{mint}Fire immunity, fast, cloak itself, disarm survivors, pull survivors in and change their gravity, jump periodically, start meteor showers, spawn with a shield, smite survivors, warp to survivors, and spawn Witches/zombies."
 	}
@@ -7254,6 +8154,11 @@
 		"en"			"Cobalt Witch"
 	}
 
+	"Common #91 Name"
+	{
+		"en"			"Cobalt Common"
+	}
+
 	"Tank #91"
 	{
 		"en"			"{mint}This Tank is immune to fire damage and can run really fast."
@@ -7292,6 +8197,11 @@
 	"Witch #91"
 	{
 		"en"			"{mint}This Witch is immune to fire damage and can run really fast."
+	}
+
+	"Common #91"
+	{
+		"en"			"{mint}This Common is immune to fire damage and can run really fast."
 	}
 
 	"Tank #92 Name"
@@ -7334,6 +8244,11 @@
 		"en"			"Distraction Witch"
 	}
 
+	"Common #92 Name"
+	{
+		"en"			"Distraction Common"
+	}
+
 	"Tank #92"
 	{
 		"en"			"{mint}This Tank can jump periodically, make survivors jump uncontrollably, and warp to survivors."
@@ -7372,6 +8287,11 @@
 	"Witch #92"
 	{
 		"en"			"{mint}This Witch can jump periodically, make survivors jump uncontrollably, and warp to survivors."
+	}
+
+	"Common #92"
+	{
+		"en"			"{mint}This Common can jump periodically, make survivors jump uncontrollably, and warp to survivors."
 	}
 
 	"Tank #93 Name"
@@ -7414,6 +8334,11 @@
 		"en"			"Feedback Witch"
 	}
 
+	"Common #93 Name"
+	{
+		"en"			"Feedback Common"
+	}
+
 	"Tank #93"
 	{
 		"en"			"{mint}This Tank pushes survivors away."
@@ -7452,6 +8377,11 @@
 	"Witch #93"
 	{
 		"en"			"{mint}This Witch pushes survivors away."
+	}
+
+	"Common #93"
+	{
+		"en"			"{mint}This Common pushes survivors away."
 	}
 
 	"Tank #94 Name"
@@ -7494,6 +8424,11 @@
 		"en"			"Flash Witch"
 	}
 
+	"Common #94 Name"
+	{
+		"en"			"Flash Common"
+	}
+
 	"Tank #94"
 	{
 		"en"			"{mint}This Tank can run really fast, throw electricity at survivors, and slow down time around itself, all while having temporary invincibility."
@@ -7532,6 +8467,11 @@
 	"Witch #94"
 	{
 		"en"			"{mint}This Witch can run really fast and slow down time around itself, all while having temporary invincibility."
+	}
+
+	"Common #94"
+	{
+		"en"			"{mint}This Common can run really fast and slow down time around itself, all while having temporary invincibility."
 	}
 
 	"Tank #95 Name"
@@ -7574,6 +8514,11 @@
 		"en"			"Goliath Witch"
 	}
 
+	"Common #95 Name"
+	{
+		"en"			"Goliath Common"
+	}
+
 	"Tank #95"
 	{
 		"en"			"{mint}Fire immunity, moves slowly, give survivors temporary health, absorbs health from nearby infected, spawns with a shield, and smites survivors."
@@ -7610,6 +8555,11 @@
 	}
 
 	"Witch #95"
+	{
+		"en"			"{mint}Fire immunity, moves slowly, give survivors temporary health, absorbs health from nearby infected, spawns with a shield, and smites survivors."
+	}
+
+	"Common #95"
 	{
 		"en"			"{mint}Fire immunity, moves slowly, give survivors temporary health, absorbs health from nearby infected, spawns with a shield, and smites survivors."
 	}
@@ -7654,6 +8604,11 @@
 		"en"			"Hallucination Witch"
 	}
 
+	"Common #96 Name"
+	{
+		"en"			"Hallucination Common"
+	}
+
 	"Tank #96"
 	{
 		"en"			"{mint}Fire immunity, cloaks itself, and warps to survivors."
@@ -7690,6 +8645,11 @@
 	}
 
 	"Witch #96"
+	{
+		"en"			"{mint}Fire immunity, cloaks itself, and warps to survivors."
+	}
+
+	"Common #96"
 	{
 		"en"			"{mint}Fire immunity, cloaks itself, and warps to survivors."
 	}
@@ -7734,6 +8694,11 @@
 		"en"			"Meme Witch"
 	}
 
+	"Common #97 Name"
+	{
+		"en"			"Meme Common"
+	}
+
 	"Tank #97"
 	{
 		"en"			"{mint}Fire immunity, absorbs damage, runs fast, cloaks itself, pulls survivors in and changes their gravity, jumps high, starts meteor showers, smites survivors, spams rocks, warps to survivors, and spawns Witches/zombies."
@@ -7770,6 +8735,11 @@
 	}
 
 	"Witch #97"
+	{
+		"en"			"{mint}Fire immunity, absorbs damage, runs fast, cloaks itself, pulls survivors in and changes their gravity, jumps high, starts meteor showers, smites survivors, spams rocks, warps to survivors, and spawns Witches/zombies."
+	}
+
+	"Common #97"
 	{
 		"en"			"{mint}Fire immunity, absorbs damage, runs fast, cloaks itself, pulls survivors in and changes their gravity, jumps high, starts meteor showers, smites survivors, spams rocks, warps to survivors, and spawns Witches/zombies."
 	}
@@ -7814,6 +8784,11 @@
 		"en"			"Mirage Witch"
 	}
 
+	"Common #98 Name"
+	{
+		"en"			"Mirage Common"
+	}
+
 	"Tank #98"
 	{
 		"en"			"{mint}This Tank is immune to fire damage, runs fast, and warps to survivors."
@@ -7852,6 +8827,11 @@
 	"Witch #98"
 	{
 		"en"			"{mint}This Witch is immune to fire damage, runs fast, and warps to survivors."
+	}
+
+	"Common #98"
+	{
+		"en"			"{mint}This Common is immune to fire damage, runs fast, and warps to survivors."
 	}
 
 	"Tank #99 Name"
@@ -7894,6 +8874,11 @@
 		"en"			"Poltergeist Witch"
 	}
 
+	"Common #99 Name"
+	{
+		"en"			"Poltergeist Common"
+	}
+
 	"Tank #99"
 	{
 		"en"			"{mint}This Tank is immune to fire damage, runs fast, cloaks itself, and warps to survivors."
@@ -7932,6 +8917,11 @@
 	"Witch #99"
 	{
 		"en"			"{mint}This Witch is immune to fire damage, runs fast, cloaks itself, and warps to survivors."
+	}
+
+	"Common #99"
+	{
+		"en"			"{mint}This Common is immune to fire damage, runs fast, cloaks itself, and warps to survivors."
 	}
 
 	"Tank #100 Name"
@@ -7974,6 +8964,11 @@
 		"en"			"Psychotic Witch"
 	}
 
+	"Common #100 Name"
+	{
+		"en"			"Psychotic Common"
+	}
+
 	"Tank #100"
 	{
 		"en"			"{mint}This Tank can give survivors temporary health, absorb health from nearby infected, start meteor showers, spawn with a shield, and warp to survivors."
@@ -8012,6 +9007,11 @@
 	"Witch #100"
 	{
 		"en"			"{mint}This Witch can give survivors temporary health, absorb health from nearby infected, start meteor showers, spawn with a shield, and warp to survivors."
+	}
+
+	"Common #100"
+	{
+		"en"			"{mint}This Common can give survivors temporary health, absorb health from nearby infected, start meteor showers, spawn with a shield, and warp to survivors."
 	}
 
 	"Tank #101 Name"
@@ -8054,6 +9054,11 @@
 		"en"			"Reverse-Flash Witch"
 	}
 
+	"Common #101 Name"
+	{
+		"en"			"Reverse-Flash Common"
+	}
+
 	"Tank #101"
 	{
 		"en"			"{mint}This Tank is immune to fire damage, runs really fast, and warps to survivors."
@@ -8092,6 +9097,11 @@
 	"Witch #101"
 	{
 		"en"			"{mint}This Witch is immune to fire damage, runs really fast, and warps to survivors."
+	}
+
+	"Common #101"
+	{
+		"en"			"{mint}This Common is immune to fire damage, runs really fast, and warps to survivors."
 	}
 
 	"Tank #102 Name"
@@ -8134,6 +9144,11 @@
 		"en"			"Spawner Witch"
 	}
 
+	"Common #102 Name"
+	{
+		"en"			"Spawner Common"
+	}
+
 	"Tank #102"
 	{
 		"en"			"{mint}This Tank spawns zombies behind clouds of smoke within the area."
@@ -8172,6 +9187,11 @@
 	"Witch #102"
 	{
 		"en"			"{mint}This Witch spawns zombies behind clouds of smoke within the area."
+	}
+
+	"Common #102"
+	{
+		"en"			"{mint}This Common spawns zombies behind clouds of smoke within the area."
 	}
 
 	"Tank #103 Name"
@@ -8214,6 +9234,11 @@
 		"en"			"Zoom Witch"
 	}
 
+	"Common #103 Name"
+	{
+		"en"			"Zoom Common"
+	}
+
 	"Tank #103"
 	{
 		"en"			"{mint}This Tank is immune to fire damage, runs really fast, and warps to survivors."
@@ -8252,6 +9277,11 @@
 	"Witch #103"
 	{
 		"en"			"{mint}This Witch is immune to fire damage, runs really fast, and warps to survivors."
+	}
+
+	"Common #103"
+	{
+		"en"			"{mint}This Common is immune to fire damage, runs really fast, and warps to survivors."
 	}
 
 	"Tank #104 Name"
@@ -8294,6 +9324,11 @@
 		"en"			"Trap Witch"
 	}
 
+	"Common #104 Name"
+	{
+		"en"			"Trap Common"
+	}
+
 	"Tank #104"
 	{
 		"en"			"{mint}This Tank is not what it seems."
@@ -8332,6 +9367,11 @@
 	"Witch #104"
 	{
 		"en"			"{mint}This Witch is not what it seems."
+	}
+
+	"Common #104"
+	{
+		"en"			"{mint}This Common is not what it seems."
 	}
 
 	"Tank #105 Name"
@@ -8374,6 +9414,11 @@
 		"en"			"Dread Witch"
 	}
 
+	"Common #105 Name"
+	{
+		"en"			"Dread Common"
+	}
+
 	"Tank #105"
 	{
 		"en"			"{mint}This Tank can partially blind survivors."
@@ -8412,6 +9457,11 @@
 	"Witch #105"
 	{
 		"en"			"{mint}This Witch can partially blind survivors."
+	}
+
+	"Common #105"
+	{
+		"en"			"{mint}This Common can partially blind survivors."
 	}
 
 	"Tank #106 Name"
@@ -8454,6 +9504,11 @@
 		"en"			"Rabid Witch"
 	}
 
+	"Common #106 Name"
+	{
+		"en"			"Rabid Common"
+	}
+
 	"Tank #106"
 	{
 		"en"			"{mint}This Tank can partially drug and hurt survivors."
@@ -8492,6 +9547,11 @@
 	"Witch #106"
 	{
 		"en"			"{mint}This Witch can partially drug and hurt survivors."
+	}
+
+	"Common #106"
+	{
+		"en"			"{mint}This Common can partially drug and hurt survivors."
 	}
 
 	"Tank #107 Name"
@@ -8534,6 +9594,11 @@
 		"en"			"Tremor Witch"
 	}
 
+	"Common #107 Name"
+	{
+		"en"			"Tremor Common"
+	}
+
 	"Tank #107"
 	{
 		"en"			"{mint}This Tank can hurl rocks at survivors."
@@ -8572,6 +9637,11 @@
 	"Witch #107"
 	{
 		"en"			"{mint}This Witch can hurl rocks at survivors."
+	}
+
+	"Common #107"
+	{
+		"en"			"{mint}This Common can hurl rocks at survivors."
 	}
 
 	"Tank #108 Name"
@@ -8614,6 +9684,11 @@
 		"en"			"Psyk0tik Witch"
 	}
 
+	"Common #108 Name"
+	{
+		"en"			"Psyk0tik Common"
+	}
+
 	"Tank #108"
 	{
 		"en"			"{mint}This Tank does extra damage and runs really fast while cloaking itself and slowing survivors down."
@@ -8652,6 +9727,11 @@
 	"Witch #108"
 	{
 		"en"			"{mint}This Witch does extra damage and runs really fast while cloaking itself and slowing survivors down."
+	}
+
+	"Common #108"
+	{
+		"en"			"{mint}This Common does extra damage and runs really fast while cloaking itself and slowing survivors down."
 	}
 
 	"Tank #109 Name"
@@ -8694,6 +9774,11 @@
 		"en"			"Apocalyptic Witch"
 	}
 
+	"Common #109 Name"
+	{
+		"en"			"Apocalyptic Common"
+	}
+
 	"Tank #109"
 	{
 		"en"			"{mint}This Tank is immune to fire damage, runs a little faster, starts meteor showers, panic events, and rock showers."
@@ -8732,6 +9817,11 @@
 	"Witch #109"
 	{
 		"en"			"{mint}This Witch is immune to fire damage, runs a little faster, starts meteor showers, panic events, and rock showers."
+	}
+
+	"Common #109"
+	{
+		"en"			"{mint}This Common is immune to fire damage, runs a little faster, starts meteor showers, panic events, and rock showers."
 	}
 
 	"Tank #110 Name"
@@ -8774,6 +9864,11 @@
 		"en"			"Darth Vader Witch"
 	}
 
+	"Common #110 Name"
+	{
+		"en"			"Darth Vader Common"
+	}
+
 	"Tank #110"
 	{
 		"en"			"{mint}It's Darth Vader... And he is... A Mutant Tank with the Force!"
@@ -8812,6 +9907,11 @@
 	"Witch #110"
 	{
 		"en"			"{mint}It's Darth Vader... And he is... A Mutant Witch with the Force!"
+	}
+
+	"Common #110"
+	{
+		"en"			"{mint}It's Darth Vader... And he is... A Mutant Common with the Force!"
 	}
 
 	"Tank #111 Name"
@@ -8854,6 +9954,11 @@
 		"en"			"Drug Addict Witch"
 	}
 
+	"Common #111 Name"
+	{
+		"en"			"Drug Addict Common"
+	}
+
 	"Tank #111"
 	{
 		"en"			"{mint}This Tank has a contagious addiction."
@@ -8892,6 +9997,11 @@
 	"Witch #111"
 	{
 		"en"			"{mint}This Witch has a contagious addiction."
+	}
+
+	"Common #111"
+	{
+		"en"			"{mint}This Common has a contagious addiction."
 	}
 
 	"Tank #112 Name"
@@ -8934,6 +10044,11 @@
 		"en"			"Godspeed Witch"
 	}
 
+	"Common #112 Name"
+	{
+		"en"			"Godspeed Common"
+	}
+
 	"Tank #112"
 	{
 		"en"			"{mint}This Tank is immune to fire damage, runs really fast, and warps to survivors."
@@ -8972,6 +10087,11 @@
 	"Witch #112"
 	{
 		"en"			"{mint}This Witch is immune to fire damage, runs really fast, and warps to survivors."
+	}
+
+	"Common #112"
+	{
+		"en"			"{mint}This Common is immune to fire damage, runs really fast, and warps to survivors."
 	}
 
 	"Tank #113 Name"
@@ -9014,6 +10134,11 @@
 		"en"			"Grim Reaper Witch"
 	}
 
+	"Common #113 Name"
+	{
+		"en"			"Grim Reaper Common"
+	}
+
 	"Tank #113"
 	{
 		"en"			"{mint}This Tank runs a little faster, buries survivors, cloaks itself, and warps to survivors."
@@ -9052,6 +10177,11 @@
 	"Witch #113"
 	{
 		"en"			"{mint}This Witch runs a little faster, buries survivors, cloaks itself, and warps to survivors."
+	}
+
+	"Common #113"
+	{
+		"en"			"{mint}This Common runs a little faster, buries survivors, cloaks itself, and warps to survivors."
 	}
 
 	"Tank #114 Name"
@@ -9094,6 +10224,11 @@
 		"en"			"Horde Witch"
 	}
 
+	"Common #114 Name"
+	{
+		"en"			"Horde Common"
+	}
+
 	"Tank #114"
 	{
 		"en"			"{mint}This Tank can start panic events and puke on survivors to help prolong them."
@@ -9132,6 +10267,11 @@
 	"Witch #114"
 	{
 		"en"			"{mint}This Witch can start panic events and puke on survivors to help prolong them."
+	}
+
+	"Common #114"
+	{
+		"en"			"{mint}This Common can start panic events and puke on survivors to help prolong them."
 	}
 
 	"Tank #115 Name"
@@ -9174,6 +10314,11 @@
 		"en"			"Hulk Witch"
 	}
 
+	"Common #115 Name"
+	{
+		"en"			"Hulk Common"
+	}
+
 	"Tank #115"
 	{
 		"en"			"{mint}Meet the Incredible Hulk! This Tank has most of the abilities of the Hulk!"
@@ -9212,6 +10357,11 @@
 	"Witch #115"
 	{
 		"en"			"{mint}Meet the Incredible Hulk! This Witch has most of the abilities of the Hulk!"
+	}
+
+	"Common #115"
+	{
+		"en"			"{mint}Meet the Incredible Hulk! This Common has most of the abilities of the Hulk!"
 	}
 
 	"Tank #116 Name"
@@ -9254,6 +10404,11 @@
 		"en"			"Ninja Witch"
 	}
 
+	"Common #116 Name"
+	{
+		"en"			"Ninja Common"
+	}
+
 	"Tank #116"
 	{
 		"en"			"{mint}This Tank can teleport, move around silently, and cloak itself. Be very careful!"
@@ -9292,6 +10447,11 @@
 	"Witch #116"
 	{
 		"en"			"{mint}This Witch can teleport, move around silently, and cloak itself. Be very careful!"
+	}
+
+	"Common #116"
+	{
+		"en"			"{mint}This Common can teleport, move around silently, and cloak itself. Be very careful!"
 	}
 
 	"Tank #117 Name"
@@ -9334,6 +10494,11 @@
 		"en"			"Zen Witch"
 	}
 
+	"Common #117 Name"
+	{
+		"en"			"Zen Common"
+	}
+
 	"Tank #117"
 	{
 		"en"			"{mint}This Tank is too busy meditating to care about you."
@@ -9374,6 +10539,11 @@
 		"en"			"{mint}This Witch is too busy meditating to care about you."
 	}
 
+	"Common #117"
+	{
+		"en"			"{mint}This Common is too busy meditating to care about you."
+	}
+
 	"Tank #118 Name"
 	{
 		"en"			"The Boss (1st Form)"
@@ -9410,6 +10580,11 @@
 	}
 
 	"Witch #118 Name"
+	{
+		"en"			"The Boss (1st Form)"
+	}
+
+	"Common #118 Name"
 	{
 		"en"			"The Boss (1st Form)"
 	}
@@ -9454,6 +10629,11 @@
 		"en"			"{mint}This Witch periodically warps to survivors."
 	}
 
+	"Common #118"
+	{
+		"en"			"{mint}This Common periodically warps to survivors."
+	}
+
 	"Tank #119 Name"
 	{
 		"en"			"Steel Overlord (2nd Form)"
@@ -9490,6 +10670,11 @@
 	}
 
 	"Witch #119 Name"
+	{
+		"en"			"Steel Overlord (2nd Form)"
+	}
+
+	"Common #119 Name"
 	{
 		"en"			"Steel Overlord (2nd Form)"
 	}
@@ -9534,6 +10719,11 @@
 		"en"			"{mint}This Witch runs a little faster, is immune to melee, is a bit stronger than usual, can change survivors' gravity, and periodically warps to survivors."
 	}
 
+	"Common #119"
+	{
+		"en"			"{mint}This Common runs a little faster, is immune to melee, is a bit stronger than usual, can change survivors' gravity, and periodically warps to survivors."
+	}
+
 	"Tank #120 Name"
 	{
 		"en"			"Night Stalker (3rd Form)"
@@ -9570,6 +10760,11 @@
 	}
 
 	"Witch #120 Name"
+	{
+		"en"			"Night Stalker (3rd Form)"
+	}
+
+	"Common #120 Name"
 	{
 		"en"			"Night Stalker (3rd Form)"
 	}
@@ -9614,6 +10809,11 @@
 		"en"			"{mint}This Witch runs a little faster, is immune to fire, is a bit weaker than usual, can blind survivors, can go invisible, and periodically warps to survivors."
 	}
 
+	"Common #120"
+	{
+		"en"			"{mint}This Common runs a little faster, is immune to fire, is a bit weaker than usual, can blind survivors, can go invisible, and periodically warps to survivors."
+	}
+
 	"Tank #121 Name"
 	{
 		"en"			"Spirit of Fire (4th Form)"
@@ -9650,6 +10850,11 @@
 	}
 
 	"Witch #121 Name"
+	{
+		"en"			"Spirit of Fire (4th Form)"
+	}
+
+	"Common #121 Name"
 	{
 		"en"			"Spirit of Fire (4th Form)"
 	}
@@ -9694,6 +10899,11 @@
 		"en"			"{mint}This Witch runs a little faster, is immune to fire, is stronger than usual, create fires, give survivors temporary health, jump periodically, and periodically warps to survivors."
 	}
 
+	"Common #121"
+	{
+		"en"			"{mint}This Common runs a little faster, is immune to fire, is stronger than usual, create fires, give survivors temporary health, jump periodically, and periodically warps to survivors."
+	}
+
 	"Tank #122 Name"
 	{
 		"en"			"Randomizer Tank"
@@ -9732,6 +10942,11 @@
 	"Witch #122 Name"
 	{
 		"en"			"Randomizer Witch"
+	}
+
+	"Common #122 Name"
+	{
+		"en"			"Randomizer Common"
 	}
 
 	"Tank #122"
@@ -9774,6 +10989,11 @@
 		"en"			"{mint}This Witch randomly switches into different Mutant Witch types and deals increased damage. Be careful..."
 	}
 
+	"Common #122"
+	{
+		"en"			"{mint}This Common randomly switches into different Mutant Witch types and deals increased damage. Be careful..."
+	}
+
 	"Tank #123 Name"
 	{
 		"en"			"Shapeshifter Tank"
@@ -9812,6 +11032,11 @@
 	"Witch #123 Name"
 	{
 		"en"			"Shapeshifter Witch"
+	}
+
+	"Common #123 Name"
+	{
+		"en"			"Shapeshifter Common"
 	}
 
 	"Tank #123"
@@ -9854,6 +11079,11 @@
 		"en"			"{mint}This Witch can shapeshift into different Mutant Witch types. Don't underestimate it..."
 	}
 
+	"Common #123"
+	{
+		"en"			"{mint}This Common can shapeshift into different Mutant Witch types. Don't underestimate it..."
+	}
+
 	"Tank #124 Name"
 	{
 		"en"			"Flashbanger Tank"
@@ -9892,6 +11122,11 @@
 	"Witch #124 Name"
 	{
 		"en"			"Flashbanger Witch"
+	}
+
+	"Common #124 Name"
+	{
+		"en"			"Flashbanger Common"
 	}
 
 	"Tank #124"
@@ -9934,6 +11169,11 @@
 		"en"			"{mint}This Witch causes flashbangs which staggers it and anyone affected by its attacks."
 	}
 
+	"Common #124"
+	{
+		"en"			"{mint}This Common causes flashbangs which staggers it and anyone affected by its attacks."
+	}
+
 	"Tank #125 Name"
 	{
 		"en"			"Mudman Tank"
@@ -9972,6 +11212,11 @@
 	"Witch #125 Name"
 	{
 		"en"			"Mudman Witch"
+	}
+
+	"Common #125 Name"
+	{
+		"en"			"Mudman Common"
 	}
 
 	"Tank #125"
@@ -10014,6 +11259,11 @@
 		"en"			"{mint}This Witch is as annoying as any mudman."
 	}
 
+	"Common #125"
+	{
+		"en"			"{mint}This Common is as annoying as any mudman."
+	}
+
 	"Tank #126 Name"
 	{
 		"en"			"Endgame Tank"
@@ -10054,6 +11304,11 @@
 		"en"			"Endgame Witch"
 	}
 
+	"Common #126 Name"
+	{
+		"en"			"Endgame Common"
+	}
+
 	"Tank #126"
 	{
 		"en"			"{mint}Goodbye everyone!"
@@ -10090,6 +11345,11 @@
 	}
 
 	"Witch #126"
+	{
+		"en"			"{mint}Goodbye everyone!"
+	}
+
+	"Common #126"
 	{
 		"en"			"{mint}Goodbye everyone!"
 	}
@@ -10134,6 +11394,11 @@
 		"en"			"Playful Witch"
 	}
 
+	"Common #127 Name"
+	{
+		"en"			"Playful Common"
+	}
+
 	"Tank #127"
 	{
 		"en"			"{mint}This Tank doesn't do any damage. It just wants to play!"
@@ -10172,6 +11437,11 @@
 	"Witch #127"
 	{
 		"en"			"{mint}This Witch doesn't do any damage. It just wants to play!"
+	}
+
+	"Common #127"
+	{
+		"en"			"{mint}This Common doesn't do any damage. It just wants to play!"
 	}
 
 	"Tank #128 Name"
@@ -10214,6 +11484,11 @@
 		"en"			"Annoying Witch"
 	}
 
+	"Common #128 Name"
+	{
+		"en"			"Annoying Common"
+	}
+
 	"Tank #128"
 	{
 		"en"			"{mint}This Tank just won't go away."
@@ -10252,6 +11527,1631 @@
 	"Witch #128"
 	{
 		"en"			"{mint}This Witch just won't go away."
+	}
+
+	"Common #128"
+	{
+		"en"			"{mint}This Common just won't go away."
+	}
+
+	"Tank #129 Name"
+	{
+		"en"			"Sipow Tank"
+	}
+
+	"Boomer #129 Name"
+	{
+		"en"			"Sipow Boomer"
+	}
+
+	"Charger #129 Name"
+	{
+		"en"			"Sipow Charger"
+	}
+
+	"Hunter #129 Name"
+	{
+		"en"			"Sipow Hunter"
+	}
+
+	"Jockey #129 Name"
+	{
+		"en"			"Sipow Jockey"
+	}
+
+	"Smoker #129 Name"
+	{
+		"en"			"Sipow Smoker"
+	}
+
+	"Spitter #129 Name"
+	{
+		"en"			"Sipow Spitter"
+	}
+
+	"Witch #129 Name"
+	{
+		"en"			"Sipow Witch"
+	}
+
+	"Common #129 Name"
+	{
+		"en"			"Sipow Common"
+	}
+
+	"Tank #129"
+	{
+		"en"			"{mint}This Tank can create acid puddles underneath survivors and start meteor showers with meteorites that burn and explode after a few seconds."
+	}
+
+	"Boomer #129"
+	{
+		"en"			"{mint}This Boomer can create acid puddles underneath survivors and start meteor showers with meteorites that burn and explode after a few seconds."
+	}
+
+	"Charger #129"
+	{
+		"en"			"{mint}This Charger can create acid puddles underneath survivors and start meteor showers with meteorites that burn and explode after a few seconds."
+	}
+
+	"Hunter #129"
+	{
+		"en"			"{mint}This Hunter can create acid puddles underneath survivors and start meteor showers with meteorites that burn and explode after a few seconds."
+	}
+
+	"Jockey #129"
+	{
+		"en"			"{mint}This Jockey can create acid puddles underneath survivors and start meteor showers with meteorites that burn and explode after a few seconds."
+	}
+
+	"Smoker #129"
+	{
+		"en"			"{mint}This Smoker can create acid puddles underneath survivors and start meteor showers with meteorites that burn and explode after a few seconds."
+	}
+
+	"Spitter #129"
+	{
+		"en"			"{mint}This Spitter can create acid puddles underneath survivors and start meteor showers with meteorites that burn and explode after a few seconds."
+	}
+
+	"Witch #129"
+	{
+		"en"			"{mint}This Witch can create acid puddles underneath survivors and start meteor showers with meteorites that burn and explode after a few seconds."
+	}
+
+	"Common #129"
+	{
+		"en"			"{mint}This Common can create acid puddles underneath survivors and start meteor showers with meteorites that burn and explode after a few seconds."
+	}
+
+	"Tank #130 Name"
+	{
+		"en"			"Evil Tank"
+	}
+
+	"Boomer #130 Name"
+	{
+		"en"			"Evil Boomer"
+	}
+
+	"Charger #130 Name"
+	{
+		"en"			"Evil Charger"
+	}
+
+	"Hunter #130 Name"
+	{
+		"en"			"Evil Hunter"
+	}
+
+	"Jockey #130 Name"
+	{
+		"en"			"Evil Jockey"
+	}
+
+	"Smoker #130 Name"
+	{
+		"en"			"Evil Smoker"
+	}
+
+	"Spitter #130 Name"
+	{
+		"en"			"Evil Spitter"
+	}
+
+	"Witch #130 Name"
+	{
+		"en"			"Evil Witch"
+	}
+
+	"Common #130 Name"
+	{
+		"en"			"Evil Common"
+	}
+
+	"Tank #130"
+	{
+		"en"			"{mint}This Tank can send you to the lava but will not let anything die!"
+	}
+
+	"Boomer #130"
+	{
+		"en"			"{mint}This Boomer can send you to the lava but will not let anything die!"
+	}
+
+	"Charger #130"
+	{
+		"en"			"{mint}This Charger can send you to the lava but will not let anything die!"
+	}
+
+	"Hunter #130"
+	{
+		"en"			"{mint}This Hunter can send you to the lava but will not let anything die!"
+	}
+
+	"Jockey #130"
+	{
+		"en"			"{mint}This Jockey can send you to the lava but will not let anything die!"
+	}
+
+	"Smoker #130"
+	{
+		"en"			"{mint}This Smoker can send you to the lava but will not let anything die!"
+	}
+
+	"Spitter #130"
+	{
+		"en"			"{mint}This Spitter can send you to the lava but will not let anything die!"
+	}
+
+	"Witch #130"
+	{
+		"en"			"{mint}This Witch can send you to the lava but will not let anything die!"
+	}
+
+	"Common #130"
+	{
+		"en"			"{mint}This Common can send you to the lava but will not let anything die!"
+	}
+
+	"Tank #131 Name"
+	{
+		"en"			"Officer Tank"
+	}
+
+	"Boomer #131 Name"
+	{
+		"en"			"Officer Boomer"
+	}
+
+	"Charger #131 Name"
+	{
+		"en"			"Officer Charger"
+	}
+
+	"Hunter #131 Name"
+	{
+		"en"			"Officer Hunter"
+	}
+
+	"Jockey #131 Name"
+	{
+		"en"			"Officer Jockey"
+	}
+
+	"Smoker #131 Name"
+	{
+		"en"			"Officer Smoker"
+	}
+
+	"Spitter #131 Name"
+	{
+		"en"			"Officer Spitter"
+	}
+
+	"Witch #131 Name"
+	{
+		"en"			"Officer Witch"
+	}
+
+	"Common #131 Name"
+	{
+		"en"			"Officer Common"
+	}
+
+	"Tank #131"
+	{
+		"en"			"{mint}This Tank and the whole police department is here to enforce the law!"
+	}
+
+	"Boomer #131"
+	{
+		"en"			"{mint}This Boomer and the whole police department is here to enforce the law!"
+	}
+
+	"Charger #131"
+	{
+		"en"			"{mint}This Charger and the whole police department is here to enforce the law!"
+	}
+
+	"Hunter #131"
+	{
+		"en"			"{mint}This Hunter and the whole police department is here to enforce the law!"
+	}
+
+	"Jockey #131"
+	{
+		"en"			"{mint}This Jockey and the whole police department is here to enforce the law!"
+	}
+
+	"Smoker #131"
+	{
+		"en"			"{mint}This Smoker and the whole police department is here to enforce the law!"
+	}
+
+	"Spitter #131"
+	{
+		"en"			"{mint}This Spitter and the whole police department is here to enforce the law!"
+	}
+
+	"Witch #131"
+	{
+		"en"			"{mint}This Witch and the whole police department is here to enforce the law!"
+	}
+
+	"Common #131"
+	{
+		"en"			"{mint}This Common and the whole police department is here to enforce the law!"
+	}
+
+	"Tank #132 Name"
+	{
+		"en"			"Mafia Tank"
+	}
+
+	"Boomer #132 Name"
+	{
+		"en"			"Mafia Boomer"
+	}
+
+	"Charger #132 Name"
+	{
+		"en"			"Mafia Charger"
+	}
+
+	"Hunter #132 Name"
+	{
+		"en"			"Mafia Hunter"
+	}
+
+	"Jockey #132 Name"
+	{
+		"en"			"Mafia Jockey"
+	}
+
+	"Smoker #132 Name"
+	{
+		"en"			"Mafia Smoker"
+	}
+
+	"Spitter #132 Name"
+	{
+		"en"			"Mafia Spitter"
+	}
+
+	"Witch #132 Name"
+	{
+		"en"			"Mafia Witch"
+	}
+
+	"Common #132 Name"
+	{
+		"en"			"Mafia Common"
+	}
+
+	"Tank #132"
+	{
+		"en"			"{mint}This Tank is part of the Mafia!"
+	}
+
+	"Boomer #132"
+	{
+		"en"			"{mint}This Boomer is part of the Mafia!"
+	}
+
+	"Charger #132"
+	{
+		"en"			"{mint}This Charger is part of the Mafia!"
+	}
+
+	"Hunter #132"
+	{
+		"en"			"{mint}This Hunter is part of the Mafia!"
+	}
+
+	"Jockey #132"
+	{
+		"en"			"{mint}This Jockey is part of the Mafia!"
+	}
+
+	"Smoker #132"
+	{
+		"en"			"{mint}This Smoker is part of the Mafia!"
+	}
+
+	"Spitter #132"
+	{
+		"en"			"{mint}This Spitter is part of the Mafia!"
+	}
+
+	"Witch #132"
+	{
+		"en"			"{mint}This Witch is part of the Mafia!"
+	}
+
+	"Common #132"
+	{
+		"en"			"{mint}This Common is part of the Mafia!"
+	}
+
+	"Tank #133 Name"
+	{
+		"en"			"Frankenstein Tank"
+	}
+
+	"Boomer #133 Name"
+	{
+		"en"			"Frankenstein Boomer"
+	}
+
+	"Charger #133 Name"
+	{
+		"en"			"Frankenstein Charger"
+	}
+
+	"Hunter #133 Name"
+	{
+		"en"			"Frankenstein Hunter"
+	}
+
+	"Jockey #133 Name"
+	{
+		"en"			"Frankenstein Jockey"
+	}
+
+	"Smoker #133 Name"
+	{
+		"en"			"Frankenstein Smoker"
+	}
+
+	"Spitter #133 Name"
+	{
+		"en"			"Frankenstein Spitter"
+	}
+
+	"Witch #133 Name"
+	{
+		"en"			"Frankenstein Witch"
+	}
+
+	"Common #133 Name"
+	{
+		"en"			"Frankenstein Common"
+	}
+
+	"Tank #133"
+	{
+		"en"			"{mint}This Tank is Frankenstein's mutant!"
+	}
+
+	"Boomer #133"
+	{
+		"en"			"{mint}This Boomer is Frankenstein's mutant!"
+	}
+
+	"Charger #133"
+	{
+		"en"			"{mint}This Charger is Frankenstein's mutant!"
+	}
+
+	"Hunter #133"
+	{
+		"en"			"{mint}This Hunter is Frankenstein's mutant!"
+	}
+
+	"Jockey #133"
+	{
+		"en"			"{mint}This Jockey is Frankenstein's mutant!"
+	}
+
+	"Smoker #133"
+	{
+		"en"			"{mint}This Smoker is Frankenstein's mutant!"
+	}
+
+	"Spitter #133"
+	{
+		"en"			"{mint}This Spitter is Frankenstein's mutant!"
+	}
+
+	"Witch #133"
+	{
+		"en"			"{mint}This Witch is Frankenstein's mutant!"
+	}
+
+	"Common #133"
+	{
+		"en"			"{mint}This Common is Frankenstein's mutant!"
+	}
+
+	"Tank #134 Name"
+	{
+		"en"			"Prototype Tank"
+	}
+
+	"Boomer #134 Name"
+	{
+		"en"			"Prototype Boomer"
+	}
+
+	"Charger #134 Name"
+	{
+		"en"			"Prototype Charger"
+	}
+
+	"Hunter #134 Name"
+	{
+		"en"			"Prototype Hunter"
+	}
+
+	"Jockey #134 Name"
+	{
+		"en"			"Prototype Jockey"
+	}
+
+	"Smoker #134 Name"
+	{
+		"en"			"Prototype Smoker"
+	}
+
+	"Spitter #134 Name"
+	{
+		"en"			"Prototype Spitter"
+	}
+
+	"Witch #134 Name"
+	{
+		"en"			"Prototype Witch"
+	}
+
+	"Common #134 Name"
+	{
+		"en"			"Prototype Common"
+	}
+
+	"Tank #134"
+	{
+		"en"			"{mint}This Tank improvises, adapts, and overcomes any situation."
+	}
+
+	"Boomer #134"
+	{
+		"en"			"{mint}This Boomer improvises, adapts, and overcomes any situation."
+	}
+
+	"Charger #134"
+	{
+		"en"			"{mint}This Charger improvises, adapts, and overcomes any situation."
+	}
+
+	"Hunter #134"
+	{
+		"en"			"{mint}This Hunter improvises, adapts, and overcomes any situation."
+	}
+
+	"Jockey #134"
+	{
+		"en"			"{mint}This Jockey improvises, adapts, and overcomes any situation."
+	}
+
+	"Smoker #134"
+	{
+		"en"			"{mint}This Smoker improvises, adapts, and overcomes any situation."
+	}
+
+	"Spitter #134"
+	{
+		"en"			"{mint}This Spitter improvises, adapts, and overcomes any situation."
+	}
+
+	"Witch #134"
+	{
+		"en"			"{mint}This Witch improvises, adapts, and overcomes any situation."
+	}
+
+	"Common #134"
+	{
+		"en"			"{mint}This Common improvises, adapts, and overcomes any situation."
+	}
+
+	"Tank #135 Name"
+	{
+		"en"			"Zeus Tank"
+	}
+
+	"Boomer #135 Name"
+	{
+		"en"			"Zeus Boomer"
+	}
+
+	"Charger #135 Name"
+	{
+		"en"			"Zeus Charger"
+	}
+
+	"Hunter #135 Name"
+	{
+		"en"			"Zeus Hunter"
+	}
+
+	"Jockey #135 Name"
+	{
+		"en"			"Zeus Jockey"
+	}
+
+	"Smoker #135 Name"
+	{
+		"en"			"Zeus Smoker"
+	}
+
+	"Spitter #135 Name"
+	{
+		"en"			"Zeus Spitter"
+	}
+
+	"Witch #135 Name"
+	{
+		"en"			"Zeus Witch"
+	}
+
+	"Common #135 Name"
+	{
+		"en"			"Zeus Common"
+	}
+
+	"Tank #135"
+	{
+		"en"			"{mint}This Tank shoots lightning bolts from its fingertips!"
+	}
+
+	"Boomer #135"
+	{
+		"en"			"{mint}This Boomer shoots lightning bolts from its fingertips!"
+	}
+
+	"Charger #135"
+	{
+		"en"			"{mint}This Charger shoots lightning bolts from its fingertips!"
+	}
+
+	"Hunter #135"
+	{
+		"en"			"{mint}This Hunter shoots lightning bolts from its fingertips!"
+	}
+
+	"Jockey #135"
+	{
+		"en"			"{mint}This Jockey shoots lightning bolts from its fingertips!"
+	}
+
+	"Smoker #135"
+	{
+		"en"			"{mint}This Smoker shoots lightning bolts from its fingertips!"
+	}
+
+	"Spitter #135"
+	{
+		"en"			"{mint}This Spitter shoots lightning bolts from its fingertips!"
+	}
+
+	"Witch #135"
+	{
+		"en"			"{mint}This Witch shoots lightning bolts from its fingertips!"
+	}
+
+	"Common #135"
+	{
+		"en"			"{mint}This Common shoots lightning bolts from its fingertips!"
+	}
+
+	"Tank #136 Name"
+	{
+		"en"			"Trajectory Tank"
+	}
+
+	"Boomer #136 Name"
+	{
+		"en"			"Trajectory Boomer"
+	}
+
+	"Charger #136 Name"
+	{
+		"en"			"Trajectory Charger"
+	}
+
+	"Hunter #136 Name"
+	{
+		"en"			"Trajectory Hunter"
+	}
+
+	"Jockey #136 Name"
+	{
+		"en"			"Trajectory Jockey"
+	}
+
+	"Smoker #136 Name"
+	{
+		"en"			"Trajectory Smoker"
+	}
+
+	"Spitter #136 Name"
+	{
+		"en"			"Trajectory Spitter"
+	}
+
+	"Witch #136 Name"
+	{
+		"en"			"Trajectory Witch"
+	}
+
+	"Common #136 Name"
+	{
+		"en"			"Trajectory Common"
+	}
+
+	"Tank #136"
+	{
+		"en"			"{mint}This Tank uses velocity to change the trajectory of your lifespan!"
+	}
+
+	"Boomer #136"
+	{
+		"en"			"{mint}This Boomer uses velocity to change the trajectory of your lifespan!"
+	}
+
+	"Charger #136"
+	{
+		"en"			"{mint}This Charger uses velocity to change the trajectory of your lifespan!"
+	}
+
+	"Hunter #136"
+	{
+		"en"			"{mint}This Hunter uses velocity to change the trajectory of your lifespan!"
+	}
+
+	"Jockey #136"
+	{
+		"en"			"{mint}This Jockey uses velocity to change the trajectory of your lifespan!"
+	}
+
+	"Smoker #136"
+	{
+		"en"			"{mint}This Smoker uses velocity to change the trajectory of your lifespan!"
+	}
+
+	"Spitter #136"
+	{
+		"en"			"{mint}This Spitter uses velocity to change the trajectory of your lifespan!"
+	}
+
+	"Witch #136"
+	{
+		"en"			"{mint}This Witch uses velocity to change the trajectory of your lifespan!"
+	}
+
+	"Common #136"
+	{
+		"en"			"{mint}This Common uses velocity to change the trajectory of your lifespan!"
+	}
+
+	"Tank #137 Name"
+	{
+		"en"			"Barrage Tank"
+	}
+
+	"Boomer #137 Name"
+	{
+		"en"			"Barrage Boomer"
+	}
+
+	"Charger #137 Name"
+	{
+		"en"			"Barrage Charger"
+	}
+
+	"Hunter #137 Name"
+	{
+		"en"			"Barrage Hunter"
+	}
+
+	"Jockey #137 Name"
+	{
+		"en"			"Barrage Jockey"
+	}
+
+	"Smoker #137 Name"
+	{
+		"en"			"Barrage Smoker"
+	}
+
+	"Spitter #137 Name"
+	{
+		"en"			"Barrage Spitter"
+	}
+
+	"Witch #137 Name"
+	{
+		"en"			"Barrage Witch"
+	}
+
+	"Common #137 Name"
+	{
+		"en"			"Barrage Common"
+	}
+
+	"Tank #137"
+	{
+		"en"			"{mint}This Tank will not grace you with any downtime."
+	}
+
+	"Boomer #137"
+	{
+		"en"			"{mint}This Boomer will not grace you with any downtime."
+	}
+
+	"Charger #137"
+	{
+		"en"			"{mint}This Charger will not grace you with any downtime."
+	}
+
+	"Hunter #137"
+	{
+		"en"			"{mint}This Hunter will not grace you with any downtime."
+	}
+
+	"Jockey #137"
+	{
+		"en"			"{mint}This Jockey will not grace you with any downtime."
+	}
+
+	"Smoker #137"
+	{
+		"en"			"{mint}This Smoker will not grace you with any downtime."
+	}
+
+	"Spitter #137"
+	{
+		"en"			"{mint}This Spitter will not grace you with any downtime."
+	}
+
+	"Witch #137"
+	{
+		"en"			"{mint}This Witch will not grace you with any downtime."
+	}
+
+	"Common #137"
+	{
+		"en"			"{mint}This Common will not grace you with any downtime."
+	}
+
+	"Tank #138 Name"
+	{
+		"en"			"Collector Tank"
+	}
+
+	"Boomer #138 Name"
+	{
+		"en"			"Collector Boomer"
+	}
+
+	"Charger #138 Name"
+	{
+		"en"			"Collector Charger"
+	}
+
+	"Hunter #138 Name"
+	{
+		"en"			"Collector Hunter"
+	}
+
+	"Jockey #138 Name"
+	{
+		"en"			"Collector Jockey"
+	}
+
+	"Smoker #138 Name"
+	{
+		"en"			"Collector Smoker"
+	}
+
+	"Spitter #138 Name"
+	{
+		"en"			"Collector Spitter"
+	}
+
+	"Witch #138 Name"
+	{
+		"en"			"Collector Witch"
+	}
+
+	"Common #138 Name"
+	{
+		"en"			"Collector Common"
+	}
+
+	"Tank #138"
+	{
+		"en"			"{mint}This Tank wants to add you to its collection..."
+	}
+
+	"Boomer #138"
+	{
+		"en"			"{mint}This Boomer wants to add you to its collection..."
+	}
+
+	"Charger #138"
+	{
+		"en"			"{mint}This Charger wants to add you to its collection..."
+	}
+
+	"Hunter #138"
+	{
+		"en"			"{mint}This Hunter wants to add you to its collection..."
+	}
+
+	"Jockey #138"
+	{
+		"en"			"{mint}This Jockey wants to add you to its collection..."
+	}
+
+	"Smoker #138"
+	{
+		"en"			"{mint}This Smoker wants to add you to its collection..."
+	}
+
+	"Spitter #138"
+	{
+		"en"			"{mint}This Spitter wants to add you to its collection..."
+	}
+
+	"Witch #138"
+	{
+		"en"			"{mint}This Witch wants to add you to its collection..."
+	}
+
+	"Common #138"
+	{
+		"en"			"{mint}This Common wants to add you to its collection..."
+	}
+
+	"Tank #139 Name"
+	{
+		"en"			"Timewalker Tank"
+	}
+
+	"Boomer #139 Name"
+	{
+		"en"			"Timewalker Boomer"
+	}
+
+	"Charger #139 Name"
+	{
+		"en"			"Timewalker Charger"
+	}
+
+	"Hunter #139 Name"
+	{
+		"en"			"Timewalker Hunter"
+	}
+
+	"Jockey #139 Name"
+	{
+		"en"			"Timewalker Jockey"
+	}
+
+	"Smoker #139 Name"
+	{
+		"en"			"Timewalker Smoker"
+	}
+
+	"Spitter #139 Name"
+	{
+		"en"			"Timewalker Spitter"
+	}
+
+	"Witch #139 Name"
+	{
+		"en"			"Timewalker Witch"
+	}
+
+	"Common #139 Name"
+	{
+		"en"			"Timewalker Common"
+	}
+
+	"Tank #139"
+	{
+		"en"			"{mint}This Tank exists all throughout time."
+	}
+
+	"Boomer #139"
+	{
+		"en"			"{mint}This Boomer exists all throughout time."
+	}
+
+	"Charger #139"
+	{
+		"en"			"{mint}This Charger exists all throughout time."
+	}
+
+	"Hunter #139"
+	{
+		"en"			"{mint}This Hunter exists all throughout time."
+	}
+
+	"Jockey #139"
+	{
+		"en"			"{mint}This Jockey exists all throughout time."
+	}
+
+	"Smoker #139"
+	{
+		"en"			"{mint}This Smoker exists all throughout time."
+	}
+
+	"Spitter #139"
+	{
+		"en"			"{mint}This Spitter exists all throughout time."
+	}
+
+	"Witch #139"
+	{
+		"en"			"{mint}This Witch exists all throughout time."
+	}
+
+	"Common #139"
+	{
+		"en"			"{mint}This Common exists all throughout time."
+	}
+
+	"Tank #140 Name"
+	{
+		"en"			"Speed Demon Tank"
+	}
+
+	"Boomer #140 Name"
+	{
+		"en"			"Speed Demon Boomer"
+	}
+
+	"Charger #140 Name"
+	{
+		"en"			"Speed Demon Charger"
+	}
+
+	"Hunter #140 Name"
+	{
+		"en"			"Speed Demon Hunter"
+	}
+
+	"Jockey #140 Name"
+	{
+		"en"			"Speed Demon Jockey"
+	}
+
+	"Smoker #140 Name"
+	{
+		"en"			"Speed Demon Smoker"
+	}
+
+	"Spitter #140 Name"
+	{
+		"en"			"Speed Demon Spitter"
+	}
+
+	"Witch #140 Name"
+	{
+		"en"			"Speed Demon Witch"
+	}
+
+	"Common #140 Name"
+	{
+		"en"			"Speed Demon Common"
+	}
+
+	"Tank #140"
+	{
+		"en"			"{mint}This Tank leaves a trail of fire wherever it goes..."
+	}
+
+	"Boomer #140"
+	{
+		"en"			"{mint}This Boomer leaves a trail of fire wherever it goes..."
+	}
+
+	"Charger #140"
+	{
+		"en"			"{mint}This Charger leaves a trail of fire wherever it goes..."
+	}
+
+	"Hunter #140"
+	{
+		"en"			"{mint}This Hunter leaves a trail of fire wherever it goes..."
+	}
+
+	"Jockey #140"
+	{
+		"en"			"{mint}This Jockey leaves a trail of fire wherever it goes..."
+	}
+
+	"Smoker #140"
+	{
+		"en"			"{mint}This Smoker leaves a trail of fire wherever it goes..."
+	}
+
+	"Spitter #140"
+	{
+		"en"			"{mint}This Spitter leaves a trail of fire wherever it goes..."
+	}
+
+	"Witch #140"
+	{
+		"en"			"{mint}This Witch leaves a trail of fire wherever it goes..."
+	}
+
+	"Common #140"
+	{
+		"en"			"{mint}This Common leaves a trail of fire wherever it goes..."
+	}
+
+	"Tank #141 Name"
+	{
+		"en"			"Ravager Tank"
+	}
+
+	"Boomer #141 Name"
+	{
+		"en"			"Ravager Boomer"
+	}
+
+	"Charger #141 Name"
+	{
+		"en"			"Ravager Charger"
+	}
+
+	"Hunter #141 Name"
+	{
+		"en"			"Ravager Hunter"
+	}
+
+	"Jockey #141 Name"
+	{
+		"en"			"Ravager Jockey"
+	}
+
+	"Smoker #141 Name"
+	{
+		"en"			"Ravager Smoker"
+	}
+
+	"Spitter #141 Name"
+	{
+		"en"			"Ravager Spitter"
+	}
+
+	"Witch #141 Name"
+	{
+		"en"			"Ravager Witch"
+	}
+
+	"Common #141 Name"
+	{
+		"en"			"Ravager Common"
+	}
+
+	"Tank #141"
+	{
+		"en"			"{mint}This Tank will blow up anything in its path!"
+	}
+
+	"Boomer #141"
+	{
+		"en"			"{mint}This Boomer will blow up anything in its path!"
+	}
+
+	"Charger #141"
+	{
+		"en"			"{mint}This Charger will blow up anything in its path!"
+	}
+
+	"Hunter #141"
+	{
+		"en"			"{mint}This Hunter will blow up anything in its path!"
+	}
+
+	"Jockey #141"
+	{
+		"en"			"{mint}This Jockey will blow up anything in its path!"
+	}
+
+	"Smoker #141"
+	{
+		"en"			"{mint}This Smoker will blow up anything in its path!"
+	}
+
+	"Spitter #141"
+	{
+		"en"			"{mint}This Spitter will blow up anything in its path!"
+	}
+
+	"Witch #141"
+	{
+		"en"			"{mint}This Witch will blow up anything in its path!"
+	}
+
+	"Common #141"
+	{
+		"en"			"{mint}This Common will blow up anything in its path!"
+	}
+
+	"Tank #142 Name"
+	{
+		"en"			"Ramattra Tank"
+	}
+
+	"Boomer #142 Name"
+	{
+		"en"			"Ramattra Boomer"
+	}
+
+	"Charger #142 Name"
+	{
+		"en"			"Ramattra Charger"
+	}
+
+	"Hunter #142 Name"
+	{
+		"en"			"Ramattra Hunter"
+	}
+
+	"Jockey #142 Name"
+	{
+		"en"			"Ramattra Jockey"
+	}
+
+	"Smoker #142 Name"
+	{
+		"en"			"Ramattra Smoker"
+	}
+
+	"Spitter #142 Name"
+	{
+		"en"			"Ramattra Spitter"
+	}
+
+	"Witch #142 Name"
+	{
+		"en"			"Ramattra Witch"
+	}
+
+	"Common #142 Name"
+	{
+		"en"			"Ramattra Common"
+	}
+
+	"Tank #142"
+	{
+		"en"			"{mint}This Tank will make you SUFFER AS IT HAS!"
+	}
+
+	"Boomer #142"
+	{
+		"en"			"{mint}This Boomer will make you SUFFER AS IT HAS!"
+	}
+
+	"Charger #142"
+	{
+		"en"			"{mint}This Charger will make you SUFFER AS IT HAS!"
+	}
+
+	"Hunter #142"
+	{
+		"en"			"{mint}This Hunter will make you SUFFER AS IT HAS!"
+	}
+
+	"Jockey #142"
+	{
+		"en"			"{mint}This Jockey will make you SUFFER AS IT HAS!"
+	}
+
+	"Smoker #142"
+	{
+		"en"			"{mint}This Smoker will make you SUFFER AS IT HAS!"
+	}
+
+	"Spitter #142"
+	{
+		"en"			"{mint}This Spitter will make you SUFFER AS IT HAS!"
+	}
+
+	"Witch #142"
+	{
+		"en"			"{mint}This Witch will make you SUFFER AS IT HAS!"
+	}
+
+	"Common #142"
+	{
+		"en"			"{mint}This Common will make you SUFFER AS IT HAS!"
+	}
+
+	"Tank #143 Name"
+	{
+		"en"			"Sigma Tank"
+	}
+
+	"Boomer #143 Name"
+	{
+		"en"			"Sigma Boomer"
+	}
+
+	"Charger #143 Name"
+	{
+		"en"			"Sigma Charger"
+	}
+
+	"Hunter #143 Name"
+	{
+		"en"			"Sigma Hunter"
+	}
+
+	"Jockey #143 Name"
+	{
+		"en"			"Sigma Jockey"
+	}
+
+	"Smoker #143 Name"
+	{
+		"en"			"Sigma Smoker"
+	}
+
+	"Spitter #143 Name"
+	{
+		"en"			"Sigma Spitter"
+	}
+
+	"Witch #143 Name"
+	{
+		"en"			"Sigma Witch"
+	}
+
+	"Common #143 Name"
+	{
+		"en"			"Sigma Common"
+	}
+
+	"Tank #143"
+	{
+		"en"			"{mint}This Tank can control gravity and absorb a lot of damage."
+	}
+
+	"Boomer #143"
+	{
+		"en"			"{mint}This Boomer can control gravity and absorb a lot of damage."
+	}
+
+	"Charger #143"
+	{
+		"en"			"{mint}This Charger can control gravity and absorb a lot of damage."
+	}
+
+	"Hunter #143"
+	{
+		"en"			"{mint}This Hunter can control gravity and absorb a lot of damage."
+	}
+
+	"Jockey #143"
+	{
+		"en"			"{mint}This Jockey can control gravity and absorb a lot of damage."
+	}
+
+	"Smoker #143"
+	{
+		"en"			"{mint}This Smoker can control gravity and absorb a lot of damage."
+	}
+
+	"Spitter #143"
+	{
+		"en"			"{mint}This Spitter can control gravity and absorb a lot of damage."
+	}
+
+	"Witch #143"
+	{
+		"en"			"{mint}This Witch can control gravity and absorb a lot of damage."
+	}
+
+	"Common #143"
+	{
+		"en"			"{mint}This Common can control gravity and absorb a lot of damage."
+	}
+
+	"Tank #144 Name"
+	{
+		"en"			"Zarya Tank"
+	}
+
+	"Boomer #144 Name"
+	{
+		"en"			"Zarya Boomer"
+	}
+
+	"Charger #144 Name"
+	{
+		"en"			"Zarya Charger"
+	}
+
+	"Hunter #144 Name"
+	{
+		"en"			"Zarya Hunter"
+	}
+
+	"Jockey #144 Name"
+	{
+		"en"			"Zarya Jockey"
+	}
+
+	"Smoker #144 Name"
+	{
+		"en"			"Zarya Smoker"
+	}
+
+	"Spitter #144 Name"
+	{
+		"en"			"Zarya Spitter"
+	}
+
+	"Witch #144 Name"
+	{
+		"en"			"Zarya Witch"
+	}
+
+	"Common #144 Name"
+	{
+		"en"			"Zarya Common"
+	}
+
+	"Tank #144"
+	{
+		"en"			"{mint}This Tank can control gravity, convert incoming damage into armor and damage boost, and absorb health from nearby infected."
+	}
+
+	"Boomer #144"
+	{
+		"en"			"{mint}This Boomer can control gravity, convert incoming damage into armor and damage boost, and absorb health from nearby infected."
+	}
+
+	"Charger #144"
+	{
+		"en"			"{mint}This Charger can control gravity, convert incoming damage into armor and damage boost, and absorb health from nearby infected."
+	}
+
+	"Hunter #144"
+	{
+		"en"			"{mint}This Hunter can control gravity, convert incoming damage into armor and damage boost, and absorb health from nearby infected."
+	}
+
+	"Jockey #144"
+	{
+		"en"			"{mint}This Jockey can control gravity, convert incoming damage into armor and damage boost, and absorb health from nearby infected."
+	}
+
+	"Smoker #144"
+	{
+		"en"			"{mint}This Smoker can control gravity, convert incoming damage into armor and damage boost, and absorb health from nearby infected."
+	}
+
+	"Spitter #144"
+	{
+		"en"			"{mint}This Spitter can control gravity, convert incoming damage into armor and damage boost, and absorb health from nearby infected."
+	}
+
+	"Witch #144"
+	{
+		"en"			"{mint}This Witch can control gravity, convert incoming damage into armor and damage boost, and absorb health from nearby infected."
+	}
+
+	"Common #144"
+	{
+		"en"			"{mint}This Common can control gravity, convert incoming damage into armor and damage boost, and absorb health from nearby infected."
+	}
+
+	"Tank #145 Name"
+	{
+		"en"			"Slacker Tank"
+	}
+
+	"Boomer #145 Name"
+	{
+		"en"			"Slacker Boomer"
+	}
+
+	"Charger #145 Name"
+	{
+		"en"			"Slacker Charger"
+	}
+
+	"Hunter #145 Name"
+	{
+		"en"			"Slacker Hunter"
+	}
+
+	"Jockey #145 Name"
+	{
+		"en"			"Slacker Jockey"
+	}
+
+	"Smoker #145 Name"
+	{
+		"en"			"Slacker Smoker"
+	}
+
+	"Spitter #145 Name"
+	{
+		"en"			"Slacker Spitter"
+	}
+
+	"Witch #145 Name"
+	{
+		"en"			"Slacker Witch"
+	}
+
+	"Common #145 Name"
+	{
+		"en"			"Slacker Common"
+	}
+
+	"Tank #145"
+	{
+		"en"			"{mint}This Tank punishes those who have been falling behind!"
+	}
+
+	"Boomer #145"
+	{
+		"en"			"{mint}This Boomer punishes those who have been falling behind!"
+	}
+
+	"Charger #145"
+	{
+		"en"			"{mint}This Charger punishes those who have been falling behind!"
+	}
+
+	"Hunter #145"
+	{
+		"en"			"{mint}This Hunter punishes those who have been falling behind!"
+	}
+
+	"Jockey #145"
+	{
+		"en"			"{mint}This Jockey punishes those who have been falling behind!"
+	}
+
+	"Smoker #145"
+	{
+		"en"			"{mint}This Smoker punishes those who have been falling behind!"
+	}
+
+	"Spitter #145"
+	{
+		"en"			"{mint}This Spitter punishes those who have been falling behind!"
+	}
+
+	"Witch #145"
+	{
+		"en"			"{mint}This Witch punishes those who have been falling behind!"
+	}
+
+	"Common #145"
+	{
+		"en"			"{mint}This Common punishes those who have been falling behind!"
+	}
+
+	"Tank #146 Name"
+	{
+		"en"			"Rusher Tank"
+	}
+
+	"Boomer #146 Name"
+	{
+		"en"			"Rusher Boomer"
+	}
+
+	"Charger #146 Name"
+	{
+		"en"			"Rusher Charger"
+	}
+
+	"Hunter #146 Name"
+	{
+		"en"			"Rusher Hunter"
+	}
+
+	"Jockey #146 Name"
+	{
+		"en"			"Rusher Jockey"
+	}
+
+	"Smoker #146 Name"
+	{
+		"en"			"Rusher Smoker"
+	}
+
+	"Spitter #146 Name"
+	{
+		"en"			"Rusher Spitter"
+	}
+
+	"Witch #146 Name"
+	{
+		"en"			"Rusher Witch"
+	}
+
+	"Common #146 Name"
+	{
+		"en"			"Rusher Common"
+	}
+
+	"Tank #146"
+	{
+		"en"			"{mint}This Tank punishes those who have been running ahead!"
+	}
+
+	"Boomer #146"
+	{
+		"en"			"{mint}This Boomer punishes those who have been running ahead!"
+	}
+
+	"Charger #146"
+	{
+		"en"			"{mint}This Charger punishes those who have been running ahead!"
+	}
+
+	"Hunter #146"
+	{
+		"en"			"{mint}This Hunter punishes those who have been running ahead!"
+	}
+
+	"Jockey #146"
+	{
+		"en"			"{mint}This Jockey punishes those who have been running ahead!"
+	}
+
+	"Smoker #146"
+	{
+		"en"			"{mint}This Smoker punishes those who have been running ahead!"
+	}
+
+	"Spitter #146"
+	{
+		"en"			"{mint}This Spitter punishes those who have been running ahead!"
+	}
+
+	"Witch #146"
+	{
+		"en"			"{mint}This Witch punishes those who have been running ahead!"
+	}
+
+	"Common #146"
+	{
+		"en"			"{mint}This Common punishes those who have been running ahead!"
 	}
 
 	// This is actually a valid Steam32ID, so don't uncomment this; it's just an example.
@@ -10324,16 +13224,6 @@
 	// "STEAM_0:1:23456789 Spitter"
 	// {
 	//	"en"			"{mint}This Spitter is controlled by someone."
-	// }
-	//
-	// "STEAM_0:1:23456789 Witch Name"
-	// {
-	//	"en"			"Witch"
-	// }
-	//
-	// "STEAM_0:1:23456789 Witch"
-	// {
-	//	"en"			"{mint}This Witch is controlled by someone."
 	// }
 	// --
 	// Add Tank Note phrases for your own Mutant Tanks below!

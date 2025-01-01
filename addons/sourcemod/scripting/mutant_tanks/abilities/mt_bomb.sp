@@ -1,6 +1,6 @@
 /**
- * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2024  Alfred "Psyk0tik" Llagas
+ * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -1366,35 +1366,37 @@ void vBombReset()
 	}
 }
 
-void tTimerBombCombo(Handle timer, DataPack pack)
+Action tTimerBombCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esBombAbility[g_esBombPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esBombPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esBombPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esBombCache[iTank].g_iBombAbility == 0)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vBombAbility(iTank, flRandom, iPos);
+
+	return Plugin_Continue;
 }
 
-void tTimerBombCombo2(Handle timer, DataPack pack)
+Action tTimerBombCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor))
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esBombAbility[g_esBombPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esBombPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esBombPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esBombCache[iTank].g_iBombHit == 0)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
@@ -1409,4 +1411,6 @@ void tTimerBombCombo2(Handle timer, DataPack pack)
 	{
 		vBombHit(iSurvivor, iTank, flRandom, flChance, g_esBombCache[iTank].g_iBombHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
+
+	return Plugin_Continue;
 }

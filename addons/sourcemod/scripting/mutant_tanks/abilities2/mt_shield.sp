@@ -1,6 +1,6 @@
 /**
- * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2024  Alfred "Psyk0tik" Llagas
+ * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -28,6 +28,8 @@ public Plugin myinfo =
 };
 
 bool g_bDedicated, g_bLateLoad, g_bSecondGame;
+
+int g_iGraphicsLevel;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -412,7 +414,15 @@ int iShieldMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esShieldCache[param1].g_iShieldAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
 				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esShieldCache[param1].g_iHumanAmmo - g_esShieldPlayer[param1].g_iAmmoCount), g_esShieldCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esShieldCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
+				case 3:
+				{
+					switch (g_esShieldCache[param1].g_iHumanMode)
+					{
+						case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtonMode1");
+						case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtonMode2");
+						case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtonMode3");
+					}
+				}
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", ((g_esShieldCache[param1].g_iHumanAbility == 1) ? g_esShieldCache[param1].g_iHumanCooldown : g_esShieldCache[param1].g_iShieldCooldown));
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "ShieldDetails");
 				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", ((g_esShieldCache[param1].g_iHumanAbility == 1) ? g_esShieldCache[param1].g_iHumanDuration : g_esShieldCache[param1].g_iShieldDuration));
@@ -508,7 +518,7 @@ public void OnGameFrame()
 	{
 		char sClassname[32], sHealthBar[51], sSet[2][2], sTankName[64];
 		float flPercentage = 0.0;
-		int iTarget = 0;
+		int iCount = 0, iTarget = 0;
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
 			if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT))
@@ -527,12 +537,12 @@ public void OnGameFrame()
 						ReplaceString(g_esShieldCache[iTarget].g_sShieldHealthChars, sizeof esShieldCache::g_sShieldHealthChars, " ", "");
 						ExplodeString(g_esShieldCache[iTarget].g_sShieldHealthChars, ",", sSet, sizeof sSet, sizeof sSet[]);
 
-						for (int iCount = 0; iCount < ((g_esShieldPlayer[iTarget].g_flHealth / g_esShieldCache[iTarget].g_flShieldHealth) * (sizeof sHealthBar - 1)) && iCount < (sizeof sHealthBar - 1); iCount++)
+						for (iCount = 0; iCount < ((g_esShieldPlayer[iTarget].g_flHealth / g_esShieldCache[iTarget].g_flShieldHealth) * (sizeof sHealthBar - 1)) && iCount < (sizeof sHealthBar - 1); iCount++)
 						{
 							StrCat(sHealthBar, sizeof sHealthBar, sSet[0]);
 						}
 
-						for (int iCount = 0; iCount < (sizeof sHealthBar - 1); iCount++)
+						for (; iCount < (sizeof sHealthBar - 1); iCount++)
 						{
 							StrCat(sHealthBar, sizeof sHealthBar, sSet[1]);
 						}
@@ -587,7 +597,7 @@ void vShieldPlayerRunCmd(int client)
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 #endif
 {
-	if (!MT_IsTankSupported(client) || (bIsInfected(client, MT_CHECK_FAKECLIENT) && g_esShieldCache[client].g_iHumanMode == 1) || (g_esShieldPlayer[client].g_iDuration == -1 && g_esShieldPlayer[client].g_iCooldown2 == -1))
+	if (!MT_IsTankSupported(client) || (bIsInfected(client, MT_CHECK_FAKECLIENT) && g_esShieldCache[client].g_iHumanMode > 0) || (g_esShieldPlayer[client].g_iDuration == -1 && g_esShieldPlayer[client].g_iCooldown2 == -1))
 	{
 #if defined MT_ABILITIES_MAIN2
 		return;
@@ -946,7 +956,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esShieldTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esShieldTeammate[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esShieldTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esShieldTeammate[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esShieldTeammate[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esShieldTeammate[admin].g_iHumanDuration, value, -1, 99999);
-			g_esShieldTeammate[admin].g_iHumanMode = iGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esShieldTeammate[admin].g_iHumanMode, value, -1, 1);
+			g_esShieldTeammate[admin].g_iHumanMode = iGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esShieldTeammate[admin].g_iHumanMode, value, -1, 2);
 			g_esShieldTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esShieldTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esShieldTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esShieldTeammate[admin].g_iRequiresHumans, value, -1, 32);
 			g_esShieldTeammate[admin].g_iShieldAbility = iGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esShieldTeammate[admin].g_iShieldAbility, value, -1, 1);
@@ -973,7 +983,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esShieldPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esShieldPlayer[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esShieldPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esShieldPlayer[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esShieldPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esShieldPlayer[admin].g_iHumanDuration, value, -1, 99999);
-			g_esShieldPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esShieldPlayer[admin].g_iHumanMode, value, -1, 1);
+			g_esShieldPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esShieldPlayer[admin].g_iHumanMode, value, -1, 2);
 			g_esShieldPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esShieldPlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esShieldPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esShieldPlayer[admin].g_iRequiresHumans, value, -1, 32);
 			g_esShieldPlayer[admin].g_iShieldAbility = iGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esShieldPlayer[admin].g_iShieldAbility, value, -1, 1);
@@ -1031,7 +1041,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esShieldSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esShieldSpecial[type].g_iHumanAmmo, value, -1, 99999);
 			g_esShieldSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esShieldSpecial[type].g_iHumanCooldown, value, -1, 99999);
 			g_esShieldSpecial[type].g_iHumanDuration = iGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esShieldSpecial[type].g_iHumanDuration, value, -1, 99999);
-			g_esShieldSpecial[type].g_iHumanMode = iGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esShieldSpecial[type].g_iHumanMode, value, -1, 1);
+			g_esShieldSpecial[type].g_iHumanMode = iGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esShieldSpecial[type].g_iHumanMode, value, -1, 2);
 			g_esShieldSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esShieldSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esShieldSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esShieldSpecial[type].g_iRequiresHumans, value, -1, 32);
 			g_esShieldSpecial[type].g_iShieldAbility = iGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esShieldSpecial[type].g_iShieldAbility, value, -1, 1);
@@ -1058,7 +1068,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esShieldAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esShieldAbility[type].g_iHumanAmmo, value, -1, 99999);
 			g_esShieldAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esShieldAbility[type].g_iHumanCooldown, value, -1, 99999);
 			g_esShieldAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esShieldAbility[type].g_iHumanDuration, value, -1, 99999);
-			g_esShieldAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esShieldAbility[type].g_iHumanMode, value, -1, 1);
+			g_esShieldAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esShieldAbility[type].g_iHumanMode, value, -1, 2);
 			g_esShieldAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esShieldAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esShieldAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esShieldAbility[type].g_iRequiresHumans, value, -1, 32);
 			g_esShieldAbility[type].g_iShieldAbility = iGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esShieldAbility[type].g_iShieldAbility, value, -1, 1);
@@ -1117,7 +1127,9 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esShieldPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esShieldPlayer[tank].g_iTankType = apply ? type : 0;
 	int iType = g_esShieldPlayer[tank].g_iTankTypeRecorded;
-
+#if !defined MT_ABILITIES_MAIN2
+	g_iGraphicsLevel = MT_GetGraphicsLevel();
+#endif
 	if (bInfected)
 	{
 		g_esShieldCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esShieldTeammate[tank].g_flCloseAreasOnly, g_esShieldPlayer[tank].g_flCloseAreasOnly, g_esShieldSpecial[iType].g_flCloseAreasOnly, g_esShieldAbility[iType].g_flCloseAreasOnly, 1);
@@ -1322,10 +1334,10 @@ public void MT_OnButtonPressed(int tank, int button)
 
 		if ((button & MT_MAIN_KEY) && g_esShieldCache[tank].g_iShieldAbility == 1 && g_esShieldCache[tank].g_iHumanAbility == 1)
 		{
-			int iTime = GetTime();
+			int iHumanMode = g_esShieldCache[tank].g_iHumanMode, iTime = GetTime();
 			bool bRecharging = g_esShieldPlayer[tank].g_iCooldown != -1 && g_esShieldPlayer[tank].g_iCooldown >= iTime;
 
-			switch (g_esShieldCache[tank].g_iHumanMode)
+			switch (iHumanMode)
 			{
 				case 0:
 				{
@@ -1342,26 +1354,37 @@ public void MT_OnButtonPressed(int tank, int button)
 						MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldHuman4", (g_esShieldPlayer[tank].g_iCooldown - iTime));
 					}
 				}
-				case 1:
+				case 1, 2:
 				{
-					if (g_esShieldPlayer[tank].g_iAmmoCount < g_esShieldCache[tank].g_iHumanAmmo && g_esShieldCache[tank].g_iHumanAmmo > 0)
+					if ((iHumanMode == 2 && g_esShieldPlayer[tank].g_bActivated) || (g_esShieldPlayer[tank].g_iAmmoCount < g_esShieldCache[tank].g_iHumanAmmo && g_esShieldCache[tank].g_iHumanAmmo > 0))
 					{
 						if (!g_esShieldPlayer[tank].g_bActivated && !bRecharging)
 						{
 							g_esShieldPlayer[tank].g_bActivated = true;
 							g_esShieldPlayer[tank].g_iAmmoCount++;
 
-							g_esShieldPlayer[tank].g_iShield = CreateEntityByName("prop_dynamic");
-							if (bIsValidEntity(g_esShieldPlayer[tank].g_iShield))
+							if (g_iGraphicsLevel > 1)
 							{
-								vShield(tank);
+								g_esShieldPlayer[tank].g_iShield = CreateEntityByName("prop_dynamic");
+								if (bIsValidEntity(g_esShieldPlayer[tank].g_iShield))
+								{
+									vShield(tank);
+								}
 							}
 
 							MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldHuman", g_esShieldPlayer[tank].g_iAmmoCount, g_esShieldCache[tank].g_iHumanAmmo);
 						}
 						else if (g_esShieldPlayer[tank].g_bActivated)
 						{
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldHuman3");
+							switch (iHumanMode)
+							{
+								case 1: MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldHuman3");
+								case 2:
+								{
+									vRemoveShield(tank);
+									vShieldReset3(tank);
+								}
+							}
 						}
 						else if (bRecharging)
 						{
@@ -1436,7 +1459,7 @@ public void MT_OnRockThrow(int tank, int rock)
 
 void vSetShieldGlow(int entity, int color, bool flashing, int min, int max, int type)
 {
-	if (!g_bSecondGame)
+	if (!g_bSecondGame || g_iGraphicsLevel <= 1)
 	{
 		return;
 	}
@@ -1464,7 +1487,7 @@ void vShield(int tank)
 	DispatchSpawn(g_esShieldPlayer[tank].g_iShield);
 	vSetEntityParent(g_esShieldPlayer[tank].g_iShield, tank, true);
 
-	switch (StrEqual(g_esShieldCache[tank].g_sShieldColor, "rainbow", false))
+	switch (StrEqual(g_esShieldCache[tank].g_sShieldColor, "rainbow", false) && g_iGraphicsLevel > 2)
 	{
 		case true:
 		{
@@ -1486,7 +1509,7 @@ void vShield(int tank)
 		int iGlowColor[4];
 		MT_GetTankColors(tank, 2, iGlowColor[0], iGlowColor[1], iGlowColor[2], iGlowColor[3]);
 
-		switch (iGlowColor[0] == -2 && iGlowColor[1] == -2 && iGlowColor[2] == -2)
+		switch (iGlowColor[0] == -2 && iGlowColor[1] == -2 && iGlowColor[2] == -2 && g_iGraphicsLevel > 2)
 		{
 			case true:
 			{
@@ -1521,34 +1544,38 @@ void vShieldAbility(int tank, bool shield)
 			{
 				if (GetRandomFloat(0.1, 100.0) <= g_esShieldCache[tank].g_flShieldChance)
 				{
-					g_esShieldPlayer[tank].g_iShield = CreateEntityByName("prop_dynamic");
-					if (bIsValidEntity(g_esShieldPlayer[tank].g_iShield))
+					if (g_iGraphicsLevel > 1)
 					{
-						g_esShieldPlayer[tank].g_bActivated = true;
-						g_esShieldPlayer[tank].g_flHealth = g_esShieldCache[tank].g_flShieldHealth;
-						g_esShieldPlayer[tank].g_iCooldown2 = -1;
-
-						vShield(tank);
-						ExtinguishEntity(tank);
-
-						if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esShieldCache[tank].g_iHumanAbility == 1)
+						g_esShieldPlayer[tank].g_iShield = CreateEntityByName("prop_dynamic");
+						if (bIsValidEntity(g_esShieldPlayer[tank].g_iShield))
 						{
-							int iPos = g_esShieldAbility[g_esShieldPlayer[tank].g_iTankTypeRecorded].g_iComboPosition, iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 5, iPos)) : g_esShieldCache[tank].g_iShieldDuration;
-							iDuration = (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esShieldCache[tank].g_iHumanAbility == 1) ? g_esShieldCache[tank].g_iHumanDuration : iDuration;
-							g_esShieldPlayer[tank].g_iAmmoCount++;
-							g_esShieldPlayer[tank].g_iDuration = (iTime + iDuration);
+							g_esShieldPlayer[tank].g_bActivated = true;
+							g_esShieldPlayer[tank].g_flHealth = g_esShieldCache[tank].g_flShieldHealth;
+							g_esShieldPlayer[tank].g_iCooldown2 = -1;
 
-							vExternalView(tank, 1.5);
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldHuman", g_esShieldPlayer[tank].g_iAmmoCount, g_esShieldCache[tank].g_iHumanAmmo);
+							vShield(tank);
 						}
+					}
 
-						if (g_esShieldCache[tank].g_iShieldMessage == 1)
-						{
-							char sTankName[64];
-							MT_GetTankName(tank, sTankName);
-							MT_PrintToChatAll("%s %t", MT_TAG2, "Shield", sTankName);
-							MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Shield", LANG_SERVER, sTankName);
-						}
+					if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esShieldCache[tank].g_iHumanAbility == 1 && g_esShieldPlayer[tank].g_bActivated)
+					{
+						int iPos = g_esShieldAbility[g_esShieldPlayer[tank].g_iTankTypeRecorded].g_iComboPosition, iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 5, iPos)) : g_esShieldCache[tank].g_iShieldDuration;
+						iDuration = (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esShieldCache[tank].g_iHumanAbility == 1) ? g_esShieldCache[tank].g_iHumanDuration : iDuration;
+						g_esShieldPlayer[tank].g_iAmmoCount++;
+						g_esShieldPlayer[tank].g_iDuration = (iTime + iDuration);
+
+						vExternalView(tank, 1.5);
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldHuman", g_esShieldPlayer[tank].g_iAmmoCount, g_esShieldCache[tank].g_iHumanAmmo);
+					}
+
+					ExtinguishEntity(tank);
+
+					if (g_esShieldCache[tank].g_iShieldMessage == 1)
+					{
+						char sTankName[64];
+						MT_GetTankName(tank, sTankName);
+						MT_PrintToChatAll("%s %t", MT_TAG2, "Shield", sTankName);
+						MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Shield", LANG_SERVER, sTankName);
 					}
 				}
 				else if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esShieldCache[tank].g_iHumanAbility == 1)
@@ -1592,7 +1619,7 @@ void vShieldAbility(int tank, bool shield)
 
 void OnShieldPreThinkPost(int tank)
 {
-	if (!MT_IsTankSupported(tank) || !MT_IsCustomTankSupported(tank) || !g_esShieldPlayer[tank].g_bRainbowColor)
+	if (!MT_IsTankSupported(tank) || !MT_IsCustomTankSupported(tank) || !g_esShieldPlayer[tank].g_bRainbowColor || g_iGraphicsLevel <= 2)
 	{
 		g_esShieldPlayer[tank].g_bRainbowColor = false;
 
@@ -1716,15 +1743,17 @@ void vShieldReset3(int tank)
 	}
 }
 
-void tTimerShieldCombo(Handle timer, int userid)
+Action tTimerShieldCombo(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esShieldAbility[g_esShieldPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esShieldPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esShieldPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esShieldCache[iTank].g_iShieldAbility == 0 || g_esShieldPlayer[iTank].g_bActivated)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	vShieldAbility(iTank, true);
+
+	return Plugin_Continue;
 }
 
 Action tTimerShieldThrow(Handle timer, DataPack pack)

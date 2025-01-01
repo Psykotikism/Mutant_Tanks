@@ -224,6 +224,16 @@
 		"hu"			"Mutáns Tankok Verzió"
 	}
 
+	"MTWarnRusher"
+	{
+		"hu"			"Csoportosulj a csapatoddal, mielőtt levadásznak!"
+	}
+
+	"MTWarnSlacker"
+	{
+		"hu"			"Érd utol a csapatodat, mielőtt levadásznak!"
+	}
+
 	"Ammunition"
 	{
 		"hu"			"Lőszer"
@@ -251,12 +261,17 @@
 
 	"AbilityButtonMode1"
 	{
-		"hu"			"Nyomj gombo(kat)t hogy aktiváld a képesége(idet)det."
+		"hu"			"Nyomj gomb(ok)at a képességeid aktiválásához."
 	}
 
 	"AbilityButtonMode2"
 	{
-		"hu"			"Tarts lenyomva gombo(kat) a képessége(ek)id használatához."
+		"hu"			"A képességek használatához tartsd lenyomva a gomb(ok)at."
+	}
+
+	"AbilityButtonMode3"
+	{
+		"hu"			"Nyomj gomb(ok)at a képességeid váltásához."
 	}
 
 	"Buttons"
@@ -1004,6 +1019,11 @@
 		"hu"			"Tank"
 	}
 
+	"NoNameBill"
+	{
+		"hu"			"Bill"
+	}
+
 	"NoNameBoomer"
 	{
 		"hu"			"Pukkancs"
@@ -1014,6 +1034,26 @@
 		"hu"			"Rohanó"
 	}
 
+	"NoNameCoach"
+	{
+		"hu"			"Edző"
+	}
+
+	"NoNameCommon"
+	{
+		"hu"			"Fertőzöttek"
+	}
+
+	"NoNameEllis"
+	{
+		"hu"			"Ellis"
+	}
+
+	"NoNameFrancis"
+	{
+		"hu"			"Francis"
+	}
+
 	"NoNameHunter"
 	{
 		"hu"			"Vadász"
@@ -1022,6 +1062,21 @@
 	"NoNameJockey"
 	{
 		"hu"			"Zsoké"
+	}
+
+	"NoNameLouis"
+	{
+		"hu"			"Louis"
+	}
+
+	"NoNameNick"
+	{
+		"hu"			"Nick"
+	}
+
+	"NoNameRochelle"
+	{
+		"hu"			"Rochelle"
 	}
 
 	"NoNameSmoker"
@@ -1037,6 +1092,11 @@
 	"NoNameWitch"
 	{
 		"hu"			"Boszorka"
+	}
+
+	"NoNameZoey"
+	{
+		"hu"			"Zoey"
 	}
 
 	"NoNote"
@@ -1295,11 +1355,6 @@
 	}
 
 	"RewardLadyKiller"
-	{
-		"hu"			"{1}{mint} nőcsábász{default} használatot"
-	}
-
-	"RewardLadyKiller2"
 	{
 		"hu"			"Van még neked{yellow} {1}{mint} nőcsábász{default} használatod."
 	}
@@ -1849,59 +1904,9 @@
 		"hu"			"Lőszer Képesség"
 	}
 
-	"Blind"
-	{
-		"hu"			"{olive}{1}{mint} megvakította{olive} {2}{mint}!"
-	}
-
-	"Blind2"
-	{
-		"hu"			"{olive}{1}{mint} többé már nem vak!"
-	}
-
-	"BlindAmmo"
-	{
-		"hu"			"Elhasználtad az összes távolsági vakító képességed lőszerét."
-	}
-
 	"BlindDetails"
 	{
 		"hu"			"Megvakítod a túlélőket."
-	}
-
-	"BlindHuman"
-	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik vakító képességedet!"
-	}
-
-	"BlindHuman2"
-	{
-		"hu"			"A vakító képességed aktiválása nem sikerült. Próbáld újra."
-	}
-
-	"BlindHuman3"
-	{
-		"hu"			"A vakító képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-	}
-
-	"BlindHuman4"
-	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a vakító képességedet."
-	}
-
-	"BlindHuman5"
-	{
-		"hu"			"A vakító képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-	}
-
-	"BlindMenu"
-	{
-		"hu"			"Távolsági Vakító Információ"
-	}
-
-	"BlindMenu2"
-	{
-		"hu"			"Vakító Képesség"
 	}
 
 	"Bomb"
@@ -2244,6 +2249,11 @@
 		"hu"			"{olive}{1}{mint} dobott egy közelharci fegyvert!"
 	}
 
+	"Drop3"
+	{
+		"hu"			"{olive}{1}{mint} tételeket adott{yellow} a túlélőknek{mint}!"
+	}
+
 	"DropDetails"
 	{
 		"hu"			"Fegyvert dobsz a halálod után."
@@ -2251,12 +2261,12 @@
 
 	"DropHuman"
 	{
-		"hu"			"Fegyvert dobsz miután meghalsz!"
+		"hu"			"Tételeket adsz a túlélőknek miután meghalsz!"
 	}
 
 	"DropHuman2"
 	{
-		"hu"			"Azonnal fegyvert dobsz a halálod után."
+		"hu"			"Már adtál tételeket a túlélőknek a halálod után."
 	}
 
 	"DropMenu"
@@ -3139,16 +3149,6 @@
 		"hu"			"Csak a tested bizonyos pontjain vagy sebezhető."
 	}
 
-	"HitMenu"
-	{
-		"hu"			"Ütő Képesség Információ"
-	}
-
-	"HitMenu2"
-	{
-		"hu"			"Ütő Képesség"
-	}
-
 	"Hurt"
 	{
 		"hu"			"{olive}{1}{mint} bántja{olive} {2}{mint}-t!"
@@ -3157,6 +3157,16 @@
 	"Hurt2"
 	{
 		"hu"			"{olive}{1}{mint} többé már nincs bántalmazás alatt!"
+	}
+
+	"Hurt3"
+	{
+		"hu"			"{olive}{1}{mint} csapdossa{olive} {2}{mint}-t!"
+	}
+
+	"Hurt4"
+	{
+		"hu"			"{olive}{1}{mint} többé már nincs csapdosva!"
 	}
 
 	"HurtAmmo"
@@ -3419,34 +3429,9 @@
 		"hu"			"Megfordítás Képesség"
 	}
 
-	"Item"
-	{
-		"hu"			"{olive}{1}{mint} tételeket adott{yellow} a túlélőknek{mint}!"
-	}
-
 	"ItemDetails"
 	{
 		"hu"			"Tételeket adsz a túlélőknek halálod után."
-	}
-
-	"ItemHuman"
-	{
-		"hu"			"Tételeket adsz a túlélőknek miután meghalsz!"
-	}
-
-	"ItemHuman2"
-	{
-		"hu"			"Már adtál tételeket a túlélőknek a halálod után."
-	}
-
-	"ItemMenu"
-	{
-		"hu"			"Tétel Képesség Információ"
-	}
-
-	"ItemMenu2"
-	{
-		"hu"			"Tétel Képesség"
 	}
 
 	"Jump"
@@ -3534,39 +3519,9 @@
 		"hu"			"Ugrás Képesség"
 	}
 
-	"Kamikaze"
-	{
-		"hu"			"{olive}{1}{mint} kamikazét adott{olive} {2}{mint}-nak!"
-	}
-
 	"KamikazeDetails"
 	{
 		"hu"			"Megölöd magad és áldozatként viszed magaddal a túlélőket is."
-	}
-
-	"KamikazeHuman"
-	{
-		"hu"			"Aktiváltad a kamikaze képességedet!"
-	}
-
-	"KamikazeHuman2"
-	{
-		"hu"			"Nem sikerült aktiválni a kamikaze képességedet. Próbáld újra."
-	}
-
-	"KamikazeHuman3"
-	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a kamikaze képességedet."
-	}
-
-	"KamikazeMenu"
-	{
-		"hu"			"Kamikaze Képesség Információ"
-	}
-
-	"KamikazeMenu2"
-	{
-		"hu"			"Kamikaze Képesség"
 	}
 
 	"Lag"
@@ -3679,59 +3634,9 @@
 		"hu"			"Lézer Képesség"
 	}
 
-	"Leech"
-	{
-		"hu"			"{olive}{1}{mint} életet{yellow} szív{mint} el{olive} {2}{mint}-tól!"
-	}
-
-	"Leech2"
-	{
-		"hu"			"{olive}{1}{mint} már nem szív{yellow} életet{mint} el{olive} {2}{mint}-tól!"
-	}
-
-	"LeechAmmo"
-	{
-		"hu"			"Elhasználtad a távolsági pióca képességed összes lőszerét."
-	}
-
 	"LeechDetails"
 	{
 		"hu"			"Elszívod az életet a túlélőktől."
-	}
-
-	"LeechHuman"
-	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik pióca képességedet!"
-	}
-
-	"LeechHuman2"
-	{
-		"hu"			"Nem sikerült aktiválni a pióca képességedet. Próbáld újra."
-	}
-
-	"LeechHuman3"
-	{
-		"hu"			"A pióca képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-	}
-
-	"LeechHuman4"
-	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a pióca képességedet."
-	}
-
-	"LeechHuman5"
-	{
-		"hu"			"A pióca képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-	}
-
-	"LeechMenu"
-	{
-		"hu"			"Pióca Képesség Információ"
-	}
-
-	"LeechMenu2"
-	{
-		"hu"			"Pióca Képesség"
 	}
 
 	"Lightning"
@@ -3959,54 +3864,9 @@
 		"hu"			"Minyon Képesség"
 	}
 
-	"Necro"
-	{
-		"hu"			"{olive}{1}{mint} visszahozta a közelben lévő speciális fertőzötteket!"
-	}
-
-	"NecroAmmo"
-	{
-		"hu"			"Elhasználtad a haláli képességed összes lőszerét."
-	}
-
 	"NecroDetails"
 	{
 		"hu"			"Visszahozod a közelben lévő speciális fertőzötteket amikor meghalnak."
-	}
-
-	"NecroHuman"
-	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik haláli képességedet!"
-	}
-
-	"NecroHuman2"
-	{
-		"hu"			"Nem sikerült aktiválni a haláli képességedet. Próbáld újra."
-	}
-
-	"NecroHuman3"
-	{
-		"hu"			"Már aktiváltad a haláli képességedet."
-	}
-
-	"NecroHuman4"
-	{
-		"hu"			"A haláli képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-	}
-
-	"NecroHuman5"
-	{
-		"hu"			"A haláli képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-	}
-
-	"NecroMenu"
-	{
-		"hu"			"Haláli Képesség Információ"
-	}
-
-	"NecroMenu2"
-	{
-		"hu"			"Haláli Képesség"
 	}
 
 	"Nullify"
@@ -4174,59 +4034,9 @@
 		"hu"			"Pánik Képesség"
 	}
 
-	"Pimp"
-	{
-		"hu"			"{olive}{1}{mint} csapdossa{olive} {2}{mint}-t!"
-	}
-
-	"Pimp2"
-	{
-		"hu"			"{olive}{1}{mint} többé már nincs csapdosva!"
-	}
-
-	"PimpAmmo"
-	{
-		"hu"			"Elhasználtad a távolsági csapdosó képességed összes lőszerét."
-	}
-
 	"PimpDetails"
 	{
 		"hu"			"Lecsapod a túlélőket."
-	}
-
-	"PimpHuman"
-	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik csapdosó képességedet!"
-	}
-
-	"PimpHuman2"
-	{
-		"hu"			"Nem sikerült aktiválni a csapdosó képességedet. Próbáld újra."
-	}
-
-	"PimpHuman3"
-	{
-		"hu"			"A csapdosó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-	}
-
-	"PimpHuman4"
-	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a csapdosó képességedet."
-	}
-
-	"PimpHuman5"
-	{
-		"hu"			"A csapdosó képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-	}
-
-	"PimpMenu"
-	{
-		"hu"			"Csapdosó Képesség Információ"
-	}
-
-	"PimpMenu2"
-	{
-		"hu"			"Csapdosó Képesség"
 	}
 
 	"Puke"
@@ -4539,6 +4349,16 @@
 		"hu"			"{olive}{1}{mint} már nem regenerálja az életerejét!"
 	}
 
+	"Regen3"
+	{
+		"hu"			"{olive}{1}{mint} ellopott egy kis életerőt{olive} {2}{mint}-tol!"
+	}
+
+	"Regen4"
+	{
+		"hu"			"{olive}{1}{mint} ellopott egy kis életerőt{olive} {2}{mint}-tol!"
+	}
+
 	"RegenAmmo"
 	{
 		"hu"			"Elhasználtad a regeneráló képességed összes lőszerét."
@@ -4586,10 +4406,20 @@
 
 	"Respawn"
 	{
+		"hu"			"{olive}{1}{mint} visszahozta a közelben lévő speciális fertőzötteket!"
+	}
+
+	"Respawn2"
+	{
 		"hu"			"{olive}{1}{mint} visszahozta önmagát!"
 	}
 
 	"RespawnAmmo"
+	{
+		"hu"			"Elhasználtad a haláli képességed összes lőszerét."
+	}
+
+	"RespawnAmmo2"
 	{
 		"hu"			"Elhasználtad az összes szikla záporodat."
 	}
@@ -4601,15 +4431,40 @@
 
 	"RespawnHuman"
 	{
-		"hu"			"Újjászületsz miután meghalsz!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik haláli képességedet!"
 	}
 
 	"RespawnHuman2"
 	{
-		"hu"			"Azonnal újjászületsz a halálod pillanatában."
+		"hu"			"Nem sikerült aktiválni a haláli képességedet. Próbáld újra."
 	}
 
 	"RespawnHuman3"
+	{
+		"hu"			"Már aktiváltad a haláli képességedet."
+	}
+
+	"RespawnHuman4"
+	{
+		"hu"			"A haláli képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+	}
+
+	"RespawnHuman5"
+	{
+		"hu"			"A haláli képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
+	}
+
+	"RespawnHuman6"
+	{
+		"hu"			"Újjászületsz miután meghalsz!"
+	}
+
+	"RespawnHuman7"
+	{
+		"hu"			"Azonnal újjászületsz a halálod pillanatában."
+	}
+
+	"RespawnHuman8"
 	{
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik újjászületésedet!"
 	}
@@ -4676,12 +4531,12 @@
 
 	"Rock"
 	{
-		"hu"			"{olive}{1}{mint} szikla záport{yellow} indított{mint}!"
+		"hu"			"{olive}{1}{mint} folyamatosan sziklákat dobál!"
 	}
 
 	"Rock2"
 	{
-		"hu"			"{olive}{1}{mint} szikla zápora véget ért!"
+		"hu"			"{olive}{1}{mint} többé már nem dobál folyamatosan sziklákat!"
 	}
 
 	"RockAmmo"
@@ -4696,27 +4551,27 @@
 
 	"RockHuman"
 	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik szikla záporodat!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik folyamatos szikla képességedet!"
 	}
 
 	"RockHuman2"
 	{
-		"hu"			"Nem sikerült aktiválni a szikla záporodat. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a folyamatos szikla képességedet. Próbáld újra."
 	}
 
 	"RockHuman3"
 	{
-		"hu"			"Már aktiváltad a szikla záporodat."
+		"hu"			"Már aktiváltad a folyamatos szikla képességedet."
 	}
 
 	"RockHuman4"
 	{
-		"hu"			"A szikla zápor képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A folyamatos szikla képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"RockHuman5"
 	{
-		"hu"			"A szikla zápor képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
+		"hu"			"A folyamatos szikla képességed véget ért, az újratöltés ideje{yellow} {1} másodperc{mint}."
 	}
 
 	"RockMenu"
@@ -4729,109 +4584,14 @@
 		"hu"			"Szikla Képesség"
 	}
 
-	"Rocket"
-	{
-		"hu"			"{olive}{1}{mint} elküldte{olive} {2}{mint}-t az űrbe!"
-	}
-
-	"RocketAmmo"
-	{
-		"hu"			"Elhasználtad a távolsági rakéta képességed összes lőszerét."
-	}
-
 	"RocketDetails"
 	{
 		"hu"			"Az űrbe küldöd a túlélőket."
 	}
 
-	"RocketHuman"
-	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik rakéta képességedet!"
-	}
-
-	"RocketHuman2"
-	{
-		"hu"			"Nem sikerült aktiválni a rakéta képességedet. Próbáld újra."
-	}
-
-	"RocketHuman3"
-	{
-		"hu"			"A rakéta képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-	}
-
-	"RocketHuman4"
-	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a rakéta képességedet."
-	}
-
-	"RocketHuman5"
-	{
-		"hu"			"A rakéta képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-	}
-
-	"RocketMenu"
-	{
-		"hu"			"Rakéta Képesség Információ"
-	}
-
-	"RocketMenu2"
-	{
-		"hu"			"Rakéta Képesség"
-	}
-
-	"Shake"
-	{
-		"hu"			"{olive}{1}{mint} rázza{olive} {2}{mint}-t!"
-	}
-
-	"Shake2"
-	{
-		"hu"			"{olive}{1}{mint} többé már nem rázkódik!"
-	}
-
-	"ShakeAmmo"
-	{
-		"hu"			"Elhasználtad a távolsági rázó képességed összes lőszerét."
-	}
-
 	"ShakeDetails"
 	{
 		"hu"			"Rázod a túlélők képernyőjét."
-	}
-
-	"ShakeHuman"
-	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik rázó képességedet!"
-	}
-
-	"ShakeHuman2"
-	{
-		"hu"			"Nem sikerült aktiválni a rázó képességedet. Próbáld újra."
-	}
-
-	"ShakeHuman3"
-	{
-		"hu"			"A rázó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-	}
-
-	"ShakeHuman4"
-	{
-		"hu"			"nincsenek túlélők a közelben ahhoz, hogy használni tudd a rázó képességedet."
-	}
-
-	"ShakeHuman5"
-	{
-		"hu"			"A rázó képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-	}
-
-	"ShakeMenu"
-	{
-		"hu"			"Rázó Képesség Információ"
-	}
-
-	"ShakeMenu2"
-	{
-		"hu"			"Rázó Képesség"
 	}
 
 	"Shield"
@@ -5009,6 +4769,21 @@
 		"hu"			"{olive}{1}{mint} halálra zúzta{olive} {2}{mint} -t!"
 	}
 
+	"Smash2"
+	{
+		"hu"			"{olive}{1}{mint} kamikazét adott{olive} {2}{mint}-nak!"
+	}
+
+	"Smash3"
+	{
+		"hu"			"{olive}{1}{mint} elküldte{olive} {2}{mint}-t az űrbe!"
+	}
+
+	"Smash4"
+	{
+		"hu"			"{olive}{1}{mint} lesújtott{olive} {2}{mint}-ra!"
+	}
+
 	"SmashAmmo"
 	{
 		"hu"			"Elhasználtad a távolsági zúzó képességed összes lőszerét."
@@ -5054,69 +4829,9 @@
 		"hu"			"Zúzó Képesség"
 	}
 
-	"Smite"
-	{
-		"hu"			"{olive}{1}{mint} lesújtott{olive} {2}{mint}-ra!"
-	}
-
-	"SmiteAmmo"
-	{
-		"hu"			"Elhasználtad a távolsági lesújtó képességed összes lőszerét."
-	}
-
 	"SmiteDetails"
 	{
 		"hu"			"Lesújtól a túlélőkre."
-	}
-
-	"SmiteHuman"
-	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik lesújtó képességedet!"
-	}
-
-	"SmiteHuman2"
-	{
-		"hu"			"Nem sikerült aktiválni a lesújtó képességedet. Próbáld újra."
-	}
-
-	"SmiteHuman3"
-	{
-		"hu"			"A lesújtó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-	}
-
-	"SmiteHuman4"
-	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a lesújtó képességedet."
-	}
-
-	"SmiteHuman5"
-	{
-		"hu"			"A zúzó képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
-	}
-
-	"SmiteMenu"
-	{
-		"hu"			"Lesújtó Képesség Információ"
-	}
-
-	"SmiteMenu2"
-	{
-		"hu"			"Lesújtó Képesség"
-	}
-
-	"Spam"
-	{
-		"hu"			"{olive}{1}{mint} folyamatosan sziklákat dobál!"
-	}
-
-	"Spam2"
-	{
-		"hu"			"{olive}{1}{mint} többé már nem dobál folyamatosan sziklákat!"
-	}
-
-	"SpamAmmo"
-	{
-		"hu"			"Elhasználtad a folyamatos képességed összes lőszerét."
 	}
 
 	"SpamDetails"
@@ -5124,149 +4839,9 @@
 		"hu"			"Folyamatosan sziklákat dobálsz a túlélőkre."
 	}
 
-	"SpamHuman"
-	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik folyamatos szikla képességedet!"
-	}
-
-	"SpamHuman2"
-	{
-		"hu"			"Nem sikerült aktiválni a folyamatos szikla képességedet. Próbáld újra."
-	}
-
-	"SpamHuman3"
-	{
-		"hu"			"Már aktiváltad a folyamatos szikla képességedet."
-	}
-
-	"SpamHuman4"
-	{
-		"hu"			"A folyamatos szikla képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-	}
-
-	"SpamHuman5"
-	{
-		"hu"			"A folyamatos szikla képességed véget ért, az újratöltés ideje{yellow} {1} másodperc{mint}."
-	}
-
-	"SpamMenu"
-	{
-		"hu"			"Folyamatos Képesség Információ"
-	}
-
-	"SpamMenu2"
-	{
-		"hu"			"Folyamatos Képesség"
-	}
-
-	"Splash"
-	{
-		"hu"			"{olive}{1}{mint} területi sebzést okoz a közelben lévő túlélőkre!"
-	}
-
-	"Splash2"
-	{
-		"hu"			"{olive}{1}{mint} többé már nem okoz területi sebzést a túlélőkre!"
-	}
-
-	"SplashAmmo"
-	{
-		"hu"			"Elhasználtad a területi sebzés képességed összes lőszerét."
-	}
-
-	"SplashDetails"
-	{
-		"hu"			"Folyamatosan területi sebzést okozol a közelben lévő túlélőkre."
-	}
-
-	"SplashHuman"
-	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik területi sebzés képességedet!"
-	}
-
-	"SplashHuman2"
-	{
-		"hu"			"Nem sikerült aktiválni a területi képességedet. Próbáld újra."
-	}
-
-	"SplashHuman3"
-	{
-		"hu"			"Már aktiváltad a területi képességedet."
-	}
-
-	"SplashHuman4"
-	{
-		"hu"			"A területi képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-	}
-
-	"SplashHuman5"
-	{
-		"hu"			"A területi képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
-	}
-
-	"SplashMenu"
-	{
-		"hu"			"Területi Képesség Információ"
-	}
-
-	"SplashMenu2"
-	{
-		"hu"			"Területi Képesség"
-	}
-
-	"Splatter"
-	{
-		"hu"			"{olive}{1}{mint} épp összefröcsköli{olive} {2}{mint} képernyőjét!"
-	}
-
-	"Splatter2"
-	{
-		"hu"			"{olive}{1}képernyője{mint} többé már nincs összefröcskölve{mint}!"
-	}
-
-	"SplatterAmmo"
-	{
-		"hu"			"Elhasználtad a Fröcskölő képességed összes lőszerét."
-	}
-
 	"SplatterDetails"
 	{
 		"hu"			"Összefröcskölöd a túlélők képernyőjét."
-	}
-
-	"SplatterHuman"
-	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} fröcskölő képességedet!"
-	}
-
-	"SplatterHuman2"
-	{
-		"hu"			"Nem sikerült aktiválni a fröcskölő képességedet. Próbáld újra."
-	}
-
-	"SplatterHuman3"
-	{
-		"hu"			"A fröccsenő képességednek még kell{yellow} {1} másodperc(ek){mint} az újratöltéshez.."
-	}
-
-	"SplatterHuman4"
-	{
-		"hu"			"Nincsenek túlélők a közeledben akiken használhatnád a fröccsenő képességedet."
-	}
-
-	"SplatterHuman5"
-	{
-		"hu"			"A fröcskölő képességed véget ért, az újratöltéshez kell még{yellow} {1} másodperc{mint}."
-	}
-
-	"SplatterMenu"
-	{
-		"hu"			"Fröcskölő Képesség Információ"
-	}
-
-	"SplatterMenu2"
-	{
-		"hu"			"Fröcskölő Képesség"
 	}
 
 	"Throw"
@@ -5494,32 +5069,47 @@
 		"hu"			"Élőholt Képesség"
 	}
 
-	"Vampire"
-	{
-		"hu"			"{olive}{1}{mint} életerőt lopott{olive} {2}{mint}-tol!"
-	}
-
 	"VampireDetails"
 	{
 		"hu"			"Életerőt kapsz ha bántod a túlélőket."
 	}
 
-	"VampireMenu"
-	{
-		"hu"			"Vámpír Képesség Információ"
-	}
-
-	"VampireMenu2"
-	{
-		"hu"			"Vámpír Képesség"
-	}
-
 	"Vision"
+	{
+		"hu"			"{olive}{1}{mint} megvakította{olive} {2}{mint}!"
+	}
+
+	"Vision2"
+	{
+		"hu"			"{olive}{1}{mint} többé már nem vak!"
+	}
+
+	"Vision3"
+	{
+		"hu"			"{olive}{1}{mint} rázza{olive} {2}{mint}-t!"
+	}
+
+	"Vision4"
+	{
+		"hu"			"{olive}{1}{mint} többé már nem rázkódik!"
+	}
+
+	"Vision5"
+	{
+		"hu"			"{olive}{1}{mint} épp összefröcsköli{olive} {2}{mint} képernyőjét!"
+	}
+
+	"Vision6"
+	{
+		"hu"			"{olive}{1}képernyője{mint} többé már nincs összefröcskölve{mint}!"
+	}
+
+	"Vision7"
 	{
 		"hu"			"{olive}{1}{mint} megváltoztatta{olive} {2}{mint} látómezejét{yellow} {3}{mint}-ra/re!"
 	}
 
-	"Vision2"
+	"Vision8"
 	{
 		"hu"			"{olive}{1}{mint} látómezeje visszaállt{yellow} {2}{mint}-ra/re!"
 	}
@@ -5759,29 +5349,9 @@
 		"hu"			"Boszorka Képesség"
 	}
 
-	"Xiphos"
-	{
-		"hu"			"{olive}{1}{mint} ellopott egy kis életerőt{olive} {2}{mint}-tol!"
-	}
-
-	"Xiphos2"
-	{
-		"hu"			"{olive}{1}{mint} ellopott egy kis életerőt{olive} {2}{mint}-tol!"
-	}
-
 	"XiphosDetails"
 	{
 		"hu"			"Életerőt tudsz lopni a túlélőktől, és fordítva."
-	}
-
-	"XiphosMenu"
-	{
-		"hu"			"Xipho Képesség Információ"
-	}
-
-	"XiphosMenu2"
-	{
-		"hu"			"Xipho Képesség"
 	}
 
 	"Yell"
@@ -5839,58 +5409,8 @@
 		"hu"			"Üvöltő Képesség"
 	}
 
-	"Zombie"
-	{
-		"hu"			"{olive}{1}{mint} időszakosan zombikat hozz létre!"
-	}
-
-	"Zombie2"
-	{
-		"hu"			"{olive}{1}{mint} zombikat{yellow} hozott létre{mint}!"
-	}
-
-	"ZombieAmmo"
-	{
-		"hu"			"Elhasználtad a zombi létrehozó képességed összes lőszerét."
-	}
-
 	"ZombieDetails"
 	{
 		"hu"			"Zombikat hozol létre."
-	}
-
-	"ZombieHuman"
-	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik zombi létrehozó képességedet!"
-	}
-
-	"ZombieHuman2"
-	{
-		"hu"			"Nem sikerült aktiválni a zombi létrehozó képességedet. Próbáld újra."
-	}
-
-	"ZombieHuman3"
-	{
-		"hu"			"Már aktiváltad a zombi létrehozó képességedet."
-	}
-
-	"ZombieHuman4"
-	{
-		"hu"			"A zombi létrehozó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-	}
-
-	"ZombieHuman5"
-	{
-		"hu"			"A zombi létrehozó képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
-	}
-
-	"ZombieMenu"
-	{
-		"hu"			"Zombi Képesség Információ"
-	}
-
-	"ZombieMenu2"
-	{
-		"hu"			"Zombi Képesség"
 	}
 }

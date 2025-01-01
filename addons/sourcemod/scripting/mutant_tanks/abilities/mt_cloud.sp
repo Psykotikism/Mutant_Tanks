@@ -1,6 +1,6 @@
 /**
- * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2024  Alfred "Psyk0tik" Llagas
+ * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -29,6 +29,8 @@ public Plugin myinfo =
 
 bool g_bDedicated;
 
+int g_iGraphicsLevel;
+
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	EngineVersion evEngine = GetEngineVersion();
@@ -45,6 +47,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 
 #define PARTICLE_SMOKE "smoker_smokecloud"
+#define PARTICLE_BLOOD "boomer_explode_D"
 #else
 	#if MT_CLOUD_COMPILE_METHOD == 1
 		#error This file must be compiled as a standalone plugin.
@@ -65,6 +68,8 @@ enum struct esCloudPlayer
 	float g_flCloseAreasOnly;
 	float g_flCloudChance;
 	float g_flCloudDamage;
+	float g_flCloudInterval;
+	float g_flCloudRange;
 	float g_flOpenAreasOnly;
 
 	int g_iAccessFlags;
@@ -73,6 +78,7 @@ enum struct esCloudPlayer
 	int g_iCloudCooldown;
 	int g_iCloudDuration;
 	int g_iCloudMessage;
+	int g_iCloudRemove;
 	int g_iCloudSight;
 	int g_iComboAbility;
 	int g_iCooldown;
@@ -94,12 +100,15 @@ enum struct esCloudTeammate
 	float g_flCloseAreasOnly;
 	float g_flCloudChance;
 	float g_flCloudDamage;
+	float g_flCloudInterval;
+	float g_flCloudRange;
 	float g_flOpenAreasOnly;
 
 	int g_iCloudAbility;
 	int g_iCloudCooldown;
 	int g_iCloudDuration;
 	int g_iCloudMessage;
+	int g_iCloudRemove;
 	int g_iCloudSight;
 	int g_iComboAbility;
 	int g_iHumanAbility;
@@ -117,6 +126,8 @@ enum struct esCloudAbility
 	float g_flCloseAreasOnly;
 	float g_flCloudChance;
 	float g_flCloudDamage;
+	float g_flCloudInterval;
+	float g_flCloudRange;
 	float g_flOpenAreasOnly;
 
 	int g_iAccessFlags;
@@ -124,6 +135,7 @@ enum struct esCloudAbility
 	int g_iCloudCooldown;
 	int g_iCloudDuration;
 	int g_iCloudMessage;
+	int g_iCloudRemove;
 	int g_iCloudSight;
 	int g_iComboAbility;
 	int g_iComboPosition;
@@ -143,12 +155,15 @@ enum struct esCloudSpecial
 	float g_flCloseAreasOnly;
 	float g_flCloudChance;
 	float g_flCloudDamage;
+	float g_flCloudInterval;
+	float g_flCloudRange;
 	float g_flOpenAreasOnly;
 
 	int g_iCloudAbility;
 	int g_iCloudCooldown;
 	int g_iCloudDuration;
 	int g_iCloudMessage;
+	int g_iCloudRemove;
 	int g_iCloudSight;
 	int g_iComboAbility;
 	int g_iHumanAbility;
@@ -166,12 +181,15 @@ enum struct esCloudCache
 	float g_flCloseAreasOnly;
 	float g_flCloudChance;
 	float g_flCloudDamage;
+	float g_flCloudInterval;
+	float g_flCloudRange;
 	float g_flOpenAreasOnly;
 
 	int g_iCloudAbility;
 	int g_iCloudCooldown;
 	int g_iCloudDuration;
 	int g_iCloudMessage;
+	int g_iCloudRemove;
 	int g_iCloudSight;
 	int g_iComboAbility;
 	int g_iHumanAbility;
@@ -293,7 +311,15 @@ int iCloudMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esCloudCache[param1].g_iCloudAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
 				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esCloudCache[param1].g_iHumanAmmo - g_esCloudPlayer[param1].g_iAmmoCount), g_esCloudCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esCloudCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
+				case 3:
+				{
+					switch (g_esCloudCache[param1].g_iHumanMode)
+					{
+						case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtonMode1");
+						case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtonMode2");
+						case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtonMode3");
+					}
+				}
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", ((g_esCloudCache[param1].g_iHumanAbility == 1) ? g_esCloudCache[param1].g_iHumanCooldown : g_esCloudCache[param1].g_iCloudCooldown));
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "CloudDetails");
 				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", ((g_esCloudCache[param1].g_iHumanAbility == 1) ? g_esCloudCache[param1].g_iHumanDuration : g_esCloudCache[param1].g_iCloudDuration));
@@ -482,6 +508,9 @@ public void MT_OnConfigsLoad(int mode)
 				g_esCloudAbility[iIndex].g_iCloudCooldown = 0;
 				g_esCloudAbility[iIndex].g_flCloudDamage = 5.0;
 				g_esCloudAbility[iIndex].g_iCloudDuration = 0;
+				g_esCloudAbility[iIndex].g_flCloudInterval = 5.0;
+				g_esCloudAbility[iIndex].g_flCloudRange = 500.0;
+				g_esCloudAbility[iIndex].g_iCloudRemove = 0;
 				g_esCloudAbility[iIndex].g_iCloudSight = 0;
 
 				g_esCloudSpecial[iIndex].g_flCloseAreasOnly = -1.0;
@@ -499,6 +528,9 @@ public void MT_OnConfigsLoad(int mode)
 				g_esCloudSpecial[iIndex].g_iCloudCooldown = -1;
 				g_esCloudSpecial[iIndex].g_flCloudDamage = -1.0;
 				g_esCloudSpecial[iIndex].g_iCloudDuration = -1;
+				g_esCloudSpecial[iIndex].g_flCloudInterval = -1.0;
+				g_esCloudSpecial[iIndex].g_flCloudRange = -1.0;
+				g_esCloudSpecial[iIndex].g_iCloudRemove = -1;
 				g_esCloudSpecial[iIndex].g_iCloudSight = -1;
 			}
 		}
@@ -523,6 +555,9 @@ public void MT_OnConfigsLoad(int mode)
 				g_esCloudPlayer[iPlayer].g_iCloudCooldown = -1;
 				g_esCloudPlayer[iPlayer].g_flCloudDamage = -1.0;
 				g_esCloudPlayer[iPlayer].g_iCloudDuration = -1;
+				g_esCloudPlayer[iPlayer].g_flCloudInterval = -1.0;
+				g_esCloudPlayer[iPlayer].g_flCloudRange = -1.0;
+				g_esCloudPlayer[iPlayer].g_iCloudRemove = -1;
 				g_esCloudPlayer[iPlayer].g_iCloudSight = -1;
 
 				g_esCloudTeammate[iPlayer].g_flCloseAreasOnly = -1.0;
@@ -540,6 +575,9 @@ public void MT_OnConfigsLoad(int mode)
 				g_esCloudTeammate[iPlayer].g_iCloudCooldown = -1;
 				g_esCloudTeammate[iPlayer].g_flCloudDamage = -1.0;
 				g_esCloudTeammate[iPlayer].g_iCloudDuration = -1;
+				g_esCloudTeammate[iPlayer].g_flCloudInterval = -1.0;
+				g_esCloudTeammate[iPlayer].g_flCloudRange = -1.0;
+				g_esCloudTeammate[iPlayer].g_iCloudRemove = -1;
 				g_esCloudTeammate[iPlayer].g_iCloudSight = -1;
 			}
 		}
@@ -562,7 +600,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esCloudTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esCloudTeammate[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esCloudTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esCloudTeammate[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esCloudTeammate[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esCloudTeammate[admin].g_iHumanDuration, value, -1, 99999);
-			g_esCloudTeammate[admin].g_iHumanMode = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esCloudTeammate[admin].g_iHumanMode, value, -1, 1);
+			g_esCloudTeammate[admin].g_iHumanMode = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esCloudTeammate[admin].g_iHumanMode, value, -1, 2);
 			g_esCloudTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esCloudTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esCloudTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esCloudTeammate[admin].g_iRequiresHumans, value, -1, 32);
 			g_esCloudTeammate[admin].g_iCloudAbility = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esCloudTeammate[admin].g_iCloudAbility, value, -1, 1);
@@ -572,6 +610,9 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esCloudTeammate[admin].g_iCloudCooldown = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "CloudCooldown", "Cloud Cooldown", "Cloud_Cooldown", "cooldown", g_esCloudTeammate[admin].g_iCloudCooldown, value, -1, 99999);
 			g_esCloudTeammate[admin].g_flCloudDamage = flGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "CloudDamage", "Cloud Damage", "Cloud_Damage", "damage", g_esCloudTeammate[admin].g_flCloudDamage, value, -1.0, 99999.0);
 			g_esCloudTeammate[admin].g_iCloudDuration = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "CloudDuration", "Cloud Duration", "Cloud_Duration", "duration", g_esCloudTeammate[admin].g_iCloudDuration, value, -1, 99999);
+			g_esCloudTeammate[admin].g_flCloudInterval = flGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "CloudInterval", "Cloud Interval", "Cloud_Interval", "interval", g_esCloudTeammate[admin].g_flCloudInterval, value, -1.0, 99999.0);
+			g_esCloudTeammate[admin].g_flCloudRange = flGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "CloudRange", "Cloud Range", "Cloud_Range", "range", g_esCloudTeammate[admin].g_flCloudRange, value, -1.0, 99999.0);
+			g_esCloudTeammate[admin].g_iCloudRemove = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "CloudRemove", "Cloud Remove", "Cloud_Remove", "remove", g_esCloudTeammate[admin].g_iCloudRemove, value, -1, 1);
 		}
 		else
 		{
@@ -581,7 +622,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esCloudPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esCloudPlayer[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esCloudPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esCloudPlayer[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esCloudPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esCloudPlayer[admin].g_iHumanDuration, value, -1, 99999);
-			g_esCloudPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esCloudPlayer[admin].g_iHumanMode, value, -1, 1);
+			g_esCloudPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esCloudPlayer[admin].g_iHumanMode, value, -1, 2);
 			g_esCloudPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esCloudPlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esCloudPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esCloudPlayer[admin].g_iRequiresHumans, value, -1, 32);
 			g_esCloudPlayer[admin].g_iCloudAbility = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esCloudPlayer[admin].g_iCloudAbility, value, -1, 1);
@@ -591,6 +632,9 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esCloudPlayer[admin].g_iCloudCooldown = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "CloudCooldown", "Cloud Cooldown", "Cloud_Cooldown", "cooldown", g_esCloudPlayer[admin].g_iCloudCooldown, value, -1, 99999);
 			g_esCloudPlayer[admin].g_flCloudDamage = flGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "CloudDamage", "Cloud Damage", "Cloud_Damage", "damage", g_esCloudPlayer[admin].g_flCloudDamage, value, -1.0, 99999.0);
 			g_esCloudPlayer[admin].g_iCloudDuration = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "CloudDuration", "Cloud Duration", "Cloud_Duration", "duration", g_esCloudPlayer[admin].g_iCloudDuration, value, -1, 99999);
+			g_esCloudPlayer[admin].g_flCloudInterval = flGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "CloudInterval", "Cloud Interval", "Cloud_Interval", "interval", g_esCloudPlayer[admin].g_flCloudInterval, value, -1.0, 99999.0);
+			g_esCloudPlayer[admin].g_flCloudRange = flGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "CloudRange", "Cloud Range", "Cloud_Range", "range", g_esCloudPlayer[admin].g_flCloudRange, value, -1.0, 99999.0);
+			g_esCloudPlayer[admin].g_iCloudRemove = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "CloudRemove", "Cloud Remove", "Cloud_Remove", "remove", g_esCloudPlayer[admin].g_iCloudRemove, value, -1, 1);
 			g_esCloudPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 			g_esCloudPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 		}
@@ -606,7 +650,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esCloudSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esCloudSpecial[type].g_iHumanAmmo, value, -1, 99999);
 			g_esCloudSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esCloudSpecial[type].g_iHumanCooldown, value, -1, 99999);
 			g_esCloudSpecial[type].g_iHumanDuration = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esCloudSpecial[type].g_iHumanDuration, value, -1, 99999);
-			g_esCloudSpecial[type].g_iHumanMode = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esCloudSpecial[type].g_iHumanMode, value, -1, 1);
+			g_esCloudSpecial[type].g_iHumanMode = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esCloudSpecial[type].g_iHumanMode, value, -1, 2);
 			g_esCloudSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esCloudSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esCloudSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esCloudSpecial[type].g_iRequiresHumans, value, -1, 32);
 			g_esCloudSpecial[type].g_iCloudAbility = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esCloudSpecial[type].g_iCloudAbility, value, -1, 1);
@@ -616,6 +660,9 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esCloudSpecial[type].g_iCloudCooldown = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "CloudCooldown", "Cloud Cooldown", "Cloud_Cooldown", "cooldown", g_esCloudSpecial[type].g_iCloudCooldown, value, -1, 99999);
 			g_esCloudSpecial[type].g_flCloudDamage = flGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "CloudDamage", "Cloud Damage", "Cloud_Damage", "damage", g_esCloudSpecial[type].g_flCloudDamage, value, -1.0, 99999.0);
 			g_esCloudSpecial[type].g_iCloudDuration = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "CloudDuration", "Cloud Duration", "Cloud_Duration", "duration", g_esCloudSpecial[type].g_iCloudDuration, value, -1, 99999);
+			g_esCloudSpecial[type].g_flCloudInterval = flGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "CloudInterval", "Cloud Interval", "Cloud_Interval", "interval", g_esCloudSpecial[type].g_flCloudInterval, value, -1.0, 99999.0);
+			g_esCloudSpecial[type].g_flCloudRange = flGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "CloudRange", "Cloud Range", "Cloud_Range", "range", g_esCloudSpecial[type].g_flCloudRange, value, -1.0, 99999.0);
+			g_esCloudSpecial[type].g_iCloudRemove = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "CloudRemove", "Cloud Remove", "Cloud_Remove", "remove", g_esCloudSpecial[type].g_iCloudRemove, value, -1, 1);
 		}
 		else
 		{
@@ -625,7 +672,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esCloudAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esCloudAbility[type].g_iHumanAmmo, value, -1, 99999);
 			g_esCloudAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esCloudAbility[type].g_iHumanCooldown, value, -1, 99999);
 			g_esCloudAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esCloudAbility[type].g_iHumanDuration, value, -1, 99999);
-			g_esCloudAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esCloudAbility[type].g_iHumanMode, value, -1, 1);
+			g_esCloudAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esCloudAbility[type].g_iHumanMode, value, -1, 2);
 			g_esCloudAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esCloudAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esCloudAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esCloudAbility[type].g_iRequiresHumans, value, -1, 32);
 			g_esCloudAbility[type].g_iCloudAbility = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esCloudAbility[type].g_iCloudAbility, value, -1, 1);
@@ -635,6 +682,9 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esCloudAbility[type].g_iCloudCooldown = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "CloudCooldown", "Cloud Cooldown", "Cloud_Cooldown", "cooldown", g_esCloudAbility[type].g_iCloudCooldown, value, -1, 99999);
 			g_esCloudAbility[type].g_flCloudDamage = flGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "CloudDamage", "Cloud Damage", "Cloud_Damage", "damage", g_esCloudAbility[type].g_flCloudDamage, value, -1.0, 99999.0);
 			g_esCloudAbility[type].g_iCloudDuration = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "CloudDuration", "Cloud Duration", "Cloud_Duration", "duration", g_esCloudAbility[type].g_iCloudDuration, value, -1, 99999);
+			g_esCloudAbility[type].g_flCloudInterval = flGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "CloudInterval", "Cloud Interval", "Cloud_Interval", "interval", g_esCloudAbility[type].g_flCloudInterval, value, -1.0, 99999.0);
+			g_esCloudAbility[type].g_flCloudRange = flGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "CloudRange", "Cloud Range", "Cloud_Range", "range", g_esCloudAbility[type].g_flCloudRange, value, -1.0, 99999.0);
+			g_esCloudAbility[type].g_iCloudRemove = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "CloudRemove", "Cloud Remove", "Cloud_Remove", "remove", g_esCloudAbility[type].g_iCloudRemove, value, -1, 1);
 			g_esCloudAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 			g_esCloudAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 		}
@@ -651,16 +701,21 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCloudPlayer[tank].g_iTankTypeRecorded = apply ? MT_GetRecordedTankType(tank, type) : 0;
 	g_esCloudPlayer[tank].g_iTankType = apply ? type : 0;
 	int iType = g_esCloudPlayer[tank].g_iTankTypeRecorded;
-
+#if !defined MT_ABILITIES_MAIN
+	g_iGraphicsLevel = MT_GetGraphicsLevel();
+#endif
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		g_esCloudCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esCloudTeammate[tank].g_flCloseAreasOnly, g_esCloudPlayer[tank].g_flCloseAreasOnly, g_esCloudSpecial[iType].g_flCloseAreasOnly, g_esCloudAbility[iType].g_flCloseAreasOnly, 1);
 		g_esCloudCache[tank].g_flCloudChance = flGetSubSettingValue(apply, bHuman, g_esCloudTeammate[tank].g_flCloudChance, g_esCloudPlayer[tank].g_flCloudChance, g_esCloudSpecial[iType].g_flCloudChance, g_esCloudAbility[iType].g_flCloudChance, 1);
 		g_esCloudCache[tank].g_flCloudDamage = flGetSubSettingValue(apply, bHuman, g_esCloudTeammate[tank].g_flCloudDamage, g_esCloudPlayer[tank].g_flCloudDamage, g_esCloudSpecial[iType].g_flCloudDamage, g_esCloudAbility[iType].g_flCloudDamage, 1);
+		g_esCloudCache[tank].g_flCloudInterval = flGetSubSettingValue(apply, bHuman, g_esCloudTeammate[tank].g_flCloudInterval, g_esCloudPlayer[tank].g_flCloudInterval, g_esCloudSpecial[iType].g_flCloudInterval, g_esCloudAbility[iType].g_flCloudInterval, 1);
+		g_esCloudCache[tank].g_flCloudRange = flGetSubSettingValue(apply, bHuman, g_esCloudTeammate[tank].g_flCloudRange, g_esCloudPlayer[tank].g_flCloudRange, g_esCloudSpecial[iType].g_flCloudRange, g_esCloudAbility[iType].g_flCloudRange, 1);
 		g_esCloudCache[tank].g_iCloudAbility = iGetSubSettingValue(apply, bHuman, g_esCloudTeammate[tank].g_iCloudAbility, g_esCloudPlayer[tank].g_iCloudAbility, g_esCloudSpecial[iType].g_iCloudAbility, g_esCloudAbility[iType].g_iCloudAbility, 1);
 		g_esCloudCache[tank].g_iCloudCooldown = iGetSubSettingValue(apply, bHuman, g_esCloudTeammate[tank].g_iCloudCooldown, g_esCloudPlayer[tank].g_iCloudCooldown, g_esCloudSpecial[iType].g_iCloudCooldown, g_esCloudAbility[iType].g_iCloudCooldown, 1);
 		g_esCloudCache[tank].g_iCloudDuration = iGetSubSettingValue(apply, bHuman, g_esCloudTeammate[tank].g_iCloudDuration, g_esCloudPlayer[tank].g_iCloudDuration, g_esCloudSpecial[iType].g_iCloudDuration, g_esCloudAbility[iType].g_iCloudDuration, 1);
 		g_esCloudCache[tank].g_iCloudMessage = iGetSubSettingValue(apply, bHuman, g_esCloudTeammate[tank].g_iCloudMessage, g_esCloudPlayer[tank].g_iCloudMessage, g_esCloudSpecial[iType].g_iCloudMessage, g_esCloudAbility[iType].g_iCloudMessage, 1);
+		g_esCloudCache[tank].g_iCloudRemove = iGetSubSettingValue(apply, bHuman, g_esCloudTeammate[tank].g_iCloudRemove, g_esCloudPlayer[tank].g_iCloudRemove, g_esCloudSpecial[iType].g_iCloudRemove, g_esCloudAbility[iType].g_iCloudRemove, 1);
 		g_esCloudCache[tank].g_iCloudSight = iGetSubSettingValue(apply, bHuman, g_esCloudTeammate[tank].g_iCloudSight, g_esCloudPlayer[tank].g_iCloudSight, g_esCloudSpecial[iType].g_iCloudSight, g_esCloudAbility[iType].g_iCloudSight, 1);
 		g_esCloudCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esCloudTeammate[tank].g_iComboAbility, g_esCloudPlayer[tank].g_iComboAbility, g_esCloudSpecial[iType].g_iComboAbility, g_esCloudAbility[iType].g_iComboAbility, 1);
 		g_esCloudCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esCloudTeammate[tank].g_iHumanAbility, g_esCloudPlayer[tank].g_iHumanAbility, g_esCloudSpecial[iType].g_iHumanAbility, g_esCloudAbility[iType].g_iHumanAbility, 1);
@@ -676,10 +731,13 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esCloudCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esCloudPlayer[tank].g_flCloseAreasOnly, g_esCloudAbility[iType].g_flCloseAreasOnly, 1);
 		g_esCloudCache[tank].g_flCloudChance = flGetSettingValue(apply, bHuman, g_esCloudPlayer[tank].g_flCloudChance, g_esCloudAbility[iType].g_flCloudChance, 1);
 		g_esCloudCache[tank].g_flCloudDamage = flGetSettingValue(apply, bHuman, g_esCloudPlayer[tank].g_flCloudDamage, g_esCloudAbility[iType].g_flCloudDamage, 1);
+		g_esCloudCache[tank].g_flCloudInterval = flGetSettingValue(apply, bHuman, g_esCloudPlayer[tank].g_flCloudInterval, g_esCloudAbility[iType].g_flCloudInterval, 1);
+		g_esCloudCache[tank].g_flCloudRange = flGetSettingValue(apply, bHuman, g_esCloudPlayer[tank].g_flCloudRange, g_esCloudAbility[iType].g_flCloudRange, 1);
 		g_esCloudCache[tank].g_iCloudAbility = iGetSettingValue(apply, bHuman, g_esCloudPlayer[tank].g_iCloudAbility, g_esCloudAbility[iType].g_iCloudAbility, 1);
 		g_esCloudCache[tank].g_iCloudCooldown = iGetSettingValue(apply, bHuman, g_esCloudPlayer[tank].g_iCloudCooldown, g_esCloudAbility[iType].g_iCloudCooldown, 1);
 		g_esCloudCache[tank].g_iCloudDuration = iGetSettingValue(apply, bHuman, g_esCloudPlayer[tank].g_iCloudDuration, g_esCloudAbility[iType].g_iCloudDuration, 1);
 		g_esCloudCache[tank].g_iCloudMessage = iGetSettingValue(apply, bHuman, g_esCloudPlayer[tank].g_iCloudMessage, g_esCloudAbility[iType].g_iCloudMessage, 1);
+		g_esCloudCache[tank].g_iCloudRemove = iGetSettingValue(apply, bHuman, g_esCloudPlayer[tank].g_iCloudRemove, g_esCloudAbility[iType].g_iCloudRemove, 1);
 		g_esCloudCache[tank].g_iCloudSight = iGetSettingValue(apply, bHuman, g_esCloudPlayer[tank].g_iCloudSight, g_esCloudAbility[iType].g_iCloudSight, 1);
 		g_esCloudCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esCloudPlayer[tank].g_iComboAbility, g_esCloudAbility[iType].g_iComboAbility, 1);
 		g_esCloudCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esCloudPlayer[tank].g_iHumanAbility, g_esCloudAbility[iType].g_iHumanAbility, 1);
@@ -785,10 +843,10 @@ public void MT_OnButtonPressed(int tank, int button)
 
 		if ((button & MT_MAIN_KEY) && g_esCloudCache[tank].g_iCloudAbility == 1 && g_esCloudCache[tank].g_iHumanAbility == 1)
 		{
-			int iTime = GetTime();
+			int iHumanMode = g_esCloudCache[tank].g_iHumanMode, iTime = GetTime();
 			bool bRecharging = g_esCloudPlayer[tank].g_iCooldown != -1 && g_esCloudPlayer[tank].g_iCooldown >= iTime;
 
-			switch (g_esCloudCache[tank].g_iHumanMode)
+			switch (iHumanMode)
 			{
 				case 0:
 				{
@@ -805,9 +863,9 @@ public void MT_OnButtonPressed(int tank, int button)
 						MT_PrintToChat(tank, "%s %t", MT_TAG3, "CloudHuman4", (g_esCloudPlayer[tank].g_iCooldown - iTime));
 					}
 				}
-				case 1:
+				case 1, 2:
 				{
-					if (g_esCloudPlayer[tank].g_iAmmoCount < g_esCloudCache[tank].g_iHumanAmmo && g_esCloudCache[tank].g_iHumanAmmo > 0)
+					if ((iHumanMode == 2 && g_esCloudPlayer[tank].g_bActivated) || (g_esCloudPlayer[tank].g_iAmmoCount < g_esCloudCache[tank].g_iHumanAmmo && g_esCloudCache[tank].g_iHumanAmmo > 0))
 					{
 						if (!g_esCloudPlayer[tank].g_bActivated && !bRecharging)
 						{
@@ -819,7 +877,15 @@ public void MT_OnButtonPressed(int tank, int button)
 						}
 						else if (g_esCloudPlayer[tank].g_bActivated)
 						{
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "CloudHuman3");
+							switch (iHumanMode)
+							{
+								case 1: MT_PrintToChat(tank, "%s %t", MT_TAG3, "CloudHuman3");
+								case 2:
+								{
+									vCloudReset2(tank);
+									vCloudReset3(tank);
+								}
+							}
 						}
 						else if (bRecharging)
 						{
@@ -900,12 +966,16 @@ void vCloud2(int tank, int pos = -1)
 		return;
 	}
 
-	DataPack dpCloud;
-	CreateDataTimer(1.5, tTimerCloud, dpCloud, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-	dpCloud.WriteCell(GetClientUserId(tank));
-	dpCloud.WriteCell(g_esCloudPlayer[tank].g_iTankType);
-	dpCloud.WriteCell(GetTime());
-	dpCloud.WriteCell(pos);
+	float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 6, pos) : g_esCloudCache[tank].g_flCloudInterval;
+	if (flInterval > 0.0)
+	{
+		DataPack dpCloud;
+		CreateDataTimer(flInterval, tTimerCloud, dpCloud, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+		dpCloud.WriteCell(GetClientUserId(tank));
+		dpCloud.WriteCell(g_esCloudPlayer[tank].g_iTankType);
+		dpCloud.WriteCell(GetTime());
+		dpCloud.WriteCell(pos);
+	}
 }
 
 void vCloudAbility(int tank)
@@ -1011,11 +1081,16 @@ Action tTimerCloud(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	vAttachParticle(iTank, PARTICLE_SMOKE, 1.5);
+	if (g_iGraphicsLevel > 2 && g_esCloudCache[iTank].g_iCloudRemove == 0)
+	{
+		float flInterval = (iPos != -1) ? MT_GetCombinationSetting(iTank, 6, iPos) : g_esCloudCache[iTank].g_flCloudInterval;
+		vAttachParticle(iTank, PARTICLE_SMOKE, flInterval);
+	}
 
 	float flTankPos[3], flSurvivorPos[3];
 	GetClientAbsOrigin(iTank, flTankPos);
-	float flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 3, iPos) : g_esCloudCache[iTank].g_flCloudDamage;
+	float flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 3, iPos) : g_esCloudCache[iTank].g_flCloudDamage,
+		flRange = (iPos != -1) ? MT_GetCombinationSetting(iTank, 9, iPos) : g_esCloudCache[iTank].g_flCloudRange;
 	if (flDamage > 0.0)
 	{
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
@@ -1023,9 +1098,14 @@ Action tTimerCloud(Handle timer, DataPack pack)
 			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, iTank) && !bIsAdminImmune(iSurvivor, g_esCloudPlayer[iTank].g_iTankType, g_esCloudAbility[g_esCloudPlayer[iTank].g_iTankTypeRecorded].g_iImmunityFlags, g_esCloudPlayer[iSurvivor].g_iImmunityFlags))
 			{
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
-				if (GetVectorDistance(flTankPos, flSurvivorPos) <= 200.0 && bIsVisibleToPlayer(iTank, iSurvivor, g_esCloudCache[iTank].g_iCloudSight, .range = 200.0))
+				if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange && bIsVisibleToPlayer(iTank, iSurvivor, g_esCloudCache[iTank].g_iCloudSight, .range = flRange))
 				{
 					vDamagePlayer(iSurvivor, iTank, MT_GetScaledDamage(flDamage), "65536");
+
+					if (g_iGraphicsLevel > 2)
+					{
+						vAttachParticle(iSurvivor, PARTICLE_BLOOD, 0.1);
+					}
 				}
 			}
 		}
@@ -1034,16 +1114,18 @@ Action tTimerCloud(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-void tTimerCloudCombo(Handle timer, DataPack pack)
+Action tTimerCloudCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esCloudAbility[g_esCloudPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esCloudPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esCloudPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esCloudCache[iTank].g_iCloudAbility == 0 || g_esCloudPlayer[iTank].g_bActivated)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	int iPos = pack.ReadCell();
 	vCloud(iTank, iPos);
+
+	return Plugin_Continue;
 }

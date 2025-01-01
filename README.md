@@ -11,8 +11,8 @@
 <details>
 	<summary>Click to expand!</summary>
 
-Mutant Tanks: a L4D/L4D2 SourceMod Plugin
-Copyright (C) 2024  Alfred "Psyk0tik" Llagas
+Mutant Tanks: A L4D/L4D2 SourceMod Plugin
+Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
@@ -61,8 +61,8 @@ Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, 
 6. Store up to 500 Mutant Tank types.
 7. Administration system designed for access and immunity to Mutant Tanks.
 8. Custom target filters for targeting survivors, special infected, and Mutant Tanks.
-9. Over 1,500 optional settings to configure.
-10. Over 70 unique abilities to choose from.
+9. Over 3,000 optional settings to configure.
+10. Over 30 unique abilities to choose from.
 11. Choose which abilities to install.
 12. Add custom abilities and features through the use of forwards and natives.
 13. Create all kinds of combinations of abilities.
@@ -71,6 +71,10 @@ Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, 
 16. Detects idle or bugged Tanks.
 17. Toggle damage scaling based on difficulty.
 18. Fully customizable reward system.
+19. Fully customizable punishment system.
+20. Fully customizable passive system.
+21. Fully customizable spawn protection.
+22. And many more!
 </details>
 
 ## Commands
@@ -86,6 +90,18 @@ sm_mt_list - View a list of installed abilities.
 sm_mt_reload - Reload the config file.
 sm_tank - Spawn a Mutant Tank.
 sm_mt_tank - Spawn a Mutant Tank.
+sm_smoker - Spawn a Mutant Smoker.
+sm_mt_smoker - Spawn a Mutant Smoker.
+sm_boomer - Spawn a Mutant Boomer.
+sm_mt_boomer - Spawn a Mutant Boomer.
+sm_hunter - Spawn a Mutant Hunter.
+sm_mt_hunter - Spawn a Mutant Hunter.
+sm_spitter - Spawn a Mutant Spitter.
+sm_mt_spitter - Spawn a Mutant Spitter.
+sm_jockey - Spawn a Mutant Jockey.
+sm_mt_jockey - Spawn a Mutant Jockey.
+sm_charger - Spawn a Mutant Charger.
+sm_mt_charger - Spawn a Mutant Charger.
 sm_mt_version - Find out the current version of Mutant Tanks.
 
 // Accessible by the developer only.
@@ -93,19 +109,31 @@ sm_mt_dev - Used only by and for the developer.
 
 // Accessible by all players.
 sm_mutanttank - Choose a Mutant Tank. (This command only works if the "Spawn Mode" setting under the "Plugin Settings/Human Support" section is set to 0.)
+sm_mtank - Choose a Mutant Tank. (This command only works if the "Spawn Mode" setting under the "Plugin Settings/Human Support" section is set to 0.)
+sm_mutantsmoker - Choose a Mutant Smoker. (This command only works if the "Spawn Mode" setting under the "Plugin Settings/Human Support" section is set to 0.)
+sm_msmoker - Choose a Mutant Smoker. (This command only works if the "Spawn Mode" setting under the "Plugin Settings/Human Support" section is set to 0.)
+sm_mutantboomer - Choose a Mutant Boomer. (This command only works if the "Spawn Mode" setting under the "Plugin Settings/Human Support" section is set to 0.)
+sm_mboomer - Choose a Mutant Boomer. (This command only works if the "Spawn Mode" setting under the "Plugin Settings/Human Support" section is set to 0.)
+sm_mutanthunter - Choose a Mutant Hunter. (This command only works if the "Spawn Mode" setting under the "Plugin Settings/Human Support" section is set to 0.)
+sm_mhunter - Choose a Mutant Hunter. (This command only works if the "Spawn Mode" setting under the "Plugin Settings/Human Support" section is set to 0.)
+sm_mutantspitter - Choose a Mutant Spitter. (This command only works if the "Spawn Mode" setting under the "Plugin Settings/Human Support" section is set to 0.)
+sm_mspitter - Choose a Mutant Spitter. (This command only works if the "Spawn Mode" setting under the "Plugin Settings/Human Support" section is set to 0.)
+sm_mutantjockey - Choose a Mutant Jockey. (This command only works if the "Spawn Mode" setting under the "Plugin Settings/Human Support" section is set to 0.)
+sm_mjockey - Choose a Mutant Jockey. (This command only works if the "Spawn Mode" setting under the "Plugin Settings/Human Support" section is set to 0.)
+sm_mutantcharger - Choose a Mutant Charger. (This command only works if the "Spawn Mode" setting under the "Plugin Settings/Human Support" section is set to 0.)
+sm_mcharger - Choose a Mutant Charger. (This command only works if the "Spawn Mode" setting under the "Plugin Settings/Human Support" section is set to 0.)
 sm_mt_info - View information about Mutant Tanks.
 sm_mt_prefs - Set your Mutant Tanks preferences.
 
 // Packaged
-sm_mt_ability - View information about each ability (A-L).
-sm_mt_ability2 - View information about each ability (M-Z).
+sm_mt_ability - View information about each ability (A-J).
+sm_mt_ability2 - View information about each ability (L-Z).
 
 // Standalone
 sm_mt_absorb - View information about the Absorb ability.
 sm_mt_acid - View information about the Acid ability.
 sm_mt_aimless - View information about the Aimless ability.
 sm_mt_ammo - View information about the Ammo ability.
-sm_mt_blind - View information about the Blind ability.
 sm_mt_bomb - View information about the Bomb ability.
 sm_mt_bury - View information about the Bury ability.
 sm_mt_car - View information about the Car ability.
@@ -127,27 +155,21 @@ sm_mt_god - View information about the God ability.
 sm_mt_gravity - View information about the Gravity ability.
 sm_mt_gunner - View information about the Gunner ability.
 sm_mt_heal - View information about the Heal ability.
-sm_mt_hit - View information about the Hit ability.
 sm_mt_hurt - View information about the Hurt ability.
 sm_mt_hypno - View information about the Hypno ability.
 sm_mt_ice - View information about the Ice ability.
 sm_mt_idle - View information about the Idle ability.
 sm_mt_invert - View information about the Invert ability.
-sm_mt_item - View information about the Item ability.
 sm_mt_jump - View information about the Jump ability.
-sm_mt_kamikaze - View information about the Kamikaze ability.
 sm_mt_lag - View information about the Lag ability.
 sm_mt_laser - View information about the Laser ability.
-sm_mt_leech - View information about the Leech ability.
 sm_mt_lightning - View information about the Lightning ability.
 sm_mt_medic - View information about the Medic ability.
 sm_mt_meteor - View information about the Meteor ability.
 sm_mt_minion - View information about the Minion ability.
-sm_mt_necro - View information about the Necro ability.
 sm_mt_nullify - View information about the Nullify ability.
 sm_mt_omni - View information about the Omni ability.
 sm_mt_panic - View information about the Panic ability.
-sm_mt_pimp - View information about the Pimp ability.
 sm_mt_puke - View information about the Puke ability.
 sm_mt_pyro - View information about the Pyro ability.
 sm_mt_quiet - View information about the Quiet ability.
@@ -157,28 +179,19 @@ sm_mt_regen - View information about the Regen ability.
 sm_mt_respawn - View information about the Respawn ability.
 sm_mt_restart - View information about the Restart ability.
 sm_mt_rock - View information about the Rock ability.
-sm_mt_rocket - View information about the Rocket ability.
-sm_mt_shake - View information about the Shake ability.
 sm_mt_shield - View information about the Shield ability.
 sm_mt_shove - View information about the Shove ability.
 sm_mt_slow - View information about the Slow ability.
 sm_mt_smash - View information about the Smash ability.
-sm_mt_smite - View information about the Smite ability.
-sm_mt_spam - View information about the Spam ability.
-sm_mt_splash - View information about the Splash ability.
-sm_mt_splatter - View information about the Splatter ability.
 sm_mt_throw - View information about the Throw ability.
 sm_mt_track - View information about the Track ability.
 sm_mt_ultimate - View information about the Ultimate ability.
 sm_mt_undead - View information about the Undead ability.
-sm_mt_vampire - View information about the Vampire ability.
 sm_mt_vision - View information about the Vision ability.
 sm_mt_warp - View information about the Warp ability.
 sm_mt_whirl - View information about the Whirl ability.
 sm_mt_witch - View information about the Witch ability.
-sm_mt_xiphos - View information about the Xiphos ability.
 sm_mt_yell - View information about the Yell ability.
-sm_mt_zombie - View information about the Zombie ability.
 ```
 </details>
 
@@ -231,6 +244,17 @@ mt_enabledgamemodes ""
 // Minimum: "0.000000"
 // Maximum: "15.000000"
 mt_gamemodetypes "0"
+
+// Sets the graphics level of the plugin to help with server performance.
+// 0: OFF
+// 1: Low
+// 2: Medium
+// 3: High
+// -
+// Default: "3"
+// Minimum: "0.000000"
+// Maximum: "3.000000"
+mt_graphicslevel "3"
 
 // Enable Mutant Tanks on listen servers.
 // 0: OFF
@@ -1233,6 +1257,21 @@ forward void MT_OnRockThrow(int tank, int rock);
 forward void MT_OnSettingsCached(int tank, bool apply, int type);
 
 /**
+ * Called when a passive is given to or taken away from a survivor.
+ * Use this forward to give or take away passives.
+ *
+ * @param survivor		Client index of the survivor.
+ * @param type			1 = Health, 2 = Damage boost, 4 = Speed boost, 8 = Ammo, 16 = Item, 32 = God mode, 64 = Health and ammo refill, 128 = Respawn,
+ * 					255 = All eight passives, 256-2147483647 = Reserved for third-party plugins
+ * @param apply			True if the passive is given, false otherwise.
+ * @param weaponOnly		True if the passive is given to weapons only, false otherwise.
+ * @param weaponIndex		Type index of the weapon.
+ *
+ * @return			Plugin_Handled to prevent giving or taking passives, Plugin_Continue to allow.
+ **/
+forward Action MT_OnToggleSurvivorPassive(int survivor, int &type, bool apply, bool weaponOnly, int weaponIndex);
+
+/**
  * Called when a Mutant Tank type has been chosen.
  * Use this forward to check or change the chosen type.
  *
@@ -1280,6 +1319,18 @@ native void MT_DeafenPlayer(int player);
  * @error			Invalid entity index.
  **/
 native void MT_DetonateTankRock(int rock);
+
+/**
+ * Returns if a certain survivor has a passive type active.
+ *
+ * @param survivor		Client index of the survivor.
+ * @param type			1 = Health, 2 = Damage boost, 4 = Speed boost, 8 = Ammo, 16 = Item, 32 = God mode, 64 = Health and ammo refill,
+ * 					128 = Respawn, 255 = All eight passives, 256-2147483647 = Reserved for third-party plugins
+ *
+ * @return			True if the survivor has the passive type active, false otherwise.
+ * @error			Invalid client index, client is not in-game, or type is 0 or less.
+ **/
+native bool MT_DoesSurvivorHavePassiveType(int survivor, int type);
 
 /**
  * Returns if a certain survivor has a reward type active.
@@ -1367,6 +1418,13 @@ native int MT_GetGlowRange(int tank, bool mode);
  * @error			Invalid client index or client is not in-game.
  **/
 native int MT_GetGlowType(int tank);
+
+/**
+ * Returns the current graphics level.
+ *
+ * @return			The current graphics level.
+ **/
+native int MT_GetGraphicsLevel();
 
 /**
  * Returns the current immunity flags set by the core plugin.
@@ -1670,10 +1728,11 @@ native void MT_ShoveBySurvivor(int player, int survivor, float direction[3]);
  *
  * @param tank			Client index of the Tank.
  * @param type			Mutant Tank type.
+ * @param specType		Special Infected type.
  *
  * @error			Invalid client index, client is not in-game, or type is 0 or less.
  **/
-native void MT_SpawnTank(int tank, int type);
+native void MT_SpawnTank(int tank, int type, int specType = 0);
 
 /**
  * Staggers a player from a certain direction.
@@ -2581,7 +2640,7 @@ Whatever each button activates is entirely up to your configuration settings.
 
 4. How do I change the buttons or add extra buttons?
 
-Edit lines `104-107` of the `mutant_tanks.inc` file and recompile each ability plugin.
+Edit lines `107-110` of the `mutant_tanks.inc` file and recompile each ability plugin.
 </details>
 <details>
 	<summary>Question 5</summary>
@@ -2659,7 +2718,7 @@ That setting is a special mode setting for players, which can determine how some
 
 10. Is there any way players can view information about this feature in-game?
 
-Yes, use the `sm_mt_ability`/`sm_mt_ability2` commands.
+Yes, use the `sm_mt_ability` command.
 
 The commands will each provide a menu that players can use to display certain information in chat.
 
@@ -2753,7 +2812,7 @@ Set the values in `Execute Config Types`.
 
 **honorcode23** - For the [[L4D & L4D2] New Custom Commands](https://forums.alliedmods.net/showthread.php?t=133475) plugin.
 
-**panxiaohai** - For the [[L4D & L4D2] We Can Not Survive Alone](https://forums.alliedmods.net/showthread.php?t=167389), [[L4D & L4D2] Melee Weapon Tank](https://forums.alliedmods.net/showthread.php?t=166356), [[L4D & L4D2] Tank's Power](https://forums.alliedmods.net/showthread.php?t=134537), and [[L4D & L4D2] Automatic Robot](https://forums.alliedmods.net/showthread.php?t=130177) plugins.
+**panxiaohai** - For the [[L4D & L4D2] We Can Not Survive Alone](https://forums.alliedmods.net/showthread.php?t=167389), [[L4D & L4D2] Melee Weapon Tank](https://forums.alliedmods.net/showthread.php?t=166356), [[L4D & L4D2] Tank's Power](https://forums.alliedmods.net/showthread.php?t=134537), [[L4D & L4D2] Automatic Robot](https://forums.alliedmods.net/showthread.php?t=130177), and [[L4D2] Variable Size Of Infected and Witch](https://forums.alliedmods.net/showthread.php?t=165905) plugins.
 
 **strontiumdog** - For the [[ANY] Evil Admin: Mirror Damage](https://forums.alliedmods.net/showthread.php?t=79321), [[ANY] Evil Admin: Pimp Slap](https://forums.alliedmods.net/showthread.php?t=79322), [[ANY] Evil Admin: Rocket](https://forums.alliedmods.net/showthread.php?t=79617), and [Evil Admin: Vision](https://forums.alliedmods.net/showthread.php?t=79324) plugins.
 
@@ -2843,7 +2902,7 @@ Set the values in `Execute Config Types`.
 
 **Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer, AlexAlcala, ddd123, GL_INS, Slaven555, Neki93, kot4404, KadabraZz, Krufftys Killers, thewintersoldier97, Balloons, George Rex, swofleswof, bedildewo, Dudus1st** - For reporting issues.
 
-**Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType, HarryPotter, jeremyvillanueva, DonProof, XXrevoltadoXX, XYZC, JustMadMan, DARG367, zonbarbar, Unfellowed** - For suggesting ideas.
+**Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType, HarryPotter, jeremyvillanueva, DonProof, XXrevoltadoXX, XYZC, JustMadMan, DARG367, zonbarbar, Unfellowed, maclarens** - For suggesting ideas.
 
 **Marttt** - For helping with many things and the pull requests.
 

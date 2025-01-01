@@ -1,6 +1,6 @@
 /**
- * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2024  Alfred "Psyk0tik" Llagas
+ * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -70,6 +70,14 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define MT_MENU_THROW "Throw Ability"
 
+enum struct esThrowGeneral
+{
+	int g_iCar[2048];
+	int g_iCarOwner[2048];
+}
+
+esThrowGeneral g_esThrowGeneral;
+
 enum struct esThrowPlayer
 {
 	bool g_bActivated;
@@ -77,6 +85,7 @@ enum struct esThrowPlayer
 
 	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
+	float g_flThrowCarDamage;
 	float g_flThrowCarLifetime;
 	float g_flThrowChance;
 	float g_flThrowInfectedLifetime;
@@ -113,6 +122,7 @@ enum struct esThrowTeammate
 {
 	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
+	float g_flThrowCarDamage;
 	float g_flThrowCarLifetime;
 	float g_flThrowChance;
 	float g_flThrowInfectedLifetime;
@@ -142,6 +152,7 @@ enum struct esThrowAbility
 {
 	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
+	float g_flThrowCarDamage;
 	float g_flThrowCarLifetime;
 	float g_flThrowChance;
 	float g_flThrowInfectedLifetime;
@@ -174,6 +185,7 @@ enum struct esThrowSpecial
 {
 	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
+	float g_flThrowCarDamage;
 	float g_flThrowCarLifetime;
 	float g_flThrowChance;
 	float g_flThrowInfectedLifetime;
@@ -203,6 +215,7 @@ enum struct esThrowCache
 {
 	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
+	float g_flThrowCarDamage;
 	float g_flThrowCarLifetime;
 	float g_flThrowChance;
 	float g_flThrowInfectedLifetime;
@@ -433,10 +446,45 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
+void vThrowEntityDestroyed(int entity)
+#else
+public void OnEntityDestroyed(int entity)
+#endif
+{
+	if (bIsValidEntity(entity))
+	{
+		g_esThrowGeneral.g_iCar[entity] = INVALID_ENT_REFERENCE;
+		g_esThrowGeneral.g_iCarOwner[entity] = -1;
+	}
+}
+
 Action OnThrowTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (MT_IsCorePluginEnabled() && bIsSurvivor(victim) && !bIsSurvivorDisabled(victim) && damage > 0.0)
+	if (MT_IsCorePluginEnabled() && bIsSurvivor(victim) && damage > 0.0)
 	{
+		if (bIsValidEntity(inflictor))
+		{
+			int iCar = EntRefToEntIndex(g_esThrowGeneral.g_iCar[inflictor]);
+			if (iCar > MaxClients && iCar == inflictor)
+			{
+				int iTank = g_esThrowGeneral.g_iCarOwner[iCar];
+				if (MT_IsTankSupported(iTank) && MT_IsCustomTankSupported(iTank))
+				{
+					if ((!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esThrowAbility[g_esThrowPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esThrowPlayer[iTank].g_iAccessFlags)) || MT_IsAdminImmune(victim, iTank) || bIsAdminImmune(victim, g_esThrowPlayer[iTank].g_iTankType, g_esThrowAbility[g_esThrowPlayer[iTank].g_iTankTypeRecorded].g_iImmunityFlags, g_esThrowPlayer[victim].g_iImmunityFlags))
+					{
+						return Plugin_Handled;
+					}
+
+					int iPos = g_esThrowAbility[g_esThrowPlayer[iTank].g_iTankTypeRecorded].g_iComboPosition;
+					float flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 3, iPos) : g_esThrowCache[iTank].g_flThrowCarDamage;
+					damage = MT_GetScaledDamage(flDamage);
+
+					return (damage > 0.0) ? Plugin_Changed : Plugin_Handled;
+				}
+			}
+		}
+
 		if (bIsInfected(attacker) && g_esThrowPlayer[attacker].g_bThrown)
 		{
 			int iTank = g_esThrowPlayer[attacker].g_iOwner;
@@ -572,6 +620,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esThrowAbility[iIndex].g_iRequiresHumans = 0;
 				g_esThrowAbility[iIndex].g_iThrowAbility = 0;
 				g_esThrowAbility[iIndex].g_iThrowMessage = 0;
+				g_esThrowAbility[iIndex].g_flThrowCarDamage = 5.0;
 				g_esThrowAbility[iIndex].g_flThrowCarLifetime = 10.0;
 				g_esThrowAbility[iIndex].g_iThrowCarOptions = 0;
 				g_esThrowAbility[iIndex].g_iThrowCarOwner = 1;
@@ -595,6 +644,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esThrowSpecial[iIndex].g_iRequiresHumans = -1;
 				g_esThrowSpecial[iIndex].g_iThrowAbility = -1;
 				g_esThrowSpecial[iIndex].g_iThrowMessage = -1;
+				g_esThrowSpecial[iIndex].g_flThrowCarDamage = -1.0;
 				g_esThrowSpecial[iIndex].g_flThrowCarLifetime = -1.0;
 				g_esThrowSpecial[iIndex].g_iThrowCarOptions = -1;
 				g_esThrowSpecial[iIndex].g_iThrowCarOwner = -1;
@@ -625,6 +675,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esThrowPlayer[iPlayer].g_iRequiresHumans = -1;
 				g_esThrowPlayer[iPlayer].g_iThrowAbility = -1;
 				g_esThrowPlayer[iPlayer].g_iThrowMessage = -1;
+				g_esThrowPlayer[iPlayer].g_flThrowCarDamage = -1.0;
 				g_esThrowPlayer[iPlayer].g_flThrowCarLifetime = -1.0;
 				g_esThrowPlayer[iPlayer].g_iThrowCarOptions = -1;
 				g_esThrowPlayer[iPlayer].g_iThrowCarOwner = -1;
@@ -648,6 +699,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esThrowTeammate[iPlayer].g_iRequiresHumans = -1;
 				g_esThrowTeammate[iPlayer].g_iThrowAbility = -1;
 				g_esThrowTeammate[iPlayer].g_iThrowMessage = -1;
+				g_esThrowTeammate[iPlayer].g_flThrowCarDamage = -1.0;
 				g_esThrowTeammate[iPlayer].g_flThrowCarLifetime = -1.0;
 				g_esThrowTeammate[iPlayer].g_iThrowCarOptions = -1;
 				g_esThrowTeammate[iPlayer].g_iThrowCarOwner = -1;
@@ -685,6 +737,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esThrowTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esThrowTeammate[admin].g_iRequiresHumans, value, -1, 32);
 			g_esThrowTeammate[admin].g_iThrowAbility = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esThrowTeammate[admin].g_iThrowAbility, value, -1, 15);
 			g_esThrowTeammate[admin].g_iThrowMessage = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esThrowTeammate[admin].g_iThrowMessage, value, -1, 15);
+			g_esThrowTeammate[admin].g_flThrowCarDamage = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowCarDamage", "Throw Car Damage", "Throw_Car_Damage", "cardamage", g_esThrowTeammate[admin].g_flThrowCarDamage, value, -1.0, 99999.0);
 			g_esThrowTeammate[admin].g_flThrowCarLifetime = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowCarLifetime", "Throw Car Lifetime", "Throw_Car_Lifetime", "carlifetime", g_esThrowTeammate[admin].g_flThrowCarLifetime, value, -1.0, 99999.0);
 			g_esThrowTeammate[admin].g_iThrowCarOptions = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowCarOptions", "Throw Car Options", "Throw_Car_Options", "caroptions", g_esThrowTeammate[admin].g_iThrowCarOptions, value, -1, 7);
 			g_esThrowTeammate[admin].g_iThrowCarOwner = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowCarOwner", "Throw Car Owner", "Throw_Car_Owner", "carowner", g_esThrowTeammate[admin].g_iThrowCarOwner, value, -1, 1);
@@ -710,6 +763,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esThrowPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esThrowPlayer[admin].g_iRequiresHumans, value, -1, 32);
 			g_esThrowPlayer[admin].g_iThrowAbility = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esThrowPlayer[admin].g_iThrowAbility, value, -1, 15);
 			g_esThrowPlayer[admin].g_iThrowMessage = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esThrowPlayer[admin].g_iThrowMessage, value, -1, 15);
+			g_esThrowPlayer[admin].g_flThrowCarDamage = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowCarDamage", "Throw Car Damage", "Throw_Car_Damage", "cardamage", g_esThrowPlayer[admin].g_flThrowCarDamage, value, -1.0, 99999.0);
 			g_esThrowPlayer[admin].g_flThrowCarLifetime = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowCarLifetime", "Throw Car Lifetime", "Throw_Car_Lifetime", "carlifetime", g_esThrowPlayer[admin].g_flThrowCarLifetime, value, -1.0, 99999.0);
 			g_esThrowPlayer[admin].g_iThrowCarOptions = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowCarOptions", "Throw Car Options", "Throw_Car_Options", "caroptions", g_esThrowPlayer[admin].g_iThrowCarOptions, value, -1, 7);
 			g_esThrowPlayer[admin].g_iThrowCarOwner = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowCarOwner", "Throw Car Owner", "Throw_Car_Owner", "carowner", g_esThrowPlayer[admin].g_iThrowCarOwner, value, -1, 1);
@@ -741,6 +795,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esThrowSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esThrowSpecial[type].g_iRequiresHumans, value, -1, 32);
 			g_esThrowSpecial[type].g_iThrowAbility = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esThrowSpecial[type].g_iThrowAbility, value, -1, 15);
 			g_esThrowSpecial[type].g_iThrowMessage = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esThrowSpecial[type].g_iThrowMessage, value, -1, 15);
+			g_esThrowSpecial[type].g_flThrowCarDamage = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowCarDamage", "Throw Car Damage", "Throw_Car_Damage", "cardamage", g_esThrowSpecial[type].g_flThrowCarDamage, value, -1.0, 99999.0);
 			g_esThrowSpecial[type].g_flThrowCarLifetime = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowCarLifetime", "Throw Car Lifetime", "Throw_Car_Lifetime", "carlifetime", g_esThrowSpecial[type].g_flThrowCarLifetime, value, -1.0, 99999.0);
 			g_esThrowSpecial[type].g_iThrowCarOptions = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowCarOptions", "Throw Car Options", "Throw_Car_Options", "caroptions", g_esThrowSpecial[type].g_iThrowCarOptions, value, -1, 7);
 			g_esThrowSpecial[type].g_iThrowCarOwner = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowCarOwner", "Throw Car Owner", "Throw_Car_Owner", "carowner", g_esThrowSpecial[type].g_iThrowCarOwner, value, -1, 1);
@@ -766,6 +821,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esThrowAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esThrowAbility[type].g_iRequiresHumans, value, -1, 32);
 			g_esThrowAbility[type].g_iThrowAbility = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esThrowAbility[type].g_iThrowAbility, value, -1, 15);
 			g_esThrowAbility[type].g_iThrowMessage = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esThrowAbility[type].g_iThrowMessage, value, -1, 15);
+			g_esThrowAbility[type].g_flThrowCarDamage = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowCarDamage", "Throw Car Damage", "Throw_Car_Damage", "cardamage", g_esThrowAbility[type].g_flThrowCarDamage, value, -1.0, 99999.0);
 			g_esThrowAbility[type].g_flThrowCarLifetime = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowCarLifetime", "Throw Car Lifetime", "Throw_Car_Lifetime", "carlifetime", g_esThrowAbility[type].g_flThrowCarLifetime, value, -1.0, 99999.0);
 			g_esThrowAbility[type].g_iThrowCarOptions = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowCarOptions", "Throw Car Options", "Throw_Car_Options", "caroptions", g_esThrowAbility[type].g_iThrowCarOptions, value, -1, 7);
 			g_esThrowAbility[type].g_iThrowCarOwner = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowCarOwner", "Throw Car Owner", "Throw_Car_Owner", "carowner", g_esThrowAbility[type].g_iThrowCarOwner, value, -1, 1);
@@ -800,6 +856,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	{
 		g_esThrowCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_flCloseAreasOnly, g_esThrowPlayer[tank].g_flCloseAreasOnly, g_esThrowSpecial[iType].g_flCloseAreasOnly, g_esThrowAbility[iType].g_flCloseAreasOnly, 1);
 		g_esThrowCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_iComboAbility, g_esThrowPlayer[tank].g_iComboAbility, g_esThrowSpecial[iType].g_iComboAbility, g_esThrowAbility[iType].g_iComboAbility, 1);
+		g_esThrowCache[tank].g_flThrowCarDamage = flGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_flThrowCarDamage, g_esThrowPlayer[tank].g_flThrowCarDamage, g_esThrowSpecial[iType].g_flThrowCarDamage, g_esThrowAbility[iType].g_flThrowCarDamage, 1);
 		g_esThrowCache[tank].g_flThrowCarLifetime = flGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_flThrowCarLifetime, g_esThrowPlayer[tank].g_flThrowCarLifetime, g_esThrowSpecial[iType].g_flThrowCarLifetime, g_esThrowAbility[iType].g_flThrowCarLifetime, 1);
 		g_esThrowCache[tank].g_flThrowChance = flGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_flThrowChance, g_esThrowPlayer[tank].g_flThrowChance, g_esThrowSpecial[iType].g_flThrowChance, g_esThrowAbility[iType].g_flThrowChance, 1);
 		g_esThrowCache[tank].g_flThrowInfectedLifetime = flGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_flThrowInfectedLifetime, g_esThrowPlayer[tank].g_flThrowInfectedLifetime, g_esThrowSpecial[iType].g_flThrowInfectedLifetime, g_esThrowAbility[iType].g_flThrowInfectedLifetime, 1);
@@ -825,6 +882,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	{
 		g_esThrowCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_flCloseAreasOnly, g_esThrowAbility[iType].g_flCloseAreasOnly, 1);
 		g_esThrowCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_iComboAbility, g_esThrowAbility[iType].g_iComboAbility, 1);
+		g_esThrowCache[tank].g_flThrowCarDamage = flGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_flThrowCarDamage, g_esThrowAbility[iType].g_flThrowCarDamage, 1);
 		g_esThrowCache[tank].g_flThrowCarLifetime = flGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_flThrowCarLifetime, g_esThrowAbility[iType].g_flThrowCarLifetime, 1);
 		g_esThrowCache[tank].g_flThrowChance = flGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_flThrowChance, g_esThrowAbility[iType].g_flThrowChance, 1);
 		g_esThrowCache[tank].g_flThrowInfectedLifetime = flGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_flThrowInfectedLifetime, g_esThrowAbility[iType].g_flThrowInfectedLifetime, 1);
@@ -1124,26 +1182,30 @@ int iGetThrownWitchCount(int tank)
 	return iWitchCount;
 }
 
-void tTimerThrowKillInfected(Handle timer, int userid)
+Action tTimerThrowKillInfected(Handle timer, int userid)
 {
 	int iSpecial = GetClientOfUserId(userid);
 	if (!bIsInfected(iSpecial) || !g_esThrowPlayer[iSpecial].g_bThrown)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	ForcePlayerSuicide(iSpecial);
+
+	return Plugin_Continue;
 }
 
-void tTimerThrowKillWitch(Handle timer, int ref)
+Action tTimerThrowKillWitch(Handle timer, int ref)
 {
 	int iWitch = EntRefToEntIndex(ref);
 	if (iWitch == INVALID_ENT_REFERENCE || !bIsValidEntity(iWitch) || !bIsWitch(iWitch))
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	RemoveEntity(iWitch);
+
+	return Plugin_Continue;
 }
 
 Action tTimerThrow(Handle timer, DataPack pack)
@@ -1248,6 +1310,8 @@ Action tTimerThrow(Handle timer, DataPack pack)
 					TeleportEntity(iCar, .velocity = flVelocity);
 
 					SDKHook(iCar, SDKHook_StartTouch, OnThrowStartTouch);
+					g_esThrowGeneral.g_iCar[iCar] = EntIndexToEntRef(iCar);
+					g_esThrowGeneral.g_iCarOwner[iCar] = GetClientUserId(iTank);
 					iCar = EntIndexToEntRef(iCar);
 					vDeleteEntity(iCar, g_esThrowCache[iTank].g_flThrowCarLifetime);
 
@@ -1291,24 +1355,24 @@ Action tTimerThrow(Handle timer, DataPack pack)
 
 					switch (iOption)
 					{
-						case 1: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "smoker");
-						case 2: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "boomer");
-						case 4: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "hunter");
-						case 8: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), (g_bSecondGame ? "spitter" : "boomer"));
-						case 16: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), (g_bSecondGame ? "jockey" : "hunter"));
-						case 32: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), (g_bSecondGame ? "charger" : "smoker"));
-						case 64: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "tank");
+						case 1: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "tank");
+						case 2: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "smoker");
+						case 4: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "boomer");
+						case 8: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "hunter");
+						case 16: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), (g_bSecondGame ? "spitter" : "boomer"));
+						case 32: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), (g_bSecondGame ? "jockey" : "hunter"));
+						case 64: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), (g_bSecondGame ? "charger" : "smoker"));
 						default:
 						{
 							switch (MT_GetRandomInt(1, (sizeof iOptions)))
 							{
-								case 1: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "smoker");
-								case 2: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "boomer");
-								case 3: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "hunter");
-								case 4: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), (g_bSecondGame ? "spitter" : "boomer"));
-								case 5: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), (g_bSecondGame ? "jockey" : "hunter"));
-								case 6: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), (g_bSecondGame ? "charger" : "smoker"));
-								case 7: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "tank");
+								case 1: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "tank");
+								case 2: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "smoker");
+								case 3: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "boomer");
+								case 4: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "hunter");
+								case 5: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), (g_bSecondGame ? "spitter" : "boomer"));
+								case 6: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), (g_bSecondGame ? "jockey" : "hunter"));
+								case 7: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), (g_bSecondGame ? "charger" : "smoker"));
 							}
 						}
 					}

@@ -1,6 +1,6 @@
 /**
- * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2024  Alfred "Psyk0tik" Llagas
+ * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -1141,35 +1141,37 @@ void vAmmoReset()
 	}
 }
 
-void tTimerAmmoCombo(Handle timer, DataPack pack)
+Action tTimerAmmoCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAmmoAbility[g_esAmmoPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esAmmoPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esAmmoPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esAmmoCache[iTank].g_iAmmoAbility == 0)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vAmmoAbility(iTank, flRandom, iPos);
+
+	return Plugin_Continue;
 }
 
-void tTimerAmmoCombo2(Handle timer, DataPack pack)
+Action tTimerAmmoCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor))
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAmmoAbility[g_esAmmoPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esAmmoPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esAmmoPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esAmmoCache[iTank].g_iAmmoHit == 0)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
@@ -1184,4 +1186,6 @@ void tTimerAmmoCombo2(Handle timer, DataPack pack)
 	{
 		vAmmoHit(iSurvivor, iTank, flRandom, flChance, g_esAmmoCache[iTank].g_iAmmoHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
+
+	return Plugin_Continue;
 }

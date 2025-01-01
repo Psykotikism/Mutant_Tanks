@@ -1,6 +1,6 @@
 /**
- * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2024  Alfred "Psyk0tik" Llagas
+ * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -415,7 +415,15 @@ int iGhostMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 					MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons");
 					MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons2");
 				}
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esGhostCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
+				case 3:
+				{
+					switch (g_esGhostCache[param1].g_iHumanMode)
+					{
+						case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtonMode1");
+						case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtonMode2");
+						case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtonMode3");
+					}
+				}
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", ((g_esGhostCache[param1].g_iHumanAbility == 1) ? g_esGhostCache[param1].g_iHumanCooldown : g_esGhostCache[param1].g_iGhostCooldown));
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "GhostDetails");
 				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", ((g_esGhostCache[param1].g_iHumanAbility == 1) ? g_esGhostCache[param1].g_iHumanDuration : g_esGhostCache[param1].g_iGhostDuration));
@@ -879,7 +887,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esGhostTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esGhostTeammate[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esGhostTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esGhostTeammate[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esGhostTeammate[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esGhostTeammate[admin].g_iHumanDuration, value, -1, 99999);
-			g_esGhostTeammate[admin].g_iHumanMode = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGhostTeammate[admin].g_iHumanMode, value, -1, 1);
+			g_esGhostTeammate[admin].g_iHumanMode = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGhostTeammate[admin].g_iHumanMode, value, -1, 2);
 			g_esGhostTeammate[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esGhostTeammate[admin].g_iHumanRangeCooldown, value, -1, 99999);
 			g_esGhostTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esGhostTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esGhostTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGhostTeammate[admin].g_iRequiresHumans, value, -1, 32);
@@ -913,7 +921,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esGhostPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esGhostPlayer[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esGhostPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esGhostPlayer[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esGhostPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esGhostPlayer[admin].g_iHumanDuration, value, -1, 99999);
-			g_esGhostPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGhostPlayer[admin].g_iHumanMode, value, -1, 1);
+			g_esGhostPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGhostPlayer[admin].g_iHumanMode, value, -1, 2);
 			g_esGhostPlayer[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esGhostPlayer[admin].g_iHumanRangeCooldown, value, -1, 99999);
 			g_esGhostPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esGhostPlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esGhostPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGhostPlayer[admin].g_iRequiresHumans, value, -1, 32);
@@ -953,7 +961,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esGhostSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esGhostSpecial[type].g_iHumanAmmo, value, -1, 99999);
 			g_esGhostSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esGhostSpecial[type].g_iHumanCooldown, value, -1, 99999);
 			g_esGhostSpecial[type].g_iHumanDuration = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esGhostSpecial[type].g_iHumanDuration, value, -1, 99999);
-			g_esGhostSpecial[type].g_iHumanMode = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGhostSpecial[type].g_iHumanMode, value, -1, 1);
+			g_esGhostSpecial[type].g_iHumanMode = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGhostSpecial[type].g_iHumanMode, value, -1, 2);
 			g_esGhostSpecial[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esGhostSpecial[type].g_iHumanRangeCooldown, value, -1, 99999);
 			g_esGhostSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esGhostSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esGhostSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGhostSpecial[type].g_iRequiresHumans, value, -1, 32);
@@ -987,7 +995,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esGhostAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esGhostAbility[type].g_iHumanAmmo, value, -1, 99999);
 			g_esGhostAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esGhostAbility[type].g_iHumanCooldown, value, -1, 99999);
 			g_esGhostAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esGhostAbility[type].g_iHumanDuration, value, -1, 99999);
-			g_esGhostAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGhostAbility[type].g_iHumanMode, value, -1, 1);
+			g_esGhostAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGhostAbility[type].g_iHumanMode, value, -1, 2);
 			g_esGhostAbility[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esGhostAbility[type].g_iHumanRangeCooldown, value, -1, 99999);
 			g_esGhostAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esGhostAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esGhostAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGhostAbility[type].g_iRequiresHumans, value, -1, 32);
@@ -1205,8 +1213,9 @@ public void MT_OnButtonPressed(int tank, int button)
 		if ((button & MT_MAIN_KEY) && (g_esGhostCache[tank].g_iGhostAbility == 2 || g_esGhostCache[tank].g_iGhostAbility == 3) && g_esGhostCache[tank].g_iHumanAbility == 1)
 		{
 			bool bRecharging = g_esGhostPlayer[tank].g_iCooldown != -1 && g_esGhostPlayer[tank].g_iCooldown >= iTime;
+			int iHumanMode = g_esGhostCache[tank].g_iHumanMode;
 
-			switch (g_esGhostCache[tank].g_iHumanMode)
+			switch (iHumanMode)
 			{
 				case 0:
 				{
@@ -1223,9 +1232,9 @@ public void MT_OnButtonPressed(int tank, int button)
 						MT_PrintToChat(tank, "%s %t", MT_TAG3, "GhostHuman5", (g_esGhostPlayer[tank].g_iCooldown - iTime));
 					}
 				}
-				case 1:
+				case 1, 2:
 				{
-					if (g_esGhostPlayer[tank].g_iAmmoCount < g_esGhostCache[tank].g_iHumanAmmo && g_esGhostCache[tank].g_iHumanAmmo > 0)
+					if ((iHumanMode == 2 && g_esGhostPlayer[tank].g_bActivated) || (g_esGhostPlayer[tank].g_iAmmoCount < g_esGhostCache[tank].g_iHumanAmmo && g_esGhostCache[tank].g_iHumanAmmo > 0))
 					{
 						if (!g_esGhostPlayer[tank].g_bActivated && !bRecharging)
 						{
@@ -1238,7 +1247,11 @@ public void MT_OnButtonPressed(int tank, int button)
 						}
 						else if (g_esGhostPlayer[tank].g_bActivated)
 						{
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "GhostHuman4");
+							switch (iHumanMode)
+							{
+								case 1: MT_PrintToChat(tank, "%s %t", MT_TAG3, "GhostHuman4");
+								case 2: vGhostReset2(tank);
+							}
 						}
 						else if (bRecharging)
 						{
@@ -1675,49 +1688,53 @@ void vGhostResetRender(int tank)
 	SetEntityRenderColor(tank, iSkinColor[0], iSkinColor[1], iSkinColor[2], g_esGhostPlayer[tank].g_iGhostAlpha);
 }
 
-void tTimerGhostCombo(Handle timer, DataPack pack)
+Action tTimerGhostCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esGhostAbility[g_esGhostPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esGhostPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esGhostPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esGhostCache[iTank].g_iGhostAbility == 0 || g_esGhostCache[iTank].g_iGhostAbility == 2)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vGhostAbility(iTank, true, flRandom, iPos);
+
+	return Plugin_Continue;
 }
 
-void tTimerGhostCombo2(Handle timer, DataPack pack)
+Action tTimerGhostCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esGhostAbility[g_esGhostPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esGhostPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esGhostPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esGhostCache[iTank].g_iGhostAbility == 0 || g_esGhostCache[iTank].g_iGhostAbility == 1)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	int iPos = pack.ReadCell();
 	vGhostAbility(iTank, false, .pos = iPos);
+
+	return Plugin_Continue;
 }
 
-void tTimerGhostCombo3(Handle timer, DataPack pack)
+Action tTimerGhostCombo3(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor))
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esGhostAbility[g_esGhostPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esGhostPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esGhostPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esGhostCache[iTank].g_iGhostHit == 0)
 	{
-		return;
+		return Plugin_Stop;
 	}
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
@@ -1731,6 +1748,8 @@ void tTimerGhostCombo3(Handle timer, DataPack pack)
 	{
 		vGhostHit(iSurvivor, iTank, flRandom, flChance, g_esGhostCache[iTank].g_iGhostHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 	}
+
+	return Plugin_Continue;
 }
 
 Action tTimerGhost(Handle timer, DataPack pack)

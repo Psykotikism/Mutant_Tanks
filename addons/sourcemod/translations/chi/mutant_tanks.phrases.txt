@@ -224,6 +224,16 @@
 		"chi"			"突变坦克版本"
 	}
 
+	"MTWarnRusher"
+	{
+		"chi"			"追杀将至,别和你大部队分道扬镳！"
+	}
+
+	"MTWarnSlacker"
+	{
+		"chi"			"追杀将至,快跟上你的大部队！"
+	}
+
 	"Ammunition"
 	{
 		"chi"			"次数"
@@ -251,12 +261,17 @@
 
 	"AbilityButtonMode1"
 	{
-		"chi"			"按下按键触发你的能力。"
+		"chi"			"点击按钮来激活你的技能。"
 	}
 
 	"AbilityButtonMode2"
 	{
-		"chi"			"按住按键触发你的能力。"
+		"chi"			"长按按钮来激活你的技能。"
+	}
+
+	"AbilityButtonMode3"
+	{
+		"chi"			"点击按钮来切换你的技能。"
 	}
 
 	"Buttons"
@@ -1004,6 +1019,11 @@
 		"chi"			"坦克"
 	}
 
+	"NoNameBill"
+	{
+		"chi"			"比尔"
+	}
+
 	"NoNameBoomer"
 	{
 		"chi"			"胖子"
@@ -1014,6 +1034,26 @@
 		"chi"			"牛"
 	}
 
+	"NoNameCoach"
+	{
+		"chi"			"教练"
+	}
+
+	"NoNameCommon"
+	{
+		"chi"			"普通"
+	}
+
+	"NoNameEllis"
+	{
+		"chi"			"埃里斯"
+	}
+
+	"NoNameFrancis"
+	{
+		"chi"			"朗西斯"
+	}
+
 	"NoNameHunter"
 	{
 		"chi"			"猎人"
@@ -1022,6 +1062,21 @@
 	"NoNameJockey"
 	{
 		"chi"			"猴子"
+	}
+
+	"NoNameLouis"
+	{
+		"chi"			"路易斯"
+	}
+
+	"NoNameNick"
+	{
+		"chi"			"尼克"
+	}
+
+	"NoNameRochelle"
+	{
+		"chi"			"罗雪儿"
 	}
 
 	"NoNameSmoker"
@@ -1037,6 +1092,11 @@
 	"NoNameWitch"
 	{
 		"chi"			"女巫"
+	}
+
+	"NoNameZoey"
+	{
+		"chi"			"佐伊"
 	}
 
 	"NoNote"
@@ -1295,11 +1355,6 @@
 	}
 
 	"RewardLadyKiller"
-	{
-		"chi"			"{1}{default} 次{mint} 女巫杀手{default} 的使用权"
-	}
-
-	"RewardLadyKiller2"
 	{
 		"chi"			"你的{mint} 女巫杀手{default} 还剩下{yellow} {1}{default} 次可用。"
 	}
@@ -1849,59 +1904,9 @@
 		"chi"			"掠弹能力"
 	}
 
-	"Blind"
-	{
-		"chi"			"{olive}{1}{mint} 致盲了{olive} {2}{mint}！"
-	}
-
-	"Blind2"
-	{
-		"chi"			"{olive}{1}{mint} 可以看见东西了！"
-	}
-
-	"BlindAmmo"
-	{
-		"chi"			"你已经用光了所有 致盲 范围能力次数。"
-	}
-
 	"BlindDetails"
 	{
 		"chi"			"你可以致盲幸存者。"
-	}
-
-	"BlindHuman"
-	{
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 致盲 能力！"
-	}
-
-	"BlindHuman2"
-	{
-		"chi"			"你的 致盲 能力未能激活， 请重试。"
-	}
-
-	"BlindHuman3"
-	{
-		"chi"			"你的 致盲 能力还需要{yellow} {1} 秒{mint}进行充能。"
-	}
-
-	"BlindHuman4"
-	{
-		"chi"			"附近没有幸存者可以让你使用 致盲 能力。"
-	}
-
-	"BlindHuman5"
-	{
-		"chi"			"你的 致盲 能力已结束， 需要{yellow} {1} 秒{mint}进行充能。"
-	}
-
-	"BlindMenu"
-	{
-		"chi"			"致盲能力信息"
-	}
-
-	"BlindMenu2"
-	{
-		"chi"			"致盲能力"
 	}
 
 	"Bomb"
@@ -2244,6 +2249,11 @@
 		"chi"			"{olive}{1}{mint} 掉落了近战武器！"
 	}
 
+	"Drop3"
+	{
+		"chi"			"{olive}{1}{mint} 给予了幸存者{yellow} 物品{mint}！"
+	}
+
 	"DropDetails"
 	{
 		"chi"			"你死亡时掉落武器。"
@@ -2251,12 +2261,12 @@
 
 	"DropHuman"
 	{
-		"chi"			"你死亡后会掉落武器。"
+		"chi"			"死后你会给予幸存者物品！"
 	}
 
 	"DropHuman2"
 	{
-		"chi"			"你将在死亡后掉落武器。"
+		"chi"			"你将在死亡后给予幸存者物品。"
 	}
 
 	"DropMenu"
@@ -3139,16 +3149,6 @@
 		"chi"			"你只有特定部位能受到伤害。"
 	}
 
-	"HitMenu"
-	{
-		"chi"			"狙击能力信息"
-	}
-
-	"HitMenu2"
-	{
-		"chi"			"狙击能力"
-	}
-
 	"Hurt"
 	{
 		"chi"			"{olive}{1}{mint} 对{olive} {2}{mint} 造成的伤口在不断流血！"
@@ -3157,6 +3157,16 @@
 	"Hurt2"
 	{
 		"chi"			"{olive}{1}{mint} 的伤口愈合了！"
+	}
+
+	"Hurt3"
+	{
+		"chi"			"{olive}{1}{mint} 鞭挞了{olive} {2}{mint} 好几次！"
+	}
+
+	"Hurt4"
+	{
+		"chi"			"{olive}{1}{mint} 逃过了鞭挞！"
 	}
 
 	"HurtAmmo"
@@ -3419,34 +3429,9 @@
 		"chi"			"反向能力"
 	}
 
-	"Item"
-	{
-		"chi"			"{olive}{1}{mint} 给予了幸存者{yellow} 物品{mint}！"
-	}
-
 	"ItemDetails"
 	{
 		"chi"			"你死亡后会给予幸存者物品。"
-	}
-
-	"ItemHuman"
-	{
-		"chi"			"死后你会给予幸存者物品！"
-	}
-
-	"ItemHuman2"
-	{
-		"chi"			"你将在死亡后给予幸存者物品。"
-	}
-
-	"ItemMenu"
-	{
-		"chi"			"赠物能力信息"
-	}
-
-	"ItemMenu2"
-	{
-		"chi"			"赠物能力"
 	}
 
 	"Jump"
@@ -3534,39 +3519,9 @@
 		"chi"			"跳跃能力"
 	}
 
-	"Kamikaze"
-	{
-		"chi"			"{olive}{1}{mint} 与{olive} {2}{mint} 同归于尽了！"
-	}
-
 	"KamikazeDetails"
 	{
 		"chi"			"你会与幸存者同归于尽。"
-	}
-
-	"KamikazeHuman"
-	{
-		"chi"			"你激活了你的 神风 能力！"
-	}
-
-	"KamikazeHuman2"
-	{
-		"chi"			"你的 神风 能力未能激活， 请重试。"
-	}
-
-	"KamikazeHuman3"
-	{
-		"chi"			"附近没有幸存者可以让你使用 神风 能力。"
-	}
-
-	"KamikazeMenu"
-	{
-		"chi"			"神风能力信息"
-	}
-
-	"KamikazeMenu2"
-	{
-		"chi"			"神风能力"
 	}
 
 	"Lag"
@@ -3679,59 +3634,9 @@
 		"chi"			"激光能力"
 	}
 
-	"Leech"
-	{
-		"chi"			"{olive}{1}{mint} 正用{yellow} 水蛭{mint} 汲取{olive} {2}{mint} 的生命值！"
-	}
-
-	"Leech2"
-	{
-		"chi"			"{olive}{1}{mint} 的{yellow} 水蛭{mint} 不在汲取{olive} {2}{mint} 的生命值了！"
-	}
-
-	"LeechAmmo"
-	{
-		"chi"			"你已经用光了所有 水蛭 范围能力次数。"
-	}
-
 	"LeechDetails"
 	{
 		"chi"			"你可以从幸存者身上吸取生命值。"
-	}
-
-	"LeechHuman"
-	{
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 水蛭 能力！"
-	}
-
-	"LeechHuman2"
-	{
-		"chi"			"你的 水蛭 能力未能激活， 请重试。"
-	}
-
-	"LeechHuman3"
-	{
-		"chi"			"你的 水蛭 能力还需要{yellow} {1} 秒{mint}进行充能。"
-	}
-
-	"LeechHuman4"
-	{
-		"chi"			"附近没有幸存者可以让你使用 水蛭 能力。"
-	}
-
-	"LeechHuman5"
-	{
-		"chi"			"你的 水蛭 能力已结束， 需要{yellow} {1} 秒{mint}进行充能。"
-	}
-
-	"LeechMenu"
-	{
-		"chi"			"水蛭能力信息"
-	}
-
-	"LeechMenu2"
-	{
-		"chi"			"水蛭能力"
 	}
 
 	"Lightning"
@@ -3959,54 +3864,9 @@
 		"chi"			"仆从能力"
 	}
 
-	"Necro"
-	{
-		"chi"			"{olive}{1}{mint} 复活了附近的特殊感染者！"
-	}
-
-	"NecroAmmo"
-	{
-		"chi"			"你已经用光了所有 死灵 能力次数。"
-	}
-
 	"NecroDetails"
 	{
 		"chi"			"你可以复活附近死亡的特殊感染者。"
-	}
-
-	"NecroHuman"
-	{
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 死灵 能力！"
-	}
-
-	"NecroHuman2"
-	{
-		"chi"			"你的 死灵 能力未能激活， 请重试。"
-	}
-
-	"NecroHuman3"
-	{
-		"chi"			"你已经激活了你的 死灵 能力。"
-	}
-
-	"NecroHuman4"
-	{
-		"chi"			"你的 死灵 能力还需要{yellow} {1} 秒{mint}进行充能。"
-	}
-
-	"NecroHuman5"
-	{
-		"chi"			"你的 死灵 能力已结束， 需要{yellow} {1} 秒{mint}进行充能。"
-	}
-
-	"NecroMenu"
-	{
-		"chi"			"死灵能力信息"
-	}
-
-	"NecroMenu2"
-	{
-		"chi"			"死灵能力"
 	}
 
 	"Nullify"
@@ -4174,59 +4034,9 @@
 		"chi"			"唤潮能力"
 	}
 
-	"Pimp"
-	{
-		"chi"			"{olive}{1}{mint} 鞭挞了{olive} {2}{mint} 好几次！"
-	}
-
-	"Pimp2"
-	{
-		"chi"			"{olive}{1}{mint} 逃过了鞭挞！"
-	}
-
-	"PimpAmmo"
-	{
-		"chi"			"你已经用光了所有 鞭挞 范围能力次数。"
-	}
-
 	"PimpDetails"
 	{
 		"chi"			"你可以鞭挞幸存者。"
-	}
-
-	"PimpHuman"
-	{
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 鞭挞 能力！"
-	}
-
-	"PimpHuman2"
-	{
-		"chi"			"你的 鞭挞 能力未能激活， 请重试。"
-	}
-
-	"PimpHuman3"
-	{
-		"chi"			"你的 鞭挞 能力还需要{yellow} {1} 秒{mint}进行充能。"
-	}
-
-	"PimpHuman4"
-	{
-		"chi"			"附近没有幸存者可以让你使用 鞭挞 能力。"
-	}
-
-	"PimpHuman5"
-	{
-		"chi"			"你的 鞭挞 能力已结束， 需要{yellow} {1} 秒{mint}进行充能。"
-	}
-
-	"PimpMenu"
-	{
-		"chi"			"鞭挞能力信息"
-	}
-
-	"PimpMenu2"
-	{
-		"chi"			"鞭挞能力"
 	}
 
 	"Puke"
@@ -4539,6 +4349,16 @@
 		"chi"			"{olive}{1}{mint} 停止了恢复生命值！"
 	}
 
+	"Regen3"
+	{
+		"chi"			"{olive}{1}{mint} 从{olive} {2}{mint} 身上偷取了一些生命值！"
+	}
+
+	"Regen4"
+	{
+		"chi"			"{olive}{1}{mint} 从{olive} {2}{mint} 身上偷取了一些生命值！"
+	}
+
 	"RegenAmmo"
 	{
 		"chi"			"你已经用光了所有 自愈 能力次数。"
@@ -4586,10 +4406,20 @@
 
 	"Respawn"
 	{
+		"chi"			"{olive}{1}{mint} 复活了附近的特殊感染者！"
+	}
+
+	"Respawn2"
+	{
 		"chi"			"{olive}{1}{mint} 复活了！"
 	}
 
 	"RespawnAmmo"
+	{
+		"chi"			"你已经用光了所有 死灵 能力次数。"
+	}
+
+	"RespawnAmmo2"
 	{
 		"chi"			"你已经用光了所有 复活 能力次数。"
 	}
@@ -4601,15 +4431,40 @@
 
 	"RespawnHuman"
 	{
-		"chi"			"你死亡后会重生！"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 死灵 能力！"
 	}
 
 	"RespawnHuman2"
 	{
-		"chi"			"你将在死亡后重生。"
+		"chi"			"你的 死灵 能力未能激活， 请重试。"
 	}
 
 	"RespawnHuman3"
+	{
+		"chi"			"你已经激活了你的 死灵 能力。"
+	}
+
+	"RespawnHuman4"
+	{
+		"chi"			"你的 死灵 能力还需要{yellow} {1} 秒{mint}进行充能。"
+	}
+
+	"RespawnHuman5"
+	{
+		"chi"			"你的 死灵 能力已结束， 需要{yellow} {1} 秒{mint}进行充能。"
+	}
+
+	"RespawnHuman6"
+	{
+		"chi"			"你死亡后会重生！"
+	}
+
+	"RespawnHuman7"
+	{
+		"chi"			"你将在死亡后重生。"
+	}
+
+	"RespawnHuman8"
 	{
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 重生！"
 	}
@@ -4676,12 +4531,12 @@
 
 	"Rock"
 	{
-		"chi"			"{olive}{1}{mint} 开始召唤{yellow} 岩石雨{mint}！"
+		"chi"			"{olive}{1}{mint} 正在连投岩石！"
 	}
 
 	"Rock2"
 	{
-		"chi"			"{olive}{1}{mint} 的 岩石雨 结束了！"
+		"chi"			"{olive}{1}{mint} 停止了连投岩石！"
 	}
 
 	"RockAmmo"
@@ -4696,27 +4551,27 @@
 
 	"RockHuman"
 	{
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 岩石雨！"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 岩石连投 能力！"
 	}
 
 	"RockHuman2"
 	{
-		"chi"			"你的 岩石雨 未能激活， 请重试。"
+		"chi"			"你的 岩石连投 能力未能激活， 请重试。"
 	}
 
 	"RockHuman3"
 	{
-		"chi"			"你已经激活了你的 岩石雨。"
+		"chi"			"你已经激活了你的 岩石连投 能力。"
 	}
 
 	"RockHuman4"
 	{
-		"chi"			"你的 岩石雨 还需要{yellow} {1} 秒{mint}进行充能。"
+		"chi"			"你的 岩石连投 能力还需要{yellow} {1} 秒{mint}进行充能。"
 	}
 
 	"RockHuman5"
 	{
-		"chi"			"你的 岩石雨 能力已结束， 还需要{yellow} {1} 秒{mint}进行充能。"
+		"chi"			"你的 岩石连投 能力已结束， 需要{yellow} {1} 秒{mint}进行充能。"
 	}
 
 	"RockMenu"
@@ -4729,109 +4584,14 @@
 		"chi"			"岩石雨能力"
 	}
 
-	"Rocket"
-	{
-		"chi"			"{olive}{1}{mint} 把{olive} {2}{mint} 送上了太空！"
-	}
-
-	"RocketAmmo"
-	{
-		"chi"			"你已经用光了所有 火箭 范围能力次数。"
-	}
-
 	"RocketDetails"
 	{
 		"chi"			"你可以把幸存者送上太空。"
 	}
 
-	"RocketHuman"
-	{
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 火箭 能力！"
-	}
-
-	"RocketHuman2"
-	{
-		"chi"			"你的 火箭 能力未能激活， 请重试。"
-	}
-
-	"RocketHuman3"
-	{
-		"chi"			"你的 火箭 能力还需要{yellow} {1} 秒{mint}进行充能。"
-	}
-
-	"RocketHuman4"
-	{
-		"chi"			"附近没有幸存者可以让你使用 火箭 能力。"
-	}
-
-	"RocketHuman5"
-	{
-		"chi"			"你的 火箭 能力已结束， 需要{yellow} {1} 秒{mint}进行充能。"
-	}
-
-	"RocketMenu"
-	{
-		"chi"			"火箭能力信息"
-	}
-
-	"RocketMenu2"
-	{
-		"chi"			"火箭"
-	}
-
-	"Shake"
-	{
-		"chi"			"{olive}{1}{mint} 让{olive} {2}{mint} 的屏幕疯狂抖动！"
-	}
-
-	"Shake2"
-	{
-		"chi"			"{olive}{1}{mint} 的屏幕停止了抖动！"
-	}
-
-	"ShakeAmmo"
-	{
-		"chi"			"你已经用光了所有 震动 范围能力次数。"
-	}
-
 	"ShakeDetails"
 	{
 		"chi"			"你可以晃动幸存者屏幕。"
-	}
-
-	"ShakeHuman"
-	{
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 震动 能力！"
-	}
-
-	"ShakeHuman2"
-	{
-		"chi"			"你的 震动 能力未能激活， 请重试。"
-	}
-
-	"ShakeHuman3"
-	{
-		"chi"			"你的 震动 能力还需要{yellow} {1} 秒{mint}进行充能。"
-	}
-
-	"ShakeHuman4"
-	{
-		"chi"			"附近没有幸存者可以让你使用 震动 能力。"
-	}
-
-	"ShakeHuman5"
-	{
-		"chi"			"你的 震动 能力已结束， 需要{yellow} {1} 秒{mint}进行充能。"
-	}
-
-	"ShakeMenu"
-	{
-		"chi"			"震动能力信息"
-	}
-
-	"ShakeMenu2"
-	{
-		"chi"			"震动"
 	}
 
 	"Shield"
@@ -5009,6 +4769,21 @@
 		"chi"			"{olive}{1}{mint} 把{olive} {2}{mint} 砸死了！"
 	}
 
+	"Smash2"
+	{
+		"chi"			"{olive}{1}{mint} 与{olive} {2}{mint} 同归于尽了！"
+	}
+
+	"Smash3"
+	{
+		"chi"			"{olive}{1}{mint} 把{olive} {2}{mint} 送上了太空！"
+	}
+
+	"Smash4"
+	{
+		"chi"			"{olive}{1}{mint} 重击了{olive} {2}{mint}！"
+	}
+
 	"SmashAmmo"
 	{
 		"chi"			"你已经用光了所有 粉碎 范围能力次数。"
@@ -5054,69 +4829,9 @@
 		"chi"			"粉碎能力"
 	}
 
-	"Smite"
-	{
-		"chi"			"{olive}{1}{mint} 重击了{olive} {2}{mint}！"
-	}
-
-	"SmiteAmmo"
-	{
-		"chi"			"你已经用光了所有 重击 范围能力次数。"
-	}
-
 	"SmiteDetails"
 	{
 		"chi"			"你可以重击幸存者。"
-	}
-
-	"SmiteHuman"
-	{
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 重击 能力！"
-	}
-
-	"SmiteHuman2"
-	{
-		"chi"			"你的 重击 能力未能激活， 请重试。"
-	}
-
-	"SmiteHuman3"
-	{
-		"chi"			"你的 重击 能力还需要{yellow} {1} 秒{mint}进行充能。"
-	}
-
-	"SmiteHuman4"
-	{
-		"chi"			"附近没有幸存者可以让你使用 重击 能力。"
-	}
-
-	"SmiteHuman5"
-	{
-		"chi"			"你的 重击 能力已结束， 需要{yellow} {1} 秒{mint}进行充能。"
-	}
-
-	"SmiteMenu"
-	{
-		"chi"			"重击能力信息"
-	}
-
-	"SmiteMenu2"
-	{
-		"chi"			"重击能力"
-	}
-
-	"Spam"
-	{
-		"chi"			"{olive}{1}{mint} 正在连投岩石！"
-	}
-
-	"Spam2"
-	{
-		"chi"			"{olive}{1}{mint} 停止了连投岩石！"
-	}
-
-	"SpamAmmo"
-	{
-		"chi"			"你已经用光了所有 连投 能力次数。"
 	}
 
 	"SpamDetails"
@@ -5124,149 +4839,9 @@
 		"chi"			"你可以对幸存者投掷一堆岩石。"
 	}
 
-	"SpamHuman"
-	{
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 岩石连投 能力！"
-	}
-
-	"SpamHuman2"
-	{
-		"chi"			"你的 岩石连投 能力未能激活， 请重试。"
-	}
-
-	"SpamHuman3"
-	{
-		"chi"			"你已经激活了你的 岩石连投 能力。"
-	}
-
-	"SpamHuman4"
-	{
-		"chi"			"你的 岩石连投 能力还需要{yellow} {1} 秒{mint}进行充能。"
-	}
-
-	"SpamHuman5"
-	{
-		"chi"			"你的 岩石连投 能力已结束， 需要{yellow} {1} 秒{mint}进行充能。"
-	}
-
-	"SpamMenu"
-	{
-		"chi"			"连投能力信息"
-	}
-
-	"SpamMenu2"
-	{
-		"chi"			"连投能力"
-	}
-
-	"Splash"
-	{
-		"chi"			"{olive}{1}{mint} 正在对幸存者溅射伤害！"
-	}
-
-	"Splash2"
-	{
-		"chi"			"{olive}{1}{mint} 停止了对幸存者溅射伤害！"
-	}
-
-	"SplashAmmo"
-	{
-		"chi"			"你已经用光了所有 溅射 能力次数。"
-	}
-
-	"SplashDetails"
-	{
-		"chi"			"你可以对附近的幸存者造成溅射伤害。"
-	}
-
-	"SplashHuman"
-	{
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 溅射 能力！"
-	}
-
-	"SplashHuman2"
-	{
-		"chi"			"你的 溅射 能力未能激活， 请重试。"
-	}
-
-	"SplashHuman3"
-	{
-		"chi"			"你已经激活了你的 溅射 能力。"
-	}
-
-	"SplashHuman4"
-	{
-		"chi"			"你的 溅射 能力还需要{yellow} {1} 秒{mint}进行充能。"
-	}
-
-	"SplashHuman5"
-	{
-		"chi"			"你的 溅射 能力已结束， 需要{yellow} {1} 秒{mint}进行充能。"
-	}
-
-	"SplashMenu"
-	{
-		"chi"			"溅射能力信息"
-	}
-
-	"SplashMenu2"
-	{
-		"chi"			"溅射能力"
-	}
-
-	"Splatter"
-	{
-		"chi"			"{olive}{1}{mint} 的喷溅物正在遮挡{olive} {2}{mint} 的屏幕！"
-	}
-
-	"Splatter2"
-	{
-		"chi"			"{olive}{1}{mint} 不再被喷溅物遮挡{mint}！"
-	}
-
-	"SplatterAmmo"
-	{
-		"chi"			"你已经用完了所有飞溅能力的弹药。"
-	}
-
 	"SplatterDetails"
 	{
 		"chi"			"你可以用喷溅物遮挡幸存者屏幕。"
-	}
-
-	"SplatterHuman"
-	{
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 的飞溅能力！"
-	}
-
-	"SplatterHuman2"
-	{
-		"chi"			"你的飞溅技能无法激活， 请重试。"
-	}
-
-	"SplatterHuman3"
-	{
-		"chi"			"你的喷溅能力还需要{yellow} {1} 秒{mint} 进行充能。"
-	}
-
-	"SplatterHuman4"
-	{
-		"chi"			"附近没有幸存者可以给你使用喷溅能力。"
-	}
-
-	"SplatterHuman5"
-	{
-		"chi"			"你的飞溅能力结束， 需要{yellow} {1} 秒{mint}补充能量。"
-	}
-
-	"SplatterMenu"
-	{
-		"chi"			"飞溅能力信息"
-	}
-
-	"SplatterMenu2"
-	{
-		"chi"			"飞溅能力"
 	}
 
 	"Throw"
@@ -5494,32 +5069,47 @@
 		"chi"			"不死能力"
 	}
 
-	"Vampire"
-	{
-		"chi"			"{olive}{1}{mint} 从{olive} {2}{mint} 偷走了一些生命值！"
-	}
-
 	"VampireDetails"
 	{
 		"chi"			"你可以通过伤害幸存者获得生命值。"
 	}
 
-	"VampireMenu"
-	{
-		"chi"			"吸血能力信息"
-	}
-
-	"VampireMenu2"
-	{
-		"chi"			"吸血能力"
-	}
-
 	"Vision"
+	{
+		"chi"			"{olive}{1}{mint} 致盲了{olive} {2}{mint}！"
+	}
+
+	"Vision2"
+	{
+		"chi"			"{olive}{1}{mint} 可以看见东西了！"
+	}
+
+	"Vision3"
+	{
+		"chi"			"{olive}{1}{mint} 让{olive} {2}{mint} 的屏幕疯狂抖动！"
+	}
+
+	"Vision4"
+	{
+		"chi"			"{olive}{1}{mint} 的屏幕停止了抖动！"
+	}
+
+	"Vision5"
+	{
+		"chi"			"{olive}{1}{mint} 的喷溅物正在遮挡{olive} {2}{mint} 的屏幕！"
+	}
+
+	"Vision6"
+	{
+		"chi"			"{olive}{1}{mint} 不再被喷溅物遮挡{mint}！"
+	}
+
+	"Vision7"
 	{
 		"chi"			"{olive}{1}{mint} 让{olive} {2}{mint} 的视觉系数变成了{yellow} {3}{mint}！"
 	}
 
-	"Vision2"
+	"Vision8"
 	{
 		"chi"			"{olive}{1}{mint} 让{yellow} {2}{mint} 的视觉系数变回去了！"
 	}
@@ -5759,29 +5349,9 @@
 		"chi"			"女巫能力"
 	}
 
-	"Xiphos"
-	{
-		"chi"			"{olive}{1}{mint} 从{olive} {2}{mint} 身上偷取了一些生命值！"
-	}
-
-	"Xiphos2"
-	{
-		"chi"			"{olive}{1}{mint} 从{olive} {2}{mint} 身上偷取了一些生命值！"
-	}
-
 	"XiphosDetails"
 	{
 		"chi"			"你可以从幸存者身上窃取生命值， 反之亦然。"
-	}
-
-	"XiphosMenu"
-	{
-		"chi"			"双刃剑能力信息"
-	}
-
-	"XiphosMenu2"
-	{
-		"chi"			"双刃剑能力"
 	}
 
 	"Yell"
@@ -5839,58 +5409,8 @@
 		"chi"			"战吼能力"
 	}
 
-	"Zombie"
-	{
-		"chi"			"{olive}{1}{mint} 将定期召唤僵尸！"
-	}
-
-	"Zombie2"
-	{
-		"chi"			"{olive}{1}{mint} 召唤了{yellow} 僵尸{mint}！"
-	}
-
-	"ZombieAmmo"
-	{
-		"chi"			"你已经用光了所有 僵尸 召唤能力次数。"
-	}
-
 	"ZombieDetails"
 	{
 		"chi"			"你可以召唤僵尸。"
-	}
-
-	"ZombieHuman"
-	{
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 召唤僵尸 能力！"
-	}
-
-	"ZombieHuman2"
-	{
-		"chi"			"你的 召唤僵尸 能力未能激活， 请重试。"
-	}
-
-	"ZombieHuman3"
-	{
-		"chi"			"你已经激活了你的 召唤僵尸 能力。"
-	}
-
-	"ZombieHuman4"
-	{
-		"chi"			"你的 召唤僵尸 能力还需要{yellow} {1} 秒{mint}进行充能。"
-	}
-
-	"ZombieHuman5"
-	{
-		"chi"			"你的 召唤僵尸 能力已结束， 需要{yellow} {1} 秒{mint}进行充能。"
-	}
-
-	"ZombieMenu"
-	{
-		"chi"			"僵尸能力信息"
-	}
-
-	"ZombieMenu2"
-	{
-		"chi"			"僵尸能力"
 	}
 }
