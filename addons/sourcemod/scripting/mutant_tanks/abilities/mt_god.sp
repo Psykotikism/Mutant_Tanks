@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2017-2026  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -182,9 +182,9 @@ public void OnPluginStart()
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 	LoadTranslations("mutant_tanks_names.phrases");
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	RegConsoleCmd("sm_mt_god", cmdGodInfo, "View information about the God ability.");
-
+#endif
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -215,7 +215,9 @@ void vGodClientPutInServer(int client)
 public void OnClientPutInServer(int client)
 #endif
 {
+#if (MT_INCLUDE_DAMAGEHOOKS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	SDKHook(client, SDKHook_OnTakeDamage, OnGodTakeDamage);
+#endif
 	vRemoveGod(client);
 }
 
@@ -236,7 +238,7 @@ public void OnMapEnd()
 {
 	vGodReset();
 }
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if !defined MT_ABILITIES_MAIN
 Action cmdGodInfo(int client, int args)
 {
@@ -265,7 +267,8 @@ Action cmdGodInfo(int client, int args)
 	return Plugin_Handled;
 }
 #endif
-
+#endif
+#if (MT_INCLUDE_MENUS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 void vGodMenu(int client, const char[] name, int item)
 {
 	if (StrContains(MT_GOD_SECTION4, name, false) == -1)
@@ -383,7 +386,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 		FormatEx(buffer, size, "%T", "GodMenu2", client);
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN
 void vGodPlayerRunCmd(int client)
 #else
@@ -413,7 +416,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	return Plugin_Continue;
 #endif
 }
-
+#if (MT_INCLUDE_DAMAGEHOOKS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action OnGodTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
@@ -433,7 +436,7 @@ Action OnGodTakeDamage(int victim, int &attacker, int &inflictor, float &damage,
 				ExtinguishEntity(victim);
 			}
 
-			if ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB))
+			if (damagetype & DMG_SLOWBURN)
 			{
 				float flTankPos[3];
 				GetClientAbsOrigin(victim, flTankPos);
@@ -451,7 +454,7 @@ Action OnGodTakeDamage(int victim, int &attacker, int &inflictor, float &damage,
 
 	return Plugin_Continue;
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN
 void vGodPluginCheck(ArrayList list)
 #else
@@ -472,7 +475,7 @@ public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, 
 	list3.PushString(MT_GOD_SECTION3);
 	list4.PushString(MT_GOD_SECTION4);
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN
 void vGodCombineAbilities(int tank, int type, const float random, const char[] combo)
 #else
@@ -532,7 +535,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN
 void vGodConfigsLoad(int mode)
 #else
@@ -627,15 +630,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esGodTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esGodTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esGodTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esGodTeammate[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esGodTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esGodTeammate[admin].g_iHumanAbility, value, -1, 2);
 			g_esGodTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esGodTeammate[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esGodTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esGodTeammate[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esGodTeammate[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esGodTeammate[admin].g_iHumanDuration, value, -1, 99999);
 			g_esGodTeammate[admin].g_iHumanMode = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGodTeammate[admin].g_iHumanMode, value, -1, 2);
+#endif
 			g_esGodTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esGodTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esGodTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGodTeammate[admin].g_iRequiresHumans, value, -1, 32);
 			g_esGodTeammate[admin].g_iGodAbility = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esGodTeammate[admin].g_iGodAbility, value, -1, 1);
@@ -645,14 +653,21 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esGodTeammate[admin].g_iGodDuration = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "GodDuration", "God Duration", "God_Duration", "duration", g_esGodTeammate[admin].g_iGodDuration, value, -1, 99999);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esGodPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esGodPlayer[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esGodPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esGodPlayer[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esGodPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esGodPlayer[admin].g_iHumanAbility, value, -1, 2);
 			g_esGodPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esGodPlayer[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esGodPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esGodPlayer[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esGodPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esGodPlayer[admin].g_iHumanDuration, value, -1, 99999);
 			g_esGodPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGodPlayer[admin].g_iHumanMode, value, -1, 2);
+#endif
 			g_esGodPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esGodPlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esGodPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGodPlayer[admin].g_iRequiresHumans, value, -1, 32);
 			g_esGodPlayer[admin].g_iGodAbility = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esGodPlayer[admin].g_iGodAbility, value, -1, 1);
@@ -667,15 +682,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esGodSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esGodSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esGodSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esGodSpecial[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esGodSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esGodSpecial[type].g_iHumanAbility, value, -1, 2);
 			g_esGodSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esGodSpecial[type].g_iHumanAmmo, value, -1, 99999);
 			g_esGodSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esGodSpecial[type].g_iHumanCooldown, value, -1, 99999);
 			g_esGodSpecial[type].g_iHumanDuration = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esGodSpecial[type].g_iHumanDuration, value, -1, 99999);
 			g_esGodSpecial[type].g_iHumanMode = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGodSpecial[type].g_iHumanMode, value, -1, 2);
+#endif
 			g_esGodSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esGodSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esGodSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGodSpecial[type].g_iRequiresHumans, value, -1, 32);
 			g_esGodSpecial[type].g_iGodAbility = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esGodSpecial[type].g_iGodAbility, value, -1, 1);
@@ -685,14 +705,21 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esGodSpecial[type].g_iGodDuration = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "GodDuration", "God Duration", "God_Duration", "duration", g_esGodSpecial[type].g_iGodDuration, value, -1, 99999);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esGodAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esGodAbility[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esGodAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esGodAbility[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esGodAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esGodAbility[type].g_iHumanAbility, value, -1, 2);
 			g_esGodAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esGodAbility[type].g_iHumanAmmo, value, -1, 99999);
 			g_esGodAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esGodAbility[type].g_iHumanCooldown, value, -1, 99999);
 			g_esGodAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esGodAbility[type].g_iHumanDuration, value, -1, 99999);
 			g_esGodAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGodAbility[type].g_iHumanMode, value, -1, 2);
+#endif
 			g_esGodAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esGodAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esGodAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGodAbility[type].g_iRequiresHumans, value, -1, 32);
 			g_esGodAbility[type].g_iGodAbility = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esGodAbility[type].g_iGodAbility, value, -1, 1);
@@ -717,37 +744,49 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esGodPlayer[tank].g_iTankType = apply ? type : 0;
 	int iType = g_esGodPlayer[tank].g_iTankTypeRecorded;
 
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		g_esGodCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_flCloseAreasOnly, g_esGodPlayer[tank].g_flCloseAreasOnly, g_esGodSpecial[iType].g_flCloseAreasOnly, g_esGodAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esGodCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_iComboAbility, g_esGodPlayer[tank].g_iComboAbility, g_esGodSpecial[iType].g_iComboAbility, g_esGodAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esGodCache[tank].g_flGodChance = flGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_flGodChance, g_esGodPlayer[tank].g_flGodChance, g_esGodSpecial[iType].g_flGodChance, g_esGodAbility[iType].g_flGodChance, 1);
 		g_esGodCache[tank].g_iGodAbility = iGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_iGodAbility, g_esGodPlayer[tank].g_iGodAbility, g_esGodSpecial[iType].g_iGodAbility, g_esGodAbility[iType].g_iGodAbility, 1);
 		g_esGodCache[tank].g_iGodCooldown = iGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_iGodCooldown, g_esGodPlayer[tank].g_iGodCooldown, g_esGodSpecial[iType].g_iGodCooldown, g_esGodAbility[iType].g_iGodCooldown, 1);
 		g_esGodCache[tank].g_iGodDuration = iGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_iGodDuration, g_esGodPlayer[tank].g_iGodDuration, g_esGodSpecial[iType].g_iGodDuration, g_esGodAbility[iType].g_iGodDuration, 1);
 		g_esGodCache[tank].g_iGodMessage = iGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_iGodMessage, g_esGodPlayer[tank].g_iGodMessage, g_esGodSpecial[iType].g_iGodMessage, g_esGodAbility[iType].g_iGodMessage, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esGodCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_iHumanAbility, g_esGodPlayer[tank].g_iHumanAbility, g_esGodSpecial[iType].g_iHumanAbility, g_esGodAbility[iType].g_iHumanAbility, 1);
 		g_esGodCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_iHumanAmmo, g_esGodPlayer[tank].g_iHumanAmmo, g_esGodSpecial[iType].g_iHumanAmmo, g_esGodAbility[iType].g_iHumanAmmo, 1);
 		g_esGodCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_iHumanCooldown, g_esGodPlayer[tank].g_iHumanCooldown, g_esGodSpecial[iType].g_iHumanCooldown, g_esGodAbility[iType].g_iHumanCooldown, 1);
 		g_esGodCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_iHumanDuration, g_esGodPlayer[tank].g_iHumanDuration, g_esGodSpecial[iType].g_iHumanDuration, g_esGodAbility[iType].g_iHumanDuration, 1);
 		g_esGodCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_iHumanMode, g_esGodPlayer[tank].g_iHumanMode, g_esGodSpecial[iType].g_iHumanMode, g_esGodAbility[iType].g_iHumanMode, 1);
+#endif
 		g_esGodCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_flOpenAreasOnly, g_esGodPlayer[tank].g_flOpenAreasOnly, g_esGodSpecial[iType].g_flOpenAreasOnly, g_esGodAbility[iType].g_flOpenAreasOnly, 1);
 		g_esGodCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esGodTeammate[tank].g_iRequiresHumans, g_esGodPlayer[tank].g_iRequiresHumans, g_esGodSpecial[iType].g_iRequiresHumans, g_esGodAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
+#else
+	if (!bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+#endif
 	{
 		g_esGodCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_flCloseAreasOnly, g_esGodAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esGodCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iComboAbility, g_esGodAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esGodCache[tank].g_flGodChance = flGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_flGodChance, g_esGodAbility[iType].g_flGodChance, 1);
 		g_esGodCache[tank].g_iGodAbility = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iGodAbility, g_esGodAbility[iType].g_iGodAbility, 1);
 		g_esGodCache[tank].g_iGodCooldown = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iGodCooldown, g_esGodAbility[iType].g_iGodCooldown, 1);
 		g_esGodCache[tank].g_iGodDuration = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iGodDuration, g_esGodAbility[iType].g_iGodDuration, 1);
 		g_esGodCache[tank].g_iGodMessage = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iGodMessage, g_esGodAbility[iType].g_iGodMessage, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esGodCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iHumanAbility, g_esGodAbility[iType].g_iHumanAbility, 1);
 		g_esGodCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iHumanAmmo, g_esGodAbility[iType].g_iHumanAmmo, 1);
 		g_esGodCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iHumanCooldown, g_esGodAbility[iType].g_iHumanCooldown, 1);
 		g_esGodCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iHumanDuration, g_esGodAbility[iType].g_iHumanDuration, 1);
 		g_esGodCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iHumanMode, g_esGodAbility[iType].g_iHumanMode, 1);
+#endif
 		g_esGodCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_flOpenAreasOnly, g_esGodAbility[iType].g_flOpenAreasOnly, 1);
 		g_esGodCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iRequiresHumans, g_esGodAbility[iType].g_iRequiresHumans, 1);
 	}
@@ -813,7 +852,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		}
 	}
 }
-
+#if (MT_INCLUDE_DETOURS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN
 Action aGodPlayerHitByVomitJar(int player, int thrower)
 #else
@@ -841,7 +880,7 @@ public Action MT_OnPlayerShovedBySurvivor(int player, int survivor, const float 
 
 	return Plugin_Continue;
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN
 void vGodAbilityActivated(int tank)
 #else
@@ -858,7 +897,7 @@ public void MT_OnAbilityActivated(int tank)
 		vGodAbility(tank);
 	}
 }
-
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN
 void vGodButtonPressed(int tank, int button)
 #else
@@ -947,7 +986,7 @@ public void MT_OnButtonReleased(int tank, int button)
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN
 void vGodChangeType(int tank, int oldType)
 #else
@@ -1066,7 +1105,7 @@ void vGodReset3(int tank)
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "GodHuman5", (g_esGodPlayer[tank].g_iCooldown - iTime));
 	}
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action tTimerGodCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -1082,3 +1121,4 @@ Action tTimerGodCombo(Handle timer, DataPack pack)
 
 	return Plugin_Continue;
 }
+#endif

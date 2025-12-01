@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2017-2026  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -297,9 +297,9 @@ public void OnPluginStart()
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 	LoadTranslations("mutant_tanks_names.phrases");
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	RegConsoleCmd("sm_mt_restart", cmdRestartInfo, "View information about the Restart ability.");
-
+#endif
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -332,7 +332,9 @@ void vRestartClientPutInServer(int client)
 public void OnClientPutInServer(int client)
 #endif
 {
+#if (MT_INCLUDE_DAMAGEHOOKS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	SDKHook(client, SDKHook_OnTakeDamage, OnRestartTakeDamage);
+#endif
 	vRemoveRestart(client);
 }
 
@@ -353,7 +355,7 @@ public void OnMapEnd()
 {
 	vRestartReset();
 }
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if !defined MT_ABILITIES_MAIN2
 Action cmdRestartInfo(int client, int args)
 {
@@ -382,7 +384,8 @@ Action cmdRestartInfo(int client, int args)
 	return Plugin_Handled;
 }
 #endif
-
+#endif
+#if (MT_INCLUDE_MENUS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 void vRestartMenu(int client, const char[] name, int item)
 {
 	if (StrContains(MT_RESTART_SECTION4, name, false) == -1)
@@ -489,7 +492,8 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 		FormatEx(buffer, size, "%T", "RestartMenu2", client);
 	}
 }
-
+#endif
+#if (MT_INCLUDE_DAMAGEHOOKS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action OnRestartTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
@@ -529,7 +533,7 @@ Action OnRestartTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 	return Plugin_Continue;
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vRestartPluginCheck(ArrayList list)
 #else
@@ -550,7 +554,7 @@ public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, 
 	list3.PushString(MT_RESTART_SECTION3);
 	list4.PushString(MT_RESTART_SECTION4);
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN2
 void vRestartCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, const char[] classname)
 #else
@@ -638,7 +642,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vRestartConfigsLoad(int mode)
 #else
@@ -760,14 +764,19 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esRestartTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esRestartTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esRestartTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRestartTeammate[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esRestartTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRestartTeammate[admin].g_iHumanAbility, value, -1, 2);
 			g_esRestartTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRestartTeammate[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esRestartTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRestartTeammate[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esRestartTeammate[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esRestartTeammate[admin].g_iHumanRangeCooldown, value, -1, 99999);
+#endif
 			g_esRestartTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRestartTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esRestartTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRestartTeammate[admin].g_iRequiresHumans, value, -1, 32);
 			g_esRestartTeammate[admin].g_iRestartAbility = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRestartTeammate[admin].g_iRestartAbility, value, -1, 1);
@@ -786,13 +795,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			vGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartLoadout", "Restart Loadout", "Restart_Loadout", "loadout", g_esRestartTeammate[admin].g_sRestartLoadout, sizeof esRestartTeammate::g_sRestartLoadout, value);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esRestartPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esRestartPlayer[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esRestartPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRestartPlayer[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esRestartPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRestartPlayer[admin].g_iHumanAbility, value, -1, 2);
 			g_esRestartPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRestartPlayer[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esRestartPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRestartPlayer[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esRestartPlayer[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esRestartPlayer[admin].g_iHumanRangeCooldown, value, -1, 99999);
+#endif
 			g_esRestartPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRestartPlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esRestartPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRestartPlayer[admin].g_iRequiresHumans, value, -1, 32);
 			g_esRestartPlayer[admin].g_iRestartAbility = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRestartPlayer[admin].g_iRestartAbility, value, -1, 1);
@@ -816,14 +832,19 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esRestartSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esRestartSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esRestartSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRestartSpecial[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esRestartSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRestartSpecial[type].g_iHumanAbility, value, -1, 2);
 			g_esRestartSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRestartSpecial[type].g_iHumanAmmo, value, -1, 99999);
 			g_esRestartSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRestartSpecial[type].g_iHumanCooldown, value, -1, 99999);
 			g_esRestartSpecial[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esRestartSpecial[type].g_iHumanRangeCooldown, value, -1, 99999);
+#endif
 			g_esRestartSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRestartSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esRestartSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRestartSpecial[type].g_iRequiresHumans, value, -1, 32);
 			g_esRestartSpecial[type].g_iRestartAbility = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRestartSpecial[type].g_iRestartAbility, value, -1, 1);
@@ -842,13 +863,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			vGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartLoadout", "Restart Loadout", "Restart_Loadout", "loadout", g_esRestartSpecial[type].g_sRestartLoadout, sizeof esRestartSpecial::g_sRestartLoadout, value);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esRestartAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esRestartAbility[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esRestartAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRestartAbility[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esRestartAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRestartAbility[type].g_iHumanAbility, value, -1, 2);
 			g_esRestartAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRestartAbility[type].g_iHumanAmmo, value, -1, 99999);
 			g_esRestartAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRestartAbility[type].g_iHumanCooldown, value, -1, 99999);
 			g_esRestartAbility[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esRestartAbility[type].g_iHumanRangeCooldown, value, -1, 99999);
+#endif
 			g_esRestartAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRestartAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esRestartAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRestartAbility[type].g_iRequiresHumans, value, -1, 32);
 			g_esRestartAbility[type].g_iRestartAbility = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRestartAbility[type].g_iRestartAbility, value, -1, 1);
@@ -884,17 +912,22 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #if !defined MT_ABILITIES_MAIN2
 	g_iGraphicsLevel = MT_GetGraphicsLevel();
 #endif
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		g_esRestartCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_flCloseAreasOnly, g_esRestartPlayer[tank].g_flCloseAreasOnly, g_esRestartSpecial[iType].g_flCloseAreasOnly, g_esRestartAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esRestartCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_iComboAbility, g_esRestartPlayer[tank].g_iComboAbility, g_esRestartSpecial[iType].g_iComboAbility, g_esRestartAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esRestartCache[tank].g_flRestartChance = flGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_flRestartChance, g_esRestartPlayer[tank].g_flRestartChance, g_esRestartSpecial[iType].g_flRestartChance, g_esRestartAbility[iType].g_flRestartChance, 1);
 		g_esRestartCache[tank].g_flRestartRange = flGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_flRestartRange, g_esRestartPlayer[tank].g_flRestartRange, g_esRestartSpecial[iType].g_flRestartRange, g_esRestartAbility[iType].g_flRestartRange, 1);
 		g_esRestartCache[tank].g_flRestartRangeChance = flGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_flRestartRangeChance, g_esRestartPlayer[tank].g_flRestartRangeChance, g_esRestartSpecial[iType].g_flRestartRangeChance, g_esRestartAbility[iType].g_flRestartRangeChance, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esRestartCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_iHumanAbility, g_esRestartPlayer[tank].g_iHumanAbility, g_esRestartSpecial[iType].g_iHumanAbility, g_esRestartAbility[iType].g_iHumanAbility, 1);
 		g_esRestartCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_iHumanAmmo, g_esRestartPlayer[tank].g_iHumanAmmo, g_esRestartSpecial[iType].g_iHumanAmmo, g_esRestartAbility[iType].g_iHumanAmmo, 1);
 		g_esRestartCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_iHumanCooldown, g_esRestartPlayer[tank].g_iHumanCooldown, g_esRestartSpecial[iType].g_iHumanCooldown, g_esRestartAbility[iType].g_iHumanCooldown, 1);
 		g_esRestartCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_iHumanRangeCooldown, g_esRestartPlayer[tank].g_iHumanRangeCooldown, g_esRestartSpecial[iType].g_iHumanRangeCooldown, g_esRestartAbility[iType].g_iHumanRangeCooldown, 1);
+#endif
 		g_esRestartCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_flOpenAreasOnly, g_esRestartPlayer[tank].g_flOpenAreasOnly, g_esRestartSpecial[iType].g_flOpenAreasOnly, g_esRestartAbility[iType].g_flOpenAreasOnly, 1);
 		g_esRestartCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_iRequiresHumans, g_esRestartPlayer[tank].g_iRequiresHumans, g_esRestartSpecial[iType].g_iRequiresHumans, g_esRestartAbility[iType].g_iRequiresHumans, 1);
 		g_esRestartCache[tank].g_iRestartAbility = iGetSubSettingValue(apply, bHuman, g_esRestartTeammate[tank].g_iRestartAbility, g_esRestartPlayer[tank].g_iRestartAbility, g_esRestartSpecial[iType].g_iRestartAbility, g_esRestartAbility[iType].g_iRestartAbility, 1);
@@ -910,16 +943,23 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		vGetSubSettingValue(apply, bHuman, g_esRestartCache[tank].g_sRestartLoadout, sizeof esRestartCache::g_sRestartLoadout, g_esRestartTeammate[tank].g_sRestartLoadout, g_esRestartPlayer[tank].g_sRestartLoadout, g_esRestartSpecial[iType].g_sRestartLoadout, g_esRestartAbility[iType].g_sRestartLoadout);
 	}
 	else
+#else
+	if (!bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+#endif
 	{
 		g_esRestartCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_flCloseAreasOnly, g_esRestartAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esRestartCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_iComboAbility, g_esRestartAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esRestartCache[tank].g_flRestartChance = flGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_flRestartChance, g_esRestartAbility[iType].g_flRestartChance, 1);
 		g_esRestartCache[tank].g_flRestartRange = flGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_flRestartRange, g_esRestartAbility[iType].g_flRestartRange, 1);
 		g_esRestartCache[tank].g_flRestartRangeChance = flGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_flRestartRangeChance, g_esRestartAbility[iType].g_flRestartRangeChance, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esRestartCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_iHumanAbility, g_esRestartAbility[iType].g_iHumanAbility, 1);
 		g_esRestartCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_iHumanAmmo, g_esRestartAbility[iType].g_iHumanAmmo, 1);
 		g_esRestartCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_iHumanCooldown, g_esRestartAbility[iType].g_iHumanCooldown, 1);
 		g_esRestartCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_iHumanRangeCooldown, g_esRestartAbility[iType].g_iHumanRangeCooldown, 1);
+#endif
 		g_esRestartCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_flOpenAreasOnly, g_esRestartAbility[iType].g_flOpenAreasOnly, 1);
 		g_esRestartCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_iRequiresHumans, g_esRestartAbility[iType].g_iRequiresHumans, 1);
 		g_esRestartCache[tank].g_iRestartAbility = iGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_iRestartAbility, g_esRestartAbility[iType].g_iRestartAbility, 1);
@@ -996,6 +1036,7 @@ public void MT_OnHookEvent(bool hooked)
 						continue;
 					}
 
+					bCheck[iPos] = false;
 					UnhookEvent(sEvent, MT_OnEventFired);
 				}
 			}
@@ -1041,6 +1082,14 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveRestart(iTank);
 		}
 	}
+	else if (StrEqual(name, "player_entered_checkpoint") || StrEqual(name, "player_entered_start_area"))
+	{
+		g_esRestartPlayer[GetClientOfUserId(event.GetInt("userid"))].g_bCheckpoint = true;
+	}
+	else if (StrEqual(name, "player_left_checkpoint"))
+	{
+		g_esRestartPlayer[GetClientOfUserId(event.GetInt("userid"))].g_bCheckpoint = false;
+	}
 	else if (StrEqual(name, "player_now_it"))
 	{
 		bool bExploded = event.GetBool("exploded");
@@ -1065,25 +1114,13 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			GetClientAbsOrigin(iPlayer, g_esRestartPlayer[iPlayer].g_flSpawnPosition);
 		}
 	}
-	else if (StrEqual(name, "player_left_checkpoint"))
-	{
-		g_esRestartPlayer[GetClientOfUserId(event.GetInt("userid"))].g_bCheckpoint = false;
-	}
-	else if (StrEqual(name, "player_entered_checkpoint") || StrEqual(name, "player_entered_start_area"))
-	{
-		g_esRestartPlayer[GetClientOfUserId(event.GetInt("userid"))].g_bCheckpoint = true;
-	}
 	else if (StrEqual(name, "round_start") || StrEqual(name, "round_end"))
 	{
 		vRestartReset();
 
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++ )
 		{
-			switch (bIsSurvivor(iPlayer, MT_CHECK_INGAME))
-			{
-				case true: g_esRestartPlayer[iPlayer].g_bCheckpoint = true;
-				case false: g_esRestartPlayer[iPlayer].g_bCheckpoint = false;
-			}
+			g_esRestartPlayer[iPlayer].g_bCheckpoint = bIsSurvivor(iPlayer, MT_CHECK_INGAME);
 		}
 	}
 }
@@ -1104,7 +1141,7 @@ public void MT_OnAbilityActivated(int tank)
 		vRestartAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
 }
-
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN2
 void vRestartButtonPressed(int tank, int button)
 #else
@@ -1130,7 +1167,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vRestartChangeType(int tank, int oldType)
 #else
@@ -1383,7 +1420,7 @@ bool bIsSurvivorInCheckpoint(int survivor, bool start)
 	bool bReturn2 = start ? !!GetEntProp(survivor, Prop_Send, "m_isInMissionStartArea") : false;
 	return bReturn || bReturn2;
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action tTimerRestartCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -1432,3 +1469,4 @@ Action tTimerRestartCombo2(Handle timer, DataPack pack)
 
 	return Plugin_Continue;
 }
+#endif

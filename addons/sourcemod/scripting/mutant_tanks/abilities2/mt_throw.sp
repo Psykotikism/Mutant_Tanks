@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2017-2026  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -254,9 +254,9 @@ public void OnPluginStart()
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 	LoadTranslations("mutant_tanks_names.phrases");
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	RegConsoleCmd("sm_mt_throw", cmdThrowInfo, "View information about the Throw ability.");
-
+#endif
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -291,7 +291,9 @@ void vThrowClientPutInServer(int client)
 public void OnClientPutInServer(int client)
 #endif
 {
+#if (MT_INCLUDE_DAMAGEHOOKS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	SDKHook(client, SDKHook_OnTakeDamage, OnThrowTakeDamage);
+#endif
 	vRemoveThrow(client);
 }
 
@@ -312,7 +314,7 @@ public void OnMapEnd()
 {
 	vThrowReset();
 }
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if !defined MT_ABILITIES_MAIN2
 Action cmdThrowInfo(int client, int args)
 {
@@ -341,7 +343,8 @@ Action cmdThrowInfo(int client, int args)
 	return Plugin_Handled;
 }
 #endif
-
+#endif
+#if (MT_INCLUDE_MENUS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 void vThrowMenu(int client, const char[] name, int item)
 {
 	if (StrContains(MT_THROW_SECTION4, name, false) == -1)
@@ -445,7 +448,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 		FormatEx(buffer, size, "%T", "ThrowMenu2", client);
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vThrowEntityDestroyed(int entity)
 #else
@@ -458,7 +461,7 @@ public void OnEntityDestroyed(int entity)
 		g_esThrowGeneral.g_iCarOwner[entity] = -1;
 	}
 }
-
+#if (MT_INCLUDE_DAMAGEHOOKS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action OnThrowTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsSurvivor(victim) && damage > 0.0)
@@ -517,7 +520,7 @@ Action OnThrowTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 	return Plugin_Continue;
 }
-
+#endif
 Action OnThrowStartTouch(int thrown, int other)
 {
 	if (bIsValidEntity(thrown) && bIsValidEntity(other))
@@ -549,7 +552,7 @@ public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, 
 	list3.PushString(MT_THROW_SECTION3);
 	list4.PushString(MT_THROW_SECTION4);
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN2
 void vThrowCombineAbilities(int tank, int type, const float random, const char[] combo, int weapon)
 #else
@@ -595,7 +598,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vThrowConfigsLoad(int mode)
 #else
@@ -726,13 +729,18 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esThrowTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esThrowTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esThrowTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esThrowTeammate[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esThrowTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esThrowTeammate[admin].g_iHumanAbility, value, -1, 2);
 			g_esThrowTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esThrowTeammate[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esThrowTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esThrowTeammate[admin].g_iHumanCooldown, value, -1, 99999);
+#endif
 			g_esThrowTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esThrowTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esThrowTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esThrowTeammate[admin].g_iRequiresHumans, value, -1, 32);
 			g_esThrowTeammate[admin].g_iThrowAbility = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esThrowTeammate[admin].g_iThrowAbility, value, -1, 15);
@@ -753,12 +761,19 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esThrowTeammate[admin].g_iThrowWitchRemove = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowWitchRemove", "Throw Witch Remove", "Throw_Witch_Remove", "witchremove", g_esThrowTeammate[admin].g_iThrowWitchRemove, value, -1, 1);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esThrowPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esThrowPlayer[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esThrowPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esThrowPlayer[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esThrowPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esThrowPlayer[admin].g_iHumanAbility, value, -1, 2);
 			g_esThrowPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esThrowPlayer[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esThrowPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esThrowPlayer[admin].g_iHumanCooldown, value, -1, 99999);
+#endif
 			g_esThrowPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esThrowPlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esThrowPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esThrowPlayer[admin].g_iRequiresHumans, value, -1, 32);
 			g_esThrowPlayer[admin].g_iThrowAbility = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esThrowPlayer[admin].g_iThrowAbility, value, -1, 15);
@@ -784,13 +799,18 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esThrowSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esThrowSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esThrowSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esThrowSpecial[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esThrowSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esThrowSpecial[type].g_iHumanAbility, value, -1, 2);
 			g_esThrowSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esThrowSpecial[type].g_iHumanAmmo, value, -1, 99999);
 			g_esThrowSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esThrowSpecial[type].g_iHumanCooldown, value, -1, 99999);
+#endif
 			g_esThrowSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esThrowSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esThrowSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esThrowSpecial[type].g_iRequiresHumans, value, -1, 32);
 			g_esThrowSpecial[type].g_iThrowAbility = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esThrowSpecial[type].g_iThrowAbility, value, -1, 15);
@@ -811,12 +831,19 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esThrowSpecial[type].g_iThrowWitchRemove = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowWitchRemove", "Throw Witch Remove", "Throw_Witch_Remove", "witchremove", g_esThrowSpecial[type].g_iThrowWitchRemove, value, -1, 1);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esThrowAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esThrowAbility[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esThrowAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esThrowAbility[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esThrowAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esThrowAbility[type].g_iHumanAbility, value, -1, 2);
 			g_esThrowAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esThrowAbility[type].g_iHumanAmmo, value, -1, 99999);
 			g_esThrowAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esThrowAbility[type].g_iHumanCooldown, value, -1, 99999);
+#endif
 			g_esThrowAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esThrowAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esThrowAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esThrowAbility[type].g_iRequiresHumans, value, -1, 32);
 			g_esThrowAbility[type].g_iThrowAbility = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esThrowAbility[type].g_iThrowAbility, value, -1, 15);
@@ -852,19 +879,24 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esThrowPlayer[tank].g_iTankType = apply ? type : 0;
 	int iType = g_esThrowPlayer[tank].g_iTankTypeRecorded;
 
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		g_esThrowCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_flCloseAreasOnly, g_esThrowPlayer[tank].g_flCloseAreasOnly, g_esThrowSpecial[iType].g_flCloseAreasOnly, g_esThrowAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esThrowCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_iComboAbility, g_esThrowPlayer[tank].g_iComboAbility, g_esThrowSpecial[iType].g_iComboAbility, g_esThrowAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esThrowCache[tank].g_flThrowCarDamage = flGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_flThrowCarDamage, g_esThrowPlayer[tank].g_flThrowCarDamage, g_esThrowSpecial[iType].g_flThrowCarDamage, g_esThrowAbility[iType].g_flThrowCarDamage, 1);
 		g_esThrowCache[tank].g_flThrowCarLifetime = flGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_flThrowCarLifetime, g_esThrowPlayer[tank].g_flThrowCarLifetime, g_esThrowSpecial[iType].g_flThrowCarLifetime, g_esThrowAbility[iType].g_flThrowCarLifetime, 1);
 		g_esThrowCache[tank].g_flThrowChance = flGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_flThrowChance, g_esThrowPlayer[tank].g_flThrowChance, g_esThrowSpecial[iType].g_flThrowChance, g_esThrowAbility[iType].g_flThrowChance, 1);
 		g_esThrowCache[tank].g_flThrowInfectedLifetime = flGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_flThrowInfectedLifetime, g_esThrowPlayer[tank].g_flThrowInfectedLifetime, g_esThrowSpecial[iType].g_flThrowInfectedLifetime, g_esThrowAbility[iType].g_flThrowInfectedLifetime, 1);
 		g_esThrowCache[tank].g_flThrowWitchDamage = flGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_flThrowWitchDamage, g_esThrowPlayer[tank].g_flThrowWitchDamage, g_esThrowSpecial[iType].g_flThrowWitchDamage, g_esThrowAbility[iType].g_flThrowWitchDamage, 1);
 		g_esThrowCache[tank].g_flThrowWitchLifetime = flGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_flThrowWitchLifetime, g_esThrowPlayer[tank].g_flThrowWitchLifetime, g_esThrowSpecial[iType].g_flThrowWitchLifetime, g_esThrowAbility[iType].g_flThrowWitchLifetime, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esThrowCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_iHumanAbility, g_esThrowPlayer[tank].g_iHumanAbility, g_esThrowSpecial[iType].g_iHumanAbility, g_esThrowAbility[iType].g_iHumanAbility, 1);
 		g_esThrowCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_iHumanAmmo, g_esThrowPlayer[tank].g_iHumanAmmo, g_esThrowSpecial[iType].g_iHumanAmmo, g_esThrowAbility[iType].g_iHumanAmmo, 1);
 		g_esThrowCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_iHumanCooldown, g_esThrowPlayer[tank].g_iHumanCooldown, g_esThrowSpecial[iType].g_iHumanCooldown, g_esThrowAbility[iType].g_iHumanCooldown, 1);
+#endif
 		g_esThrowCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_flOpenAreasOnly, g_esThrowPlayer[tank].g_flOpenAreasOnly, g_esThrowSpecial[iType].g_flOpenAreasOnly, g_esThrowAbility[iType].g_flOpenAreasOnly, 1);
 		g_esThrowCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_iRequiresHumans, g_esThrowPlayer[tank].g_iRequiresHumans, g_esThrowSpecial[iType].g_iRequiresHumans, g_esThrowAbility[iType].g_iRequiresHumans, 1);
 		g_esThrowCache[tank].g_iThrowAbility = iGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_iThrowAbility, g_esThrowPlayer[tank].g_iThrowAbility, g_esThrowSpecial[iType].g_iThrowAbility, g_esThrowAbility[iType].g_iThrowAbility, 1);
@@ -879,18 +911,25 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esThrowCache[tank].g_iThrowWitchRemove = iGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_iThrowWitchRemove, g_esThrowPlayer[tank].g_iThrowWitchRemove, g_esThrowSpecial[iType].g_iThrowWitchRemove, g_esThrowAbility[iType].g_iThrowWitchRemove, 1);
 	}
 	else
+#else
+	if (!bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+#endif
 	{
 		g_esThrowCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_flCloseAreasOnly, g_esThrowAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esThrowCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_iComboAbility, g_esThrowAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esThrowCache[tank].g_flThrowCarDamage = flGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_flThrowCarDamage, g_esThrowAbility[iType].g_flThrowCarDamage, 1);
 		g_esThrowCache[tank].g_flThrowCarLifetime = flGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_flThrowCarLifetime, g_esThrowAbility[iType].g_flThrowCarLifetime, 1);
 		g_esThrowCache[tank].g_flThrowChance = flGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_flThrowChance, g_esThrowAbility[iType].g_flThrowChance, 1);
 		g_esThrowCache[tank].g_flThrowInfectedLifetime = flGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_flThrowInfectedLifetime, g_esThrowAbility[iType].g_flThrowInfectedLifetime, 1);
 		g_esThrowCache[tank].g_flThrowWitchDamage = flGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_flThrowWitchDamage, g_esThrowAbility[iType].g_flThrowWitchDamage, 1);
 		g_esThrowCache[tank].g_flThrowWitchLifetime = flGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_flThrowWitchLifetime, g_esThrowAbility[iType].g_flThrowWitchLifetime, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esThrowCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_iHumanAbility, g_esThrowAbility[iType].g_iHumanAbility, 1);
 		g_esThrowCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_iHumanAmmo, g_esThrowAbility[iType].g_iHumanAmmo, 1);
 		g_esThrowCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_iHumanCooldown, g_esThrowAbility[iType].g_iHumanCooldown, 1);
+#endif
 		g_esThrowCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_flOpenAreasOnly, g_esThrowAbility[iType].g_flOpenAreasOnly, 1);
 		g_esThrowCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_iRequiresHumans, g_esThrowAbility[iType].g_iRequiresHumans, 1);
 		g_esThrowCache[tank].g_iThrowAbility = iGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_iThrowAbility, g_esThrowAbility[iType].g_iThrowAbility, 1);
@@ -996,7 +1035,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		}
 	}
 }
-
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN2
 void vThrowButtonPressed(int tank, int button)
 #else
@@ -1039,7 +1078,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vThrowChangeType(int tank, int oldType)
 #else

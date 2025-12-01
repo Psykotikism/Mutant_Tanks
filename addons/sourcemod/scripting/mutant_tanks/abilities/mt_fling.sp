@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2017-2026  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -282,9 +282,9 @@ public void OnPluginStart()
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 	LoadTranslations("mutant_tanks_names.phrases");
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	RegConsoleCmd("sm_mt_fling", cmdFlingInfo, "View information about the Fling ability.");
-
+#endif
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -315,7 +315,9 @@ void vFlingClientPutInServer(int client)
 public void OnClientPutInServer(int client)
 #endif
 {
+#if (MT_INCLUDE_DAMAGEHOOKS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	SDKHook(client, SDKHook_OnTakeDamage, OnFlingTakeDamage);
+#endif
 	vRemoveFling(client);
 }
 
@@ -336,7 +338,7 @@ public void OnMapEnd()
 {
 	vFlingReset();
 }
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if !defined MT_ABILITIES_MAIN
 Action cmdFlingInfo(int client, int args)
 {
@@ -365,7 +367,8 @@ Action cmdFlingInfo(int client, int args)
 	return Plugin_Handled;
 }
 #endif
-
+#endif
+#if (MT_INCLUDE_MENUS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 void vFlingMenu(int client, const char[] name, int item)
 {
 	if (StrContains(MT_FLING_SECTION4, name, false) == -1)
@@ -472,7 +475,8 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 		FormatEx(buffer, size, "%T", "FlingMenu2", client);
 	}
 }
-
+#endif
+#if (MT_INCLUDE_DAMAGEHOOKS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action OnFlingTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (g_bSecondGame && MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
@@ -512,7 +516,7 @@ Action OnFlingTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 	return Plugin_Continue;
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN
 void vFlingPluginCheck(ArrayList list)
 #else
@@ -533,7 +537,7 @@ public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, 
 	list3.PushString(MT_FLING_SECTION3);
 	list4.PushString(MT_FLING_SECTION4);
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN
 void vFlingCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, const char[] classname)
 #else
@@ -623,7 +627,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN
 void vFlingConfigsLoad(int mode)
 #else
@@ -753,14 +757,19 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esFlingTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esFlingTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esFlingTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFlingTeammate[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esFlingTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFlingTeammate[admin].g_iHumanAbility, value, -1, 2);
 			g_esFlingTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFlingTeammate[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esFlingTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFlingTeammate[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esFlingTeammate[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esFlingTeammate[admin].g_iHumanRangeCooldown, value, -1, 99999);
+#endif
 			g_esFlingTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFlingTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esFlingTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFlingTeammate[admin].g_iRequiresHumans, value, -1, 32);
 			g_esFlingTeammate[admin].g_iFlingAbility = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFlingTeammate[admin].g_iFlingAbility, value, -1, 1);
@@ -780,13 +789,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esFlingTeammate[admin].g_iFlingRangeCooldown = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingRangeCooldown", "Fling Range Cooldown", "Fling_Range_Cooldown", "rangecooldown", g_esFlingTeammate[admin].g_iFlingRangeCooldown, value, -1, 99999);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esFlingPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esFlingPlayer[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esFlingPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFlingPlayer[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esFlingPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFlingPlayer[admin].g_iHumanAbility, value, -1, 2);
 			g_esFlingPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFlingPlayer[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esFlingPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFlingPlayer[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esFlingPlayer[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esFlingPlayer[admin].g_iHumanRangeCooldown, value, -1, 99999);
+#endif
 			g_esFlingPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFlingPlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esFlingPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFlingPlayer[admin].g_iRequiresHumans, value, -1, 32);
 			g_esFlingPlayer[admin].g_iFlingAbility = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFlingPlayer[admin].g_iFlingAbility, value, -1, 1);
@@ -811,14 +827,19 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esFlingSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esFlingSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esFlingSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFlingSpecial[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esFlingSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFlingSpecial[type].g_iHumanAbility, value, -1, 2);
 			g_esFlingSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFlingSpecial[type].g_iHumanAmmo, value, -1, 99999);
 			g_esFlingSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFlingSpecial[type].g_iHumanCooldown, value, -1, 99999);
 			g_esFlingSpecial[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esFlingSpecial[type].g_iHumanRangeCooldown, value, -1, 99999);
+#endif
 			g_esFlingSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFlingSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esFlingSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFlingSpecial[type].g_iRequiresHumans, value, -1, 32);
 			g_esFlingSpecial[type].g_iFlingAbility = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFlingSpecial[type].g_iFlingAbility, value, -1, 1);
@@ -838,13 +859,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esFlingSpecial[type].g_iFlingRangeCooldown = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingRangeCooldown", "Fling Range Cooldown", "Fling_Range_Cooldown", "rangecooldown", g_esFlingSpecial[type].g_iFlingRangeCooldown, value, -1, 99999);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esFlingAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esFlingAbility[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esFlingAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFlingAbility[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esFlingAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFlingAbility[type].g_iHumanAbility, value, -1, 2);
 			g_esFlingAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFlingAbility[type].g_iHumanAmmo, value, -1, 99999);
 			g_esFlingAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFlingAbility[type].g_iHumanCooldown, value, -1, 99999);
 			g_esFlingAbility[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esFlingAbility[type].g_iHumanRangeCooldown, value, -1, 99999);
+#endif
 			g_esFlingAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFlingAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esFlingAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFlingAbility[type].g_iRequiresHumans, value, -1, 32);
 			g_esFlingAbility[type].g_iFlingAbility = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFlingAbility[type].g_iFlingAbility, value, -1, 1);
@@ -879,10 +907,13 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esFlingPlayer[tank].g_iTankType = apply ? type : 0;
 	int iType = g_esFlingPlayer[tank].g_iTankTypeRecorded;
 
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		g_esFlingCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_flCloseAreasOnly, g_esFlingPlayer[tank].g_flCloseAreasOnly, g_esFlingSpecial[iType].g_flCloseAreasOnly, g_esFlingAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esFlingCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_iComboAbility, g_esFlingPlayer[tank].g_iComboAbility, g_esFlingSpecial[iType].g_iComboAbility, g_esFlingAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esFlingCache[tank].g_flFlingChance = flGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_flFlingChance, g_esFlingPlayer[tank].g_flFlingChance, g_esFlingSpecial[iType].g_flFlingChance, g_esFlingAbility[iType].g_flFlingChance, 1);
 		g_esFlingCache[tank].g_flFlingDeathChance = flGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_flFlingDeathChance, g_esFlingPlayer[tank].g_flFlingDeathChance, g_esFlingSpecial[iType].g_flFlingDeathChance, g_esFlingAbility[iType].g_flFlingDeathChance, 1);
 		g_esFlingCache[tank].g_flFlingDeathRange = flGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_flFlingDeathRange, g_esFlingPlayer[tank].g_flFlingDeathRange, g_esFlingSpecial[iType].g_flFlingDeathRange, g_esFlingAbility[iType].g_flFlingDeathRange, 1);
@@ -898,17 +929,24 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esFlingCache[tank].g_iFlingMessage = iGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_iFlingMessage, g_esFlingPlayer[tank].g_iFlingMessage, g_esFlingSpecial[iType].g_iFlingMessage, g_esFlingAbility[iType].g_iFlingMessage, 1);
 		g_esFlingCache[tank].g_iFlingRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_iFlingRangeCooldown, g_esFlingPlayer[tank].g_iFlingRangeCooldown, g_esFlingSpecial[iType].g_iFlingRangeCooldown, g_esFlingAbility[iType].g_iFlingRangeCooldown, 1);
 		g_esFlingCache[tank].g_iFlingSight = iGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_iFlingSight, g_esFlingPlayer[tank].g_iFlingSight, g_esFlingSpecial[iType].g_iFlingSight, g_esFlingAbility[iType].g_iFlingSight, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esFlingCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_iHumanAbility, g_esFlingPlayer[tank].g_iHumanAbility, g_esFlingSpecial[iType].g_iHumanAbility, g_esFlingAbility[iType].g_iHumanAbility, 1);
 		g_esFlingCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_iHumanAmmo, g_esFlingPlayer[tank].g_iHumanAmmo, g_esFlingSpecial[iType].g_iHumanAmmo, g_esFlingAbility[iType].g_iHumanAmmo, 1);
 		g_esFlingCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_iHumanCooldown, g_esFlingPlayer[tank].g_iHumanCooldown, g_esFlingSpecial[iType].g_iHumanCooldown, g_esFlingAbility[iType].g_iHumanCooldown, 1);
 		g_esFlingCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_iHumanRangeCooldown, g_esFlingPlayer[tank].g_iHumanRangeCooldown, g_esFlingSpecial[iType].g_iHumanRangeCooldown, g_esFlingAbility[iType].g_iHumanRangeCooldown, 1);
+#endif
 		g_esFlingCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_flOpenAreasOnly, g_esFlingPlayer[tank].g_flOpenAreasOnly, g_esFlingSpecial[iType].g_flOpenAreasOnly, g_esFlingAbility[iType].g_flOpenAreasOnly, 1);
 		g_esFlingCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esFlingTeammate[tank].g_iRequiresHumans, g_esFlingPlayer[tank].g_iRequiresHumans, g_esFlingSpecial[iType].g_iRequiresHumans, g_esFlingAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
+#else
+	if (!bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+#endif
 	{
 		g_esFlingCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_flCloseAreasOnly, g_esFlingAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esFlingCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_iComboAbility, g_esFlingAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esFlingCache[tank].g_flFlingChance = flGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_flFlingChance, g_esFlingAbility[iType].g_flFlingChance, 1);
 		g_esFlingCache[tank].g_flFlingDeathChance = flGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_flFlingDeathChance, g_esFlingAbility[iType].g_flFlingDeathChance, 1);
 		g_esFlingCache[tank].g_flFlingDeathRange = flGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_flFlingDeathRange, g_esFlingAbility[iType].g_flFlingDeathRange, 1);
@@ -924,10 +962,12 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esFlingCache[tank].g_iFlingMessage = iGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_iFlingMessage, g_esFlingAbility[iType].g_iFlingMessage, 1);
 		g_esFlingCache[tank].g_iFlingRangeCooldown = iGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_iFlingRangeCooldown, g_esFlingAbility[iType].g_iFlingRangeCooldown, 1);
 		g_esFlingCache[tank].g_iFlingSight = iGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_iFlingSight, g_esFlingAbility[iType].g_iFlingSight, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esFlingCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_iHumanAbility, g_esFlingAbility[iType].g_iHumanAbility, 1);
 		g_esFlingCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_iHumanAmmo, g_esFlingAbility[iType].g_iHumanAmmo, 1);
 		g_esFlingCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_iHumanCooldown, g_esFlingAbility[iType].g_iHumanCooldown, 1);
 		g_esFlingCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_iHumanRangeCooldown, g_esFlingAbility[iType].g_iHumanRangeCooldown, 1);
+#endif
 		g_esFlingCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_flOpenAreasOnly, g_esFlingAbility[iType].g_flOpenAreasOnly, 1);
 		g_esFlingCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_iRequiresHumans, g_esFlingAbility[iType].g_iRequiresHumans, 1);
 	}
@@ -1030,7 +1070,7 @@ public void MT_OnAbilityActivated(int tank)
 		vFlingAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
 }
-
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN
 void vFlingButtonPressed(int tank, int button)
 #else
@@ -1056,7 +1096,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN
 void vFlingChangeType(int tank, int oldType)
 #else
@@ -1282,7 +1322,7 @@ void vFlingReset()
 		}
 	}
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action tTimerFlingCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -1331,3 +1371,4 @@ Action tTimerFlingCombo2(Handle timer, DataPack pack)
 
 	return Plugin_Continue;
 }
+#endif

@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2017-2026  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -329,9 +329,9 @@ public void OnPluginStart()
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 	LoadTranslations("mutant_tanks_names.phrases");
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	RegConsoleCmd("sm_mt_warp", cmdWarpInfo, "View information about the Warp ability.");
-
+#endif
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -365,7 +365,9 @@ void vWarpClientPutInServer(int client)
 public void OnClientPutInServer(int client)
 #endif
 {
+#if (MT_INCLUDE_DAMAGEHOOKS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	SDKHook(client, SDKHook_OnTakeDamage, OnWarpTakeDamage);
+#endif
 	vRemoveWarp(client);
 }
 
@@ -386,7 +388,7 @@ public void OnMapEnd()
 {
 	vWarpReset();
 }
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if !defined MT_ABILITIES_MAIN2
 Action cmdWarpInfo(int client, int args)
 {
@@ -415,7 +417,8 @@ Action cmdWarpInfo(int client, int args)
 	return Plugin_Handled;
 }
 #endif
-
+#endif
+#if (MT_INCLUDE_MENUS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 void vWarpMenu(int client, const char[] name, int item)
 {
 	if (StrContains(MT_WARP_SECTION4, name, false) == -1)
@@ -547,7 +550,8 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 		FormatEx(buffer, size, "%T", "WarpMenu2", client);
 	}
 }
-
+#endif
+#if (MT_INCLUDE_DAMAGEHOOKS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action OnWarpTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
@@ -587,7 +591,7 @@ Action OnWarpTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 	return Plugin_Continue;
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vWarpPluginCheck(ArrayList list)
 #else
@@ -608,7 +612,7 @@ public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, 
 	list3.PushString(MT_WARP_SECTION3);
 	list4.PushString(MT_WARP_SECTION4);
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN2
 void vWarpCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
 #else
@@ -723,7 +727,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vWarpConfigsLoad(int mode)
 #else
@@ -874,10 +878,14 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esWarpTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esWarpTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esWarpTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esWarpTeammate[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esWarpTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esWarpTeammate[admin].g_iHumanAbility, value, -1, 2);
 			g_esWarpTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esWarpTeammate[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esWarpTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esWarpTeammate[admin].g_iHumanCooldown, value, -1, 99999);
@@ -885,6 +893,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esWarpTeammate[admin].g_iHumanMode = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esWarpTeammate[admin].g_iHumanMode, value, -1, 2);
 			g_esWarpTeammate[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esWarpTeammate[admin].g_iHumanRangeCooldown, value, -1, 99999);
 			g_esWarpTeammate[admin].g_iHumanRockCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanRockCooldown", "Human Rock Cooldown", "Human_Rock_Cooldown", "hrockcooldown", g_esWarpTeammate[admin].g_iHumanRockCooldown, value, -1, 99999);
+#endif
 			g_esWarpTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esWarpTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esWarpTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esWarpTeammate[admin].g_iRequiresHumans, value, -1, 32);
 			g_esWarpTeammate[admin].g_iWarpAbility = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esWarpTeammate[admin].g_iWarpAbility, value, -1, 3);
@@ -906,9 +915,15 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esWarpTeammate[admin].g_iWarpRockCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpPinCooldown", "Warp Pin Cooldown", "Warp_Pin_Cooldown", "pincooldown", g_esWarpTeammate[admin].g_iWarpRockCooldown, value, -1, 99999);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esWarpPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esWarpPlayer[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esWarpPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esWarpPlayer[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esWarpPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esWarpPlayer[admin].g_iHumanAbility, value, -1, 2);
 			g_esWarpPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esWarpPlayer[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esWarpPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esWarpPlayer[admin].g_iHumanCooldown, value, -1, 99999);
@@ -916,6 +931,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esWarpPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esWarpPlayer[admin].g_iHumanMode, value, -1, 2);
 			g_esWarpPlayer[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esWarpPlayer[admin].g_iHumanRangeCooldown, value, -1, 99999);
 			g_esWarpPlayer[admin].g_iHumanRockCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanRockCooldown", "Human Rock Cooldown", "Human_Rock_Cooldown", "hrockcooldown", g_esWarpPlayer[admin].g_iHumanRockCooldown, value, -1, 99999);
+#endif
 			g_esWarpPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esWarpPlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esWarpPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esWarpPlayer[admin].g_iRequiresHumans, value, -1, 32);
 			g_esWarpPlayer[admin].g_iWarpAbility = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esWarpPlayer[admin].g_iWarpAbility, value, -1, 3);
@@ -942,10 +958,14 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esWarpSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esWarpSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esWarpSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esWarpSpecial[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esWarpSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esWarpSpecial[type].g_iHumanAbility, value, -1, 2);
 			g_esWarpSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esWarpSpecial[type].g_iHumanAmmo, value, -1, 99999);
 			g_esWarpSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esWarpSpecial[type].g_iHumanCooldown, value, -1, 99999);
@@ -953,6 +973,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esWarpSpecial[type].g_iHumanMode = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esWarpSpecial[type].g_iHumanMode, value, -1, 2);
 			g_esWarpSpecial[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esWarpSpecial[type].g_iHumanRangeCooldown, value, -1, 99999);
 			g_esWarpSpecial[type].g_iHumanRockCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanRockCooldown", "Human Rock Cooldown", "Human_Rock_Cooldown", "hrockcooldown", g_esWarpSpecial[type].g_iHumanRockCooldown, value, -1, 99999);
+#endif
 			g_esWarpSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esWarpSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esWarpSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esWarpSpecial[type].g_iRequiresHumans, value, -1, 32);
 			g_esWarpSpecial[type].g_iWarpAbility = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esWarpSpecial[type].g_iWarpAbility, value, -1, 3);
@@ -974,9 +995,15 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esWarpSpecial[type].g_iWarpRockCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpPinCooldown", "Warp Pin Cooldown", "Warp_Pin_Cooldown", "pincooldown", g_esWarpSpecial[type].g_iWarpRockCooldown, value, -1, 99999);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esWarpAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esWarpAbility[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esWarpAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esWarpAbility[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esWarpAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esWarpAbility[type].g_iHumanAbility, value, -1, 2);
 			g_esWarpAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esWarpAbility[type].g_iHumanAmmo, value, -1, 99999);
 			g_esWarpAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esWarpAbility[type].g_iHumanCooldown, value, -1, 99999);
@@ -984,6 +1011,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esWarpAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esWarpAbility[type].g_iHumanMode, value, -1, 2);
 			g_esWarpAbility[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esWarpAbility[type].g_iHumanRangeCooldown, value, -1, 99999);
 			g_esWarpAbility[type].g_iHumanRockCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanRockCooldown", "Human Rock Cooldown", "Human_Rock_Cooldown", "hrockcooldown", g_esWarpAbility[type].g_iHumanRockCooldown, value, -1, 99999);
+#endif
 			g_esWarpAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esWarpAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esWarpAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esWarpAbility[type].g_iRequiresHumans, value, -1, 32);
 			g_esWarpAbility[type].g_iWarpAbility = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esWarpAbility[type].g_iWarpAbility, value, -1, 3);
@@ -1023,15 +1051,19 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #if !defined MT_ABILITIES_MAIN2
 	g_iGraphicsLevel = MT_GetGraphicsLevel();
 #endif
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		g_esWarpCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_flCloseAreasOnly, g_esWarpPlayer[tank].g_flCloseAreasOnly, g_esWarpSpecial[iType].g_flCloseAreasOnly, g_esWarpAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esWarpCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iComboAbility, g_esWarpPlayer[tank].g_iComboAbility, g_esWarpSpecial[iType].g_iComboAbility, g_esWarpAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esWarpCache[tank].g_flWarpChance = flGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_flWarpChance, g_esWarpPlayer[tank].g_flWarpChance, g_esWarpSpecial[iType].g_flWarpChance, g_esWarpAbility[iType].g_flWarpChance, 1);
 		g_esWarpCache[tank].g_flWarpInterval = flGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_flWarpInterval, g_esWarpPlayer[tank].g_flWarpInterval, g_esWarpSpecial[iType].g_flWarpInterval, g_esWarpAbility[iType].g_flWarpInterval, 1);
 		g_esWarpCache[tank].g_flWarpRange = flGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_flWarpRange, g_esWarpPlayer[tank].g_flWarpRange, g_esWarpSpecial[iType].g_flWarpRange, g_esWarpAbility[iType].g_flWarpRange, 1);
 		g_esWarpCache[tank].g_flWarpRangeChance = flGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_flWarpRangeChance, g_esWarpPlayer[tank].g_flWarpRangeChance, g_esWarpSpecial[iType].g_flWarpRangeChance, g_esWarpAbility[iType].g_flWarpRangeChance, 1);
 		g_esWarpCache[tank].g_flWarpRockChance = flGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_flWarpRockChance, g_esWarpPlayer[tank].g_flWarpRockChance, g_esWarpSpecial[iType].g_flWarpRockChance, g_esWarpAbility[iType].g_flWarpRockChance, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esWarpCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iHumanAbility, g_esWarpPlayer[tank].g_iHumanAbility, g_esWarpSpecial[iType].g_iHumanAbility, g_esWarpAbility[iType].g_iHumanAbility, 1);
 		g_esWarpCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iHumanAmmo, g_esWarpPlayer[tank].g_iHumanAmmo, g_esWarpSpecial[iType].g_iHumanAmmo, g_esWarpAbility[iType].g_iHumanAmmo, 1);
 		g_esWarpCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iHumanCooldown, g_esWarpPlayer[tank].g_iHumanCooldown, g_esWarpSpecial[iType].g_iHumanCooldown, g_esWarpAbility[iType].g_iHumanCooldown, 1);
@@ -1039,6 +1071,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esWarpCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iHumanMode, g_esWarpPlayer[tank].g_iHumanMode, g_esWarpSpecial[iType].g_iHumanMode, g_esWarpAbility[iType].g_iHumanMode, 1);
 		g_esWarpCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iHumanRangeCooldown, g_esWarpPlayer[tank].g_iHumanRangeCooldown, g_esWarpSpecial[iType].g_iHumanRangeCooldown, g_esWarpAbility[iType].g_iHumanRangeCooldown, 1);
 		g_esWarpCache[tank].g_iHumanRockCooldown = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iHumanRockCooldown, g_esWarpPlayer[tank].g_iHumanRockCooldown, g_esWarpSpecial[iType].g_iHumanRockCooldown, g_esWarpAbility[iType].g_iHumanRockCooldown, 1);
+#endif
 		g_esWarpCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_flOpenAreasOnly, g_esWarpPlayer[tank].g_flOpenAreasOnly, g_esWarpSpecial[iType].g_flOpenAreasOnly, g_esWarpAbility[iType].g_flOpenAreasOnly, 1);
 		g_esWarpCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iRequiresHumans, g_esWarpPlayer[tank].g_iRequiresHumans, g_esWarpSpecial[iType].g_iRequiresHumans, g_esWarpAbility[iType].g_iRequiresHumans, 1);
 		g_esWarpCache[tank].g_iWarpAbility = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iWarpAbility, g_esWarpPlayer[tank].g_iWarpAbility, g_esWarpSpecial[iType].g_iWarpAbility, g_esWarpAbility[iType].g_iWarpAbility, 1);
@@ -1055,14 +1088,20 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esWarpCache[tank].g_iWarpRockCooldown = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iWarpRockCooldown, g_esWarpPlayer[tank].g_iWarpRockCooldown, g_esWarpSpecial[iType].g_iWarpRockCooldown, g_esWarpAbility[iType].g_iWarpRockCooldown, 1);
 	}
 	else
+#else
+	if (!bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+#endif
 	{
 		g_esWarpCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_flCloseAreasOnly, g_esWarpAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esWarpCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iComboAbility, g_esWarpAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esWarpCache[tank].g_flWarpChance = flGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_flWarpChance, g_esWarpAbility[iType].g_flWarpChance, 1);
 		g_esWarpCache[tank].g_flWarpInterval = flGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_flWarpInterval, g_esWarpAbility[iType].g_flWarpInterval, 1);
 		g_esWarpCache[tank].g_flWarpRange = flGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_flWarpRange, g_esWarpAbility[iType].g_flWarpRange, 1);
 		g_esWarpCache[tank].g_flWarpRangeChance = flGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_flWarpRangeChance, g_esWarpAbility[iType].g_flWarpRangeChance, 1);
 		g_esWarpCache[tank].g_flWarpRockChance = flGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_flWarpRockChance, g_esWarpAbility[iType].g_flWarpRockChance, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esWarpCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iHumanAbility, g_esWarpAbility[iType].g_iHumanAbility, 1);
 		g_esWarpCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iHumanAmmo, g_esWarpAbility[iType].g_iHumanAmmo, 1);
 		g_esWarpCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iHumanCooldown, g_esWarpAbility[iType].g_iHumanCooldown, 1);
@@ -1070,6 +1109,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esWarpCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iHumanMode, g_esWarpAbility[iType].g_iHumanMode, 1);
 		g_esWarpCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iHumanRangeCooldown, g_esWarpAbility[iType].g_iHumanRangeCooldown, 1);
 		g_esWarpCache[tank].g_iHumanRockCooldown = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iHumanRockCooldown, g_esWarpAbility[iType].g_iHumanRockCooldown, 1);
+#endif
 		g_esWarpCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_flOpenAreasOnly, g_esWarpAbility[iType].g_flOpenAreasOnly, 1);
 		g_esWarpCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iRequiresHumans, g_esWarpAbility[iType].g_iRequiresHumans, 1);
 		g_esWarpCache[tank].g_iWarpAbility = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iWarpAbility, g_esWarpAbility[iType].g_iWarpAbility, 1);
@@ -1158,7 +1198,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		}
 	}
 }
-
+#if (MT_INCLUDE_DETOURS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN2
 void vWarpPlayerEventKilled(int victim)
 #else
@@ -1199,7 +1239,7 @@ public void MT_OnPlayerEventKilled(int victim, int attacker)
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vWarpAbilityActivated(int tank)
 #else
@@ -1217,7 +1257,7 @@ public void MT_OnAbilityActivated(int tank)
 		vWarpAbility(tank, true, GetRandomFloat(0.1, 100.0));
 	}
 }
-
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN2
 void vWarpButtonPressed(int tank, int button)
 #else
@@ -1312,7 +1352,7 @@ public void MT_OnButtonReleased(int tank, int button)
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vWarpChangeType(int tank, int oldType)
 #else
@@ -1335,7 +1375,7 @@ public void MT_OnPostTankSpawn(int tank)
 {
 	vWarpRange(tank);
 }
-
+#if (MT_INCLUDE_DETOURS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN2
 void vWarpRockBreak(int tank, int rock)
 #else
@@ -1352,7 +1392,7 @@ public void MT_OnRockBreak(int tank, int rock)
 		vWarpRockBreak2(tank, rock, GetRandomFloat(0.1, 100.0));
 	}
 }
-
+#endif
 void vWarp(int tank, int pos = -1)
 {
 	int iTime = GetTime();
@@ -1691,7 +1731,7 @@ void vWarpRange(int tank)
 		EmitSoundToAll(SOUND_ELECTRICITY, tank);
 	}
 }
-
+#if (MT_INCLUDE_DETOURS == 1 || MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 void vWarpRockBreak2(int tank, int rock, float random, int pos = -1)
 {
 	int iLauncher = GetEntPropEnt(rock, Prop_Data, "m_hOwnerEntity");
@@ -1781,7 +1821,7 @@ void vWarpRockBreak2(int tank, int rock, float random, int pos = -1)
 		}
 	}
 }
-
+#endif
 void vWarpCopyStats2(int oldTank, int newTank)
 {
 	g_esWarpPlayer[newTank].g_iAmmoCount = g_esWarpPlayer[oldTank].g_iAmmoCount;
@@ -1853,7 +1893,7 @@ bool bIsSurvivorInsideSaferoom(int survivor)
 
 	return false;
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action tTimerWarpCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -1918,7 +1958,7 @@ Action tTimerWarpCombo3(Handle timer, DataPack pack)
 
 	return Plugin_Continue;
 }
-
+#endif
 Action tTimerWarp(Handle timer, DataPack pack)
 {
 	pack.Reset();

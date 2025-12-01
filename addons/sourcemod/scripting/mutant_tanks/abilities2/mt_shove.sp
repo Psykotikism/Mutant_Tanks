@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2017-2026  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -232,9 +232,9 @@ public void OnPluginStart()
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 	LoadTranslations("mutant_tanks_names.phrases");
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	RegConsoleCmd("sm_mt_shove", cmdShoveInfo, "View information about the Shove ability.");
-
+#endif
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -265,7 +265,9 @@ void vShoveClientPutInServer(int client)
 public void OnClientPutInServer(int client)
 #endif
 {
+#if (MT_INCLUDE_DAMAGEHOOKS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	SDKHook(client, SDKHook_OnTakeDamage, OnShoveTakeDamage);
+#endif
 	vShoveReset3(client);
 }
 
@@ -286,7 +288,7 @@ public void OnMapEnd()
 {
 	vShoveReset();
 }
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if !defined MT_ABILITIES_MAIN2
 Action cmdShoveInfo(int client, int args)
 {
@@ -315,7 +317,8 @@ Action cmdShoveInfo(int client, int args)
 	return Plugin_Handled;
 }
 #endif
-
+#endif
+#if (MT_INCLUDE_MENUS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 void vShoveMenu(int client, const char[] name, int item)
 {
 	if (StrContains(MT_SHOVE_SECTION4, name, false) == -1)
@@ -425,7 +428,8 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 		FormatEx(buffer, size, "%T", "ShoveMenu2", client);
 	}
 }
-
+#endif
+#if (MT_INCLUDE_DAMAGEHOOKS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action OnShoveTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
@@ -465,7 +469,7 @@ Action OnShoveTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 	return Plugin_Continue;
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vShovePluginCheck(ArrayList list)
 #else
@@ -486,7 +490,7 @@ public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, 
 	list3.PushString(MT_SHOVE_SECTION3);
 	list4.PushString(MT_SHOVE_SECTION4);
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN2
 void vShoveCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, const char[] classname)
 #else
@@ -576,7 +580,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vShoveConfigsLoad(int mode)
 #else
@@ -710,14 +714,19 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esShoveTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SHOVE_SECTION, MT_SHOVE_SECTION2, MT_SHOVE_SECTION3, MT_SHOVE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esShoveTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esShoveTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_SHOVE_SECTION, MT_SHOVE_SECTION2, MT_SHOVE_SECTION3, MT_SHOVE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esShoveTeammate[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esShoveTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_SHOVE_SECTION, MT_SHOVE_SECTION2, MT_SHOVE_SECTION3, MT_SHOVE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esShoveTeammate[admin].g_iHumanAbility, value, -1, 2);
 			g_esShoveTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_SHOVE_SECTION, MT_SHOVE_SECTION2, MT_SHOVE_SECTION3, MT_SHOVE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esShoveTeammate[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esShoveTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_SHOVE_SECTION, MT_SHOVE_SECTION2, MT_SHOVE_SECTION3, MT_SHOVE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esShoveTeammate[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esShoveTeammate[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_SHOVE_SECTION, MT_SHOVE_SECTION2, MT_SHOVE_SECTION3, MT_SHOVE_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esShoveTeammate[admin].g_iHumanRangeCooldown, value, -1, 99999);
+#endif
 			g_esShoveTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SHOVE_SECTION, MT_SHOVE_SECTION2, MT_SHOVE_SECTION3, MT_SHOVE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esShoveTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esShoveTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_SHOVE_SECTION, MT_SHOVE_SECTION2, MT_SHOVE_SECTION3, MT_SHOVE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esShoveTeammate[admin].g_iRequiresHumans, value, -1, 32);
 			g_esShoveTeammate[admin].g_iShoveAbility = iGetKeyValue(subsection, MT_SHOVE_SECTION, MT_SHOVE_SECTION2, MT_SHOVE_SECTION3, MT_SHOVE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esShoveTeammate[admin].g_iShoveAbility, value, -1, 1);
@@ -738,13 +747,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esShoveTeammate[admin].g_iShoveRangeCooldown = iGetKeyValue(subsection, MT_SHOVE_SECTION, MT_SHOVE_SECTION2, MT_SHOVE_SECTION3, MT_SHOVE_SECTION4, key, "ShoveRangeCooldown", "Shove Range Cooldown", "Shove_Range_Cooldown", "rangecooldown", g_esShoveTeammate[admin].g_iShoveRangeCooldown, value, -1, 99999);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esShovePlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SHOVE_SECTION, MT_SHOVE_SECTION2, MT_SHOVE_SECTION3, MT_SHOVE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esShovePlayer[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esShovePlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_SHOVE_SECTION, MT_SHOVE_SECTION2, MT_SHOVE_SECTION3, MT_SHOVE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esShovePlayer[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esShovePlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_SHOVE_SECTION, MT_SHOVE_SECTION2, MT_SHOVE_SECTION3, MT_SHOVE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esShovePlayer[admin].g_iHumanAbility, value, -1, 2);
 			g_esShovePlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_SHOVE_SECTION, MT_SHOVE_SECTION2, MT_SHOVE_SECTION3, MT_SHOVE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esShovePlayer[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esShovePlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_SHOVE_SECTION, MT_SHOVE_SECTION2, MT_SHOVE_SECTION3, MT_SHOVE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esShovePlayer[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esShovePlayer[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_SHOVE_SECTION, MT_SHOVE_SECTION2, MT_SHOVE_SECTION3, MT_SHOVE_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esShovePlayer[admin].g_iHumanRangeCooldown, value, -1, 99999);
+#endif
 			g_esShovePlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SHOVE_SECTION, MT_SHOVE_SECTION2, MT_SHOVE_SECTION3, MT_SHOVE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esShovePlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esShovePlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_SHOVE_SECTION, MT_SHOVE_SECTION2, MT_SHOVE_SECTION3, MT_SHOVE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esShovePlayer[admin].g_iRequiresHumans, value, -1, 32);
 			g_esShovePlayer[admin].g_iShoveAbility = iGetKeyValue(subsection, MT_SHOVE_SECTION, MT_SHOVE_SECTION2, MT_SHOVE_SECTION3, MT_SHOVE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esShovePlayer[admin].g_iShoveAbility, value, -1, 1);
@@ -770,14 +786,19 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esShoveSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SHOVE_SECTION, MT_SHOVE_SECTION2, MT_SHOVE_SECTION3, MT_SHOVE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esShoveSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esShoveSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_SHOVE_SECTION, MT_SHOVE_SECTION2, MT_SHOVE_SECTION3, MT_SHOVE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esShoveSpecial[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esShoveSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_SHOVE_SECTION, MT_SHOVE_SECTION2, MT_SHOVE_SECTION3, MT_SHOVE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esShoveSpecial[type].g_iHumanAbility, value, -1, 2);
 			g_esShoveSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_SHOVE_SECTION, MT_SHOVE_SECTION2, MT_SHOVE_SECTION3, MT_SHOVE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esShoveSpecial[type].g_iHumanAmmo, value, -1, 99999);
 			g_esShoveSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_SHOVE_SECTION, MT_SHOVE_SECTION2, MT_SHOVE_SECTION3, MT_SHOVE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esShoveSpecial[type].g_iHumanCooldown, value, -1, 99999);
 			g_esShoveSpecial[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_SHOVE_SECTION, MT_SHOVE_SECTION2, MT_SHOVE_SECTION3, MT_SHOVE_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esShoveSpecial[type].g_iHumanRangeCooldown, value, -1, 99999);
+#endif
 			g_esShoveSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SHOVE_SECTION, MT_SHOVE_SECTION2, MT_SHOVE_SECTION3, MT_SHOVE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esShoveSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esShoveSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_SHOVE_SECTION, MT_SHOVE_SECTION2, MT_SHOVE_SECTION3, MT_SHOVE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esShoveSpecial[type].g_iRequiresHumans, value, -1, 32);
 			g_esShoveSpecial[type].g_iShoveAbility = iGetKeyValue(subsection, MT_SHOVE_SECTION, MT_SHOVE_SECTION2, MT_SHOVE_SECTION3, MT_SHOVE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esShoveSpecial[type].g_iShoveAbility, value, -1, 1);
@@ -798,13 +819,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esShoveSpecial[type].g_iShoveRangeCooldown = iGetKeyValue(subsection, MT_SHOVE_SECTION, MT_SHOVE_SECTION2, MT_SHOVE_SECTION3, MT_SHOVE_SECTION4, key, "ShoveRangeCooldown", "Shove Range Cooldown", "Shove_Range_Cooldown", "rangecooldown", g_esShoveSpecial[type].g_iShoveRangeCooldown, value, -1, 99999);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esShoveAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SHOVE_SECTION, MT_SHOVE_SECTION2, MT_SHOVE_SECTION3, MT_SHOVE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esShoveAbility[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esShoveAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_SHOVE_SECTION, MT_SHOVE_SECTION2, MT_SHOVE_SECTION3, MT_SHOVE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esShoveAbility[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esShoveAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_SHOVE_SECTION, MT_SHOVE_SECTION2, MT_SHOVE_SECTION3, MT_SHOVE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esShoveAbility[type].g_iHumanAbility, value, -1, 2);
 			g_esShoveAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_SHOVE_SECTION, MT_SHOVE_SECTION2, MT_SHOVE_SECTION3, MT_SHOVE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esShoveAbility[type].g_iHumanAmmo, value, -1, 99999);
 			g_esShoveAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_SHOVE_SECTION, MT_SHOVE_SECTION2, MT_SHOVE_SECTION3, MT_SHOVE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esShoveAbility[type].g_iHumanCooldown, value, -1, 99999);
 			g_esShoveAbility[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_SHOVE_SECTION, MT_SHOVE_SECTION2, MT_SHOVE_SECTION3, MT_SHOVE_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esShoveAbility[type].g_iHumanRangeCooldown, value, -1, 99999);
+#endif
 			g_esShoveAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SHOVE_SECTION, MT_SHOVE_SECTION2, MT_SHOVE_SECTION3, MT_SHOVE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esShoveAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esShoveAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_SHOVE_SECTION, MT_SHOVE_SECTION2, MT_SHOVE_SECTION3, MT_SHOVE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esShoveAbility[type].g_iRequiresHumans, value, -1, 32);
 			g_esShoveAbility[type].g_iShoveAbility = iGetKeyValue(subsection, MT_SHOVE_SECTION, MT_SHOVE_SECTION2, MT_SHOVE_SECTION3, MT_SHOVE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esShoveAbility[type].g_iShoveAbility, value, -1, 1);
@@ -840,20 +868,25 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esShovePlayer[tank].g_iTankType = apply ? type : 0;
 	int iType = g_esShovePlayer[tank].g_iTankTypeRecorded;
 
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		g_esShoveCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_flCloseAreasOnly, g_esShovePlayer[tank].g_flCloseAreasOnly, g_esShoveSpecial[iType].g_flCloseAreasOnly, g_esShoveAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esShoveCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_iComboAbility, g_esShovePlayer[tank].g_iComboAbility, g_esShoveSpecial[iType].g_iComboAbility, g_esShoveAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esShoveCache[tank].g_flShoveChance = flGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_flShoveChance, g_esShovePlayer[tank].g_flShoveChance, g_esShoveSpecial[iType].g_flShoveChance, g_esShoveAbility[iType].g_flShoveChance, 1);
 		g_esShoveCache[tank].g_flShoveDeathChance = flGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_flShoveDeathChance, g_esShovePlayer[tank].g_flShoveDeathChance, g_esShoveSpecial[iType].g_flShoveDeathChance, g_esShoveAbility[iType].g_flShoveDeathChance, 1);
 		g_esShoveCache[tank].g_flShoveDeathRange = flGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_flShoveDeathRange, g_esShovePlayer[tank].g_flShoveDeathRange, g_esShoveSpecial[iType].g_flShoveDeathRange, g_esShoveAbility[iType].g_flShoveDeathRange, 1);
 		g_esShoveCache[tank].g_flShoveInterval = flGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_flShoveInterval, g_esShovePlayer[tank].g_flShoveInterval, g_esShoveSpecial[iType].g_flShoveInterval, g_esShoveAbility[iType].g_flShoveInterval, 1);
 		g_esShoveCache[tank].g_flShoveRange = flGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_flShoveRange, g_esShovePlayer[tank].g_flShoveRange, g_esShoveSpecial[iType].g_flShoveRange, g_esShoveAbility[iType].g_flShoveRange, 1);
 		g_esShoveCache[tank].g_flShoveRangeChance = flGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_flShoveRangeChance, g_esShovePlayer[tank].g_flShoveRangeChance, g_esShoveSpecial[iType].g_flShoveRangeChance, g_esShoveAbility[iType].g_flShoveRangeChance, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esShoveCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_iHumanAbility, g_esShovePlayer[tank].g_iHumanAbility, g_esShoveSpecial[iType].g_iHumanAbility, g_esShoveAbility[iType].g_iHumanAbility, 1);
 		g_esShoveCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_iHumanAmmo, g_esShovePlayer[tank].g_iHumanAmmo, g_esShoveSpecial[iType].g_iHumanAmmo, g_esShoveAbility[iType].g_iHumanAmmo, 1);
 		g_esShoveCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_iHumanCooldown, g_esShovePlayer[tank].g_iHumanCooldown, g_esShoveSpecial[iType].g_iHumanCooldown, g_esShoveAbility[iType].g_iHumanCooldown, 1);
 		g_esShoveCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_iHumanRangeCooldown, g_esShovePlayer[tank].g_iHumanRangeCooldown, g_esShoveSpecial[iType].g_iHumanRangeCooldown, g_esShoveAbility[iType].g_iHumanRangeCooldown, 1);
+#endif
 		g_esShoveCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_flOpenAreasOnly, g_esShovePlayer[tank].g_flOpenAreasOnly, g_esShoveSpecial[iType].g_flOpenAreasOnly, g_esShoveAbility[iType].g_flOpenAreasOnly, 1);
 		g_esShoveCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_iRequiresHumans, g_esShovePlayer[tank].g_iRequiresHumans, g_esShoveSpecial[iType].g_iRequiresHumans, g_esShoveAbility[iType].g_iRequiresHumans, 1);
 		g_esShoveCache[tank].g_iShoveAbility = iGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_iShoveAbility, g_esShovePlayer[tank].g_iShoveAbility, g_esShoveSpecial[iType].g_iShoveAbility, g_esShoveAbility[iType].g_iShoveAbility, 1);
@@ -868,19 +901,26 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esShoveCache[tank].g_iShoveSight = iGetSubSettingValue(apply, bHuman, g_esShoveTeammate[tank].g_iShoveSight, g_esShovePlayer[tank].g_iShoveSight, g_esShoveSpecial[iType].g_iShoveSight, g_esShoveAbility[iType].g_iShoveSight, 1);
 	}
 	else
+#else
+	if (!bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+#endif
 	{
 		g_esShoveCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_flCloseAreasOnly, g_esShoveAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esShoveCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_iComboAbility, g_esShoveAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esShoveCache[tank].g_flShoveChance = flGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_flShoveChance, g_esShoveAbility[iType].g_flShoveChance, 1);
 		g_esShoveCache[tank].g_flShoveDeathChance = flGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_flShoveDeathChance, g_esShoveAbility[iType].g_flShoveDeathChance, 1);
 		g_esShoveCache[tank].g_flShoveDeathRange = flGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_flShoveDeathRange, g_esShoveAbility[iType].g_flShoveDeathRange, 1);
 		g_esShoveCache[tank].g_flShoveInterval = flGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_flShoveInterval, g_esShoveAbility[iType].g_flShoveInterval, 1);
 		g_esShoveCache[tank].g_flShoveRange = flGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_flShoveRange, g_esShoveAbility[iType].g_flShoveRange, 1);
 		g_esShoveCache[tank].g_flShoveRangeChance = flGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_flShoveRangeChance, g_esShoveAbility[iType].g_flShoveRangeChance, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esShoveCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_iHumanAbility, g_esShoveAbility[iType].g_iHumanAbility, 1);
 		g_esShoveCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_iHumanAmmo, g_esShoveAbility[iType].g_iHumanAmmo, 1);
 		g_esShoveCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_iHumanCooldown, g_esShoveAbility[iType].g_iHumanCooldown, 1);
 		g_esShoveCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_iHumanRangeCooldown, g_esShoveAbility[iType].g_iHumanRangeCooldown, 1);
+#endif
 		g_esShoveCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_flOpenAreasOnly, g_esShoveAbility[iType].g_flOpenAreasOnly, 1);
 		g_esShoveCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_iRequiresHumans, g_esShoveAbility[iType].g_iRequiresHumans, 1);
 		g_esShoveCache[tank].g_iShoveAbility = iGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_iShoveAbility, g_esShoveAbility[iType].g_iShoveAbility, 1);
@@ -993,7 +1033,7 @@ public void MT_OnAbilityActivated(int tank)
 		vShoveAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
 }
-
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN2
 void vShoveButtonPressed(int tank, int button)
 #else
@@ -1019,7 +1059,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vShoveChangeType(int tank, int oldType)
 #else
@@ -1269,7 +1309,7 @@ void vShoveReset3(int tank)
 	g_esShovePlayer[tank].g_iCooldown = -1;
 	g_esShovePlayer[tank].g_iRangeCooldown = -1;
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action tTimerShoveCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -1318,7 +1358,7 @@ Action tTimerShoveCombo2(Handle timer, DataPack pack)
 
 	return Plugin_Continue;
 }
-
+#endif
 Action tTimerShove(Handle timer, DataPack pack)
 {
 	pack.Reset();

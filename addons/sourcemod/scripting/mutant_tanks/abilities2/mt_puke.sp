@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2017-2026  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -225,9 +225,9 @@ public void OnPluginStart()
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 	LoadTranslations("mutant_tanks_names.phrases");
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	RegConsoleCmd("sm_mt_puke", cmdPukeInfo, "View information about the Puke ability.");
-
+#endif
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -261,7 +261,9 @@ void vPukeClientPutInServer(int client)
 public void OnClientPutInServer(int client)
 #endif
 {
+#if (MT_INCLUDE_DAMAGEHOOKS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	SDKHook(client, SDKHook_OnTakeDamage, OnPukeTakeDamage);
+#endif
 	vRemovePuke(client);
 }
 
@@ -282,7 +284,7 @@ public void OnMapEnd()
 {
 	vPukeReset();
 }
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if !defined MT_ABILITIES_MAIN2
 Action cmdPukeInfo(int client, int args)
 {
@@ -311,7 +313,8 @@ Action cmdPukeInfo(int client, int args)
 	return Plugin_Handled;
 }
 #endif
-
+#endif
+#if (MT_INCLUDE_MENUS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 void vPukeMenu(int client, const char[] name, int item)
 {
 	if (StrContains(MT_PUKE_SECTION4, name, false) == -1)
@@ -418,7 +421,8 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 		FormatEx(buffer, size, "%T", "PukeMenu2", client);
 	}
 }
-
+#endif
+#if (MT_INCLUDE_DAMAGEHOOKS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action OnPukeTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
@@ -458,7 +462,7 @@ Action OnPukeTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 	return Plugin_Continue;
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vPukePluginCheck(ArrayList list)
 #else
@@ -479,7 +483,7 @@ public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, 
 	list3.PushString(MT_PUKE_SECTION3);
 	list4.PushString(MT_PUKE_SECTION4);
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN2
 void vPukeCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, const char[] classname)
 #else
@@ -569,7 +573,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vPukeConfigsLoad(int mode)
 #else
@@ -695,14 +699,19 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esPukeTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_PUKE_SECTION, MT_PUKE_SECTION2, MT_PUKE_SECTION3, MT_PUKE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esPukeTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esPukeTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_PUKE_SECTION, MT_PUKE_SECTION2, MT_PUKE_SECTION3, MT_PUKE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esPukeTeammate[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esPukeTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_PUKE_SECTION, MT_PUKE_SECTION2, MT_PUKE_SECTION3, MT_PUKE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPukeTeammate[admin].g_iHumanAbility, value, -1, 2);
 			g_esPukeTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_PUKE_SECTION, MT_PUKE_SECTION2, MT_PUKE_SECTION3, MT_PUKE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPukeTeammate[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esPukeTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_PUKE_SECTION, MT_PUKE_SECTION2, MT_PUKE_SECTION3, MT_PUKE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPukeTeammate[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esPukeTeammate[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_PUKE_SECTION, MT_PUKE_SECTION2, MT_PUKE_SECTION3, MT_PUKE_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esPukeTeammate[admin].g_iHumanRangeCooldown, value, -1, 99999);
+#endif
 			g_esPukeTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_PUKE_SECTION, MT_PUKE_SECTION2, MT_PUKE_SECTION3, MT_PUKE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPukeTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esPukeTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_PUKE_SECTION, MT_PUKE_SECTION2, MT_PUKE_SECTION3, MT_PUKE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPukeTeammate[admin].g_iRequiresHumans, value, -1, 32);
 			g_esPukeTeammate[admin].g_iPukeAbility = iGetKeyValue(subsection, MT_PUKE_SECTION, MT_PUKE_SECTION2, MT_PUKE_SECTION3, MT_PUKE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPukeTeammate[admin].g_iPukeAbility, value, -1, 1);
@@ -721,13 +730,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esPukeTeammate[admin].g_iPukeRangeCooldown = iGetKeyValue(subsection, MT_PUKE_SECTION, MT_PUKE_SECTION2, MT_PUKE_SECTION3, MT_PUKE_SECTION4, key, "PukeRangeCooldown", "Puke Range Cooldown", "Puke_Range_Cooldown", "rangecooldown", g_esPukeTeammate[admin].g_iPukeRangeCooldown, value, -1, 99999);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esPukePlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_PUKE_SECTION, MT_PUKE_SECTION2, MT_PUKE_SECTION3, MT_PUKE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esPukePlayer[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esPukePlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_PUKE_SECTION, MT_PUKE_SECTION2, MT_PUKE_SECTION3, MT_PUKE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esPukePlayer[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esPukePlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_PUKE_SECTION, MT_PUKE_SECTION2, MT_PUKE_SECTION3, MT_PUKE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPukePlayer[admin].g_iHumanAbility, value, -1, 2);
 			g_esPukePlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_PUKE_SECTION, MT_PUKE_SECTION2, MT_PUKE_SECTION3, MT_PUKE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPukePlayer[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esPukePlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_PUKE_SECTION, MT_PUKE_SECTION2, MT_PUKE_SECTION3, MT_PUKE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPukePlayer[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esPukePlayer[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_PUKE_SECTION, MT_PUKE_SECTION2, MT_PUKE_SECTION3, MT_PUKE_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esPukePlayer[admin].g_iHumanRangeCooldown, value, -1, 99999);
+#endif
 			g_esPukePlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_PUKE_SECTION, MT_PUKE_SECTION2, MT_PUKE_SECTION3, MT_PUKE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPukePlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esPukePlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_PUKE_SECTION, MT_PUKE_SECTION2, MT_PUKE_SECTION3, MT_PUKE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPukePlayer[admin].g_iRequiresHumans, value, -1, 32);
 			g_esPukePlayer[admin].g_iPukeAbility = iGetKeyValue(subsection, MT_PUKE_SECTION, MT_PUKE_SECTION2, MT_PUKE_SECTION3, MT_PUKE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPukePlayer[admin].g_iPukeAbility, value, -1, 1);
@@ -751,14 +767,19 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esPukeSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_PUKE_SECTION, MT_PUKE_SECTION2, MT_PUKE_SECTION3, MT_PUKE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esPukeSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esPukeSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_PUKE_SECTION, MT_PUKE_SECTION2, MT_PUKE_SECTION3, MT_PUKE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esPukeSpecial[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esPukeSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_PUKE_SECTION, MT_PUKE_SECTION2, MT_PUKE_SECTION3, MT_PUKE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPukeSpecial[type].g_iHumanAbility, value, -1, 2);
 			g_esPukeSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_PUKE_SECTION, MT_PUKE_SECTION2, MT_PUKE_SECTION3, MT_PUKE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPukeSpecial[type].g_iHumanAmmo, value, -1, 99999);
 			g_esPukeSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_PUKE_SECTION, MT_PUKE_SECTION2, MT_PUKE_SECTION3, MT_PUKE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPukeSpecial[type].g_iHumanCooldown, value, -1, 99999);
 			g_esPukeSpecial[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_PUKE_SECTION, MT_PUKE_SECTION2, MT_PUKE_SECTION3, MT_PUKE_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esPukeSpecial[type].g_iHumanRangeCooldown, value, -1, 99999);
+#endif
 			g_esPukeSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_PUKE_SECTION, MT_PUKE_SECTION2, MT_PUKE_SECTION3, MT_PUKE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPukeSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esPukeSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_PUKE_SECTION, MT_PUKE_SECTION2, MT_PUKE_SECTION3, MT_PUKE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPukeSpecial[type].g_iRequiresHumans, value, -1, 32);
 			g_esPukeSpecial[type].g_iPukeAbility = iGetKeyValue(subsection, MT_PUKE_SECTION, MT_PUKE_SECTION2, MT_PUKE_SECTION3, MT_PUKE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPukeSpecial[type].g_iPukeAbility, value, -1, 1);
@@ -777,13 +798,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esPukeSpecial[type].g_iPukeRangeCooldown = iGetKeyValue(subsection, MT_PUKE_SECTION, MT_PUKE_SECTION2, MT_PUKE_SECTION3, MT_PUKE_SECTION4, key, "PukeRangeCooldown", "Puke Range Cooldown", "Puke_Range_Cooldown", "rangecooldown", g_esPukeSpecial[type].g_iPukeRangeCooldown, value, -1, 99999);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esPukeAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_PUKE_SECTION, MT_PUKE_SECTION2, MT_PUKE_SECTION3, MT_PUKE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esPukeAbility[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esPukeAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_PUKE_SECTION, MT_PUKE_SECTION2, MT_PUKE_SECTION3, MT_PUKE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esPukeAbility[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esPukeAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_PUKE_SECTION, MT_PUKE_SECTION2, MT_PUKE_SECTION3, MT_PUKE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPukeAbility[type].g_iHumanAbility, value, -1, 2);
 			g_esPukeAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_PUKE_SECTION, MT_PUKE_SECTION2, MT_PUKE_SECTION3, MT_PUKE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPukeAbility[type].g_iHumanAmmo, value, -1, 99999);
 			g_esPukeAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_PUKE_SECTION, MT_PUKE_SECTION2, MT_PUKE_SECTION3, MT_PUKE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPukeAbility[type].g_iHumanCooldown, value, -1, 99999);
 			g_esPukeAbility[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_PUKE_SECTION, MT_PUKE_SECTION2, MT_PUKE_SECTION3, MT_PUKE_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esPukeAbility[type].g_iHumanRangeCooldown, value, -1, 99999);
+#endif
 			g_esPukeAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_PUKE_SECTION, MT_PUKE_SECTION2, MT_PUKE_SECTION3, MT_PUKE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPukeAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esPukeAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_PUKE_SECTION, MT_PUKE_SECTION2, MT_PUKE_SECTION3, MT_PUKE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPukeAbility[type].g_iRequiresHumans, value, -1, 32);
 			g_esPukeAbility[type].g_iPukeAbility = iGetKeyValue(subsection, MT_PUKE_SECTION, MT_PUKE_SECTION2, MT_PUKE_SECTION3, MT_PUKE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPukeAbility[type].g_iPukeAbility, value, -1, 1);
@@ -819,19 +847,24 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #if !defined MT_ABILITIES_MAIN2
 	g_iGraphicsLevel = MT_GetGraphicsLevel();
 #endif
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		g_esPukeCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_flCloseAreasOnly, g_esPukePlayer[tank].g_flCloseAreasOnly, g_esPukeSpecial[iType].g_flCloseAreasOnly, g_esPukeAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esPukeCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_iComboAbility, g_esPukePlayer[tank].g_iComboAbility, g_esPukeSpecial[iType].g_iComboAbility, g_esPukeAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esPukeCache[tank].g_flPukeChance = flGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_flPukeChance, g_esPukePlayer[tank].g_flPukeChance, g_esPukeSpecial[iType].g_flPukeChance, g_esPukeAbility[iType].g_flPukeChance, 1);
 		g_esPukeCache[tank].g_flPukeDeathChance = flGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_flPukeDeathChance, g_esPukePlayer[tank].g_flPukeDeathChance, g_esPukeSpecial[iType].g_flPukeDeathChance, g_esPukeAbility[iType].g_flPukeDeathChance, 1);
 		g_esPukeCache[tank].g_flPukeDeathRange = flGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_flPukeDeathRange, g_esPukePlayer[tank].g_flPukeDeathRange, g_esPukeSpecial[iType].g_flPukeDeathRange, g_esPukeAbility[iType].g_flPukeDeathRange, 1);
 		g_esPukeCache[tank].g_flPukeRange = flGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_flPukeRange, g_esPukePlayer[tank].g_flPukeRange, g_esPukeSpecial[iType].g_flPukeRange, g_esPukeAbility[iType].g_flPukeRange, 1);
 		g_esPukeCache[tank].g_flPukeRangeChance = flGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_flPukeRangeChance, g_esPukePlayer[tank].g_flPukeRangeChance, g_esPukeSpecial[iType].g_flPukeRangeChance, g_esPukeAbility[iType].g_flPukeRangeChance, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esPukeCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_iHumanAbility, g_esPukePlayer[tank].g_iHumanAbility, g_esPukeSpecial[iType].g_iHumanAbility, g_esPukeAbility[iType].g_iHumanAbility, 1);
 		g_esPukeCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_iHumanAmmo, g_esPukePlayer[tank].g_iHumanAmmo, g_esPukeSpecial[iType].g_iHumanAmmo, g_esPukeAbility[iType].g_iHumanAmmo, 1);
 		g_esPukeCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_iHumanCooldown, g_esPukePlayer[tank].g_iHumanCooldown, g_esPukeSpecial[iType].g_iHumanCooldown, g_esPukeAbility[iType].g_iHumanCooldown, 1);
 		g_esPukeCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_iHumanRangeCooldown, g_esPukePlayer[tank].g_iHumanRangeCooldown, g_esPukeSpecial[iType].g_iHumanRangeCooldown, g_esPukeAbility[iType].g_iHumanRangeCooldown, 1);
+#endif
 		g_esPukeCache[tank].g_iPukeAbility = iGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_iPukeAbility, g_esPukePlayer[tank].g_iPukeAbility, g_esPukeSpecial[iType].g_iPukeAbility, g_esPukeAbility[iType].g_iPukeAbility, 1);
 		g_esPukeCache[tank].g_iPukeCooldown = iGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_iPukeCooldown, g_esPukePlayer[tank].g_iPukeCooldown, g_esPukeSpecial[iType].g_iPukeCooldown, g_esPukeAbility[iType].g_iPukeCooldown, 1);
 		g_esPukeCache[tank].g_iPukeDeath = iGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_iPukeDeath, g_esPukePlayer[tank].g_iPukeDeath, g_esPukeSpecial[iType].g_iPukeDeath, g_esPukeAbility[iType].g_iPukeDeath, 1);
@@ -845,18 +878,25 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esPukeCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esPukeTeammate[tank].g_iRequiresHumans, g_esPukePlayer[tank].g_iRequiresHumans, g_esPukeSpecial[iType].g_iRequiresHumans, g_esPukeAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
+#else
+	if (!bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+#endif
 	{
 		g_esPukeCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_flCloseAreasOnly, g_esPukeAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esPukeCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_iComboAbility, g_esPukeAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esPukeCache[tank].g_flPukeChance = flGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_flPukeChance, g_esPukeAbility[iType].g_flPukeChance, 1);
 		g_esPukeCache[tank].g_flPukeDeathChance = flGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_flPukeDeathChance, g_esPukeAbility[iType].g_flPukeDeathChance, 1);
 		g_esPukeCache[tank].g_flPukeDeathRange = flGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_flPukeDeathRange, g_esPukeAbility[iType].g_flPukeDeathRange, 1);
 		g_esPukeCache[tank].g_flPukeRange = flGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_flPukeRange, g_esPukeAbility[iType].g_flPukeRange, 1);
 		g_esPukeCache[tank].g_flPukeRangeChance = flGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_flPukeRangeChance, g_esPukeAbility[iType].g_flPukeRangeChance, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esPukeCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_iHumanAbility, g_esPukeAbility[iType].g_iHumanAbility, 1);
 		g_esPukeCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_iHumanAmmo, g_esPukeAbility[iType].g_iHumanAmmo, 1);
 		g_esPukeCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_iHumanCooldown, g_esPukeAbility[iType].g_iHumanCooldown, 1);
 		g_esPukeCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_iHumanRangeCooldown, g_esPukeAbility[iType].g_iHumanRangeCooldown, 1);
+#endif
 		g_esPukeCache[tank].g_iPukeAbility = iGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_iPukeAbility, g_esPukeAbility[iType].g_iPukeAbility, 1);
 		g_esPukeCache[tank].g_iPukeCooldown = iGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_iPukeCooldown, g_esPukeAbility[iType].g_iPukeCooldown, 1);
 		g_esPukeCache[tank].g_iPukeDeath = iGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_iPukeDeath, g_esPukeAbility[iType].g_iPukeDeath, 1);
@@ -958,7 +998,7 @@ public void MT_OnAbilityActivated(int tank)
 		vPukeAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
 }
-
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN2
 void vPukeButtonPressed(int tank, int button)
 #else
@@ -984,7 +1024,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vPukeChangeType(int tank, int oldType)
 #else
@@ -1215,7 +1255,7 @@ void vPukeReset()
 		}
 	}
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action tTimerPukeCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -1264,7 +1304,7 @@ Action tTimerPukeCombo2(Handle timer, DataPack pack)
 
 	return Plugin_Continue;
 }
-
+#endif
 Action tTimerPukeHit(Handle timer, DataPack pack)
 {
 	pack.Reset();

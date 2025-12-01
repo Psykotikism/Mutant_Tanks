@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2017-2026  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -220,9 +220,9 @@ public void OnPluginStart()
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 	LoadTranslations("mutant_tanks_names.phrases");
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	RegConsoleCmd("sm_mt_aimless", cmdAimlessInfo, "View information about the Aimless ability.");
-
+#endif
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -253,7 +253,9 @@ void vAimlessClientPutInServer(int client)
 public void OnClientPutInServer(int client)
 #endif
 {
+#if (MT_INCLUDE_DAMAGEHOOKS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	SDKHook(client, SDKHook_OnTakeDamage, OnAimlessTakeDamage);
+#endif
 	vAimlessReset2(client);
 }
 
@@ -274,7 +276,7 @@ public void OnMapEnd()
 {
 	vAimlessReset();
 }
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if !defined MT_ABILITIES_MAIN
 Action cmdAimlessInfo(int client, int args)
 {
@@ -303,7 +305,8 @@ Action cmdAimlessInfo(int client, int args)
 	return Plugin_Handled;
 }
 #endif
-
+#endif
+#if (MT_INCLUDE_MENUS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 void vAimlessMenu(int client, const char[] name, int item)
 {
 	if (StrContains(MT_AIMLESS_SECTION4, name, false) == -1)
@@ -413,7 +416,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 		FormatEx(buffer, size, "%T", "AimlessMenu2", client);
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN
 Action aAimlessPlayerRunCmd(int client, int &buttons)
 #else
@@ -449,7 +452,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 	return Plugin_Continue;
 }
-
+#if (MT_INCLUDE_DAMAGEHOOKS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action OnAimlessTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
@@ -489,7 +492,7 @@ Action OnAimlessTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 	return Plugin_Continue;
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN
 void vAimlessPluginCheck(ArrayList list)
 #else
@@ -510,7 +513,7 @@ public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, 
 	list3.PushString(MT_AIMLESS_SECTION3);
 	list4.PushString(MT_AIMLESS_SECTION4);
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN
 void vAimlessCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, const char[] classname)
 #else
@@ -598,7 +601,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN
 void vAimlessConfigsLoad(int mode)
 #else
@@ -720,14 +723,19 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esAimlessTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esAimlessTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esAimlessTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esAimlessTeammate[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esAimlessTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAimlessTeammate[admin].g_iHumanAbility, value, -1, 2);
 			g_esAimlessTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAimlessTeammate[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esAimlessTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAimlessTeammate[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esAimlessTeammate[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esAimlessTeammate[admin].g_iHumanRangeCooldown, value, -1, 99999);
+#endif
 			g_esAimlessTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAimlessTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esAimlessTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAimlessTeammate[admin].g_iRequiresHumans, value, -1, 32);
 			g_esAimlessTeammate[admin].g_iAimlessAbility = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAimlessTeammate[admin].g_iAimlessAbility, value, -1, 1);
@@ -745,13 +753,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esAimlessTeammate[admin].g_iAimlessRangeCooldown = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "AimlessRangeCooldown", "Aimless Range Cooldown", "Aimless_Range_Cooldown", "rangecooldown", g_esAimlessTeammate[admin].g_iAimlessRangeCooldown, value, -1, 99999);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esAimlessPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esAimlessPlayer[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esAimlessPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esAimlessPlayer[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esAimlessPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAimlessPlayer[admin].g_iHumanAbility, value, -1, 2);
 			g_esAimlessPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAimlessPlayer[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esAimlessPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAimlessPlayer[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esAimlessPlayer[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esAimlessPlayer[admin].g_iHumanRangeCooldown, value, -1, 99999);
+#endif
 			g_esAimlessPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAimlessPlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esAimlessPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAimlessPlayer[admin].g_iRequiresHumans, value, -1, 32);
 			g_esAimlessPlayer[admin].g_iAimlessAbility = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAimlessPlayer[admin].g_iAimlessAbility, value, -1, 1);
@@ -774,14 +789,19 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esAimlessSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esAimlessSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esAimlessSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esAimlessSpecial[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esAimlessSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAimlessSpecial[type].g_iHumanAbility, value, -1, 2);
 			g_esAimlessSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAimlessSpecial[type].g_iHumanAmmo, value, -1, 99999);
 			g_esAimlessSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAimlessSpecial[type].g_iHumanCooldown, value, -1, 99999);
 			g_esAimlessSpecial[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esAimlessSpecial[type].g_iHumanRangeCooldown, value, -1, 99999);
+#endif
 			g_esAimlessSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAimlessSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esAimlessSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAimlessSpecial[type].g_iRequiresHumans, value, -1, 32);
 			g_esAimlessSpecial[type].g_iAimlessAbility = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAimlessSpecial[type].g_iAimlessAbility, value, -1, 1);
@@ -799,13 +819,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esAimlessSpecial[type].g_iAimlessRangeCooldown = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "AimlessRangeCooldown", "Aimless Range Cooldown", "Aimless_Range_Cooldown", "rangecooldown", g_esAimlessSpecial[type].g_iAimlessRangeCooldown, value, -1, 99999);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esAimlessAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esAimlessAbility[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esAimlessAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esAimlessAbility[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esAimlessAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAimlessAbility[type].g_iHumanAbility, value, -1, 2);
 			g_esAimlessAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAimlessAbility[type].g_iHumanAmmo, value, -1, 99999);
 			g_esAimlessAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAimlessAbility[type].g_iHumanCooldown, value, -1, 99999);
 			g_esAimlessAbility[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esAimlessAbility[type].g_iHumanRangeCooldown, value, -1, 99999);
+#endif
 			g_esAimlessAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAimlessAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esAimlessAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAimlessAbility[type].g_iRequiresHumans, value, -1, 32);
 			g_esAimlessAbility[type].g_iAimlessAbility = iGetKeyValue(subsection, MT_AIMLESS_SECTION, MT_AIMLESS_SECTION2, MT_AIMLESS_SECTION3, MT_AIMLESS_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAimlessAbility[type].g_iAimlessAbility, value, -1, 1);
@@ -838,6 +865,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esAimlessPlayer[tank].g_iTankType = apply ? type : 0;
 	int iType = g_esAimlessPlayer[tank].g_iTankTypeRecorded;
 
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		g_esAimlessCache[tank].g_flAimlessChance = flGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_flAimlessChance, g_esAimlessPlayer[tank].g_flAimlessChance, g_esAimlessSpecial[iType].g_flAimlessChance, g_esAimlessAbility[iType].g_flAimlessChance, 1);
@@ -854,15 +882,22 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esAimlessCache[tank].g_iAimlessRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_iAimlessRangeCooldown, g_esAimlessPlayer[tank].g_iAimlessRangeCooldown, g_esAimlessSpecial[iType].g_iAimlessRangeCooldown, g_esAimlessAbility[iType].g_iAimlessRangeCooldown, 1);
 		g_esAimlessCache[tank].g_iAimlessSight = iGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_iAimlessSight, g_esAimlessPlayer[tank].g_iAimlessSight, g_esAimlessSpecial[iType].g_iAimlessSight, g_esAimlessAbility[iType].g_iAimlessSight, 1);
 		g_esAimlessCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_flCloseAreasOnly, g_esAimlessPlayer[tank].g_flCloseAreasOnly, g_esAimlessSpecial[iType].g_flCloseAreasOnly, g_esAimlessAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esAimlessCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_iComboAbility, g_esAimlessPlayer[tank].g_iComboAbility, g_esAimlessSpecial[iType].g_iComboAbility, g_esAimlessAbility[iType].g_iComboAbility, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esAimlessCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_iHumanAbility, g_esAimlessPlayer[tank].g_iHumanAbility, g_esAimlessSpecial[iType].g_iHumanAbility, g_esAimlessAbility[iType].g_iHumanAbility, 1);
 		g_esAimlessCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_iHumanAmmo, g_esAimlessPlayer[tank].g_iHumanAmmo, g_esAimlessSpecial[iType].g_iHumanAmmo, g_esAimlessAbility[iType].g_iHumanAmmo, 1);
 		g_esAimlessCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_iHumanCooldown, g_esAimlessPlayer[tank].g_iHumanCooldown, g_esAimlessSpecial[iType].g_iHumanCooldown, g_esAimlessAbility[iType].g_iHumanCooldown, 1);
 		g_esAimlessCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_iHumanRangeCooldown, g_esAimlessPlayer[tank].g_iHumanRangeCooldown, g_esAimlessSpecial[iType].g_iHumanRangeCooldown, g_esAimlessAbility[iType].g_iHumanRangeCooldown, 1);
+#endif
 		g_esAimlessCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_flOpenAreasOnly, g_esAimlessPlayer[tank].g_flOpenAreasOnly, g_esAimlessSpecial[iType].g_flOpenAreasOnly, g_esAimlessAbility[iType].g_flOpenAreasOnly, 1);
 		g_esAimlessCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esAimlessTeammate[tank].g_iRequiresHumans, g_esAimlessPlayer[tank].g_iRequiresHumans, g_esAimlessSpecial[iType].g_iRequiresHumans, g_esAimlessAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
+#else
+	if (!bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+#endif
 	{
 		g_esAimlessCache[tank].g_flAimlessChance = flGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_flAimlessChance, g_esAimlessAbility[iType].g_flAimlessChance, 1);
 		g_esAimlessCache[tank].g_flAimlessDuration = flGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_flAimlessDuration, g_esAimlessAbility[iType].g_flAimlessDuration, 1);
@@ -878,11 +913,15 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esAimlessCache[tank].g_iAimlessRangeCooldown = iGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_iAimlessRangeCooldown, g_esAimlessAbility[iType].g_iAimlessRangeCooldown, 1);
 		g_esAimlessCache[tank].g_iAimlessSight = iGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_iAimlessSight, g_esAimlessAbility[iType].g_iAimlessSight, 1);
 		g_esAimlessCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_flCloseAreasOnly, g_esAimlessAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esAimlessCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_iComboAbility, g_esAimlessAbility[iType].g_iComboAbility, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esAimlessCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_iHumanAbility, g_esAimlessAbility[iType].g_iHumanAbility, 1);
 		g_esAimlessCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_iHumanAmmo, g_esAimlessAbility[iType].g_iHumanAmmo, 1);
 		g_esAimlessCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_iHumanCooldown, g_esAimlessAbility[iType].g_iHumanCooldown, 1);
 		g_esAimlessCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_iHumanRangeCooldown, g_esAimlessAbility[iType].g_iHumanRangeCooldown, 1);
+#endif
 		g_esAimlessCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_flOpenAreasOnly, g_esAimlessAbility[iType].g_flOpenAreasOnly, 1);
 		g_esAimlessCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_iRequiresHumans, g_esAimlessAbility[iType].g_iRequiresHumans, 1);
 	}
@@ -1013,7 +1052,7 @@ public void MT_OnAbilityActivated(int tank)
 		vAimlessAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
 }
-
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN
 void vAimlessButtonPressed(int tank, int button)
 #else
@@ -1039,7 +1078,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN
 void vAimlessChangeType(int tank, int oldType)
 #else
@@ -1269,7 +1308,7 @@ void vStopAimless(int survivor)
 
 	SetEntPropFloat(survivor, Prop_Send, "m_flNextAttack", 1.0);
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action tTimerAimlessCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -1318,7 +1357,7 @@ Action tTimerAimlessCombo2(Handle timer, DataPack pack)
 
 	return Plugin_Continue;
 }
-
+#endif
 Action tTimerStopAimless(Handle timer, DataPack pack)
 {
 	pack.Reset();

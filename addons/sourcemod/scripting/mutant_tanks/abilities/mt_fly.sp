@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2017-2026  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -197,9 +197,9 @@ public void OnPluginStart()
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 	LoadTranslations("mutant_tanks_names.phrases");
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	RegConsoleCmd("sm_mt_fly", cmdFlyInfo, "View information about the Fly ability.");
-
+#endif
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -230,7 +230,9 @@ void vFlyClientPutInServer(int client)
 public void OnClientPutInServer(int client)
 #endif
 {
+#if (MT_INCLUDE_DAMAGEHOOKS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	SDKHook(client, SDKHook_OnTakeDamage, OnFlyTakeDamage);
+#endif
 	vRemoveFly(client);
 }
 
@@ -251,7 +253,7 @@ public void OnMapEnd()
 {
 	vFlyReset();
 }
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if !defined MT_ABILITIES_MAIN
 Action cmdFlyInfo(int client, int args)
 {
@@ -280,7 +282,8 @@ Action cmdFlyInfo(int client, int args)
 	return Plugin_Handled;
 }
 #endif
-
+#endif
+#if (MT_INCLUDE_MENUS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 void vFlyMenu(int client, const char[] name, int item)
 {
 	if (StrContains(MT_FLY_SECTION4, name, false) == -1)
@@ -398,7 +401,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 		FormatEx(buffer, size, "%T", "FlyMenu2", client);
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN
 void vFlyPlayerRunCmd(int client)
 #else
@@ -422,7 +425,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	return Plugin_Continue;
 #endif
 }
-
+#if (MT_INCLUDE_DAMAGEHOOKS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action OnFlyTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
@@ -465,7 +468,7 @@ Action OnFlyTakeDamage(int victim, int &attacker, int &inflictor, float &damage,
 
 	return Plugin_Continue;
 }
-
+#endif
 Action OnFlyPreThink(int tank)
 {
 	switch (MT_IsTankSupported(tank) && g_esFlyPlayer[tank].g_bActivated)
@@ -512,7 +515,7 @@ public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, 
 	list3.PushString(MT_FLY_SECTION3);
 	list4.PushString(MT_FLY_SECTION4);
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN
 void vFlyCombineAbilities(int tank, int type, const float random, const char[] combo)
 #else
@@ -572,7 +575,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN
 void vFlyConfigsLoad(int mode)
 #else
@@ -675,15 +678,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esFlyTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esFlyTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esFlyTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFlyTeammate[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esFlyTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFlyTeammate[admin].g_iHumanAbility, value, -1, 2);
 			g_esFlyTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFlyTeammate[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esFlyTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFlyTeammate[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esFlyTeammate[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esFlyTeammate[admin].g_iHumanDuration, value, -1, 99999);
 			g_esFlyTeammate[admin].g_iHumanMode = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esFlyTeammate[admin].g_iHumanMode, value, -1, 2);
+#endif
 			g_esFlyTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFlyTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esFlyTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFlyTeammate[admin].g_iRequiresHumans, value, -1, 32);
 			g_esFlyTeammate[admin].g_iFlyAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFlyTeammate[admin].g_iFlyAbility, value, -1, 1);
@@ -695,14 +703,21 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esFlyTeammate[admin].g_iFlyType = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyType", "Fly Type", "Fly_Type", "type", g_esFlyTeammate[admin].g_iFlyType, value, -1, 15);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esFlyPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esFlyPlayer[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esFlyPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFlyPlayer[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esFlyPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFlyPlayer[admin].g_iHumanAbility, value, -1, 2);
 			g_esFlyPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFlyPlayer[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esFlyPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFlyPlayer[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esFlyPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esFlyPlayer[admin].g_iHumanDuration, value, -1, 99999);
 			g_esFlyPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esFlyPlayer[admin].g_iHumanMode, value, -1, 2);
+#endif
 			g_esFlyPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFlyPlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esFlyPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFlyPlayer[admin].g_iRequiresHumans, value, -1, 32);
 			g_esFlyPlayer[admin].g_iFlyAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFlyPlayer[admin].g_iFlyAbility, value, -1, 1);
@@ -719,15 +734,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esFlySpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esFlySpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esFlySpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFlySpecial[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esFlySpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFlySpecial[type].g_iHumanAbility, value, -1, 2);
 			g_esFlySpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFlySpecial[type].g_iHumanAmmo, value, -1, 99999);
 			g_esFlySpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFlySpecial[type].g_iHumanCooldown, value, -1, 99999);
 			g_esFlySpecial[type].g_iHumanDuration = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esFlySpecial[type].g_iHumanDuration, value, -1, 99999);
 			g_esFlySpecial[type].g_iHumanMode = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esFlySpecial[type].g_iHumanMode, value, -1, 2);
+#endif
 			g_esFlySpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFlySpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esFlySpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFlySpecial[type].g_iRequiresHumans, value, -1, 32);
 			g_esFlySpecial[type].g_iFlyAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFlySpecial[type].g_iFlyAbility, value, -1, 1);
@@ -739,14 +759,21 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esFlySpecial[type].g_iFlyType = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyType", "Fly Type", "Fly_Type", "type", g_esFlySpecial[type].g_iFlyType, value, -1, 15);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esFlyAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esFlyAbility[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esFlyAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFlyAbility[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esFlyAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFlyAbility[type].g_iHumanAbility, value, -1, 2);
 			g_esFlyAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFlyAbility[type].g_iHumanAmmo, value, -1, 99999);
 			g_esFlyAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFlyAbility[type].g_iHumanCooldown, value, -1, 99999);
 			g_esFlyAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esFlyAbility[type].g_iHumanDuration, value, -1, 99999);
 			g_esFlyAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esFlyAbility[type].g_iHumanMode, value, -1, 2);
+#endif
 			g_esFlyAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFlyAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esFlyAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFlyAbility[type].g_iRequiresHumans, value, -1, 32);
 			g_esFlyAbility[type].g_iFlyAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFlyAbility[type].g_iFlyAbility, value, -1, 1);
@@ -773,39 +800,51 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esFlyPlayer[tank].g_iTankType = apply ? type : 0;
 	int iType = g_esFlyPlayer[tank].g_iTankTypeRecorded;
 
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		g_esFlyCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_flCloseAreasOnly, g_esFlyPlayer[tank].g_flCloseAreasOnly, g_esFlySpecial[iType].g_flCloseAreasOnly, g_esFlyAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esFlyCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iComboAbility, g_esFlyPlayer[tank].g_iComboAbility, g_esFlySpecial[iType].g_iComboAbility, g_esFlyAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esFlyCache[tank].g_flFlyChance = flGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_flFlyChance, g_esFlyPlayer[tank].g_flFlyChance, g_esFlySpecial[iType].g_flFlyChance, g_esFlyAbility[iType].g_flFlyChance, 1);
 		g_esFlyCache[tank].g_flFlySpeed = flGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_flFlySpeed, g_esFlyPlayer[tank].g_flFlySpeed, g_esFlySpecial[iType].g_flFlySpeed, g_esFlyAbility[iType].g_flFlySpeed, 1);
 		g_esFlyCache[tank].g_iFlyAbility = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iFlyAbility, g_esFlyPlayer[tank].g_iFlyAbility, g_esFlySpecial[iType].g_iFlyAbility, g_esFlyAbility[iType].g_iFlyAbility, 1);
 		g_esFlyCache[tank].g_iFlyCooldown = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iFlyCooldown, g_esFlyPlayer[tank].g_iFlyCooldown, g_esFlySpecial[iType].g_iFlyCooldown, g_esFlyAbility[iType].g_iFlyCooldown, 1);
 		g_esFlyCache[tank].g_iFlyDuration = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iFlyDuration, g_esFlyPlayer[tank].g_iFlyDuration, g_esFlySpecial[iType].g_iFlyDuration, g_esFlyAbility[iType].g_iFlyDuration, 1);
 		g_esFlyCache[tank].g_iFlyType = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iFlyType, g_esFlyPlayer[tank].g_iFlyType, g_esFlySpecial[iType].g_iFlyType, g_esFlyAbility[iType].g_iFlyType, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esFlyCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iHumanAbility, g_esFlyPlayer[tank].g_iHumanAbility, g_esFlySpecial[iType].g_iHumanAbility, g_esFlyAbility[iType].g_iHumanAbility, 1);
 		g_esFlyCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iHumanAmmo, g_esFlyPlayer[tank].g_iHumanAmmo, g_esFlySpecial[iType].g_iHumanAmmo, g_esFlyAbility[iType].g_iHumanAmmo, 1);
 		g_esFlyCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iHumanCooldown, g_esFlyPlayer[tank].g_iHumanCooldown, g_esFlySpecial[iType].g_iHumanCooldown, g_esFlyAbility[iType].g_iHumanCooldown, 1);
 		g_esFlyCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iHumanDuration, g_esFlyPlayer[tank].g_iHumanDuration, g_esFlySpecial[iType].g_iHumanDuration, g_esFlyAbility[iType].g_iHumanDuration, 1);
 		g_esFlyCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iHumanMode, g_esFlyPlayer[tank].g_iHumanMode, g_esFlySpecial[iType].g_iHumanMode, g_esFlyAbility[iType].g_iHumanMode, 1);
+#endif
 		g_esFlyCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_flOpenAreasOnly, g_esFlyPlayer[tank].g_flOpenAreasOnly, g_esFlySpecial[iType].g_flOpenAreasOnly, g_esFlyAbility[iType].g_flOpenAreasOnly, 1);
 		g_esFlyCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iRequiresHumans, g_esFlyPlayer[tank].g_iRequiresHumans, g_esFlySpecial[iType].g_iRequiresHumans, g_esFlyAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
+#else
+	if (!bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+#endif
 	{
 		g_esFlyCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_flCloseAreasOnly, g_esFlyAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esFlyCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iComboAbility, g_esFlyAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esFlyCache[tank].g_flFlyChance = flGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_flFlyChance, g_esFlyAbility[iType].g_flFlyChance, 1);
 		g_esFlyCache[tank].g_flFlySpeed = flGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_flFlySpeed, g_esFlyAbility[iType].g_flFlySpeed, 1);
 		g_esFlyCache[tank].g_iFlyAbility = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iFlyAbility, g_esFlyAbility[iType].g_iFlyAbility, 1);
 		g_esFlyCache[tank].g_iFlyCooldown = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iFlyCooldown, g_esFlyAbility[iType].g_iFlyCooldown, 1);
 		g_esFlyCache[tank].g_iFlyDuration = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iFlyDuration, g_esFlyAbility[iType].g_iFlyDuration, 1);
 		g_esFlyCache[tank].g_iFlyType = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iFlyType, g_esFlyAbility[iType].g_iFlyType, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esFlyCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iHumanAbility, g_esFlyAbility[iType].g_iHumanAbility, 1);
 		g_esFlyCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iHumanAmmo, g_esFlyAbility[iType].g_iHumanAmmo, 1);
 		g_esFlyCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iHumanCooldown, g_esFlyAbility[iType].g_iHumanCooldown, 1);
 		g_esFlyCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iHumanDuration, g_esFlyAbility[iType].g_iHumanDuration, 1);
 		g_esFlyCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iHumanMode, g_esFlyAbility[iType].g_iHumanMode, 1);
+#endif
 		g_esFlyCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_flOpenAreasOnly, g_esFlyAbility[iType].g_flOpenAreasOnly, 1);
 		g_esFlyCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iRequiresHumans, g_esFlyAbility[iType].g_iRequiresHumans, 1);
 	}
@@ -921,7 +960,7 @@ public void MT_OnAbilityActivated(int tank)
 		vFlyAbility(tank);
 	}
 }
-
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN
 void vFlyButtonPressed(int tank, int button)
 #else
@@ -1002,7 +1041,7 @@ public void MT_OnButtonReleased(int tank, int button)
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN
 void vFlyChangeType(int tank, int oldType)
 #else
@@ -1646,7 +1685,7 @@ int iGetFlyTarget(float pos[3], float angles[3], int tank)
 
 	return iTarget;
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action tTimerFlyCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -1662,3 +1701,4 @@ Action tTimerFlyCombo(Handle timer, DataPack pack)
 
 	return Plugin_Continue;
 }
+#endif

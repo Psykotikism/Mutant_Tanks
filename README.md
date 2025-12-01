@@ -12,7 +12,7 @@
 	<summary>Click to expand!</summary>
 
 Mutant Tanks: A L4D/L4D2 SourceMod Plugin
-Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
+Copyright (C) 2017-2026  Alfred "Psyk0tik" Llagas
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
@@ -2640,7 +2640,7 @@ Whatever each button activates is entirely up to your configuration settings.
 
 4. How do I change the buttons or add extra buttons?
 
-Edit lines `107-110` of the `mutant_tanks.inc` file and recompile each ability plugin.
+Edit lines `128-131` of the `mutant_tanks.inc` file and recompile each ability plugin.
 </details>
 <details>
 	<summary>Question 5</summary>
@@ -2898,11 +2898,11 @@ Set the values in `Execute Config Types`.
 
 **emsit** - For reporting issues, helping with parts of the code, and suggesting ideas.
 
-**ReCreator, SilentBr, Neptunia, Zytheus, huwong, Tank Rush, Tonblader, TheStarRocker, Maku, Shadowart, moschinovac, saberQAQ, Shao, xcd222, PVNDV, SpannerV2** - For reporting issues and suggesting ideas.
+**ReCreator, SilentBr, Neptunia, Zytheus, huwong, Tank Rush, Tonblader, TheStarRocker, Maku, Shadowart, moschinovac, saberQAQ, Shao, xcd222, PVNDV, SpannerV2, ForTheSakura, DARG367** - For reporting issues and suggesting ideas.
 
-**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer, AlexAlcala, ddd123, GL_INS, Slaven555, Neki93, kot4404, KadabraZz, Krufftys Killers, thewintersoldier97, Balloons, George Rex, swofleswof, bedildewo, Dudus1st** - For reporting issues.
+**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer, AlexAlcala, ddd123, GL_INS, Slaven555, Neki93, kot4404, KadabraZz, Krufftys Killers, thewintersoldier97, Balloons, George Rex, swofleswof, bedildewo, Dudus1st, Hajitek Majitek, YuQiWooQi, Korsar, f1993062317, ioioio, CrazMan, Yuusha, BenLH, zuaLdakid05, Dominatez, TimeCop_Master** - For reporting issues.
 
-**Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType, HarryPotter, jeremyvillanueva, DonProof, XXrevoltadoXX, XYZC, JustMadMan, DARG367, zonbarbar, Unfellowed, maclarens** - For suggesting ideas.
+**Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType, HarryPotter, jeremyvillanueva, DonProof, XXrevoltadoXX, XYZC, JustMadMan, zonbarbar, Unfellowed, maclarens** - For suggesting ideas.
 
 **Marttt** - For helping with many things and the pull requests.
 

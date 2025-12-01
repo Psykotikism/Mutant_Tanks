@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2017-2026  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -374,9 +374,9 @@ public void OnPluginStart()
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 	LoadTranslations("mutant_tanks_names.phrases");
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	RegConsoleCmd("sm_mt_ability2", cmdAbilityInfo2, "View information about each ability (L-Z).");
-
+#endif
 	vAbilitySetup(0);
 
 	if (g_bLateLoad)
@@ -388,8 +388,10 @@ public void OnPluginStart()
 				OnClientPutInServer(iPlayer);
 			}
 		}
+#if (MT_INCLUDE_DAMAGEHOOKS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_MENU_SHIELD
 		vShieldLateLoad();
+#endif
 #endif
 		g_bLateLoad = false;
 	}
@@ -435,8 +437,10 @@ public void OnEntityCreated(int entity, const char[] classname)
 #if defined MT_MENU_METEOR
 	vMeteorEntityCreated(entity, classname);
 #endif
+#if (MT_INCLUDE_DAMAGEHOOKS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_MENU_SHIELD
 	vShieldEntityCreated(entity, classname);
+#endif
 #endif
 #if defined MT_MENU_SMASH
 	vSmashEntityCreated(entity, classname);
@@ -449,7 +453,7 @@ public void OnEntityDestroyed(int entity)
 	vThrowEntityDestroyed(entity);
 #endif
 }
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action cmdAbilityInfo2(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
@@ -493,7 +497,8 @@ Action cmdAbilityInfo2(int client, int args)
 
 	return Plugin_Handled;
 }
-
+#endif
+#if (MT_INCLUDE_MENUS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 public void MT_OnDisplayMenu(Menu menu)
 {
 #if defined MT_MENU_LAG
@@ -784,7 +789,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	vYellMenuItemDisplayed(client, info, buffer, size);
 #endif
 }
-
+#endif
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
 	if (!MT_IsCorePluginEnabled())
@@ -1005,7 +1010,7 @@ public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, 
 	vYellAbilityCheck(list, list2, list3, list4);
 #endif
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
 {
 #if defined MT_MENU_LAG
@@ -1099,7 +1104,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	vYellCombineAbilities(tank, type, random, combo);
 #endif
 }
-
+#endif
 public void MT_OnConfigsLoad(int mode)
 {
 #if defined MT_MENU_LAG
@@ -1600,7 +1605,7 @@ public void MT_OnAbilityActivated(int tank)
 {
 	vAbilityPlayer(3, tank);
 }
-
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 public void MT_OnButtonPressed(int tank, int button)
 {
 #if defined MT_MENU_LAG
@@ -1740,7 +1745,7 @@ public void MT_OnButtonReleased(int tank, int button)
 	vYellButtonReleased(tank, button);
 #endif
 }
-
+#endif
 public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 {
 #if defined MT_MENU_LAG
@@ -1839,7 +1844,7 @@ public void MT_OnPostTankSpawn(int tank)
 {
 	vAbilityPlayer(4, tank);
 }
-
+#if (MT_INCLUDE_DETOURS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 public Action MT_OnFatalFalling(int survivor)
 {
 #if defined MT_MENU_RECALL
@@ -1890,6 +1895,20 @@ public Action MT_OnPlayerShovedBySurvivor(int player, int survivor, const float 
 	return aReturn;
 }
 
+public void MT_OnRockBreak(int tank, int rock)
+{
+#if defined MT_MENU_MEDIC
+	vMedicRockBreak(tank, rock);
+#endif
+#if defined MT_MENU_TRACK
+	vTrackRockBreak(rock);
+#endif
+#if defined MT_MENU_WARP
+	vWarpRockBreak(tank, rock);
+#endif
+}
+#endif
+#if (MT_INCLUDE_REWARDS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 public Action MT_OnRewardSurvivor(int survivor, int tank, int &type, int priority, float &duration, bool apply)
 {
 #if defined MT_MENU_RECALL
@@ -1908,7 +1927,19 @@ public Action MT_OnRewardSurvivor(int survivor, int tank, int &type, int priorit
 #endif
 	return aReturn;
 }
-
+#endif
+#if (MT_INCLUDE_PASSIVES == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
+public Action MT_OnToggleSurvivorPassive(int survivor, int &type, bool apply, bool weaponOnly, int weaponIndex)
+{
+#if defined MT_MENU_RECALL
+	vRecallToggleSurvivorPassive(survivor, type, apply);
+#endif
+#if defined MT_MENU_SLOW
+	vSlowToggleSurvivorPassive(survivor, type, apply);
+#endif
+	return Plugin_Continue;
+}
+#endif
 public void MT_OnRockThrow(int tank, int rock)
 {
 #if defined MT_MENU_SHIELD
@@ -1921,20 +1952,7 @@ public void MT_OnRockThrow(int tank, int rock)
 	vTrackRockThrow(tank, rock);
 #endif
 }
-
-public void MT_OnRockBreak(int tank, int rock)
-{
-#if defined MT_MENU_MEDIC
-	vMedicRockBreak(tank, rock);
-#endif
-#if defined MT_MENU_TRACK
-	vTrackRockBreak(rock);
-#endif
-#if defined MT_MENU_WARP
-	vWarpRockBreak(tank, rock);
-#endif
-}
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 void vAbilityMenu(int client, const char[] name)
 {
 #if defined MT_MENU_LAG
@@ -2036,7 +2054,7 @@ void vAbilityMenu(int client, const char[] name)
 		MT_LogMessage(-1, "%s Ability Menu (%i, %s) - This should never fire.", MT_TAG, client, name);
 	}
 }
-
+#endif
 void vAbilityPlayer(int type, int client)
 {
 #if defined MT_MENU_LAG
@@ -2532,7 +2550,7 @@ void vAbilitySetup(int type)
 		case 2: vYellMapEnd();
 	}
 #endif
-	bool bLog = false;
+	bool bLog = !g_bDedicated;
 	if (bLog)
 	{
 		MT_LogMessage(-1, "%s Ability Setup (%i) - This should never fire.", MT_TAG, type);

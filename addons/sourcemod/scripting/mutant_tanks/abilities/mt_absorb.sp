@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2017-2026  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -211,9 +211,9 @@ public void OnPluginStart()
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 	LoadTranslations("mutant_tanks_names.phrases");
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	RegConsoleCmd("sm_mt_absorb", cmdAbsorbInfo, "View information about the Absorb ability.");
-
+#endif
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -244,7 +244,9 @@ void vAbsorbClientPutInServer(int client)
 public void OnClientPutInServer(int client)
 #endif
 {
+#if (MT_INCLUDE_DAMAGEHOOKS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	SDKHook(client, SDKHook_OnTakeDamage, OnAbsorbTakeDamage);
+#endif
 	vRemoveAbsorb(client);
 }
 
@@ -265,7 +267,7 @@ public void OnMapEnd()
 {
 	vAbsorbReset();
 }
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if !defined MT_ABILITIES_MAIN
 Action cmdAbsorbInfo(int client, int args)
 {
@@ -294,7 +296,8 @@ Action cmdAbsorbInfo(int client, int args)
 	return Plugin_Handled;
 }
 #endif
-
+#endif
+#if (MT_INCLUDE_MENUS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 void vAbsorbMenu(int client, const char[] name, int item)
 {
 	if (StrContains(MT_ABSORB_SECTION4, name, false) == -1)
@@ -412,7 +415,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 		FormatEx(buffer, size, "%T", "AbsorbMenu2", client);
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN
 void vAbsorbPlayerRunCmd(int client)
 #else
@@ -442,7 +445,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	return Plugin_Continue;
 #endif
 }
-
+#if (MT_INCLUDE_DAMAGEHOOKS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action OnAbsorbTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
@@ -475,7 +478,7 @@ Action OnAbsorbTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 				bChanged = true;
 				damage /= g_esAbsorbCache[victim].g_flAbsorbHittableDivisor;
 			}
-			else if (g_esAbsorbCache[victim].g_flAbsorbMeleeDivisor > 1.0 && ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)))
+			else if (g_esAbsorbCache[victim].g_flAbsorbMeleeDivisor > 1.0 && (damagetype & DMG_SLOWBURN))
 			{
 				bChanged = true;
 				damage /= g_esAbsorbCache[victim].g_flAbsorbMeleeDivisor;
@@ -500,7 +503,7 @@ Action OnAbsorbTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 
 	return Plugin_Continue;
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN
 void vAbsorbPluginCheck(ArrayList list)
 #else
@@ -521,7 +524,7 @@ public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, 
 	list3.PushString(MT_ABSORB_SECTION3);
 	list4.PushString(MT_ABSORB_SECTION4);
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN
 void vAbsorbCombineAbilities(int tank, int type, const float random, const char[] combo)
 #else
@@ -581,7 +584,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN
 void vAbsorbConfigsLoad(int mode)
 #else
@@ -700,15 +703,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esAbsorbTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esAbsorbTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esAbsorbTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esAbsorbTeammate[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esAbsorbTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbsorbTeammate[admin].g_iHumanAbility, value, -1, 2);
 			g_esAbsorbTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbsorbTeammate[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esAbsorbTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbsorbTeammate[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esAbsorbTeammate[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esAbsorbTeammate[admin].g_iHumanDuration, value, -1, 99999);
 			g_esAbsorbTeammate[admin].g_iHumanMode = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esAbsorbTeammate[admin].g_iHumanMode, value, -1, 2);
+#endif
 			g_esAbsorbTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbsorbTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esAbsorbTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbsorbTeammate[admin].g_iRequiresHumans, value, -1, 32);
 			g_esAbsorbTeammate[admin].g_iAbsorbAbility = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbsorbTeammate[admin].g_iAbsorbAbility, value, -1, 1);
@@ -724,14 +732,21 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esAbsorbTeammate[admin].g_flAbsorbMeleeDivisor = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbsorbMeleeDivisor", "Absorb Melee Divisor", "Absorb_Melee_Divisor", "melee", g_esAbsorbTeammate[admin].g_flAbsorbMeleeDivisor, value, -1.0, 99999.0);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esAbsorbPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esAbsorbPlayer[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esAbsorbPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esAbsorbPlayer[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esAbsorbPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbsorbPlayer[admin].g_iHumanAbility, value, -1, 2);
 			g_esAbsorbPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbsorbPlayer[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esAbsorbPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbsorbPlayer[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esAbsorbPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esAbsorbPlayer[admin].g_iHumanDuration, value, -1, 99999);
 			g_esAbsorbPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esAbsorbPlayer[admin].g_iHumanMode, value, -1, 2);
+#endif
 			g_esAbsorbPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbsorbPlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esAbsorbPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbsorbPlayer[admin].g_iRequiresHumans, value, -1, 32);
 			g_esAbsorbPlayer[admin].g_iAbsorbAbility = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbsorbPlayer[admin].g_iAbsorbAbility, value, -1, 1);
@@ -752,15 +767,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esAbsorbSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esAbsorbSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esAbsorbSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esAbsorbSpecial[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esAbsorbSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbsorbSpecial[type].g_iHumanAbility, value, -1, 2);
 			g_esAbsorbSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbsorbSpecial[type].g_iHumanAmmo, value, -1, 99999);
 			g_esAbsorbSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbsorbSpecial[type].g_iHumanCooldown, value, -1, 99999);
 			g_esAbsorbSpecial[type].g_iHumanDuration = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esAbsorbSpecial[type].g_iHumanDuration, value, -1, 99999);
 			g_esAbsorbSpecial[type].g_iHumanMode = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esAbsorbSpecial[type].g_iHumanMode, value, -1, 2);
+#endif
 			g_esAbsorbSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbsorbSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esAbsorbSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbsorbSpecial[type].g_iRequiresHumans, value, -1, 32);
 			g_esAbsorbSpecial[type].g_iAbsorbAbility = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbsorbSpecial[type].g_iAbsorbAbility, value, -1, 1);
@@ -776,14 +796,21 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esAbsorbSpecial[type].g_flAbsorbMeleeDivisor = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbsorbMeleeDivisor", "Absorb Melee Divisor", "Absorb_Melee_Divisor", "melee", g_esAbsorbSpecial[type].g_flAbsorbMeleeDivisor, value, -1.0, 99999.0);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esAbsorbAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esAbsorbAbility[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esAbsorbAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esAbsorbAbility[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esAbsorbAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbsorbAbility[type].g_iHumanAbility, value, -1, 2);
 			g_esAbsorbAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbsorbAbility[type].g_iHumanAmmo, value, -1, 99999);
 			g_esAbsorbAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbsorbAbility[type].g_iHumanCooldown, value, -1, 99999);
 			g_esAbsorbAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esAbsorbAbility[type].g_iHumanDuration, value, -1, 99999);
 			g_esAbsorbAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esAbsorbAbility[type].g_iHumanMode, value, -1, 2);
+#endif
 			g_esAbsorbAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbsorbAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esAbsorbAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbsorbAbility[type].g_iRequiresHumans, value, -1, 32);
 			g_esAbsorbAbility[type].g_iAbsorbAbility = iGetKeyValue(subsection, MT_ABSORB_SECTION, MT_ABSORB_SECTION2, MT_ABSORB_SECTION3, MT_ABSORB_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbsorbAbility[type].g_iAbsorbAbility, value, -1, 1);
@@ -814,6 +841,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esAbsorbPlayer[tank].g_iTankType = apply ? type : 0;
 	int iType = g_esAbsorbPlayer[tank].g_iTankTypeRecorded;
 
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		g_esAbsorbCache[tank].g_flAbsorbBulletDivisor = flGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_flAbsorbBulletDivisor, g_esAbsorbPlayer[tank].g_flAbsorbBulletDivisor, g_esAbsorbSpecial[iType].g_flAbsorbBulletDivisor, g_esAbsorbAbility[iType].g_flAbsorbBulletDivisor, 1);
@@ -828,16 +856,23 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esAbsorbCache[tank].g_iAbsorbDuration = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iAbsorbDuration, g_esAbsorbPlayer[tank].g_iAbsorbDuration, g_esAbsorbSpecial[iType].g_iAbsorbDuration, g_esAbsorbAbility[iType].g_iAbsorbDuration, 1);
 		g_esAbsorbCache[tank].g_iAbsorbMessage = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iAbsorbMessage, g_esAbsorbPlayer[tank].g_iAbsorbMessage, g_esAbsorbSpecial[iType].g_iAbsorbMessage, g_esAbsorbAbility[iType].g_iAbsorbMessage, 1);
 		g_esAbsorbCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_flCloseAreasOnly, g_esAbsorbPlayer[tank].g_flCloseAreasOnly, g_esAbsorbSpecial[iType].g_flCloseAreasOnly, g_esAbsorbAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esAbsorbCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iComboAbility, g_esAbsorbPlayer[tank].g_iComboAbility, g_esAbsorbSpecial[iType].g_iComboAbility, g_esAbsorbAbility[iType].g_iComboAbility, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esAbsorbCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iHumanAbility, g_esAbsorbPlayer[tank].g_iHumanAbility, g_esAbsorbSpecial[iType].g_iHumanAbility, g_esAbsorbAbility[iType].g_iHumanAbility, 1);
 		g_esAbsorbCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iHumanAmmo, g_esAbsorbPlayer[tank].g_iHumanAmmo, g_esAbsorbSpecial[iType].g_iHumanAmmo, g_esAbsorbAbility[iType].g_iHumanAmmo, 1);
 		g_esAbsorbCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iHumanCooldown, g_esAbsorbPlayer[tank].g_iHumanCooldown, g_esAbsorbSpecial[iType].g_iHumanCooldown, g_esAbsorbAbility[iType].g_iHumanCooldown, 1);
 		g_esAbsorbCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iHumanDuration, g_esAbsorbPlayer[tank].g_iHumanDuration, g_esAbsorbSpecial[iType].g_iHumanDuration, g_esAbsorbAbility[iType].g_iHumanDuration, 1);
 		g_esAbsorbCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iHumanMode, g_esAbsorbPlayer[tank].g_iHumanMode, g_esAbsorbSpecial[iType].g_iHumanMode, g_esAbsorbAbility[iType].g_iHumanMode, 1);
+#endif
 		g_esAbsorbCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_flOpenAreasOnly, g_esAbsorbPlayer[tank].g_flOpenAreasOnly, g_esAbsorbSpecial[iType].g_flOpenAreasOnly, g_esAbsorbAbility[iType].g_flOpenAreasOnly, 1);
 		g_esAbsorbCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esAbsorbTeammate[tank].g_iRequiresHumans, g_esAbsorbPlayer[tank].g_iRequiresHumans, g_esAbsorbSpecial[iType].g_iRequiresHumans, g_esAbsorbAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
+#else
+	if (!bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+#endif
 	{
 		g_esAbsorbCache[tank].g_flAbsorbBulletDivisor = flGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_flAbsorbBulletDivisor, g_esAbsorbAbility[iType].g_flAbsorbBulletDivisor, 1);
 		g_esAbsorbCache[tank].g_flAbsorbChance = flGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_flAbsorbChance, g_esAbsorbAbility[iType].g_flAbsorbChance, 1);
@@ -851,12 +886,16 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esAbsorbCache[tank].g_iAbsorbDuration = iGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_iAbsorbDuration, g_esAbsorbAbility[iType].g_iAbsorbDuration, 1);
 		g_esAbsorbCache[tank].g_iAbsorbMessage = iGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_iAbsorbMessage, g_esAbsorbAbility[iType].g_iAbsorbMessage, 1);
 		g_esAbsorbCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_flCloseAreasOnly, g_esAbsorbAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esAbsorbCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_iComboAbility, g_esAbsorbAbility[iType].g_iComboAbility, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esAbsorbCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_iHumanAbility, g_esAbsorbAbility[iType].g_iHumanAbility, 1);
 		g_esAbsorbCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_iHumanAmmo, g_esAbsorbAbility[iType].g_iHumanAmmo, 1);
 		g_esAbsorbCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_iHumanCooldown, g_esAbsorbAbility[iType].g_iHumanCooldown, 1);
 		g_esAbsorbCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_iHumanDuration, g_esAbsorbAbility[iType].g_iHumanDuration, 1);
 		g_esAbsorbCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_iHumanMode, g_esAbsorbAbility[iType].g_iHumanMode, 1);
+#endif
 		g_esAbsorbCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_flOpenAreasOnly, g_esAbsorbAbility[iType].g_flOpenAreasOnly, 1);
 		g_esAbsorbCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_iRequiresHumans, g_esAbsorbAbility[iType].g_iRequiresHumans, 1);
 	}
@@ -939,7 +978,7 @@ public void MT_OnAbilityActivated(int tank)
 		vAbsorbAbility(tank);
 	}
 }
-
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN
 void vAbsorbButtonPressed(int tank, int button)
 #else
@@ -1029,7 +1068,7 @@ public void MT_OnButtonReleased(int tank, int button)
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN
 void vAbsorbChangeType(int tank, int oldType)
 #else
@@ -1153,7 +1192,7 @@ void vAbsorbReset3(int tank)
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "AbsorbHuman5", (g_esAbsorbPlayer[tank].g_iCooldown - iTime));
 	}
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action tTimerAbsorbCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -1169,3 +1208,4 @@ Action tTimerAbsorbCombo(Handle timer, DataPack pack)
 
 	return Plugin_Continue;
 }
+#endif

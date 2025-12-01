@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2017-2026  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -22,9 +22,30 @@
 #define MT_AUTHOR "Psyk0tik"
 #define MT_AUTHOR2 "Crasher_3637"
 #define MT_DESCRIPTION "Mutant Tanks enhances the fun and excitement players get from Tank fights by creating a unique experience with every Tank."
-#define MT_VERSION "9.3"
+#define MT_VERSION "9.4"
 #define MT_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 #define MT_URL2 "https://github.com/Psykotikism/Mutant_Tanks"
+
+#define MT_INCLUDE_ALL 0 // override to include all modules below (default: 0, recommended: 0)
+#define MT_INCLUDE_COMMANDS 1 // console commands (default: 1, recommended: 1)
+#define MT_INCLUDE_COMPETITIVE 1 // competitive support (default: 1, recommended: 0)
+#define MT_INCLUDE_CUSTOMCONFIGS 1 // custom configs per map, day, difficulty, finale event, game mode, player count (default: 1, recommended: 1)
+#define MT_INCLUDE_CUSTOMSPAWNS 1 // bosses, randomizer, transformations (default: 1, recommended: 1)
+#define MT_INCLUDE_CUSTOMWAVES 1 // regular/finale wave spawner (default: 1, recommended: 1)
+#define MT_INCLUDE_DAMAGEHOOKS 1 // customize damage values for several settings/interactions (default: 1, recommended: 1)
+#define MT_INCLUDE_DETOURS 1 // function detours utilizing dhooks (default: 1, recommended: 1)
+#define MT_INCLUDE_HEALTHDISPLAY 1 // custom health hud for mutants (default: 1, recommended: 1)
+#define MT_INCLUDE_MENUS 1 // menu system for several features (default: 1, recommended: 1)
+#define MT_INCLUDE_MOB 0 // mutant commons/witches (default: 0, recommended: 0)
+#define MT_INCLUDE_NEWCONTENT 0 // latest content available for testing (default: 0, recommended: 0)
+#define MT_INCLUDE_PASSIVES 0 // survivor passives (default: 0, recommended: 0)
+#define MT_INCLUDE_PATCHES 1 // patch system for injecting changes into game code (default: 1, recommended: 1)
+#define MT_INCLUDE_PUNISHMENT 0 // punishment system (default: 0, recommended: 0)
+#define MT_INCLUDE_REWARDS 0 // reward system (default: 0, recommended: 0)
+#define MT_INCLUDE_RUSH 0 // rush mode (default: 0, recommended: 0)
+#define MT_INCLUDE_SPECIALS 0 // mutant specials (default: 0, recommended: 0)
+#define MT_INCLUDE_SURVIVORS 0 // mutant survivors (default: 0, recommended: 0)
+#define MT_INCLUDE_NONE 0 // override to exclude all modules above (default: 0, recommended: 0)
 
 public SharedPlugin __pl_mutanttanks =
 {
@@ -2945,13 +2966,13 @@ stock bool bIsVisibleToPlayer(int player, int target = 0, int type = -1, float p
 	return bReturn;
 }
 
-stock bool bIsVisibleToPosition(int entity, float pos1[3], float pos2[3], float range)
+stock bool bIsVisibleToPosition(float pos1[3], float pos2[3], float range)
 {
 	float flPos[3], flAngles[3];
 	MakeVectorFromPoints(pos1, pos2, flPos);
 	GetVectorAngles(flPos, flAngles);
 
-	Handle hTrace = TR_TraceRayFilterEx(pos1, flAngles, MASK_SOLID, RayType_EndPoint, bTraceRayDontHitSelfAndSolid, entity);
+	Handle hTrace = TR_TraceRayFilterEx(pos1, flAngles, MASK_SOLID, RayType_EndPoint, bTraceRayDontHitSelfAndSolid);
 	if (hTrace != null)
 	{
 		if (TR_DidHit(hTrace))
@@ -3716,7 +3737,7 @@ stock int iGetIdlePlayer(int bot)
 	return 0;
 }
 
-stock int iGetIncapacitatedCount(bool human = false)
+stock int iGetIncapacitatedSurvivorCount(bool human = false)
 {
 	bool bValidPlayer = false;
 	int iCount = 0;
@@ -4072,7 +4093,7 @@ stock int iGetNearestCommonInfected(float pos[3], float range)
 		if (bIsValidEntity(iCommon))
 		{
 			GetEntPropVector(iCommon, Prop_Send, "m_vecOrigin", flCommonPos);
-			if (bIsVisibleToPosition(iCommon, pos, flCommonPos, range))
+			if (bIsVisibleToPosition(pos, flCommonPos, range))
 			{
 				iCommons[iCommonCount] = iCommon;
 				iCommonCount++;
@@ -4093,7 +4114,7 @@ stock int iGetNearestSpecialInfected(int tank, float pos[3], float range)
 		if (bIsInfected(iSpecial, MT_CHECK_INGAME|MT_CHECK_ALIVE) && tank != iSpecial)
 		{
 			GetClientEyePosition(iSpecial, flInfectedPos);
-			if (bIsVisibleToPosition(iSpecial, pos, flInfectedPos, range))
+			if (bIsVisibleToPosition(pos, flInfectedPos, range))
 			{
 				iSpecials[iInfectedCount] = iSpecial;
 				iInfectedCount++;
@@ -4121,7 +4142,7 @@ stock int iGetNearestSurvivor(int tank, float pos[3], float range, bool noHumans
 			}
 
 			GetClientEyePosition(iSurvivor, flSurvivorPos);
-			if (bIsVisibleToPosition(iSurvivor, pos, flSurvivorPos, range))
+			if (bIsVisibleToPosition(pos, flSurvivorPos, range))
 			{
 				iSurvivors[iSurvivorCount] = iSurvivor;
 				iSurvivorCount++;

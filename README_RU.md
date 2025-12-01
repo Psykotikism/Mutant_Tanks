@@ -12,7 +12,7 @@
 	<summary>Нажмите, чтобы расширить!</summary>
 
 Танки-мутанты: SourceMod плагин L4D/L4D2
-Все права защищены (C) 2017-2025  Альфред "Psyk0tik" Лагас (Alfred "Psyk0tik" Llagas)
+Все права защищены (C) 2017-2026  Альфред "Psyk0tik" Лагас (Alfred "Psyk0tik" Llagas)
 
 Эта программа является бесплатным программным обеспечением: вы можете распространять и/или изменять её в соответствии с условиями Стандартной общественной лицензии GNU, опубликованной Free Software Foundation, либо версии 3 Лицензии, либо (по вашему выбору) любой более поздней версии.
 
@@ -2640,7 +2640,7 @@ mutant_tanks // 3-й формат
 
 4. Как мне изменить кнопки или добавить дополнительные кнопки?
 
-Отредактируйте `107-110` строки файла `mutant_tanks.inc` и перекомпилируйте каждый плагин способности.
+Отредактируйте `128-131` строки файла `mutant_tanks.inc` и перекомпилируйте каждый плагин способности.
 </details>
 <details>
 	<summary>Вопрос 5</summary>
@@ -2898,11 +2898,11 @@ Overrides
 
 **emsit** - За сообщения о проблемах, помощи с частями кода и предложения идей.
 
-**ReCreator, SilentBr, Neptunia, Zytheus, huwong, Tank Rush, Tonblader, TheStarRocker, Maku, Shadowart, moschinovac, saberQAQ, Shao, xcd222, PVNDV, SpannerV2** - За сообщения о проблемах и предложения идей.
+**ReCreator, SilentBr, Neptunia, Zytheus, huwong, Tank Rush, Tonblader, TheStarRocker, Maku, Shadowart, moschinovac, saberQAQ, Shao, xcd222, PVNDV, SpannerV2, ForTheSakura, DARG367** - За сообщения о проблемах и предложения идей.
 
-**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer, AlexAlcala, ddd123, GL_INS, Slaven555, Neki93, kot4404, KadabraZz, Krufftys Killers, thewintersoldier97, Balloons, George Rex, swofleswof, bedildewo, Dudus1st** - За сообщения о проблемах.
+**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer, AlexAlcala, ddd123, GL_INS, Slaven555, Neki93, kot4404, KadabraZz, Krufftys Killers, thewintersoldier97, Balloons, George Rex, swofleswof, bedildewo, Dudus1st, Hajitek Majitek, YuQiWooQi, Korsar, f1993062317, ioioio, CrazMan, Yuusha, BenLH, zuaLdakid05, Dominatez, TimeCop_Master** - За сообщения о проблемах.
 
-**Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType, HarryPotter, jeremyvillanueva, DonProof, XXrevoltadoXX, XYZC, JustMadMan, DARG367, zonbarbar, Unfellowed, maclarens** - За предложения идей.
+**Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType, HarryPotter, jeremyvillanueva, DonProof, XXrevoltadoXX, XYZC, JustMadMan, zonbarbar, Unfellowed, maclarens** - За предложения идей.
 
 **Marttt** - За помощь во многих вещах и pull request'ы.
 

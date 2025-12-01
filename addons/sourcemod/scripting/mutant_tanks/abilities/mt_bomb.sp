@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2017-2026  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -251,9 +251,9 @@ public void OnPluginStart()
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 	LoadTranslations("mutant_tanks_names.phrases");
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	RegConsoleCmd("sm_mt_bomb", cmdBombInfo, "View information about the Bomb ability.");
-
+#endif
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -292,7 +292,9 @@ void vBombClientPutInServer(int client)
 public void OnClientPutInServer(int client)
 #endif
 {
+#if (MT_INCLUDE_DAMAGEHOOKS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	SDKHook(client, SDKHook_OnTakeDamage, OnBombTakeDamage);
+#endif
 	vRemoveBomb(client);
 }
 
@@ -313,7 +315,7 @@ public void OnMapEnd()
 {
 	vBombReset();
 }
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if !defined MT_ABILITIES_MAIN
 Action cmdBombInfo(int client, int args)
 {
@@ -342,7 +344,8 @@ Action cmdBombInfo(int client, int args)
 	return Plugin_Handled;
 }
 #endif
-
+#endif
+#if (MT_INCLUDE_MENUS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 void vBombMenu(int client, const char[] name, int item)
 {
 	if (StrContains(MT_BOMB_SECTION4, name, false) == -1)
@@ -452,7 +455,8 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 		FormatEx(buffer, size, "%T", "BombMenu2", client);
 	}
 }
-
+#endif
+#if (MT_INCLUDE_DAMAGEHOOKS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action OnBombTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
@@ -502,7 +506,7 @@ Action OnBombTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 	return Plugin_Continue;
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN
 void vBombPluginCheck(ArrayList list)
 #else
@@ -523,7 +527,7 @@ public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, 
 	list3.PushString(MT_BOMB_SECTION3);
 	list4.PushString(MT_BOMB_SECTION4);
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN
 void vBombCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
 #else
@@ -620,7 +624,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN
 void vBombConfigsLoad(int mode)
 #else
@@ -762,15 +766,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esBombTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esBombTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esBombTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esBombTeammate[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esBombTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esBombTeammate[admin].g_iHumanAbility, value, -1, 2);
 			g_esBombTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esBombTeammate[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esBombTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esBombTeammate[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esBombTeammate[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esBombTeammate[admin].g_iHumanRangeCooldown, value, -1, 99999);
 			g_esBombTeammate[admin].g_iHumanRockCooldown = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "HumanRockCooldown", "Human Rock Cooldown", "Human_Rock_Cooldown", "hrockcooldown", g_esBombTeammate[admin].g_iHumanRockCooldown, value, -1, 99999);
+#endif
 			g_esBombTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esBombTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esBombTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esBombTeammate[admin].g_iRequiresHumans, value, -1, 32);
 			g_esBombTeammate[admin].g_iBombAbility = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esBombTeammate[admin].g_iBombAbility, value, -1, 1);
@@ -792,14 +801,21 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esBombTeammate[admin].g_iBombRockCooldown = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombPinCooldown", "Bomb Pin Cooldown", "Bomb_Pin_Cooldown", "pincooldown", g_esBombTeammate[admin].g_iBombRockCooldown, value, -1, 99999);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esBombPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esBombPlayer[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esBombPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esBombPlayer[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esBombPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esBombPlayer[admin].g_iHumanAbility, value, -1, 2);
 			g_esBombPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esBombPlayer[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esBombPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esBombPlayer[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esBombPlayer[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esBombPlayer[admin].g_iHumanRangeCooldown, value, -1, 99999);
 			g_esBombPlayer[admin].g_iHumanRockCooldown = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "HumanRockCooldown", "Human Rock Cooldown", "Human_Rock_Cooldown", "hrockcooldown", g_esBombPlayer[admin].g_iHumanRockCooldown, value, -1, 99999);
+#endif
 			g_esBombPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esBombPlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esBombPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esBombPlayer[admin].g_iRequiresHumans, value, -1, 32);
 			g_esBombPlayer[admin].g_iBombAbility = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esBombPlayer[admin].g_iBombAbility, value, -1, 1);
@@ -826,15 +842,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esBombSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esBombSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esBombSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esBombSpecial[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esBombSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esBombSpecial[type].g_iHumanAbility, value, -1, 2);
 			g_esBombSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esBombSpecial[type].g_iHumanAmmo, value, -1, 99999);
 			g_esBombSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esBombSpecial[type].g_iHumanCooldown, value, -1, 99999);
 			g_esBombSpecial[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esBombSpecial[type].g_iHumanRangeCooldown, value, -1, 99999);
 			g_esBombSpecial[type].g_iHumanRockCooldown = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "HumanRockCooldown", "Human Rock Cooldown", "Human_Rock_Cooldown", "hrockcooldown", g_esBombSpecial[type].g_iHumanRockCooldown, value, -1, 99999);
+#endif
 			g_esBombSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esBombSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esBombSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esBombSpecial[type].g_iRequiresHumans, value, -1, 32);
 			g_esBombSpecial[type].g_iBombAbility = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esBombSpecial[type].g_iBombAbility, value, -1, 1);
@@ -856,14 +877,21 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esBombSpecial[type].g_iBombRockCooldown = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombPinCooldown", "Bomb Pin Cooldown", "Bomb_Pin_Cooldown", "pincooldown", g_esBombSpecial[type].g_iBombRockCooldown, value, -1, 99999);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esBombAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esBombAbility[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esBombAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esBombAbility[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esBombAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esBombAbility[type].g_iHumanAbility, value, -1, 2);
 			g_esBombAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esBombAbility[type].g_iHumanAmmo, value, -1, 99999);
 			g_esBombAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esBombAbility[type].g_iHumanCooldown, value, -1, 99999);
 			g_esBombAbility[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esBombAbility[type].g_iHumanRangeCooldown, value, -1, 99999);
 			g_esBombAbility[type].g_iHumanRockCooldown = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "HumanRockCooldown", "Human Rock Cooldown", "Human_Rock_Cooldown", "hrockcooldown", g_esBombAbility[type].g_iHumanRockCooldown, value, -1, 99999);
+#endif
 			g_esBombAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esBombAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esBombAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esBombAbility[type].g_iRequiresHumans, value, -1, 32);
 			g_esBombAbility[type].g_iBombAbility = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esBombAbility[type].g_iBombAbility, value, -1, 1);
@@ -900,6 +928,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esBombPlayer[tank].g_iTankType = apply ? type : 0;
 	int iType = g_esBombPlayer[tank].g_iTankTypeRecorded;
 
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		g_esBombCache[tank].g_flBombChance = flGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_flBombChance, g_esBombPlayer[tank].g_flBombChance, g_esBombSpecial[iType].g_flBombChance, g_esBombAbility[iType].g_flBombChance, 1);
@@ -920,16 +949,23 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esBombCache[tank].g_iBombRockCooldown = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iBombRockCooldown, g_esBombPlayer[tank].g_iBombRockCooldown, g_esBombSpecial[iType].g_iBombRockCooldown, g_esBombAbility[iType].g_iBombRockCooldown, 1);
 		g_esBombCache[tank].g_iBombSight = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iBombSight, g_esBombPlayer[tank].g_iBombSight, g_esBombSpecial[iType].g_iBombSight, g_esBombAbility[iType].g_iBombSight, 1);
 		g_esBombCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_flCloseAreasOnly, g_esBombPlayer[tank].g_flCloseAreasOnly, g_esBombSpecial[iType].g_flCloseAreasOnly, g_esBombAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esBombCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iComboAbility, g_esBombPlayer[tank].g_iComboAbility, g_esBombSpecial[iType].g_iComboAbility, g_esBombAbility[iType].g_iComboAbility, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esBombCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iHumanAbility, g_esBombPlayer[tank].g_iHumanAbility, g_esBombSpecial[iType].g_iHumanAbility, g_esBombAbility[iType].g_iHumanAbility, 1);
 		g_esBombCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iHumanAmmo, g_esBombPlayer[tank].g_iHumanAmmo, g_esBombSpecial[iType].g_iHumanAmmo, g_esBombAbility[iType].g_iHumanAmmo, 1);
 		g_esBombCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iHumanCooldown, g_esBombPlayer[tank].g_iHumanCooldown, g_esBombSpecial[iType].g_iHumanCooldown, g_esBombAbility[iType].g_iHumanCooldown, 1);
 		g_esBombCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iHumanRangeCooldown, g_esBombPlayer[tank].g_iHumanRangeCooldown, g_esBombSpecial[iType].g_iHumanRangeCooldown, g_esBombAbility[iType].g_iHumanRangeCooldown, 1);
 		g_esBombCache[tank].g_iHumanRockCooldown = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iHumanRockCooldown, g_esBombPlayer[tank].g_iHumanRockCooldown, g_esBombSpecial[iType].g_iHumanRockCooldown, g_esBombAbility[iType].g_iHumanRockCooldown, 1);
+#endif
 		g_esBombCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_flOpenAreasOnly, g_esBombPlayer[tank].g_flOpenAreasOnly, g_esBombSpecial[iType].g_flOpenAreasOnly, g_esBombAbility[iType].g_flOpenAreasOnly, 1);
 		g_esBombCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esBombTeammate[tank].g_iRequiresHumans, g_esBombPlayer[tank].g_iRequiresHumans, g_esBombSpecial[iType].g_iRequiresHumans, g_esBombAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
+#else
+	if (!bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+#endif
 	{
 		g_esBombCache[tank].g_flBombChance = flGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_flBombChance, g_esBombAbility[iType].g_flBombChance, 1);
 		g_esBombCache[tank].g_flBombDamage = flGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_flBombDamage, g_esBombAbility[iType].g_flBombDamage, 1);
@@ -949,12 +985,16 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esBombCache[tank].g_iBombRockCooldown = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iBombRockCooldown, g_esBombAbility[iType].g_iBombRockCooldown, 1);
 		g_esBombCache[tank].g_iBombSight = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iBombSight, g_esBombAbility[iType].g_iBombSight, 1);
 		g_esBombCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_flCloseAreasOnly, g_esBombAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esBombCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iComboAbility, g_esBombAbility[iType].g_iComboAbility, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esBombCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iHumanAbility, g_esBombAbility[iType].g_iHumanAbility, 1);
 		g_esBombCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iHumanAmmo, g_esBombAbility[iType].g_iHumanAmmo, 1);
 		g_esBombCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iHumanCooldown, g_esBombAbility[iType].g_iHumanCooldown, 1);
 		g_esBombCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iHumanRangeCooldown, g_esBombAbility[iType].g_iHumanRangeCooldown, 1);
 		g_esBombCache[tank].g_iHumanRockCooldown = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iHumanRockCooldown, g_esBombAbility[iType].g_iHumanRockCooldown, 1);
+#endif
 		g_esBombCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_flOpenAreasOnly, g_esBombAbility[iType].g_flOpenAreasOnly, 1);
 		g_esBombCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iRequiresHumans, g_esBombAbility[iType].g_iRequiresHumans, 1);
 	}
@@ -1057,7 +1097,7 @@ public void MT_OnAbilityActivated(int tank)
 		vBombAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
 }
-
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN
 void vBombButtonPressed(int tank, int button)
 #else
@@ -1083,7 +1123,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN
 void vBombChangeType(int tank, int oldType)
 #else
@@ -1124,7 +1164,7 @@ public void MT_OnPostTankSpawn(int tank)
 {
 	vBombRange(tank, 1, 1, GetRandomFloat(0.1, 100.0));
 }
-
+#if (MT_INCLUDE_DETOURS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN
 void vBombRockBreak(int tank, int rock)
 #else
@@ -1141,7 +1181,7 @@ public void MT_OnRockBreak(int tank, int rock)
 		vBombRockBreak2(tank, rock, GetRandomFloat(0.1, 100.0));
 	}
 }
-
+#endif
 void vBombAbility(int tank, float random, int pos = -1)
 {
 	if (bIsAreaNarrow(tank, g_esBombCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esBombCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esBombPlayer[tank].g_iTankType, tank) || (g_esBombCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esBombCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esBombAbility[g_esBombPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esBombPlayer[tank].g_iAccessFlags)))
@@ -1294,7 +1334,7 @@ void vBombRange(int tank, int value, int bit, float random, int pos = -1)
 		}
 	}
 }
-
+#if (MT_INCLUDE_DETOURS == 1 || MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 void vBombRockBreak2(int tank, int rock, float random, int pos = -1)
 {
 	float flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 14, pos) : g_esBombCache[tank].g_flBombRockChance;
@@ -1336,7 +1376,7 @@ void vBombRockBreak2(int tank, int rock, float random, int pos = -1)
 		}
 	}
 }
-
+#endif
 void vBombCopyStats2(int oldTank, int newTank)
 {
 	g_esBombPlayer[newTank].g_iAmmoCount = g_esBombPlayer[oldTank].g_iAmmoCount;
@@ -1365,7 +1405,7 @@ void vBombReset()
 		}
 	}
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action tTimerBombCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -1414,3 +1454,4 @@ Action tTimerBombCombo2(Handle timer, DataPack pack)
 
 	return Plugin_Continue;
 }
+#endif

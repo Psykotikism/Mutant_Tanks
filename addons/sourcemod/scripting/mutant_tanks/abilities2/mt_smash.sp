@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2017-2026  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -268,9 +268,9 @@ public void OnPluginStart()
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 	LoadTranslations("mutant_tanks_names.phrases");
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	RegConsoleCmd("sm_mt_smash", cmdSmashInfo, "View information about the Smash ability.");
-
+#endif
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -318,7 +318,9 @@ void vSmashClientPutInServer(int client)
 public void OnClientPutInServer(int client)
 #endif
 {
+#if (MT_INCLUDE_DAMAGEHOOKS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	SDKHook(client, SDKHook_OnTakeDamage, OnSmashTakeDamage);
+#endif
 	vSmashReset3(client);
 }
 
@@ -339,7 +341,7 @@ public void OnMapEnd()
 {
 	vSmashReset();
 }
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if !defined MT_ABILITIES_MAIN2
 Action cmdSmashInfo(int client, int args)
 {
@@ -368,7 +370,8 @@ Action cmdSmashInfo(int client, int args)
 	return Plugin_Handled;
 }
 #endif
-
+#endif
+#if (MT_INCLUDE_MENUS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 void vSmashMenu(int client, const char[] name, int item)
 {
 	if (StrContains(MT_SMASH_SECTION4, name, false) == -1)
@@ -475,7 +478,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 		FormatEx(buffer, size, "%T", "SmashMenu2", client);
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vSmashEntityCreated(int entity, const char[] classname)
 #else
@@ -507,7 +510,7 @@ void OnSmashModelSpawnPost(int model)
 
 	RemoveEntity(model);
 }
-
+#if (MT_INCLUDE_DAMAGEHOOKS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action OnSmashTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
@@ -555,7 +558,7 @@ Action OnSmashTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 	return Plugin_Continue;
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vSmashPluginCheck(ArrayList list)
 #else
@@ -576,7 +579,7 @@ public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, 
 	list3.PushString(MT_SMASH_SECTION3);
 	list4.PushString(MT_SMASH_SECTION4);
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN2
 void vSmashCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, const char[] classname)
 #else
@@ -664,7 +667,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vSmashConfigsLoad(int mode)
 #else
@@ -806,14 +809,19 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esSmashTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esSmashTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esSmashTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esSmashTeammate[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esSmashTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esSmashTeammate[admin].g_iHumanAbility, value, -1, 2);
 			g_esSmashTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esSmashTeammate[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esSmashTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esSmashTeammate[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esSmashTeammate[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esSmashTeammate[admin].g_iHumanRangeCooldown, value, -1, 99999);
+#endif
 			g_esSmashTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esSmashTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esSmashTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esSmashTeammate[admin].g_iRequiresHumans, value, -1, 32);
 			g_esSmashTeammate[admin].g_iSmashAbility = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSmashTeammate[admin].g_iSmashAbility, value, -1, 1);
@@ -836,13 +844,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esSmashTeammate[admin].g_iSmashType = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "SmashType", "Smash Type", "Smash_Type", "type", g_esSmashTeammate[admin].g_iSmashType, value, -1, 3);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esSmashPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esSmashPlayer[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esSmashPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esSmashPlayer[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esSmashPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esSmashPlayer[admin].g_iHumanAbility, value, -1, 2);
 			g_esSmashPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esSmashPlayer[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esSmashPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esSmashPlayer[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esSmashPlayer[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esSmashPlayer[admin].g_iHumanRangeCooldown, value, -1, 99999);
+#endif
 			g_esSmashPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esSmashPlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esSmashPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esSmashPlayer[admin].g_iRequiresHumans, value, -1, 32);
 			g_esSmashPlayer[admin].g_iSmashAbility = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSmashPlayer[admin].g_iSmashAbility, value, -1, 1);
@@ -870,14 +885,19 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esSmashSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esSmashSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esSmashSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esSmashSpecial[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esSmashSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esSmashSpecial[type].g_iHumanAbility, value, -1, 2);
 			g_esSmashSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esSmashSpecial[type].g_iHumanAmmo, value, -1, 99999);
 			g_esSmashSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esSmashSpecial[type].g_iHumanCooldown, value, -1, 99999);
 			g_esSmashSpecial[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esSmashSpecial[type].g_iHumanRangeCooldown, value, -1, 99999);
+#endif
 			g_esSmashSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esSmashSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esSmashSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esSmashSpecial[type].g_iRequiresHumans, value, -1, 32);
 			g_esSmashSpecial[type].g_iSmashAbility = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSmashSpecial[type].g_iSmashAbility, value, -1, 1);
@@ -900,13 +920,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esSmashSpecial[type].g_iSmashType = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "SmashType", "Smash Type", "Smash_Type", "type", g_esSmashSpecial[type].g_iSmashType, value, -1, 3);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esSmashAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esSmashAbility[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esSmashAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esSmashAbility[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esSmashAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esSmashAbility[type].g_iHumanAbility, value, -1, 2);
 			g_esSmashAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esSmashAbility[type].g_iHumanAmmo, value, -1, 99999);
 			g_esSmashAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esSmashAbility[type].g_iHumanCooldown, value, -1, 99999);
 			g_esSmashAbility[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esSmashAbility[type].g_iHumanRangeCooldown, value, -1, 99999);
+#endif
 			g_esSmashAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esSmashAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esSmashAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esSmashAbility[type].g_iRequiresHumans, value, -1, 32);
 			g_esSmashAbility[type].g_iSmashAbility = iGetKeyValue(subsection, MT_SMASH_SECTION, MT_SMASH_SECTION2, MT_SMASH_SECTION3, MT_SMASH_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSmashAbility[type].g_iSmashAbility, value, -1, 1);
@@ -946,20 +973,25 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #if !defined MT_ABILITIES_MAIN2
 	g_iGraphicsLevel = MT_GetGraphicsLevel();
 #endif
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		g_esSmashCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_flCloseAreasOnly, g_esSmashPlayer[tank].g_flCloseAreasOnly, g_esSmashSpecial[iType].g_flCloseAreasOnly, g_esSmashAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esSmashCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_iComboAbility, g_esSmashPlayer[tank].g_iComboAbility, g_esSmashSpecial[iType].g_iComboAbility, g_esSmashAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esSmashCache[tank].g_flSmashChance = flGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_flSmashChance, g_esSmashPlayer[tank].g_flSmashChance, g_esSmashSpecial[iType].g_flSmashChance, g_esSmashAbility[iType].g_flSmashChance, 1);
 		g_esSmashCache[tank].g_flSmashCountdown = flGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_flSmashCountdown, g_esSmashPlayer[tank].g_flSmashCountdown, g_esSmashSpecial[iType].g_flSmashCountdown, g_esSmashAbility[iType].g_flSmashCountdown, 1);
 		g_esSmashCache[tank].g_flSmashDelay = flGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_flSmashDelay, g_esSmashPlayer[tank].g_flSmashDelay, g_esSmashSpecial[iType].g_flSmashDelay, g_esSmashAbility[iType].g_flSmashDelay, 1);
 		g_esSmashCache[tank].g_flSmashMeter = flGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_flSmashMeter, g_esSmashPlayer[tank].g_flSmashMeter, g_esSmashSpecial[iType].g_flSmashMeter, g_esSmashAbility[iType].g_flSmashMeter, 1);
 		g_esSmashCache[tank].g_flSmashRange = flGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_flSmashRange, g_esSmashPlayer[tank].g_flSmashRange, g_esSmashSpecial[iType].g_flSmashRange, g_esSmashAbility[iType].g_flSmashRange, 1);
 		g_esSmashCache[tank].g_flSmashRangeChance = flGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_flSmashRangeChance, g_esSmashPlayer[tank].g_flSmashRangeChance, g_esSmashSpecial[iType].g_flSmashRangeChance, g_esSmashAbility[iType].g_flSmashRangeChance, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esSmashCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_iHumanAbility, g_esSmashPlayer[tank].g_iHumanAbility, g_esSmashSpecial[iType].g_iHumanAbility, g_esSmashAbility[iType].g_iHumanAbility, 1);
 		g_esSmashCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_iHumanAmmo, g_esSmashPlayer[tank].g_iHumanAmmo, g_esSmashSpecial[iType].g_iHumanAmmo, g_esSmashAbility[iType].g_iHumanAmmo, 1);
 		g_esSmashCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_iHumanCooldown, g_esSmashPlayer[tank].g_iHumanCooldown, g_esSmashSpecial[iType].g_iHumanCooldown, g_esSmashAbility[iType].g_iHumanCooldown, 1);
 		g_esSmashCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_iHumanRangeCooldown, g_esSmashPlayer[tank].g_iHumanRangeCooldown, g_esSmashSpecial[iType].g_iHumanRangeCooldown, g_esSmashAbility[iType].g_iHumanRangeCooldown, 1);
+#endif
 		g_esSmashCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_flOpenAreasOnly, g_esSmashPlayer[tank].g_flOpenAreasOnly, g_esSmashSpecial[iType].g_flOpenAreasOnly, g_esSmashAbility[iType].g_flOpenAreasOnly, 1);
 		g_esSmashCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_iRequiresHumans, g_esSmashPlayer[tank].g_iRequiresHumans, g_esSmashSpecial[iType].g_iRequiresHumans, g_esSmashAbility[iType].g_iRequiresHumans, 1);
 		g_esSmashCache[tank].g_iSmashAbility = iGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_iSmashAbility, g_esSmashPlayer[tank].g_iSmashAbility, g_esSmashSpecial[iType].g_iSmashAbility, g_esSmashAbility[iType].g_iSmashAbility, 1);
@@ -976,19 +1008,26 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esSmashCache[tank].g_iSmashType = iGetSubSettingValue(apply, bHuman, g_esSmashTeammate[tank].g_iSmashType, g_esSmashPlayer[tank].g_iSmashType, g_esSmashSpecial[iType].g_iSmashType, g_esSmashAbility[iType].g_iSmashType, 1);
 	}
 	else
+#else
+	if (!bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+#endif
 	{
 		g_esSmashCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_flCloseAreasOnly, g_esSmashAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esSmashCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_iComboAbility, g_esSmashAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esSmashCache[tank].g_flSmashChance = flGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_flSmashChance, g_esSmashAbility[iType].g_flSmashChance, 1);
 		g_esSmashCache[tank].g_flSmashCountdown = flGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_flSmashCountdown, g_esSmashAbility[iType].g_flSmashCountdown, 1);
 		g_esSmashCache[tank].g_flSmashDelay = flGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_flSmashDelay, g_esSmashAbility[iType].g_flSmashDelay, 1);
 		g_esSmashCache[tank].g_flSmashMeter = flGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_flSmashMeter, g_esSmashAbility[iType].g_flSmashMeter, 1);
 		g_esSmashCache[tank].g_flSmashRange = flGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_flSmashRange, g_esSmashAbility[iType].g_flSmashRange, 1);
 		g_esSmashCache[tank].g_flSmashRangeChance = flGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_flSmashRangeChance, g_esSmashAbility[iType].g_flSmashRangeChance, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esSmashCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_iHumanAbility, g_esSmashAbility[iType].g_iHumanAbility, 1);
 		g_esSmashCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_iHumanAmmo, g_esSmashAbility[iType].g_iHumanAmmo, 1);
 		g_esSmashCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_iHumanCooldown, g_esSmashAbility[iType].g_iHumanCooldown, 1);
 		g_esSmashCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_iHumanRangeCooldown, g_esSmashAbility[iType].g_iHumanRangeCooldown, 1);
+#endif
 		g_esSmashCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_flOpenAreasOnly, g_esSmashAbility[iType].g_flOpenAreasOnly, 1);
 		g_esSmashCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_iRequiresHumans, g_esSmashAbility[iType].g_iRequiresHumans, 1);
 		g_esSmashCache[tank].g_iSmashAbility = iGetSettingValue(apply, bHuman, g_esSmashPlayer[tank].g_iSmashAbility, g_esSmashAbility[iType].g_iSmashAbility, 1);
@@ -1091,7 +1130,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		}
 	}
 }
-
+#if (MT_INCLUDE_DETOURS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN2
 void vSmashPlayerEventKilled(int victim, int attacker)
 #else
@@ -1103,7 +1142,7 @@ public void MT_OnPlayerEventKilled(int victim, int attacker)
 		g_iSmashDeathModelOwner = GetClientUserId(victim);
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vSmashAbilityActivated(int tank)
 #else
@@ -1120,7 +1159,7 @@ public void MT_OnAbilityActivated(int tank)
 		vSmashAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
 }
-
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN2
 void vSmashButtonPressed(int tank, int button)
 #else
@@ -1146,7 +1185,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vSmashChangeType(int tank, int oldType)
 #else
@@ -1604,7 +1643,7 @@ Action tTimerSmash2(Handle timer, DataPack pack)
 
 	return Plugin_Continue;
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action tTimerSmashCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -1653,7 +1692,7 @@ Action tTimerSmashCombo2(Handle timer, DataPack pack)
 
 	return Plugin_Continue;
 }
-
+#endif
 Action tTimerSmashLaunch(Handle timer, DataPack pack)
 {
 	pack.Reset();

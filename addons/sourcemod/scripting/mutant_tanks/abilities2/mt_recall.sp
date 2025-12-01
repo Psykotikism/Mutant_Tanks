@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2017-2026  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -215,9 +215,9 @@ public void OnPluginStart()
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 	LoadTranslations("mutant_tanks_names.phrases");
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	RegConsoleCmd("sm_mt_recall", cmdRecallInfo, "View information about the Recall ability.");
-
+#endif
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -248,7 +248,9 @@ void vRecallClientPutInServer(int client)
 public void OnClientPutInServer(int client)
 #endif
 {
+#if (MT_INCLUDE_DAMAGEHOOKS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	SDKHook(client, SDKHook_OnTakeDamage, OnRecallTakeDamage);
+#endif
 	vRemoveRecall(client);
 }
 
@@ -269,7 +271,7 @@ public void OnMapEnd()
 {
 	vRecallReset();
 }
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if !defined MT_ABILITIES_MAIN2
 Action cmdRecallInfo(int client, int args)
 {
@@ -298,7 +300,8 @@ Action cmdRecallInfo(int client, int args)
 	return Plugin_Handled;
 }
 #endif
-
+#endif
+#if (MT_INCLUDE_MENUS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 void vRecallMenu(int client, const char[] name, int item)
 {
 	if (StrContains(MT_RECALL_SECTION4, name, false) == -1)
@@ -413,9 +416,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 		FormatEx(buffer, size, "%T", "RecallMenu2", client);
 	}
 }
-
-
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vRecallPlayerRunCmd(int client, int &buttons)
 #else
@@ -431,7 +432,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 #endif
 	}
 
-	if (bIsHumanSurvivor(client) && MT_DoesSurvivorHaveRewardType(client, MT_REWARD_DEVELOPER4) && (buttons & IN_JUMP))
+	if (bIsHumanSurvivor(client) && (MT_DoesSurvivorHaveRewardType(client, MT_REWARD_DEVELOPER4) || MT_DoesSurvivorHavePassiveType(client, MT_PASSIVE_DEVELOPER4)) && (buttons & IN_JUMP))
 	{
 		if (g_esRecallPlayer[client].g_alHealthVals == null || g_esRecallPlayer[client].g_alPrevLocations == null)
 		{
@@ -504,7 +505,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	return Plugin_Continue;
 #endif
 }
-
+#if (MT_INCLUDE_DAMAGEHOOKS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action OnRecallTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsHumanSurvivor(victim) && (damagetype & DMG_FALL) && g_esRecallPlayer[victim].g_bBlockFall && damage > 0.0)
@@ -516,7 +517,7 @@ Action OnRecallTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 
 	return Plugin_Continue;
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vRecallPluginCheck(ArrayList list)
 #else
@@ -649,13 +650,16 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esRecallTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_RECALL_SECTION, MT_RECALL_SECTION2, MT_RECALL_SECTION3, MT_RECALL_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esRecallTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esRecallTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_RECALL_SECTION, MT_RECALL_SECTION2, MT_RECALL_SECTION3, MT_RECALL_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRecallTeammate[admin].g_iHumanAbility, value, -1, 2);
 			g_esRecallTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_RECALL_SECTION, MT_RECALL_SECTION2, MT_RECALL_SECTION3, MT_RECALL_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRecallTeammate[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esRecallTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_RECALL_SECTION, MT_RECALL_SECTION2, MT_RECALL_SECTION3, MT_RECALL_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRecallTeammate[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esRecallTeammate[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_RECALL_SECTION, MT_RECALL_SECTION2, MT_RECALL_SECTION3, MT_RECALL_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esRecallTeammate[admin].g_iHumanRangeCooldown, value, -1, 99999);
+#endif
 			g_esRecallTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_RECALL_SECTION, MT_RECALL_SECTION2, MT_RECALL_SECTION3, MT_RECALL_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRecallTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esRecallTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_RECALL_SECTION, MT_RECALL_SECTION2, MT_RECALL_SECTION3, MT_RECALL_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRecallTeammate[admin].g_iRequiresHumans, value, -1, 32);
 			g_esRecallTeammate[admin].g_iRecallAbility = iGetKeyValue(subsection, MT_RECALL_SECTION, MT_RECALL_SECTION2, MT_RECALL_SECTION3, MT_RECALL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRecallTeammate[admin].g_iRecallAbility, value, -1, 3);
@@ -672,12 +676,17 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esRecallTeammate[admin].g_flRecallRewindThreshold = flGetKeyValue(subsection, MT_RECALL_SECTION, MT_RECALL_SECTION2, MT_RECALL_SECTION3, MT_RECALL_SECTION4, key, "RecallRewindThreshold", "Recall Rewind Threshold", "Recall_Rewind_Threshold", "rewindthreshold", g_esRecallTeammate[admin].g_flRecallRewindThreshold, value, -1.0, 1.0);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esRecallPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_RECALL_SECTION, MT_RECALL_SECTION2, MT_RECALL_SECTION3, MT_RECALL_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esRecallPlayer[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esRecallPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_RECALL_SECTION, MT_RECALL_SECTION2, MT_RECALL_SECTION3, MT_RECALL_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRecallPlayer[admin].g_iHumanAbility, value, -1, 2);
 			g_esRecallPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_RECALL_SECTION, MT_RECALL_SECTION2, MT_RECALL_SECTION3, MT_RECALL_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRecallPlayer[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esRecallPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_RECALL_SECTION, MT_RECALL_SECTION2, MT_RECALL_SECTION3, MT_RECALL_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRecallPlayer[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esRecallPlayer[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_RECALL_SECTION, MT_RECALL_SECTION2, MT_RECALL_SECTION3, MT_RECALL_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esRecallPlayer[admin].g_iHumanRangeCooldown, value, -1, 99999);
+#endif
 			g_esRecallPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_RECALL_SECTION, MT_RECALL_SECTION2, MT_RECALL_SECTION3, MT_RECALL_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRecallPlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esRecallPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_RECALL_SECTION, MT_RECALL_SECTION2, MT_RECALL_SECTION3, MT_RECALL_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRecallPlayer[admin].g_iRequiresHumans, value, -1, 32);
 			g_esRecallPlayer[admin].g_iRecallAbility = iGetKeyValue(subsection, MT_RECALL_SECTION, MT_RECALL_SECTION2, MT_RECALL_SECTION3, MT_RECALL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRecallPlayer[admin].g_iRecallAbility, value, -1, 3);
@@ -698,13 +707,16 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esRecallSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_RECALL_SECTION, MT_RECALL_SECTION2, MT_RECALL_SECTION3, MT_RECALL_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esRecallSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esRecallSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_RECALL_SECTION, MT_RECALL_SECTION2, MT_RECALL_SECTION3, MT_RECALL_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRecallSpecial[type].g_iHumanAbility, value, -1, 2);
 			g_esRecallSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_RECALL_SECTION, MT_RECALL_SECTION2, MT_RECALL_SECTION3, MT_RECALL_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRecallSpecial[type].g_iHumanAmmo, value, -1, 99999);
 			g_esRecallSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_RECALL_SECTION, MT_RECALL_SECTION2, MT_RECALL_SECTION3, MT_RECALL_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRecallSpecial[type].g_iHumanCooldown, value, -1, 99999);
 			g_esRecallSpecial[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_RECALL_SECTION, MT_RECALL_SECTION2, MT_RECALL_SECTION3, MT_RECALL_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esRecallSpecial[type].g_iHumanRangeCooldown, value, -1, 99999);
+#endif
 			g_esRecallSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_RECALL_SECTION, MT_RECALL_SECTION2, MT_RECALL_SECTION3, MT_RECALL_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRecallSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esRecallSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_RECALL_SECTION, MT_RECALL_SECTION2, MT_RECALL_SECTION3, MT_RECALL_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRecallSpecial[type].g_iRequiresHumans, value, -1, 32);
 			g_esRecallSpecial[type].g_iRecallAbility = iGetKeyValue(subsection, MT_RECALL_SECTION, MT_RECALL_SECTION2, MT_RECALL_SECTION3, MT_RECALL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRecallSpecial[type].g_iRecallAbility, value, -1, 3);
@@ -721,12 +733,17 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esRecallSpecial[type].g_flRecallRewindThreshold = flGetKeyValue(subsection, MT_RECALL_SECTION, MT_RECALL_SECTION2, MT_RECALL_SECTION3, MT_RECALL_SECTION4, key, "RecallRewindThreshold", "Recall Rewind Threshold", "Recall_Rewind_Threshold", "rewindthreshold", g_esRecallSpecial[type].g_flRecallRewindThreshold, value, -1.0, 1.0);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esRecallAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_RECALL_SECTION, MT_RECALL_SECTION2, MT_RECALL_SECTION3, MT_RECALL_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esRecallAbility[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esRecallAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_RECALL_SECTION, MT_RECALL_SECTION2, MT_RECALL_SECTION3, MT_RECALL_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRecallAbility[type].g_iHumanAbility, value, -1, 2);
 			g_esRecallAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_RECALL_SECTION, MT_RECALL_SECTION2, MT_RECALL_SECTION3, MT_RECALL_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRecallAbility[type].g_iHumanAmmo, value, -1, 99999);
 			g_esRecallAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_RECALL_SECTION, MT_RECALL_SECTION2, MT_RECALL_SECTION3, MT_RECALL_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRecallAbility[type].g_iHumanCooldown, value, -1, 99999);
 			g_esRecallAbility[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_RECALL_SECTION, MT_RECALL_SECTION2, MT_RECALL_SECTION3, MT_RECALL_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esRecallAbility[type].g_iHumanRangeCooldown, value, -1, 99999);
+#endif
 			g_esRecallAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_RECALL_SECTION, MT_RECALL_SECTION2, MT_RECALL_SECTION3, MT_RECALL_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRecallAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esRecallAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_RECALL_SECTION, MT_RECALL_SECTION2, MT_RECALL_SECTION3, MT_RECALL_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRecallAbility[type].g_iRequiresHumans, value, -1, 32);
 			g_esRecallAbility[type].g_iRecallAbility = iGetKeyValue(subsection, MT_RECALL_SECTION, MT_RECALL_SECTION2, MT_RECALL_SECTION3, MT_RECALL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRecallAbility[type].g_iRecallAbility, value, -1, 3);
@@ -760,6 +777,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #if !defined MT_ABILITIES_MAIN2
 	g_iGraphicsLevel = MT_GetGraphicsLevel();
 #endif
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		g_esRecallCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_flCloseAreasOnly, g_esRecallPlayer[tank].g_flCloseAreasOnly, g_esRecallSpecial[iType].g_flCloseAreasOnly, g_esRecallAbility[iType].g_flCloseAreasOnly, 1);
@@ -767,10 +785,12 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esRecallCache[tank].g_flRecallBlinkRange = flGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_flRecallBlinkRange, g_esRecallPlayer[tank].g_flRecallBlinkRange, g_esRecallSpecial[iType].g_flRecallBlinkRange, g_esRecallAbility[iType].g_flRecallBlinkRange, 1);
 		g_esRecallCache[tank].g_flRecallRewindChance = flGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_flRecallRewindChance, g_esRecallPlayer[tank].g_flRecallRewindChance, g_esRecallSpecial[iType].g_flRecallRewindChance, g_esRecallAbility[iType].g_flRecallRewindChance, 1);
 		g_esRecallCache[tank].g_flRecallRewindThreshold = flGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_flRecallRewindThreshold, g_esRecallPlayer[tank].g_flRecallRewindThreshold, g_esRecallSpecial[iType].g_flRecallRewindThreshold, g_esRecallAbility[iType].g_flRecallRewindThreshold, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esRecallCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_iHumanAbility, g_esRecallPlayer[tank].g_iHumanAbility, g_esRecallSpecial[iType].g_iHumanAbility, g_esRecallAbility[iType].g_iHumanAbility, 1);
 		g_esRecallCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_iHumanAmmo, g_esRecallPlayer[tank].g_iHumanAmmo, g_esRecallSpecial[iType].g_iHumanAmmo, g_esRecallAbility[iType].g_iHumanAmmo, 1);
 		g_esRecallCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_iHumanCooldown, g_esRecallPlayer[tank].g_iHumanCooldown, g_esRecallSpecial[iType].g_iHumanCooldown, g_esRecallAbility[iType].g_iHumanCooldown, 1);
 		g_esRecallCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_iHumanRangeCooldown, g_esRecallPlayer[tank].g_iHumanRangeCooldown, g_esRecallSpecial[iType].g_iHumanRangeCooldown, g_esRecallAbility[iType].g_iHumanRangeCooldown, 1);
+#endif
 		g_esRecallCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_flOpenAreasOnly, g_esRecallPlayer[tank].g_flOpenAreasOnly, g_esRecallSpecial[iType].g_flOpenAreasOnly, g_esRecallAbility[iType].g_flOpenAreasOnly, 1);
 		g_esRecallCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_iRequiresHumans, g_esRecallPlayer[tank].g_iRequiresHumans, g_esRecallSpecial[iType].g_iRequiresHumans, g_esRecallAbility[iType].g_iRequiresHumans, 1);
 		g_esRecallCache[tank].g_iRecallAbility = iGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_iRecallAbility, g_esRecallPlayer[tank].g_iRecallAbility, g_esRecallSpecial[iType].g_iRecallAbility, g_esRecallAbility[iType].g_iRecallAbility, 1);
@@ -783,16 +803,21 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esRecallCache[tank].g_iRecallMessage = iGetSubSettingValue(apply, bHuman, g_esRecallTeammate[tank].g_iRecallMessage, g_esRecallPlayer[tank].g_iRecallMessage, g_esRecallSpecial[iType].g_iRecallMessage, g_esRecallAbility[iType].g_iRecallMessage, 1);
 	}
 	else
+#else
+	if (!bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+#endif
 	{
 		g_esRecallCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_flCloseAreasOnly, g_esRecallAbility[iType].g_flCloseAreasOnly, 1);
 		g_esRecallCache[tank].g_flRecallBlinkChance = flGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_flRecallBlinkChance, g_esRecallAbility[iType].g_flRecallBlinkChance, 1);
 		g_esRecallCache[tank].g_flRecallBlinkRange = flGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_flRecallBlinkRange, g_esRecallAbility[iType].g_flRecallBlinkRange, 1);
 		g_esRecallCache[tank].g_flRecallRewindChance = flGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_flRecallRewindChance, g_esRecallAbility[iType].g_flRecallRewindChance, 1);
 		g_esRecallCache[tank].g_flRecallRewindThreshold = flGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_flRecallRewindThreshold, g_esRecallAbility[iType].g_flRecallRewindThreshold, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esRecallCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_iHumanAbility, g_esRecallAbility[iType].g_iHumanAbility, 1);
 		g_esRecallCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_iHumanAmmo, g_esRecallAbility[iType].g_iHumanAmmo, 1);
 		g_esRecallCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_iHumanCooldown, g_esRecallAbility[iType].g_iHumanCooldown, 1);
 		g_esRecallCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_iHumanRangeCooldown, g_esRecallAbility[iType].g_iHumanRangeCooldown, 1);
+#endif
 		g_esRecallCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_flOpenAreasOnly, g_esRecallAbility[iType].g_flOpenAreasOnly, 1);
 		g_esRecallCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_iRequiresHumans, g_esRecallAbility[iType].g_iRequiresHumans, 1);
 		g_esRecallCache[tank].g_iRecallAbility = iGetSettingValue(apply, bHuman, g_esRecallPlayer[tank].g_iRecallAbility, g_esRecallAbility[iType].g_iRecallAbility, 1);
@@ -847,7 +872,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			else if (bIsSurvivor(iPlayer))
 			{
 				vResetRecallTimers(iBot, false);
-				vResetRecallTimers(iPlayer, MT_DoesSurvivorHaveRewardType(iPlayer, MT_REWARD_DEVELOPER4));
+				vResetRecallTimers(iPlayer, (MT_DoesSurvivorHaveRewardType(iPlayer, MT_REWARD_DEVELOPER4) || MT_DoesSurvivorHavePassiveType(iPlayer, MT_PASSIVE_DEVELOPER4)));
 			}
 		}
 	}
@@ -869,7 +894,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			else if (bIsSurvivor(iBot))
 			{
 				vResetRecallTimers(iPlayer, false);
-				vResetRecallTimers(iBot, MT_DoesSurvivorHaveRewardType(iBot, MT_REWARD_DEVELOPER4));
+				vResetRecallTimers(iBot, (MT_DoesSurvivorHaveRewardType(iBot, MT_REWARD_DEVELOPER4) || MT_DoesSurvivorHavePassiveType(iBot, MT_PASSIVE_DEVELOPER4)));
 			}
 		}
 	}
@@ -882,11 +907,11 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		}
 		else if (bIsSurvivor(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vResetRecallTimers(iPlayer, (StrContains(name, "spawn") != -1 && MT_DoesSurvivorHaveRewardType(iPlayer, MT_REWARD_DEVELOPER4)));
+			vResetRecallTimers(iPlayer, (StrContains(name, "spawn") != -1 && (MT_DoesSurvivorHaveRewardType(iPlayer, MT_REWARD_DEVELOPER4) || MT_DoesSurvivorHavePassiveType(iPlayer, MT_PASSIVE_DEVELOPER4))));
 		}
 	}
 }
-
+#if (MT_INCLUDE_DETOURS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN2
 void vRecallFatalFalling(int survivor)
 #else
@@ -942,7 +967,8 @@ public void MT_OnPlayerEventKilled(int victim, int attacker)
 		}
 	}
 }
-
+#endif
+#if (MT_INCLUDE_REWARDS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN2
 void vRecallRewardSurvivor(int survivor, int &type, bool apply)
 #else
@@ -954,14 +980,34 @@ public Action MT_OnRewardSurvivor(int survivor, int tank, int &type, int priorit
 		switch (apply)
 		{
 			case true: vResetRecallTimers(survivor);
-			case false: vResetRecallTimers(survivor, false);
+			case false: vResetRecallTimers(survivor, MT_DoesSurvivorHavePassiveType(survivor, MT_PASSIVE_DEVELOPER4));
 		}
 	}
 #if !defined MT_ABILITIES_MAIN2
 	return Plugin_Continue;
 #endif
 }
-
+#endif
+#if (MT_INCLUDE_PASSIVES == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
+#if defined MT_ABILITIES_MAIN2
+void vRecallToggleSurvivorPassive(int survivor, int &type, bool apply)
+#else
+public Action MT_OnToggleSurvivorPassive(int survivor, int &type, bool apply, bool weaponOnly, int weaponIndex)
+#endif
+{
+	if (bIsHumanSurvivor(survivor) && (type & MT_PASSIVE_DEVELOPER4))
+	{
+		switch (apply)
+		{
+			case true: vResetRecallTimers(survivor);
+			case false: vResetRecallTimers(survivor, MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_DEVELOPER4));
+		}
+	}
+#if !defined MT_ABILITIES_MAIN2
+	return Plugin_Continue;
+#endif
+}
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vRecallAbilityActivated(int tank)
 #else
@@ -979,7 +1025,7 @@ public void MT_OnAbilityActivated(int tank)
 		vRecallAbility(tank, true);
 	}
 }
-
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN2
 void vRecallButtonPressed(int tank, int button)
 #else
@@ -1013,7 +1059,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vRecallChangeType(int tank, int oldType)
 #else
@@ -1434,7 +1480,7 @@ Action tTimerStoreRecall(Handle timer, int userid)
 {
 	int iPlayer = GetClientOfUserId(userid);
 	bool bCancel = !MT_IsCorePluginEnabled() || !MT_IsTankSupported(iPlayer) || (!MT_HasAdminAccess(iPlayer) && !bHasAdminAccess(iPlayer, g_esRecallAbility[g_esRecallPlayer[iPlayer].g_iTankTypeRecorded].g_iAccessFlags, g_esRecallPlayer[iPlayer].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esRecallPlayer[iPlayer].g_iTankType, iPlayer) || !MT_IsCustomTankSupported(iPlayer) || g_esRecallCache[iPlayer].g_iRecallAbility == 0,
-		bCancel2 = !MT_IsCorePluginEnabled() || !bIsHumanSurvivor(iPlayer) || !MT_DoesSurvivorHaveRewardType(iPlayer, MT_REWARD_DEVELOPER4);
+		bCancel2 = !MT_IsCorePluginEnabled() || !bIsHumanSurvivor(iPlayer) || (!MT_DoesSurvivorHaveRewardType(iPlayer, MT_REWARD_DEVELOPER4) && !MT_DoesSurvivorHavePassiveType(iPlayer, MT_PASSIVE_DEVELOPER4));
 	if (bCancel && bCancel2)
 	{
 		vClearHealthValueList(iPlayer);

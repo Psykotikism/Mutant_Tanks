@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2017-2026  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -251,8 +251,9 @@ public void OnPluginStart()
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 	LoadTranslations("mutant_tanks_names.phrases");
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	RegConsoleCmd("sm_mt_yell", cmdYellInfo, "View information about the Yell ability.");
+#endif
 }
 #endif
 
@@ -314,7 +315,7 @@ public void OnMapEnd()
 {
 	vYellReset();
 }
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if !defined MT_ABILITIES_MAIN2
 Action cmdYellInfo(int client, int args)
 {
@@ -343,7 +344,8 @@ Action cmdYellInfo(int client, int args)
 	return Plugin_Handled;
 }
 #endif
-
+#endif
+#if (MT_INCLUDE_MENUS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 void vYellMenu(int client, const char[] name, int item)
 {
 	if (StrContains(MT_YELL_SECTION4, name, false) == -1)
@@ -461,7 +463,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 		FormatEx(buffer, size, "%T", "YellMenu2", client);
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vYellPluginCheck(ArrayList list)
 #else
@@ -482,7 +484,7 @@ public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, 
 	list3.PushString(MT_YELL_SECTION3);
 	list4.PushString(MT_YELL_SECTION4);
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN2
 void vYellCombineAbilities(int tank, int type, const float random, const char[] combo)
 #else
@@ -542,7 +544,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vYellConfigsLoad(int mode)
 #else
@@ -661,15 +663,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esYellTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esYellTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esYellTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esYellTeammate[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esYellTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esYellTeammate[admin].g_iHumanAbility, value, -1, 2);
 			g_esYellTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esYellTeammate[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esYellTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esYellTeammate[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esYellTeammate[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esYellTeammate[admin].g_iHumanDuration, value, -1, 99999);
 			g_esYellTeammate[admin].g_iHumanMode = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esYellTeammate[admin].g_iHumanMode, value, -1, 2);
+#endif
 			g_esYellTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esYellTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esYellTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esYellTeammate[admin].g_iRequiresHumans, value, -1, 32);
 			g_esYellTeammate[admin].g_iYellAbility = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esYellTeammate[admin].g_iYellAbility, value, -1, 1);
@@ -685,14 +692,21 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esYellTeammate[admin].g_flYellRange = flGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellRange", "Yell Range", "Yell_Range", "range", g_esYellTeammate[admin].g_flYellRange, value, -1.0, 99999.0);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esYellPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esYellPlayer[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esYellPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esYellPlayer[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esYellPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esYellPlayer[admin].g_iHumanAbility, value, -1, 2);
 			g_esYellPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esYellPlayer[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esYellPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esYellPlayer[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esYellPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esYellPlayer[admin].g_iHumanDuration, value, -1, 99999);
 			g_esYellPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esYellPlayer[admin].g_iHumanMode, value, -1, 2);
+#endif
 			g_esYellPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esYellPlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esYellPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esYellPlayer[admin].g_iRequiresHumans, value, -1, 32);
 			g_esYellPlayer[admin].g_iYellAbility = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esYellPlayer[admin].g_iYellAbility, value, -1, 1);
@@ -713,15 +727,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esYellSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esYellSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esYellSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esYellSpecial[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esYellSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esYellSpecial[type].g_iHumanAbility, value, -1, 2);
 			g_esYellSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esYellSpecial[type].g_iHumanAmmo, value, -1, 99999);
 			g_esYellSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esYellSpecial[type].g_iHumanCooldown, value, -1, 99999);
 			g_esYellSpecial[type].g_iHumanDuration = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esYellSpecial[type].g_iHumanDuration, value, -1, 99999);
 			g_esYellSpecial[type].g_iHumanMode = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esYellSpecial[type].g_iHumanMode, value, -1, 2);
+#endif
 			g_esYellSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esYellSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esYellSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esYellSpecial[type].g_iRequiresHumans, value, -1, 32);
 			g_esYellSpecial[type].g_iYellAbility = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esYellSpecial[type].g_iYellAbility, value, -1, 1);
@@ -737,14 +756,21 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esYellSpecial[type].g_flYellRange = flGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellRange", "Yell Range", "Yell_Range", "range", g_esYellSpecial[type].g_flYellRange, value, -1.0, 99999.0);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esYellAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esYellAbility[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esYellAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esYellAbility[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esYellAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esYellAbility[type].g_iHumanAbility, value, -1, 2);
 			g_esYellAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esYellAbility[type].g_iHumanAmmo, value, -1, 99999);
 			g_esYellAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esYellAbility[type].g_iHumanCooldown, value, -1, 99999);
 			g_esYellAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esYellAbility[type].g_iHumanDuration, value, -1, 99999);
 			g_esYellAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esYellAbility[type].g_iHumanMode, value, -1, 2);
+#endif
 			g_esYellAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esYellAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esYellAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esYellAbility[type].g_iRequiresHumans, value, -1, 32);
 			g_esYellAbility[type].g_iYellAbility = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esYellAbility[type].g_iYellAbility, value, -1, 1);
@@ -777,19 +803,24 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #if !defined MT_ABILITIES_MAIN2
 	g_iGraphicsLevel = MT_GetGraphicsLevel();
 #endif
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		g_esYellCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esYellTeammate[tank].g_flCloseAreasOnly, g_esYellPlayer[tank].g_flCloseAreasOnly, g_esYellSpecial[iType].g_flCloseAreasOnly, g_esYellAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esYellCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esYellTeammate[tank].g_iComboAbility, g_esYellPlayer[tank].g_iComboAbility, g_esYellSpecial[iType].g_iComboAbility, g_esYellAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esYellCache[tank].g_flYellChance = flGetSubSettingValue(apply, bHuman, g_esYellTeammate[tank].g_flYellChance, g_esYellPlayer[tank].g_flYellChance, g_esYellSpecial[iType].g_flYellChance, g_esYellAbility[iType].g_flYellChance, 1);
 		g_esYellCache[tank].g_flYellDamage = flGetSubSettingValue(apply, bHuman, g_esYellTeammate[tank].g_flYellDamage, g_esYellPlayer[tank].g_flYellDamage, g_esYellSpecial[iType].g_flYellDamage, g_esYellAbility[iType].g_flYellDamage, 1);
 		g_esYellCache[tank].g_flYellInterval = flGetSubSettingValue(apply, bHuman, g_esYellTeammate[tank].g_flYellInterval, g_esYellPlayer[tank].g_flYellInterval, g_esYellSpecial[iType].g_flYellInterval, g_esYellAbility[iType].g_flYellInterval, 1);
 		g_esYellCache[tank].g_flYellRange = flGetSubSettingValue(apply, bHuman, g_esYellTeammate[tank].g_flYellRange, g_esYellPlayer[tank].g_flYellRange, g_esYellSpecial[iType].g_flYellRange, g_esYellAbility[iType].g_flYellRange, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esYellCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esYellTeammate[tank].g_iHumanAbility, g_esYellPlayer[tank].g_iHumanAbility, g_esYellSpecial[iType].g_iHumanAbility, g_esYellAbility[iType].g_iHumanAbility, 1);
 		g_esYellCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esYellTeammate[tank].g_iHumanAmmo, g_esYellPlayer[tank].g_iHumanAmmo, g_esYellSpecial[iType].g_iHumanAmmo, g_esYellAbility[iType].g_iHumanAmmo, 1);
 		g_esYellCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esYellTeammate[tank].g_iHumanCooldown, g_esYellPlayer[tank].g_iHumanCooldown, g_esYellSpecial[iType].g_iHumanCooldown, g_esYellAbility[iType].g_iHumanCooldown, 1);
 		g_esYellCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esYellTeammate[tank].g_iHumanDuration, g_esYellPlayer[tank].g_iHumanDuration, g_esYellSpecial[iType].g_iHumanDuration, g_esYellAbility[iType].g_iHumanDuration, 1);
 		g_esYellCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esYellTeammate[tank].g_iHumanMode, g_esYellPlayer[tank].g_iHumanMode, g_esYellSpecial[iType].g_iHumanMode, g_esYellAbility[iType].g_iHumanMode, 1);
+#endif
 		g_esYellCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esYellTeammate[tank].g_flOpenAreasOnly, g_esYellPlayer[tank].g_flOpenAreasOnly, g_esYellSpecial[iType].g_flOpenAreasOnly, g_esYellAbility[iType].g_flOpenAreasOnly, 1);
 		g_esYellCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esYellTeammate[tank].g_iRequiresHumans, g_esYellPlayer[tank].g_iRequiresHumans, g_esYellSpecial[iType].g_iRequiresHumans, g_esYellAbility[iType].g_iRequiresHumans, 1);
 		g_esYellCache[tank].g_iYellAbility = iGetSubSettingValue(apply, bHuman, g_esYellTeammate[tank].g_iYellAbility, g_esYellPlayer[tank].g_iYellAbility, g_esYellSpecial[iType].g_iYellAbility, g_esYellAbility[iType].g_iYellAbility, 1);
@@ -801,18 +832,25 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esYellCache[tank].g_iYellSight = iGetSubSettingValue(apply, bHuman, g_esYellTeammate[tank].g_iYellSight, g_esYellPlayer[tank].g_iYellSight, g_esYellSpecial[iType].g_iYellSight, g_esYellAbility[iType].g_iYellSight, 1);
 	}
 	else
+#else
+	if (!bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+#endif
 	{
 		g_esYellCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esYellPlayer[tank].g_flCloseAreasOnly, g_esYellAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esYellCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esYellPlayer[tank].g_iComboAbility, g_esYellAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esYellCache[tank].g_flYellChance = flGetSettingValue(apply, bHuman, g_esYellPlayer[tank].g_flYellChance, g_esYellAbility[iType].g_flYellChance, 1);
 		g_esYellCache[tank].g_flYellDamage = flGetSettingValue(apply, bHuman, g_esYellPlayer[tank].g_flYellDamage, g_esYellAbility[iType].g_flYellDamage, 1);
 		g_esYellCache[tank].g_flYellInterval = flGetSettingValue(apply, bHuman, g_esYellPlayer[tank].g_flYellInterval, g_esYellAbility[iType].g_flYellInterval, 1);
 		g_esYellCache[tank].g_flYellRange = flGetSettingValue(apply, bHuman, g_esYellPlayer[tank].g_flYellRange, g_esYellAbility[iType].g_flYellRange, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esYellCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esYellPlayer[tank].g_iHumanAbility, g_esYellAbility[iType].g_iHumanAbility, 1);
 		g_esYellCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esYellPlayer[tank].g_iHumanAmmo, g_esYellAbility[iType].g_iHumanAmmo, 1);
 		g_esYellCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esYellPlayer[tank].g_iHumanCooldown, g_esYellAbility[iType].g_iHumanCooldown, 1);
 		g_esYellCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esYellPlayer[tank].g_iHumanDuration, g_esYellAbility[iType].g_iHumanDuration, 1);
 		g_esYellCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esYellPlayer[tank].g_iHumanMode, g_esYellAbility[iType].g_iHumanMode, 1);
+#endif
 		g_esYellCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esYellPlayer[tank].g_flOpenAreasOnly, g_esYellAbility[iType].g_flOpenAreasOnly, 1);
 		g_esYellCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esYellPlayer[tank].g_iRequiresHumans, g_esYellAbility[iType].g_iRequiresHumans, 1);
 		g_esYellCache[tank].g_iYellAbility = iGetSettingValue(apply, bHuman, g_esYellPlayer[tank].g_iYellAbility, g_esYellAbility[iType].g_iYellAbility, 1);
@@ -902,7 +940,7 @@ public void MT_OnAbilityActivated(int tank)
 		vYellAbility(tank);
 	}
 }
-
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN2
 void vYellButtonPressed(int tank, int button)
 #else
@@ -992,7 +1030,7 @@ public void MT_OnButtonReleased(int tank, int button)
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vYellChangeType(int tank, int oldType)
 #else
@@ -1119,7 +1157,7 @@ void vYellReset3(int tank)
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "YellHuman5", (g_esYellPlayer[tank].g_iCooldown - iTime));
 	}
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action tTimerYellCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -1135,7 +1173,7 @@ Action tTimerYellCombo(Handle timer, DataPack pack)
 
 	return Plugin_Continue;
 }
-
+#endif
 Action tTimerYell(Handle timer, DataPack pack)
 {
 	pack.Reset();

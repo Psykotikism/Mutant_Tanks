@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2017-2026  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -250,9 +250,9 @@ public void OnPluginStart()
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 	LoadTranslations("mutant_tanks_names.phrases");
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	RegConsoleCmd("sm_mt_fire", cmdFireInfo, "View information about the Fire ability.");
-
+#endif
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -289,7 +289,9 @@ void vFireClientPutInServer(int client)
 public void OnClientPutInServer(int client)
 #endif
 {
+#if (MT_INCLUDE_DAMAGEHOOKS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	SDKHook(client, SDKHook_OnTakeDamage, OnFireTakeDamage);
+#endif
 	vRemoveFire(client);
 }
 
@@ -310,7 +312,7 @@ public void OnMapEnd()
 {
 	vFireReset();
 }
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if !defined MT_ABILITIES_MAIN
 Action cmdFireInfo(int client, int args)
 {
@@ -339,7 +341,8 @@ Action cmdFireInfo(int client, int args)
 	return Plugin_Handled;
 }
 #endif
-
+#endif
+#if (MT_INCLUDE_MENUS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 void vFireMenu(int client, const char[] name, int item)
 {
 	if (StrContains(MT_FIRE_SECTION4, name, false) == -1)
@@ -449,7 +452,8 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 		FormatEx(buffer, size, "%T", "FireMenu2", client);
 	}
 }
-
+#endif
+#if (MT_INCLUDE_DAMAGEHOOKS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action OnFireTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
@@ -499,7 +503,7 @@ Action OnFireTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 	return Plugin_Continue;
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN
 void vFirePluginCheck(ArrayList list)
 #else
@@ -520,7 +524,7 @@ public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, 
 	list3.PushString(MT_FIRE_SECTION3);
 	list4.PushString(MT_FIRE_SECTION4);
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN
 void vFireCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
 #else
@@ -617,7 +621,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN
 void vFireConfigsLoad(int mode)
 #else
@@ -759,15 +763,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esFireTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esFireTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esFireTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFireTeammate[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esFireTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFireTeammate[admin].g_iHumanAbility, value, -1, 2);
 			g_esFireTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFireTeammate[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esFireTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFireTeammate[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esFireTeammate[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esFireTeammate[admin].g_iHumanRangeCooldown, value, -1, 99999);
 			g_esFireTeammate[admin].g_iHumanRockCooldown = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "HumanRockCooldown", "Human Rock Cooldown", "Human_Rock_Cooldown", "hrockcooldown", g_esFireTeammate[admin].g_iHumanRockCooldown, value, -1, 99999);
+#endif
 			g_esFireTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFireTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esFireTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFireTeammate[admin].g_iRequiresHumans, value, -1, 32);
 			g_esFireTeammate[admin].g_iFireAbility = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFireTeammate[admin].g_iFireAbility, value, -1, 1);
@@ -789,14 +798,21 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esFireTeammate[admin].g_iFireRockCooldown = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FirePinCooldown", "Fire Pin Cooldown", "Fire_Pin_Cooldown", "pincooldown", g_esFireTeammate[admin].g_iFireRockCooldown, value, -1, 99999);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esFirePlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esFirePlayer[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esFirePlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFirePlayer[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esFirePlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFirePlayer[admin].g_iHumanAbility, value, -1, 2);
 			g_esFirePlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFirePlayer[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esFirePlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFirePlayer[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esFirePlayer[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esFirePlayer[admin].g_iHumanRangeCooldown, value, -1, 99999);
 			g_esFirePlayer[admin].g_iHumanRockCooldown = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "HumanRockCooldown", "Human Rock Cooldown", "Human_Rock_Cooldown", "hrockcooldown", g_esFirePlayer[admin].g_iHumanRockCooldown, value, -1, 99999);
+#endif
 			g_esFirePlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFirePlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esFirePlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFirePlayer[admin].g_iRequiresHumans, value, -1, 32);
 			g_esFirePlayer[admin].g_iFireAbility = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFirePlayer[admin].g_iFireAbility, value, -1, 1);
@@ -823,15 +839,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esFireSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esFireSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esFireSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFireSpecial[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esFireSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFireSpecial[type].g_iHumanAbility, value, -1, 2);
 			g_esFireSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFireSpecial[type].g_iHumanAmmo, value, -1, 99999);
 			g_esFireSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFireSpecial[type].g_iHumanCooldown, value, -1, 99999);
 			g_esFireSpecial[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esFireSpecial[type].g_iHumanRangeCooldown, value, -1, 99999);
 			g_esFireSpecial[type].g_iHumanRockCooldown = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "HumanRockCooldown", "Human Rock Cooldown", "Human_Rock_Cooldown", "hrockcooldown", g_esFireSpecial[type].g_iHumanRockCooldown, value, -1, 99999);
+#endif
 			g_esFireSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFireSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esFireSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFireSpecial[type].g_iRequiresHumans, value, -1, 32);
 			g_esFireSpecial[type].g_iFireAbility = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFireSpecial[type].g_iFireAbility, value, -1, 1);
@@ -853,14 +874,21 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esFireSpecial[type].g_iFireRockCooldown = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "FirePinCooldown", "Fire Pin Cooldown", "Fire_Pin_Cooldown", "pincooldown", g_esFireSpecial[type].g_iFireRockCooldown, value, -1, 99999);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esFireAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esFireAbility[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esFireAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFireAbility[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esFireAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFireAbility[type].g_iHumanAbility, value, -1, 2);
 			g_esFireAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFireAbility[type].g_iHumanAmmo, value, -1, 99999);
 			g_esFireAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFireAbility[type].g_iHumanCooldown, value, -1, 99999);
 			g_esFireAbility[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esFireAbility[type].g_iHumanRangeCooldown, value, -1, 99999);
 			g_esFireAbility[type].g_iHumanRockCooldown = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "HumanRockCooldown", "Human Rock Cooldown", "Human_Rock_Cooldown", "hrockcooldown", g_esFireAbility[type].g_iHumanRockCooldown, value, -1, 99999);
+#endif
 			g_esFireAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFireAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esFireAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFireAbility[type].g_iRequiresHumans, value, -1, 32);
 			g_esFireAbility[type].g_iFireAbility = iGetKeyValue(subsection, MT_FIRE_SECTION, MT_FIRE_SECTION2, MT_FIRE_SECTION3, MT_FIRE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFireAbility[type].g_iFireAbility, value, -1, 1);
@@ -897,10 +925,13 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esFirePlayer[tank].g_iTankType = apply ? type : 0;
 	int iType = g_esFirePlayer[tank].g_iTankTypeRecorded;
 
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		g_esFireCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank].g_flCloseAreasOnly, g_esFirePlayer[tank].g_flCloseAreasOnly, g_esFireSpecial[iType].g_flCloseAreasOnly, g_esFireAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esFireCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank].g_iComboAbility, g_esFirePlayer[tank].g_iComboAbility, g_esFireSpecial[iType].g_iComboAbility, g_esFireAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esFireCache[tank].g_flFireChance = flGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank].g_flFireChance, g_esFirePlayer[tank].g_flFireChance, g_esFireSpecial[iType].g_flFireChance, g_esFireAbility[iType].g_flFireChance, 1);
 		g_esFireCache[tank].g_flFireDamage = flGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank].g_flFireDamage, g_esFirePlayer[tank].g_flFireDamage, g_esFireSpecial[iType].g_flFireDamage, g_esFireAbility[iType].g_flFireDamage, 1);
 		g_esFireCache[tank].g_flFireDeathChance = flGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank].g_flFireDeathChance, g_esFirePlayer[tank].g_flFireDeathChance, g_esFireSpecial[iType].g_flFireDeathChance, g_esFireAbility[iType].g_flFireDeathChance, 1);
@@ -918,18 +949,25 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esFireCache[tank].g_iFireRockBreak = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank].g_iFireRockBreak, g_esFirePlayer[tank].g_iFireRockBreak, g_esFireSpecial[iType].g_iFireRockBreak, g_esFireAbility[iType].g_iFireRockBreak, 1);
 		g_esFireCache[tank].g_iFireRockCooldown = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank].g_iFireRockCooldown, g_esFirePlayer[tank].g_iFireRockCooldown, g_esFireSpecial[iType].g_iFireRockCooldown, g_esFireAbility[iType].g_iFireRockCooldown, 1);
 		g_esFireCache[tank].g_iFireSight = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank].g_iFireSight, g_esFirePlayer[tank].g_iFireSight, g_esFireSpecial[iType].g_iFireSight, g_esFireAbility[iType].g_iFireSight, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esFireCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank].g_iHumanAbility, g_esFirePlayer[tank].g_iHumanAbility, g_esFireSpecial[iType].g_iHumanAbility, g_esFireAbility[iType].g_iHumanAbility, 1);
 		g_esFireCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank].g_iHumanAmmo, g_esFirePlayer[tank].g_iHumanAmmo, g_esFireSpecial[iType].g_iHumanAmmo, g_esFireAbility[iType].g_iHumanAmmo, 1);
 		g_esFireCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank].g_iHumanCooldown, g_esFirePlayer[tank].g_iHumanCooldown, g_esFireSpecial[iType].g_iHumanCooldown, g_esFireAbility[iType].g_iHumanCooldown, 1);
 		g_esFireCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank].g_iHumanRangeCooldown, g_esFirePlayer[tank].g_iHumanRangeCooldown, g_esFireSpecial[iType].g_iHumanRangeCooldown, g_esFireAbility[iType].g_iHumanRangeCooldown, 1);
 		g_esFireCache[tank].g_iHumanRockCooldown = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank].g_iHumanRockCooldown, g_esFirePlayer[tank].g_iHumanRockCooldown, g_esFireSpecial[iType].g_iHumanRockCooldown, g_esFireAbility[iType].g_iHumanRockCooldown, 1);
+#endif
 		g_esFireCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank].g_flOpenAreasOnly, g_esFirePlayer[tank].g_flOpenAreasOnly, g_esFireSpecial[iType].g_flOpenAreasOnly, g_esFireAbility[iType].g_flOpenAreasOnly, 1);
 		g_esFireCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esFireTeammate[tank].g_iRequiresHumans, g_esFirePlayer[tank].g_iRequiresHumans, g_esFireSpecial[iType].g_iRequiresHumans, g_esFireAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
+#else
+	if (!bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+#endif
 	{
 		g_esFireCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esFirePlayer[tank].g_flCloseAreasOnly, g_esFireAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esFireCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esFirePlayer[tank].g_iComboAbility, g_esFireAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esFireCache[tank].g_flFireChance = flGetSettingValue(apply, bHuman, g_esFirePlayer[tank].g_flFireChance, g_esFireAbility[iType].g_flFireChance, 1);
 		g_esFireCache[tank].g_flFireDamage = flGetSettingValue(apply, bHuman, g_esFirePlayer[tank].g_flFireDamage, g_esFireAbility[iType].g_flFireDamage, 1);
 		g_esFireCache[tank].g_flFireDeathChance = flGetSettingValue(apply, bHuman, g_esFirePlayer[tank].g_flFireDeathChance, g_esFireAbility[iType].g_flFireDeathChance, 1);
@@ -947,11 +985,13 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esFireCache[tank].g_iFireRockBreak = iGetSettingValue(apply, bHuman, g_esFirePlayer[tank].g_iFireRockBreak, g_esFireAbility[iType].g_iFireRockBreak, 1);
 		g_esFireCache[tank].g_iFireRockCooldown = iGetSettingValue(apply, bHuman, g_esFirePlayer[tank].g_iFireRockCooldown, g_esFireAbility[iType].g_iFireRockCooldown, 1);
 		g_esFireCache[tank].g_iFireSight = iGetSettingValue(apply, bHuman, g_esFirePlayer[tank].g_iFireSight, g_esFireAbility[iType].g_iFireSight, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esFireCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esFirePlayer[tank].g_iHumanAbility, g_esFireAbility[iType].g_iHumanAbility, 1);
 		g_esFireCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esFirePlayer[tank].g_iHumanAmmo, g_esFireAbility[iType].g_iHumanAmmo, 1);
 		g_esFireCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esFirePlayer[tank].g_iHumanCooldown, g_esFireAbility[iType].g_iHumanCooldown, 1);
 		g_esFireCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esFirePlayer[tank].g_iHumanRangeCooldown, g_esFireAbility[iType].g_iHumanRangeCooldown, 1);
 		g_esFireCache[tank].g_iHumanRockCooldown = iGetSettingValue(apply, bHuman, g_esFirePlayer[tank].g_iHumanRockCooldown, g_esFireAbility[iType].g_iHumanRockCooldown, 1);
+#endif
 		g_esFireCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esFirePlayer[tank].g_flOpenAreasOnly, g_esFireAbility[iType].g_flOpenAreasOnly, 1);
 		g_esFireCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esFirePlayer[tank].g_iRequiresHumans, g_esFireAbility[iType].g_iRequiresHumans, 1);
 	}
@@ -1050,7 +1090,7 @@ public void MT_OnAbilityActivated(int tank)
 		vFireAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
 }
-
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN
 void vFireButtonPressed(int tank, int button)
 #else
@@ -1076,7 +1116,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN
 void vFireChangeType(int tank, int oldType)
 #else
@@ -1111,7 +1151,7 @@ public void MT_OnPostTankSpawn(int tank)
 {
 	vFireRange(tank, 1, 1, GetRandomFloat(0.1, 100.0));
 }
-
+#if (MT_INCLUDE_DETOURS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN
 void vFireRockBreak(int tank, int rock)
 #else
@@ -1128,7 +1168,7 @@ public void MT_OnRockBreak(int tank, int rock)
 		vFireRockBreak2(tank, rock, GetRandomFloat(0.1, 100.0));
 	}
 }
-
+#endif
 void vFireAbility(int tank, float random, int pos = -1)
 {
 	if (bIsAreaNarrow(tank, g_esFireCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esFireCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esFirePlayer[tank].g_iTankType, tank) || (g_esFireCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esFireCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFireAbility[g_esFirePlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esFirePlayer[tank].g_iAccessFlags)))
@@ -1280,7 +1320,7 @@ void vFireRange(int tank, int value, int bit, float random, int pos = -1)
 		vSpawnBreakProp(tank, flPos, 10.0, MODEL_GASCAN);
 	}
 }
-
+#if (MT_INCLUDE_DETOURS == 1 || MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 void vFireRockBreak2(int tank, int rock, float random, int pos = -1)
 {
 	float flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 14, pos) : g_esFireCache[tank].g_flFireRockChance;
@@ -1316,7 +1356,7 @@ void vFireRockBreak2(int tank, int rock, float random, int pos = -1)
 		}
 	}
 }
-
+#endif
 void vFireCopyStats2(int oldTank, int newTank)
 {
 	g_esFirePlayer[newTank].g_iAmmoCount = g_esFirePlayer[oldTank].g_iAmmoCount;
@@ -1345,7 +1385,7 @@ void vFireReset()
 		}
 	}
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action tTimerFireCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -1394,3 +1434,4 @@ Action tTimerFireCombo2(Handle timer, DataPack pack)
 
 	return Plugin_Continue;
 }
+#endif

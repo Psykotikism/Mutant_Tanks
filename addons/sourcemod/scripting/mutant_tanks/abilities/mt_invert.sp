@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2017-2026  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -212,9 +212,9 @@ public void OnPluginStart()
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 	LoadTranslations("mutant_tanks_names.phrases");
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	RegConsoleCmd("sm_mt_invert", cmdInvertInfo, "View information about the Invert ability.");
-
+#endif
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -245,7 +245,9 @@ void vInvertClientPutInServer(int client)
 public void OnClientPutInServer(int client)
 #endif
 {
+#if (MT_INCLUDE_DAMAGEHOOKS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	SDKHook(client, SDKHook_OnTakeDamage, OnInvertTakeDamage);
+#endif
 	vInvertReset2(client);
 }
 
@@ -266,7 +268,7 @@ public void OnMapEnd()
 {
 	vInvertReset();
 }
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if !defined MT_ABILITIES_MAIN
 Action cmdInvertInfo(int client, int args)
 {
@@ -295,7 +297,8 @@ Action cmdInvertInfo(int client, int args)
 	return Plugin_Handled;
 }
 #endif
-
+#endif
+#if (MT_INCLUDE_MENUS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 void vInvertMenu(int client, const char[] name, int item)
 {
 	if (StrContains(MT_INVERT_SECTION4, name, false) == -1)
@@ -405,7 +408,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 		FormatEx(buffer, size, "%T", "InvertMenu2", client);
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN
 Action aInvertPlayerRunCmd(int client, int &buttons, float vel[3])
 #else
@@ -443,7 +446,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 	return Plugin_Continue;
 }
-
+#if (MT_INCLUDE_DAMAGEHOOKS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action OnInvertTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
@@ -483,7 +486,7 @@ Action OnInvertTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 
 	return Plugin_Continue;
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN
 void vInvertPluginCheck(ArrayList list)
 #else
@@ -504,7 +507,7 @@ public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, 
 	list3.PushString(MT_INVERT_SECTION3);
 	list4.PushString(MT_INVERT_SECTION4);
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN
 void vInvertCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, const char[] classname)
 #else
@@ -592,7 +595,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN
 void vInvertConfigsLoad(int mode)
 #else
@@ -710,14 +713,19 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esInvertTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esInvertTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esInvertTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esInvertTeammate[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esInvertTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esInvertTeammate[admin].g_iHumanAbility, value, -1, 2);
 			g_esInvertTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esInvertTeammate[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esInvertTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esInvertTeammate[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esInvertTeammate[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esInvertTeammate[admin].g_iHumanRangeCooldown, value, -1, 99999);
+#endif
 			g_esInvertTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esInvertTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esInvertTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esInvertTeammate[admin].g_iRequiresHumans, value, -1, 32);
 			g_esInvertTeammate[admin].g_iInvertAbility = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esInvertTeammate[admin].g_iInvertAbility, value, -1, 1);
@@ -734,13 +742,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esInvertTeammate[admin].g_iInvertRangeCooldown = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertRangeCooldown", "Invert Range Cooldown", "Invert_Range_Cooldown", "rangecooldown", g_esInvertTeammate[admin].g_iInvertRangeCooldown, value, -1, 99999);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esInvertPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esInvertPlayer[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esInvertPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esInvertPlayer[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esInvertPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esInvertPlayer[admin].g_iHumanAbility, value, -1, 2);
 			g_esInvertPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esInvertPlayer[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esInvertPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esInvertPlayer[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esInvertPlayer[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esInvertPlayer[admin].g_iHumanRangeCooldown, value, -1, 99999);
+#endif
 			g_esInvertPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esInvertPlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esInvertPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esInvertPlayer[admin].g_iRequiresHumans, value, -1, 32);
 			g_esInvertPlayer[admin].g_iInvertAbility = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esInvertPlayer[admin].g_iInvertAbility, value, -1, 1);
@@ -762,14 +777,19 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esInvertSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esInvertSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esInvertSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esInvertSpecial[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esInvertSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esInvertSpecial[type].g_iHumanAbility, value, -1, 2);
 			g_esInvertSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esInvertSpecial[type].g_iHumanAmmo, value, -1, 99999);
 			g_esInvertSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esInvertSpecial[type].g_iHumanCooldown, value, -1, 99999);
 			g_esInvertSpecial[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esInvertSpecial[type].g_iHumanRangeCooldown, value, -1, 99999);
+#endif
 			g_esInvertSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esInvertSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esInvertSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esInvertSpecial[type].g_iRequiresHumans, value, -1, 32);
 			g_esInvertSpecial[type].g_iInvertAbility = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esInvertSpecial[type].g_iInvertAbility, value, -1, 1);
@@ -786,13 +806,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esInvertSpecial[type].g_iInvertRangeCooldown = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertRangeCooldown", "Invert Range Cooldown", "Invert_Range_Cooldown", "rangecooldown", g_esInvertSpecial[type].g_iInvertRangeCooldown, value, -1, 99999);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esInvertAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esInvertAbility[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esInvertAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esInvertAbility[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esInvertAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esInvertAbility[type].g_iHumanAbility, value, -1, 2);
 			g_esInvertAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esInvertAbility[type].g_iHumanAmmo, value, -1, 99999);
 			g_esInvertAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esInvertAbility[type].g_iHumanCooldown, value, -1, 99999);
 			g_esInvertAbility[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esInvertAbility[type].g_iHumanRangeCooldown, value, -1, 99999);
+#endif
 			g_esInvertAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esInvertAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esInvertAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esInvertAbility[type].g_iRequiresHumans, value, -1, 32);
 			g_esInvertAbility[type].g_iInvertAbility = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esInvertAbility[type].g_iInvertAbility, value, -1, 1);
@@ -824,18 +851,23 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esInvertPlayer[tank].g_iTankType = apply ? type : 0;
 	int iType = g_esInvertPlayer[tank].g_iTankTypeRecorded;
 
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		g_esInvertCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esInvertTeammate[tank].g_flCloseAreasOnly, g_esInvertPlayer[tank].g_flCloseAreasOnly, g_esInvertSpecial[iType].g_flCloseAreasOnly, g_esInvertAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esInvertCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esInvertTeammate[tank].g_iComboAbility, g_esInvertPlayer[tank].g_iComboAbility, g_esInvertSpecial[iType].g_iComboAbility, g_esInvertAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esInvertCache[tank].g_flInvertChance = flGetSubSettingValue(apply, bHuman, g_esInvertTeammate[tank].g_flInvertChance, g_esInvertPlayer[tank].g_flInvertChance, g_esInvertSpecial[iType].g_flInvertChance, g_esInvertAbility[iType].g_flInvertChance, 1);
 		g_esInvertCache[tank].g_flInvertDuration = flGetSubSettingValue(apply, bHuman, g_esInvertTeammate[tank].g_flInvertDuration, g_esInvertPlayer[tank].g_flInvertDuration, g_esInvertSpecial[iType].g_flInvertDuration, g_esInvertAbility[iType].g_flInvertDuration, 1);
 		g_esInvertCache[tank].g_flInvertRange = flGetSubSettingValue(apply, bHuman, g_esInvertTeammate[tank].g_flInvertRange, g_esInvertPlayer[tank].g_flInvertRange, g_esInvertSpecial[iType].g_flInvertRange, g_esInvertAbility[iType].g_flInvertRange, 1);
 		g_esInvertCache[tank].g_flInvertRangeChance = flGetSubSettingValue(apply, bHuman, g_esInvertTeammate[tank].g_flInvertRangeChance, g_esInvertPlayer[tank].g_flInvertRangeChance, g_esInvertSpecial[iType].g_flInvertRangeChance, g_esInvertAbility[iType].g_flInvertRangeChance, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esInvertCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esInvertTeammate[tank].g_iHumanAbility, g_esInvertPlayer[tank].g_iHumanAbility, g_esInvertSpecial[iType].g_iHumanAbility, g_esInvertAbility[iType].g_iHumanAbility, 1);
 		g_esInvertCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esInvertTeammate[tank].g_iHumanAmmo, g_esInvertPlayer[tank].g_iHumanAmmo, g_esInvertSpecial[iType].g_iHumanAmmo, g_esInvertAbility[iType].g_iHumanAmmo, 1);
 		g_esInvertCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esInvertTeammate[tank].g_iHumanCooldown, g_esInvertPlayer[tank].g_iHumanCooldown, g_esInvertSpecial[iType].g_iHumanCooldown, g_esInvertAbility[iType].g_iHumanCooldown, 1);
 		g_esInvertCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esInvertTeammate[tank].g_iHumanRangeCooldown, g_esInvertPlayer[tank].g_iHumanRangeCooldown, g_esInvertSpecial[iType].g_iHumanRangeCooldown, g_esInvertAbility[iType].g_iHumanRangeCooldown, 1);
+#endif
 		g_esInvertCache[tank].g_iInvertAbility = iGetSubSettingValue(apply, bHuman, g_esInvertTeammate[tank].g_iInvertAbility, g_esInvertPlayer[tank].g_iInvertAbility, g_esInvertSpecial[iType].g_iInvertAbility, g_esInvertAbility[iType].g_iInvertAbility, 1);
 		g_esInvertCache[tank].g_iInvertCooldown = iGetSubSettingValue(apply, bHuman, g_esInvertTeammate[tank].g_iInvertCooldown, g_esInvertPlayer[tank].g_iInvertCooldown, g_esInvertSpecial[iType].g_iInvertCooldown, g_esInvertAbility[iType].g_iInvertCooldown, 1);
 		g_esInvertCache[tank].g_iInvertEffect = iGetSubSettingValue(apply, bHuman, g_esInvertTeammate[tank].g_iInvertEffect, g_esInvertPlayer[tank].g_iInvertEffect, g_esInvertSpecial[iType].g_iInvertEffect, g_esInvertAbility[iType].g_iInvertEffect, 1);
@@ -848,17 +880,24 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esInvertCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esInvertTeammate[tank].g_iRequiresHumans, g_esInvertPlayer[tank].g_iRequiresHumans, g_esInvertSpecial[iType].g_iRequiresHumans, g_esInvertAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
+#else
+	if (!bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+#endif
 	{
 		g_esInvertCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esInvertPlayer[tank].g_flCloseAreasOnly, g_esInvertAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esInvertCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esInvertPlayer[tank].g_iComboAbility, g_esInvertAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esInvertCache[tank].g_flInvertChance = flGetSettingValue(apply, bHuman, g_esInvertPlayer[tank].g_flInvertChance, g_esInvertAbility[iType].g_flInvertChance, 1);
 		g_esInvertCache[tank].g_flInvertDuration = flGetSettingValue(apply, bHuman, g_esInvertPlayer[tank].g_flInvertDuration, g_esInvertAbility[iType].g_flInvertDuration, 1);
 		g_esInvertCache[tank].g_flInvertRange = flGetSettingValue(apply, bHuman, g_esInvertPlayer[tank].g_flInvertRange, g_esInvertAbility[iType].g_flInvertRange, 1);
 		g_esInvertCache[tank].g_flInvertRangeChance = flGetSettingValue(apply, bHuman, g_esInvertPlayer[tank].g_flInvertRangeChance, g_esInvertAbility[iType].g_flInvertRangeChance, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esInvertCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esInvertPlayer[tank].g_iHumanAbility, g_esInvertAbility[iType].g_iHumanAbility, 1);
 		g_esInvertCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esInvertPlayer[tank].g_iHumanAmmo, g_esInvertAbility[iType].g_iHumanAmmo, 1);
 		g_esInvertCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esInvertPlayer[tank].g_iHumanCooldown, g_esInvertAbility[iType].g_iHumanCooldown, 1);
 		g_esInvertCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esInvertPlayer[tank].g_iHumanRangeCooldown, g_esInvertAbility[iType].g_iHumanRangeCooldown, 1);
+#endif
 		g_esInvertCache[tank].g_iInvertAbility = iGetSettingValue(apply, bHuman, g_esInvertPlayer[tank].g_iInvertAbility, g_esInvertAbility[iType].g_iInvertAbility, 1);
 		g_esInvertCache[tank].g_iInvertCooldown = iGetSettingValue(apply, bHuman, g_esInvertPlayer[tank].g_iInvertCooldown, g_esInvertAbility[iType].g_iInvertCooldown, 1);
 		g_esInvertCache[tank].g_iInvertEffect = iGetSettingValue(apply, bHuman, g_esInvertPlayer[tank].g_iInvertEffect, g_esInvertAbility[iType].g_iInvertEffect, 1);
@@ -959,7 +998,7 @@ public void MT_OnAbilityActivated(int tank)
 		vInvertAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
 }
-
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN
 void vInvertButtonPressed(int tank, int button)
 #else
@@ -985,7 +1024,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN
 void vInvertChangeType(int tank, int oldType)
 #else
@@ -1183,7 +1222,7 @@ void vInvertReset2(int tank)
 	g_esInvertPlayer[tank].g_iCooldown = -1;
 	g_esInvertPlayer[tank].g_iRangeCooldown = -1;
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action tTimerInvertCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -1232,7 +1271,7 @@ Action tTimerInvertCombo2(Handle timer, DataPack pack)
 
 	return Plugin_Continue;
 }
-
+#endif
 Action tTimerStopInvert(Handle timer, DataPack pack)
 {
 	pack.Reset();

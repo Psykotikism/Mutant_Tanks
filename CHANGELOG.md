@@ -1,17 +1,84 @@
 # Changelog
 
-## Version 9.3 (January 1, 2025)
+## Version 9.4 (December 25, 2025)
 
 ### Bug Fixes
+
+#### General
+- Fixed the issue with empty phrases causing errors. (Thanks to everyone that tested and reported!)
+
+#### Core Plugin
+- Fixed the issue with glow outlines not working. (Thanks to everyone that tested and reported!)
+- Fixed the issue with not being able to jump off ladders. (Thanks to everyone that tested and reported!)
+- Fixed the array index errors caused by the `Boss` feature. (Thanks to `BenLH` for reporting!)
+- Fixed the `Shockwave Radius` passive/reward reviving infected survivors (carriers). (Thanks to `Angelace113` for testing and reporting!)
+- Fixed the regular wave spawner not working. (Thanks to `Hajitek Majitek` for reporting!)
+
+#### Abilities
+- Gunner: Fixed the ability not working. (Thanks to everyone that tested and reported!)
+
+### Changes
+
+#### General
+- Added switches throughout each plugin file to allow users to toggle certain major features when compiling the plugin and its sub-plugins. (Each feature setting can be found and toggled in the `scripting/include/mutant_tanks.inc` file.)
+
+#### Core Plugin
+- Removed the screen shake and metallic sound triggered by the `Safety Bubble` passive/reward. (Requested by `xcd222`.)
+
+#### Settings
+- Changed how the `Carrier Body` setting works and its default value from `0` to `1`.
+- Added the `Regular Check` setting under the `Plugin Settings->Waves` section. (Requested by `ForTheSakura`.)
+- Added the `Survivor Filter` setting under the `Tank #->Spawn` section.
+- Added the following settings under the `Plugin Settings->Punishment` section (Requested by `ForTheSakura`.):
+	- `Saferoom Check`
+	- `Saferoom Delay`
+	- `Saferoom Interval`
+	- `Saferoom Type`
+
+#### Abilities
+- Bury: Added the `Bury Type` setting.
+- Choke: Added the `Choke Type` setting.
+- Ice: Added the `Ice Type` setting. (Requested by `Mi.Cura`.)
+
+#### Game Data
+- L4D1: Updated several offsets and signatures for the `1/17/2025` game update.
+
+### Files
+
+#### General
+- The pre-compiled plugins included in the package are:
+	- Compiled without any of the optional dependencies.
+	- Compiled with the `SourceMod 1.12.0.7066` compiler.
+- The plugins can still be compiled with `SourceMod 1.12.0.6985` or higher.
+
+#### Updates
+- Updated config files.
+- Updated gamedata file.
+- Updated include file.
+- Updated updater file.
+
+## Version 9.3 (January 1, 2025)
+<details>
+	<summary>Click to expand!</summary>
+
+### Bug Fixes
+<details>
+	<summary>Core Plugin</summary>
 
 #### Core Plugin
 - Fixed the `Tank Rush` feature enforcing several convars' default values while disabled. (Thanks to `xcd222` for reporting!)
 - Fixed Mutant Infected's healthbars sometimes displaying the wrong name.
+</details>
+<details>
+	<summary>Abilities</summary>
 
 #### Abilities
 - Medic: Fixed the ability affecting the Mutant Infected who triggers it.
+</details>
 
 ### Changes
+<details>
+	<summary>General</summary>
 
 #### General
 - Dead survivors can now respawn into random combinations of Mutant types.
@@ -20,14 +87,23 @@
 	- The mutation continues to evolve and use people as resources...
 - Witches can now turn other infected into random Mutant Types.
 	- The mutation continues to evolve and use any means to multiply...
+</details>
+<details>
+	<summary>Core Plugin</summary>
 
 #### Core Plugin
 - Improved the mutant spawner to respect the `* Chance` setting for each mutant type. (Thanks to `maclarens` for suggesting!)
 - Added a `Punishment` system for punishing rushers/slackers. (Thanks to `Silvers` for the code!)
 - Added a `Passives` system for adding buffs/debuffs to survivors and weapons.
+</details>
+<details>
+	<summary>ConVars</summary>
 
 #### ConVars
 - Added the `mt_graphicslevel` convar.
+</details>
+<details>
+	<summary>Config Files</summary>
 
 #### Config Files
 - Added the following default Mutant Tank types:
@@ -48,9 +124,15 @@
 	- `Zarya Tank`
 	- `Slacker Tank`
 	- `Rusher Tank`
+</details>
+<details>
+	<summary>Game Data</summary>
 
 #### Game Data
 - Added a signature for the `CGrenadeLauncher::LaunchGrenade` function. (L4D2)
+</details>
+<details>
+	<summary>Settings</summary>
 
 #### Settings
 - Added the following settings under the `Plugin Settings->General` section:
@@ -255,18 +337,27 @@
 	- `Glow Flashing`
 	- `Glow Range`
 	- `Glow Type`
+</details>
+<details>
+	<summary>Translations</summary>
 
 #### Translations
 - Updated English translations.
 - Updated Simplified Chinese translations. (Thanks to `yuzumi`!)
 - Updated Hungarian translations. (Thanks to `KasperH`/`Ladis`!)
 - Updated Russian translations. (Thanks to `Blueberry`/`Kleiner`!)
+</details>
+<details>
+	<summary>Natives & Forwards</summary>
 
 #### Natives & Forwards
 - Added the `MT_OnToggleSurvivorPassive` forward.
 - Added the `MT_GetGraphicsLevel` native.
 - Added the `MT_DoesSurvivorHavePassiveType` native.
 - The `MT_SpawnTank` native now has a third parameter.
+</details>
+<details>
+	<summary>Abilities</summary>
 
 #### Abilities
 - Combined the following abilities:
@@ -348,8 +439,11 @@
 	- Added the `Vision Mode` setting.
 	- Added the `Vision Stagger` setting.
 	- Added the `Vision Type` setting.
+</details>
 
 ### Files
+<details>
+	<summary>General</summary>
 
 #### General
 - The pre-compiled plugins included in the package are:
@@ -382,6 +476,9 @@
 	- `abilities2/mt_lag.sp`
 	- `abilities2/mt_laser.sp`
 	- `abilities2/mt_lightning.sp`
+</details>
+<details>
+	<summary>Updates</summary>
 
 #### Updates
 - Updated config files.
@@ -389,6 +486,8 @@
 - Updated include file.
 - Updated translation files.
 - Updated updater file.
+</details>
+</details>
 
 ## Version 9.2 (September 10, 2024)
 <details>

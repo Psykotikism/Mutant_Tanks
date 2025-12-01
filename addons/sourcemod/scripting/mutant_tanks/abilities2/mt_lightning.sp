@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2017-2026  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -213,8 +213,9 @@ public void OnPluginStart()
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 	LoadTranslations("mutant_tanks_names.phrases");
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	RegConsoleCmd("sm_mt_lightning", cmdLightningInfo, "View information about the Lightning ability.");
+#endif
 }
 #endif
 
@@ -263,7 +264,7 @@ public void OnMapEnd()
 {
 	vLightningReset();
 }
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if !defined MT_ABILITIES_MAIN2
 Action cmdLightningInfo(int client, int args)
 {
@@ -292,7 +293,8 @@ Action cmdLightningInfo(int client, int args)
 	return Plugin_Handled;
 }
 #endif
-
+#endif
+#if (MT_INCLUDE_MENUS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 void vLightningMenu(int client, const char[] name, int item)
 {
 	if (StrContains(MT_LIGHTNING_SECTION4, name, false) == -1)
@@ -410,7 +412,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 		FormatEx(buffer, size, "%T", "LightningMenu2", client);
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vLightningPluginCheck(ArrayList list)
 #else
@@ -431,7 +433,7 @@ public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, 
 	list3.PushString(MT_LIGHTNING_SECTION3);
 	list4.PushString(MT_LIGHTNING_SECTION4);
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN2
 void vLightningCombineAbilities(int tank, int type, const float random, const char[] combo)
 #else
@@ -491,7 +493,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vLightningConfigsLoad(int mode)
 #else
@@ -598,15 +600,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esLightningTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esLightningTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esLightningTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esLightningTeammate[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esLightningTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esLightningTeammate[admin].g_iHumanAbility, value, -1, 2);
 			g_esLightningTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esLightningTeammate[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esLightningTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esLightningTeammate[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esLightningTeammate[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esLightningTeammate[admin].g_iHumanDuration, value, -1, 99999);
 			g_esLightningTeammate[admin].g_iHumanMode = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esLightningTeammate[admin].g_iHumanMode, value, -1, 2);
+#endif
 			g_esLightningTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esLightningTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esLightningTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esLightningTeammate[admin].g_iRequiresHumans, value, -1, 32);
 			g_esLightningTeammate[admin].g_iLightningAbility = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esLightningTeammate[admin].g_iLightningAbility, value, -1, 1);
@@ -619,14 +626,21 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esLightningTeammate[admin].g_flLightningInterval = flGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningInterval", "Lightning Interval", "Lightning_Interval", "interval", g_esLightningTeammate[admin].g_flLightningInterval, value, -1.0, 99999.0);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esLightningPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esLightningPlayer[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esLightningPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esLightningPlayer[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esLightningPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esLightningPlayer[admin].g_iHumanAbility, value, -1, 2);
 			g_esLightningPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esLightningPlayer[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esLightningPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esLightningPlayer[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esLightningPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esLightningPlayer[admin].g_iHumanDuration, value, -1, 99999);
 			g_esLightningPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esLightningPlayer[admin].g_iHumanMode, value, -1, 2);
+#endif
 			g_esLightningPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esLightningPlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esLightningPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esLightningPlayer[admin].g_iRequiresHumans, value, -1, 32);
 			g_esLightningPlayer[admin].g_iLightningAbility = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esLightningPlayer[admin].g_iLightningAbility, value, -1, 1);
@@ -644,15 +658,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esLightningSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esLightningSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esLightningSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esLightningSpecial[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esLightningSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esLightningSpecial[type].g_iHumanAbility, value, -1, 2);
 			g_esLightningSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esLightningSpecial[type].g_iHumanAmmo, value, -1, 99999);
 			g_esLightningSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esLightningSpecial[type].g_iHumanCooldown, value, -1, 99999);
 			g_esLightningSpecial[type].g_iHumanDuration = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esLightningSpecial[type].g_iHumanDuration, value, -1, 99999);
 			g_esLightningSpecial[type].g_iHumanMode = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esLightningSpecial[type].g_iHumanMode, value, -1, 2);
+#endif
 			g_esLightningSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esLightningSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esLightningSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esLightningSpecial[type].g_iRequiresHumans, value, -1, 32);
 			g_esLightningSpecial[type].g_iLightningAbility = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esLightningSpecial[type].g_iLightningAbility, value, -1, 1);
@@ -665,14 +684,21 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esLightningSpecial[type].g_flLightningInterval = flGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningInterval", "Lightning Interval", "Lightning_Interval", "interval", g_esLightningSpecial[type].g_flLightningInterval, value, -1.0, 99999.0);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esLightningAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esLightningAbility[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esLightningAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esLightningAbility[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esLightningAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esLightningAbility[type].g_iHumanAbility, value, -1, 2);
 			g_esLightningAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esLightningAbility[type].g_iHumanAmmo, value, -1, 99999);
 			g_esLightningAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esLightningAbility[type].g_iHumanCooldown, value, -1, 99999);
 			g_esLightningAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esLightningAbility[type].g_iHumanDuration, value, -1, 99999);
 			g_esLightningAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esLightningAbility[type].g_iHumanMode, value, -1, 2);
+#endif
 			g_esLightningAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esLightningAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esLightningAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esLightningAbility[type].g_iRequiresHumans, value, -1, 32);
 			g_esLightningAbility[type].g_iLightningAbility = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esLightningAbility[type].g_iLightningAbility, value, -1, 1);
@@ -702,10 +728,13 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #if !defined MT_ABILITIES_MAIN2
 	g_iGraphicsLevel = MT_GetGraphicsLevel();
 #endif
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		g_esLightningCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_flCloseAreasOnly, g_esLightningPlayer[tank].g_flCloseAreasOnly, g_esLightningSpecial[iType].g_flCloseAreasOnly, g_esLightningAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esLightningCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_iComboAbility, g_esLightningPlayer[tank].g_iComboAbility, g_esLightningSpecial[iType].g_iComboAbility, g_esLightningAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esLightningCache[tank].g_flLightningChance = flGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_flLightningChance, g_esLightningPlayer[tank].g_flLightningChance, g_esLightningSpecial[iType].g_flLightningChance, g_esLightningAbility[iType].g_flLightningChance, 1);
 		g_esLightningCache[tank].g_flLightningDamage = flGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_flLightningDamage, g_esLightningPlayer[tank].g_flLightningDamage, g_esLightningSpecial[iType].g_flLightningDamage, g_esLightningAbility[iType].g_flLightningDamage, 1);
 		g_esLightningCache[tank].g_flLightningInterval = flGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_flLightningInterval, g_esLightningPlayer[tank].g_flLightningInterval, g_esLightningSpecial[iType].g_flLightningInterval, g_esLightningAbility[iType].g_flLightningInterval, 1);
@@ -714,18 +743,25 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esLightningCache[tank].g_iLightningDuration = iGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_iLightningDuration, g_esLightningPlayer[tank].g_iLightningDuration, g_esLightningSpecial[iType].g_iLightningDuration, g_esLightningAbility[iType].g_iLightningDuration, 1);
 		g_esLightningCache[tank].g_iLightningMessage = iGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_iLightningMessage, g_esLightningPlayer[tank].g_iLightningMessage, g_esLightningSpecial[iType].g_iLightningMessage, g_esLightningAbility[iType].g_iLightningMessage, 1);
 		g_esLightningCache[tank].g_iLightningSight = iGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_iLightningSight, g_esLightningPlayer[tank].g_iLightningSight, g_esLightningSpecial[iType].g_iLightningSight, g_esLightningAbility[iType].g_iLightningSight, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esLightningCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_iHumanAbility, g_esLightningPlayer[tank].g_iHumanAbility, g_esLightningSpecial[iType].g_iHumanAbility, g_esLightningAbility[iType].g_iHumanAbility, 1);
 		g_esLightningCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_iHumanAmmo, g_esLightningPlayer[tank].g_iHumanAmmo, g_esLightningSpecial[iType].g_iHumanAmmo, g_esLightningAbility[iType].g_iHumanAmmo, 1);
 		g_esLightningCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_iHumanCooldown, g_esLightningPlayer[tank].g_iHumanCooldown, g_esLightningSpecial[iType].g_iHumanCooldown, g_esLightningAbility[iType].g_iHumanCooldown, 1);
 		g_esLightningCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_iHumanDuration, g_esLightningPlayer[tank].g_iHumanDuration, g_esLightningSpecial[iType].g_iHumanDuration, g_esLightningAbility[iType].g_iHumanDuration, 1);
 		g_esLightningCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_iHumanMode, g_esLightningPlayer[tank].g_iHumanMode, g_esLightningSpecial[iType].g_iHumanMode, g_esLightningAbility[iType].g_iHumanMode, 1);
+#endif
 		g_esLightningCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_flOpenAreasOnly, g_esLightningPlayer[tank].g_flOpenAreasOnly, g_esLightningSpecial[iType].g_flOpenAreasOnly, g_esLightningAbility[iType].g_flOpenAreasOnly, 1);
 		g_esLightningCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esLightningTeammate[tank].g_iRequiresHumans, g_esLightningPlayer[tank].g_iRequiresHumans, g_esLightningSpecial[iType].g_iRequiresHumans, g_esLightningAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
+#else
+	if (!bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+#endif
 	{
 		g_esLightningCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_flCloseAreasOnly, g_esLightningAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esLightningCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iComboAbility, g_esLightningAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esLightningCache[tank].g_flLightningChance = flGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_flLightningChance, g_esLightningAbility[iType].g_flLightningChance, 1);
 		g_esLightningCache[tank].g_flLightningDamage = flGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_flLightningDamage, g_esLightningAbility[iType].g_flLightningDamage, 1);
 		g_esLightningCache[tank].g_flLightningInterval = flGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_flLightningInterval, g_esLightningAbility[iType].g_flLightningInterval, 1);
@@ -734,11 +770,13 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esLightningCache[tank].g_iLightningDuration = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iLightningDuration, g_esLightningAbility[iType].g_iLightningDuration, 1);
 		g_esLightningCache[tank].g_iLightningMessage = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iLightningMessage, g_esLightningAbility[iType].g_iLightningMessage, 1);
 		g_esLightningCache[tank].g_iLightningSight = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iLightningSight, g_esLightningAbility[iType].g_iLightningSight, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esLightningCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iHumanAbility, g_esLightningAbility[iType].g_iHumanAbility, 1);
 		g_esLightningCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iHumanAmmo, g_esLightningAbility[iType].g_iHumanAmmo, 1);
 		g_esLightningCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iHumanCooldown, g_esLightningAbility[iType].g_iHumanCooldown, 1);
 		g_esLightningCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iHumanDuration, g_esLightningAbility[iType].g_iHumanDuration, 1);
 		g_esLightningCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iHumanMode, g_esLightningAbility[iType].g_iHumanMode, 1);
+#endif
 		g_esLightningCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_flOpenAreasOnly, g_esLightningAbility[iType].g_flOpenAreasOnly, 1);
 		g_esLightningCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iRequiresHumans, g_esLightningAbility[iType].g_iRequiresHumans, 1);
 	}
@@ -821,7 +859,7 @@ public void MT_OnAbilityActivated(int tank)
 		vLightningAbility(tank);
 	}
 }
-
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN2
 void vLightningButtonPressed(int tank, int button)
 #else
@@ -911,7 +949,7 @@ public void MT_OnButtonReleased(int tank, int button)
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vLightningChangeType(int tank, int oldType)
 #else
@@ -1043,7 +1081,7 @@ void vLightningReset3(int tank)
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "LightningHuman5", (g_esLightningPlayer[tank].g_iCooldown - iTime));
 	}
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action tTimerLightningCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -1059,7 +1097,7 @@ Action tTimerLightningCombo(Handle timer, DataPack pack)
 
 	return Plugin_Continue;
 }
-
+#endif
 Action tTimerLightning(Handle timer, DataPack pack)
 {
 	pack.Reset();

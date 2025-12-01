@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2017-2026  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -328,8 +328,9 @@ public void OnPluginStart()
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 	LoadTranslations("mutant_tanks_names.phrases");
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	RegConsoleCmd("sm_mt_gunner", cmdGunnerInfo, "View information about the Gunner ability.");
+#endif
 }
 #endif
 
@@ -404,7 +405,7 @@ public void MT_OnPluginEnd()
 		}
 	}
 }
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if !defined MT_ABILITIES_MAIN
 Action cmdGunnerInfo(int client, int args)
 {
@@ -433,7 +434,8 @@ Action cmdGunnerInfo(int client, int args)
 	return Plugin_Handled;
 }
 #endif
-
+#endif
+#if (MT_INCLUDE_MENUS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 void vGunnerMenu(int client, const char[] name, int item)
 {
 	if (StrContains(MT_GUNNER_SECTION4, name, false) == -1)
@@ -551,7 +553,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 		FormatEx(buffer, size, "%T", "GunnerMenu2", client);
 	}
 }
-
+#endif
 public void OnGameFrame()
 {
 	float flTime = GetEngineTime(), flDuration = (flTime - g_flLastTime);
@@ -591,7 +593,7 @@ public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, 
 	list3.PushString(MT_GUNNER_SECTION3);
 	list4.PushString(MT_GUNNER_SECTION4);
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN
 void vGunnerCombineAbilities(int tank, int type, const float random, const char[] combo)
 #else
@@ -645,7 +647,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN
 void vGunnerConfigsLoad(int mode)
 #else
@@ -780,14 +782,19 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esGunnerTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esGunnerTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esGunnerTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esGunnerTeammate[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esGunnerTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esGunnerTeammate[admin].g_iHumanAbility, value, -1, 2);
 			g_esGunnerTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esGunnerTeammate[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esGunnerTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esGunnerTeammate[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esGunnerTeammate[admin].g_iHumanMode = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGunnerTeammate[admin].g_iHumanMode, value, -1, 2);
+#endif
 			g_esGunnerTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esGunnerTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esGunnerTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGunnerTeammate[admin].g_iRequiresHumans, value, -1, 32);
 			g_esGunnerTeammate[admin].g_iGunnerAbility = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esGunnerTeammate[admin].g_iGunnerAbility, value, -1, 1);
@@ -808,13 +815,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esGunnerTeammate[admin].g_iGunnerTargetType = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerTargetType", "Gunner Target Type", "Gunner_Target_Type", "targettype", g_esGunnerTeammate[admin].g_iGunnerTargetType, value, -1, 31);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esGunnerPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esGunnerPlayer[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esGunnerPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esGunnerPlayer[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esGunnerPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esGunnerPlayer[admin].g_iHumanAbility, value, -1, 2);
 			g_esGunnerPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esGunnerPlayer[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esGunnerPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esGunnerPlayer[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esGunnerPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGunnerPlayer[admin].g_iHumanMode, value, -1, 2);
+#endif
 			g_esGunnerPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esGunnerPlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esGunnerPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGunnerPlayer[admin].g_iRequiresHumans, value, -1, 32);
 			g_esGunnerPlayer[admin].g_iGunnerAbility = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esGunnerPlayer[admin].g_iGunnerAbility, value, -1, 1);
@@ -840,14 +854,19 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esGunnerSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esGunnerSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esGunnerSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esGunnerSpecial[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esGunnerSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esGunnerSpecial[type].g_iHumanAbility, value, -1, 2);
 			g_esGunnerSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esGunnerSpecial[type].g_iHumanAmmo, value, -1, 99999);
 			g_esGunnerSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esGunnerSpecial[type].g_iHumanCooldown, value, -1, 99999);
 			g_esGunnerSpecial[type].g_iHumanMode = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGunnerSpecial[type].g_iHumanMode, value, -1, 2);
+#endif
 			g_esGunnerSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esGunnerSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esGunnerSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGunnerSpecial[type].g_iRequiresHumans, value, -1, 32);
 			g_esGunnerSpecial[type].g_iGunnerAbility = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esGunnerSpecial[type].g_iGunnerAbility, value, -1, 1);
@@ -868,13 +887,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esGunnerSpecial[type].g_iGunnerTargetType = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "GunnerTargetType", "Gunner Target Type", "Gunner_Target_Type", "targettype", g_esGunnerSpecial[type].g_iGunnerTargetType, value, -1, 31);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esGunnerAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esGunnerAbility[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esGunnerAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esGunnerAbility[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esGunnerAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esGunnerAbility[type].g_iHumanAbility, value, -1, 2);
 			g_esGunnerAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esGunnerAbility[type].g_iHumanAmmo, value, -1, 99999);
 			g_esGunnerAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esGunnerAbility[type].g_iHumanCooldown, value, -1, 99999);
 			g_esGunnerAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGunnerAbility[type].g_iHumanMode, value, -1, 2);
+#endif
 			g_esGunnerAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esGunnerAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esGunnerAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGunnerAbility[type].g_iRequiresHumans, value, -1, 32);
 			g_esGunnerAbility[type].g_iGunnerAbility = iGetKeyValue(subsection, MT_GUNNER_SECTION, MT_GUNNER_SECTION2, MT_GUNNER_SECTION3, MT_GUNNER_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esGunnerAbility[type].g_iGunnerAbility, value, -1, 1);
@@ -912,10 +938,13 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #if !defined MT_ABILITIES_MAIN
 	g_iGraphicsLevel = MT_GetGraphicsLevel();
 #endif
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		g_esGunnerCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_flCloseAreasOnly, g_esGunnerPlayer[tank].g_flCloseAreasOnly, g_esGunnerSpecial[iType].g_flCloseAreasOnly, g_esGunnerAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esGunnerCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iComboAbility, g_esGunnerPlayer[tank].g_iComboAbility, g_esGunnerSpecial[iType].g_iComboAbility, g_esGunnerAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esGunnerCache[tank].g_flGunnerAccuracy = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_flGunnerAccuracy, g_esGunnerPlayer[tank].g_flGunnerAccuracy, g_esGunnerSpecial[iType].g_flGunnerAccuracy, g_esGunnerAbility[iType].g_flGunnerAccuracy, 1);
 		g_esGunnerCache[tank].g_flGunnerChance = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_flGunnerChance, g_esGunnerPlayer[tank].g_flGunnerChance, g_esGunnerSpecial[iType].g_flGunnerChance, g_esGunnerAbility[iType].g_flGunnerChance, 1);
 		g_esGunnerCache[tank].g_flGunnerDamage = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_flGunnerDamage, g_esGunnerPlayer[tank].g_flGunnerDamage, g_esGunnerSpecial[iType].g_flGunnerDamage, g_esGunnerAbility[iType].g_flGunnerDamage, 1);
@@ -924,10 +953,6 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esGunnerCache[tank].g_flGunnerLoadTime = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_flGunnerLoadTime, g_esGunnerPlayer[tank].g_flGunnerLoadTime, g_esGunnerSpecial[iType].g_flGunnerLoadTime, g_esGunnerAbility[iType].g_flGunnerLoadTime, 1);
 		g_esGunnerCache[tank].g_flGunnerRange = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_flGunnerRange, g_esGunnerPlayer[tank].g_flGunnerRange, g_esGunnerSpecial[iType].g_flGunnerRange, g_esGunnerAbility[iType].g_flGunnerRange, 1);
 		g_esGunnerCache[tank].g_flGunnerReactionTime = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_flGunnerReactionTime, g_esGunnerPlayer[tank].g_flGunnerReactionTime, g_esGunnerSpecial[iType].g_flGunnerReactionTime, g_esGunnerAbility[iType].g_flGunnerReactionTime, 1);
-		g_esGunnerCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iHumanAbility, g_esGunnerPlayer[tank].g_iHumanAbility, g_esGunnerSpecial[iType].g_iHumanAbility, g_esGunnerAbility[iType].g_iHumanAbility, 1);
-		g_esGunnerCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iHumanAmmo, g_esGunnerPlayer[tank].g_iHumanAmmo, g_esGunnerSpecial[iType].g_iHumanAmmo, g_esGunnerAbility[iType].g_iHumanAmmo, 1);
-		g_esGunnerCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iHumanCooldown, g_esGunnerPlayer[tank].g_iHumanCooldown, g_esGunnerSpecial[iType].g_iHumanCooldown, g_esGunnerAbility[iType].g_iHumanCooldown, 1);
-		g_esGunnerCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iHumanMode, g_esGunnerPlayer[tank].g_iHumanMode, g_esGunnerSpecial[iType].g_iHumanMode, g_esGunnerAbility[iType].g_iHumanMode, 1);
 		g_esGunnerCache[tank].g_iGunnerAbility = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iGunnerAbility, g_esGunnerPlayer[tank].g_iGunnerAbility, g_esGunnerSpecial[iType].g_iGunnerAbility, g_esGunnerAbility[iType].g_iGunnerAbility, 1);
 		g_esGunnerCache[tank].g_iGunnerBullets = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iGunnerBullets, g_esGunnerPlayer[tank].g_iGunnerBullets, g_esGunnerSpecial[iType].g_iGunnerBullets, g_esGunnerAbility[iType].g_iGunnerBullets, 1);
 		g_esGunnerCache[tank].g_iGunnerClipSize = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iGunnerClipSize, g_esGunnerPlayer[tank].g_iGunnerClipSize, g_esGunnerSpecial[iType].g_iGunnerClipSize, g_esGunnerAbility[iType].g_iGunnerClipSize, 1);
@@ -936,13 +961,24 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esGunnerCache[tank].g_iGunnerGunType = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iGunnerGunType, g_esGunnerPlayer[tank].g_iGunnerGunType, g_esGunnerSpecial[iType].g_iGunnerGunType, g_esGunnerAbility[iType].g_iGunnerGunType, 1);
 		g_esGunnerCache[tank].g_iGunnerMessage = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iGunnerMessage, g_esGunnerPlayer[tank].g_iGunnerMessage, g_esGunnerSpecial[iType].g_iGunnerMessage, g_esGunnerAbility[iType].g_iGunnerMessage, 1);
 		g_esGunnerCache[tank].g_iGunnerTargetType = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iGunnerTargetType, g_esGunnerPlayer[tank].g_iGunnerTargetType, g_esGunnerSpecial[iType].g_iGunnerTargetType, g_esGunnerAbility[iType].g_iGunnerTargetType, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
+		g_esGunnerCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iHumanAbility, g_esGunnerPlayer[tank].g_iHumanAbility, g_esGunnerSpecial[iType].g_iHumanAbility, g_esGunnerAbility[iType].g_iHumanAbility, 1);
+		g_esGunnerCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iHumanAmmo, g_esGunnerPlayer[tank].g_iHumanAmmo, g_esGunnerSpecial[iType].g_iHumanAmmo, g_esGunnerAbility[iType].g_iHumanAmmo, 1);
+		g_esGunnerCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iHumanCooldown, g_esGunnerPlayer[tank].g_iHumanCooldown, g_esGunnerSpecial[iType].g_iHumanCooldown, g_esGunnerAbility[iType].g_iHumanCooldown, 1);
+		g_esGunnerCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iHumanMode, g_esGunnerPlayer[tank].g_iHumanMode, g_esGunnerSpecial[iType].g_iHumanMode, g_esGunnerAbility[iType].g_iHumanMode, 1);
+#endif
 		g_esGunnerCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_flOpenAreasOnly, g_esGunnerPlayer[tank].g_flOpenAreasOnly, g_esGunnerSpecial[iType].g_flOpenAreasOnly, g_esGunnerAbility[iType].g_flOpenAreasOnly, 1);
 		g_esGunnerCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esGunnerTeammate[tank].g_iRequiresHumans, g_esGunnerPlayer[tank].g_iRequiresHumans, g_esGunnerSpecial[iType].g_iRequiresHumans, g_esGunnerAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
+#else
+	if (!bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+#endif
 	{
 		g_esGunnerCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_flCloseAreasOnly, g_esGunnerAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esGunnerCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iComboAbility, g_esGunnerAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esGunnerCache[tank].g_flGunnerAccuracy = flGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_flGunnerAccuracy, g_esGunnerAbility[iType].g_flGunnerAccuracy, 1);
 		g_esGunnerCache[tank].g_flGunnerChance = flGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_flGunnerChance, g_esGunnerAbility[iType].g_flGunnerChance, 1);
 		g_esGunnerCache[tank].g_flGunnerDamage = flGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_flGunnerDamage, g_esGunnerAbility[iType].g_flGunnerDamage, 1);
@@ -951,10 +987,6 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esGunnerCache[tank].g_flGunnerLoadTime = flGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_flGunnerLoadTime, g_esGunnerAbility[iType].g_flGunnerLoadTime, 1);
 		g_esGunnerCache[tank].g_flGunnerRange = flGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_flGunnerRange, g_esGunnerAbility[iType].g_flGunnerRange, 1);
 		g_esGunnerCache[tank].g_flGunnerReactionTime = flGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_flGunnerReactionTime, g_esGunnerAbility[iType].g_flGunnerReactionTime, 1);
-		g_esGunnerCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iHumanAbility, g_esGunnerAbility[iType].g_iHumanAbility, 1);
-		g_esGunnerCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iHumanAmmo, g_esGunnerAbility[iType].g_iHumanAmmo, 1);
-		g_esGunnerCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iHumanCooldown, g_esGunnerAbility[iType].g_iHumanCooldown, 1);
-		g_esGunnerCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iHumanMode, g_esGunnerAbility[iType].g_iHumanMode, 1);
 		g_esGunnerCache[tank].g_iGunnerAbility = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iGunnerAbility, g_esGunnerAbility[iType].g_iGunnerAbility, 1);
 		g_esGunnerCache[tank].g_iGunnerBullets = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iGunnerBullets, g_esGunnerAbility[iType].g_iGunnerBullets, 1);
 		g_esGunnerCache[tank].g_iGunnerClipSize = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iGunnerClipSize, g_esGunnerAbility[iType].g_iGunnerClipSize, 1);
@@ -963,6 +995,12 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esGunnerCache[tank].g_iGunnerGunType = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iGunnerGunType, g_esGunnerAbility[iType].g_iGunnerGunType, 1);
 		g_esGunnerCache[tank].g_iGunnerMessage = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iGunnerMessage, g_esGunnerAbility[iType].g_iGunnerMessage, 1);
 		g_esGunnerCache[tank].g_iGunnerTargetType = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iGunnerTargetType, g_esGunnerAbility[iType].g_iGunnerTargetType, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
+		g_esGunnerCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iHumanAbility, g_esGunnerAbility[iType].g_iHumanAbility, 1);
+		g_esGunnerCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iHumanAmmo, g_esGunnerAbility[iType].g_iHumanAmmo, 1);
+		g_esGunnerCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iHumanCooldown, g_esGunnerAbility[iType].g_iHumanCooldown, 1);
+		g_esGunnerCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iHumanMode, g_esGunnerAbility[iType].g_iHumanMode, 1);
+#endif
 		g_esGunnerCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_flOpenAreasOnly, g_esGunnerAbility[iType].g_flOpenAreasOnly, 1);
 		g_esGunnerCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esGunnerPlayer[tank].g_iRequiresHumans, g_esGunnerAbility[iType].g_iRequiresHumans, 1);
 	}
@@ -1076,7 +1114,7 @@ public void MT_OnAbilityActivated(int tank)
 		vGunnerAbility(tank);
 	}
 }
-
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN
 void vGunnerButtonPressed(int tank, int button)
 #else
@@ -1129,11 +1167,7 @@ public void MT_OnButtonPressed(int tank, int button)
 							switch (iHumanMode)
 							{
 								case 1: MT_PrintToChat(tank, "%s %t", MT_TAG3, "GunnerHuman3");
-								case 2:
-								{
-									vGunnerReset2(tank);
-									vGunnerReset3(tank);
-								}
+								case 2: vRemoveGunner(tank, true, true);
 							}
 						}
 						else if (bRecharging)
@@ -1161,12 +1195,11 @@ public void MT_OnButtonReleased(int tank, int button)
 	{
 		if ((button & MT_MAIN_KEY) && g_esGunnerCache[tank].g_iHumanMode == 1 && g_esGunnerPlayer[tank].g_bActivated && (g_esGunnerPlayer[tank].g_iCooldown == -1 || g_esGunnerPlayer[tank].g_iCooldown <= GetTime()))
 		{
-			vGunnerReset2(tank);
-			vGunnerReset3(tank);
+			vRemoveGunner(tank, true, true);
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN
 void vGunnerChangeType(int tank, int oldType)
 #else
@@ -1634,7 +1667,7 @@ void vGunnerCopyStats2(int oldTank, int newTank)
 	g_esGunnerPlayer[newTank].g_iCooldown = g_esGunnerPlayer[oldTank].g_iCooldown;
 }
 
-void vRemoveGunner(int tank)
+void vRemoveGunner(int tank, bool message = false, bool cooldown = false)
 {
 	g_esGunnerPlayer[tank].g_bActivated = false;
 	g_esGunnerPlayer[tank].g_bRainbowColor = false;
@@ -1661,6 +1694,25 @@ void vRemoveGunner(int tank)
 	}
 
 	g_esGunnerPlayer[tank].g_iDrone = INVALID_ENT_REFERENCE;
+
+	if (message && g_esGunnerCache[tank].g_iGunnerMessage == 1)
+	{
+		char sTankName[64];
+		MT_GetTankName(tank, sTankName);
+		MT_PrintToChatAll("%s %t", MT_TAG2, "Gunner2", sTankName);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Gunner2", LANG_SERVER, sTankName);
+	}
+
+	if (cooldown)
+	{
+		int iTime = GetTime(), iPos = g_esGunnerAbility[g_esGunnerPlayer[tank].g_iTankTypeRecorded].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esGunnerCache[tank].g_iGunnerCooldown;
+		iCooldown = (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esGunnerCache[tank].g_iHumanAbility == 1 && g_esGunnerCache[tank].g_iHumanMode == 0 && g_esGunnerPlayer[tank].g_iAmmoCount < g_esGunnerCache[tank].g_iHumanAmmo && g_esGunnerCache[tank].g_iHumanAmmo > 0) ? g_esGunnerCache[tank].g_iHumanCooldown : iCooldown;
+		g_esGunnerPlayer[tank].g_iCooldown = (iTime + iCooldown);
+		if (g_esGunnerPlayer[tank].g_iCooldown != -1 && g_esGunnerPlayer[tank].g_iCooldown >= iTime)
+		{
+			MT_PrintToChat(tank, "%s %t", MT_TAG3, "GunnerHuman5", (g_esGunnerPlayer[tank].g_iCooldown - iTime));
+		}
+	}
 }
 
 void vGunnerReset()
@@ -1671,30 +1723,6 @@ void vGunnerReset()
 		{
 			vRemoveGunner(iPlayer);
 		}
-	}
-}
-
-void vGunnerReset2(int tank)
-{
-	vRemoveGunner(tank);
-
-	if (g_esGunnerCache[tank].g_iGunnerMessage == 1)
-	{
-		char sTankName[64];
-		MT_GetTankName(tank, sTankName);
-		MT_PrintToChatAll("%s %t", MT_TAG2, "Gunner2", sTankName);
-		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Gunner2", LANG_SERVER, sTankName);
-	}
-}
-
-void vGunnerReset3(int tank)
-{
-	int iTime = GetTime(), iPos = g_esGunnerAbility[g_esGunnerPlayer[tank].g_iTankTypeRecorded].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esGunnerCache[tank].g_iGunnerCooldown;
-	iCooldown = (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esGunnerCache[tank].g_iHumanAbility == 1 && g_esGunnerCache[tank].g_iHumanMode == 0 && g_esGunnerPlayer[tank].g_iAmmoCount < g_esGunnerCache[tank].g_iHumanAmmo && g_esGunnerCache[tank].g_iHumanAmmo > 0) ? g_esGunnerCache[tank].g_iHumanCooldown : iCooldown;
-	g_esGunnerPlayer[tank].g_iCooldown = (iTime + iCooldown);
-	if (g_esGunnerPlayer[tank].g_iCooldown != -1 && g_esGunnerPlayer[tank].g_iCooldown >= iTime)
-	{
-		MT_PrintToChat(tank, "%s %t", MT_TAG3, "GunnerHuman5", (g_esGunnerPlayer[tank].g_iCooldown - iTime));
 	}
 }
 
@@ -1711,7 +1739,7 @@ void vSetGunnerGlow(int drone, int color, bool flashing, int min, int max, int t
 	SetEntProp(drone, Prop_Send, "m_nGlowRange", max);
 	SetEntProp(drone, Prop_Send, "m_iGlowType", type);
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action tTimerGunnerCombo(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
@@ -1724,3 +1752,4 @@ Action tTimerGunnerCombo(Handle timer, int userid)
 
 	return Plugin_Continue;
 }
+#endif

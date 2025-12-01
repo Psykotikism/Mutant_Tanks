@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2017-2026  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -186,8 +186,9 @@ public void OnPluginStart()
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 	LoadTranslations("mutant_tanks_names.phrases");
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	RegConsoleCmd("sm_mt_track", cmdTrackInfo, "View information about the Track ability.");
+#endif
 }
 #endif
 
@@ -226,7 +227,7 @@ public void OnMapEnd()
 {
 	vTrackReset();
 }
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if !defined MT_ABILITIES_MAIN2
 Action cmdTrackInfo(int client, int args)
 {
@@ -255,7 +256,8 @@ Action cmdTrackInfo(int client, int args)
 	return Plugin_Handled;
 }
 #endif
-
+#endif
+#if (MT_INCLUDE_MENUS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 void vTrackMenu(int client, const char[] name, int item)
 {
 	if (StrContains(MT_TRACK_SECTION4, name, false) == -1)
@@ -359,7 +361,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 		FormatEx(buffer, size, "%T", "TrackMenu2", client);
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vTrackPluginCheck(ArrayList list)
 #else
@@ -380,7 +382,7 @@ public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, 
 	list3.PushString(MT_TRACK_SECTION3);
 	list4.PushString(MT_TRACK_SECTION4);
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN2
 void vTrackCombineAbilities(int tank, int type, const float random, const char[] combo, int weapon)
 #else
@@ -426,7 +428,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vTrackConfigsLoad(int mode)
 #else
@@ -521,13 +523,18 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esTrackTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esTrackTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esTrackTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esTrackTeammate[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esTrackTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esTrackTeammate[admin].g_iHumanAbility, value, -1, 2);
 			g_esTrackTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esTrackTeammate[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esTrackTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esTrackTeammate[admin].g_iHumanCooldown, value, -1, 99999);
+#endif
 			g_esTrackTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esTrackTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esTrackTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esTrackTeammate[admin].g_iRequiresHumans, value, -1, 32);
 			g_esTrackTeammate[admin].g_iTrackAbility = iGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esTrackTeammate[admin].g_iTrackAbility, value, -1, 1);
@@ -539,12 +546,19 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esTrackTeammate[admin].g_flTrackSpeed = flGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "TrackSpeed", "Track Speed", "Track_Speed", "speed", g_esTrackTeammate[admin].g_flTrackSpeed, value, -1.0, 99999.0);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esTrackPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esTrackPlayer[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esTrackPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esTrackPlayer[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esTrackPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esTrackPlayer[admin].g_iHumanAbility, value, -1, 2);
 			g_esTrackPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esTrackPlayer[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esTrackPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esTrackPlayer[admin].g_iHumanCooldown, value, -1, 99999);
+#endif
 			g_esTrackPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esTrackPlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esTrackPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esTrackPlayer[admin].g_iRequiresHumans, value, -1, 32);
 			g_esTrackPlayer[admin].g_iTrackAbility = iGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esTrackPlayer[admin].g_iTrackAbility, value, -1, 1);
@@ -561,13 +575,18 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esTrackSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esTrackSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esTrackSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esTrackSpecial[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esTrackSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esTrackSpecial[type].g_iHumanAbility, value, -1, 2);
 			g_esTrackSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esTrackSpecial[type].g_iHumanAmmo, value, -1, 99999);
 			g_esTrackSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esTrackSpecial[type].g_iHumanCooldown, value, -1, 99999);
+#endif
 			g_esTrackSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esTrackSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esTrackSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esTrackSpecial[type].g_iRequiresHumans, value, -1, 32);
 			g_esTrackSpecial[type].g_iTrackAbility = iGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esTrackSpecial[type].g_iTrackAbility, value, -1, 1);
@@ -579,12 +598,19 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esTrackSpecial[type].g_flTrackSpeed = flGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "TrackSpeed", "Track Speed", "Track_Speed", "speed", g_esTrackSpecial[type].g_flTrackSpeed, value, -1.0, 99999.0);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esTrackAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esTrackAbility[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esTrackAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esTrackAbility[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esTrackAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esTrackAbility[type].g_iHumanAbility, value, -1, 2);
 			g_esTrackAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esTrackAbility[type].g_iHumanAmmo, value, -1, 99999);
 			g_esTrackAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esTrackAbility[type].g_iHumanCooldown, value, -1, 99999);
+#endif
 			g_esTrackAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esTrackAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esTrackAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esTrackAbility[type].g_iRequiresHumans, value, -1, 32);
 			g_esTrackAbility[type].g_iTrackAbility = iGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esTrackAbility[type].g_iTrackAbility, value, -1, 1);
@@ -613,15 +639,20 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #if !defined MT_ABILITIES_MAIN2
 	g_iGraphicsLevel = MT_GetGraphicsLevel();
 #endif
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		g_esTrackCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esTrackTeammate[tank].g_flCloseAreasOnly, g_esTrackPlayer[tank].g_flCloseAreasOnly, g_esTrackSpecial[iType].g_flCloseAreasOnly, g_esTrackAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esTrackCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esTrackTeammate[tank].g_iComboAbility, g_esTrackPlayer[tank].g_iComboAbility, g_esTrackSpecial[iType].g_iComboAbility, g_esTrackAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esTrackCache[tank].g_flTrackChance = flGetSubSettingValue(apply, bHuman, g_esTrackTeammate[tank].g_flTrackChance, g_esTrackPlayer[tank].g_flTrackChance, g_esTrackSpecial[iType].g_flTrackChance, g_esTrackAbility[iType].g_flTrackChance, 1);
 		g_esTrackCache[tank].g_flTrackSpeed = flGetSubSettingValue(apply, bHuman, g_esTrackTeammate[tank].g_flTrackSpeed, g_esTrackPlayer[tank].g_flTrackSpeed, g_esTrackSpecial[iType].g_flTrackSpeed, g_esTrackAbility[iType].g_flTrackSpeed, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esTrackCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esTrackTeammate[tank].g_iHumanAbility, g_esTrackPlayer[tank].g_iHumanAbility, g_esTrackSpecial[iType].g_iHumanAbility, g_esTrackAbility[iType].g_iHumanAbility, 1);
 		g_esTrackCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esTrackTeammate[tank].g_iHumanAmmo, g_esTrackPlayer[tank].g_iHumanAmmo, g_esTrackSpecial[iType].g_iHumanAmmo, g_esTrackAbility[iType].g_iHumanAmmo, 1);
 		g_esTrackCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esTrackTeammate[tank].g_iHumanCooldown, g_esTrackPlayer[tank].g_iHumanCooldown, g_esTrackSpecial[iType].g_iHumanCooldown, g_esTrackAbility[iType].g_iHumanCooldown, 1);
+#endif
 		g_esTrackCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esTrackTeammate[tank].g_flOpenAreasOnly, g_esTrackPlayer[tank].g_flOpenAreasOnly, g_esTrackSpecial[iType].g_flOpenAreasOnly, g_esTrackAbility[iType].g_flOpenAreasOnly, 1);
 		g_esTrackCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esTrackTeammate[tank].g_iRequiresHumans, g_esTrackPlayer[tank].g_iRequiresHumans, g_esTrackSpecial[iType].g_iRequiresHumans, g_esTrackAbility[iType].g_iRequiresHumans, 1);
 		g_esTrackCache[tank].g_iTrackAbility = iGetSubSettingValue(apply, bHuman, g_esTrackTeammate[tank].g_iTrackAbility, g_esTrackPlayer[tank].g_iTrackAbility, g_esTrackSpecial[iType].g_iTrackAbility, g_esTrackAbility[iType].g_iTrackAbility, 1);
@@ -631,14 +662,21 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esTrackCache[tank].g_iTrackMode = iGetSubSettingValue(apply, bHuman, g_esTrackTeammate[tank].g_iTrackMode, g_esTrackPlayer[tank].g_iTrackMode, g_esTrackSpecial[iType].g_iTrackMode, g_esTrackAbility[iType].g_iTrackMode, 1);
 	}
 	else
+#else
+	if (!bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+#endif
 	{
 		g_esTrackCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_flCloseAreasOnly, g_esTrackAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esTrackCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_iComboAbility, g_esTrackAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esTrackCache[tank].g_flTrackChance = flGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_flTrackChance, g_esTrackAbility[iType].g_flTrackChance, 1);
 		g_esTrackCache[tank].g_flTrackSpeed = flGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_flTrackSpeed, g_esTrackAbility[iType].g_flTrackSpeed, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esTrackCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_iHumanAbility, g_esTrackAbility[iType].g_iHumanAbility, 1);
 		g_esTrackCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_iHumanAmmo, g_esTrackAbility[iType].g_iHumanAmmo, 1);
 		g_esTrackCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_iHumanCooldown, g_esTrackAbility[iType].g_iHumanCooldown, 1);
+#endif
 		g_esTrackCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_flOpenAreasOnly, g_esTrackAbility[iType].g_flOpenAreasOnly, 1);
 		g_esTrackCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_iRequiresHumans, g_esTrackAbility[iType].g_iRequiresHumans, 1);
 		g_esTrackCache[tank].g_iTrackAbility = iGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_iTrackAbility, g_esTrackAbility[iType].g_iTrackAbility, 1);
@@ -709,7 +747,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		}
 	}
 }
-
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN2
 void vTrackButtonPressed(int tank, int button)
 #else
@@ -752,7 +790,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vTrackChangeType(int tank, int oldType)
 #else
@@ -766,7 +804,7 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 
 	vRemoveTrack(tank);
 }
-
+#if (MT_INCLUDE_DETOURS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN2
 void vTrackRockBreak(int rock)
 #else
@@ -775,7 +813,7 @@ public void MT_OnRockBreak(int tank, int rock)
 {
 	vSetTrackGlow(rock, 0, false, 0, 0, 0);
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vTrackRockThrow(int tank, int rock)
 #else

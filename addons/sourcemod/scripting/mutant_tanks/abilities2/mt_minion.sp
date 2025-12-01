@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2017-2026  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -202,8 +202,9 @@ public void OnPluginStart()
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 	LoadTranslations("mutant_tanks_names.phrases");
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	RegConsoleCmd("sm_mt_minion", cmdMinionInfo, "View information about the Minion ability.");
+#endif
 }
 #endif
 
@@ -260,7 +261,7 @@ public void OnMapEnd()
 {
 	vMinionReset();
 }
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if !defined MT_ABILITIES_MAIN2
 Action cmdMinionInfo(int client, int args)
 {
@@ -289,7 +290,8 @@ Action cmdMinionInfo(int client, int args)
 	return Plugin_Handled;
 }
 #endif
-
+#endif
+#if (MT_INCLUDE_MENUS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 void vMinionMenu(int client, const char[] name, int item)
 {
 	if (StrContains(MT_MINION_SECTION4, name, false) == -1)
@@ -393,7 +395,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 		FormatEx(buffer, size, "%T", "MinionMenu2", client);
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vMinionPluginCheck(ArrayList list)
 #else
@@ -414,7 +416,7 @@ public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, 
 	list3.PushString(MT_MINION_SECTION3);
 	list4.PushString(MT_MINION_SECTION4);
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN2
 void vMinionCombineAbilities(int tank, int type, const float random, const char[] combo)
 #else
@@ -468,7 +470,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vMinionConfigsLoad(int mode)
 #else
@@ -577,13 +579,18 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esMinionTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esMinionTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esMinionTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esMinionTeammate[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esMinionTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esMinionTeammate[admin].g_iHumanAbility, value, -1, 2);
 			g_esMinionTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esMinionTeammate[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esMinionTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esMinionTeammate[admin].g_iHumanCooldown, value, -1, 99999);
+#endif
 			g_esMinionTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esMinionTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esMinionTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esMinionTeammate[admin].g_iRequiresHumans, value, -1, 32);
 			g_esMinionTeammate[admin].g_iMinionAbility = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esMinionTeammate[admin].g_iMinionAbility, value, -1, 1);
@@ -597,12 +604,19 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esMinionTeammate[admin].g_iMinionReplace = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionReplace", "Minion Replace", "Minion_Replace", "replace", g_esMinionTeammate[admin].g_iMinionReplace, value, -1, 1);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esMinionPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esMinionPlayer[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esMinionPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esMinionPlayer[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esMinionPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esMinionPlayer[admin].g_iHumanAbility, value, -1, 2);
 			g_esMinionPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esMinionPlayer[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esMinionPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esMinionPlayer[admin].g_iHumanCooldown, value, -1, 99999);
+#endif
 			g_esMinionPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esMinionPlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esMinionPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esMinionPlayer[admin].g_iRequiresHumans, value, -1, 32);
 			g_esMinionPlayer[admin].g_iMinionAbility = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esMinionPlayer[admin].g_iMinionAbility, value, -1, 1);
@@ -642,13 +656,18 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esMinionSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esMinionSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esMinionSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esMinionSpecial[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esMinionSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esMinionSpecial[type].g_iHumanAbility, value, -1, 2);
 			g_esMinionSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esMinionSpecial[type].g_iHumanAmmo, value, -1, 99999);
 			g_esMinionSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esMinionSpecial[type].g_iHumanCooldown, value, -1, 99999);
+#endif
 			g_esMinionSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esMinionSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esMinionSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esMinionSpecial[type].g_iRequiresHumans, value, -1, 32);
 			g_esMinionSpecial[type].g_iMinionAbility = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esMinionSpecial[type].g_iMinionAbility, value, -1, 1);
@@ -662,12 +681,19 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esMinionSpecial[type].g_iMinionReplace = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionReplace", "Minion Replace", "Minion_Replace", "replace", g_esMinionSpecial[type].g_iMinionReplace, value, -1, 1);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esMinionAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esMinionAbility[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esMinionAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esMinionAbility[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esMinionAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esMinionAbility[type].g_iHumanAbility, value, -1, 2);
 			g_esMinionAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esMinionAbility[type].g_iHumanAmmo, value, -1, 99999);
 			g_esMinionAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esMinionAbility[type].g_iHumanCooldown, value, -1, 99999);
+#endif
 			g_esMinionAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esMinionAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esMinionAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esMinionAbility[type].g_iRequiresHumans, value, -1, 32);
 			g_esMinionAbility[type].g_iMinionAbility = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esMinionAbility[type].g_iMinionAbility, value, -1, 1);
@@ -717,15 +743,20 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esMinionPlayer[tank].g_iTankType = apply ? type : 0;
 	int iType = g_esMinionPlayer[tank].g_iTankTypeRecorded;
 
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		g_esMinionCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_flCloseAreasOnly, g_esMinionPlayer[tank].g_flCloseAreasOnly, g_esMinionSpecial[iType].g_flCloseAreasOnly, g_esMinionAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esMinionCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iComboAbility, g_esMinionPlayer[tank].g_iComboAbility, g_esMinionSpecial[iType].g_iComboAbility, g_esMinionAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esMinionCache[tank].g_flMinionChance = flGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_flMinionChance, g_esMinionPlayer[tank].g_flMinionChance, g_esMinionSpecial[iType].g_flMinionChance, g_esMinionAbility[iType].g_flMinionChance, 1);
 		g_esMinionCache[tank].g_flMinionLifetime = flGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_flMinionLifetime, g_esMinionPlayer[tank].g_flMinionLifetime, g_esMinionSpecial[iType].g_flMinionLifetime, g_esMinionAbility[iType].g_flMinionLifetime, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esMinionCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iHumanAbility, g_esMinionPlayer[tank].g_iHumanAbility, g_esMinionSpecial[iType].g_iHumanAbility, g_esMinionAbility[iType].g_iHumanAbility, 1);
 		g_esMinionCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iHumanAmmo, g_esMinionPlayer[tank].g_iHumanAmmo, g_esMinionSpecial[iType].g_iHumanAmmo, g_esMinionAbility[iType].g_iHumanAmmo, 1);
 		g_esMinionCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iHumanCooldown, g_esMinionPlayer[tank].g_iHumanCooldown, g_esMinionSpecial[iType].g_iHumanCooldown, g_esMinionAbility[iType].g_iHumanCooldown, 1);
+#endif
 		g_esMinionCache[tank].g_iMinionAbility = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iMinionAbility, g_esMinionPlayer[tank].g_iMinionAbility, g_esMinionSpecial[iType].g_iMinionAbility, g_esMinionAbility[iType].g_iMinionAbility, 1);
 		g_esMinionCache[tank].g_iMinionAmount = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iMinionAmount, g_esMinionPlayer[tank].g_iMinionAmount, g_esMinionSpecial[iType].g_iMinionAmount, g_esMinionAbility[iType].g_iMinionAmount, 1);
 		g_esMinionCache[tank].g_iMinionCooldown = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iMinionCooldown, g_esMinionPlayer[tank].g_iMinionCooldown, g_esMinionSpecial[iType].g_iMinionCooldown, g_esMinionAbility[iType].g_iMinionCooldown, 1);
@@ -739,14 +770,21 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esMinionCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esMinionTeammate[tank].g_iRequiresHumans, g_esMinionPlayer[tank].g_iRequiresHumans, g_esMinionSpecial[iType].g_iRequiresHumans, g_esMinionAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
+#else
+	if (!bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+#endif
 	{
 		g_esMinionCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_flCloseAreasOnly, g_esMinionAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esMinionCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iComboAbility, g_esMinionAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esMinionCache[tank].g_flMinionChance = flGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_flMinionChance, g_esMinionAbility[iType].g_flMinionChance, 1);
 		g_esMinionCache[tank].g_flMinionLifetime = flGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_flMinionLifetime, g_esMinionAbility[iType].g_flMinionLifetime, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esMinionCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iHumanAbility, g_esMinionAbility[iType].g_iHumanAbility, 1);
 		g_esMinionCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iHumanAmmo, g_esMinionAbility[iType].g_iHumanAmmo, 1);
 		g_esMinionCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iHumanCooldown, g_esMinionAbility[iType].g_iHumanCooldown, 1);
+#endif
 		g_esMinionCache[tank].g_iMinionAbility = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iMinionAbility, g_esMinionAbility[iType].g_iMinionAbility, 1);
 		g_esMinionCache[tank].g_iMinionAmount = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iMinionAmount, g_esMinionAbility[iType].g_iMinionAmount, 1);
 		g_esMinionCache[tank].g_iMinionCooldown = iGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_iMinionCooldown, g_esMinionAbility[iType].g_iMinionCooldown, 1);
@@ -884,7 +922,7 @@ public void MT_OnAbilityActivated(int tank)
 		vMinionAbility(tank);
 	}
 }
-
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN2
 void vMinionButtonPressed(int tank, int button)
 #else
@@ -910,7 +948,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vMinionChangeType(int tank, int oldType)
 #else
@@ -1169,7 +1207,7 @@ void vMinionReset()
 		}
 	}
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action tTimerMinionCombo(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
@@ -1182,7 +1220,7 @@ Action tTimerMinionCombo(Handle timer, int userid)
 
 	return Plugin_Continue;
 }
-
+#endif
 Action tTimerKillMinion(Handle timer, int userid)
 {
 	int iSpecial = GetClientOfUserId(userid);

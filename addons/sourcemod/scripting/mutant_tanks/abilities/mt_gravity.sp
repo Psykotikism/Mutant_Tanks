@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2017-2026  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -277,9 +277,9 @@ public void OnPluginStart()
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 	LoadTranslations("mutant_tanks_names.phrases");
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	RegConsoleCmd("sm_mt_gravity", cmdGravityInfo, "View information about the Gravity ability.");
-
+#endif
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -312,7 +312,9 @@ void vGravityClientPutInServer(int client)
 public void OnClientPutInServer(int client)
 #endif
 {
+#if (MT_INCLUDE_DAMAGEHOOKS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	SDKHook(client, SDKHook_OnTakeDamage, OnGravityTakeDamage);
+#endif
 	vGravityReset2(client);
 }
 
@@ -333,7 +335,7 @@ public void OnMapEnd()
 {
 	vGravityReset();
 }
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if !defined MT_ABILITIES_MAIN
 Action cmdGravityInfo(int client, int args)
 {
@@ -362,7 +364,8 @@ Action cmdGravityInfo(int client, int args)
 	return Plugin_Handled;
 }
 #endif
-
+#endif
+#if (MT_INCLUDE_MENUS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 void vGravityMenu(int client, const char[] name, int item)
 {
 	if (StrContains(MT_GRAVITY_SECTION4, name, false) == -1)
@@ -494,7 +497,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 		FormatEx(buffer, size, "%T", "GravityMenu2", client);
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN
 void vGravityPlayerRunCmd(int client)
 #else
@@ -524,7 +527,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	return Plugin_Continue;
 #endif
 }
-
+#if (MT_INCLUDE_DAMAGEHOOKS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action OnGravityTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
@@ -564,7 +567,7 @@ Action OnGravityTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 	return Plugin_Continue;
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN
 void vGravityPluginCheck(ArrayList list)
 #else
@@ -585,7 +588,7 @@ public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, 
 	list3.PushString(MT_GRAVITY_SECTION3);
 	list4.PushString(MT_GRAVITY_SECTION4);
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN
 void vGravityCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
 #else
@@ -700,7 +703,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN
 void vGravityConfigsLoad(int mode)
 #else
@@ -863,10 +866,14 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esGravityTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esGravityTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esGravityTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esGravityTeammate[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esGravityTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esGravityTeammate[admin].g_iHumanAbility, value, -1, 2);
 			g_esGravityTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esGravityTeammate[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esGravityTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esGravityTeammate[admin].g_iHumanCooldown, value, -1, 99999);
@@ -874,6 +881,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esGravityTeammate[admin].g_iHumanMode = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGravityTeammate[admin].g_iHumanMode, value, -1, 2);
 			g_esGravityTeammate[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esGravityTeammate[admin].g_iHumanRangeCooldown, value, -1, 99999);
 			g_esGravityTeammate[admin].g_iHumanRockCooldown = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanRockCooldown", "Human Rock Cooldown", "Human_Rock_Cooldown", "hrockcooldown", g_esGravityTeammate[admin].g_iHumanRockCooldown, value, -1, 99999);
+#endif
 			g_esGravityTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esGravityTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esGravityTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGravityTeammate[admin].g_iRequiresHumans, value, -1, 32);
 			g_esGravityTeammate[admin].g_iGravityAbility = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esGravityTeammate[admin].g_iGravityAbility, value, -1, 3);
@@ -898,9 +906,15 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esGravityTeammate[admin].g_flGravityValue = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityValue", "Gravity Value", "Gravity_Value", "value", g_esGravityTeammate[admin].g_flGravityValue, value, -1.0, 99999.0);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esGravityPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esGravityPlayer[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esGravityPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esGravityPlayer[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esGravityPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esGravityPlayer[admin].g_iHumanAbility, value, -1, 2);
 			g_esGravityPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esGravityPlayer[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esGravityPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esGravityPlayer[admin].g_iHumanCooldown, value, -1, 99999);
@@ -908,6 +922,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esGravityPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGravityPlayer[admin].g_iHumanMode, value, -1, 2);
 			g_esGravityPlayer[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esGravityPlayer[admin].g_iHumanRangeCooldown, value, -1, 99999);
 			g_esGravityPlayer[admin].g_iHumanRockCooldown = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanRockCooldown", "Human Rock Cooldown", "Human_Rock_Cooldown", "hrockcooldown", g_esGravityPlayer[admin].g_iHumanRockCooldown, value, -1, 99999);
+#endif
 			g_esGravityPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esGravityPlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esGravityPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGravityPlayer[admin].g_iRequiresHumans, value, -1, 32);
 			g_esGravityPlayer[admin].g_iGravityAbility = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esGravityPlayer[admin].g_iGravityAbility, value, -1, 3);
@@ -937,10 +952,14 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esGravitySpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esGravitySpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esGravitySpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esGravitySpecial[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esGravitySpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esGravitySpecial[type].g_iHumanAbility, value, -1, 2);
 			g_esGravitySpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esGravitySpecial[type].g_iHumanAmmo, value, -1, 99999);
 			g_esGravitySpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esGravitySpecial[type].g_iHumanCooldown, value, -1, 99999);
@@ -948,6 +967,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esGravitySpecial[type].g_iHumanMode = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGravitySpecial[type].g_iHumanMode, value, -1, 2);
 			g_esGravitySpecial[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esGravitySpecial[type].g_iHumanRangeCooldown, value, -1, 99999);
 			g_esGravitySpecial[type].g_iHumanRockCooldown = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanRockCooldown", "Human Rock Cooldown", "Human_Rock_Cooldown", "hrockcooldown", g_esGravitySpecial[type].g_iHumanRockCooldown, value, -1, 99999);
+#endif
 			g_esGravitySpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esGravitySpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esGravitySpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGravitySpecial[type].g_iRequiresHumans, value, -1, 32);
 			g_esGravitySpecial[type].g_iGravityAbility = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esGravitySpecial[type].g_iGravityAbility, value, -1, 3);
@@ -972,9 +992,15 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esGravitySpecial[type].g_flGravityValue = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityValue", "Gravity Value", "Gravity_Value", "value", g_esGravitySpecial[type].g_flGravityValue, value, -1.0, 99999.0);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esGravityAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esGravityAbility[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esGravityAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esGravityAbility[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esGravityAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esGravityAbility[type].g_iHumanAbility, value, -1, 2);
 			g_esGravityAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esGravityAbility[type].g_iHumanAmmo, value, -1, 99999);
 			g_esGravityAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esGravityAbility[type].g_iHumanCooldown, value, -1, 99999);
@@ -982,6 +1008,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esGravityAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGravityAbility[type].g_iHumanMode, value, -1, 2);
 			g_esGravityAbility[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esGravityAbility[type].g_iHumanRangeCooldown, value, -1, 99999);
 			g_esGravityAbility[type].g_iHumanRockCooldown = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanRockCooldown", "Human Rock Cooldown", "Human_Rock_Cooldown", "hrockcooldown", g_esGravityAbility[type].g_iHumanRockCooldown, value, -1, 99999);
+#endif
 			g_esGravityAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esGravityAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esGravityAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGravityAbility[type].g_iRequiresHumans, value, -1, 32);
 			g_esGravityAbility[type].g_iGravityAbility = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esGravityAbility[type].g_iGravityAbility, value, -1, 3);
@@ -1021,10 +1048,13 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esGravityPlayer[tank].g_iTankType = apply ? type : 0;
 	int iType = g_esGravityPlayer[tank].g_iTankTypeRecorded;
 
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		g_esGravityCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_flCloseAreasOnly, g_esGravityPlayer[tank].g_flCloseAreasOnly, g_esGravitySpecial[iType].g_flCloseAreasOnly, g_esGravityAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esGravityCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iComboAbility, g_esGravityPlayer[tank].g_iComboAbility, g_esGravitySpecial[iType].g_iComboAbility, g_esGravityAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esGravityCache[tank].g_flGravityChance = flGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_flGravityChance, g_esGravityPlayer[tank].g_flGravityChance, g_esGravitySpecial[iType].g_flGravityChance, g_esGravityAbility[iType].g_flGravityChance, 1);
 		g_esGravityCache[tank].g_flGravityForce = flGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_flGravityForce, g_esGravityPlayer[tank].g_flGravityForce, g_esGravitySpecial[iType].g_flGravityForce, g_esGravityAbility[iType].g_flGravityForce, 2, -1.0);
 		g_esGravityCache[tank].g_flGravityRadius = flGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_flGravityRadius, g_esGravityPlayer[tank].g_flGravityRadius, g_esGravitySpecial[iType].g_flGravityRadius, g_esGravityAbility[iType].g_flGravityRadius, 1);
@@ -1045,6 +1075,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esGravityCache[tank].g_iGravityRockBreak = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iGravityRockBreak, g_esGravityPlayer[tank].g_iGravityRockBreak, g_esGravitySpecial[iType].g_iGravityRockBreak, g_esGravityAbility[iType].g_iGravityRockBreak, 1);
 		g_esGravityCache[tank].g_iGravityRockCooldown = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iGravityRockCooldown, g_esGravityPlayer[tank].g_iGravityRockCooldown, g_esGravitySpecial[iType].g_iGravityRockCooldown, g_esGravityAbility[iType].g_iGravityRockCooldown, 1);
 		g_esGravityCache[tank].g_iGravitySight = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iGravitySight, g_esGravityPlayer[tank].g_iGravitySight, g_esGravitySpecial[iType].g_iGravitySight, g_esGravityAbility[iType].g_iGravitySight, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esGravityCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iHumanAbility, g_esGravityPlayer[tank].g_iHumanAbility, g_esGravitySpecial[iType].g_iHumanAbility, g_esGravityAbility[iType].g_iHumanAbility, 1);
 		g_esGravityCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iHumanAmmo, g_esGravityPlayer[tank].g_iHumanAmmo, g_esGravitySpecial[iType].g_iHumanAmmo, g_esGravityAbility[iType].g_iHumanAmmo, 1);
 		g_esGravityCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iHumanCooldown, g_esGravityPlayer[tank].g_iHumanCooldown, g_esGravitySpecial[iType].g_iHumanCooldown, g_esGravityAbility[iType].g_iHumanCooldown, 1);
@@ -1052,13 +1083,19 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esGravityCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iHumanMode, g_esGravityPlayer[tank].g_iHumanMode, g_esGravitySpecial[iType].g_iHumanMode, g_esGravityAbility[iType].g_iHumanMode, 1);
 		g_esGravityCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iHumanRangeCooldown, g_esGravityPlayer[tank].g_iHumanRangeCooldown, g_esGravitySpecial[iType].g_iHumanRangeCooldown, g_esGravityAbility[iType].g_iHumanRangeCooldown, 1);
 		g_esGravityCache[tank].g_iHumanRockCooldown = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iHumanRockCooldown, g_esGravityPlayer[tank].g_iHumanRockCooldown, g_esGravitySpecial[iType].g_iHumanRockCooldown, g_esGravityAbility[iType].g_iHumanRockCooldown, 1);
+#endif
 		g_esGravityCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_flOpenAreasOnly, g_esGravityPlayer[tank].g_flOpenAreasOnly, g_esGravitySpecial[iType].g_flOpenAreasOnly, g_esGravityAbility[iType].g_flOpenAreasOnly, 1);
 		g_esGravityCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esGravityTeammate[tank].g_iRequiresHumans, g_esGravityPlayer[tank].g_iRequiresHumans, g_esGravitySpecial[iType].g_iRequiresHumans, g_esGravityAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
+#else
+	if (!bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+#endif
 	{
 		g_esGravityCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_flCloseAreasOnly, g_esGravityAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esGravityCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iComboAbility, g_esGravityAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esGravityCache[tank].g_flGravityChance = flGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_flGravityChance, g_esGravityAbility[iType].g_flGravityChance, 1);
 		g_esGravityCache[tank].g_flGravityForce = flGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_flGravityForce, g_esGravityAbility[iType].g_flGravityForce, 2, -1.0);
 		g_esGravityCache[tank].g_flGravityRadius = flGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_flGravityRadius, g_esGravityAbility[iType].g_flGravityRadius, 1);
@@ -1079,6 +1116,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esGravityCache[tank].g_iGravityRockBreak = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iGravityRockBreak, g_esGravityAbility[iType].g_iGravityRockBreak, 1);
 		g_esGravityCache[tank].g_iGravityRockCooldown = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iGravityRockCooldown, g_esGravityAbility[iType].g_iGravityRockCooldown, 1);
 		g_esGravityCache[tank].g_iGravitySight = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iGravitySight, g_esGravityAbility[iType].g_iGravitySight, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esGravityCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iHumanAbility, g_esGravityAbility[iType].g_iHumanAbility, 1);
 		g_esGravityCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iHumanAmmo, g_esGravityAbility[iType].g_iHumanAmmo, 1);
 		g_esGravityCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iHumanCooldown, g_esGravityAbility[iType].g_iHumanCooldown, 1);
@@ -1086,6 +1124,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esGravityCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iHumanMode, g_esGravityAbility[iType].g_iHumanMode, 1);
 		g_esGravityCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iHumanRangeCooldown, g_esGravityAbility[iType].g_iHumanRangeCooldown, 1);
 		g_esGravityCache[tank].g_iHumanRockCooldown = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iHumanRockCooldown, g_esGravityAbility[iType].g_iHumanRockCooldown, 1);
+#endif
 		g_esGravityCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_flOpenAreasOnly, g_esGravityAbility[iType].g_flOpenAreasOnly, 1);
 		g_esGravityCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iRequiresHumans, g_esGravityAbility[iType].g_iRequiresHumans, 1);
 	}
@@ -1181,7 +1220,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		}
 	}
 }
-
+#if (MT_INCLUDE_REWARDS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN
 void vGravityRewardSurvivor(int survivor, int &type, bool apply)
 #else
@@ -1196,7 +1235,23 @@ public Action MT_OnRewardSurvivor(int survivor, int tank, int &type, int priorit
 	return Plugin_Continue;
 #endif
 }
-
+#endif
+#if (MT_INCLUDE_PASSIVES == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
+#if defined MT_ABILITIES_MAIN
+void vGravityToggleSurvivorPassive(int survivor, int &type, bool apply)
+#else
+public Action MT_OnToggleSurvivorPassive(int survivor, int &type, bool apply, bool weaponOnly, int weaponIndex)
+#endif
+{
+	if (bIsSurvivor(survivor) && apply && (type & MT_PASSIVE_SPEEDBOOST) && g_esGravityPlayer[survivor].g_bAffected)
+	{
+		vStopGravity(survivor);
+	}
+#if !defined MT_ABILITIES_MAIN
+	return Plugin_Continue;
+#endif
+}
+#endif
 #if defined MT_ABILITIES_MAIN
 void vGravityAbilityActivated(int tank)
 #else
@@ -1214,7 +1269,7 @@ public void MT_OnAbilityActivated(int tank)
 		vGravityAbility(tank, true, GetRandomFloat(0.1, 100.0));
 	}
 }
-
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN
 void vGravityButtonPressed(int tank, int button)
 #else
@@ -1314,7 +1369,7 @@ public void MT_OnButtonReleased(int tank, int button)
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN
 void vGravityChangeType(int tank, int oldType)
 #else
@@ -1333,7 +1388,7 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 
 	vGravityReset2(tank);
 }
-
+#if (MT_INCLUDE_DETOURS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN
 void vGravityRockBreak(int tank, int rock)
 #else
@@ -1350,7 +1405,7 @@ public void MT_OnRockBreak(int tank, int rock)
 		vGravityRockBreak2(tank, rock, GetRandomFloat(0.1, 100.0));
 	}
 }
-
+#endif
 void vGravity(int tank, bool save = true, int rock = -1, int pos = -1)
 {
 	if (save && ((g_esGravityPlayer[tank].g_iCooldown != -1 && g_esGravityPlayer[tank].g_iCooldown >= GetTime()) || bIsAreaNarrow(tank, g_esGravityCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esGravityCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esGravityPlayer[tank].g_iTankType, tank) || (g_esGravityCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esGravityCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esGravityAbility[g_esGravityPlayer[tank].g_iTankTypeRecorded].g_iAccessFlags, g_esGravityPlayer[tank].g_iAccessFlags))))
@@ -1513,7 +1568,7 @@ void vGravityHit(int survivor, int tank, float random, float chance, int enabled
 		return;
 	}
 
-	if ((enabled == 1 || enabled == 3) && bIsSurvivor(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_SPEEDBOOST))
+	if ((enabled == 1 || enabled == 3) && bIsSurvivor(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_SPEEDBOOST) && !MT_DoesSurvivorHavePassiveType(survivor, MT_PASSIVE_SPEEDBOOST))
 	{
 		if (!bIsInfected(tank, MT_CHECK_FAKECLIENT) || (flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE) || (g_esGravityPlayer[tank].g_iAmmoCount2 < g_esGravityCache[tank].g_iHumanAmmo && g_esGravityCache[tank].g_iHumanAmmo > 0))
 		{
@@ -1618,7 +1673,7 @@ void vGravityHit(int survivor, int tank, float random, float chance, int enabled
 		}
 	}
 }
-
+#if (MT_INCLUDE_DETOURS == 1 || MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 void vGravityRockBreak2(int tank, int rock, float random, int pos = -1)
 {
 	float flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 14, pos) : g_esGravityCache[tank].g_flGravityRockChance;
@@ -1644,7 +1699,7 @@ void vGravityRockBreak2(int tank, int rock, float random, int pos = -1)
 		vGravity(tank, false, rock, pos);
 	}
 }
-
+#endif
 void vGravityCopyStats2(int oldTank, int newTank)
 {
 	g_esGravityPlayer[newTank].g_iAmmoCount = g_esGravityPlayer[oldTank].g_iAmmoCount;
@@ -1746,7 +1801,7 @@ void vStopGravity(int survivor)
 
 	SetEntityGravity(survivor, 1.0);
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action tTimerGravityCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -1811,7 +1866,7 @@ Action tTimerGravityCombo3(Handle timer, DataPack pack)
 
 	return Plugin_Continue;
 }
-
+#endif
 Action tTimerStopGravity(Handle timer, DataPack pack)
 {
 	pack.Reset();

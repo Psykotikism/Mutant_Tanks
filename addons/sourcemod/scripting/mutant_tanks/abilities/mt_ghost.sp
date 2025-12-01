@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2017-2026  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -287,9 +287,9 @@ public void OnPluginStart()
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 	LoadTranslations("mutant_tanks_names.phrases");
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	RegConsoleCmd("sm_mt_ghost", cmdGhostInfo, "View information about the Ghost ability.");
-
+#endif
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -323,7 +323,9 @@ void vGhostClientPutInServer(int client)
 public void OnClientPutInServer(int client)
 #endif
 {
+#if (MT_INCLUDE_DAMAGEHOOKS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	SDKHook(client, SDKHook_OnTakeDamage, OnGhostTakeDamage);
+#endif
 	vRemoveGhost(client);
 }
 
@@ -344,7 +346,7 @@ public void OnMapEnd()
 {
 	vGhostReset();
 }
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if !defined MT_ABILITIES_MAIN
 Action cmdGhostInfo(int client, int args)
 {
@@ -373,7 +375,8 @@ Action cmdGhostInfo(int client, int args)
 	return Plugin_Handled;
 }
 #endif
-
+#endif
+#if (MT_INCLUDE_MENUS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 void vGhostMenu(int client, const char[] name, int item)
 {
 	if (StrContains(MT_GHOST_SECTION4, name, false) == -1)
@@ -502,7 +505,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 		FormatEx(buffer, size, "%T", "GhostMenu2", client);
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN
 void vGhostPlayerRunCmd(int client)
 #else
@@ -540,7 +543,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	return Plugin_Continue;
 #endif
 }
-
+#if (MT_INCLUDE_DAMAGEHOOKS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action OnGhostTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
@@ -588,7 +591,7 @@ Action OnGhostTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 	return Plugin_Continue;
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN
 void vGhostPluginCheck(ArrayList list)
 #else
@@ -609,7 +612,7 @@ public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, 
 	list3.PushString(MT_GHOST_SECTION3);
 	list4.PushString(MT_GHOST_SECTION4);
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN
 void vGhostCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, const char[] classname)
 #else
@@ -716,7 +719,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN
 void vGhostConfigsLoad(int mode)
 #else
@@ -879,16 +882,21 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esGhostTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esGhostTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esGhostTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esGhostTeammate[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esGhostTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esGhostTeammate[admin].g_iHumanAbility, value, -1, 2);
 			g_esGhostTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esGhostTeammate[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esGhostTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esGhostTeammate[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esGhostTeammate[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esGhostTeammate[admin].g_iHumanDuration, value, -1, 99999);
 			g_esGhostTeammate[admin].g_iHumanMode = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGhostTeammate[admin].g_iHumanMode, value, -1, 2);
 			g_esGhostTeammate[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esGhostTeammate[admin].g_iHumanRangeCooldown, value, -1, 99999);
+#endif
 			g_esGhostTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esGhostTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esGhostTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGhostTeammate[admin].g_iRequiresHumans, value, -1, 32);
 			g_esGhostTeammate[admin].g_iGhostAbility = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esGhostTeammate[admin].g_iGhostAbility, value, -1, 3);
@@ -914,15 +922,22 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esGhostTeammate[admin].g_iGhostWeaponSlots = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "GhostWeaponSlots", "Ghost Weapon Slots", "Ghost_Weapon_Slots", "slots", g_esGhostTeammate[admin].g_iGhostWeaponSlots, value, -1, 31);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esGhostPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esGhostPlayer[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esGhostPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esGhostPlayer[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esGhostPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esGhostPlayer[admin].g_iHumanAbility, value, -1, 2);
 			g_esGhostPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esGhostPlayer[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esGhostPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esGhostPlayer[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esGhostPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esGhostPlayer[admin].g_iHumanDuration, value, -1, 99999);
 			g_esGhostPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGhostPlayer[admin].g_iHumanMode, value, -1, 2);
 			g_esGhostPlayer[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esGhostPlayer[admin].g_iHumanRangeCooldown, value, -1, 99999);
+#endif
 			g_esGhostPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esGhostPlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esGhostPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGhostPlayer[admin].g_iRequiresHumans, value, -1, 32);
 			g_esGhostPlayer[admin].g_iGhostAbility = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esGhostPlayer[admin].g_iGhostAbility, value, -1, 3);
@@ -953,16 +968,21 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esGhostSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esGhostSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esGhostSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esGhostSpecial[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esGhostSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esGhostSpecial[type].g_iHumanAbility, value, -1, 2);
 			g_esGhostSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esGhostSpecial[type].g_iHumanAmmo, value, -1, 99999);
 			g_esGhostSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esGhostSpecial[type].g_iHumanCooldown, value, -1, 99999);
 			g_esGhostSpecial[type].g_iHumanDuration = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esGhostSpecial[type].g_iHumanDuration, value, -1, 99999);
 			g_esGhostSpecial[type].g_iHumanMode = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGhostSpecial[type].g_iHumanMode, value, -1, 2);
 			g_esGhostSpecial[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esGhostSpecial[type].g_iHumanRangeCooldown, value, -1, 99999);
+#endif
 			g_esGhostSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esGhostSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esGhostSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGhostSpecial[type].g_iRequiresHumans, value, -1, 32);
 			g_esGhostSpecial[type].g_iGhostAbility = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esGhostSpecial[type].g_iGhostAbility, value, -1, 3);
@@ -988,15 +1008,22 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esGhostSpecial[type].g_iGhostWeaponSlots = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "GhostWeaponSlots", "Ghost Weapon Slots", "Ghost_Weapon_Slots", "slots", g_esGhostSpecial[type].g_iGhostWeaponSlots, value, -1, 31);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esGhostAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esGhostAbility[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esGhostAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esGhostAbility[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esGhostAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esGhostAbility[type].g_iHumanAbility, value, -1, 2);
 			g_esGhostAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esGhostAbility[type].g_iHumanAmmo, value, -1, 99999);
 			g_esGhostAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esGhostAbility[type].g_iHumanCooldown, value, -1, 99999);
 			g_esGhostAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esGhostAbility[type].g_iHumanDuration, value, -1, 99999);
 			g_esGhostAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGhostAbility[type].g_iHumanMode, value, -1, 2);
 			g_esGhostAbility[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esGhostAbility[type].g_iHumanRangeCooldown, value, -1, 99999);
+#endif
 			g_esGhostAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esGhostAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esGhostAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGhostAbility[type].g_iRequiresHumans, value, -1, 32);
 			g_esGhostAbility[type].g_iGhostAbility = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esGhostAbility[type].g_iGhostAbility, value, -1, 3);
@@ -1037,10 +1064,13 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esGhostPlayer[tank].g_iTankType = apply ? type : 0;
 	int iType = g_esGhostPlayer[tank].g_iTankTypeRecorded;
 
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		g_esGhostCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esGhostTeammate[tank].g_flCloseAreasOnly, g_esGhostPlayer[tank].g_flCloseAreasOnly, g_esGhostSpecial[iType].g_flCloseAreasOnly, g_esGhostAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esGhostCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esGhostTeammate[tank].g_iComboAbility, g_esGhostPlayer[tank].g_iComboAbility, g_esGhostSpecial[iType].g_iComboAbility, g_esGhostAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esGhostCache[tank].g_flGhostChance = flGetSubSettingValue(apply, bHuman, g_esGhostTeammate[tank].g_flGhostChance, g_esGhostPlayer[tank].g_flGhostChance, g_esGhostSpecial[iType].g_flGhostChance, g_esGhostAbility[iType].g_flGhostChance, 1);
 		g_esGhostCache[tank].g_flGhostFadeRate = flGetSubSettingValue(apply, bHuman, g_esGhostTeammate[tank].g_flGhostFadeRate, g_esGhostPlayer[tank].g_flGhostFadeRate, g_esGhostSpecial[iType].g_flGhostFadeRate, g_esGhostAbility[iType].g_flGhostFadeRate, 1);
 		g_esGhostCache[tank].g_flGhostRange = flGetSubSettingValue(apply, bHuman, g_esGhostTeammate[tank].g_flGhostRange, g_esGhostPlayer[tank].g_flGhostRange, g_esGhostSpecial[iType].g_flGhostRange, g_esGhostAbility[iType].g_flGhostRange, 1);
@@ -1062,19 +1092,26 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esGhostCache[tank].g_iGhostSight = iGetSubSettingValue(apply, bHuman, g_esGhostTeammate[tank].g_iGhostSight, g_esGhostPlayer[tank].g_iGhostSight, g_esGhostSpecial[iType].g_iGhostSight, g_esGhostAbility[iType].g_iGhostSight, 1);
 		g_esGhostCache[tank].g_iGhostSpecials = iGetSubSettingValue(apply, bHuman, g_esGhostTeammate[tank].g_iGhostSpecials, g_esGhostPlayer[tank].g_iGhostSpecials, g_esGhostSpecial[iType].g_iGhostSpecials, g_esGhostAbility[iType].g_iGhostSpecials, 1);
 		g_esGhostCache[tank].g_iGhostWeaponSlots = iGetSubSettingValue(apply, bHuman, g_esGhostTeammate[tank].g_iGhostWeaponSlots, g_esGhostPlayer[tank].g_iGhostWeaponSlots, g_esGhostSpecial[iType].g_iGhostWeaponSlots, g_esGhostAbility[iType].g_iGhostWeaponSlots, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esGhostCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esGhostTeammate[tank].g_iHumanAbility, g_esGhostPlayer[tank].g_iHumanAbility, g_esGhostSpecial[iType].g_iHumanAbility, g_esGhostAbility[iType].g_iHumanAbility, 1);
 		g_esGhostCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esGhostTeammate[tank].g_iHumanAmmo, g_esGhostPlayer[tank].g_iHumanAmmo, g_esGhostSpecial[iType].g_iHumanAmmo, g_esGhostAbility[iType].g_iHumanAmmo, 1);
 		g_esGhostCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esGhostTeammate[tank].g_iHumanCooldown, g_esGhostPlayer[tank].g_iHumanCooldown, g_esGhostSpecial[iType].g_iHumanCooldown, g_esGhostAbility[iType].g_iHumanCooldown, 1);
 		g_esGhostCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esGhostTeammate[tank].g_iHumanDuration, g_esGhostPlayer[tank].g_iHumanDuration, g_esGhostSpecial[iType].g_iHumanDuration, g_esGhostAbility[iType].g_iHumanDuration, 1);
 		g_esGhostCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esGhostTeammate[tank].g_iHumanMode, g_esGhostPlayer[tank].g_iHumanMode, g_esGhostSpecial[iType].g_iHumanMode, g_esGhostAbility[iType].g_iHumanMode, 1);
 		g_esGhostCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esGhostTeammate[tank].g_iHumanRangeCooldown, g_esGhostPlayer[tank].g_iHumanRangeCooldown, g_esGhostSpecial[iType].g_iHumanRangeCooldown, g_esGhostAbility[iType].g_iHumanRangeCooldown, 1);
+#endif
 		g_esGhostCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esGhostTeammate[tank].g_flOpenAreasOnly, g_esGhostPlayer[tank].g_flOpenAreasOnly, g_esGhostSpecial[iType].g_flOpenAreasOnly, g_esGhostAbility[iType].g_flOpenAreasOnly, 1);
 		g_esGhostCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esGhostTeammate[tank].g_iRequiresHumans, g_esGhostPlayer[tank].g_iRequiresHumans, g_esGhostSpecial[iType].g_iRequiresHumans, g_esGhostAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
+#else
+	if (!bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+#endif
 	{
 		g_esGhostCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esGhostPlayer[tank].g_flCloseAreasOnly, g_esGhostAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esGhostCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esGhostPlayer[tank].g_iComboAbility, g_esGhostAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esGhostCache[tank].g_flGhostChance = flGetSettingValue(apply, bHuman, g_esGhostPlayer[tank].g_flGhostChance, g_esGhostAbility[iType].g_flGhostChance, 1);
 		g_esGhostCache[tank].g_flGhostFadeRate = flGetSettingValue(apply, bHuman, g_esGhostPlayer[tank].g_flGhostFadeRate, g_esGhostAbility[iType].g_flGhostFadeRate, 1);
 		g_esGhostCache[tank].g_flGhostRange = flGetSettingValue(apply, bHuman, g_esGhostPlayer[tank].g_flGhostRange, g_esGhostAbility[iType].g_flGhostRange, 1);
@@ -1096,12 +1133,14 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esGhostCache[tank].g_iGhostSight = iGetSettingValue(apply, bHuman, g_esGhostPlayer[tank].g_iGhostSight, g_esGhostAbility[iType].g_iGhostSight, 1);
 		g_esGhostCache[tank].g_iGhostSpecials = iGetSettingValue(apply, bHuman, g_esGhostPlayer[tank].g_iGhostSpecials, g_esGhostAbility[iType].g_iGhostSpecials, 1);
 		g_esGhostCache[tank].g_iGhostWeaponSlots = iGetSettingValue(apply, bHuman, g_esGhostPlayer[tank].g_iGhostWeaponSlots, g_esGhostAbility[iType].g_iGhostWeaponSlots, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esGhostCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esGhostPlayer[tank].g_iHumanAbility, g_esGhostAbility[iType].g_iHumanAbility, 1);
 		g_esGhostCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esGhostPlayer[tank].g_iHumanAmmo, g_esGhostAbility[iType].g_iHumanAmmo, 1);
 		g_esGhostCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esGhostPlayer[tank].g_iHumanCooldown, g_esGhostAbility[iType].g_iHumanCooldown, 1);
 		g_esGhostCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esGhostPlayer[tank].g_iHumanDuration, g_esGhostAbility[iType].g_iHumanDuration, 1);
 		g_esGhostCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esGhostPlayer[tank].g_iHumanMode, g_esGhostAbility[iType].g_iHumanMode, 1);
 		g_esGhostCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esGhostPlayer[tank].g_iHumanRangeCooldown, g_esGhostAbility[iType].g_iHumanRangeCooldown, 1);
+#endif
 		g_esGhostCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esGhostPlayer[tank].g_flOpenAreasOnly, g_esGhostAbility[iType].g_flOpenAreasOnly, 1);
 		g_esGhostCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esGhostPlayer[tank].g_iRequiresHumans, g_esGhostAbility[iType].g_iRequiresHumans, 1);
 	}
@@ -1195,7 +1234,7 @@ public void MT_OnAbilityActivated(int tank)
 		vGhostAbility(tank, true, GetRandomFloat(0.1, 100.0));
 	}
 }
-
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN
 void vGhostButtonPressed(int tank, int button)
 #else
@@ -1291,7 +1330,7 @@ public void MT_OnButtonReleased(int tank, int button)
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN
 void vGhostChangeType(int tank, int oldType)
 #else
@@ -1687,7 +1726,7 @@ void vGhostResetRender(int tank)
 	SetEntityRenderMode(tank, RENDER_TRANSCOLOR);
 	SetEntityRenderColor(tank, iSkinColor[0], iSkinColor[1], iSkinColor[2], g_esGhostPlayer[tank].g_iGhostAlpha);
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action tTimerGhostCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -1751,7 +1790,7 @@ Action tTimerGhostCombo3(Handle timer, DataPack pack)
 
 	return Plugin_Continue;
 }
-
+#endif
 Action tTimerGhost(Handle timer, DataPack pack)
 {
 	pack.Reset();

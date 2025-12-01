@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2017-2026  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -219,8 +219,9 @@ public void OnPluginStart()
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 	LoadTranslations("mutant_tanks_names.phrases");
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	RegConsoleCmd("sm_mt_laser", cmdLaserInfo, "View information about the Laser ability.");
+#endif
 }
 #endif
 
@@ -268,7 +269,7 @@ public void OnMapEnd()
 {
 	vLaserReset();
 }
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if !defined MT_ABILITIES_MAIN2
 Action cmdLaserInfo(int client, int args)
 {
@@ -297,7 +298,8 @@ Action cmdLaserInfo(int client, int args)
 	return Plugin_Handled;
 }
 #endif
-
+#endif
+#if (MT_INCLUDE_MENUS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 void vLaserMenu(int client, const char[] name, int item)
 {
 	if (StrContains(MT_LASER_SECTION4, name, false) == -1)
@@ -415,7 +417,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 		FormatEx(buffer, size, "%T", "LaserMenu2", client);
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vLaserPluginCheck(ArrayList list)
 #else
@@ -436,7 +438,7 @@ public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, 
 	list3.PushString(MT_LASER_SECTION3);
 	list4.PushString(MT_LASER_SECTION4);
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN2
 void vLaserCombineAbilities(int tank, int type, const float random, const char[] combo)
 #else
@@ -496,7 +498,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vLaserConfigsLoad(int mode)
 #else
@@ -611,15 +613,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esLaserTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esLaserTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esLaserTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esLaserTeammate[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esLaserTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esLaserTeammate[admin].g_iHumanAbility, value, -1, 2);
 			g_esLaserTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esLaserTeammate[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esLaserTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esLaserTeammate[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esLaserTeammate[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esLaserTeammate[admin].g_iHumanDuration, value, -1, 99999);
 			g_esLaserTeammate[admin].g_iHumanMode = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esLaserTeammate[admin].g_iHumanMode, value, -1, 2);
+#endif
 			g_esLaserTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esLaserTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esLaserTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esLaserTeammate[admin].g_iRequiresHumans, value, -1, 32);
 			g_esLaserTeammate[admin].g_iLaserAbility = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esLaserTeammate[admin].g_iLaserAbility, value, -1, 1);
@@ -634,14 +641,21 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esLaserTeammate[admin].g_flLaserRange = flGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "LaserRange", "Laser Range", "Laser_Range", "range", g_esLaserTeammate[admin].g_flLaserRange, value, -1.0, 99999.0);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esLaserPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esLaserPlayer[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esLaserPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esLaserPlayer[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esLaserPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esLaserPlayer[admin].g_iHumanAbility, value, -1, 2);
 			g_esLaserPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esLaserPlayer[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esLaserPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esLaserPlayer[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esLaserPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esLaserPlayer[admin].g_iHumanDuration, value, -1, 99999);
 			g_esLaserPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esLaserPlayer[admin].g_iHumanMode, value, -1, 2);
+#endif
 			g_esLaserPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esLaserPlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esLaserPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esLaserPlayer[admin].g_iRequiresHumans, value, -1, 32);
 			g_esLaserPlayer[admin].g_iLaserAbility = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esLaserPlayer[admin].g_iLaserAbility, value, -1, 1);
@@ -661,15 +675,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esLaserSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esLaserSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esLaserSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esLaserSpecial[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esLaserSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esLaserSpecial[type].g_iHumanAbility, value, -1, 2);
 			g_esLaserSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esLaserSpecial[type].g_iHumanAmmo, value, -1, 99999);
 			g_esLaserSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esLaserSpecial[type].g_iHumanCooldown, value, -1, 99999);
 			g_esLaserSpecial[type].g_iHumanDuration = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esLaserSpecial[type].g_iHumanDuration, value, -1, 99999);
 			g_esLaserSpecial[type].g_iHumanMode = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esLaserSpecial[type].g_iHumanMode, value, -1, 2);
+#endif
 			g_esLaserSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esLaserSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esLaserSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esLaserSpecial[type].g_iRequiresHumans, value, -1, 32);
 			g_esLaserSpecial[type].g_iLaserAbility = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esLaserSpecial[type].g_iLaserAbility, value, -1, 1);
@@ -684,14 +703,21 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esLaserSpecial[type].g_flLaserRange = flGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "LaserRange", "Laser Range", "Laser_Range", "range", g_esLaserSpecial[type].g_flLaserRange, value, -1.0, 99999.0);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esLaserAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esLaserAbility[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esLaserAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esLaserAbility[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esLaserAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esLaserAbility[type].g_iHumanAbility, value, -1, 2);
 			g_esLaserAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esLaserAbility[type].g_iHumanAmmo, value, -1, 99999);
 			g_esLaserAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esLaserAbility[type].g_iHumanCooldown, value, -1, 99999);
 			g_esLaserAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esLaserAbility[type].g_iHumanDuration, value, -1, 99999);
 			g_esLaserAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esLaserAbility[type].g_iHumanMode, value, -1, 2);
+#endif
 			g_esLaserAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esLaserAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esLaserAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esLaserAbility[type].g_iRequiresHumans, value, -1, 32);
 			g_esLaserAbility[type].g_iLaserAbility = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esLaserAbility[type].g_iLaserAbility, value, -1, 1);
@@ -723,19 +749,24 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #if !defined MT_ABILITIES_MAIN2
 	g_iGraphicsLevel = MT_GetGraphicsLevel();
 #endif
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		g_esLaserCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_flCloseAreasOnly, g_esLaserPlayer[tank].g_flCloseAreasOnly, g_esLaserSpecial[iType].g_flCloseAreasOnly, g_esLaserAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esLaserCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_iComboAbility, g_esLaserPlayer[tank].g_iComboAbility, g_esLaserSpecial[iType].g_iComboAbility, g_esLaserAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esLaserCache[tank].g_flLaserChance = flGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_flLaserChance, g_esLaserPlayer[tank].g_flLaserChance, g_esLaserSpecial[iType].g_flLaserChance, g_esLaserAbility[iType].g_flLaserChance, 1);
 		g_esLaserCache[tank].g_flLaserDamage = flGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_flLaserDamage, g_esLaserPlayer[tank].g_flLaserDamage, g_esLaserSpecial[iType].g_flLaserDamage, g_esLaserAbility[iType].g_flLaserDamage, 1);
 		g_esLaserCache[tank].g_flLaserInterval = flGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_flLaserInterval, g_esLaserPlayer[tank].g_flLaserInterval, g_esLaserSpecial[iType].g_flLaserInterval, g_esLaserAbility[iType].g_flLaserInterval, 1);
 		g_esLaserCache[tank].g_flLaserRange = flGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_flLaserRange, g_esLaserPlayer[tank].g_flLaserRange, g_esLaserSpecial[iType].g_flLaserRange, g_esLaserAbility[iType].g_flLaserRange, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esLaserCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_iHumanAbility, g_esLaserPlayer[tank].g_iHumanAbility, g_esLaserSpecial[iType].g_iHumanAbility, g_esLaserAbility[iType].g_iHumanAbility, 1);
 		g_esLaserCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_iHumanAmmo, g_esLaserPlayer[tank].g_iHumanAmmo, g_esLaserSpecial[iType].g_iHumanAmmo, g_esLaserAbility[iType].g_iHumanAmmo, 1);
 		g_esLaserCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_iHumanCooldown, g_esLaserPlayer[tank].g_iHumanCooldown, g_esLaserSpecial[iType].g_iHumanCooldown, g_esLaserAbility[iType].g_iHumanCooldown, 1);
 		g_esLaserCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_iHumanDuration, g_esLaserPlayer[tank].g_iHumanDuration, g_esLaserSpecial[iType].g_iHumanDuration, g_esLaserAbility[iType].g_iHumanDuration, 1);
 		g_esLaserCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_iHumanMode, g_esLaserPlayer[tank].g_iHumanMode, g_esLaserSpecial[iType].g_iHumanMode, g_esLaserAbility[iType].g_iHumanMode, 1);
+#endif
 		g_esLaserCache[tank].g_iLaserAbility = iGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_iLaserAbility, g_esLaserPlayer[tank].g_iLaserAbility, g_esLaserSpecial[iType].g_iLaserAbility, g_esLaserAbility[iType].g_iLaserAbility, 1);
 		g_esLaserCache[tank].g_iLaserCooldown = iGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_iLaserCooldown, g_esLaserPlayer[tank].g_iLaserCooldown, g_esLaserSpecial[iType].g_iLaserCooldown, g_esLaserAbility[iType].g_iLaserCooldown, 1);
 		g_esLaserCache[tank].g_iLaserDuration = iGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_iLaserDuration, g_esLaserPlayer[tank].g_iLaserDuration, g_esLaserSpecial[iType].g_iLaserDuration, g_esLaserAbility[iType].g_iLaserDuration, 1);
@@ -746,18 +777,25 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esLaserCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esLaserTeammate[tank].g_iRequiresHumans, g_esLaserPlayer[tank].g_iRequiresHumans, g_esLaserSpecial[iType].g_iRequiresHumans, g_esLaserAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
+#else
+	if (!bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+#endif
 	{
 		g_esLaserCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_flCloseAreasOnly, g_esLaserAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esLaserCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_iComboAbility, g_esLaserAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esLaserCache[tank].g_flLaserChance = flGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_flLaserChance, g_esLaserAbility[iType].g_flLaserChance, 1);
 		g_esLaserCache[tank].g_flLaserDamage = flGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_flLaserDamage, g_esLaserAbility[iType].g_flLaserDamage, 1);
 		g_esLaserCache[tank].g_flLaserInterval = flGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_flLaserInterval, g_esLaserAbility[iType].g_flLaserInterval, 1);
 		g_esLaserCache[tank].g_flLaserRange = flGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_flLaserRange, g_esLaserAbility[iType].g_flLaserRange, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esLaserCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_iHumanAbility, g_esLaserAbility[iType].g_iHumanAbility, 1);
 		g_esLaserCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_iHumanAmmo, g_esLaserAbility[iType].g_iHumanAmmo, 1);
 		g_esLaserCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_iHumanCooldown, g_esLaserAbility[iType].g_iHumanCooldown, 1);
 		g_esLaserCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_iHumanDuration, g_esLaserAbility[iType].g_iHumanDuration, 1);
 		g_esLaserCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_iHumanMode, g_esLaserAbility[iType].g_iHumanMode, 1);
+#endif
 		g_esLaserCache[tank].g_iLaserAbility = iGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_iLaserAbility, g_esLaserAbility[iType].g_iLaserAbility, 1);
 		g_esLaserCache[tank].g_iLaserCooldown = iGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_iLaserCooldown, g_esLaserAbility[iType].g_iLaserCooldown, 1);
 		g_esLaserCache[tank].g_iLaserDuration = iGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_iLaserDuration, g_esLaserAbility[iType].g_iLaserDuration, 1);
@@ -846,7 +884,7 @@ public void MT_OnAbilityActivated(int tank)
 		vLaserAbility(tank);
 	}
 }
-
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN2
 void vLaserButtonPressed(int tank, int button)
 #else
@@ -936,7 +974,7 @@ public void MT_OnButtonReleased(int tank, int button)
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vLaserChangeType(int tank, int oldType)
 #else
@@ -1123,7 +1161,7 @@ int iLaserTarget(int tank, int survivor, float range = 0.0, int pos = -1)
 
 	return 0;
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action tTimerLaserCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -1139,7 +1177,7 @@ Action tTimerLaserCombo(Handle timer, DataPack pack)
 
 	return Plugin_Continue;
 }
-
+#endif
 Action tTimerLaser(Handle timer, DataPack pack)
 {
 	pack.Reset();

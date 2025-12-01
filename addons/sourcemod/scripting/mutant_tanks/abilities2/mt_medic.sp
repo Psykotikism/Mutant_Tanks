@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2017-2026  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -306,9 +306,9 @@ public void OnPluginStart()
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 	LoadTranslations("mutant_tanks_names.phrases");
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	RegConsoleCmd("sm_mt_medic", cmdMedicInfo, "View information about the Medic ability.");
-
+#endif
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -342,8 +342,10 @@ void vMedicClientPutInServer(int client)
 public void OnClientPutInServer(int client)
 #endif
 {
+#if (MT_INCLUDE_DAMAGEHOOKS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	SDKHook(client, SDKHook_OnTakeDamage, OnMedicTakeDamage);
 	SDKHook(client, SDKHook_TraceAttack, MedicTraceAttack);
+#endif
 	vRemoveMedic(client);
 }
 
@@ -364,7 +366,7 @@ public void OnMapEnd()
 {
 	vMedicReset();
 }
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if !defined MT_ABILITIES_MAIN2
 Action cmdMedicInfo(int client, int args)
 {
@@ -393,7 +395,8 @@ Action cmdMedicInfo(int client, int args)
 	return Plugin_Handled;
 }
 #endif
-
+#endif
+#if (MT_INCLUDE_MENUS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 void vMedicMenu(int client, const char[] name, int item)
 {
 	if (StrContains(MT_MEDIC_SECTION4, name, false) == -1)
@@ -518,7 +521,8 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 		FormatEx(buffer, size, "%T", "MedicMenu2", client);
 	}
 }
-
+#endif
+#if (MT_INCLUDE_DAMAGEHOOKS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action OnMedicTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
@@ -569,7 +573,7 @@ Action MedicTraceAttack(int victim, int &attacker, int &inflictor, float &damage
 
 	return Plugin_Continue;
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vMedicPluginCheck(ArrayList list)
 #else
@@ -590,7 +594,7 @@ public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, 
 	list3.PushString(MT_MEDIC_SECTION3);
 	list4.PushString(MT_MEDIC_SECTION4);
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN2
 void vMedicCombineAbilities(int tank, int type, const float random, const char[] combo, int weapon)
 #else
@@ -660,7 +664,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vMedicConfigsLoad(int mode)
 #else
@@ -867,16 +871,21 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esMedicTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esMedicTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esMedicTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esMedicTeammate[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esMedicTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esMedicTeammate[admin].g_iHumanAbility, value, -1, 2);
 			g_esMedicTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esMedicTeammate[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esMedicTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esMedicTeammate[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esMedicTeammate[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esMedicTeammate[admin].g_iHumanDuration, value, -1, 99999);
 			g_esMedicTeammate[admin].g_iHumanMode = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esMedicTeammate[admin].g_iHumanMode, value, -1, 2);
 			g_esMedicTeammate[admin].g_iHumanRockCooldown = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "HumanRockCooldown", "Human Rock Cooldown", "Human_Rock_Cooldown", "hrockcooldown", g_esMedicTeammate[admin].g_iHumanRockCooldown, value, -1, 99999);
+#endif
 			g_esMedicTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esMedicTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esMedicTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esMedicTeammate[admin].g_iRequiresHumans, value, -1, 32);
 			g_esMedicTeammate[admin].g_iMedicAbility = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esMedicTeammate[admin].g_iMedicAbility, value, -1, 1);
@@ -899,15 +908,22 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esMedicTeammate[admin].g_iMedicSymbiosis = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "MedicSymbiosis", "Medic Symbiosis", "Medic_Symbiosis", "symbiosis", g_esMedicTeammate[admin].g_iMedicSymbiosis, value, -1, 1);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esMedicPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esMedicPlayer[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esMedicPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esMedicPlayer[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esMedicPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esMedicPlayer[admin].g_iHumanAbility, value, -1, 2);
 			g_esMedicPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esMedicPlayer[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esMedicPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esMedicPlayer[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esMedicPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esMedicPlayer[admin].g_iHumanDuration, value, -1, 99999);
 			g_esMedicPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esMedicPlayer[admin].g_iHumanMode, value, -1, 2);
 			g_esMedicPlayer[admin].g_iHumanRockCooldown = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "HumanRockCooldown", "Human Rock Cooldown", "Human_Rock_Cooldown", "hrockcooldown", g_esMedicPlayer[admin].g_iHumanRockCooldown, value, -1, 99999);
+#endif
 			g_esMedicPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esMedicPlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esMedicPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esMedicPlayer[admin].g_iRequiresHumans, value, -1, 32);
 			g_esMedicPlayer[admin].g_iMedicAbility = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esMedicPlayer[admin].g_iMedicAbility, value, -1, 1);
@@ -980,16 +996,21 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esMedicSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esMedicSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esMedicSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esMedicSpecial[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esMedicSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esMedicSpecial[type].g_iHumanAbility, value, -1, 2);
 			g_esMedicSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esMedicSpecial[type].g_iHumanAmmo, value, -1, 99999);
 			g_esMedicSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esMedicSpecial[type].g_iHumanCooldown, value, -1, 99999);
 			g_esMedicSpecial[type].g_iHumanDuration = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esMedicSpecial[type].g_iHumanDuration, value, -1, 99999);
 			g_esMedicSpecial[type].g_iHumanMode = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esMedicSpecial[type].g_iHumanMode, value, -1, 2);
 			g_esMedicSpecial[type].g_iHumanRockCooldown = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "HumanRockCooldown", "Human Rock Cooldown", "Human_Rock_Cooldown", "hrockcooldown", g_esMedicSpecial[type].g_iHumanRockCooldown, value, -1, 99999);
+#endif
 			g_esMedicSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esMedicSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esMedicSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esMedicSpecial[type].g_iRequiresHumans, value, -1, 32);
 			g_esMedicSpecial[type].g_iMedicAbility = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esMedicSpecial[type].g_iMedicAbility, value, -1, 1);
@@ -1012,15 +1033,22 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esMedicSpecial[type].g_iMedicSymbiosis = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "MedicSymbiosis", "Medic Symbiosis", "Medic_Symbiosis", "symbiosis", g_esMedicSpecial[type].g_iMedicSymbiosis, value, -1, 1);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esMedicAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esMedicAbility[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esMedicAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esMedicAbility[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esMedicAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esMedicAbility[type].g_iHumanAbility, value, -1, 2);
 			g_esMedicAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esMedicAbility[type].g_iHumanAmmo, value, -1, 99999);
 			g_esMedicAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esMedicAbility[type].g_iHumanCooldown, value, -1, 99999);
 			g_esMedicAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esMedicAbility[type].g_iHumanDuration, value, -1, 99999);
 			g_esMedicAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esMedicAbility[type].g_iHumanMode, value, -1, 2);
 			g_esMedicAbility[type].g_iHumanRockCooldown = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "HumanRockCooldown", "Human Rock Cooldown", "Human_Rock_Cooldown", "hrockcooldown", g_esMedicAbility[type].g_iHumanRockCooldown, value, -1, 99999);
+#endif
 			g_esMedicAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esMedicAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esMedicAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esMedicAbility[type].g_iRequiresHumans, value, -1, 32);
 			g_esMedicAbility[type].g_iMedicAbility = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esMedicAbility[type].g_iMedicAbility, value, -1, 1);
@@ -1105,10 +1133,13 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #if !defined MT_ABILITIES_MAIN2
 	g_iGraphicsLevel = MT_GetGraphicsLevel();
 #endif
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	if (bInfected)
 	{
 		g_esMedicCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esMedicTeammate[tank].g_flCloseAreasOnly, g_esMedicPlayer[tank].g_flCloseAreasOnly, g_esMedicSpecial[iType].g_flCloseAreasOnly, g_esMedicAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esMedicCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esMedicTeammate[tank].g_iComboAbility, g_esMedicPlayer[tank].g_iComboAbility, g_esMedicSpecial[iType].g_iComboAbility, g_esMedicAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esMedicCache[tank].g_flMedicBuffDamage = flGetSubSettingValue(apply, bHuman, g_esMedicTeammate[tank].g_flMedicBuffDamage, g_esMedicPlayer[tank].g_flMedicBuffDamage, g_esMedicSpecial[iType].g_flMedicBuffDamage, g_esMedicAbility[iType].g_flMedicBuffDamage, 1);
 		g_esMedicCache[tank].g_flMedicBuffResistance = flGetSubSettingValue(apply, bHuman, g_esMedicTeammate[tank].g_flMedicBuffResistance, g_esMedicPlayer[tank].g_flMedicBuffResistance, g_esMedicSpecial[iType].g_flMedicBuffResistance, g_esMedicAbility[iType].g_flMedicBuffResistance, 1);
 		g_esMedicCache[tank].g_flMedicBuffSpeed = flGetSubSettingValue(apply, bHuman, g_esMedicTeammate[tank].g_flMedicBuffSpeed, g_esMedicPlayer[tank].g_flMedicBuffSpeed, g_esMedicSpecial[iType].g_flMedicBuffSpeed, g_esMedicAbility[iType].g_flMedicBuffSpeed, 1);
@@ -1117,12 +1148,14 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esMedicCache[tank].g_flMedicInterval = flGetSubSettingValue(apply, bHuman, g_esMedicTeammate[tank].g_flMedicInterval, g_esMedicPlayer[tank].g_flMedicInterval, g_esMedicSpecial[iType].g_flMedicInterval, g_esMedicAbility[iType].g_flMedicInterval, 1);
 		g_esMedicCache[tank].g_flMedicRange = flGetSubSettingValue(apply, bHuman, g_esMedicTeammate[tank].g_flMedicRange, g_esMedicPlayer[tank].g_flMedicRange, g_esMedicSpecial[iType].g_flMedicRange, g_esMedicAbility[iType].g_flMedicRange, 1);
 		g_esMedicCache[tank].g_flMedicRockChance = flGetSubSettingValue(apply, bHuman, g_esMedicTeammate[tank].g_flMedicRockChance, g_esMedicPlayer[tank].g_flMedicRockChance, g_esMedicSpecial[iType].g_flMedicRockChance, g_esMedicAbility[iType].g_flMedicRockChance, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esMedicCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esMedicTeammate[tank].g_iHumanAbility, g_esMedicPlayer[tank].g_iHumanAbility, g_esMedicSpecial[iType].g_iHumanAbility, g_esMedicAbility[iType].g_iHumanAbility, 1);
 		g_esMedicCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esMedicTeammate[tank].g_iHumanAmmo, g_esMedicPlayer[tank].g_iHumanAmmo, g_esMedicSpecial[iType].g_iHumanAmmo, g_esMedicAbility[iType].g_iHumanAmmo, 1);
 		g_esMedicCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esMedicTeammate[tank].g_iHumanCooldown, g_esMedicPlayer[tank].g_iHumanCooldown, g_esMedicSpecial[iType].g_iHumanCooldown, g_esMedicAbility[iType].g_iHumanCooldown, 1);
 		g_esMedicCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esMedicTeammate[tank].g_iHumanDuration, g_esMedicPlayer[tank].g_iHumanDuration, g_esMedicSpecial[iType].g_iHumanDuration, g_esMedicAbility[iType].g_iHumanDuration, 1);
 		g_esMedicCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esMedicTeammate[tank].g_iHumanMode, g_esMedicPlayer[tank].g_iHumanMode, g_esMedicSpecial[iType].g_iHumanMode, g_esMedicAbility[iType].g_iHumanMode, 1);
 		g_esMedicCache[tank].g_iHumanRockCooldown = iGetSubSettingValue(apply, bHuman, g_esMedicTeammate[tank].g_iHumanRockCooldown, g_esMedicPlayer[tank].g_iHumanRockCooldown, g_esMedicSpecial[iType].g_iHumanRockCooldown, g_esMedicAbility[iType].g_iHumanRockCooldown, 1);
+#endif
 		g_esMedicCache[tank].g_iMedicAbility = iGetSubSettingValue(apply, bHuman, g_esMedicTeammate[tank].g_iMedicAbility, g_esMedicPlayer[tank].g_iMedicAbility, g_esMedicSpecial[iType].g_iMedicAbility, g_esMedicAbility[iType].g_iMedicAbility, 1);
 		g_esMedicCache[tank].g_iMedicCooldown = iGetSubSettingValue(apply, bHuman, g_esMedicTeammate[tank].g_iMedicCooldown, g_esMedicPlayer[tank].g_iMedicCooldown, g_esMedicSpecial[iType].g_iMedicCooldown, g_esMedicAbility[iType].g_iMedicCooldown, 1);
 		g_esMedicCache[tank].g_iMedicDuration = iGetSubSettingValue(apply, bHuman, g_esMedicTeammate[tank].g_iMedicDuration, g_esMedicPlayer[tank].g_iMedicDuration, g_esMedicSpecial[iType].g_iMedicDuration, g_esMedicAbility[iType].g_iMedicDuration, 1);
@@ -1137,9 +1170,14 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esMedicCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esMedicTeammate[tank].g_iRequiresHumans, g_esMedicPlayer[tank].g_iRequiresHumans, g_esMedicSpecial[iType].g_iRequiresHumans, g_esMedicAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
+#else
+	if (!bInfected)
+#endif
 	{
 		g_esMedicCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esMedicPlayer[tank].g_flCloseAreasOnly, g_esMedicAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esMedicCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esMedicPlayer[tank].g_iComboAbility, g_esMedicAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esMedicCache[tank].g_flMedicBuffDamage = flGetSettingValue(apply, bHuman, g_esMedicPlayer[tank].g_flMedicBuffDamage, g_esMedicAbility[iType].g_flMedicBuffDamage, 1);
 		g_esMedicCache[tank].g_flMedicBuffResistance = flGetSettingValue(apply, bHuman, g_esMedicPlayer[tank].g_flMedicBuffResistance, g_esMedicAbility[iType].g_flMedicBuffResistance, 1);
 		g_esMedicCache[tank].g_flMedicBuffSpeed = flGetSettingValue(apply, bHuman, g_esMedicPlayer[tank].g_flMedicBuffSpeed, g_esMedicAbility[iType].g_flMedicBuffSpeed, 1);
@@ -1148,12 +1186,14 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esMedicCache[tank].g_flMedicInterval = flGetSettingValue(apply, bHuman, g_esMedicPlayer[tank].g_flMedicInterval, g_esMedicAbility[iType].g_flMedicInterval, 1);
 		g_esMedicCache[tank].g_flMedicRange = flGetSettingValue(apply, bHuman, g_esMedicPlayer[tank].g_flMedicRange, g_esMedicAbility[iType].g_flMedicRange, 1);
 		g_esMedicCache[tank].g_flMedicRockChance = flGetSettingValue(apply, bHuman, g_esMedicPlayer[tank].g_flMedicRockChance, g_esMedicAbility[iType].g_flMedicRockChance, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esMedicCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esMedicPlayer[tank].g_iHumanAbility, g_esMedicAbility[iType].g_iHumanAbility, 1);
 		g_esMedicCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esMedicPlayer[tank].g_iHumanAmmo, g_esMedicAbility[iType].g_iHumanAmmo, 1);
 		g_esMedicCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esMedicPlayer[tank].g_iHumanCooldown, g_esMedicAbility[iType].g_iHumanCooldown, 1);
 		g_esMedicCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esMedicPlayer[tank].g_iHumanDuration, g_esMedicAbility[iType].g_iHumanDuration, 1);
 		g_esMedicCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esMedicPlayer[tank].g_iHumanMode, g_esMedicAbility[iType].g_iHumanMode, 1);
 		g_esMedicCache[tank].g_iHumanRockCooldown = iGetSettingValue(apply, bHuman, g_esMedicPlayer[tank].g_iHumanRockCooldown, g_esMedicAbility[iType].g_iHumanRockCooldown, 1);
+#endif
 		g_esMedicCache[tank].g_iMedicAbility = iGetSettingValue(apply, bHuman, g_esMedicPlayer[tank].g_iMedicAbility, g_esMedicAbility[iType].g_iMedicAbility, 1);
 		g_esMedicCache[tank].g_iMedicCooldown = iGetSettingValue(apply, bHuman, g_esMedicPlayer[tank].g_iMedicCooldown, g_esMedicAbility[iType].g_iMedicCooldown, 1);
 		g_esMedicCache[tank].g_iMedicDuration = iGetSettingValue(apply, bHuman, g_esMedicPlayer[tank].g_iMedicDuration, g_esMedicAbility[iType].g_iMedicDuration, 1);
@@ -1170,12 +1210,16 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 
 	for (int iPos = 0; iPos < (sizeof esMedicCache::g_iMedicHealth); iPos++)
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (bInfected)
 		{
 			g_esMedicCache[tank].g_iMedicHealth[iPos] = iGetSubSettingValue(apply, bHuman, g_esMedicTeammate[tank].g_iMedicHealth[iPos], g_esMedicPlayer[tank].g_iMedicHealth[iPos], g_esMedicSpecial[iType].g_iMedicHealth[iPos], g_esMedicAbility[iType].g_iMedicHealth[iPos], 1);
 			g_esMedicCache[tank].g_iMedicMaxHealth[iPos] = iGetSubSettingValue(apply, bHuman, g_esMedicTeammate[tank].g_iMedicMaxHealth[iPos], g_esMedicPlayer[tank].g_iMedicMaxHealth[iPos], g_esMedicSpecial[iType].g_iMedicMaxHealth[iPos], g_esMedicAbility[iType].g_iMedicMaxHealth[iPos], 1);
 		}
 		else
+#else
+		if (!bInfected)
+#endif
 		{
 			g_esMedicCache[tank].g_iMedicHealth[iPos] = iGetSettingValue(apply, bHuman, g_esMedicPlayer[tank].g_iMedicHealth[iPos], g_esMedicAbility[iType].g_iMedicHealth[iPos], 1);
 			g_esMedicCache[tank].g_iMedicMaxHealth[iPos] = iGetSettingValue(apply, bHuman, g_esMedicPlayer[tank].g_iMedicMaxHealth[iPos], g_esMedicAbility[iType].g_iMedicMaxHealth[iPos], 1);
@@ -1269,7 +1313,7 @@ public void MT_OnAbilityActivated(int tank)
 		vMedicAbility(tank);
 	}
 }
-
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN2
 void vMedicButtonPressed(int tank, int button)
 #else
@@ -1359,7 +1403,7 @@ public void MT_OnButtonReleased(int tank, int button)
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vMedicChangeType(int tank, int oldType)
 #else
@@ -1373,7 +1417,7 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 
 	vRemoveMedic(tank);
 }
-
+#if (MT_INCLUDE_DETOURS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN2
 void vMedicRockBreak(int tank, int rock)
 #else
@@ -1390,7 +1434,7 @@ public void MT_OnRockBreak(int tank, int rock)
 		vMedicRockBreak2(tank, rock, GetRandomFloat(0.1, 100.0));
 	}
 }
-
+#endif
 void vMedic(int tank, int pos = -1)
 {
 	if (g_esMedicPlayer[tank].g_iCooldown != -1 && g_esMedicPlayer[tank].g_iCooldown >= GetTime())
@@ -1543,7 +1587,7 @@ void vMedicAbility(int tank)
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "MedicAmmo");
 	}
 }
-
+#if (MT_INCLUDE_DETOURS == 1 || MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 void vMedicRockBreak2(int tank, int rock, float random, int pos = -1)
 {
 	float flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 14, pos) : g_esMedicCache[tank].g_flMedicRockChance;
@@ -1582,7 +1626,7 @@ void vMedicRockBreak2(int tank, int rock, float random, int pos = -1)
 		}
 	}
 }
-
+#endif
 void vMedicCopyStats2(int oldTank, int newTank)
 {
 	g_esMedicPlayer[newTank].g_iAmmoCount = g_esMedicPlayer[oldTank].g_iAmmoCount;
@@ -1684,7 +1728,7 @@ int[] iGetRandomColors(int tank)
 
 	return g_esMedicCache[tank].g_iMedicFieldColor;
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action tTimerMedicCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -1700,7 +1744,7 @@ Action tTimerMedicCombo(Handle timer, DataPack pack)
 
 	return Plugin_Continue;
 }
-
+#endif
 Action tTimerMedic(Handle timer, DataPack pack)
 {
 	pack.Reset();

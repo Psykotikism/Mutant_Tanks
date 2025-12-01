@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: A L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2017-2025  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2017-2026  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -242,9 +242,9 @@ public void OnPluginStart()
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 	LoadTranslations("mutant_tanks_names.phrases");
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	RegConsoleCmd("sm_mt_quiet", cmdQuietInfo, "View information about the Quiet ability.");
-
+#endif
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -277,7 +277,9 @@ void vQuietClientPutInServer(int client)
 public void OnClientPutInServer(int client)
 #endif
 {
+#if (MT_INCLUDE_DAMAGEHOOKS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	SDKHook(client, SDKHook_OnTakeDamage, OnQuietTakeDamage);
+#endif
 	vQuietReset2(client);
 }
 
@@ -300,7 +302,7 @@ public void OnMapEnd()
 
 	RemoveNormalSoundHook(QuietSoundHook);
 }
-
+#if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if !defined MT_ABILITIES_MAIN2
 Action cmdQuietInfo(int client, int args)
 {
@@ -329,7 +331,8 @@ Action cmdQuietInfo(int client, int args)
 	return Plugin_Handled;
 }
 #endif
-
+#endif
+#if (MT_INCLUDE_MENUS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 void vQuietMenu(int client, const char[] name, int item)
 {
 	if (StrContains(MT_QUIET_SECTION4, name, false) == -1)
@@ -439,7 +442,8 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 		FormatEx(buffer, size, "%T", "QuietMenu2", client);
 	}
 }
-
+#endif
+#if (MT_INCLUDE_DAMAGEHOOKS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action OnQuietTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
@@ -479,7 +483,7 @@ Action OnQuietTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 	return Plugin_Continue;
 }
-
+#endif
 Action QuietSoundHook(int clients[MAXPLAYERS], int &numClients, char sample[PLATFORM_MAX_PATH], int &entity, int &channel, float &volume, int &level, int &pitch, int &flags, char soundEntry[PLATFORM_MAX_PATH], int &seed)
 {
 	if (MT_IsCorePluginEnabled())
@@ -536,7 +540,7 @@ public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, 
 	list3.PushString(MT_QUIET_SECTION3);
 	list4.PushString(MT_QUIET_SECTION4);
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN2
 void vQuietCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, const char[] classname)
 #else
@@ -624,7 +628,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vQuietConfigsLoad(int mode)
 #else
@@ -746,14 +750,19 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esQuietTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esQuietTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esQuietTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esQuietTeammate[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esQuietTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esQuietTeammate[admin].g_iHumanAbility, value, -1, 2);
 			g_esQuietTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esQuietTeammate[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esQuietTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esQuietTeammate[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esQuietTeammate[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esQuietTeammate[admin].g_iHumanRangeCooldown, value, -1, 99999);
+#endif
 			g_esQuietTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esQuietTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esQuietTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esQuietTeammate[admin].g_iRequiresHumans, value, -1, 32);
 			g_esQuietTeammate[admin].g_iQuietAbility = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esQuietTeammate[admin].g_iQuietAbility, value, -1, 1);
@@ -771,13 +780,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esQuietTeammate[admin].g_iQuietRangeCooldown = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietRangeCooldown", "Quiet Range Cooldown", "Quiet_Range_Cooldown", "rangecooldown", g_esQuietTeammate[admin].g_iQuietRangeCooldown, value, -1, 99999);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esQuietPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esQuietPlayer[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esQuietPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esQuietPlayer[admin].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esQuietPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esQuietPlayer[admin].g_iHumanAbility, value, -1, 2);
 			g_esQuietPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esQuietPlayer[admin].g_iHumanAmmo, value, -1, 99999);
 			g_esQuietPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esQuietPlayer[admin].g_iHumanCooldown, value, -1, 99999);
 			g_esQuietPlayer[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esQuietPlayer[admin].g_iHumanRangeCooldown, value, -1, 99999);
+#endif
 			g_esQuietPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esQuietPlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esQuietPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esQuietPlayer[admin].g_iRequiresHumans, value, -1, 32);
 			g_esQuietPlayer[admin].g_iQuietAbility = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esQuietPlayer[admin].g_iQuietAbility, value, -1, 1);
@@ -800,14 +816,19 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (special && specsection[0] != '\0')
 		{
 			g_esQuietSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esQuietSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esQuietSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esQuietSpecial[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esQuietSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esQuietSpecial[type].g_iHumanAbility, value, -1, 2);
 			g_esQuietSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esQuietSpecial[type].g_iHumanAmmo, value, -1, 99999);
 			g_esQuietSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esQuietSpecial[type].g_iHumanCooldown, value, -1, 99999);
 			g_esQuietSpecial[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esQuietSpecial[type].g_iHumanRangeCooldown, value, -1, 99999);
+#endif
 			g_esQuietSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esQuietSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esQuietSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esQuietSpecial[type].g_iRequiresHumans, value, -1, 32);
 			g_esQuietSpecial[type].g_iQuietAbility = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esQuietSpecial[type].g_iQuietAbility, value, -1, 1);
@@ -825,13 +846,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esQuietSpecial[type].g_iQuietRangeCooldown = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietRangeCooldown", "Quiet Range Cooldown", "Quiet_Range_Cooldown", "rangecooldown", g_esQuietSpecial[type].g_iQuietRangeCooldown, value, -1, 99999);
 		}
 		else
+#else
+		if (!special || specsection[0] == '\0')
+#endif
 		{
 			g_esQuietAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esQuietAbility[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esQuietAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esQuietAbility[type].g_iComboAbility, value, -1, 1);
+#endif
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esQuietAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esQuietAbility[type].g_iHumanAbility, value, -1, 2);
 			g_esQuietAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esQuietAbility[type].g_iHumanAmmo, value, -1, 99999);
 			g_esQuietAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esQuietAbility[type].g_iHumanCooldown, value, -1, 99999);
 			g_esQuietAbility[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esQuietAbility[type].g_iHumanRangeCooldown, value, -1, 99999);
+#endif
 			g_esQuietAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esQuietAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esQuietAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esQuietAbility[type].g_iRequiresHumans, value, -1, 32);
 			g_esQuietAbility[type].g_iQuietAbility = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esQuietAbility[type].g_iQuietAbility, value, -1, 1);
@@ -864,18 +892,23 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esQuietPlayer[tank].g_iTankType = apply ? type : 0;
 	int iType = g_esQuietPlayer[tank].g_iTankTypeRecorded;
 
+#if (MT_INCLUDE_SPECIALS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		g_esQuietCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_flCloseAreasOnly, g_esQuietPlayer[tank].g_flCloseAreasOnly, g_esQuietSpecial[iType].g_flCloseAreasOnly, g_esQuietAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esQuietCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_iComboAbility, g_esQuietPlayer[tank].g_iComboAbility, g_esQuietSpecial[iType].g_iComboAbility, g_esQuietAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esQuietCache[tank].g_flQuietChance = flGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_flQuietChance, g_esQuietPlayer[tank].g_flQuietChance, g_esQuietSpecial[iType].g_flQuietChance, g_esQuietAbility[iType].g_flQuietChance, 1);
 		g_esQuietCache[tank].g_flQuietDuration = flGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_flQuietDuration, g_esQuietPlayer[tank].g_flQuietDuration, g_esQuietSpecial[iType].g_flQuietDuration, g_esQuietAbility[iType].g_flQuietDuration, 1);
 		g_esQuietCache[tank].g_flQuietRange = flGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_flQuietRange, g_esQuietPlayer[tank].g_flQuietRange, g_esQuietSpecial[iType].g_flQuietRange, g_esQuietAbility[iType].g_flQuietRange, 1);
 		g_esQuietCache[tank].g_flQuietRangeChance = flGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_flQuietRangeChance, g_esQuietPlayer[tank].g_flQuietRangeChance, g_esQuietSpecial[iType].g_flQuietRangeChance, g_esQuietAbility[iType].g_flQuietRangeChance, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esQuietCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_iHumanAbility, g_esQuietPlayer[tank].g_iHumanAbility, g_esQuietSpecial[iType].g_iHumanAbility, g_esQuietAbility[iType].g_iHumanAbility, 1);
 		g_esQuietCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_iHumanAmmo, g_esQuietPlayer[tank].g_iHumanAmmo, g_esQuietSpecial[iType].g_iHumanAmmo, g_esQuietAbility[iType].g_iHumanAmmo, 1);
 		g_esQuietCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_iHumanCooldown, g_esQuietPlayer[tank].g_iHumanCooldown, g_esQuietSpecial[iType].g_iHumanCooldown, g_esQuietAbility[iType].g_iHumanCooldown, 1);
 		g_esQuietCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_iHumanRangeCooldown, g_esQuietPlayer[tank].g_iHumanRangeCooldown, g_esQuietSpecial[iType].g_iHumanRangeCooldown, g_esQuietAbility[iType].g_iHumanRangeCooldown, 1);
+#endif
 		g_esQuietCache[tank].g_iQuietAbility = iGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_iQuietAbility, g_esQuietPlayer[tank].g_iQuietAbility, g_esQuietSpecial[iType].g_iQuietAbility, g_esQuietAbility[iType].g_iQuietAbility, 1);
 		g_esQuietCache[tank].g_iQuietCooldown = iGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_iQuietCooldown, g_esQuietPlayer[tank].g_iQuietCooldown, g_esQuietSpecial[iType].g_iQuietCooldown, g_esQuietAbility[iType].g_iQuietCooldown, 1);
 		g_esQuietCache[tank].g_iQuietEffect = iGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_iQuietEffect, g_esQuietPlayer[tank].g_iQuietEffect, g_esQuietSpecial[iType].g_iQuietEffect, g_esQuietAbility[iType].g_iQuietEffect, 1);
@@ -889,17 +922,24 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esQuietCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esQuietTeammate[tank].g_iRequiresHumans, g_esQuietPlayer[tank].g_iRequiresHumans, g_esQuietSpecial[iType].g_iRequiresHumans, g_esQuietAbility[iType].g_iRequiresHumans, 1);
 	}
 	else
+#else
+	if (!bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+#endif
 	{
 		g_esQuietCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_flCloseAreasOnly, g_esQuietAbility[iType].g_flCloseAreasOnly, 1);
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esQuietCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_iComboAbility, g_esQuietAbility[iType].g_iComboAbility, 1);
+#endif
 		g_esQuietCache[tank].g_flQuietChance = flGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_flQuietChance, g_esQuietAbility[iType].g_flQuietChance, 1);
 		g_esQuietCache[tank].g_flQuietDuration = flGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_flQuietDuration, g_esQuietAbility[iType].g_flQuietDuration, 1);
 		g_esQuietCache[tank].g_flQuietRange = flGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_flQuietRange, g_esQuietAbility[iType].g_flQuietRange, 1);
 		g_esQuietCache[tank].g_flQuietRangeChance = flGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_flQuietRangeChance, g_esQuietAbility[iType].g_flQuietRangeChance, 1);
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esQuietCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_iHumanAbility, g_esQuietAbility[iType].g_iHumanAbility, 1);
 		g_esQuietCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_iHumanAmmo, g_esQuietAbility[iType].g_iHumanAmmo, 1);
 		g_esQuietCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_iHumanCooldown, g_esQuietAbility[iType].g_iHumanCooldown, 1);
 		g_esQuietCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_iHumanRangeCooldown, g_esQuietAbility[iType].g_iHumanRangeCooldown, 1);
+#endif
 		g_esQuietCache[tank].g_iQuietAbility = iGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_iQuietAbility, g_esQuietAbility[iType].g_iQuietAbility, 1);
 		g_esQuietCache[tank].g_iQuietCooldown = iGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_iQuietCooldown, g_esQuietAbility[iType].g_iQuietCooldown, 1);
 		g_esQuietCache[tank].g_iQuietEffect = iGetSettingValue(apply, bHuman, g_esQuietPlayer[tank].g_iQuietEffect, g_esQuietAbility[iType].g_iQuietEffect, 1);
@@ -1001,7 +1041,7 @@ public void MT_OnAbilityActivated(int tank)
 		vQuietAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
 }
-
+#if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 #if defined MT_ABILITIES_MAIN2
 void vQuietButtonPressed(int tank, int button)
 #else
@@ -1027,7 +1067,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		}
 	}
 }
-
+#endif
 #if defined MT_ABILITIES_MAIN2
 void vQuietChangeType(int tank, int oldType)
 #else
@@ -1228,7 +1268,7 @@ void vQuietReset2(int tank)
 	g_esQuietPlayer[tank].g_iFilter = 0;
 	g_esQuietPlayer[tank].g_iRangeCooldown = -1;
 }
-
+#if (MT_INCLUDE_CUSTOMSPAWNS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action tTimerQuietCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -1277,7 +1317,7 @@ Action tTimerQuietCombo2(Handle timer, DataPack pack)
 
 	return Plugin_Continue;
 }
-
+#endif
 Action tTimerStopQuiet(Handle timer, DataPack pack)
 {
 	pack.Reset();

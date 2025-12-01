@@ -6,8 +6,8 @@
 	<summary>Click to expand!</summary>
 
 - Visit the [`Wiki`](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
-- Maximum Tank health: `1,000,000` (Increase/decrease the value in the `mutant_tanks.inc` file on lines `103-104` and recompile all the plugins, but expect game-breaking bugs with higher values.) [Default: `65,535`]
-- Maximum types: `500` (Increase/decrease the value in the `mutant_tanks.inc` file on line `102` and recompile all the plugins, but expect server lag with higher values.)
+- Maximum Tank health: `1,000,000` (Increase/decrease the value in the `mutant_tanks.inc` file on lines `124-125` and recompile all the plugins, but expect game-breaking bugs with higher values.) [Default: `65,535`]
+- Maximum types: `500` (Increase/decrease the value in the `mutant_tanks.inc` file on line `123` and recompile all the plugins, but expect server lag with higher values.)
 - Most of these settings can be overridden for each player via their Steam IDs.
 - Most of these settings can be overridden for the other special infected (except the Witch).
 - Almost every setting can be set to `-1/-1.0` to allow settings with the same name to override it.
@@ -1170,6 +1170,64 @@
 			// 1st number = Slow down time for this many seconds when punishing a slacker.
 			// 2nd number = Slow down time for this many seconds when punishing a rusher.
 			"Zed Time"				"1.0,1.0"
+
+			// The number of survivors required to be inside the saferoom to punish any other survivor outside of the saferoom.
+			// Note: Once the timer starts, it will not stop even if all survivors leave the saferoom.
+			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
+			// 0: OFF
+			// 1-32: ON
+			"Saferoom Check"			"0"
+
+			// The delay in seconds after triggering the saferoom check before punishers start spawning.
+			// --
+			// Minimum: 0.1
+			// Maximum: 99999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Saferoom Delay"			"15.0"
+
+			// A punisher spawns to attack any survivor outside of the saferoom every time this many seconds passes.
+			// --
+			// Minimum: 0.1
+			// Maximum: 99999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Saferoom Interval"			"30.0"
+
+			// The type of punishers to attack any survivor who does not enter the saferoom within a given time.
+			// --
+			// Separate values with "-".
+			// --
+			// Value limit: 2
+			// Character limit for each value: 4
+			// --
+			// Minimum number for each value: 0 (OFF)
+			// Maximum number for each value: 500
+			// --
+			// 1st number = Minimum value
+			// 2nd number = Maximum value
+			// --
+			// Example: "0-0" (Do not choose from any Mutant Tank types.)
+			// Example: "1-25" (Choose a Mutant Tank type between 1 through 25.)
+			// Example: "50-0" (Automatically change to "0-0" because "50" is higher than "0".)
+			// Example: "1-1000" (Automatically change to "1-500" because "500" is the maximum number of Mutant Tank types allowed.)
+			// Example: "0" (Automatically change to "0-500" because the maximum range is not specified.)
+			// Example: "1000" (Automatically change to "500-500" because the maximum range is not specified and the minimum range exceeds the "500" limit.)
+			// --
+			// 0: OFF, use the randomization feature.
+			// 1-500: ON, the type of the punisher.
+			"Saferoom Type"				"0-0"
 		}
 		"Rewards"
 		{
@@ -1177,6 +1235,7 @@
 			// Note: Some rewards may require Lux's "WeaponHandling_API" plugin.
 			// Link: https://forums.alliedmods.net/showthread.php?t=319947
 			// Note: Some rewards may require patches from the "mutant_tanks_patches.cfg" config file to work.
+			// Note: Rewards will not be granted to survivors when survivor or weapon passives are enabled.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
 			// --
@@ -1293,6 +1352,7 @@
 			// Note: Some rewards may require Lux's "WeaponHandling_API" plugin.
 			// Link: https://forums.alliedmods.net/showthread.php?t=319947
 			// Note: Some rewards may require patches from the "mutant_tanks_patches.cfg" config file to work.
+			// Note: Rewards will not be granted to survivors when survivor or weapon passives are enabled.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
 			// --
@@ -3125,11 +3185,13 @@
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Carrier Bots"				"0"
 
-			// The bodies of dead survivors will appear wherever Mutant Survivors die.
+			// Removes the death models of survivors when killed.
+			// Note: Only available in Left 4 Dead 2.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
-			"Carrier Body"				"0"
+			"Carrier Body"				"1"
 
 			// The chance for dead survivors to respawn as Mutant Survivors.
 			// --
@@ -3325,6 +3387,7 @@
 			// Note: Some passives may require Lux's "WeaponHandling_API" plugin.
 			// Link: https://forums.alliedmods.net/showthread.php?t=319947
 			// Note: Some passives may require patches from the "mutant_tanks_patches.cfg" config file to work.
+			// Note: Passives will not be granted to survivors when rewards are enabled.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -3431,6 +3494,7 @@
 			// Note: Some passives may require Lux's "WeaponHandling_API" plugin.
 			// Link: https://forums.alliedmods.net/showthread.php?t=319947
 			// Note: Some passives may require patches from the "mutant_tanks_patches.cfg" config file to work.
+			// Note: Passives will not be granted to survivors when rewards are enabled.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -5350,6 +5414,22 @@
 			// 1-32: ON, the number of Tanks that will spawn.
 			"Regular Amount"			"0"
 
+			// Check for the survivor team's overall status before spawning Tanks on non-finale maps.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 31
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1: Half of the survivors must be alive.
+			// 2: Most of the alive survivors must be healthy.
+			// 4: Most of the alive survivors must have some ammo in their primary weapons.
+			// 8: Half of the alive survivors must have a throwable, pack, or medicine.
+			// 16: The overall team health must be more than half of the max team health.
+			"Regular Check"				"0"
+
 			// The delay in seconds before the regular wave spawner starts.
 			// Note: The delay starts after a survivor leaves the saferoom.
 			// --
@@ -6505,6 +6585,7 @@
 			// Note: Some rewards may require Lux's "WeaponHandling_API" plugin.
 			// Link: https://forums.alliedmods.net/showthread.php?t=319947
 			// Note: Some rewards may require patches from the "mutant_tanks_patches.cfg" config file to work.
+			// Note: Rewards will not be granted to survivors when survivor or weapon passives are enabled.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -6621,6 +6702,7 @@
 			// Note: Some rewards may require Lux's "WeaponHandling_API" plugin.
 			// Link: https://forums.alliedmods.net/showthread.php?t=319947
 			// Note: Some rewards may require patches from the "mutant_tanks_patches.cfg" config file to work.
+			// Note: Rewards will not be granted to survivors when survivor or weapon passives are enabled.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -8574,6 +8656,22 @@
 		}
 		"Spawn"
 		{
+			// Check for the survivor team's overall status before spawning this Mutant Tank type on non-finale maps.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 31
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1: Half of the survivors must be alive.
+			// 2: Most of the alive survivors must be healthy.
+			// 4: Most of the alive survivors must have some ammo in their primary weapons.
+			// 8: Half of the alive survivors must have a throwable, pack, or medicine.
+			// 16: The overall team health must be more than half of the max team health.
+			"Survivor Filter"			"0"
+
 			// The number of Mutant Tanks with this type that can be alive at any given time.
 			// Note: Clones, respawned Mutant Tanks, randomized Tanks, and Mutant Tanks spawned through the Mutant Tanks menu are not affected.
 			// Note: Do not change this setting if you are unsure of how it works.
@@ -8641,6 +8739,7 @@
 				"Finale Special"			"0"
 
 				// Example
+				"Survivor Filter"			"0"
 				"Type Limit"				"0"
 				"Close Areas Only"			"0.0"
 				"Finale Special"			"0"
@@ -12517,6 +12616,13 @@
 			// "forever" - 99999 seconds
 			"Bury Range Cooldown"			"0"
 
+			// Prevent the survivor victim from moving while buried.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Bury Type"				"0"
+
 			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Bury Ability" section for each special infected here.
@@ -12546,6 +12652,7 @@
 				"Bury Range"				"150.0"
 				"Bury Range Chance"			"15.0"
 				"Bury Range Cooldown"			"0"
+				"Bury Type"				"0"
 			}
 		}
 	}
@@ -13163,6 +13270,13 @@
 			// "forever" - 99999 seconds
 			"Choke Range Cooldown"			"0"
 
+			// Prevent the survivor victim from moving while choking.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Choke Type"				"0"
+
 			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Choke Ability" section for each special infected here.
@@ -13193,6 +13307,7 @@
 				"Choke Range"				"150.0"
 				"Choke Range Chance"			"15.0"
 				"Choke Range Cooldown"			"0"
+				"Choke Type"				"0"
 			}
 		}
 	}
@@ -20049,6 +20164,13 @@
 			// "forever" - 99999 seconds
 			"Ice Range Cooldown"			"0"
 
+			// Prevent the survivor victim from moving while frozen.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Ice Type"				"0"
+
 			"Special" // Syntax: "Special"/"spec"/"Infected"/"inf"
 			{
 				// Note: Override any of the settings in the "Ice Ability" section for each special infected here.
@@ -20076,6 +20198,7 @@
 				"Ice Range"				"150.0"
 				"Ice Range Chance"			"15.0"
 				"Ice Range Cooldown"			"0"
+				"Ice Type"				"0"
 			}
 		}
 	}
