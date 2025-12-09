@@ -180,6 +180,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_CHECKSURV_AMMO (1 << 2) // loaded guns
 #define MT_CHECKSURV_SUPPLIES (1 << 3) // stocked up
 #define MT_CHECKSURV_TEAM (1 << 4) // team health
+#define MT_CHECKSURV_WEAPON (1 << 5) // tier 2 guns
 
 #define MT_CMD_SPAWN (1 << 0) // "sm_tank"/"sm_mt_tank"
 #define MT_CMD_CONFIG (1 << 1) // "sm_mt_config"
@@ -3936,7 +3937,7 @@ public void OnEntityCreated(int entity, const char[] classname)
 			g_esHuman.g_iDeathModelOwner = 0;
 		}
 #endif
-#if (MT_INCLUDE_PUNISHMENT == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
+#if ((MT_INCLUDE_PUNISHMENT == 1 && MT_INCLUDE_NEWCONTENT == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		else if (bIsNormalMap() && (StrEqual(classname, "info_changelevel", false) || StrEqual(classname, "trigger_changelevel", false)))
 		{
 			SDKHook(entity, SDKHook_StartTouch, OnSaferoomStartTouch);
@@ -4556,7 +4557,7 @@ void vLateLoad()
 			}
 		}
 #endif
-#if (MT_INCLUDE_PUNISHMENT == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
+#if ((MT_INCLUDE_PUNISHMENT == 1 && MT_INCLUDE_NEWCONTENT == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		int iTrigger = FindEntityByClassname(-1, "info_changelevel");
 		iTrigger = (iTrigger == -1) ? FindEntityByClassname(-1, "trigger_changelevel") : iTrigger;
 		if (bIsValidEntity(iTrigger))
@@ -14305,7 +14306,9 @@ void vReadSpecialSettings(int type, int mode, const char[] subsection, const cha
 #if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esSpecial[iIndex].g_iHumanSupport = iGetKeyValue(subsection, MT_CONFIG_SECTION_HUMAN, MT_CONFIG_SECTION_HUMAN2, MT_CONFIG_SECTION_HUMAN3, MT_CONFIG_SECTION_HUMAN4, key, MT_CONFIG_SECTION_HUMAN, MT_CONFIG_SECTION_HUMAN2, MT_CONFIG_SECTION_HUMAN3, MT_CONFIG_SECTION_HUMAN4, g_esSpecial[iIndex].g_iHumanSupport, value, -1, 2);
 #endif
-			g_esSpecial[iIndex].g_iSurvivorFilter = iGetKeyValue(subsection, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, key, "SurvivorFilter", "Survivor Filter", "Survivor_Filter", "survfilter", g_esSpecial[iIndex].g_iSurvivorFilter, value, -1, 31);
+#if (MT_INCLUDE_NEWCONTENT == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
+			g_esSpecial[iIndex].g_iSurvivorFilter = iGetKeyValue(subsection, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, key, "SurvivorFilter", "Survivor Filter", "Survivor_Filter", "survfilter", g_esSpecial[iIndex].g_iSurvivorFilter, value, -1, 63);
+#endif
 			g_esSpecial[iIndex].g_iTypeLimit = iGetKeyValue(subsection, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, key, "TypeLimit", "Type Limit", "Type_Limit", "typelimit", g_esSpecial[iIndex].g_iTypeLimit, value, -1, 32);
 			g_esSpecial[iIndex].g_iFinaleSpecial = iGetKeyValue(subsection, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, key, "FinaleSpecial", "Finale Special", "Finale_Special", "finale", g_esSpecial[iIndex].g_iFinaleSpecial, value, -1, 4);
 			g_esSpecial[iIndex].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esSpecial[iIndex].g_flCloseAreasOnly, value, -1.0, 99999.0);
@@ -15302,7 +15305,9 @@ void vReadTankSettings(int type, int mode, const char[] subsection, const char[]
 #if (MT_INCLUDE_COMPETITIVE == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		g_esTank[iIndex].g_iHumanSupport = iGetKeyValue(subsection, MT_CONFIG_SECTION_HUMAN, MT_CONFIG_SECTION_HUMAN2, MT_CONFIG_SECTION_HUMAN3, MT_CONFIG_SECTION_HUMAN4, key, MT_CONFIG_SECTION_HUMAN, MT_CONFIG_SECTION_HUMAN2, MT_CONFIG_SECTION_HUMAN3, MT_CONFIG_SECTION_HUMAN4, g_esTank[iIndex].g_iHumanSupport, value, -1, 2);
 #endif
-		g_esTank[iIndex].g_iSurvivorFilter = iGetKeyValue(subsection, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, key, "SurvivorFilter", "Survivor Filter", "Survivor_Filter", "survfilter", g_esTank[iIndex].g_iSurvivorFilter, value, -1, 31);
+#if (MT_INCLUDE_NEWCONTENT == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
+		g_esTank[iIndex].g_iSurvivorFilter = iGetKeyValue(subsection, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, key, "SurvivorFilter", "Survivor Filter", "Survivor_Filter", "survfilter", g_esTank[iIndex].g_iSurvivorFilter, value, -1, 63);
+#endif
 		g_esTank[iIndex].g_iTypeLimit = iGetKeyValue(subsection, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, key, "TypeLimit", "Type Limit", "Type_Limit", "typelimit", g_esTank[iIndex].g_iTypeLimit, value, -1, 32);
 		g_esTank[iIndex].g_iFinaleTank = iGetKeyValue(subsection, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, key, "FinaleTank", "Finale Tank", "Finale_Tank", "finale", g_esTank[iIndex].g_iFinaleTank, value, -1, 4);
 		g_esTank[iIndex].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esTank[iIndex].g_flCloseAreasOnly, value, -1.0, 99999.0);
@@ -16292,7 +16297,9 @@ void vSetTankSettings(int mode, const char[] section, const char[] subsection, c
 			g_esGeneral.g_iLimitExtras = iGetKeyValue(subsection, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, key, "LimitExtras", "Limit Extras", "Limit_Extras", "limitex", g_esGeneral.g_iLimitExtras, value, -1, 1);
 			g_esGeneral.g_flExtrasDelay = flGetKeyValue(subsection, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, key, "ExtrasDelay", "Extras Delay", "Extras_Delay", "exdelay", g_esGeneral.g_flExtrasDelay, value, -1.0, 99999.0);
 			g_esGeneral.g_iRegularAmount = iGetKeyValue(subsection, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, key, "RegularAmount", "Regular Amount", "Regular_Amount", "regamount", g_esGeneral.g_iRegularAmount, value, -1, 32);
-			g_esGeneral.g_iRegularCheck = iGetKeyValue(subsection, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, key, "RegularCheck", "Regular Check", "Regular_Check", "regcheck", g_esGeneral.g_iRegularCheck, value, -1, 31);
+#if MT_INCLUDE_NEWCONTENT == 1
+			g_esGeneral.g_iRegularCheck = iGetKeyValue(subsection, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, key, "RegularCheck", "Regular Check", "Regular_Check", "regcheck", g_esGeneral.g_iRegularCheck, value, -1, 63);
+#endif
 			g_esGeneral.g_flRegularDelay = flGetKeyValue(subsection, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, key, "RegularDelay", "Regular Delay", "Regular_Delay", "regdelay", g_esGeneral.g_flRegularDelay, value, -1.0, 99999.0);
 			g_esGeneral.g_flRegularInterval = flGetKeyValue(subsection, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, key, "RegularInterval", "Regular Interval", "Regular_Interval", "reginterval", g_esGeneral.g_flRegularInterval, value, -1.0, 99999.0);
 			g_esGeneral.g_iRegularLimit = iGetKeyValue(subsection, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, key, "RegularLimit", "Regular Limit", "Regular_Limit", "reglimit", g_esGeneral.g_iRegularLimit, value, -1, 99999);
@@ -16382,7 +16389,7 @@ void vSetTankSettings(int mode, const char[] section, const char[] subsection, c
 					g_esGeneral.g_iWarningLimit[iPos] = iGetClampedValue(key, "WarningLimit", "Warning Limit", "Warning_Limit", "warnlimit", g_esGeneral.g_iWarningLimit[iPos], sSet[iPos], -1, 99999);
 					g_esGeneral.g_iWarningInterval[iPos] = iGetClampedValue(key, "WarningInterval", "Warning Interval", "Warning_Interval", "warnint", g_esGeneral.g_iWarningInterval[iPos], sSet[iPos], -1, 99999);
 				}
-
+#if MT_INCLUDE_NEWCONTENT == 1
 				g_esGeneral.g_flSaferoomDelay = flGetKeyValue(subsection, MT_CONFIG_SECTION_PUNISH, MT_CONFIG_SECTION_PUNISH, MT_CONFIG_SECTION_PUNISH, MT_CONFIG_SECTION_PUNISH, key, "SaferoomDelay", "Saferoom Delay", "Saferoom_Delay", "safedelay", g_esGeneral.g_flSaferoomDelay, value, -1.0, 99999.0);
 				g_esGeneral.g_flSaferoomInterval = flGetKeyValue(subsection, MT_CONFIG_SECTION_PUNISH, MT_CONFIG_SECTION_PUNISH, MT_CONFIG_SECTION_PUNISH, MT_CONFIG_SECTION_PUNISH, key, "SaferoomInterval", "Saferoom Interval", "Saferoom_Interval", "safeinterval", g_esGeneral.g_flSaferoomInterval, value, -1.0, 99999.0);
 				g_esGeneral.g_iSaferoomCheck = iGetKeyValue(subsection, MT_CONFIG_SECTION_PUNISH, MT_CONFIG_SECTION_PUNISH, MT_CONFIG_SECTION_PUNISH, MT_CONFIG_SECTION_PUNISH, key, "SaferoomCheck", "Saferoom Check", "Saferoom_Check", "safecheck", g_esGeneral.g_iSaferoomCheck, value, -1, 32);
@@ -16396,6 +16403,7 @@ void vSetTankSettings(int mode, const char[] section, const char[] subsection, c
 					g_esGeneral.g_iSaferoomMinType = (sSet[0][0] != '\0') ? iClamp(StringToInt(sSet[0]), -1, MT_MAXTYPES) : g_esGeneral.g_iSaferoomMinType;
 					g_esGeneral.g_iSaferoomMaxType = (sSet[1][0] != '\0') ? iClamp(StringToInt(sSet[1]), -1, MT_MAXTYPES) : g_esGeneral.g_iSaferoomMaxType;
 				}
+#endif
 			}
 #endif
 #if (MT_INCLUDE_SURVIVORS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
@@ -21244,7 +21252,7 @@ Action OnPropSetTransmit(int entity, int client)
 
 // StartTouch/EndTouch hooks
 
-#if (MT_INCLUDE_PUNISHMENT == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
+#if ((MT_INCLUDE_PUNISHMENT == 1 && MT_INCLUDE_NEWCONTENT == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action OnSaferoomStartTouch(int room, int player)
 {
 	if (bIsValidEntity(room) && bIsSurvivor(player) && bIsNormalMap())
@@ -22131,85 +22139,92 @@ void vGetTankTranslatedNoName(char[] buffer, int size, int specType, bool surviv
 		}
 	}
 }
-
+#if ((MT_INCLUDE_CUSTOMWAVES == 1 && MT_INCLUDE_NEWCONTENT == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 bool bAreSurvivorsPrepared(int flags)
 {
 	int iSurvivorCount = iGetSurvivorCount();
 	if (flags > 0 && iSurvivorCount > 0)
 	{
 		int iAliveCount = 0, iAmmoType = -1, iDeadCount = 0, iDyingCount = 0, iHealthyCount = 0, iIncapCount = iGetIncapacitatedSurvivorCount(), iLimpingCount = 0, iMissingCount = 0,
-			iPrimaryWeapon = -1, iSurvivorAmmo = 0, iSurvivorHealth = 0, iSurvivorMaxAmmo = 0, iTeamHealth = 0, iTeamMaxHealth = 0, iUnarmedCount = 0, iUnpreparedCount = 0;
+			iPrimaryWeapon = -1, iSurvivorAmmo = 0, iSurvivorHealth = 0, iSurvivorMaxAmmo = 0, iTeamHealth = 0, iTeamMaxHealth = 0, iUnarmedCount = 0, iUnpreparedCount = 0, iWeaponCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME))
 			{
-				iPrimaryWeapon = GetPlayerWeaponSlot(iSurvivor, 0);
-				if (iPrimaryWeapon > MaxClients)
+				switch (IsPlayerAlive(iSurvivor))
 				{
-					iAmmoType = GetEntProp(iPrimaryWeapon, Prop_Send, "m_iPrimaryAmmoType");
-					if (iAmmoType > 0)
+					case true:
 					{
-						iSurvivorAmmo = GetEntProp(iSurvivor, Prop_Send, "m_iAmmo", .element = iAmmoType);
-						iSurvivorMaxAmmo = iGetMaxAmmo(iSurvivor, 0, iPrimaryWeapon, true);
-						if (iSurvivorAmmo < RoundToCeil(iSurvivorMaxAmmo * 0.3))
+						iPrimaryWeapon = GetPlayerWeaponSlot(iSurvivor, 0);
+						if (iPrimaryWeapon > MaxClients)
+						{
+							iAmmoType = GetEntProp(iPrimaryWeapon, Prop_Send, "m_iPrimaryAmmoType");
+							if (iAmmoType > 0)
+							{
+								iSurvivorAmmo = GetEntProp(iSurvivor, Prop_Send, "m_iAmmo", .element = iAmmoType);
+								iSurvivorMaxAmmo = iGetMaxAmmo(iSurvivor, 0, iPrimaryWeapon, true);
+								if (iSurvivorAmmo < RoundToCeil(iSurvivorMaxAmmo * 0.3))
+								{
+									iUnarmedCount++;
+								}
+							}
+
+							if (bIsGunHighTier(iPrimaryWeapon))
+							{
+								iWeaponCount++;
+							}
+						}
+						else
 						{
 							iUnarmedCount++;
 						}
+
+						for (int iSlot = 2; iSlot <= 4; iSlot++)
+						{
+							if (GetPlayerWeaponSlot(iSurvivor, iSlot) == -1)
+							{
+								iMissingCount++;
+							}
+						}
+
+						if (iMissingCount >= 2)
+						{
+							iMissingCount = 0;
+							iUnpreparedCount++;
+						}
+
+						iSurvivorHealth = GetEntProp(iSurvivor, Prop_Data, "m_iHealth");
+						iTeamHealth += iSurvivorHealth;
+						iTeamMaxHealth += GetEntProp(iSurvivor, Prop_Data, "m_iMaxHealth");
+						iAliveCount++;
+
+						switch (iSurvivorHealth < 40 || GetEntProp(iSurvivor, Prop_Send, "m_currentReviveCount") > 0)
+						{
+							case true: iLimpingCount++;
+							case false: iHealthyCount++;
+						}
+
+						if (g_esPlayer[iSurvivor].g_bLastLife[0])
+						{
+							iDyingCount++;
+						}
 					}
-				}
-				else
-				{
-					iUnarmedCount++;
-				}
-
-				for (int iSlot = 2; iSlot <= 4; iSlot++)
-				{
-					if (GetPlayerWeaponSlot(iSurvivor, iSlot) == -1)
-					{
-						iMissingCount++;
-					}
-				}
-
-				if (iMissingCount >= 2)
-				{
-					iMissingCount = 0;
-					iUnpreparedCount++;
-				}
-
-				iSurvivorHealth = GetEntProp(iSurvivor, Prop_Data, "m_iHealth");
-				iTeamHealth += iSurvivorHealth;
-				iTeamMaxHealth += GetEntProp(iSurvivor, Prop_Data, "m_iMaxHealth");
-
-				switch (IsPlayerAlive(iSurvivor))
-				{
-					case true: iAliveCount++;
 					case false: iDeadCount++;
-				}
-
-				switch (iSurvivorHealth < 40 || GetEntProp(iSurvivor, Prop_Send, "m_currentReviveCount") > 0)
-				{
-					case true: iLimpingCount++;
-					case false: iHealthyCount++;
-				}
-
-				if (g_esPlayer[iSurvivor].g_bLastLife[0])
-				{
-					iDyingCount++;
 				}
 			}
 		}
 
-		if ((flags & MT_CHECKSURV_ALIVE) && (iAliveCount < RoundToCeil(iSurvivorCount * 0.5) || iDeadCount >= RoundToCeil(iSurvivorCount * 0.5)))
+		if (((flags & MT_CHECKSURV_ALIVE) && (iAliveCount < RoundToCeil(iSurvivorCount * 0.5) || iDeadCount >= RoundToCeil(iSurvivorCount * 0.5))) || ((flags & MT_CHECKSURV_WEAPON) && (iWeaponCount < RoundToCeil(iAliveCount * 0.5))))
 		{
 			return false;
 		}
 
-		if ((flags & MT_CHECKSURV_HEALTH) && (iHealthyCount < RoundToCeil(iSurvivorCount * 0.6) || iLimpingCount >= RoundToCeil(iSurvivorCount * 0.6) || iIncapCount >= RoundToCeil(iSurvivorCount * 0.5) || iDyingCount >= RoundToCeil(iSurvivorCount * 0.4)))
+		if ((flags & MT_CHECKSURV_HEALTH) && (iHealthyCount < RoundToCeil(iAliveCount * 0.6) || iLimpingCount >= RoundToCeil(iAliveCount * 0.6) || iIncapCount >= RoundToCeil(iAliveCount * 0.5) || iDyingCount >= RoundToCeil(iAliveCount * 0.4)))
 		{
 			return false;
 		}
 
-		if (((flags & MT_CHECKSURV_AMMO) && iUnarmedCount >= RoundToCeil(iSurvivorCount * 0.6)) || ((flags & MT_CHECKSURV_SUPPLIES) && iUnpreparedCount >= RoundToCeil(iSurvivorCount * 0.5)) || ((flags & MT_CHECKSURV_TEAM) && iTeamHealth < RoundToCeil(iTeamMaxHealth * 0.4)))
+		if (((flags & MT_CHECKSURV_AMMO) && iUnarmedCount >= RoundToCeil(iAliveCount * 0.6)) || ((flags & MT_CHECKSURV_SUPPLIES) && iUnpreparedCount >= RoundToCeil(iAliveCount * 0.5)) || ((flags & MT_CHECKSURV_TEAM) && iTeamHealth < RoundToCeil(iTeamMaxHealth * 0.4)))
 		{
 			return false;
 		}
@@ -22217,7 +22232,7 @@ bool bAreSurvivorsPrepared(int flags)
 
 	return true;
 }
-
+#endif
 bool bAreHumansRequired(int type, int specType, int count = -1)
 {
 	int iCount = (count >= 0) ? count : iGetHumanCount();
@@ -23053,11 +23068,15 @@ int iChooseTankType(int exclude, int tank, int min = -1, int max = -1)
 		return 0;
 	}
 
-	bool bCondition = false, bPrepared = true;
+	bool bCondition = false;
 	char sTypeClass[65];
 	float flClose = 0.0, flOpen = 0.0, flRandom = GetRandomFloat(0.1, 100.0), flChance = 0.0;
 	int iBackupCount = 0, iBackupTypes[MT_MAXTYPES + 1], iClass = 8, iCycleCount = 0, iCycleTypes[MT_MAXTYPES + 1], iCount = iGetTankTypeCount(tank),
-		iType = 0, iPrepTypes = iGetSurvivorPrepTypes(), iTypeCount = 0, iTypeLimit = 0, iTankTypes[MT_MAXTYPES + 1];
+		iType = 0, iTypeCount = 0, iTypeLimit = 0, iTankTypes[MT_MAXTYPES + 1];
+#if (MT_INCLUDE_NEWCONTENT == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
+	bool bPrepared = true;
+	int iPrepTypes = iGetSurvivorPrepTypes();
+#endif
 	for (int iIndex = iMin; iIndex <= iMax; iIndex++)
 	{
 		if (iIndex <= 0)
@@ -23083,7 +23102,7 @@ int iChooseTankType(int exclude, int tank, int min = -1, int max = -1)
 				case 6: sTypeClass = (g_esSpecial[iType].g_sChargerClass[0] != '\0') ? g_esSpecial[iType].g_sChargerClass : g_esTank[iType].g_sTankClass;
 			}
 		}
-
+#if (MT_INCLUDE_NEWCONTENT == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 		if (iPrepTypes > 0)
 		{
 			switch (iSpecType != iClass)
@@ -23097,7 +23116,7 @@ int iChooseTankType(int exclude, int tank, int min = -1, int max = -1)
 				continue;
 			}
 		}
-
+#endif
 		vRecycleType(iSpecType, iType, false);
 
 		switch (exclude)
@@ -23469,69 +23488,77 @@ int iGetSpecialCount(bool manual, bool include = false)
 	return 0;
 }
 #endif
+#if (MT_INCLUDE_NEWCONTENT == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 int iGetSurvivorPrepTypes()
 {
 	int iSurvivorCount = iGetSurvivorCount();
 	if (iSurvivorCount > 0)
 	{
 		int iAliveCount = 0, iAmmoType = -1, iDeadCount = 0, iDyingCount = 0, iHealthyCount = 0, iIncapCount = iGetIncapacitatedSurvivorCount(), iLimpingCount = 0, iMissingCount = 0,
-			iPrimaryWeapon = -1, iSurvivorAmmo = 0, iSurvivorHealth = 0, iSurvivorMaxAmmo = 0, iTeamHealth = 0, iTeamMaxHealth = 0, iUnarmedCount = 0, iUnpreparedCount = 0;
+			iPrimaryWeapon = -1, iSurvivorAmmo = 0, iSurvivorHealth = 0, iSurvivorMaxAmmo = 0, iTeamHealth = 0, iTeamMaxHealth = 0, iUnarmedCount = 0, iUnpreparedCount = 0, iWeaponCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME))
 			{
-				iPrimaryWeapon = GetPlayerWeaponSlot(iSurvivor, 0);
-				if (iPrimaryWeapon > MaxClients)
+				switch (IsPlayerAlive(iSurvivor))
 				{
-					iAmmoType = GetEntProp(iPrimaryWeapon, Prop_Send, "m_iPrimaryAmmoType");
-					if (iAmmoType > 0)
+					case true:
 					{
-						iSurvivorAmmo = GetEntProp(iSurvivor, Prop_Send, "m_iAmmo", .element = iAmmoType);
-						iSurvivorMaxAmmo = iGetMaxAmmo(iSurvivor, 0, iPrimaryWeapon, true);
-						if (iSurvivorAmmo < RoundToCeil(iSurvivorMaxAmmo * 0.3))
+						iPrimaryWeapon = GetPlayerWeaponSlot(iSurvivor, 0);
+						if (iPrimaryWeapon > MaxClients)
+						{
+							iAmmoType = GetEntProp(iPrimaryWeapon, Prop_Send, "m_iPrimaryAmmoType");
+							if (iAmmoType > 0)
+							{
+								iSurvivorAmmo = GetEntProp(iSurvivor, Prop_Send, "m_iAmmo", .element = iAmmoType);
+								iSurvivorMaxAmmo = iGetMaxAmmo(iSurvivor, 0, iPrimaryWeapon, true);
+								if (iSurvivorAmmo < RoundToCeil(iSurvivorMaxAmmo * 0.3))
+								{
+									iUnarmedCount++;
+								}
+							}
+
+							if (bIsGunHighTier(iPrimaryWeapon))
+							{
+								iWeaponCount++;
+							}
+						}
+						else
 						{
 							iUnarmedCount++;
 						}
+
+						for (int iSlot = 2; iSlot <= 4; iSlot++)
+						{
+							if (GetPlayerWeaponSlot(iSurvivor, iSlot) == -1)
+							{
+								iMissingCount++;
+							}
+						}
+
+						if (iMissingCount >= 2)
+						{
+							iMissingCount = 0;
+							iUnpreparedCount++;
+						}
+
+						iSurvivorHealth = GetEntProp(iSurvivor, Prop_Data, "m_iHealth");
+						iTeamHealth += iSurvivorHealth;
+						iTeamMaxHealth += GetEntProp(iSurvivor, Prop_Data, "m_iMaxHealth");
+						iAliveCount++;
+
+						switch (iSurvivorHealth < 40 || GetEntProp(iSurvivor, Prop_Send, "m_currentReviveCount") > 0)
+						{
+							case true: iLimpingCount++;
+							case false: iHealthyCount++;
+						}
+
+						if (g_esPlayer[iSurvivor].g_bLastLife[0])
+						{
+							iDyingCount++;
+						}
 					}
-				}
-				else
-				{
-					iUnarmedCount++;
-				}
-
-				for (int iSlot = 2; iSlot <= 4; iSlot++)
-				{
-					if (GetPlayerWeaponSlot(iSurvivor, iSlot) == -1)
-					{
-						iMissingCount++;
-					}
-				}
-
-				if (iMissingCount >= 2)
-				{
-					iMissingCount = 0;
-					iUnpreparedCount++;
-				}
-
-				iSurvivorHealth = GetEntProp(iSurvivor, Prop_Data, "m_iHealth");
-				iTeamHealth += iSurvivorHealth;
-				iTeamMaxHealth += GetEntProp(iSurvivor, Prop_Data, "m_iMaxHealth");
-
-				switch (IsPlayerAlive(iSurvivor))
-				{
-					case true: iAliveCount++;
 					case false: iDeadCount++;
-				}
-
-				switch (iSurvivorHealth < 40 || GetEntProp(iSurvivor, Prop_Send, "m_currentReviveCount") > 0)
-				{
-					case true: iLimpingCount++;
-					case false: iHealthyCount++;
-				}
-
-				if (g_esPlayer[iSurvivor].g_bLastLife[0])
-				{
-					iDyingCount++;
 				}
 			}
 		}
@@ -23542,17 +23569,17 @@ int iGetSurvivorPrepTypes()
 			iTypes |= MT_CHECKSURV_ALIVE;
 		}
 
-		if (iHealthyCount >= RoundToCeil(iSurvivorCount * 0.6) && iLimpingCount < RoundToCeil(iSurvivorCount * 0.6) && iIncapCount < RoundToCeil(iSurvivorCount * 0.5) && iDyingCount < RoundToCeil(iSurvivorCount * 0.4))
+		if (iHealthyCount >= RoundToCeil(iAliveCount * 0.6) && iLimpingCount < RoundToCeil(iAliveCount * 0.6) && iIncapCount < RoundToCeil(iAliveCount * 0.5) && iDyingCount < RoundToCeil(iAliveCount * 0.4))
 		{
 			iTypes |= MT_CHECKSURV_HEALTH;
 		}
 
-		if (iUnarmedCount < RoundToCeil(iSurvivorCount * 0.6))
+		if (iUnarmedCount < RoundToCeil(iAliveCount * 0.6))
 		{
 			iTypes |= MT_CHECKSURV_AMMO;
 		}
 
-		if (iUnpreparedCount < RoundToCeil(iSurvivorCount * 0.5))
+		if (iUnpreparedCount < RoundToCeil(iAliveCount * 0.5))
 		{
 			iTypes |= MT_CHECKSURV_SUPPLIES;
 		}
@@ -23562,12 +23589,17 @@ int iGetSurvivorPrepTypes()
 			iTypes |= MT_CHECKSURV_TEAM;
 		}
 
+		if (iWeaponCount >= RoundToCeil(iAliveCount * 0.5))
+		{
+			iTypes |= MT_CHECKSURV_WEAPON;
+		}
+
 		return iTypes;
 	}
 
 	return 0;
 }
-
+#endif
 int iGetTankCount(bool manual, bool include = false)
 {
 	switch (manual)
@@ -26480,11 +26512,16 @@ Action tTimerRegularWaves(Handle timer)
 		return Plugin_Stop;
 	}
 
-	if (!g_esGeneral.g_bPluginEnabled || g_esGeneral.g_iRushTypes > 0 || g_esGeneral.g_iRegularLimit <= 0 || g_esGeneral.g_iRegularMode <= 0 || g_esGeneral.g_iRegularWave <= 0 || (g_esGeneral.g_iRegularAmount > 0 && iCount >= g_esGeneral.g_iRegularAmount) || !bAreSurvivorsPrepared(g_esGeneral.g_iRegularCheck))
+	if (!g_esGeneral.g_bPluginEnabled || g_esGeneral.g_iRushTypes > 0 || g_esGeneral.g_iRegularLimit <= 0 || g_esGeneral.g_iRegularMode <= 0 || g_esGeneral.g_iRegularWave <= 0 || (g_esGeneral.g_iRegularAmount > 0 && iCount >= g_esGeneral.g_iRegularAmount))
 	{
 		return Plugin_Continue;
 	}
-
+#if MT_INCLUDE_NEWCONTENT == 1
+	if (!bAreSurvivorsPrepared(g_esGeneral.g_iRegularCheck))
+	{
+		return Plugin_Continue;
+	}
+#endif
 	switch (g_esGeneral.g_iRegularAmount)
 	{
 		case -1, 0: vRegularSpawn(iClass);
@@ -34107,7 +34144,7 @@ void vPunishSurvivor(int survivor, bool human, int type)
 		}
 	}
 }
-
+#if MT_INCLUDE_NEWCONTENT == 1
 Action tTimerDelaySaferoomCheck(Handle timer)
 {
 	g_esGeneral.g_hSaferoomCheckTimer = null;
@@ -34115,7 +34152,7 @@ Action tTimerDelaySaferoomCheck(Handle timer)
 
 	return Plugin_Continue;
 }
-
+#endif
 Action tTimerPunishSurvivors(Handle timer)
 {
 	if (g_esGeneral.g_bFinaleEnded || g_esGeneral.g_bRoundEnded)
@@ -34318,7 +34355,7 @@ Action tTimerRemovePunisher(Handle timer, DataPack pack)
 
 	return Plugin_Continue;
 }
-
+#if MT_INCLUDE_NEWCONTENT == 1
 Action tTimerSaferoomCheck(Handle timer)
 {
 	int iPlayer = iGetRandomPlayer();
@@ -34329,6 +34366,7 @@ Action tTimerSaferoomCheck(Handle timer)
 
 	return Plugin_Continue;
 }
+#endif
 #endif
 #if (MT_INCLUDE_REWARDS == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 /**

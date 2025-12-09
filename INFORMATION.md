@@ -5420,7 +5420,7 @@
 			// Add up numbers together for different results.
 			// --
 			// Minimum: 0
-			// Maximum: 31
+			// Maximum: 63
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1: Half of the survivors must be alive.
@@ -5428,6 +5428,7 @@
 			// 4: Most of the alive survivors must have some ammo in their primary weapons.
 			// 8: Half of the alive survivors must have a throwable, pack, or medicine.
 			// 16: The overall team health must be more than half of the max team health.
+			// 32: The overall team loadout must comprise mostly of tier 2 weapons.
 			"Regular Check"				"0"
 
 			// The delay in seconds before the regular wave spawner starts.
@@ -8662,7 +8663,7 @@
 			// Add up numbers together for different results.
 			// --
 			// Minimum: 0
-			// Maximum: 31
+			// Maximum: 63
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1: Half of the survivors must be alive.
@@ -8670,6 +8671,7 @@
 			// 4: Most of the alive survivors must have some ammo in their primary weapons.
 			// 8: Half of the alive survivors must have a throwable, pack, or medicine.
 			// 16: The overall team health must be more than half of the max team health.
+			// 32: The overall team loadout must comprise mostly of tier 2 weapons.
 			"Survivor Filter"			"0"
 
 			// The number of Mutant Tanks with this type that can be alive at any given time.

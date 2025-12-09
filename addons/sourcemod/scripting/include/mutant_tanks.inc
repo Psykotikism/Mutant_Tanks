@@ -2477,6 +2477,21 @@ stock bool bIsFinalMap()
 	return (FindEntityByClassname(-1, "info_changelevel") == -1 && FindEntityByClassname(-1, "trigger_changelevel") == -1) || FindEntityByClassname(-1, "trigger_finale") != -1 || FindEntityByClassname(-1, "finale_trigger") != -1;
 }
 
+stock bool bIsGunHighTier(int weapon)
+{
+	if (weapon > MaxClients)
+	{
+		char sWeapon[32];
+		GetEntityClassname(weapon, sWeapon, sizeof sWeapon);
+		if (!strncmp(sWeapon[7], "auto", 4) || StrContains(sWeapon[7], "rifle") != -1 || !strncmp(sWeapon[7], "sniper", 6) || StrContains(sWeapon[7], "spas") != -1 || StrEqual(sWeapon[7], "grenade_launcher"))
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 stock bool bIsGunWeapon(int survivor)
 {
 	int iWeapon = iGetSurvivorActiveWeapon(survivor);

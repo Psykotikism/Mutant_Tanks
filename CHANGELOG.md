@@ -14,6 +14,9 @@
 - Fixed the `Shockwave Radius` passive/reward reviving infected survivors (carriers). (Thanks to `Angelace113` for testing and reporting!)
 - Fixed the regular wave spawner not working. (Thanks to `Hajitek Majitek` for reporting!)
 
+#### Config Files
+- Fixed comments causing parsing errors in some config file formats. (Thanks to `Mi.Cura` for reporting!)
+
 #### Abilities
 - Gunner: Fixed the ability not working. (Thanks to everyone that tested and reported!)
 
@@ -26,16 +29,18 @@
 - Removed the screen shake and metallic sound triggered by the `Safety Bubble` passive/reward. (Requested by `xcd222`.)
 
 #### Settings
-- Changed how the `Carrier Body` setting works and its default value from `0` to `1`.
-- Added the `Regular Check` setting under the `Plugin Settings->Waves` section. (Requested by `ForTheSakura`.)
+> You must toggle `MT_INCLUDE_NEWCONTENT` along with their corresponding switches inside the `scripting/include/mutant_tanks.inc` file and recompile all the plugins to access these new settings.
+- Changed how the `Carrier Body` setting works and its default value from `0` to `1`. [Requires `MT_INCLUDE_SURVIVORS` to be set to `1`.]
+- Added the `Regular Check` setting under the `Plugin Settings->Waves` section. (Requested by `ForTheSakura`.) [Requires `MT_INCLUDE_CUSTOMWAVES` to be set to `1`.]
 - Added the `Survivor Filter` setting under the `Tank #->Spawn` section.
-- Added the following settings under the `Plugin Settings->Punishment` section (Requested by `ForTheSakura`.):
+- Added the following settings under the `Plugin Settings->Punishment` section (Requested by `ForTheSakura`.) [Requires `MT_INCLUDE_PUNISHMENT` to be set to `1`.]:
 	- `Saferoom Check`
 	- `Saferoom Delay`
 	- `Saferoom Interval`
 	- `Saferoom Type`
 
 #### Abilities
+> You must toggle `MT_INCLUDE_NEWCONTENT` along with their corresponding switches inside the `scripting/include/mutant_tanks.inc` file and recompile all the plugins to access these new settings.
 - Bury: Added the `Bury Type` setting.
 - Choke: Added the `Choke Type` setting.
 - Ice: Added the `Ice Type` setting. (Requested by `Mi.Cura`.)
