@@ -39,6 +39,10 @@
 	- `Saferoom Interval`
 	- `Saferoom Type`
 
+#### Translations
+- Updated English translations. (Thanks to `JustMadMan`!)
+- Updated Russian translations. (Thanks to `JustMadMan`!)
+
 #### Abilities
 > You must toggle `MT_INCLUDE_NEWCONTENT` along with their corresponding switches inside the `scripting/include/mutant_tanks.inc` file and recompile all the plugins to access these new settings.
 - Bury: Added the `Bury Type` setting.

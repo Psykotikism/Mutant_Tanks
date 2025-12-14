@@ -4421,7 +4421,7 @@
 
 	"Common #49"
 	{
-		"en"			"{mint}This Common can access other nearby Mutant Witches' abilities."
+		"en"			"{mint}This Common can access other nearby Mutant Commons' abilities."
 	}
 
 	"Tank #50 Name"
@@ -9901,12 +9901,12 @@
 
 	"Spitter #110"
 	{
-		"en"			"{mint}It's Darth Vader... And he is... A Mutant Spitter with the Force!"
+		"en"			"{mint}It's Darth Vader... And she is... A Mutant Spitter with the Force!"
 	}
 
 	"Witch #110"
 	{
-		"en"			"{mint}It's Darth Vader... And he is... A Mutant Witch with the Force!"
+		"en"			"{mint}It's Darth Vader... And she is... A Mutant Witch with the Force!"
 	}
 
 	"Common #110"
@@ -10991,7 +10991,7 @@
 
 	"Common #122"
 	{
-		"en"			"{mint}This Common randomly switches into different Mutant Witch types and deals increased damage. Be careful..."
+		"en"			"{mint}This Common randomly switches into different Mutant Common types and deals increased damage. Be careful..."
 	}
 
 	"Tank #123 Name"
@@ -11081,7 +11081,7 @@
 
 	"Common #123"
 	{
-		"en"			"{mint}This Common can shapeshift into different Mutant Witch types. Don't underestimate it..."
+		"en"			"{mint}This Common can shapeshift into different Mutant Common types. Don't underestimate it..."
 	}
 
 	"Tank #124 Name"
