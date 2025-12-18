@@ -1958,7 +1958,7 @@
 			 **/
 			"CTerrorPlayer::OnFootstep::Shake"
 			{
-				"linux"		"158" // start at 05 and patch 1 byte with 15 (0x0F)
+				"linux"		"159" // start at 05 and patch 1 byte with 15 (0x0F)
 				"mac"		"81" // start at 05 and patch 1 byte with 15 (0x0F)
 				"windows"	"76" // start at 05 and patch 1 byte with 15 (0x0F)
 			}
