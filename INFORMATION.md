@@ -25576,8 +25576,10 @@
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0/"disabled"/"false"/"off"/"no": OFF
-			// 1/"enabled"/"true"/"on"/"yes": ON
+			// 0: OFF
+			// 1: ON, the Mutant Tank can leech off health from nearby survivors.
+			// 2: ON, the Mutant Tank can gain health from damaging survivors and/or vice-versa.
+			// 3: ON, the Mutant Tank can do both.
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.

@@ -19,6 +19,9 @@
 
 #### Abilities
 - Gunner: Fixed the ability not working. (Thanks to everyone that tested and reported!)
+- Smash (Thanks to `Mi.Cura` for testing and reporting!):
+	- Fixed the issue with some of the options for the `Smash Mode` setting not working.
+	- Fixed the issue with some of the options for the `Smash Type` setting not working.
 
 ### Changes
 
@@ -38,16 +41,23 @@
 	- `Saferoom Delay`
 	- `Saferoom Interval`
 	- `Saferoom Type`
+- Changed the following settings to now take in a value to determine the ammo multiplier for all weapons [Does not require `MT_INCLUDE_NEWCONTENT` to be set to `1`.]:
+	- `Ammo Boost Reward`
+	- `Ammo Boost Passive`
 
 #### Translations
 - Updated English translations. (Thanks to `JustMadMan`!)
 - Updated Russian translations. (Thanks to `JustMadMan`!)
+- Name and note translations in the `mutant_tanks_names.phrases.txt` file can now only be specified with the following phrase section names:
+	- Name: `Tank #1 Name`/`Absorber Tank Name`
+	- Note: `Tank #1 Note`/`Absorber Tank Note`
 
 #### Abilities
 > You must toggle `MT_INCLUDE_NEWCONTENT` along with their corresponding switches inside the `scripting/include/mutant_tanks.inc` file and recompile all the plugins to access these new settings.
 - Bury: Added the `Bury Type` setting.
 - Choke: Added the `Choke Type` setting.
 - Ice: Added the `Ice Type` setting. (Requested by `Mi.Cura`.)
+- Regen: Added more options for the `Ability Enabled` setting to address issues with the legacy `Vampire` and `Xiphos` abilities. (Thanks to `Mi.Cura` for reporting!) [Does not require `MT_INCLUDE_NEWCONTENT` to be set to `1`.]
 
 #### Game Data
 - L4D1: Updated several offsets and signatures for the `1/17/2025` game update.

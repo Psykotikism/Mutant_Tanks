@@ -747,6 +747,7 @@ enum struct esGeneral
 
 	float g_flActionDurationReward[4];
 	float g_flAdrenalineTimeReward[4];
+	float g_flAmmoBoostReward[4];
 	float g_flArmorDuration;
 	float g_flArmorPercentage;
 	float g_flArmorResistance[2];
@@ -926,7 +927,6 @@ enum struct esGeneral
 	Handle g_hTankWaveTimer;
 
 	int g_iAccessFlags;
-	int g_iAmmoBoostReward[4];
 	int g_iAmmoRefillReward[4];
 	int g_iAmmoRegenReward[4];
 	int g_iAnnounceArrival;
@@ -1177,6 +1177,7 @@ enum struct esSpecific
 
 	float g_flActionDurationReward[4];
 	float g_flAdrenalineTimeReward[4];
+	float g_flAmmoBoostReward[4];
 	float g_flArmorDuration;
 	float g_flArmorPercentage;
 	float g_flArmorResistance[2];
@@ -1230,7 +1231,6 @@ enum struct esSpecific
 	float g_flSupplierReward[4];
 	float g_flSwingRateReward[4];
 
-	int g_iAmmoBoostReward[4];
 	int g_iAmmoRefillReward[4];
 	int g_iAmmoRegenReward[4];
 	int g_iAnnounceArrival;
@@ -1359,6 +1359,7 @@ enum struct esHuman
 
 	float g_flActionDurationPassive;
 	float g_flAdrenalineTimePassive;
+	float g_flAmmoBoostPassive;
 	float g_flAttackBoostPassive;
 	float g_flCarrierChance;
 	float g_flCarrierDamageMultiplier;
@@ -1393,7 +1394,6 @@ enum struct esHuman
 	float g_flSupplierPassive;
 	float g_flSwingRatePassive;
 
-	int g_iAmmoBoostPassive;
 	int g_iAmmoRefillPassive;
 	int g_iAmmoRegenPassive;
 	int g_iBlazeHealthPassive;
@@ -1633,6 +1633,8 @@ enum struct esPlayer
 	float g_flActionDurationReward[4];
 	float g_flAdrenalineTime;
 	float g_flAdrenalineTimeReward[4];
+	float g_flAmmoBoost;
+	float g_flAmmoBoostReward[4];
 	float g_flArmorDuration;
 	float g_flArmorPercentage;
 	float g_flArmorResistance[2];
@@ -1756,8 +1758,6 @@ enum struct esPlayer
 	Handle g_hProtectionTimer[2];
 
 	int g_iAccessFlags;
-	int g_iAmmoBoost;
-	int g_iAmmoBoostReward[4];
 	int g_iAmmoRefill;
 	int g_iAmmoRefillReward[4];
 	int g_iAmmoRegen;
@@ -2015,6 +2015,7 @@ enum struct esTeammate
 
 	float g_flActionDurationReward[4];
 	float g_flAdrenalineTimeReward[4];
+	float g_flAmmoBoostReward[4];
 	float g_flArmorDuration;
 	float g_flArmorPercentage;
 	float g_flArmorResistance[2];
@@ -2087,7 +2088,6 @@ enum struct esTeammate
 	float g_flTransformDelay;
 	float g_flTransformDuration;
 
-	int g_iAmmoBoostReward[4];
 	int g_iAmmoRefillReward[4];
 	int g_iAmmoRegenReward[4];
 	int g_iAnnounceArrival;
@@ -2225,6 +2225,7 @@ enum struct esShooter
 
 	float g_flActionDurationPassive;
 	float g_flAdrenalineTimePassive;
+	float g_flAmmoBoostPassive;
 	float g_flAttackBoostPassive;
 	float g_flCarrierChance;
 	float g_flCarrierDamageMultiplier;
@@ -2263,7 +2264,6 @@ enum struct esShooter
 
 	Handle g_hCharacterTimer;
 
-	int g_iAmmoBoostPassive;
 	int g_iAmmoRefillPassive;
 	int g_iAmmoRegenPassive;
 	int g_iBlazeHealthPassive;
@@ -2384,6 +2384,7 @@ enum struct esTank
 
 	float g_flActionDurationReward[4];
 	float g_flAdrenalineTimeReward[4];
+	float g_flAmmoBoostReward[4];
 	float g_flArmorDuration;
 	float g_flArmorPercentage;
 	float g_flArmorResistance[2];
@@ -2465,7 +2466,6 @@ enum struct esTank
 
 	int g_iAbilityCount;
 	int g_iAccessFlags;
-	int g_iAmmoBoostReward[4];
 	int g_iAmmoRefillReward[4];
 	int g_iAmmoRegenReward[4];
 	int g_iAnnounceArrival;
@@ -2656,6 +2656,7 @@ enum struct esSpecial
 
 	float g_flActionDurationReward[4];
 	float g_flAdrenalineTimeReward[4];
+	float g_flAmmoBoostReward[4];
 	float g_flArmorDuration;
 	float g_flArmorPercentage;
 	float g_flArmorResistance[2];
@@ -2731,7 +2732,6 @@ enum struct esSpecial
 	float g_flTransformDelay;
 	float g_flTransformDuration;
 
-	int g_iAmmoBoostReward[4];
 	int g_iAmmoRefillReward[4];
 	int g_iAmmoRegenReward[4];
 	int g_iAnnounceArrival;
@@ -2890,6 +2890,7 @@ enum struct esSurvivor
 
 	float g_flActionDurationPassive;
 	float g_flAdrenalineTimePassive;
+	float g_flAmmoBoostPassive;
 	float g_flAttackBoostPassive;
 	float g_flCarrierChance;
 	float g_flCarrierDamageMultiplier;
@@ -2924,7 +2925,6 @@ enum struct esSurvivor
 	float g_flSupplierPassive;
 	float g_flSwingRatePassive;
 
-	int g_iAmmoBoostPassive;
 	int g_iAmmoRefillPassive;
 	int g_iAmmoRegenPassive;
 	int g_iBlazeHealthPassive;
@@ -2983,6 +2983,7 @@ enum struct esWeapon
 
 	float g_flActionDurationPassive;
 	float g_flAdrenalineTimePassive;
+	float g_flAmmoBoostPassive;
 	float g_flAttackBoostPassive;
 	float g_flDamageBoostPassive;
 	float g_flDamageResistancePassive;
@@ -3011,7 +3012,6 @@ enum struct esWeapon
 	float g_flSupplierPassive;
 	float g_flSwingRatePassive;
 
-	int g_iAmmoBoostPassive;
 	int g_iAmmoRefillPassive;
 	int g_iAmmoRegenPassive;
 	int g_iBlazeHealthPassive;
@@ -3107,6 +3107,7 @@ enum struct esTankCache
 
 	float g_flActionDurationReward[4];
 	float g_flAdrenalineTimeReward[4];
+	float g_flAmmoBoostReward[4];
 	float g_flArmorDuration;
 	float g_flArmorPercentage;
 	float g_flArmorResistance[2];
@@ -3185,7 +3186,6 @@ enum struct esTankCache
 	float g_flTransformDelay;
 	float g_flTransformDuration;
 
-	int g_iAmmoBoostReward[4];
 	int g_iAmmoRefillReward[4];
 	int g_iAmmoRegenReward[4];
 	int g_iAnnounceArrival;
@@ -3351,6 +3351,7 @@ enum struct esSurvivorCache
 
 	float g_flActionDurationPassive;
 	float g_flAdrenalineTimePassive;
+	float g_flAmmoBoostPassive;
 	float g_flAttackBoostPassive;
 	float g_flCarrierChance;
 	float g_flCarrierDamageMultiplier;
@@ -3385,7 +3386,6 @@ enum struct esSurvivorCache
 	float g_flSupplierPassive;
 	float g_flSwingRatePassive;
 
-	int g_iAmmoBoostPassive;
 	int g_iAmmoRefillPassive;
 	int g_iAmmoRegenPassive;
 	int g_iBlazeHealthPassive;
@@ -3980,7 +3980,7 @@ public void OnGameFrame()
 	bool bDeveloper = false, bSpectator = false;
 #endif
 	bool bHuman = false, bWitch = false;
-	char sFinalName[64], sHealthBar[51], sHumanTag[128], sName[33], sSet[2][2], sSet2[2][2], sSet3[2][2], sTankName[64], sTypeName[10];
+	char sFinalName[64], sHealthBar[51], sHumanTag[128], sName[33], sSet[2][2], sSet2[2][2], sSet3[2][2], sTankName[64], sTankName2[64], sTypeName[10];
 	float flArmorPercentage = 0.0, flHealthPercentage = 0.0, flHealthPercentage2 = 0.0, flShieldPercentage = 0.0;
 	int iCount = 0, iTarget = 0, iHealth = 0, iMaxHealth = 0, iTotalHealth = 0, iType = 0;
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -4153,25 +4153,15 @@ public void OnGameFrame()
 					}
 
 					FormatEx(sTankName, sizeof sTankName, "%s #%i Name", sTypeName, iType);
+					FormatEx(sTankName2, sizeof sTankName2, "%s Name", sName);
 
-					if (sTankName[0] != '\0' && !TranslationPhraseExists(sTankName))
+					if (sTankName[0] != '\0' && TranslationPhraseExists(sTankName))
 					{
-						FormatEx(sTankName, sizeof sTankName, "%s Name", sName);
+						strcopy(sFinalName, sizeof sFinalName, sTankName);
 					}
-
-					if (sTankName[0] != '\0' && !TranslationPhraseExists(sTankName))
+					else if (sTankName2[0] != '\0' && TranslationPhraseExists(sTankName2))
 					{
-						FormatEx(sTankName, sizeof sTankName, "%s #%i", sTypeName, iType);
-					}
-
-					if (sTankName[0] != '\0' && !TranslationPhraseExists(sTankName))
-					{
-						strcopy(sTankName, sizeof sTankName, sName);
-					}
-
-					if (sTankName[0] == '\0' || !TranslationPhraseExists(sTankName))
-					{
-						FormatEx(sTankName, sizeof sTankName, "NoName%s", sTypeName);
+						strcopy(sFinalName, sizeof sFinalName, sTankName2);
 					}
 
 					switch (g_esInfectedCache[iTarget].g_iDisplayHealthType)
@@ -4180,34 +4170,34 @@ public void OnGameFrame()
 						{
 							switch (g_esInfectedCache[iTarget].g_iDisplayHealth)
 							{
-								case 1: PrintHintText(iPlayer, "%t", sTankName);
+								case 1: PrintHintText(iPlayer, "%t", sFinalName);
 								case 2: PrintHintText(iPlayer, "%i HP", iHealth);
 								case 3: PrintHintText(iPlayer, "%i/%i HP (%.0f%s)", iHealth, iTotalHealth, flHealthPercentage, "%%");
 								case 4: PrintHintText(iPlayer, "HP: |-<%s>-|", sHealthBar);
-								case 5: PrintHintText(iPlayer, "%t (%i HP)", sTankName, iHealth);
-								case 6: PrintHintText(iPlayer, "%t [%i/%i HP (%.0f%s)]", sTankName, iHealth, iTotalHealth, flHealthPercentage, "%%");
-								case 7: PrintHintText(iPlayer, "%t\nHP: |-<%s>-|", sTankName, sHealthBar);
+								case 5: PrintHintText(iPlayer, "%t (%i HP)", sFinalName, iHealth);
+								case 6: PrintHintText(iPlayer, "%t [%i/%i HP (%.0f%s)]", sFinalName, iHealth, iTotalHealth, flHealthPercentage, "%%");
+								case 7: PrintHintText(iPlayer, "%t\nHP: |-<%s>-|", sFinalName, sHealthBar);
 								case 8: PrintHintText(iPlayer, "%i HP\nHP: |-<%s>-|", iHealth, sHealthBar);
 								case 9: PrintHintText(iPlayer, "%i/%i HP (%.0f%s)\nHP: |-<%s>-|", iHealth, iTotalHealth, flHealthPercentage, "%%", sHealthBar);
-								case 10: PrintHintText(iPlayer, "%t (%i HP)\nHP: |-<%s>-|", sTankName, iHealth, sHealthBar);
-								case 11: PrintHintText(iPlayer, "%t [%i/%i HP (%.0f%s)]\nHP: |-<%s>-|", sTankName, iHealth, iTotalHealth, flHealthPercentage, "%%", sHealthBar);
+								case 10: PrintHintText(iPlayer, "%t (%i HP)\nHP: |-<%s>-|", sFinalName, iHealth, sHealthBar);
+								case 11: PrintHintText(iPlayer, "%t [%i/%i HP (%.0f%s)]\nHP: |-<%s>-|", sFinalName, iHealth, iTotalHealth, flHealthPercentage, "%%", sHealthBar);
 							}
 						}
 						case 2:
 						{
 							switch (g_esInfectedCache[iTarget].g_iDisplayHealth)
 							{
-								case 1: PrintCenterText(iPlayer, "%t", sTankName);
+								case 1: PrintCenterText(iPlayer, "%t", sFinalName);
 								case 2: PrintCenterText(iPlayer, "%i HP", iHealth);
 								case 3: PrintCenterText(iPlayer, "%i/%i HP (%.0f%s)", iHealth, iTotalHealth, flHealthPercentage, "%%");
 								case 4: PrintCenterText(iPlayer, "HP: |-<%s>-|", sHealthBar);
-								case 5: PrintCenterText(iPlayer, "%t (%i HP)", sTankName, iHealth);
-								case 6: PrintCenterText(iPlayer, "%t [%i/%i HP (%.0f%s)]", sTankName, iHealth, iTotalHealth, flHealthPercentage, "%%");
-								case 7: PrintCenterText(iPlayer, "%t\nHP: |-<%s>-|", sTankName, sHealthBar);
+								case 5: PrintCenterText(iPlayer, "%t (%i HP)", sFinalName, iHealth);
+								case 6: PrintCenterText(iPlayer, "%t [%i/%i HP (%.0f%s)]", sFinalName, iHealth, iTotalHealth, flHealthPercentage, "%%");
+								case 7: PrintCenterText(iPlayer, "%t\nHP: |-<%s>-|", sFinalName, sHealthBar);
 								case 8: PrintCenterText(iPlayer, "%i HP\nHP: |-<%s>-|", iHealth, sHealthBar);
 								case 9: PrintCenterText(iPlayer, "%i/%i HP (%.0f%s)\nHP: |-<%s>-|", iHealth, iTotalHealth, flHealthPercentage, "%%", sHealthBar);
-								case 10: PrintCenterText(iPlayer, "%t (%i HP)\nHP: |-<%s>-|", sTankName, iHealth, sHealthBar);
-								case 11: PrintCenterText(iPlayer, "%t [%i/%i HP (%.0f%s)]\nHP: |-<%s>-|", sTankName, iHealth, iTotalHealth, flHealthPercentage, "%%", sHealthBar);
+								case 10: PrintCenterText(iPlayer, "%t (%i HP)\nHP: |-<%s>-|", sFinalName, iHealth, sHealthBar);
+								case 11: PrintCenterText(iPlayer, "%t [%i/%i HP (%.0f%s)]\nHP: |-<%s>-|", sFinalName, iHealth, iTotalHealth, flHealthPercentage, "%%", sHealthBar);
 							}
 						}
 					}
@@ -7659,6 +7649,7 @@ void vCopySurvivorStats(int oldSurvivor, int newSurvivor)
 	g_esPlayer[newSurvivor].g_sLoopingVoiceline = g_esPlayer[oldSurvivor].g_sLoopingVoiceline;
 	g_esPlayer[newSurvivor].g_flActionDuration = g_esPlayer[oldSurvivor].g_flActionDuration;
 	g_esPlayer[newSurvivor].g_flAdrenalineTime = g_esPlayer[oldSurvivor].g_flAdrenalineTime;
+	g_esPlayer[newSurvivor].g_flAmmoBoost = g_esPlayer[oldSurvivor].g_flAmmoBoost;
 	g_esPlayer[newSurvivor].g_flAttackBoost = g_esPlayer[oldSurvivor].g_flAttackBoost;
 	g_esPlayer[newSurvivor].g_flDamageBoost = g_esPlayer[oldSurvivor].g_flDamageBoost;
 	g_esPlayer[newSurvivor].g_flDamageResistance = g_esPlayer[oldSurvivor].g_flDamageResistance;
@@ -7695,7 +7686,6 @@ void vCopySurvivorStats(int oldSurvivor, int newSurvivor)
 	g_esPlayer[newSurvivor].g_flSupplier = g_esPlayer[oldSurvivor].g_flSupplier;
 	g_esPlayer[newSurvivor].g_flSupplierCooldown = g_esPlayer[oldSurvivor].g_flSupplierCooldown;
 	g_esPlayer[newSurvivor].g_flSwingRate = g_esPlayer[oldSurvivor].g_flSwingRate;
-	g_esPlayer[newSurvivor].g_iAmmoBoost = g_esPlayer[oldSurvivor].g_iAmmoBoost;
 	g_esPlayer[newSurvivor].g_iAmmoRefill = g_esPlayer[oldSurvivor].g_iAmmoRefill;
 	g_esPlayer[newSurvivor].g_iAmmoRegen = g_esPlayer[oldSurvivor].g_iAmmoRegen;
 	g_esPlayer[newSurvivor].g_iBlazeHealth = g_esPlayer[oldSurvivor].g_iBlazeHealth;
@@ -8039,6 +8029,7 @@ void vResetSurvivorStats(int survivor, bool all)
 	g_esPlayer[survivor].g_sLoopingVoiceline[0] = '\0';
 	g_esPlayer[survivor].g_flActionDuration = 0.0;
 	g_esPlayer[survivor].g_flAdrenalineTime = 0.0;
+	g_esPlayer[survivor].g_flAmmoBoost = 0.0;
 	g_esPlayer[survivor].g_flAttackBoost = 0.0;
 	g_esPlayer[survivor].g_flDamageBoost = 0.0;
 	g_esPlayer[survivor].g_flDamageResistance = 0.0;
@@ -8074,7 +8065,6 @@ void vResetSurvivorStats(int survivor, bool all)
 	g_esPlayer[survivor].g_flSupplier = 0.0;
 	g_esPlayer[survivor].g_flSupplierCooldown = -1.0;
 	g_esPlayer[survivor].g_flSwingRate = 0.0;
-	g_esPlayer[survivor].g_iAmmoBoost = 0;
 	g_esPlayer[survivor].g_iAmmoRefill = 0;
 	g_esPlayer[survivor].g_iAmmoRegen = 0;
 	g_esPlayer[survivor].g_iBlazeHealth = 0;
@@ -9651,7 +9641,7 @@ void vChooseArrivalType(int tank, const char[] oldname, const char[] name, int m
 
 			if (mode >= 0 && bIsCustomTankSupported(tank))
 			{
-				char sPhrase[64], sSteamIDFinal[64], sName[33], sNote[64], sNoNote[64];
+				char sPhrase[64], sPhrase2[64], sFinalPhrase[64], sSteamIDFinal[64], sName[33], sNote[64], sNoNote[64];
 				FormatEx(sSteamIDFinal, sizeof sSteamIDFinal, "%s", (TranslationPhraseExists(g_esPlayer[tank].g_sSteamID32) ? g_esPlayer[tank].g_sSteamID32 : g_esPlayer[tank].g_sSteam3ID));
 				int iType = g_esTank[g_esPlayer[tank].g_iTankType].g_iRealType[0];
 
@@ -9669,23 +9659,18 @@ void vChooseArrivalType(int tank, const char[] oldname, const char[] name, int m
 				if (1 <= specType <= 6 && g_esTankCache[tank].g_iSpecialNote == 1)
 				{
 					FormatEx(sPhrase, sizeof sPhrase, "%s #%i Note", g_sSpecialNames[specType], iType);
+					FormatEx(sPhrase2, sizeof sPhrase2, "%s Note", sName);
 
-					if (sPhrase[0] != '\0' && !TranslationPhraseExists(sPhrase))
+					if (sPhrase[0] != '\0' && TranslationPhraseExists(sPhrase))
 					{
-						FormatEx(sPhrase, sizeof sPhrase, "%s Note", sName);
+						strcopy(sFinalPhrase, sizeof sFinalPhrase, sPhrase);
+					}
+					else if (sPhrase2[0] != '\0' && TranslationPhraseExists(sPhrase2))
+					{
+						strcopy(sFinalPhrase, sizeof sFinalPhrase, sPhrase2);
 					}
 
-					if (sPhrase[0] != '\0' && !TranslationPhraseExists(sPhrase))
-					{
-						FormatEx(sPhrase, sizeof sPhrase, "%s #%i", g_sSpecialNames[specType], iType);
-					}
-
-					if (sPhrase[0] != '\0' && !TranslationPhraseExists(sPhrase))
-					{
-						strcopy(sPhrase, sizeof sPhrase, sName);
-					}
-
-					FormatEx(sNote, sizeof sNote, "%s", ((bIsValidClient(tank, MT_CHECK_FAKECLIENT) && g_esTeammate[tank].g_iSpecialNote == 1 && sSteamIDFinal[0] != '\0') ? sSteamIDFinal : sPhrase));
+					FormatEx(sNote, sizeof sNote, "%s", ((bIsValidClient(tank, MT_CHECK_FAKECLIENT) && g_esTeammate[tank].g_iSpecialNote == 1 && sSteamIDFinal[0] != '\0') ? sSteamIDFinal : sFinalPhrase));
 					FormatEx(sNoNote, sizeof sNoNote, "NoNote%s", g_sSpecialNames[specType]);
 
 					bool bExists = TranslationPhraseExists(sNote);
@@ -9695,23 +9680,18 @@ void vChooseArrivalType(int tank, const char[] oldname, const char[] name, int m
 				else if (g_esTankCache[tank].g_iTankNote == 1)
 				{
 					FormatEx(sPhrase, sizeof sPhrase, "Tank #%i Note", iType);
+					FormatEx(sPhrase2, sizeof sPhrase2, "%s Note", sName);
 
-					if (sPhrase[0] != '\0' && !TranslationPhraseExists(sPhrase))
+					if (sPhrase[0] != '\0' && TranslationPhraseExists(sPhrase))
 					{
-						FormatEx(sPhrase, sizeof sPhrase, "%s Note", sName);
+						strcopy(sFinalPhrase, sizeof sFinalPhrase, sPhrase);
+					}
+					else if (sPhrase2[0] != '\0' && TranslationPhraseExists(sPhrase2))
+					{
+						strcopy(sFinalPhrase, sizeof sFinalPhrase, sPhrase2);
 					}
 
-					if (sPhrase[0] != '\0' && !TranslationPhraseExists(sPhrase))
-					{
-						FormatEx(sPhrase, sizeof sPhrase, "Tank #%i", iType);
-					}
-
-					if (sPhrase[0] != '\0' && !TranslationPhraseExists(sPhrase))
-					{
-						strcopy(sPhrase, sizeof sPhrase, sName);
-					}
-
-					FormatEx(sNote, sizeof sNote, "%s", ((bIsValidClient(tank, MT_CHECK_FAKECLIENT) && g_esPlayer[tank].g_iTankNote == 1 && sSteamIDFinal[0] != '\0') ? sSteamIDFinal : sPhrase));
+					FormatEx(sNote, sizeof sNote, "%s", ((bIsValidClient(tank, MT_CHECK_FAKECLIENT) && g_esPlayer[tank].g_iTankNote == 1 && sSteamIDFinal[0] != '\0') ? sSteamIDFinal : sFinalPhrase));
 					strcopy(sNoNote, sizeof sNoNote, "NoNote");
 
 					bool bExists = TranslationPhraseExists(sNote);
@@ -11927,8 +11907,8 @@ void vCacheTankSettings(int tank, int type = -1, bool abilitiesOnly = false, boo
 							g_esTankCache[tank].g_flActionDurationReward[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flActionDurationReward[iPos], g_esPlayer[tank].g_flActionDurationReward[iPos], g_esTankCache[tank].g_flActionDurationReward[iPos], g_esTankCache[tank].g_flActionDurationReward[iPos], 1);
 							g_esTankCache[tank].g_flAdrenalineTimeReward[iPos] = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flAdrenalineTimeReward[iPos], g_esTank[iType].g_flAdrenalineTimeReward[iPos], g_esSpecific.g_flAdrenalineTimeReward[iPos], g_esGeneral.g_flAdrenalineTimeReward[iPos], 1);
 							g_esTankCache[tank].g_flAdrenalineTimeReward[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flAdrenalineTimeReward[iPos], g_esPlayer[tank].g_flAdrenalineTimeReward[iPos], g_esTankCache[tank].g_flAdrenalineTimeReward[iPos], g_esTankCache[tank].g_flAdrenalineTimeReward[iPos], 1);
-							g_esTankCache[tank].g_iAmmoBoostReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iAmmoBoostReward[iPos], g_esTank[iType].g_iAmmoBoostReward[iPos], g_esSpecific.g_iAmmoBoostReward[iPos], g_esGeneral.g_iAmmoBoostReward[iPos], 1);
-							g_esTankCache[tank].g_iAmmoBoostReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iAmmoBoostReward[iPos], g_esPlayer[tank].g_iAmmoBoostReward[iPos], g_esTankCache[tank].g_iAmmoBoostReward[iPos], g_esTankCache[tank].g_iAmmoBoostReward[iPos], 1);
+							g_esTankCache[tank].g_flAmmoBoostReward[iPos] = flGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_flAmmoBoostReward[iPos], g_esTank[iType].g_flAmmoBoostReward[iPos], g_esSpecific.g_flAmmoBoostReward[iPos], g_esGeneral.g_flAmmoBoostReward[iPos], 1);
+							g_esTankCache[tank].g_flAmmoBoostReward[iPos] = flGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_flAmmoBoostReward[iPos], g_esPlayer[tank].g_flAmmoBoostReward[iPos], g_esTankCache[tank].g_flAmmoBoostReward[iPos], g_esTankCache[tank].g_flAmmoBoostReward[iPos], 1);
 							g_esTankCache[tank].g_iAmmoRefillReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iAmmoRefillReward[iPos], g_esTank[iType].g_iAmmoRefillReward[iPos], g_esSpecific.g_iAmmoRefillReward[iPos], g_esGeneral.g_iAmmoRefillReward[iPos], 1);
 							g_esTankCache[tank].g_iAmmoRefillReward[iPos] = iGetSubSettingValue(bAccess, bHuman, g_esTeammate[tank].g_iAmmoRefillReward[iPos], g_esPlayer[tank].g_iAmmoRefillReward[iPos], g_esTankCache[tank].g_iAmmoRefillReward[iPos], g_esTankCache[tank].g_iAmmoRefillReward[iPos], 1);
 							g_esTankCache[tank].g_iAmmoRegenReward[iPos] = iGetSubSettingValue(bAccess, true, g_esSpecial[iType].g_iAmmoRegenReward[iPos], g_esTank[iType].g_iAmmoRegenReward[iPos], g_esSpecific.g_iAmmoRegenReward[iPos], g_esGeneral.g_iAmmoRegenReward[iPos], 1);
@@ -12258,7 +12238,7 @@ void vCacheTankSettings(int tank, int type = -1, bool abilitiesOnly = false, boo
 						{
 							g_esTankCache[tank].g_flActionDurationReward[iPos] = 0.0;
 							g_esTankCache[tank].g_flAdrenalineTimeReward[iPos] = 0.0;
-							g_esTankCache[tank].g_iAmmoBoostReward[iPos] = 0;
+							g_esTankCache[tank].g_flAmmoBoostReward[iPos] = 0.0;
 							g_esTankCache[tank].g_iAmmoRefillReward[iPos] = 0;
 							g_esTankCache[tank].g_iAmmoRegenReward[iPos] = 0;
 							g_esTankCache[tank].g_flAttackBoostReward[iPos] = 0.0;
@@ -12628,8 +12608,8 @@ void vCacheTankSettings(int tank, int type = -1, bool abilitiesOnly = false, boo
 							g_esTankCache[tank].g_flActionDurationReward[iPos] = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flActionDurationReward[iPos], g_esTankCache[tank].g_flActionDurationReward[iPos], 1);
 							g_esTankCache[tank].g_flAdrenalineTimeReward[iPos] = flGetSettingValue(bAccess, true, g_esTank[iType].g_flAdrenalineTimeReward[iPos], g_esGeneral.g_flAdrenalineTimeReward[iPos], 1);
 							g_esTankCache[tank].g_flAdrenalineTimeReward[iPos] = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flAdrenalineTimeReward[iPos], g_esTankCache[tank].g_flAdrenalineTimeReward[iPos], 1);
-							g_esTankCache[tank].g_iAmmoBoostReward[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iAmmoBoostReward[iPos], g_esGeneral.g_iAmmoBoostReward[iPos], 1);
-							g_esTankCache[tank].g_iAmmoBoostReward[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iAmmoBoostReward[iPos], g_esTankCache[tank].g_iAmmoBoostReward[iPos], 1);
+							g_esTankCache[tank].g_flAmmoBoostReward[iPos] = flGetSettingValue(bAccess, true, g_esTank[iType].g_flAmmoBoostReward[iPos], g_esGeneral.g_flAmmoBoostReward[iPos], 1);
+							g_esTankCache[tank].g_flAmmoBoostReward[iPos] = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flAmmoBoostReward[iPos], g_esTankCache[tank].g_flAmmoBoostReward[iPos], 1);
 							g_esTankCache[tank].g_iAmmoRefillReward[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iAmmoRefillReward[iPos], g_esGeneral.g_iAmmoRefillReward[iPos], 1);
 							g_esTankCache[tank].g_iAmmoRefillReward[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iAmmoRefillReward[iPos], g_esTankCache[tank].g_iAmmoRefillReward[iPos], 1);
 							g_esTankCache[tank].g_iAmmoRegenReward[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iAmmoRegenReward[iPos], g_esGeneral.g_iAmmoRegenReward[iPos], 1);
@@ -12989,7 +12969,7 @@ void vCacheTankSettings(int tank, int type = -1, bool abilitiesOnly = false, boo
 						{
 							g_esTankCache[tank].g_flActionDurationReward[iPos] = 0.0;
 							g_esTankCache[tank].g_flAdrenalineTimeReward[iPos] = 0.0;
-							g_esTankCache[tank].g_iAmmoBoostReward[iPos] = 0;
+							g_esTankCache[tank].g_flAmmoBoostReward[iPos] = 0.0;
 							g_esTankCache[tank].g_iAmmoRefillReward[iPos] = 0;
 							g_esTankCache[tank].g_iAmmoRegenReward[iPos] = 0;
 							g_esTankCache[tank].g_flAttackBoostReward[iPos] = 0.0;
@@ -13278,6 +13258,8 @@ void vCacheSurvivorSettings(int survivor)
 			g_esSurvivorCache[survivor].g_flActionDurationPassive = flGetSettingValue(bValid, bHuman, g_esShooter[survivor].g_flActionDurationPassive, g_esSurvivorCache[survivor].g_flActionDurationPassive, 1);
 			g_esSurvivorCache[survivor].g_flAdrenalineTimePassive = flGetSettingValue(bValid, true, g_esSurvivor[iType].g_flAdrenalineTimePassive, g_esHuman.g_flAdrenalineTimePassive, 1);
 			g_esSurvivorCache[survivor].g_flAdrenalineTimePassive = flGetSettingValue(bValid, bHuman, g_esShooter[survivor].g_flAdrenalineTimePassive, g_esSurvivorCache[survivor].g_flAdrenalineTimePassive, 1);
+			g_esSurvivorCache[survivor].g_flAmmoBoostPassive = flGetSettingValue(bValid, true, g_esSurvivor[iType].g_flAmmoBoostPassive, g_esHuman.g_flAmmoBoostPassive, 1);
+			g_esSurvivorCache[survivor].g_flAmmoBoostPassive = flGetSettingValue(bValid, bHuman, g_esShooter[survivor].g_flAmmoBoostPassive, g_esSurvivorCache[survivor].g_flAmmoBoostPassive, 1);
 			g_esSurvivorCache[survivor].g_flAttackBoostPassive = flGetSettingValue(bValid, true, g_esSurvivor[iType].g_flAttackBoostPassive, g_esHuman.g_flAttackBoostPassive, 1);
 			g_esSurvivorCache[survivor].g_flAttackBoostPassive = flGetSettingValue(bValid, bHuman, g_esShooter[survivor].g_flAttackBoostPassive, g_esSurvivorCache[survivor].g_flAttackBoostPassive, 1);
 			g_esSurvivorCache[survivor].g_flDamageBoostPassive = flGetSettingValue(bValid, true, g_esSurvivor[iType].g_flDamageBoostPassive, g_esHuman.g_flDamageBoostPassive, 1);
@@ -13330,8 +13312,6 @@ void vCacheSurvivorSettings(int survivor)
 			g_esSurvivorCache[survivor].g_flSupplierPassive = flGetSettingValue(bValid, bHuman, g_esShooter[survivor].g_flSupplierPassive, g_esSurvivorCache[survivor].g_flSupplierPassive, 1);
 			g_esSurvivorCache[survivor].g_flSwingRatePassive = flGetSettingValue(bValid, true, g_esSurvivor[iType].g_flSwingRatePassive, g_esHuman.g_flSwingRatePassive, 1);
 			g_esSurvivorCache[survivor].g_flSwingRatePassive = flGetSettingValue(bValid, bHuman, g_esShooter[survivor].g_flSwingRatePassive, g_esSurvivorCache[survivor].g_flSwingRatePassive, 1);
-			g_esSurvivorCache[survivor].g_iAmmoBoostPassive = iGetSettingValue(bValid, true, g_esSurvivor[iType].g_iAmmoBoostPassive, g_esHuman.g_iAmmoBoostPassive, 1);
-			g_esSurvivorCache[survivor].g_iAmmoBoostPassive = iGetSettingValue(bValid, bHuman, g_esShooter[survivor].g_iAmmoBoostPassive, g_esSurvivorCache[survivor].g_iAmmoBoostPassive, 1);
 			g_esSurvivorCache[survivor].g_iAmmoRefillPassive = iGetSettingValue(bValid, true, g_esSurvivor[iType].g_iAmmoRefillPassive, g_esHuman.g_iAmmoRefillPassive, 1);
 			g_esSurvivorCache[survivor].g_iAmmoRefillPassive = iGetSettingValue(bValid, bHuman, g_esShooter[survivor].g_iAmmoRefillPassive, g_esSurvivorCache[survivor].g_iAmmoRefillPassive, 1);
 			g_esSurvivorCache[survivor].g_iAmmoRegenPassive = iGetSettingValue(bValid, true, g_esSurvivor[iType].g_iAmmoRegenPassive, g_esHuman.g_iAmmoRegenPassive, 1);
@@ -13409,6 +13389,7 @@ void vCacheSurvivorSettings(int survivor)
 			g_esSurvivorCache[survivor].g_sItemPassive[0] = '\0';
 			g_esSurvivorCache[survivor].g_flActionDurationPassive = 0.0;
 			g_esSurvivorCache[survivor].g_flAdrenalineTimePassive = 0.0;
+			g_esSurvivorCache[survivor].g_flAmmoBoostPassive = 0.0;
 			g_esSurvivorCache[survivor].g_flAttackBoostPassive = 0.0;
 			g_esSurvivorCache[survivor].g_flDamageBoostPassive = 0.0;
 			g_esSurvivorCache[survivor].g_flDamageResistancePassive = 0.0;
@@ -13436,7 +13417,6 @@ void vCacheSurvivorSettings(int survivor)
 			g_esSurvivorCache[survivor].g_flSpeedBoostPassive = 0.0;
 			g_esSurvivorCache[survivor].g_flSupplierPassive = 0.0;
 			g_esSurvivorCache[survivor].g_flSwingRatePassive = 0.0;
-			g_esSurvivorCache[survivor].g_iAmmoBoostPassive = 0;
 			g_esSurvivorCache[survivor].g_iAmmoRefillPassive = 0;
 			g_esSurvivorCache[survivor].g_iAmmoRegenPassive = 0;
 			g_esSurvivorCache[survivor].g_iBlazeHealthPassive = 0;
@@ -13756,6 +13736,7 @@ void vReadPlayerSettings(int player, const char[] subsection, const char[] key, 
 #if (MT_INCLUDE_PASSIVES == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 	g_esShooter[player].g_flActionDurationPassive = flGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "ActionDurationPassive", "Action Duration Passive", "Action_Duration_Passive", "actionduration", g_esShooter[player].g_flActionDurationPassive, value, -1.0, 99999.0);
 	g_esShooter[player].g_flAdrenalineTimePassive = flGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "AdrenalineTimePassive", "Adrenaline Time Passive", "Adrenaline_Time_Passive", "adrenaline", g_esShooter[player].g_flAdrenalineTimePassive, value, -1.0, 99999.0);
+	g_esShooter[player].g_flAmmoBoostPassive = flGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "AmmoBoostPassive", "Ammo Boost Passive", "Ammo_Boost_Passive", "ammoboost", g_esShooter[player].g_flAmmoBoostPassive, value, -1.0, 99999.0);
 	g_esShooter[player].g_flAttackBoostPassive = flGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "AttackBoostPassive", "Attack Boost Passive", "Attack_Boost_Passive", "attackboost", g_esShooter[player].g_flAttackBoostPassive, value, -1.0, 99999.0);
 	g_esShooter[player].g_flDamageBoostPassive = flGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "DamageBoostPassive", "Damage Boost Passive", "Damage_Boost_Passive", "dmgboost", g_esShooter[player].g_flDamageBoostPassive, value, -1.0, 99999.0);
 	g_esShooter[player].g_flDamageResistancePassive = flGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "DamageResistancePassive", "Damage Resistance Passive", "Damage_Resistance_Passive", "dmgres", g_esShooter[player].g_flDamageResistancePassive, value, -1.0, 99999.0);
@@ -13786,7 +13767,6 @@ void vReadPlayerSettings(int player, const char[] subsection, const char[] key, 
 	g_esShooter[player].g_iPassiveEnabled = iGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "PassiveEnabled", "Passive Enabled", "Passive_Enabled", "psenabled", g_esShooter[player].g_iPassiveEnabled, value, -2, 2147483647);
 	g_esShooter[player].g_iPassiveBots = iGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "PassiveBots", "Passive Bots", "Passive_Bots", "psbots", g_esShooter[player].g_iPassiveBots, value, -2, 2147483647);
 	g_esShooter[player].g_iPassiveNotify = iGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "PassiveNotify", "Passive Notify", "Passive_Notify", "psnotify", g_esShooter[player].g_iPassiveNotify, value, -1, 1);
-	g_esShooter[player].g_iAmmoBoostPassive = iGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "AmmoBoostPassive", "Ammo Boost Passive", "Ammo_Boost_Passive", "ammoboost", g_esShooter[player].g_iAmmoBoostPassive, value, -1, 1);
 	g_esShooter[player].g_iAmmoRefillPassive = iGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "AmmoRefillPassive", "Ammo Refill Passive", "Ammo_Refill_Passive", "ammorefill", g_esShooter[player].g_iAmmoRefillPassive, value, -1, 1);
 	g_esShooter[player].g_iAmmoRegenPassive = iGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "AmmoRegenPassive", "Ammo Regen Passive", "Ammo_Regen_Passive", "ammoregen", g_esShooter[player].g_iAmmoRegenPassive, value, -1, 99999);
 	g_esShooter[player].g_iBlazeHealthPassive = iGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "BlazeHealthPassive", "Blaze Health Passive", "Blaze_Health_Passive", "blaze", g_esShooter[player].g_iBlazeHealthPassive, value, -1, MT_MAXHEALTH);
@@ -13940,6 +13920,7 @@ void vReadPlayerSettings(int player, const char[] subsection, const char[] key, 
 				g_esPlayer[player].g_flRewardPercentage[iPos] = flGetClampedValue(key, "RewardPercentage", "Reward Percentage", "Reward_Percentage", "percent", g_esPlayer[player].g_flRewardPercentage[iPos], sSet[iPos], -1.0, 100.0);
 				g_esPlayer[player].g_flActionDurationReward[iPos] = flGetClampedValue(key, "ActionDurationReward", "Action Duration Reward", "Action_Duration_Reward", "actionduration", g_esPlayer[player].g_flActionDurationReward[iPos], sSet[iPos], -1.0, 99999.0);
 				g_esPlayer[player].g_flAdrenalineTimeReward[iPos] = flGetClampedValue(key, "AdrenalineTimeReward", "Adrenaline Time Reward", "Adrenaline_Time_Reward", "adrenaline", g_esPlayer[player].g_flAdrenalineTimeReward[iPos], sSet[iPos], -1.0, 99999.0);
+				g_esPlayer[player].g_flAmmoBoostReward[iPos] = flGetClampedValue(key, "AmmoBoostReward", "Ammo Boost Reward", "Ammo_Boost_Reward", "ammoboost", g_esPlayer[player].g_flAmmoBoostReward[iPos], sSet[iPos], -1.0, 99999.0);
 				g_esPlayer[player].g_flAttackBoostReward[iPos] = flGetClampedValue(key, "AttackBoostReward", "Attack Boost Reward", "Attack_Boost_Reward", "attackboost", g_esPlayer[player].g_flAttackBoostReward[iPos], sSet[iPos], -1.0, 99999.0);
 				g_esPlayer[player].g_flDamageBoostReward[iPos] = flGetClampedValue(key, "DamageBoostReward", "Damage Boost Reward", "Damage_Boost_Reward", "dmgboost", g_esPlayer[player].g_flDamageBoostReward[iPos], sSet[iPos], -1.0, 99999.0);
 				g_esPlayer[player].g_flDamageResistanceReward[iPos] = flGetClampedValue(key, "DamageResistanceReward", "Damage Resistance Reward", "Damage_Resistance_Reward", "dmgres", g_esPlayer[player].g_flDamageResistanceReward[iPos], sSet[iPos], -1.0, 1.0);
@@ -13973,7 +13954,6 @@ void vReadPlayerSettings(int player, const char[] subsection, const char[] key, 
 				g_esPlayer[player].g_iRewardEffect[iPos] = iGetClampedValue(key, "RewardEffect", "Reward Effect", "Reward_Effect", "effect", g_esPlayer[player].g_iRewardEffect[iPos], sSet[iPos], -1, 15);
 				g_esPlayer[player].g_iRewardNotify[iPos] = iGetClampedValue(key, "RewardNotify", "Reward Notify", "Reward_Notify", "rnotify", g_esPlayer[player].g_iRewardNotify[iPos], sSet[iPos], -1, 3);
 				g_esPlayer[player].g_iRewardVisual[iPos] = iGetClampedValue(key, "RewardVisual", "Reward Visual", "Reward_Visual", "visual", g_esPlayer[player].g_iRewardVisual[iPos], sSet[iPos], -1, 127);
-				g_esPlayer[player].g_iAmmoBoostReward[iPos] = iGetClampedValue(key, "AmmoBoostReward", "Ammo Boost Reward", "Ammo_Boost_Reward", "ammoboost", g_esPlayer[player].g_iAmmoBoostReward[iPos], sSet[iPos], -1, 1);
 				g_esPlayer[player].g_iAmmoRefillReward[iPos] = iGetClampedValue(key, "AmmoRefillReward", "Ammo Refill Reward", "Ammo_Refill_Reward", "ammorefill", g_esPlayer[player].g_iAmmoRefillReward[iPos], sSet[iPos], -1, 1);
 				g_esPlayer[player].g_iAmmoRegenReward[iPos] = iGetClampedValue(key, "AmmoRegenReward", "Ammo Regen Reward", "Ammo_Regen_Reward", "ammoregen", g_esPlayer[player].g_iAmmoRegenReward[iPos], sSet[iPos], -1, 99999);
 				g_esPlayer[player].g_iBlazeHealthReward[iPos] = iGetClampedValue(key, "BlazeHealthReward", "Blaze Health Reward", "Blaze_Health_Reward", "blaze", g_esPlayer[player].g_iBlazeHealthReward[iPos], sSet[iPos], -1, MT_MAXHEALTH);
@@ -14402,6 +14382,7 @@ void vReadSpecialSettings(int type, int mode, const char[] subsection, const cha
 						g_esSpecial[iIndex].g_flRewardPercentage[iPos] = flGetClampedValue(key, "RewardPercentage", "Reward Percentage", "Reward_Percentage", "percent", g_esSpecial[iIndex].g_flRewardPercentage[iPos], sSet[iPos], -1.0, 100.0);
 						g_esSpecial[iIndex].g_flActionDurationReward[iPos] = flGetClampedValue(key, "ActionDurationReward", "Action Duration Reward", "Action_Duration_Reward", "actionduration", g_esSpecial[iIndex].g_flActionDurationReward[iPos], sSet[iPos], -1.0, 99999.0);
 						g_esSpecial[iIndex].g_flAdrenalineTimeReward[iPos] = flGetClampedValue(key, "AdrenalineTimeReward", "Adrenaline Time Reward", "Adrenaline_Time_Reward", "adrenaline", g_esSpecial[iIndex].g_flAdrenalineTimeReward[iPos], sSet[iPos], -1.0, 99999.0);
+						g_esSpecial[iIndex].g_flAmmoBoostReward[iPos] = flGetClampedValue(key, "AmmoBoostReward", "Ammo Boost Reward", "Ammo_Boost_Reward", "ammoboost", g_esSpecial[iIndex].g_flAmmoBoostReward[iPos], sSet[iPos], -1.0, 99999.0);
 						g_esSpecial[iIndex].g_flAttackBoostReward[iPos] = flGetClampedValue(key, "AttackBoostReward", "Attack Boost Reward", "Attack_Boost_Reward", "attackboost", g_esSpecial[iIndex].g_flAttackBoostReward[iPos], sSet[iPos], -1.0, 99999.0);
 						g_esSpecial[iIndex].g_flDamageBoostReward[iPos] = flGetClampedValue(key, "DamageBoostReward", "Damage Boost Reward", "Damage_Boost_Reward", "dmgboost", g_esSpecial[iIndex].g_flDamageBoostReward[iPos], sSet[iPos], -1.0, 99999.0);
 						g_esSpecial[iIndex].g_flDamageResistanceReward[iPos] = flGetClampedValue(key, "DamageResistanceReward", "Damage Resistance Reward", "Damage_Resistance_Reward", "dmgres", g_esSpecial[iIndex].g_flDamageResistanceReward[iPos], sSet[iPos], -1.0, 1.0);
@@ -14435,7 +14416,6 @@ void vReadSpecialSettings(int type, int mode, const char[] subsection, const cha
 						g_esSpecial[iIndex].g_iRewardEffect[iPos] = iGetClampedValue(key, "RewardEffect", "Reward Effect", "Reward_Effect", "effect", g_esSpecial[iIndex].g_iRewardEffect[iPos], sSet[iPos], -1, 15);
 						g_esSpecial[iIndex].g_iRewardNotify[iPos] = iGetClampedValue(key, "RewardNotify", "Reward Notify", "Reward_Notify", "rnotify", g_esSpecial[iIndex].g_iRewardNotify[iPos], sSet[iPos], -1, 3);
 						g_esSpecial[iIndex].g_iRewardVisual[iPos] = iGetClampedValue(key, "RewardVisual", "Reward Visual", "Reward_Visual", "visual", g_esSpecial[iIndex].g_iRewardVisual[iPos], sSet[iPos], -1, 127);
-						g_esSpecial[iIndex].g_iAmmoBoostReward[iPos] = iGetClampedValue(key, "AmmoBoostReward", "Ammo Boost Reward", "Ammo_Boost_Reward", "ammoboost", g_esSpecial[iIndex].g_iAmmoBoostReward[iPos], sSet[iPos], -1, 1);
 						g_esSpecial[iIndex].g_iAmmoRefillReward[iPos] = iGetClampedValue(key, "AmmoRefillReward", "Ammo Refill Reward", "Ammo_Refill_Reward", "ammorefill", g_esSpecial[iIndex].g_iAmmoRefillReward[iPos], sSet[iPos], -1, 1);
 						g_esSpecial[iIndex].g_iAmmoRegenReward[iPos] = iGetClampedValue(key, "AmmoRegenReward", "Ammo Regen Reward", "Ammo_Regen_Reward", "ammoregen", g_esSpecial[iIndex].g_iAmmoRegenReward[iPos], sSet[iPos], -1, 99999);
 						g_esSpecial[iIndex].g_iBlazeHealthReward[iPos] = iGetClampedValue(key, "BlazeHealthReward", "Blaze Health Reward", "Blaze_Health_Reward", "blaze", g_esSpecial[iIndex].g_iBlazeHealthReward[iPos], sSet[iPos], -1, MT_MAXHEALTH);
@@ -14894,6 +14874,7 @@ void vReadSpecificSettings(int mode, const char[] section, const char[] subsecti
 #if (MT_INCLUDE_PASSIVES == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 						g_esSurvivor[iIndex].g_flActionDurationPassive = flGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "ActionDurationPassive", "Action Duration Passive", "Action_Duration_Passive", "actionduration", g_esSurvivor[iIndex].g_flActionDurationPassive, value, -1.0, 99999.0);
 						g_esSurvivor[iIndex].g_flAdrenalineTimePassive = flGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "AdrenalineTimePassive", "Adrenaline Time Passive", "Adrenaline_Time_Passive", "adrenaline", g_esSurvivor[iIndex].g_flAdrenalineTimePassive, value, -1.0, 99999.0);
+						g_esSurvivor[iIndex].g_flAmmoBoostPassive = flGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "AmmoBoostPassive", "Ammo Boost Passive", "Ammo_Boost_Passive", "ammoboost", g_esSurvivor[iIndex].g_flAmmoBoostPassive, value, -1.0, 99999.0);
 						g_esSurvivor[iIndex].g_flAttackBoostPassive = flGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "AttackBoostPassive", "Attack Boost Passive", "Attack_Boost_Passive", "attackboost", g_esSurvivor[iIndex].g_flAttackBoostPassive, value, -1.0, 99999.0);
 						g_esSurvivor[iIndex].g_flDamageBoostPassive = flGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "DamageBoostPassive", "Damage Boost Passive", "Damage_Boost_Passive", "dmgboost", g_esSurvivor[iIndex].g_flDamageBoostPassive, value, -1.0, 99999.0);
 						g_esSurvivor[iIndex].g_flDamageResistancePassive = flGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "DamageResistancePassive", "Damage Resistance Passive", "Damage_Resistance_Passive", "dmgres", g_esSurvivor[iIndex].g_flDamageResistancePassive, value, -1.0, 99999.0);
@@ -14924,7 +14905,6 @@ void vReadSpecificSettings(int mode, const char[] section, const char[] subsecti
 						g_esSurvivor[iIndex].g_iPassiveEnabled = iGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "PassiveEnabled", "Passive Enabled", "Passive_Enabled", "psenabled", g_esSurvivor[iIndex].g_iPassiveEnabled, value, -2, 2147483647);
 						g_esSurvivor[iIndex].g_iPassiveBots = iGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "PassiveBots", "Passive Bots", "Passive_Bots", "psbots", g_esSurvivor[iIndex].g_iPassiveBots, value, -2, 2147483647);
 						g_esSurvivor[iIndex].g_iPassiveNotify = iGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "PassiveNotify", "Passive Notify", "Passive_Notify", "psnotify", g_esSurvivor[iIndex].g_iPassiveNotify, value, -1, 1);
-						g_esSurvivor[iIndex].g_iAmmoBoostPassive = iGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "AmmoBoostPassive", "Ammo Boost Passive", "Ammo_Boost_Passive", "ammoboost", g_esSurvivor[iIndex].g_iAmmoBoostPassive, value, -1, 1);
 						g_esSurvivor[iIndex].g_iAmmoRefillPassive = iGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "AmmoRefillPassive", "Ammo Refill Passive", "Ammo_Refill_Passive", "ammorefill", g_esSurvivor[iIndex].g_iAmmoRefillPassive, value, -1, 1);
 						g_esSurvivor[iIndex].g_iAmmoRegenPassive = iGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "AmmoRegenPassive", "Ammo Regen Passive", "Ammo_Regen_Passive", "ammoregen", g_esSurvivor[iIndex].g_iAmmoRegenPassive, value, -1, 99999);
 						g_esSurvivor[iIndex].g_iBlazeHealthPassive = iGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "BlazeHealthPassive", "Blaze Health Passive", "Blaze_Health_Passive", "blaze", g_esSurvivor[iIndex].g_iBlazeHealthPassive, value, -1, MT_MAXHEALTH);
@@ -14990,6 +14970,7 @@ void vReadSpecificSettings(int mode, const char[] section, const char[] subsecti
 						g_esWeapon[iIndex].g_iWeaponCharacter = iGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "WeaponCharacter", "Weapon Character", "Weapon_Character", "weaponchar", g_esWeapon[iIndex].g_iWeaponCharacter, value, -1, 7);
 						g_esWeapon[iIndex].g_flActionDurationPassive = flGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "ActionDurationPassive", "Action Duration Passive", "Action_Duration_Passive", "actionduration", g_esWeapon[iIndex].g_flActionDurationPassive, value, -1.0, 99999.0);
 						g_esWeapon[iIndex].g_flAdrenalineTimePassive = flGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "AdrenalineTimePassive", "Adrenaline Time Passive", "Adrenaline_Time_Passive", "adrenaline", g_esWeapon[iIndex].g_flAdrenalineTimePassive, value, -1.0, 99999.0);
+						g_esWeapon[iIndex].g_flAmmoBoostPassive = flGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "AmmoBoostPassive", "Ammo Boost Passive", "Ammo_Boost_Passive", "ammoboost", g_esWeapon[iIndex].g_flAmmoBoostPassive, value, -1.0, 99999.0);
 						g_esWeapon[iIndex].g_flAttackBoostPassive = flGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "AttackBoostPassive", "Attack Boost Passive", "Attack_Boost_Passive", "attackboost", g_esWeapon[iIndex].g_flAttackBoostPassive, value, -1.0, 99999.0);
 						g_esWeapon[iIndex].g_flDamageBoostPassive = flGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "DamageBoostPassive", "Damage Boost Passive", "Damage_Boost_Passive", "dmgboost", g_esWeapon[iIndex].g_flDamageBoostPassive, value, -1.0, 99999.0);
 						g_esWeapon[iIndex].g_flDamageResistancePassive = flGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "DamageResistancePassive", "Damage Resistance Passive", "Damage_Resistance_Passive", "dmgres", g_esWeapon[iIndex].g_flDamageResistancePassive, value, -1.0, 99999.0);
@@ -15021,7 +15002,6 @@ void vReadSpecificSettings(int mode, const char[] section, const char[] subsecti
 						g_esWeapon[iIndex].g_iPassiveBots = iGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "PassiveBots", "Passive Bots", "Passive_Bots", "psbots", g_esWeapon[iIndex].g_iPassiveBots, value, -2, 2147483647);
 						g_esWeapon[iIndex].g_iPassiveNotify = iGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "PassiveNotify", "Passive Notify", "Passive_Notify", "psnotify", g_esWeapon[iIndex].g_iPassiveNotify, value, -1, 1);
 						g_esWeapon[iIndex].g_iStackPassives = iGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "StackPassives", "Stack Passives", "Stack_Passives", "psstack", g_esWeapon[iIndex].g_iStackPassives, value, -2, 2147483647);
-						g_esWeapon[iIndex].g_iAmmoBoostPassive = iGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "AmmoBoostPassive", "Ammo Boost Passive", "Ammo_Boost_Passive", "ammoboost", g_esWeapon[iIndex].g_iAmmoBoostPassive, value, -1, 1);
 						g_esWeapon[iIndex].g_iAmmoRefillPassive = iGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "AmmoRefillPassive", "Ammo Refill Passive", "Ammo_Refill_Passive", "ammorefill", g_esWeapon[iIndex].g_iAmmoRefillPassive, value, -1, 1);
 						g_esWeapon[iIndex].g_iAmmoRegenPassive = iGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "AmmoRegenPassive", "Ammo Regen Passive", "Ammo_Regen_Passive", "ammoregen", g_esWeapon[iIndex].g_iAmmoRegenPassive, value, -1, 99999);
 						g_esWeapon[iIndex].g_iBlazeHealthPassive = iGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "BlazeHealthPassive", "Blaze Health Passive", "Blaze_Health_Passive", "blaze", g_esWeapon[iIndex].g_iBlazeHealthPassive, value, -1, MT_MAXHEALTH);
@@ -15080,6 +15060,7 @@ void vReadSpecificSettings(int mode, const char[] section, const char[] subsecti
 						g_esSpecific.g_flRewardPercentage[iPos] = flGetClampedValue(key, "RewardPercentage", "Reward Percentage", "Reward_Percentage", "percent", g_esSpecific.g_flRewardPercentage[iPos], sSet[iPos], -1.0, 100.0);
 						g_esSpecific.g_flActionDurationReward[iPos] = flGetClampedValue(key, "ActionDurationReward", "Action Duration Reward", "Action_Duration_Reward", "actionduration", g_esSpecific.g_flActionDurationReward[iPos], sSet[iPos], -1.0, 99999.0);
 						g_esSpecific.g_flAdrenalineTimeReward[iPos] = flGetClampedValue(key, "AdrenalineTimeReward", "Adrenaline Time Reward", "Adrenaline_Time_Reward", "adrenaline", g_esSpecific.g_flAdrenalineTimeReward[iPos], sSet[iPos], -1.0, 99999.0);
+						g_esSpecific.g_flAmmoBoostReward[iPos] = flGetClampedValue(key, "AmmoBoostReward", "Ammo Boost Reward", "Ammo_Boost_Reward", "ammoboost", g_esSpecific.g_flAmmoBoostReward[iPos], sSet[iPos], -1.0, 99999.0);
 						g_esSpecific.g_flAttackBoostReward[iPos] = flGetClampedValue(key, "AttackBoostReward", "Attack Boost Reward", "Attack_Boost_Reward", "attackboost", g_esSpecific.g_flAttackBoostReward[iPos], sSet[iPos], -1.0, 99999.0);
 						g_esSpecific.g_flDamageBoostReward[iPos] = flGetClampedValue(key, "DamageBoostReward", "Damage Boost Reward", "Damage_Boost_Reward", "dmgboost", g_esSpecific.g_flDamageBoostReward[iPos], sSet[iPos], -1.0, 99999.0);
 						g_esSpecific.g_flDamageResistanceReward[iPos] = flGetClampedValue(key, "DamageResistanceReward", "Damage Resistance Reward", "Damage_Resistance_Reward", "dmgres", g_esSpecific.g_flDamageResistanceReward[iPos], sSet[iPos], -1.0, 1.0);
@@ -15113,7 +15094,6 @@ void vReadSpecificSettings(int mode, const char[] section, const char[] subsecti
 						g_esSpecific.g_iRewardEffect[iPos] = iGetClampedValue(key, "RewardEffect", "Reward Effect", "Reward_Effect", "effect", g_esSpecific.g_iRewardEffect[iPos], sSet[iPos], -1, 15);
 						g_esSpecific.g_iRewardNotify[iPos] = iGetClampedValue(key, "RewardNotify", "Reward Notify", "Reward_Notify", "rnotify", g_esSpecific.g_iRewardNotify[iPos], sSet[iPos], -1, 3);
 						g_esSpecific.g_iRewardVisual[iPos] = iGetClampedValue(key, "RewardVisual", "Reward Visual", "Reward_Visual", "visual", g_esSpecific.g_iRewardVisual[iPos], sSet[iPos], -1, 127);
-						g_esSpecific.g_iAmmoBoostReward[iPos] = iGetClampedValue(key, "AmmoBoostReward", "Ammo Boost Reward", "Ammo_Boost_Reward", "ammoboost", g_esSpecific.g_iAmmoBoostReward[iPos], sSet[iPos], -1, 1);
 						g_esSpecific.g_iAmmoRefillReward[iPos] = iGetClampedValue(key, "AmmoRefillReward", "Ammo Refill Reward", "Ammo_Refill_Reward", "ammorefill", g_esSpecific.g_iAmmoRefillReward[iPos], sSet[iPos], -1, 1);
 						g_esSpecific.g_iAmmoRegenReward[iPos] = iGetClampedValue(key, "AmmoRegenReward", "Ammo Regen Reward", "Ammo_Regen_Reward", "ammoregen", g_esSpecific.g_iAmmoRegenReward[iPos], sSet[iPos], -1, 99999);
 						g_esSpecific.g_iBlazeHealthReward[iPos] = iGetClampedValue(key, "BlazeHealthReward", "Blaze Health Reward", "Blaze_Health_Reward", "blaze", g_esSpecific.g_iBlazeHealthReward[iPos], sSet[iPos], -1, MT_MAXHEALTH);
@@ -15400,6 +15380,7 @@ void vReadTankSettings(int type, int mode, const char[] subsection, const char[]
 					g_esTank[iIndex].g_flRewardPercentage[iPos] = flGetClampedValue(key, "RewardPercentage", "Reward Percentage", "Reward_Percentage", "percent", g_esTank[iIndex].g_flRewardPercentage[iPos], sSet[iPos], -1.0, 100.0);
 					g_esTank[iIndex].g_flActionDurationReward[iPos] = flGetClampedValue(key, "ActionDurationReward", "Action Duration Reward", "Action_Duration_Reward", "actionduration", g_esTank[iIndex].g_flActionDurationReward[iPos], sSet[iPos], -1.0, 99999.0);
 					g_esTank[iIndex].g_flAdrenalineTimeReward[iPos] = flGetClampedValue(key, "AdrenalineTimeReward", "Adrenaline Time Reward", "Adrenaline_Time_Reward", "adrenaline", g_esTank[iIndex].g_flAdrenalineTimeReward[iPos], sSet[iPos], -1.0, 99999.0);
+					g_esTank[iIndex].g_flAmmoBoostReward[iPos] = flGetClampedValue(key, "AmmoBoostReward", "Ammo Boost Reward", "Ammo_Boost_Reward", "ammoboost", g_esTank[iIndex].g_flAmmoBoostReward[iPos], sSet[iPos], -1.0, 99999.0);
 					g_esTank[iIndex].g_flAttackBoostReward[iPos] = flGetClampedValue(key, "AttackBoostReward", "Attack Boost Reward", "Attack_Boost_Reward", "attackboost", g_esTank[iIndex].g_flAttackBoostReward[iPos], sSet[iPos], -1.0, 99999.0);
 					g_esTank[iIndex].g_flDamageBoostReward[iPos] = flGetClampedValue(key, "DamageBoostReward", "Damage Boost Reward", "Damage_Boost_Reward", "dmgboost", g_esTank[iIndex].g_flDamageBoostReward[iPos], sSet[iPos], -1.0, 99999.0);
 					g_esTank[iIndex].g_flDamageResistanceReward[iPos] = flGetClampedValue(key, "DamageResistanceReward", "Damage Resistance Reward", "Damage_Resistance_Reward", "dmgres", g_esTank[iIndex].g_flDamageResistanceReward[iPos], sSet[iPos], -1.0, 1.0);
@@ -15433,7 +15414,6 @@ void vReadTankSettings(int type, int mode, const char[] subsection, const char[]
 					g_esTank[iIndex].g_iRewardEffect[iPos] = iGetClampedValue(key, "RewardEffect", "Reward Effect", "Reward_Effect", "effect", g_esTank[iIndex].g_iRewardEffect[iPos], sSet[iPos], -1, 15);
 					g_esTank[iIndex].g_iRewardNotify[iPos] = iGetClampedValue(key, "RewardNotify", "Reward Notify", "Reward_Notify", "rnotify", g_esTank[iIndex].g_iRewardNotify[iPos], sSet[iPos], -1, 3);
 					g_esTank[iIndex].g_iRewardVisual[iPos] = iGetClampedValue(key, "RewardVisual", "Reward Visual", "Reward_Visual", "visual", g_esTank[iIndex].g_iRewardVisual[iPos], sSet[iPos], -1, 127);
-					g_esTank[iIndex].g_iAmmoBoostReward[iPos] = iGetClampedValue(key, "AmmoBoostReward", "Ammo Boost Reward", "Ammo_Boost_Reward", "ammoboost", g_esTank[iIndex].g_iAmmoBoostReward[iPos], sSet[iPos], -1, 1);
 					g_esTank[iIndex].g_iAmmoRefillReward[iPos] = iGetClampedValue(key, "AmmoRefillReward", "Ammo Refill Reward", "Ammo_Refill_Reward", "ammorefill", g_esTank[iIndex].g_iAmmoRefillReward[iPos], sSet[iPos], -1, 1);
 					g_esTank[iIndex].g_iAmmoRegenReward[iPos] = iGetClampedValue(key, "AmmoRegenReward", "Ammo Regen Reward", "Ammo_Regen_Reward", "ammoregen", g_esTank[iIndex].g_iAmmoRegenReward[iPos], sSet[iPos], -1, 99999);
 					g_esTank[iIndex].g_iBlazeHealthReward[iPos] = iGetClampedValue(key, "BlazeHealthReward", "Blaze Health Reward", "Blaze_Health_Reward", "blaze", g_esTank[iIndex].g_iBlazeHealthReward[iPos], sSet[iPos], -1, MT_MAXHEALTH);
@@ -15793,6 +15773,7 @@ void vReadTeammateSettings(int special, int mode, const char[] subsection, const
 				g_esTeammate[special].g_flRewardPercentage[iPos] = flGetClampedValue(key, "RewardPercentage", "Reward Percentage", "Reward_Percentage", "percent", g_esTeammate[special].g_flRewardPercentage[iPos], sSet[iPos], -1.0, 100.0);
 				g_esTeammate[special].g_flActionDurationReward[iPos] = flGetClampedValue(key, "ActionDurationReward", "Action Duration Reward", "Action_Duration_Reward", "actionduration", g_esTeammate[special].g_flActionDurationReward[iPos], sSet[iPos], -1.0, 99999.0);
 				g_esTeammate[special].g_flAdrenalineTimeReward[iPos] = flGetClampedValue(key, "AdrenalineTimeReward", "Adrenaline Time Reward", "Adrenaline_Time_Reward", "adrenaline", g_esTeammate[special].g_flAdrenalineTimeReward[iPos], sSet[iPos], -1.0, 99999.0);
+				g_esTeammate[special].g_flAmmoBoostReward[iPos] = flGetClampedValue(key, "AmmoBoostReward", "Ammo Boost Reward", "Ammo_Boost_Reward", "ammoboost", g_esTeammate[special].g_flAmmoBoostReward[iPos], sSet[iPos], -1.0, 99999.0);
 				g_esTeammate[special].g_flAttackBoostReward[iPos] = flGetClampedValue(key, "AttackBoostReward", "Attack Boost Reward", "Attack_Boost_Reward", "attackboost", g_esTeammate[special].g_flAttackBoostReward[iPos], sSet[iPos], -1.0, 99999.0);
 				g_esTeammate[special].g_flDamageBoostReward[iPos] = flGetClampedValue(key, "DamageBoostReward", "Damage Boost Reward", "Damage_Boost_Reward", "dmgboost", g_esTeammate[special].g_flDamageBoostReward[iPos], sSet[iPos], -1.0, 99999.0);
 				g_esTeammate[special].g_flDamageResistanceReward[iPos] = flGetClampedValue(key, "DamageResistanceReward", "Damage Resistance Reward", "Damage_Resistance_Reward", "dmgres", g_esTeammate[special].g_flDamageResistanceReward[iPos], sSet[iPos], -1.0, 1.0);
@@ -15826,7 +15807,6 @@ void vReadTeammateSettings(int special, int mode, const char[] subsection, const
 				g_esTeammate[special].g_iRewardEffect[iPos] = iGetClampedValue(key, "RewardEffect", "Reward Effect", "Reward_Effect", "effect", g_esTeammate[special].g_iRewardEffect[iPos], sSet[iPos], -1, 15);
 				g_esTeammate[special].g_iRewardNotify[iPos] = iGetClampedValue(key, "RewardNotify", "Reward Notify", "Reward_Notify", "rnotify", g_esTeammate[special].g_iRewardNotify[iPos], sSet[iPos], -1, 3);
 				g_esTeammate[special].g_iRewardVisual[iPos] = iGetClampedValue(key, "RewardVisual", "Reward Visual", "Reward_Visual", "visual", g_esTeammate[special].g_iRewardVisual[iPos], sSet[iPos], -1, 127);
-				g_esTeammate[special].g_iAmmoBoostReward[iPos] = iGetClampedValue(key, "AmmoBoostReward", "Ammo Boost Reward", "Ammo_Boost_Reward", "ammoboost", g_esTeammate[special].g_iAmmoBoostReward[iPos], sSet[iPos], -1, 1);
 				g_esTeammate[special].g_iAmmoRefillReward[iPos] = iGetClampedValue(key, "AmmoRefillReward", "Ammo Refill Reward", "Ammo_Refill_Reward", "ammorefill", g_esTeammate[special].g_iAmmoRefillReward[iPos], sSet[iPos], -1, 1);
 				g_esTeammate[special].g_iAmmoRegenReward[iPos] = iGetClampedValue(key, "AmmoRegenReward", "Ammo Regen Reward", "Ammo_Regen_Reward", "ammoregen", g_esTeammate[special].g_iAmmoRegenReward[iPos], sSet[iPos], -1, 99999);
 				g_esTeammate[special].g_iBlazeHealthReward[iPos] = iGetClampedValue(key, "BlazeHealthReward", "Blaze Health Reward", "Blaze_Health_Reward", "blaze", g_esTeammate[special].g_iBlazeHealthReward[iPos], sSet[iPos], -1, MT_MAXHEALTH);
@@ -16157,6 +16137,7 @@ void vSetTankSettings(int mode, const char[] section, const char[] subsection, c
 #if (MT_INCLUDE_PASSIVES == 1 || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 			g_esHuman.g_flActionDurationPassive = flGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "ActionDurationPassive", "Action Duration Passive", "Action_Duration_Passive", "actionduration", g_esHuman.g_flActionDurationPassive, value, -1.0, 99999.0);
 			g_esHuman.g_flAdrenalineTimePassive = flGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "AdrenalineTimePassive", "Adrenaline Time Passive", "Adrenaline_Time_Passive", "adrenaline", g_esHuman.g_flAdrenalineTimePassive, value, -1.0, 99999.0);
+			g_esHuman.g_flAmmoBoostPassive = flGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "AmmoBoostPassive", "Ammo Boost Passive", "Ammo_Boost_Passive", "ammoboost", g_esHuman.g_flAmmoBoostPassive, value, -1.0, 99999.0);
 			g_esHuman.g_flAttackBoostPassive = flGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "AttackBoostPassive", "Attack Boost Passive", "Attack_Boost_Passive", "attackboost", g_esHuman.g_flAttackBoostPassive, value, -1.0, 99999.0);
 			g_esHuman.g_flDamageBoostPassive = flGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "DamageBoostPassive", "Damage Boost Passive", "Damage_Boost_Passive", "dmgboost", g_esHuman.g_flDamageBoostPassive, value, -1.0, 99999.0);
 			g_esHuman.g_flDamageResistancePassive = flGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "DamageResistancePassive", "Damage Resistance Passive", "Damage_Resistance_Passive", "dmgres", g_esHuman.g_flDamageResistancePassive, value, -1.0, 99999.0);
@@ -16187,7 +16168,6 @@ void vSetTankSettings(int mode, const char[] section, const char[] subsection, c
 			g_esHuman.g_iPassiveEnabled = iGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "PassiveEnabled", "Passive Enabled", "Passive_Enabled", "psenabled", g_esHuman.g_iPassiveEnabled, value, -2, 2147483647);
 			g_esHuman.g_iPassiveBots = iGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "PassiveBots", "Passive Bots", "Passive_Bots", "psbots", g_esHuman.g_iPassiveBots, value, -2, 2147483647);
 			g_esHuman.g_iPassiveNotify = iGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "PassiveNotify", "Passive Notify", "Passive_Notify", "psnotify", g_esHuman.g_iPassiveNotify, value, -1, 1);
-			g_esHuman.g_iAmmoBoostPassive = iGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "AmmoBoostPassive", "Ammo Boost Passive", "Ammo_Boost_Passive", "ammoboost", g_esHuman.g_iAmmoBoostPassive, value, -1, 1);
 			g_esHuman.g_iAmmoRefillPassive = iGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "AmmoRefillPassive", "Ammo Refill Passive", "Ammo_Refill_Passive", "ammorefill", g_esHuman.g_iAmmoRefillPassive, value, -1, 1);
 			g_esHuman.g_iAmmoRegenPassive = iGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "AmmoRegenPassive", "Ammo Regen Passive", "Ammo_Regen_Passive", "ammoregen", g_esHuman.g_iAmmoRegenPassive, value, -1, 99999);
 			g_esHuman.g_iBlazeHealthPassive = iGetKeyValue(subsection, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, MT_CONFIG_SECTION_SURVIVORS, key, "BlazeHealthPassive", "Blaze Health Passive", "Blaze_Health_Passive", "blaze", g_esHuman.g_iBlazeHealthPassive, value, -1, MT_MAXHEALTH);
@@ -16437,6 +16417,7 @@ void vSetTankSettings(int mode, const char[] section, const char[] subsection, c
 						g_esGeneral.g_flRewardPercentage[iPos] = flGetClampedValue(key, "RewardPercentage", "Reward Percentage", "Reward_Percentage", "percent", g_esGeneral.g_flRewardPercentage[iPos], sSet[iPos], -1.0, 100.0);
 						g_esGeneral.g_flActionDurationReward[iPos] = flGetClampedValue(key, "ActionDurationReward", "Action Duration Reward", "Action_Duration_Reward", "actionduration", g_esGeneral.g_flActionDurationReward[iPos], sSet[iPos], -1.0, 99999.0);
 						g_esGeneral.g_flAdrenalineTimeReward[iPos] = flGetClampedValue(key, "AdrenalineTimeReward", "Adrenaline Time Reward", "Adrenaline_Time_Reward", "adrenaline", g_esGeneral.g_flAdrenalineTimeReward[iPos], sSet[iPos], -1.0, 99999.0);
+						g_esGeneral.g_flAmmoBoostReward[iPos] = flGetClampedValue(key, "AmmoBoostReward", "Ammo Boost Reward", "Ammo_Boost_Reward", "ammoboost", g_esGeneral.g_flAmmoBoostReward[iPos], sSet[iPos], -1.0, 99999.0);
 						g_esGeneral.g_flAttackBoostReward[iPos] = flGetClampedValue(key, "AttackBoostReward", "Attack Boost Reward", "Attack_Boost_Reward", "attackboost", g_esGeneral.g_flAttackBoostReward[iPos], sSet[iPos], -1.0, 99999.0);
 						g_esGeneral.g_flDamageBoostReward[iPos] = flGetClampedValue(key, "DamageBoostReward", "Damage Boost Reward", "Damage_Boost_Reward", "dmgboost", g_esGeneral.g_flDamageBoostReward[iPos], sSet[iPos], -1.0, 99999.0);
 						g_esGeneral.g_flDamageResistanceReward[iPos] = flGetClampedValue(key, "DamageResistanceReward", "Damage Resistance Reward", "Damage_Resistance_Reward", "dmgres", g_esGeneral.g_flDamageResistanceReward[iPos], sSet[iPos], -1.0, 1.0);
@@ -16470,7 +16451,6 @@ void vSetTankSettings(int mode, const char[] section, const char[] subsection, c
 						g_esGeneral.g_iRewardEffect[iPos] = iGetClampedValue(key, "RewardEffect", "Reward Effect", "Reward_Effect", "effect", g_esGeneral.g_iRewardEffect[iPos], sSet[iPos], -1, 15);
 						g_esGeneral.g_iRewardNotify[iPos] = iGetClampedValue(key, "RewardNotify", "Reward Notify", "Reward_Notify", "rnotify", g_esGeneral.g_iRewardNotify[iPos], sSet[iPos], -1, 3);
 						g_esGeneral.g_iRewardVisual[iPos] = iGetClampedValue(key, "RewardVisual", "Reward Visual", "Reward_Visual", "visual", g_esGeneral.g_iRewardVisual[iPos], sSet[iPos], -1, 127);
-						g_esGeneral.g_iAmmoBoostReward[iPos] = iGetClampedValue(key, "AmmoBoostReward", "Ammo Boost Reward", "Ammo_Boost_Reward", "ammoboost", g_esGeneral.g_iAmmoBoostReward[iPos], sSet[iPos], -1, 1);
 						g_esGeneral.g_iAmmoRefillReward[iPos] = iGetClampedValue(key, "AmmoRefillReward", "Ammo Refill Reward", "Ammo_Refill_Reward", "ammorefill", g_esGeneral.g_iAmmoRefillReward[iPos], sSet[iPos], -1, 1);
 						g_esGeneral.g_iAmmoRegenReward[iPos] = iGetClampedValue(key, "AmmoRegenReward", "Ammo Regen Reward", "Ammo_Regen_Reward", "ammoregen", g_esGeneral.g_iAmmoRegenReward[iPos], sSet[iPos], -1, 99999);
 						g_esGeneral.g_iBlazeHealthReward[iPos] = iGetClampedValue(key, "BlazeHealthReward", "Blaze Health Reward", "Blaze_Health_Reward", "blaze", g_esGeneral.g_iBlazeHealthReward[iPos], sSet[iPos], -1, MT_MAXHEALTH);
@@ -17474,7 +17454,7 @@ void SMCParseStart_Main(SMCParser smc)
 		g_esHuman.g_iPassiveNotify = 0;
 		g_esHuman.g_flActionDurationPassive = 0.0;
 		g_esHuman.g_flAdrenalineTimePassive = 0.0;
-		g_esHuman.g_iAmmoBoostPassive = 0;
+		g_esHuman.g_flAmmoBoostPassive = 0.0;
 		g_esHuman.g_iAmmoRefillPassive = 0;
 		g_esHuman.g_iAmmoRegenPassive = 0;
 		g_esHuman.g_flAttackBoostPassive = 0.0;
@@ -17674,7 +17654,7 @@ void SMCParseStart_Main(SMCParser smc)
 				g_esGeneral.g_iRewardVisual[iPos] = (g_bSecondGame ? 127 : 63);
 				g_esGeneral.g_flActionDurationReward[iPos] = 2.0;
 				g_esGeneral.g_flAdrenalineTimeReward[iPos] = 30.0;
-				g_esGeneral.g_iAmmoBoostReward[iPos] = 1;
+				g_esGeneral.g_flAmmoBoostReward[iPos] = 2.0;
 				g_esGeneral.g_iAmmoRefillReward[iPos] = 1;
 				g_esGeneral.g_iAmmoRegenReward[iPos] = 1;
 				g_esGeneral.g_flAttackBoostReward[iPos] = 1.25;
@@ -17859,7 +17839,7 @@ void SMCParseStart_Main(SMCParser smc)
 				g_esSpecific.g_iRewardVisual[iPos] = -1;
 				g_esSpecific.g_flActionDurationReward[iPos] = -1.0;
 				g_esSpecific.g_flAdrenalineTimeReward[iPos] = -1.0;
-				g_esSpecific.g_iAmmoBoostReward[iPos] = -1;
+				g_esSpecific.g_flAmmoBoostReward[iPos] = -1.0;
 				g_esSpecific.g_iAmmoRefillReward[iPos] = -1;
 				g_esSpecific.g_iAmmoRegenReward[iPos] = -1;
 				g_esSpecific.g_flAttackBoostReward[iPos] = -1.0;
@@ -17956,7 +17936,7 @@ void SMCParseStart_Main(SMCParser smc)
 				g_esSurvivor[iPos].g_iPassiveNotify = -1;
 				g_esSurvivor[iPos].g_flActionDurationPassive = -1.0;
 				g_esSurvivor[iPos].g_flAdrenalineTimePassive = -1.0;
-				g_esSurvivor[iPos].g_iAmmoBoostPassive = -1;
+				g_esSurvivor[iPos].g_flAmmoBoostPassive = -1.0;
 				g_esSurvivor[iPos].g_iAmmoRefillPassive = -1;
 				g_esSurvivor[iPos].g_iAmmoRegenPassive = -1;
 				g_esSurvivor[iPos].g_flAttackBoostPassive = -1.0;
@@ -18028,7 +18008,7 @@ void SMCParseStart_Main(SMCParser smc)
 			g_esWeapon[iIndex].g_iPassiveNotify = -1;
 			g_esWeapon[iIndex].g_flActionDurationPassive = -1.0;
 			g_esWeapon[iIndex].g_flAdrenalineTimePassive = -1.0;
-			g_esWeapon[iIndex].g_iAmmoBoostPassive = -1;
+			g_esWeapon[iIndex].g_flAmmoBoostPassive = -1.0;
 			g_esWeapon[iIndex].g_iAmmoRefillPassive = -1;
 			g_esWeapon[iIndex].g_iAmmoRegenPassive = -1;
 			g_esWeapon[iIndex].g_flAttackBoostPassive = -1.0;
@@ -18260,7 +18240,7 @@ void SMCParseStart_Main(SMCParser smc)
 					g_esTank[iIndex].g_iRewardVisual[iPos] = -1;
 					g_esTank[iIndex].g_flActionDurationReward[iPos] = -1.0;
 					g_esTank[iIndex].g_flAdrenalineTimeReward[iPos] = -1.0;
-					g_esTank[iIndex].g_iAmmoBoostReward[iPos] = -1;
+					g_esTank[iIndex].g_flAmmoBoostReward[iPos] = -1.0;
 					g_esTank[iIndex].g_iAmmoRefillReward[iPos] = -1;
 					g_esTank[iIndex].g_iAmmoRegenReward[iPos] = -1;
 					g_esTank[iIndex].g_flAttackBoostReward[iPos] = -1.0;
@@ -18537,7 +18517,7 @@ void SMCParseStart_Main(SMCParser smc)
 					g_esSpecial[iIndex].g_iRewardVisual[iPos] = -1;
 					g_esSpecial[iIndex].g_flActionDurationReward[iPos] = -1.0;
 					g_esSpecial[iIndex].g_flAdrenalineTimeReward[iPos] = -1.0;
-					g_esSpecial[iIndex].g_iAmmoBoostReward[iPos] = -1;
+					g_esSpecial[iIndex].g_flAmmoBoostReward[iPos] = -1.0;
 					g_esSpecial[iIndex].g_iAmmoRefillReward[iPos] = -1;
 					g_esSpecial[iIndex].g_iAmmoRegenReward[iPos] = -1;
 					g_esSpecial[iIndex].g_flAttackBoostReward[iPos] = -1.0;
@@ -18803,7 +18783,7 @@ void SMCParseStart_Main(SMCParser smc)
 					g_esPlayer[iPlayer].g_iRewardVisual[iPos] = -1;
 					g_esPlayer[iPlayer].g_flActionDurationReward[iPos] = -1.0;
 					g_esPlayer[iPlayer].g_flAdrenalineTimeReward[iPos] = -1.0;
-					g_esPlayer[iPlayer].g_iAmmoBoostReward[iPos] = -1;
+					g_esPlayer[iPlayer].g_flAmmoBoostReward[iPos] = -1.0;
 					g_esPlayer[iPlayer].g_iAmmoRefillReward[iPos] = -1;
 					g_esPlayer[iPlayer].g_iAmmoRegenReward[iPos] = -1;
 					g_esPlayer[iPlayer].g_flAttackBoostReward[iPos] = -1.0;
@@ -18900,7 +18880,7 @@ void SMCParseStart_Main(SMCParser smc)
 					g_esShooter[iPlayer].g_iPassiveNotify = -1;
 					g_esShooter[iPlayer].g_flActionDurationPassive = -1.0;
 					g_esShooter[iPlayer].g_flAdrenalineTimePassive = -1.0;
-					g_esShooter[iPlayer].g_iAmmoBoostPassive = -1;
+					g_esShooter[iPlayer].g_flAmmoBoostPassive = -1.0;
 					g_esShooter[iPlayer].g_iAmmoRefillPassive = -1;
 					g_esShooter[iPlayer].g_iAmmoRegenPassive = -1;
 					g_esShooter[iPlayer].g_flAttackBoostPassive = -1.0;
@@ -19120,7 +19100,7 @@ void SMCParseStart_Main(SMCParser smc)
 					g_esTeammate[iPlayer].g_iRewardVisual[iPos] = -1;
 					g_esTeammate[iPlayer].g_flActionDurationReward[iPos] = -1.0;
 					g_esTeammate[iPlayer].g_flAdrenalineTimeReward[iPos] = -1.0;
-					g_esTeammate[iPlayer].g_iAmmoBoostReward[iPos] = -1;
+					g_esTeammate[iPlayer].g_flAmmoBoostReward[iPos] = -1.0;
 					g_esTeammate[iPlayer].g_iAmmoRefillReward[iPos] = -1;
 					g_esTeammate[iPlayer].g_iAmmoRegenReward[iPos] = -1;
 					g_esTeammate[iPlayer].g_flAttackBoostReward[iPos] = -1.0;
@@ -22051,50 +22031,40 @@ void vGetTankTranslatedName(char[] buffer, int size, int tank = 0, int type = 0,
 
 				if (sName[0] != '\0')
 				{
-					char sSpecialName[64];
+					char sSpecialName[64], sSpecialName2[64], sFinalSpecialName[64];
 					iType = g_esTank[iType].g_iRealType[0];
 					if (1 <= iSpecType <= 6)
 					{
 						FormatEx(sSpecialName, sizeof sSpecialName, "%s #%i Name", g_sSpecialNames[iSpecType], iType);
+						FormatEx(sSpecialName2, sizeof sSpecialName2, "%s Name", sName);
 
-						if (sSpecialName[0] != '\0' && !TranslationPhraseExists(sSpecialName))
+						if (sSpecialName[0] != '\0' && TranslationPhraseExists(sSpecialName))
 						{
-							FormatEx(sSpecialName, sizeof sSpecialName, "%s Name", sName);
+							strcopy(sFinalSpecialName, sizeof sFinalSpecialName, sSpecialName);
 						}
-
-						if (sSpecialName[0] != '\0' && !TranslationPhraseExists(sSpecialName))
+						else if (sSpecialName2[0] != '\0' && TranslationPhraseExists(sSpecialName2))
 						{
-							FormatEx(sSpecialName, sizeof sSpecialName, "%s #%i", g_sSpecialNames[iSpecType], iType);
-						}
-
-						if (sSpecialName[0] != '\0' && !TranslationPhraseExists(sSpecialName))
-						{
-							strcopy(sSpecialName, sizeof sSpecialName, sName);
+							strcopy(sFinalSpecialName, sizeof sFinalSpecialName, sSpecialName2);
 						}
 					}
 					else
 					{
 						FormatEx(sSpecialName, sizeof sSpecialName, "Tank #%i Name", iType);
+						FormatEx(sSpecialName2, sizeof sSpecialName2, "%s Name", sName);
 
-						if (sSpecialName[0] != '\0' && !TranslationPhraseExists(sSpecialName))
+						if (sSpecialName[0] != '\0' && TranslationPhraseExists(sSpecialName))
 						{
-							FormatEx(sSpecialName, sizeof sSpecialName, "%s Name", sName);
+							strcopy(sFinalSpecialName, sizeof sFinalSpecialName, sSpecialName);
 						}
-
-						if (sSpecialName[0] != '\0' && !TranslationPhraseExists(sSpecialName))
+						else if (sSpecialName2[0] != '\0' && TranslationPhraseExists(sSpecialName2))
 						{
-							FormatEx(sSpecialName, sizeof sSpecialName, "Tank #%i", iType);
-						}
-
-						if (sSpecialName[0] != '\0' && !TranslationPhraseExists(sSpecialName))
-						{
-							strcopy(sSpecialName, sizeof sSpecialName, sName);
+							strcopy(sFinalSpecialName, sizeof sFinalSpecialName, sSpecialName2);
 						}
 					}
 
-					switch (sSpecialName[0] != '\0' && TranslationPhraseExists(sSpecialName))
+					switch (sFinalSpecialName[0] != '\0' && TranslationPhraseExists(sFinalSpecialName))
 					{
-						case true: strcopy(buffer, size, sSpecialName);
+						case true: strcopy(buffer, size, sFinalSpecialName);
 						case false: vGetTankTranslatedNoName(buffer, size, iSpecType, survivor, character);
 					}
 				}
@@ -23287,7 +23257,7 @@ int iGetFinaleType(int type, int specType)
 
 int iGetMaxAmmo(int survivor, int type, int weapon, bool reserve, bool reset = false)
 {
-	bool bRewarded = bIsSurvivor(survivor) && (bIsDeveloper(survivor, 4) || bIsDeveloper(survivor, 6) || (((g_esShooter[survivor].g_iTotalPassives & MT_PASSIVE_AMMO) || (g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_AMMO)) && g_esPlayer[survivor].g_iAmmoBoost == 1));
+	bool bRewarded = bIsSurvivor(survivor) && (bIsDeveloper(survivor, 4) || bIsDeveloper(survivor, 6) || (((g_esShooter[survivor].g_iTotalPassives & MT_PASSIVE_AMMO) || (g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_AMMO)) && g_esPlayer[survivor].g_flAmmoBoost > 0.0));
 	int iType = (type > 0 || weapon <= MaxClients) ? type : GetEntProp(weapon, Prop_Send, "m_iPrimaryAmmoType");
 	if (g_bSecondGame)
 	{
@@ -23295,29 +23265,29 @@ int iGetMaxAmmo(int survivor, int type, int weapon, bool reserve, bool reset = f
 		{
 			switch (iType)
 			{
-				case MT_L4D2_AMMOTYPE_RIFLE: return (bRewarded && !reset) ? (g_esGeneral.g_cvMTAssaultRifleAmmo.IntValue * 2) : g_esGeneral.g_cvMTAssaultRifleAmmo.IntValue;
-				case MT_L4D2_AMMOTYPE_SMG: return (bRewarded && !reset) ? iClamp(RoundToNearest(g_esGeneral.g_cvMTSMGAmmo.IntValue * 1.23), 1, 1000) : g_esGeneral.g_cvMTSMGAmmo.IntValue;
-				case MT_L4D2_AMMOTYPE_SHOTGUN_TIER1: return (bRewarded && !reset) ? iClamp(RoundToNearest(g_esGeneral.g_cvMTShotgunAmmo.IntValue * 2.08), 1, 255) : g_esGeneral.g_cvMTShotgunAmmo.IntValue;
-				case MT_L4D2_AMMOTYPE_SHOTGUN_TIER2: return (bRewarded && !reset) ? iClamp(RoundToNearest(g_esGeneral.g_cvMTAutoShotgunAmmo.IntValue * 2.22), 1, 255) : g_esGeneral.g_cvMTAutoShotgunAmmo.IntValue;
-				case MT_L4D2_AMMOTYPE_HUNTING_RIFLE: return (bRewarded && !reset) ? (g_esGeneral.g_cvMTHuntingRifleAmmo.IntValue * 2) : g_esGeneral.g_cvMTHuntingRifleAmmo.IntValue;
-				case MT_L4D2_AMMOTYPE_SNIPER_RIFLE: return (bRewarded && !reset) ? (g_esGeneral.g_cvMTSniperRifleAmmo.IntValue * 2) : g_esGeneral.g_cvMTSniperRifleAmmo.IntValue;
-				case MT_L4D2_AMMOTYPE_GRENADE_LAUNCHER: return (bRewarded && !reset) ? (g_esGeneral.g_cvMTGrenadeLauncherAmmo.IntValue * 2) : g_esGeneral.g_cvMTGrenadeLauncherAmmo.IntValue;
+				case MT_L4D2_AMMOTYPE_RIFLE: return (bRewarded && !reset) ? iClamp(RoundToNearest(g_esGeneral.g_cvMTAssaultRifleAmmo.IntValue * g_esPlayer[survivor].g_flAmmoBoost), 1, 1000) : g_esGeneral.g_cvMTAssaultRifleAmmo.IntValue; // default multiplier: 2
+				case MT_L4D2_AMMOTYPE_SMG: return (bRewarded && !reset) ? iClamp(RoundToNearest(g_esGeneral.g_cvMTSMGAmmo.IntValue * g_esPlayer[survivor].g_flAmmoBoost), 1, 1000) : g_esGeneral.g_cvMTSMGAmmo.IntValue; // default multiplier: 1.23
+				case MT_L4D2_AMMOTYPE_SHOTGUN_TIER1: return (bRewarded && !reset) ? iClamp(RoundToNearest(g_esGeneral.g_cvMTShotgunAmmo.IntValue * g_esPlayer[survivor].g_flAmmoBoost), 1, 255) : g_esGeneral.g_cvMTShotgunAmmo.IntValue; // default multiplier: 2.08
+				case MT_L4D2_AMMOTYPE_SHOTGUN_TIER2: return (bRewarded && !reset) ? iClamp(RoundToNearest(g_esGeneral.g_cvMTAutoShotgunAmmo.IntValue * g_esPlayer[survivor].g_flAmmoBoost), 1, 255) : g_esGeneral.g_cvMTAutoShotgunAmmo.IntValue; // default multiplier: 2.22
+				case MT_L4D2_AMMOTYPE_HUNTING_RIFLE: return (bRewarded && !reset) ? iClamp(RoundToNearest(g_esGeneral.g_cvMTHuntingRifleAmmo.IntValue * g_esPlayer[survivor].g_flAmmoBoost), 1, 500) : g_esGeneral.g_cvMTHuntingRifleAmmo.IntValue; // default multiplier: 2
+				case MT_L4D2_AMMOTYPE_SNIPER_RIFLE: return (bRewarded && !reset) ? iClamp(RoundToNearest(g_esGeneral.g_cvMTSniperRifleAmmo.IntValue * g_esPlayer[survivor].g_flAmmoBoost), 1, 500) : g_esGeneral.g_cvMTSniperRifleAmmo.IntValue; // default multiplier: 2
+				case MT_L4D2_AMMOTYPE_GRENADE_LAUNCHER: return (bRewarded && !reset) ? iClamp(RoundToNearest(g_esGeneral.g_cvMTGrenadeLauncherAmmo.IntValue * g_esPlayer[survivor].g_flAmmoBoost), 1, 100) : g_esGeneral.g_cvMTGrenadeLauncherAmmo.IntValue; // default multiplier: 2
 			}
 		}
 		else
 		{
 			switch (iType)
 			{
-				case MT_L4D2_AMMOTYPE_PISTOL: return (bRewarded && !reset) ? 30 : 15;
-				case MT_L4D2_AMMOTYPE_PISTOL_MAGNUM: return (bRewarded && !reset) ? 16 : 8;
-				case MT_L4D2_AMMOTYPE_RIFLE: return (bRewarded && !reset) ? 100 : 50;
-				case MT_L4D2_AMMOTYPE_SMG: return (bRewarded && !reset) ? 100 : 50;
-				case MT_L4D2_AMMOTYPE_RIFLE_M60: return (bRewarded && !reset) ? 300 : 150;
-				case MT_L4D2_AMMOTYPE_SHOTGUN_TIER1: return (bRewarded && !reset) ? 16 : 8;
-				case MT_L4D2_AMMOTYPE_SHOTGUN_TIER2: return (bRewarded && !reset) ? 20 : 10;
-				case MT_L4D2_AMMOTYPE_HUNTING_RIFLE: return (bRewarded && !reset) ? 30 : 15;
-				case MT_L4D2_AMMOTYPE_SNIPER_RIFLE: return (bRewarded && !reset) ? 60 : 30;
-				case MT_L4D2_AMMOTYPE_GRENADE_LAUNCHER: return (bRewarded && !reset) ? 2 : 1;
+				case MT_L4D2_AMMOTYPE_PISTOL: return (bRewarded && !reset) ? iClamp(RoundToNearest(15 * g_esPlayer[survivor].g_flAmmoBoost), 1, 100) : 15; // default value: 30
+				case MT_L4D2_AMMOTYPE_PISTOL_MAGNUM: return (bRewarded && !reset) ? iClamp(RoundToNearest(8 * g_esPlayer[survivor].g_flAmmoBoost), 1, 100) : 8; // default value: 16
+				case MT_L4D2_AMMOTYPE_RIFLE: return (bRewarded && !reset) ? iClamp(RoundToNearest(50 * g_esPlayer[survivor].g_flAmmoBoost), 1, 250) : 50; // default value: 100
+				case MT_L4D2_AMMOTYPE_SMG: return (bRewarded && !reset) ? iClamp(RoundToNearest(50 * g_esPlayer[survivor].g_flAmmoBoost), 1, 250) : 50; // default value: 100
+				case MT_L4D2_AMMOTYPE_RIFLE_M60: return (bRewarded && !reset) ? iClamp(RoundToNearest(150 * g_esPlayer[survivor].g_flAmmoBoost), 1, 250) : 150; // default value: 300
+				case MT_L4D2_AMMOTYPE_SHOTGUN_TIER1: return (bRewarded && !reset) ? iClamp(RoundToNearest(8 * g_esPlayer[survivor].g_flAmmoBoost), 1, 100) : 8; // default value: 16
+				case MT_L4D2_AMMOTYPE_SHOTGUN_TIER2: return (bRewarded && !reset) ? iClamp(RoundToNearest(10 * g_esPlayer[survivor].g_flAmmoBoost), 1, 120) : 10; // default value: 20
+				case MT_L4D2_AMMOTYPE_HUNTING_RIFLE: return (bRewarded && !reset) ? iClamp(RoundToNearest(15 * g_esPlayer[survivor].g_flAmmoBoost), 1, 150) : 15; // default value: 30
+				case MT_L4D2_AMMOTYPE_SNIPER_RIFLE: return (bRewarded && !reset) ? iClamp(RoundToNearest(30 * g_esPlayer[survivor].g_flAmmoBoost), 1, 300) : 30; // default value: 60
+				case MT_L4D2_AMMOTYPE_GRENADE_LAUNCHER: return (bRewarded && !reset) ? iClamp(RoundToNearest(1 * g_esPlayer[survivor].g_flAmmoBoost), 1, 20) : 1; // default value: 2
 			}
 		}
 	}
@@ -23327,21 +23297,21 @@ int iGetMaxAmmo(int survivor, int type, int weapon, bool reserve, bool reset = f
 		{
 			switch (iType)
 			{
-				case MT_L4D1_AMMOTYPE_HUNTING_RIFLE: return (bRewarded && !reset) ? (g_esGeneral.g_cvMTHuntingRifleAmmo.IntValue * 2) : g_esGeneral.g_cvMTHuntingRifleAmmo.IntValue;
-				case MT_L4D1_AMMOTYPE_RIFLE: return (bRewarded && !reset) ? (g_esGeneral.g_cvMTAssaultRifleAmmo.IntValue * 2) : g_esGeneral.g_cvMTAssaultRifleAmmo.IntValue;
-				case MT_L4D1_AMMOTYPE_SMG: return (bRewarded && !reset) ? iClamp(RoundToNearest(g_esGeneral.g_cvMTSMGAmmo.IntValue * 1.23), 1, 1000) : g_esGeneral.g_cvMTSMGAmmo.IntValue;
-				case MT_L4D1_AMMOTYPE_SHOTGUN: return (bRewarded && !reset) ? iClamp(RoundToNearest(g_esGeneral.g_cvMTShotgunAmmo.IntValue * 1.56), 1, 255) : g_esGeneral.g_cvMTShotgunAmmo.IntValue;
+				case MT_L4D1_AMMOTYPE_HUNTING_RIFLE: return (bRewarded && !reset) ? iClamp(RoundToNearest(g_esGeneral.g_cvMTHuntingRifleAmmo.IntValue * g_esPlayer[survivor].g_flAmmoBoost), 1, 500) : g_esGeneral.g_cvMTHuntingRifleAmmo.IntValue; // default multiplier: 2
+				case MT_L4D1_AMMOTYPE_RIFLE: return (bRewarded && !reset) ? iClamp(RoundToNearest(g_esGeneral.g_cvMTAssaultRifleAmmo.IntValue * g_esPlayer[survivor].g_flAmmoBoost), 1, 1000) : g_esGeneral.g_cvMTAssaultRifleAmmo.IntValue; // default multiplier: 2
+				case MT_L4D1_AMMOTYPE_SMG: return (bRewarded && !reset) ? iClamp(RoundToNearest(g_esGeneral.g_cvMTSMGAmmo.IntValue * g_esPlayer[survivor].g_flAmmoBoost), 1, 1000) : g_esGeneral.g_cvMTSMGAmmo.IntValue; // default multiplier: 1.23
+				case MT_L4D1_AMMOTYPE_SHOTGUN: return (bRewarded && !reset) ? iClamp(RoundToNearest(g_esGeneral.g_cvMTShotgunAmmo.IntValue * g_esPlayer[survivor].g_flAmmoBoost), 1, 255) : g_esGeneral.g_cvMTShotgunAmmo.IntValue; // default multiplier: 1.56
 			}
 		}
 		else
 		{
 			switch (iType)
 			{
-				case MT_L4D1_AMMOTYPE_PISTOL: return (bRewarded && !reset) ? 30 : 15;
-				case MT_L4D1_AMMOTYPE_HUNTING_RIFLE: return (bRewarded && !reset) ? 30 : 15;
-				case MT_L4D1_AMMOTYPE_RIFLE: return (bRewarded && !reset) ? 100 : 50;
-				case MT_L4D1_AMMOTYPE_SMG: return (bRewarded && !reset) ? 100 : 50;
-				case MT_L4D1_AMMOTYPE_SHOTGUN: return (bRewarded && !reset) ? 20 : 10;
+				case MT_L4D1_AMMOTYPE_PISTOL: return (bRewarded && !reset) ? iClamp(RoundToNearest(15 * g_esPlayer[survivor].g_flAmmoBoost), 1, 100) : 15; // default value: 30
+				case MT_L4D1_AMMOTYPE_HUNTING_RIFLE: return (bRewarded && !reset) ? iClamp(RoundToNearest(15 * g_esPlayer[survivor].g_flAmmoBoost), 1, 150) : 15; // default value: 30
+				case MT_L4D1_AMMOTYPE_RIFLE: return (bRewarded && !reset) ? iClamp(RoundToNearest(50 * g_esPlayer[survivor].g_flAmmoBoost), 1, 250) : 50; // default value: 100
+				case MT_L4D1_AMMOTYPE_SMG: return (bRewarded && !reset) ? iClamp(RoundToNearest(50 * g_esPlayer[survivor].g_flAmmoBoost), 1, 250) : 50; // default value: 100
+				case MT_L4D1_AMMOTYPE_SHOTGUN: return (bRewarded && !reset) ? iClamp(RoundToNearest(10 * g_esPlayer[survivor].g_flAmmoBoost), 1, 120) : 10; // default value: 20
 			}
 		}
 	}
@@ -28047,7 +28017,7 @@ MRESReturn mreGetMaxClip1Pre(int pThis, DHookReturn hReturn)
 	if (bIsSurvivor(iSurvivor) && iClip > 0)
 	{
 		bool bDeveloper = bIsDeveloper(iSurvivor, 4) || bIsDeveloper(iSurvivor, 6);
-		if (bDeveloper || (((g_esShooter[iSurvivor].g_iTotalPassives & MT_PASSIVE_AMMO) || (g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_AMMO)) && g_esPlayer[iSurvivor].g_iAmmoBoost == 1))
+		if (bDeveloper || (((g_esShooter[iSurvivor].g_iTotalPassives & MT_PASSIVE_AMMO) || (g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_AMMO)) && g_esPlayer[iSurvivor].g_flAmmoBoost > 0.0))
 		{
 			hReturn.Value = iClip;
 
@@ -28328,7 +28298,7 @@ MRESReturn mreMaxCarryPre(Address pThis, DHookReturn hReturn, DHookParam hParams
 	if (bIsSurvivor(iSurvivor) && iAmmo > 0)
 	{
 		bool bDeveloper = bIsDeveloper(iSurvivor, 4) || bIsDeveloper(iSurvivor, 6);
-		if (bDeveloper || (((g_esShooter[iSurvivor].g_iTotalPassives & MT_PASSIVE_AMMO) || (g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_AMMO)) && g_esPlayer[iSurvivor].g_iAmmoBoost == 1))
+		if (bDeveloper || (((g_esShooter[iSurvivor].g_iTotalPassives & MT_PASSIVE_AMMO) || (g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_AMMO)) && g_esPlayer[iSurvivor].g_flAmmoBoost > 0.0))
 		{
 			hReturn.Value = iAmmo;
 
@@ -31570,26 +31540,29 @@ void vInfectedSpawnFrame(DataPack pack)
 	int iInfected = EntRefToEntIndex(pack.ReadCell());
 	delete pack;
 
-	vCacheInfectedSettings(iInfected);
-
-	if (bIsMobSupported(iInfected))
+	if (iInfected > MaxClients)
 	{
-		if (g_esGeneral.g_iGraphicsLevel > 1 || g_esGeneral.g_cvMTGraphicsLevel.IntValue > 1)
-		{
-			switch (StrEqual(g_esInfectedCache[iInfected].g_sGlowColor, "rainbow", false) && (g_esGeneral.g_iGraphicsLevel > 2 || g_esGeneral.g_cvMTGraphicsLevel.IntValue > 2))
-			{
-				case true:
-				{
-					if (!g_esInfected[iInfected].g_bRainbowColor)
-					{
-						g_esInfected[iInfected].g_bRainbowColor = SDKHookEx(iInfected, SDKHook_PreThinkPost, OnInfectedRainbowPreThinkPost);
-					}
-				}
-				case false: vSetInfectedGlow(iInfected);
-			}
-		}
+		vCacheInfectedSettings(iInfected);
 
-		vSetupInfectedParticleEffects(iInfected);
+		if (bIsMobSupported(iInfected))
+		{
+			if (g_esGeneral.g_iGraphicsLevel > 1 || g_esGeneral.g_cvMTGraphicsLevel.IntValue > 1)
+			{
+				switch (StrEqual(g_esInfectedCache[iInfected].g_sGlowColor, "rainbow", false) && (g_esGeneral.g_iGraphicsLevel > 2 || g_esGeneral.g_cvMTGraphicsLevel.IntValue > 2))
+				{
+					case true:
+					{
+						if (!g_esInfected[iInfected].g_bRainbowColor)
+						{
+							g_esInfected[iInfected].g_bRainbowColor = SDKHookEx(iInfected, SDKHook_PreThinkPost, OnInfectedRainbowPreThinkPost);
+						}
+					}
+					case false: vSetInfectedGlow(iInfected);
+				}
+			}
+
+			vSetupInfectedParticleEffects(iInfected);
+		}
 	}
 }
 
@@ -32446,7 +32419,7 @@ void vResetPassives(int survivor, int type, bool weaponOnly = false)
 			g_esPlayer[survivor].g_flLuckyBullet = (weaponOnly ? g_esSurvivorCache[survivor].g_flLuckyBulletPassive : 0.0);
 			g_esPlayer[survivor].g_flSupplier = (weaponOnly ? g_esSurvivorCache[survivor].g_flSupplierPassive : 0.0);
 			g_esPlayer[survivor].g_flSupplierCooldown = -1.0;
-			g_esPlayer[survivor].g_iAmmoBoost = (weaponOnly ? g_esSurvivorCache[survivor].g_iAmmoBoostPassive : 0);
+			g_esPlayer[survivor].g_flAmmoBoost = (weaponOnly ? g_esSurvivorCache[survivor].g_flAmmoBoostPassive : 0.0);
 			g_esPlayer[survivor].g_iAmmoRefill = (weaponOnly ? g_esSurvivorCache[survivor].g_iAmmoRefillPassive : 0);
 			g_esPlayer[survivor].g_iAmmoRegen = (weaponOnly ? g_esSurvivorCache[survivor].g_iAmmoRegenPassive : 0);
 			g_esPlayer[survivor].g_iClusterBombs = (weaponOnly ? g_esSurvivorCache[survivor].g_iClusterBombsPassive : 0);
@@ -32820,7 +32793,7 @@ void vSetupPassives(int survivor, int type, bool weaponOnly = false, int weaponI
 			g_esPlayer[survivor].g_flLuckyBullet = g_esSurvivorCache[survivor].g_flLuckyBulletPassive;
 			g_esPlayer[survivor].g_flSupplier = g_esSurvivorCache[survivor].g_flSupplierPassive;
 			g_esPlayer[survivor].g_flSupplierCooldown = -1.0;
-			g_esPlayer[survivor].g_iAmmoBoost = g_esSurvivorCache[survivor].g_iAmmoBoostPassive;
+			g_esPlayer[survivor].g_flAmmoBoost = g_esSurvivorCache[survivor].g_flAmmoBoostPassive;
 			g_esPlayer[survivor].g_iAmmoRefill = g_esSurvivorCache[survivor].g_iAmmoRefillPassive;
 			g_esPlayer[survivor].g_iAmmoRegen = g_esSurvivorCache[survivor].g_iAmmoRegenPassive;
 			g_esPlayer[survivor].g_iClusterBombs = g_esSurvivorCache[survivor].g_iClusterBombsPassive;
@@ -32837,8 +32810,8 @@ void vSetupPassives(int survivor, int type, bool weaponOnly = false, int weaponI
 					g_esPlayer[survivor].g_flLuckyBullet = flClamp(g_esPlayer[survivor].g_flLuckyBullet, 0.0, 100.0);
 					g_esPlayer[survivor].g_flSupplier += g_esWeapon[weaponIndex].g_flSupplierPassive;
 					g_esPlayer[survivor].g_flSupplier = flClamp(g_esPlayer[survivor].g_flSupplier, 0.0, 99999.0);
-					g_esPlayer[survivor].g_iAmmoBoost += g_esWeapon[weaponIndex].g_iAmmoBoostPassive;
-					g_esPlayer[survivor].g_iAmmoBoost = iClamp(g_esPlayer[survivor].g_iAmmoBoost, 0, 1);
+					g_esPlayer[survivor].g_flAmmoBoost += g_esWeapon[weaponIndex].g_flAmmoBoostPassive;
+					g_esPlayer[survivor].g_flAmmoBoost = flClamp(g_esPlayer[survivor].g_flAmmoBoost, 0.0, 99999.0);
 					g_esPlayer[survivor].g_iAmmoRefill += g_esWeapon[weaponIndex].g_iAmmoRefillPassive;
 					g_esPlayer[survivor].g_iAmmoRefill = iClamp(g_esPlayer[survivor].g_iAmmoRefill, 0, 1);
 					g_esPlayer[survivor].g_iAmmoRegen += g_esWeapon[weaponIndex].g_iAmmoRegenPassive;
@@ -32853,7 +32826,7 @@ void vSetupPassives(int survivor, int type, bool weaponOnly = false, int weaponI
 					g_esPlayer[survivor].g_flGrenadeLauncher = g_esWeapon[weaponIndex].g_flGrenadeLauncherPassive;
 					g_esPlayer[survivor].g_flLuckyBullet = g_esWeapon[weaponIndex].g_flLuckyBulletPassive;
 					g_esPlayer[survivor].g_flSupplier = g_esWeapon[weaponIndex].g_flSupplierPassive;
-					g_esPlayer[survivor].g_iAmmoBoost = g_esWeapon[weaponIndex].g_iAmmoBoostPassive;
+					g_esPlayer[survivor].g_flAmmoBoost = g_esWeapon[weaponIndex].g_flAmmoBoostPassive;
 					g_esPlayer[survivor].g_iAmmoRefill = g_esWeapon[weaponIndex].g_iAmmoRefillPassive;
 					g_esPlayer[survivor].g_iAmmoRegen = g_esWeapon[weaponIndex].g_iAmmoRegenPassive;
 					g_esPlayer[survivor].g_iClusterBombs = g_esWeapon[weaponIndex].g_iClusterBombsPassive;
@@ -35161,7 +35134,7 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 					g_esPlayer[survivor].g_flLuckyBullet = 0.0;
 					g_esPlayer[survivor].g_flSupplier = 0.0;
 					g_esPlayer[survivor].g_flSupplierCooldown = -1.0;
-					g_esPlayer[survivor].g_iAmmoBoost = 0;
+					g_esPlayer[survivor].g_flAmmoBoost = 0.0;
 					g_esPlayer[survivor].g_iAmmoRefill = 0;
 					g_esPlayer[survivor].g_iAmmoRegen = 0;
 					g_esPlayer[survivor].g_iClusterBombs = 0;
@@ -35610,7 +35583,7 @@ void vSetupRewardCounts(int survivor, int tank, int priority, int type)
 				g_esPlayer[survivor].g_flLuckyBullet = g_esTankCache[tank].g_flLuckyBulletReward[priority];
 				g_esPlayer[survivor].g_flSupplier = g_esTankCache[tank].g_flSupplierReward[priority];
 				g_esPlayer[survivor].g_flSupplierCooldown = -1.0;
-				g_esPlayer[survivor].g_iAmmoBoost = g_esTankCache[tank].g_iAmmoBoostReward[priority];
+				g_esPlayer[survivor].g_flAmmoBoost = g_esTankCache[tank].g_flAmmoBoostReward[priority];
 				g_esPlayer[survivor].g_iAmmoRefill = g_esTankCache[tank].g_iAmmoRefillReward[priority];
 				g_esPlayer[survivor].g_iAmmoRegen = g_esTankCache[tank].g_iAmmoRegenReward[priority];
 				g_esPlayer[survivor].g_iClusterBombs = g_esTankCache[tank].g_iClusterBombsReward[priority];
@@ -35624,7 +35597,7 @@ void vSetupRewardCounts(int survivor, int tank, int priority, int type)
 				g_esPlayer[survivor].g_flLuckyBullet = flClamp(g_esPlayer[survivor].g_flLuckyBullet, 0.0, 100.0);
 				g_esPlayer[survivor].g_flSupplier += g_esTankCache[tank].g_flSupplierReward[priority];
 				g_esPlayer[survivor].g_flSupplier = flClamp(g_esPlayer[survivor].g_flSupplier, 0.0, 99999.0);
-				g_esPlayer[survivor].g_iAmmoBoost = g_esTankCache[tank].g_iAmmoBoostReward[priority];
+				g_esPlayer[survivor].g_flAmmoBoost = g_esTankCache[tank].g_flAmmoBoostReward[priority];
 				g_esPlayer[survivor].g_iAmmoRefill = g_esTankCache[tank].g_iAmmoRefillReward[priority];
 				g_esPlayer[survivor].g_iAmmoRegen += g_esTankCache[tank].g_iAmmoRegenReward[priority];
 				g_esPlayer[survivor].g_iAmmoRegen = iClamp(g_esPlayer[survivor].g_iAmmoRegen, 0, 99999);

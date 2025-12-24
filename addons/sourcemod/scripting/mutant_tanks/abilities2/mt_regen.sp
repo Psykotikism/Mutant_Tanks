@@ -457,7 +457,7 @@ Action OnRegenTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 			GetEntityClassname(inflictor, sClassname, sizeof sClassname);
 		}
 
-		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && !bIsPlayerIncapacitated(attacker) && g_esRegenCache[attacker].g_iRegenMode > 0 && GetRandomFloat(0.1, 100.0) <= g_esRegenCache[attacker].g_flRegenChance && bIsSurvivor(victim) && !bIsSurvivorDisabled(victim))
+		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && !bIsPlayerIncapacitated(attacker) && (g_esRegenCache[attacker].g_iRegenAbility == 2 || g_esRegenCache[attacker].g_iRegenAbility == 3) && g_esRegenCache[attacker].g_iRegenMode > 0 && GetRandomFloat(0.1, 100.0) <= g_esRegenCache[attacker].g_flRegenChance && bIsSurvivor(victim) && !bIsSurvivorDisabled(victim))
 		{
 			if (bIsAreaNarrow(attacker, g_esRegenCache[attacker].g_flOpenAreasOnly) || bIsAreaWide(attacker, g_esRegenCache[attacker].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRegenPlayer[attacker].g_iTankType, attacker) || (g_esRegenCache[attacker].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRegenCache[attacker].g_iRequiresHumans) || (!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esRegenAbility[g_esRegenPlayer[attacker].g_iTankTypeRecorded].g_iAccessFlags, g_esRegenPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esRegenPlayer[attacker].g_iTankType, g_esRegenAbility[g_esRegenPlayer[attacker].g_iTankTypeRecorded].g_iImmunityFlags, g_esRegenPlayer[victim].g_iImmunityFlags))
 			{
@@ -497,7 +497,7 @@ Action OnRegenTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 				}
 			}
 		}
-		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && !bIsPlayerIncapacitated(victim) && g_esRegenCache[victim].g_iRegenMode > 0 && GetRandomFloat(0.1, 100.0) <= g_esRegenCache[victim].g_flRegenChance && bIsSurvivor(attacker) && !bIsSurvivorDisabled(attacker) && (g_esRegenCache[victim].g_iRegenMode == 2 || g_esRegenCache[victim].g_iRegenMode == 3))
+		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && !bIsPlayerIncapacitated(victim) && (g_esRegenCache[victim].g_iRegenAbility == 2 || g_esRegenCache[victim].g_iRegenAbility == 3) && (g_esRegenCache[victim].g_iRegenMode == 2 || g_esRegenCache[victim].g_iRegenMode == 3) && GetRandomFloat(0.1, 100.0) <= g_esRegenCache[victim].g_flRegenChance && bIsSurvivor(attacker) && !bIsSurvivorDisabled(attacker))
 		{
 			if (bIsAreaNarrow(victim, g_esRegenCache[victim].g_flOpenAreasOnly) || bIsAreaWide(victim, g_esRegenCache[victim].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRegenPlayer[victim].g_iTankType, victim) || (g_esRegenCache[victim].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRegenCache[victim].g_iRequiresHumans) || (!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esRegenAbility[g_esRegenPlayer[victim].g_iTankTypeRecorded].g_iAccessFlags, g_esRegenPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esRegenPlayer[victim].g_iTankType, g_esRegenAbility[g_esRegenPlayer[victim].g_iTankTypeRecorded].g_iImmunityFlags, g_esRegenPlayer[attacker].g_iImmunityFlags))
 			{
@@ -579,7 +579,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_REGEN_SECTION4);
 	if (StrContains(sCombo, sSet[0], false) != -1 || StrContains(sCombo, sSet[1], false) != -1 || StrContains(sCombo, sSet[2], false) != -1 || StrContains(sCombo, sSet[3], false) != -1)
 	{
-		if (type == MT_COMBO_MAINRANGE && g_esRegenCache[tank].g_iRegenAbility == 1 && g_esRegenCache[tank].g_iComboAbility == 1 && !g_esRegenPlayer[tank].g_bActivated)
+		if (type == MT_COMBO_MAINRANGE && (g_esRegenCache[tank].g_iRegenAbility == 1 || g_esRegenCache[tank].g_iRegenAbility == 3) && g_esRegenCache[tank].g_iComboAbility == 1 && !g_esRegenPlayer[tank].g_bActivated)
 		{
 			char sAbilities[320], sSubset[10][32];
 			strcopy(sAbilities, sizeof sAbilities, combo);
@@ -761,7 +761,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 #endif
 			g_esRegenTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRegenTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esRegenTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRegenTeammate[admin].g_iRequiresHumans, value, -1, 32);
-			g_esRegenTeammate[admin].g_iRegenAbility = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRegenTeammate[admin].g_iRegenAbility, value, -1, 1);
+			g_esRegenTeammate[admin].g_iRegenAbility = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRegenTeammate[admin].g_iRegenAbility, value, -1, 3);
 			g_esRegenTeammate[admin].g_iRegenEffect = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRegenTeammate[admin].g_iRegenEffect, value, -1, 7);
 			g_esRegenTeammate[admin].g_iRegenMessage = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRegenTeammate[admin].g_iRegenMessage, value, -1, 7);
 			g_esRegenTeammate[admin].g_iRegenSight = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRegenTeammate[admin].g_iRegenSight, value, -1, 5);
@@ -794,7 +794,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 #endif
 			g_esRegenPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRegenPlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esRegenPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRegenPlayer[admin].g_iRequiresHumans, value, -1, 32);
-			g_esRegenPlayer[admin].g_iRegenAbility = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRegenPlayer[admin].g_iRegenAbility, value, -1, 1);
+			g_esRegenPlayer[admin].g_iRegenAbility = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRegenPlayer[admin].g_iRegenAbility, value, -1, 3);
 			g_esRegenPlayer[admin].g_iRegenEffect = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRegenPlayer[admin].g_iRegenEffect, value, -1, 7);
 			g_esRegenPlayer[admin].g_iRegenMessage = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRegenPlayer[admin].g_iRegenMessage, value, -1, 7);
 			g_esRegenPlayer[admin].g_iRegenSight = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRegenPlayer[admin].g_iRegenSight, value, -1, 5);
@@ -831,7 +831,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 #endif
 			g_esRegenSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRegenSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esRegenSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRegenSpecial[type].g_iRequiresHumans, value, -1, 32);
-			g_esRegenSpecial[type].g_iRegenAbility = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRegenSpecial[type].g_iRegenAbility, value, -1, 1);
+			g_esRegenSpecial[type].g_iRegenAbility = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRegenSpecial[type].g_iRegenAbility, value, -1, 3);
 			g_esRegenSpecial[type].g_iRegenEffect = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRegenSpecial[type].g_iRegenEffect, value, -1, 7);
 			g_esRegenSpecial[type].g_iRegenMessage = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRegenSpecial[type].g_iRegenMessage, value, -1, 7);
 			g_esRegenSpecial[type].g_iRegenSight = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRegenSpecial[type].g_iRegenSight, value, -1, 5);
@@ -864,7 +864,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 #endif
 			g_esRegenAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRegenAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
 			g_esRegenAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRegenAbility[type].g_iRequiresHumans, value, -1, 32);
-			g_esRegenAbility[type].g_iRegenAbility = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRegenAbility[type].g_iRegenAbility, value, -1, 1);
+			g_esRegenAbility[type].g_iRegenAbility = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRegenAbility[type].g_iRegenAbility, value, -1, 3);
 			g_esRegenAbility[type].g_iRegenEffect = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRegenAbility[type].g_iRegenEffect, value, -1, 7);
 			g_esRegenAbility[type].g_iRegenMessage = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRegenAbility[type].g_iRegenMessage, value, -1, 7);
 			g_esRegenAbility[type].g_iRegenSight = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRegenAbility[type].g_iRegenSight, value, -1, 5);
@@ -1033,7 +1033,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!bIsInfected(tank, MT_CHECK_FAKECLIENT) || g_esRegenCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esRegenCache[tank].g_iRegenAbility == 1 && g_esRegenCache[tank].g_iComboAbility == 0 && !g_esRegenPlayer[tank].g_bActivated)
+	if (MT_IsTankSupported(tank) && (!bIsInfected(tank, MT_CHECK_FAKECLIENT) || g_esRegenCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && (g_esRegenCache[tank].g_iRegenAbility == 1 || g_esRegenCache[tank].g_iRegenAbility == 3) && g_esRegenCache[tank].g_iComboAbility == 0 && !g_esRegenPlayer[tank].g_bActivated)
 	{
 		vRegenAbility(tank);
 	}
@@ -1052,7 +1052,7 @@ public void MT_OnButtonPressed(int tank, int button)
 			return;
 		}
 
-		if ((button & MT_MAIN_KEY) && g_esRegenCache[tank].g_iRegenAbility == 1 && g_esRegenCache[tank].g_iHumanAbility == 1)
+		if ((button & MT_MAIN_KEY) && (g_esRegenCache[tank].g_iRegenAbility == 1 || g_esRegenCache[tank].g_iRegenAbility == 3) && g_esRegenCache[tank].g_iHumanAbility == 1)
 		{
 			int iHumanMode = g_esRegenCache[tank].g_iHumanMode, iTime = GetTime();
 			bool bRecharging = g_esRegenPlayer[tank].g_iCooldown != -1 && g_esRegenPlayer[tank].g_iCooldown >= iTime;
@@ -1302,7 +1302,7 @@ Action tTimerRegenCombo(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esRegenAbility[g_esRegenPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esRegenPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esRegenPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esRegenCache[iTank].g_iRegenAbility == 0 || g_esRegenPlayer[iTank].g_bActivated)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esRegenAbility[g_esRegenPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esRegenPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esRegenPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esRegenCache[iTank].g_iRegenAbility == 0 || g_esRegenCache[iTank].g_iRegenAbility == 2 || g_esRegenPlayer[iTank].g_bActivated)
 	{
 		return Plugin_Stop;
 	}
@@ -1318,7 +1318,7 @@ Action tTimerRegen(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsPlayerIncapacitated(iTank) || bIsAreaNarrow(iTank, g_esRegenCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esRegenCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRegenPlayer[iTank].g_iTankType, iTank) || (g_esRegenCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRegenCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esRegenAbility[g_esRegenPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esRegenPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esRegenPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || iType != g_esRegenPlayer[iTank].g_iTankType || g_esRegenCache[iTank].g_iRegenAbility == 0 || !g_esRegenPlayer[iTank].g_bActivated)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsPlayerIncapacitated(iTank) || bIsAreaNarrow(iTank, g_esRegenCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esRegenCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRegenPlayer[iTank].g_iTankType, iTank) || (g_esRegenCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRegenCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esRegenAbility[g_esRegenPlayer[iTank].g_iTankTypeRecorded].g_iAccessFlags, g_esRegenPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esRegenPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || iType != g_esRegenPlayer[iTank].g_iTankType || g_esRegenCache[iTank].g_iRegenAbility == 0 || g_esRegenCache[iTank].g_iRegenAbility == 2 || !g_esRegenPlayer[iTank].g_bActivated)
 	{
 		vRegenReset2(iTank);
 

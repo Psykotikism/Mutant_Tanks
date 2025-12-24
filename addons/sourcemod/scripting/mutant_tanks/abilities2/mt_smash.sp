@@ -1214,7 +1214,7 @@ void vSmash(int tank, int survivor)
 					SetEntPropFloat(survivor, Prop_Send, "m_healthBuffer", 1.0);
 					vDamagePlayer(survivor, tank, float(GetEntProp(survivor, Prop_Data, "m_iHealth")), "128");
 				}
-				case 2: vDamagePlayer(survivor, tank, float(GetEntProp(survivor, Prop_Data, "m_iHealth")), "128");
+				case 2: SetEntProp(survivor, Prop_Send, "m_isIncapacitated", 1);
 			}
 		}
 		case 1:
@@ -1223,7 +1223,7 @@ void vSmash(int tank, int survivor)
 			SetEntPropFloat(survivor, Prop_Send, "m_healthBuffer", 1.0);
 			vDamagePlayer(survivor, tank, float(GetEntProp(survivor, Prop_Data, "m_iHealth")), "128");
 		}
-		case 2: vDamagePlayer(survivor, tank, float(GetEntProp(survivor, Prop_Data, "m_iHealth")), "128");
+		case 2: SetEntProp(survivor, Prop_Send, "m_isIncapacitated", 1);
 	}
 }
 
@@ -1420,6 +1420,9 @@ void vSmashHit(int survivor, int tank, float random, float chance, int enabled, 
 						int iFlame = CreateEntityByName("env_steam");
 						if (bIsValidEntity(iFlame))
 						{
+							g_esSmashPlayer[survivor].g_bAffected = true;
+							g_esSmashPlayer[survivor].g_iOwner = tank;
+
 							float flPos[3], flAngles[3];
 							GetEntPropVector(survivor, Prop_Data, "m_vecOrigin", flPos);
 							flPos[2] += 30.0;
