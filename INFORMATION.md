@@ -1697,7 +1697,7 @@
 			// 2nd number = Give ammo boost to assistants.
 			// 3rd number = Give ammo boost to teammates.
 			// 4th number = Give ammo boost to assistant killers.
-			"Ammo Boost Reward"			"1,1,1,1"
+			"Ammo Boost Reward"			"1.0,1.0,1.0,1.0"
 
 			// Give ammo refill as a reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -3096,7 +3096,7 @@
 				"Teammate Limit"			"0"
 				"Action Duration Reward"		"2.0,2.0,2.0,2.0"
 				"Adrenaline Time Reward"		"30.0,30.0,30.0,30.0"
-				"Ammo Boost Reward"			"1,1,1,1"
+				"Ammo Boost Reward"			"1.0,1.0,1.0,1.0"
 				"Ammo Refill Reward"			"1,1,1,1"
 				"Ammo Regen Reward"			"1,1,1,1"
 				"Attack Boost Reward"			"1.25,1.25,1.25,1.25"
@@ -3619,7 +3619,7 @@
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
-			"Ammo Boost Passive"			"0"
+			"Ammo Boost Passive"			"0.0"
 
 			// Give ammo refill as a passive to survivors.
 			// --
@@ -4032,7 +4032,7 @@
 				"Passive Notify"			"0"
 				"Action Duration Passive"		"0.0"
 				"Adrenaline Time Passive"		"0.0"
-				"Ammo Boost Passive"			"0"
+				"Ammo Boost Passive"			"0.0"
 				"Ammo Refill Passive"			"0"
 				"Ammo Regen Passive"			"0"
 				"Attack Boost Passive"			"0.0"
@@ -4153,7 +4153,7 @@
 				"Passive Notify"			"0"
 				"Action Duration Passive"		"0.0"
 				"Adrenaline Time Passive"		"0.0"
-				"Ammo Boost Passive"			"0"
+				"Ammo Boost Passive"			"0.0"
 				"Ammo Refill Passive"			"0"
 				"Ammo Regen Passive"			"0"
 				"Attack Boost Passive"			"0.0"
@@ -4226,7 +4226,7 @@
 				"Passive Notify"			"0"
 				"Action Duration Passive"		"0.0"
 				"Adrenaline Time Passive"		"0.0"
-				"Ammo Boost Passive"			"0"
+				"Ammo Boost Passive"			"0.0"
 				"Ammo Refill Passive"			"0"
 				"Ammo Regen Passive"			"0"
 				"Attack Boost Passive"			"0.0"
@@ -7048,7 +7048,7 @@
 			// 2nd number = Give ammo boost to assistants.
 			// 3rd number = Give ammo boost to teammates.
 			// 4th number = Give ammo boost to assistant killers.
-			"Ammo Boost Reward"			"0,0,0,0"
+			"Ammo Boost Reward"			"0.0,0.0,0.0,0.0"
 
 			// Give ammo refill as a reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -8447,7 +8447,7 @@
 				"Teammate Limit"			"0"
 				"Action Duration Reward"		"0.0,0.0,0.0,0.0"
 				"Adrenaline Time Reward"		"0.0,0.0,0.0,0.0"
-				"Ammo Boost Reward"			"0,0,0,0"
+				"Ammo Boost Reward"			"0.0,0.0,0.0,0.0"
 				"Ammo Refill Reward"			"0,0,0,0"
 				"Ammo Regen Reward"			"0,0,0,0"
 				"Attack Boost Reward"			"0.0,0.0,0.0,0.0"

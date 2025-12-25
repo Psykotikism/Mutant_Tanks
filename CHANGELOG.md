@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 9.4 (December 25, 2025)
+## Version 9.4 (January 1, 2026)
 
 ### Bug Fixes
 
