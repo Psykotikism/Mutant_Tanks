@@ -9681,7 +9681,7 @@ void vChooseArrivalType(int tank, const char[] oldname, const char[] name, int m
 				{
 					FormatEx(sPhrase, sizeof sPhrase, "Tank #%i Note", iType);
 					FormatEx(sPhrase2, sizeof sPhrase2, "%s Note", sName);
-					FormatEx(sSteamIDFinal, sizeof sSteamIDFinal, "%s Tank Note", (TranslationPhraseExists(g_esPlayer[tank].g_sSteamID32) ? g_esPlayer[tank].g_sSteamID32 : g_esPlayer[tank].g_sSteam3ID), g_sSpecialNames[specType]);
+					FormatEx(sSteamIDFinal, sizeof sSteamIDFinal, "%s Tank Note", (TranslationPhraseExists(g_esPlayer[tank].g_sSteamID32) ? g_esPlayer[tank].g_sSteamID32 : g_esPlayer[tank].g_sSteam3ID));
 
 					if (sPhrase[0] != '\0' && TranslationPhraseExists(sPhrase))
 					{
