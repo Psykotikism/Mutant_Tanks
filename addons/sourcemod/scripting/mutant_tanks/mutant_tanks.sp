@@ -9642,7 +9642,6 @@ void vChooseArrivalType(int tank, const char[] oldname, const char[] name, int m
 			if (mode >= 0 && bIsCustomTankSupported(tank))
 			{
 				char sPhrase[64], sPhrase2[64], sFinalPhrase[64], sSteamIDFinal[64], sName[33], sNote[64], sNoNote[64];
-				FormatEx(sSteamIDFinal, sizeof sSteamIDFinal, "%s", (TranslationPhraseExists(g_esPlayer[tank].g_sSteamID32) ? g_esPlayer[tank].g_sSteamID32 : g_esPlayer[tank].g_sSteam3ID));
 				int iType = g_esTank[g_esPlayer[tank].g_iTankType].g_iRealType[0];
 
 				switch (specType)
@@ -9660,6 +9659,7 @@ void vChooseArrivalType(int tank, const char[] oldname, const char[] name, int m
 				{
 					FormatEx(sPhrase, sizeof sPhrase, "%s #%i Note", g_sSpecialNames[specType], iType);
 					FormatEx(sPhrase2, sizeof sPhrase2, "%s Note", sName);
+					FormatEx(sSteamIDFinal, sizeof sSteamIDFinal, "%s %s Note", (TranslationPhraseExists(g_esPlayer[tank].g_sSteamID32) ? g_esPlayer[tank].g_sSteamID32 : g_esPlayer[tank].g_sSteam3ID), g_sSpecialNames[specType]);
 
 					if (sPhrase[0] != '\0' && TranslationPhraseExists(sPhrase))
 					{
@@ -9681,6 +9681,7 @@ void vChooseArrivalType(int tank, const char[] oldname, const char[] name, int m
 				{
 					FormatEx(sPhrase, sizeof sPhrase, "Tank #%i Note", iType);
 					FormatEx(sPhrase2, sizeof sPhrase2, "%s Note", sName);
+					FormatEx(sSteamIDFinal, sizeof sSteamIDFinal, "%s Tank Note", (TranslationPhraseExists(g_esPlayer[tank].g_sSteamID32) ? g_esPlayer[tank].g_sSteamID32 : g_esPlayer[tank].g_sSteam3ID), g_sSpecialNames[specType]);
 
 					if (sPhrase[0] != '\0' && TranslationPhraseExists(sPhrase))
 					{

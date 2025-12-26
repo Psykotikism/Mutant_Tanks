@@ -49,8 +49,8 @@
 - Updated English translations. (Thanks to `JustMadMan`!)
 - Updated Russian translations. (Thanks to `JustMadMan`!)
 - Name and note translations in the `mutant_tanks_names.phrases.txt` file can now only be specified with the following phrase section names:
-	- Name: `Tank #1 Name`/`Absorber Tank Name`
-	- Note: `Tank #1 Note`/`Absorber Tank Note`
+	- Name: `Tank #1 Name`/`Absorber Tank Name`/`STEAM_ID Tank Name`
+	- Note: `Tank #1 Note`/`Absorber Tank Note`/`STEAM_ID Tank Note`
 
 #### Abilities
 > You must toggle `MT_INCLUDE_NEWCONTENT` along with their corresponding switches inside the `scripting/include/mutant_tanks.inc` file and recompile all the plugins to access these new settings.
