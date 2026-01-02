@@ -4164,40 +4164,43 @@ public void OnGameFrame()
 						strcopy(sFinalName, sizeof sFinalName, sTankName2);
 					}
 
-					switch (g_esInfectedCache[iTarget].g_iDisplayHealthType)
+					if (sFinalName[0] != '\0')
 					{
-						case 1:
+						switch (g_esInfectedCache[iTarget].g_iDisplayHealthType)
 						{
-							switch (g_esInfectedCache[iTarget].g_iDisplayHealth)
+							case 1:
 							{
-								case 1: PrintHintText(iPlayer, "%t", sFinalName);
-								case 2: PrintHintText(iPlayer, "%i HP", iHealth);
-								case 3: PrintHintText(iPlayer, "%i/%i HP (%.0f%s)", iHealth, iTotalHealth, flHealthPercentage, "%%");
-								case 4: PrintHintText(iPlayer, "HP: |-<%s>-|", sHealthBar);
-								case 5: PrintHintText(iPlayer, "%t (%i HP)", sFinalName, iHealth);
-								case 6: PrintHintText(iPlayer, "%t [%i/%i HP (%.0f%s)]", sFinalName, iHealth, iTotalHealth, flHealthPercentage, "%%");
-								case 7: PrintHintText(iPlayer, "%t\nHP: |-<%s>-|", sFinalName, sHealthBar);
-								case 8: PrintHintText(iPlayer, "%i HP\nHP: |-<%s>-|", iHealth, sHealthBar);
-								case 9: PrintHintText(iPlayer, "%i/%i HP (%.0f%s)\nHP: |-<%s>-|", iHealth, iTotalHealth, flHealthPercentage, "%%", sHealthBar);
-								case 10: PrintHintText(iPlayer, "%t (%i HP)\nHP: |-<%s>-|", sFinalName, iHealth, sHealthBar);
-								case 11: PrintHintText(iPlayer, "%t [%i/%i HP (%.0f%s)]\nHP: |-<%s>-|", sFinalName, iHealth, iTotalHealth, flHealthPercentage, "%%", sHealthBar);
+								switch (g_esInfectedCache[iTarget].g_iDisplayHealth)
+								{
+									case 1: PrintHintText(iPlayer, "%t", sFinalName);
+									case 2: PrintHintText(iPlayer, "%i HP", iHealth);
+									case 3: PrintHintText(iPlayer, "%i/%i HP (%.0f%s)", iHealth, iTotalHealth, flHealthPercentage, "%%");
+									case 4: PrintHintText(iPlayer, "HP: |-<%s>-|", sHealthBar);
+									case 5: PrintHintText(iPlayer, "%t (%i HP)", sFinalName, iHealth);
+									case 6: PrintHintText(iPlayer, "%t [%i/%i HP (%.0f%s)]", sFinalName, iHealth, iTotalHealth, flHealthPercentage, "%%");
+									case 7: PrintHintText(iPlayer, "%t\nHP: |-<%s>-|", sFinalName, sHealthBar);
+									case 8: PrintHintText(iPlayer, "%i HP\nHP: |-<%s>-|", iHealth, sHealthBar);
+									case 9: PrintHintText(iPlayer, "%i/%i HP (%.0f%s)\nHP: |-<%s>-|", iHealth, iTotalHealth, flHealthPercentage, "%%", sHealthBar);
+									case 10: PrintHintText(iPlayer, "%t (%i HP)\nHP: |-<%s>-|", sFinalName, iHealth, sHealthBar);
+									case 11: PrintHintText(iPlayer, "%t [%i/%i HP (%.0f%s)]\nHP: |-<%s>-|", sFinalName, iHealth, iTotalHealth, flHealthPercentage, "%%", sHealthBar);
+								}
 							}
-						}
-						case 2:
-						{
-							switch (g_esInfectedCache[iTarget].g_iDisplayHealth)
+							case 2:
 							{
-								case 1: PrintCenterText(iPlayer, "%t", sFinalName);
-								case 2: PrintCenterText(iPlayer, "%i HP", iHealth);
-								case 3: PrintCenterText(iPlayer, "%i/%i HP (%.0f%s)", iHealth, iTotalHealth, flHealthPercentage, "%%");
-								case 4: PrintCenterText(iPlayer, "HP: |-<%s>-|", sHealthBar);
-								case 5: PrintCenterText(iPlayer, "%t (%i HP)", sFinalName, iHealth);
-								case 6: PrintCenterText(iPlayer, "%t [%i/%i HP (%.0f%s)]", sFinalName, iHealth, iTotalHealth, flHealthPercentage, "%%");
-								case 7: PrintCenterText(iPlayer, "%t\nHP: |-<%s>-|", sFinalName, sHealthBar);
-								case 8: PrintCenterText(iPlayer, "%i HP\nHP: |-<%s>-|", iHealth, sHealthBar);
-								case 9: PrintCenterText(iPlayer, "%i/%i HP (%.0f%s)\nHP: |-<%s>-|", iHealth, iTotalHealth, flHealthPercentage, "%%", sHealthBar);
-								case 10: PrintCenterText(iPlayer, "%t (%i HP)\nHP: |-<%s>-|", sFinalName, iHealth, sHealthBar);
-								case 11: PrintCenterText(iPlayer, "%t [%i/%i HP (%.0f%s)]\nHP: |-<%s>-|", sFinalName, iHealth, iTotalHealth, flHealthPercentage, "%%", sHealthBar);
+								switch (g_esInfectedCache[iTarget].g_iDisplayHealth)
+								{
+									case 1: PrintCenterText(iPlayer, "%t", sFinalName);
+									case 2: PrintCenterText(iPlayer, "%i HP", iHealth);
+									case 3: PrintCenterText(iPlayer, "%i/%i HP (%.0f%s)", iHealth, iTotalHealth, flHealthPercentage, "%%");
+									case 4: PrintCenterText(iPlayer, "HP: |-<%s>-|", sHealthBar);
+									case 5: PrintCenterText(iPlayer, "%t (%i HP)", sFinalName, iHealth);
+									case 6: PrintCenterText(iPlayer, "%t [%i/%i HP (%.0f%s)]", sFinalName, iHealth, iTotalHealth, flHealthPercentage, "%%");
+									case 7: PrintCenterText(iPlayer, "%t\nHP: |-<%s>-|", sFinalName, sHealthBar);
+									case 8: PrintCenterText(iPlayer, "%i HP\nHP: |-<%s>-|", iHealth, sHealthBar);
+									case 9: PrintCenterText(iPlayer, "%i/%i HP (%.0f%s)\nHP: |-<%s>-|", iHealth, iTotalHealth, flHealthPercentage, "%%", sHealthBar);
+									case 10: PrintCenterText(iPlayer, "%t (%i HP)\nHP: |-<%s>-|", sFinalName, iHealth, sHealthBar);
+									case 11: PrintCenterText(iPlayer, "%t [%i/%i HP (%.0f%s)]\nHP: |-<%s>-|", sFinalName, iHealth, iTotalHealth, flHealthPercentage, "%%", sHealthBar);
+								}
 							}
 						}
 					}
