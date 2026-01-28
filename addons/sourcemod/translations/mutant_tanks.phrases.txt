@@ -16,5821 +16,5821 @@
 
 	"MutantTanks"
 	{
-		"en"			"Mutant Tanks"
+		"en"        "Mutant Tanks"
 	}
 
 	"MTAbilitiesMenu"
 	{
-		"en"			"Mutant Tanks Abilities"
+		"en"        "Mutant Tanks Abilities"
 	}
 
 	"MTConfigMenu"
 	{
-		"en"			"Config Parser Menu"
+		"en"        "Config Parser Menu"
 	}
 
 	"MTDefaultItem"
 	{
-		"en"			"Default Tank"
+		"en"        "Default Tank"
 	}
 
 	"MTDefaultItemBoomer"
 	{
-		"en"			"Default Boomer"
+		"en"        "Default Boomer"
 	}
 
 	"MTDefaultItemCharger"
 	{
-		"en"			"Default Charger"
+		"en"        "Default Charger"
 	}
 
 	"MTDefaultItemHunter"
 	{
-		"en"			"Default Hunter"
+		"en"        "Default Hunter"
 	}
 
 	"MTDefaultItemJockey"
 	{
-		"en"			"Default Jockey"
+		"en"        "Default Jockey"
 	}
 
 	"MTDefaultItemSmoker"
 	{
-		"en"			"Default Smoker"
+		"en"        "Default Smoker"
 	}
 
 	"MTDefaultItemSpitter"
 	{
-		"en"			"Default Spitter"
+		"en"        "Default Spitter"
 	}
 
 	"MTDefaultItemWitch"
 	{
-		"en"			"Default Witch"
+		"en"        "Default Witch"
 	}
 
 	"MTFavoriteMenu"
 	{
-		"en"			"Use your favorite Mutant Tank type?"
+		"en"        "Use your favorite Mutant Tank type?"
 	}
 
 	"MTFavoriteMenuBoomer"
 	{
-		"en"			"Use your favorite Mutant Boomer type?"
+		"en"        "Use your favorite Mutant Boomer type?"
 	}
 
 	"MTFavoriteMenuCharger"
 	{
-		"en"			"Use your favorite Mutant Charger type?"
+		"en"        "Use your favorite Mutant Charger type?"
 	}
 
 	"MTFavoriteMenuHunter"
 	{
-		"en"			"Use your favorite Mutant Hunter type?"
+		"en"        "Use your favorite Mutant Hunter type?"
 	}
 
 	"MTFavoriteMenuJockey"
 	{
-		"en"			"Use your favorite Mutant Jockey type?"
+		"en"        "Use your favorite Mutant Jockey type?"
 	}
 
 	"MTFavoriteMenuSmoker"
 	{
-		"en"			"Use your favorite Mutant Smoker type?"
+		"en"        "Use your favorite Mutant Smoker type?"
 	}
 
 	"MTFavoriteMenuSpitter"
 	{
-		"en"			"Use your favorite Mutant Spitter type?"
+		"en"        "Use your favorite Mutant Spitter type?"
 	}
 
 	"MTFavoriteMenuWitch"
 	{
-		"en"			"Use your favorite Mutant Witch type?"
+		"en"        "Use your favorite Mutant Witch type?"
 	}
 
 	"MTInfoMenu"
 	{
-		"en"			"Mutant Tanks Information"
+		"en"        "Mutant Tanks Information"
 	}
 
 	"MTItem"
 	{
-		"#format"		"{1:t},{2:i},{3:i}"
-		"en"			"{1} (Tank #{2}) [Tank #{3}]"
+		"#format"   "{1:t},{2:i},{3:i}"
+		"en"        "{1} (Tank #{2}) [Tank #{3}]"
 	}
 
 	"MTItemBoomer"
 	{
-		"#format"		"{1:t},{2:i},{3:i}"
-		"en"			"{1} (Boomer #{2}) [Boomer #{3}]"
+		"#format"   "{1:t},{2:i},{3:i}"
+		"en"        "{1} (Boomer #{2}) [Boomer #{3}]"
 	}
 
 	"MTItemCharger"
 	{
-		"#format"		"{1:t},{2:i},{3:i}"
-		"en"			"{1} (Charger #{2}) [Charger #{3}]"
+		"#format"   "{1:t},{2:i},{3:i}"
+		"en"        "{1} (Charger #{2}) [Charger #{3}]"
 	}
 
 	"MTItemHunter"
 	{
-		"#format"		"{1:t},{2:i},{3:i}"
-		"en"			"{1} (Hunter #{2}) [Hunter #{3}]"
+		"#format"   "{1:t},{2:i},{3:i}"
+		"en"        "{1} (Hunter #{2}) [Hunter #{3}]"
 	}
 
 	"MTItemJockey"
 	{
-		"#format"		"{1:t},{2:i},{3:i}"
-		"en"			"{1} (Jockey #{2}) [Jockey #{3}]"
+		"#format"   "{1:t},{2:i},{3:i}"
+		"en"        "{1} (Jockey #{2}) [Jockey #{3}]"
 	}
 
 	"MTItemSmoker"
 	{
-		"#format"		"{1:t},{2:i},{3:i}"
-		"en"			"{1} (Smoker #{2}) [Smoker #{3}]"
+		"#format"   "{1:t},{2:i},{3:i}"
+		"en"        "{1} (Smoker #{2}) [Smoker #{3}]"
 	}
 
 	"MTItemSpitter"
 	{
-		"#format"		"{1:t},{2:i},{3:i}"
-		"en"			"{1} (Spitter #{2}) [Spitter #{3}]"
+		"#format"   "{1:t},{2:i},{3:i}"
+		"en"        "{1} (Spitter #{2}) [Spitter #{3}]"
 	}
 
 	"MTItemWitch"
 	{
-		"#format"		"{1:t},{2:i},{3:i}"
-		"en"			"{1} (Witch #{2}) [Witch #{3}]"
+		"#format"   "{1:t},{2:i},{3:i}"
+		"en"        "{1} (Witch #{2}) [Witch #{3}]"
 	}
 
 	"MTListMenu"
 	{
-		"en"			"Mutant Tanks List"
+		"en"        "Mutant Tanks List"
 	}
 
 	"MTListMenuBoomer"
 	{
-		"en"			"Mutant Boomers List"
+		"en"        "Mutant Boomers List"
 	}
 
 	"MTListMenuCharger"
 	{
-		"en"			"Mutant Chargers List"
+		"en"        "Mutant Chargers List"
 	}
 
 	"MTListMenuHunter"
 	{
-		"en"			"Mutant Hunters List"
+		"en"        "Mutant Hunters List"
 	}
 
 	"MTListMenuJockey"
 	{
-		"en"			"Mutant Jockeys List"
+		"en"        "Mutant Jockeys List"
 	}
 
 	"MTListMenuSmoker"
 	{
-		"en"			"Mutant Smokers List"
+		"en"        "Mutant Smokers List"
 	}
 
 	"MTListMenuSpitter"
 	{
-		"en"			"Mutant Spitters List"
+		"en"        "Mutant Spitters List"
 	}
 
 	"MTListMenuWitch"
 	{
-		"en"			"Mutant Witches List"
+		"en"        "Mutant Witches List"
 	}
 
 	"MTPathMenu"
 	{
-		"en"			"File Path Menu"
+		"en"        "File Path Menu"
 	}
 
 	"MTPrefsInfo"
 	{
-		"en"			"Type{olive} !mt_prefs{default} to change your{mint} visual reward settings{default}!"
+		"en"        "Type{olive} !mt_prefs{default} to change your{mint} visual reward settings{default}!"
 	}
 
 	"MTPrefsMenu"
 	{
-		"en"			"Mutant Tanks Preferences Menu"
+		"en"        "Mutant Tanks Preferences Menu"
 	}
 
 	"MTReloadMenu"
 	{
-		"en"			"Reload Config Menu"
+		"en"        "Reload Config Menu"
 	}
 
 	"MTSettingsItem"
 	{
-		"en"			"Plugin Settings"
+		"en"        "Plugin Settings"
 	}
 
 	"MTVersionMenu"
 	{
-		"en"			"Mutant Tanks Version"
+		"en"        "Mutant Tanks Version"
 	}
 
 	"MTWarnRusher"
 	{
-		"en"			"Group up with your team before you get hunted down!"
+		"en"        "Group up with your team before you get hunted down!"
 	}
 
 	"MTWarnSlacker"
 	{
-		"en"			"Catch up to your team before you get hunted down!"
+		"en"        "Catch up to your team before you get hunted down!"
 	}
 
 	"Ammunition"
 	{
-		"en"			"Ammunition"
+		"en"        "Ammunition"
 	}
 
 	"AbilityAmmo"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"Your main/special/upon-death ability has{olive} {1}{mint}/{olive}{2}{mint} ammo left."
+		"#format"   "{1:i},{2:i}"
+		"en"        "Your main/special/upon-death ability has{olive} {1}{mint}/{olive}{2}{mint} ammo left."
 	}
 
 	"AbilityAmmo2"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"Your range ability has{olive} {1}{mint}/{olive}{2}{mint} ammo left."
+		"#format"   "{1:i},{2:i}"
+		"en"        "Your range ability has{olive} {1}{mint}/{olive}{2}{mint} ammo left."
 	}
 
 	"AndConjunction"
 	{
-		"en"			"and"
+		"en"        "and"
 	}
 
 	"ButtonMode"
 	{
-		"en"			"Button Mode"
+		"en"        "Button Mode"
 	}
 
 	"AbilityButtonMode1"
 	{
-		"en"			"Press button(s) to activate your abilities."
+		"en"        "Press button(s) to activate your abilities."
 	}
 
 	"AbilityButtonMode2"
 	{
-		"en"			"Hold button(s) down to use your abilities."
+		"en"        "Hold button(s) down to use your abilities."
 	}
 
 	"AbilityButtonMode3"
 	{
-		"en"			"Press button(s) to toggle your abilities."
+		"en"        "Press button(s) to toggle your abilities."
 	}
 
 	"Buttons"
 	{
-		"en"			"Buttons"
+		"en"        "Buttons"
 	}
 
 	"AbilityButtons"
 	{
-		"en"			"{olive}+use (default: E):{mint} Activate your main ability."
+		"en"        "{olive}+use (default: E):{mint} Activate your main ability."
 	}
 
 	"AbilityButtons2"
 	{
-		"en"			"{olive}+reload (default: R):{mint} Activate your range ability."
+		"en"        "{olive}+reload (default: R):{mint} Activate your range ability."
 	}
 
 	"AbilityButtons3"
 	{
-		"en"			"{olive}+zoom (default: Mouse3/Scroll wheel):{mint} Activate your special ability."
+		"en"        "{olive}+zoom (default: Mouse3/Scroll wheel):{mint} Activate your special ability."
 	}
 
 	"AbilityButtons4"
 	{
-		"en"			"{olive}+duck (default: CTRL):{mint} Activate your upon-death ability."
+		"en"        "{olive}+duck (default: CTRL):{mint} Activate your upon-death ability."
 	}
 
 	"Cooldown"
 	{
-		"en"			"Cooldown"
+		"en"        "Cooldown"
 	}
 
 	"AbilityCooldown"
 	{
-		"#format"		"{1:i}"
-		"en"			"Cooldown:{olive} {1} second(s)"
+		"#format"   "{1:i}"
+		"en"        "Cooldown:{olive} {1} second(s)"
 	}
 
 	"Details"
 	{
-		"en"			"Details"
+		"en"        "Details"
 	}
 
 	"Duration"
 	{
-		"en"			"Duration"
+		"en"        "Duration"
 	}
 
 	"AbilityDuration"
 	{
-		"#format"		"{1:.2f}"
-		"en"			"Duration:{olive} {1} second(s)"
+		"#format"   "{1:.2f}"
+		"en"        "Duration:{olive} {1} second(s)"
 	}
 
 	"AbilityDuration2"
 	{
-		"#format"		"{1:i}"
-		"en"			"Duration:{olive} {1} second(s)"
+		"#format"   "{1:i}"
+		"en"        "Duration:{olive} {1} second(s)"
 	}
 
 	"HumanSupport"
 	{
-		"en"			"Human Support"
+		"en"        "Human Support"
 	}
 
 	"AbilityHumanSupport1"
 	{
-		"en"			"Enabled:{olive} No"
+		"en"        "Enabled:{olive} No"
 	}
 
 	"AbilityHumanSupport2"
 	{
-		"en"			"Enabled:{olive} Yes"
+		"en"        "Enabled:{olive} Yes"
 	}
 
 	"RangeCooldown"
 	{
-		"en"			"Range Cooldown"
+		"en"        "Range Cooldown"
 	}
 
 	"AbilityRangeCooldown"
 	{
-		"#format"		"{1:i}"
-		"en"			"Range Cooldown:{olive} {1} second(s)"
+		"#format"   "{1:i}"
+		"en"        "Range Cooldown:{olive} {1} second(s)"
 	}
 
 	"RockCooldown"
 	{
-		"en"			"Rock Cooldown"
+		"en"        "Rock Cooldown"
 	}
 
 	"AbilityRockCooldown"
 	{
-		"#format"		"{1:i}"
-		"en"			"Rock Cooldown:{olive} {1} second(s)"
+		"#format"   "{1:i}"
+		"en"        "Rock Cooldown:{olive} {1} second(s)"
 	}
 
 	"Status"
 	{
-		"en"			"Status"
+		"en"        "Status"
 	}
 
 	"AbilityInstalled"
 	{
-		"#format"		"{1:s}"
-		"en"			"{1}{olive} is installed."
+		"#format"   "{1:s}"
+		"en"        "{1}{olive} is installed."
 	}
 
 	"AbilityInstalled2"
 	{
-		"#format"		"{1:s}"
-		"en"			"{1} is installed."
+		"#format"   "{1:s}"
+		"en"        "{1} is installed."
 	}
 
 	"AbilityStatus1"
 	{
-		"en"			"Status:{olive} Disabled"
+		"en"        "Status:{olive} Disabled"
 	}
 
 	"AbilityStatus2"
 	{
-		"en"			"Status:{olive} Enabled"
+		"en"        "Status:{olive} Enabled"
 	}
 
 	"Arrival1"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{default} has appeared!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{default} has appeared!"
 	}
 
 	"Arrival2"
 	{
-		"#format"		"{1:t}"
-		"en"			"Here comes{olive} {1}{default}!"
+		"#format"   "{1:t}"
+		"en"        "Here comes{olive} {1}{default}!"
 	}
 
 	"Arrival3"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{default} is ready to kill!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{default} is ready to kill!"
 	}
 
 	"Arrival4"
 	{
-		"#format"		"{1:t}"
-		"en"			"Are you ready to face{olive} {1}{default}?"
+		"#format"   "{1:t}"
+		"en"        "Are you ready to face{olive} {1}{default}?"
 	}
 
 	"Arrival5"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{default} came for a challenge!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{default} came for a challenge!"
 	}
 
 	"Arrival6"
 	{
-		"#format"		"{1:t}"
-		"en"			"Get ready!{olive} {1}{default} is coming!"
+		"#format"   "{1:t}"
+		"en"        "Get ready!{olive} {1}{default} is coming!"
 	}
 
 	"Arrival7"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{default} is here!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{default} is here!"
 	}
 
 	"Arrival8"
 	{
-		"#format"		"{1:t}"
-		"en"			"Oh no!{olive} {1}{default} is nearing!"
+		"#format"   "{1:t}"
+		"en"        "Oh no!{olive} {1}{default} is nearing!"
 	}
 
 	"Arrival9"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{default} joined the game"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{default} joined the game"
 	}
 
 	"Arrival10"
 	{
-		"#format"		"{1:t}"
-		"en"			"It seems{olive} {1}{default} is joining your company!"
+		"#format"   "{1:t}"
+		"en"        "It seems{olive} {1}{default} is joining your company!"
 	}
 
 	"Assist1"
 	{
-		"#format"		"{1:t},{2:s}"
-		"en"			"{olive}{1}{default} is defeated!{yellow} MVP:{mint} {2}"
+		"#format"   "{1:t},{2:s}"
+		"en"        "{olive}{1}{default} is defeated!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist2"
 	{
-		"#format"		"{1:t},{2:s}"
-		"en"			"The survivors defeated{olive} {1}{default}!{yellow} MVP:{mint} {2}"
+		"#format"   "{1:t},{2:s}"
+		"en"        "The survivors defeated{olive} {1}{default}!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist3"
 	{
-		"#format"		"{1:t},{2:s}"
-		"en"			"{olive}{1}{default} goes to hell!{yellow} MVP:{mint} {2}"
+		"#format"   "{1:t},{2:s}"
+		"en"        "{olive}{1}{default} goes to hell!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist4"
 	{
-		"#format"		"{1:t},{2:s}"
-		"en"			"Is{olive} {1}{default} really dead...?{yellow} MVP:{mint} {2}"
+		"#format"   "{1:t},{2:s}"
+		"en"        "Is{olive} {1}{default} really dead...?{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist5"
 	{
-		"#format"		"{1:t},{2:s}"
-		"en"			"{olive}{1}{default} lost the challenge against the survivors!{yellow} MVP:{mint} {2}"
+		"#format"   "{1:t},{2:s}"
+		"en"        "{olive}{1}{default} lost the challenge against the survivors!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist6"
 	{
-		"#format"		"{1:t},{2:s}"
-		"en"			"The{olive} {1}{default} failed to kill the survivors!{yellow} MVP:{mint} {2}"
+		"#format"   "{1:t},{2:s}"
+		"en"        "The{olive} {1}{default} failed to kill the survivors!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist7"
 	{
-		"#format"		"{1:t},{2:s}"
-		"en"			"{olive}{1}{default} has met their demise!{yellow} MVP:{mint} {2}"
+		"#format"   "{1:t},{2:s}"
+		"en"        "{olive}{1}{default} has met their demise!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist8"
 	{
-		"#format"		"{1:t},{2:s}"
-		"en"			"Yay!{olive} {1}{default} is dead!{yellow} MVP:{mint} {2}"
+		"#format"   "{1:t},{2:s}"
+		"en"        "Yay!{olive} {1}{default} is dead!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist9"
 	{
-		"#format"		"{1:t},{2:s}"
-		"en"			"{olive}{1}{default} left the game{yellow} MVP:{mint} {2}"
+		"#format"   "{1:t},{2:s}"
+		"en"        "{olive}{1}{default} left the game{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist10"
 	{
-		"#format"		"{1:t},{2:s}"
-		"en"			"It seems{olive} {1}{default} could not beat the survivors after all.{yellow} MVP:{mint} {2}"
+		"#format"   "{1:t},{2:s}"
+		"en"        "It seems{olive} {1}{default} could not beat the survivors after all.{yellow} MVP:{mint} {2}"
 	}
 
 	"BodyVisualOn"
 	{
-		"en"			"Body Color Visual: ON"
+		"en"        "Body Color Visual: ON"
 	}
 
 	"BodyVisualOff"
 	{
-		"en"			"Body Color Visual: OFF"
+		"en"        "Body Color Visual: OFF"
 	}
 
 	"ChangeType"
 	{
-		"en"			"Your personal Mutant Tank type changed."
+		"en"        "Your personal Mutant Tank type changed."
 	}
 
 	"ChangeTypeBoomer"
 	{
-		"en"			"Your personal Mutant Boomer type changed."
+		"en"        "Your personal Mutant Boomer type changed."
 	}
 
 	"ChangeTypeCharger"
 	{
-		"en"			"Your personal Mutant Charger type changed."
+		"en"        "Your personal Mutant Charger type changed."
 	}
 
 	"ChangeTypeHunter"
 	{
-		"en"			"Your personal Mutant Hunter type changed."
+		"en"        "Your personal Mutant Hunter type changed."
 	}
 
 	"ChangeTypeJockey"
 	{
-		"en"			"Your personal Mutant Jockey type changed."
+		"en"        "Your personal Mutant Jockey type changed."
 	}
 
 	"ChangeTypeSmoker"
 	{
-		"en"			"Your personal Mutant Smoker type changed."
+		"en"        "Your personal Mutant Smoker type changed."
 	}
 
 	"ChangeTypeSpitter"
 	{
-		"en"			"Your personal Mutant Spitter type changed."
+		"en"        "Your personal Mutant Spitter type changed."
 	}
 
 	"ChangeTypeWitch"
 	{
-		"en"			"Your personal Mutant Witch type changed."
+		"en"        "Your personal Mutant Witch type changed."
 	}
 
 	"CheckConsole"
 	{
-		"en"			"See console for full output."
+		"en"        "See console for full output."
 	}
 
 	"CommandUsage"
 	{
-		"#format"		"{1:s},{2:i},{3:i}"
-		"en"			"Usage: {1} <type {2}-{3}> <amount: 1-32> <0: spawn at crosshair|1: spawn automatically> <0: not blind|1: blind>"
+		"#format"   "{1:s},{2:i},{3:i}"
+		"en"        "Usage: {1} <type {2}-{3}> <amount: 1-32> <0: spawn at crosshair|1: spawn automatically> <0: not blind|1: blind>"
 	}
 
 	"CommandUsage2"
 	{
-		"#format"		"{1:s}"
-		"en"			"Usage: {1} \"ability name\""
+		"#format"   "{1:s}"
+		"en"        "Usage: {1} \"ability name\""
 	}
 
 	"CompletedParsing"
 	{
-		"en"			"Parsing complete!"
+		"en"        "Parsing complete!"
 	}
 
 	"Death1"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{default} is defeated!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{default} is defeated!"
 	}
 
 	"Death2"
 	{
-		"#format"		"{1:t}"
-		"en"			"The survivors defeated{olive} {1}{default}!"
+		"#format"   "{1:t}"
+		"en"        "The survivors defeated{olive} {1}{default}!"
 	}
 
 	"Death3"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{default} goes to hell!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{default} goes to hell!"
 	}
 
 	"Death4"
 	{
-		"#format"		"{1:t}"
-		"en"			"Is{olive} {1}{default} really dead...?"
+		"#format"   "{1:t}"
+		"en"        "Is{olive} {1}{default} really dead...?"
 	}
 
 	"Death5"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{default} lost the challenge against the survivors!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{default} lost the challenge against the survivors!"
 	}
 
 	"Death6"
 	{
-		"#format"		"{1:t}"
-		"en"			"The{olive} {1}{default} failed to kill the survivors!"
+		"#format"   "{1:t}"
+		"en"        "The{olive} {1}{default} failed to kill the survivors!"
 	}
 
 	"Death7"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{default} has met their demise!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{default} has met their demise!"
 	}
 
 	"Death8"
 	{
-		"#format"		"{1:t}"
-		"en"			"Yay!{olive} {1}{default} is dead!"
+		"#format"   "{1:t}"
+		"en"        "Yay!{olive} {1}{default} is dead!"
 	}
 
 	"Death9"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{default} left the game"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{default} left the game"
 	}
 
 	"Death10"
 	{
-		"#format"		"{1:t}"
-		"en"			"It seems{olive} {1}{default} could not beat the survivors after all!"
+		"#format"   "{1:t}"
+		"en"        "It seems{olive} {1}{default} could not beat the survivors after all!"
 	}
 
 	"DespawnCanceled"
 	{
-		"en"			"Your despawn was canceled!"
+		"en"        "Your despawn was canceled!"
 	}
 
 	"DespawnNow"
 	{
-		"en"			"You have despawned!"
+		"en"        "You have despawned!"
 	}
 
 	"DespawnTimer"
 	{
-		"#format"		"{1:i}"
-		"en"			"You will despawn in {1} second(s)!"
+		"#format"   "{1:i}"
+		"en"        "You will despawn in {1} second(s)!"
 	}
 
 	"DisabledType"
 	{
-		"#format"		"{1:t},{2:i},{3:i}"
-		"en"			"{1}{yellow} (Tank #{2}) [Tank #{3}]{default} is disabled."
+		"#format"   "{1:t},{2:i},{3:i}"
+		"en"        "{1}{yellow} (Tank #{2}) [Tank #{3}]{default} is disabled."
 	}
 
 	"DisabledTypeBoomer"
 	{
-		"#format"		"{1:t},{2:i},{3:i}"
-		"en"			"{1}{yellow} (Boomer #{2}) [Boomer #{3}]{default} is disabled."
+		"#format"   "{1:t},{2:i},{3:i}"
+		"en"        "{1}{yellow} (Boomer #{2}) [Boomer #{3}]{default} is disabled."
 	}
 
 	"DisabledTypeCharger"
 	{
-		"#format"		"{1:t},{2:i},{3:i}"
-		"en"			"{1}{yellow} (Charger #{2}) [Charger #{3}]{default} is disabled."
+		"#format"   "{1:t},{2:i},{3:i}"
+		"en"        "{1}{yellow} (Charger #{2}) [Charger #{3}]{default} is disabled."
 	}
 
 	"DisabledTypeHunter"
 	{
-		"#format"		"{1:t},{2:i},{3:i}"
-		"en"			"{1}{yellow} (Hunter #{2}) [Hunter #{3}]{default} is disabled."
+		"#format"   "{1:t},{2:i},{3:i}"
+		"en"        "{1}{yellow} (Hunter #{2}) [Hunter #{3}]{default} is disabled."
 	}
 
 	"DisabledTypeJockey"
 	{
-		"#format"		"{1:t},{2:i},{3:i}"
-		"en"			"{1}{yellow} (Jockey #{2}) [Jockey #{3}]{default} is disabled."
+		"#format"   "{1:t},{2:i},{3:i}"
+		"en"        "{1}{yellow} (Jockey #{2}) [Jockey #{3}]{default} is disabled."
 	}
 
 	"DisabledTypeSmoker"
 	{
-		"#format"		"{1:t},{2:i},{3:i}"
-		"en"			"{1}{yellow} (Smoker #{2}) [Smoker #{3}]{default} is disabled."
+		"#format"   "{1:t},{2:i},{3:i}"
+		"en"        "{1}{yellow} (Smoker #{2}) [Smoker #{3}]{default} is disabled."
 	}
 
 	"DisabledTypeSpitter"
 	{
-		"#format"		"{1:t},{2:i},{3:i}"
-		"en"			"{1}{yellow} (Spitter #{2}) [Spitter #{3}]{default} is disabled."
+		"#format"   "{1:t},{2:i},{3:i}"
+		"en"        "{1}{yellow} (Spitter #{2}) [Spitter #{3}]{default} is disabled."
 	}
 
 	"DisabledTypeWitch"
 	{
-		"#format"		"{1:t},{2:i},{3:i}"
-		"en"			"{1}{yellow} (Witch #{2}) [Witch #{3}]{default} is disabled."
+		"#format"   "{1:t},{2:i},{3:i}"
+		"en"        "{1}{yellow} (Witch #{2}) [Witch #{3}]{default} is disabled."
 	}
 
 	"ErrorParsing"
 	{
-		"#format"		"{1:s},{2:s}"
-		"en"			"Error while parsing the \"{1}\" file. Error Message: {2}."
+		"#format"   "{1:s},{2:s}"
+		"en"        "Error while parsing the \"{1}\" file. Error Message: {2}."
 	}
 
 	"Evolved"
 	{
-		"#format"		"{1:t},{2:t},{3:i}"
-		"en"			"{olive}{1}{mint} evolved into{olive} {2}{yellow} (Stage {3}){mint}!"
+		"#format"   "{1:t},{2:t},{3:i}"
+		"en"        "{olive}{1}{mint} evolved into{olive} {2}{yellow} (Stage {3}){mint}!"
 	}
 
 	"FailedParsing"
 	{
-		"#format"		"{1:s}"
-		"en"			"Failed to parse the \"{1}\" file."
+		"#format"   "{1:s}"
+		"en"        "Failed to parse the \"{1}\" file."
 	}
 
 	"FavoriteUnused"
 	{
-		"en"			"You chose not to use your favorite Mutant Tank type."
+		"en"        "You chose not to use your favorite Mutant Tank type."
 	}
 
 	"FavoriteUnusedBoomer"
 	{
-		"en"			"You chose not to use your favorite Mutant Boomer type."
+		"en"        "You chose not to use your favorite Mutant Boomer type."
 	}
 
 	"FavoriteUnusedCharger"
 	{
-		"en"			"You chose not to use your favorite Mutant Charger type."
+		"en"        "You chose not to use your favorite Mutant Charger type."
 	}
 
 	"FavoriteUnusedHunter"
 	{
-		"en"			"You chose not to use your favorite Mutant Hunter type."
+		"en"        "You chose not to use your favorite Mutant Hunter type."
 	}
 
 	"FavoriteUnusedJockey"
 	{
-		"en"			"You chose not to use your favorite Mutant Jockey type."
+		"en"        "You chose not to use your favorite Mutant Jockey type."
 	}
 
 	"FavoriteUnusedSmoker"
 	{
-		"en"			"You chose not to use your favorite Mutant Smoker type."
+		"en"        "You chose not to use your favorite Mutant Smoker type."
 	}
 
 	"FavoriteUnusedSpitter"
 	{
-		"en"			"You chose not to use your favorite Mutant Spitter type."
+		"en"        "You chose not to use your favorite Mutant Spitter type."
 	}
 
 	"FavoriteUnusedWitch"
 	{
-		"en"			"You chose not to use your favorite Mutant Witch type."
+		"en"        "You chose not to use your favorite Mutant Witch type."
 	}
 
 	"GeneralDetails"
 	{
-		"en"			"Mutant Tanks makes fighting Tanks great again!"
+		"en"        "Mutant Tanks makes fighting Tanks great again!"
 	}
 
 	"GlowVisualOn"
 	{
-		"en"			"Glow Outline Visual: ON"
+		"en"        "Glow Outline Visual: ON"
 	}
 
 	"GlowVisualOff"
 	{
-		"en"			"Glow Outline Visual: OFF"
+		"en"        "Glow Outline Visual: OFF"
 	}
 
 	"HardcoreModeOn"
 	{
-		"en"			"HARDCORE{default} mode is{olive} enabled{default}!"
+		"en"        "HARDCORE{default} mode is{olive} enabled{default}!"
 	}
 
 	"HardcoreModeOff"
 	{
-		"en"			"HARDCORE{default} mode is{olive} disabled{default}!"
+		"en"        "HARDCORE{default} mode is{olive} disabled{default}!"
 	}
 
 	"HardcoreModeWarning"
 	{
-		"en"			"You only get one chance to survive on HARDCORE mode!"
+		"en"        "You only get one chance to survive on HARDCORE mode!"
 	}
 
 	"HumanCooldown"
 	{
-		"#format"		"{1:i}"
-		"en"			"You must wait another{olive} {1} second(s){mint} before changing into a different Mutant Tank type."
+		"#format"   "{1:i}"
+		"en"        "You must wait another{olive} {1} second(s){mint} before changing into a different Mutant Tank type."
 	}
 
 	"HumanCooldownBoomer"
 	{
-		"#format"		"{1:i}"
-		"en"			"You must wait another{olive} {1} second(s){mint} before changing into a different Mutant Boomer type."
+		"#format"   "{1:i}"
+		"en"        "You must wait another{olive} {1} second(s){mint} before changing into a different Mutant Boomer type."
 	}
 
 	"HumanCooldownCharger"
 	{
-		"#format"		"{1:i}"
-		"en"			"You must wait another{olive} {1} second(s){mint} before changing into a different Mutant Charger type."
+		"#format"   "{1:i}"
+		"en"        "You must wait another{olive} {1} second(s){mint} before changing into a different Mutant Charger type."
 	}
 
 	"HumanCooldownHunter"
 	{
-		"#format"		"{1:i}"
-		"en"			"You must wait another{olive} {1} second(s){mint} before changing into a different Mutant Hunter type."
+		"#format"   "{1:i}"
+		"en"        "You must wait another{olive} {1} second(s){mint} before changing into a different Mutant Hunter type."
 	}
 
 	"HumanCooldownJockey"
 	{
-		"#format"		"{1:i}"
-		"en"			"You must wait another{olive} {1} second(s){mint} before changing into a different Mutant Jockey type."
+		"#format"   "{1:i}"
+		"en"        "You must wait another{olive} {1} second(s){mint} before changing into a different Mutant Jockey type."
 	}
 
 	"HumanCooldownSmoker"
 	{
-		"#format"		"{1:i}"
-		"en"			"You must wait another{olive} {1} second(s){mint} before changing into a different Mutant Smoker type."
+		"#format"   "{1:i}"
+		"en"        "You must wait another{olive} {1} second(s){mint} before changing into a different Mutant Smoker type."
 	}
 
 	"HumanCooldownSpitter"
 	{
-		"#format"		"{1:i}"
-		"en"			"You must wait another{olive} {1} second(s){mint} before changing into a different Mutant Spitter type."
+		"#format"   "{1:i}"
+		"en"        "You must wait another{olive} {1} second(s){mint} before changing into a different Mutant Spitter type."
 	}
 
 	"HumanCooldownWitch"
 	{
-		"#format"		"{1:i}"
-		"en"			"You must wait another{olive} {1} second(s){mint} before changing into a different Mutant Witch type."
+		"#format"   "{1:i}"
+		"en"        "You must wait another{olive} {1} second(s){mint} before changing into a different Mutant Witch type."
 	}
 
 	"HumanTag"
 	{
-		"en"			"[HUMAN]"
+		"en"        "[HUMAN]"
 	}
 
 	"Kill1"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{default} finished off{mint} {2}{default}!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{default} finished off{mint} {2}{default}!"
 	}
 
 	"Kill2"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{default} defeated{mint} {2}{default}!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{default} defeated{mint} {2}{default}!"
 	}
 
 	"Kill3"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{default} sent{mint} {2}{default} to hell!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{default} sent{mint} {2}{default} to hell!"
 	}
 
 	"Kill4"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"Did{olive} {1}{default} actually kill{mint} {2}{default}...?"
+		"#format"   "{1:t},{2:N}"
+		"en"        "Did{olive} {1}{default} actually kill{mint} {2}{default}...?"
 	}
 
 	"Kill5"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{mint}{2}{default} lost the challenge against{olive} {1}{default}!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{mint}{2}{default} lost the challenge against{olive} {1}{default}!"
 	}
 
 	"Kill6"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{mint}{2}{default} failed to kill{olive} {1}{default}!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{mint}{2}{default} failed to kill{olive} {1}{default}!"
 	}
 
 	"Kill7"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{mint}{2}{default} has met their demise at the hands of{olive} {1}{default}!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{mint}{2}{default} has met their demise at the hands of{olive} {1}{default}!"
 	}
 
 	"Kill8"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"Yay!{mint} {2}{default} is dead thanks to{olive} {1}{default}!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "Yay!{mint} {2}{default} is dead thanks to{olive} {1}{default}!"
 	}
 
 	"Kill9"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{default} made{mint} {2}{default} ragequit!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{default} made{mint} {2}{default} ragequit!"
 	}
 
 	"Kill10"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"It seems{mint} {2}{default} could not beat{olive} {1}{default} after all!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "It seems{mint} {2}{default} could not beat{olive} {1}{default} after all!"
 	}
 
 	"Killer1"
 	{
-		"#format"		"{1:s},{2:t},{3:s}"
-		"en"			"{mint}{1}{default} finished off{olive} {2}{default}!{yellow} MVP:{mint} {3}"
+		"#format"   "{1:s},{2:t},{3:s}"
+		"en"        "{mint}{1}{default} finished off{olive} {2}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer2"
 	{
-		"#format"		"{1:s},{2:t},{3:s}"
-		"en"			"{mint}{1}{default} defeated{olive} {2}{default}!{yellow} MVP:{mint} {3}"
+		"#format"   "{1:s},{2:t},{3:s}"
+		"en"        "{mint}{1}{default} defeated{olive} {2}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer3"
 	{
-		"#format"		"{1:s},{2:t},{3:s}"
-		"en"			"{mint}{1}{default} sent{olive} {2}{default} to hell!{yellow} MVP:{mint} {3}"
+		"#format"   "{1:s},{2:t},{3:s}"
+		"en"        "{mint}{1}{default} sent{olive} {2}{default} to hell!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer4"
 	{
-		"#format"		"{1:s},{2:t},{3:s}"
-		"en"			"Did{mint} {1}{default} actually kill{olive} {2}{default}...?{yellow} MVP:{mint} {3}"
+		"#format"   "{1:s},{2:t},{3:s}"
+		"en"        "Did{mint} {1}{default} actually kill{olive} {2}{default}...?{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer5"
 	{
-		"#format"		"{1:s},{2:t},{3:s}"
-		"en"			"{olive}{2}{default} lost the challenge against{mint} {1}{default}!{yellow} MVP:{mint} {3}"
+		"#format"   "{1:s},{2:t},{3:s}"
+		"en"        "{olive}{2}{default} lost the challenge against{mint} {1}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer6"
 	{
-		"#format"		"{1:s},{2:t},{3:s}"
-		"en"			"The{olive} {2}{default} failed to kill{mint} {1}{default}!{yellow} MVP:{mint} {3}"
+		"#format"   "{1:s},{2:t},{3:s}"
+		"en"        "The{olive} {2}{default} failed to kill{mint} {1}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer7"
 	{
-		"#format"		"{1:s},{2:t},{3:s}"
-		"en"			"{olive}{2}{default} has met their demise at the hands of{mint} {1}{default}!{yellow} MVP:{mint} {3}"
+		"#format"   "{1:s},{2:t},{3:s}"
+		"en"        "{olive}{2}{default} has met their demise at the hands of{mint} {1}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer8"
 	{
-		"#format"		"{1:s},{2:t},{3:s}"
-		"en"			"Yay!{olive} {2}{default} is dead thanks to{mint} {1}{default}!{yellow} MVP:{mint} {3}"
+		"#format"   "{1:s},{2:t},{3:s}"
+		"en"        "Yay!{olive} {2}{default} is dead thanks to{mint} {1}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer9"
 	{
-		"#format"		"{1:s},{2:t},{3:s}"
-		"en"			"{mint}{1}{default} made{olive} {2}{default} ragequit!{yellow} MVP:{mint} {3}"
+		"#format"   "{1:s},{2:t},{3:s}"
+		"en"        "{mint}{1}{default} made{olive} {2}{default} ragequit!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer10"
 	{
-		"#format"		"{1:s},{2:t},{3:s}"
-		"en"			"It seems{olive} {2}{default} could not beat{mint} {1}{default} after all!{yellow} MVP:{mint} {3}"
+		"#format"   "{1:s},{2:t},{3:s}"
+		"en"        "It seems{olive} {2}{default} could not beat{mint} {1}{default} after all!{yellow} MVP:{mint} {3}"
 	}
 
 	"KillCountdown"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"Tanks{default} have{yellow} {1} minute(s) {2} second(s){default} to kill the survivors."
+		"#format"   "{1:i},{2:i}"
+		"en"        "Tanks{default} have{yellow} {1} minute(s) {2} second(s){default} to kill the survivors."
 	}
 
 	"KillCountdownAll"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"Special Infected{default} have{yellow} {1} minute(s) {2} second(s){default} to kill the survivors."
+		"#format"   "{1:i},{2:i}"
+		"en"        "Special Infected{default} have{yellow} {1} minute(s) {2} second(s){default} to kill the survivors."
 	}
 
 	"KillCountdownBoomer"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"Boomers{default} have{yellow} {1} minute(s) {2} second(s){default} to kill the survivors."
+		"#format"   "{1:i},{2:i}"
+		"en"        "Boomers{default} have{yellow} {1} minute(s) {2} second(s){default} to kill the survivors."
 	}
 
 	"KillCountdownCharger"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"Chargers{default} have{yellow} {1} minute(s) {2} second(s){default} to kill the survivors."
+		"#format"   "{1:i},{2:i}"
+		"en"        "Chargers{default} have{yellow} {1} minute(s) {2} second(s){default} to kill the survivors."
 	}
 
 	"KillCountdownHunter"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"Hunters{default} have{yellow} {1} minute(s) {2} second(s){default} to kill the survivors."
+		"#format"   "{1:i},{2:i}"
+		"en"        "Hunters{default} have{yellow} {1} minute(s) {2} second(s){default} to kill the survivors."
 	}
 
 	"KillCountdownJockey"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"Jockeys{default} have{yellow} {1} minute(s) {2} second(s){default} to kill the survivors."
+		"#format"   "{1:i},{2:i}"
+		"en"        "Jockeys{default} have{yellow} {1} minute(s) {2} second(s){default} to kill the survivors."
 	}
 
 	"KillCountdownSmoker"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"Smokers{default} have{yellow} {1} minute(s) {2} second(s){default} to kill the survivors."
+		"#format"   "{1:i},{2:i}"
+		"en"        "Smokers{default} have{yellow} {1} minute(s) {2} second(s){default} to kill the survivors."
 	}
 
 	"KillCountdownSpitter"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"Spitters{default} have{yellow} {1} minute(s) {2} second(s){default} to kill the survivors."
+		"#format"   "{1:i},{2:i}"
+		"en"        "Spitters{default} have{yellow} {1} minute(s) {2} second(s){default} to kill the survivors."
 	}
 
 	"KillCountdownWitch"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"Witches{default} have{yellow} {1} minute(s) {2} second(s){default} to kill the survivors."
+		"#format"   "{1:i},{2:i}"
+		"en"        "Witches{default} have{yellow} {1} minute(s) {2} second(s){default} to kill the survivors."
 	}
 
 	"LightVisualOn"
 	{
-		"en"			"Light Color Visual: ON"
+		"en"        "Light Color Visual: ON"
 	}
 
 	"LightVisualOff"
 	{
-		"en"			"Light Color Visual: OFF"
+		"en"        "Light Color Visual: OFF"
 	}
 
 	"LogEnded"
 	{
-		"#format"		"{1:s},{2:s}"
-		"en"			"[{1}] --- LOG ENDED ON MAP: {2} ---"
+		"#format"   "{1:s},{2:s}"
+		"en"        "[{1}] --- LOG ENDED ON MAP: {2} ---"
 	}
 
 	"LogStarted"
 	{
-		"#format"		"{1:s},{2:s}"
-		"en"			"[{1}] --- LOG STARTED ON MAP: {2} ---"
+		"#format"   "{1:s},{2:s}"
+		"en"        "[{1}] --- LOG STARTED ON MAP: {2} ---"
 	}
 
 	"MultipleMatches"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"Multiple types matched that name.{olive} Selecting a random match{yellow} (Tank #{1}) [Tank #{2}]{olive}."
+		"#format"   "{1:i},{2:i}"
+		"en"        "Multiple types matched that name.{olive} Selecting a random match{yellow} (Tank #{1}) [Tank #{2}]{olive}."
 	}
 
 	"MultipleMatchesBoomer"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"Multiple types matched that name.{olive} Selecting a random match{yellow} (Boomer #{1}) [Boomer #{2}]{olive}."
+		"#format"   "{1:i},{2:i}"
+		"en"        "Multiple types matched that name.{olive} Selecting a random match{yellow} (Boomer #{1}) [Boomer #{2}]{olive}."
 	}
 
 	"MultipleMatchesCharger"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"Multiple types matched that name.{olive} Selecting a random match{yellow} (Charger #{1}) [Charger #{2}]{olive}."
+		"#format"   "{1:i},{2:i}"
+		"en"        "Multiple types matched that name.{olive} Selecting a random match{yellow} (Charger #{1}) [Charger #{2}]{olive}."
 	}
 
 	"MultipleMatchesHunter"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"Multiple types matched that name.{olive} Selecting a random match{yellow} (Hunter #{1}) [Hunter #{2}]{olive}."
+		"#format"   "{1:i},{2:i}"
+		"en"        "Multiple types matched that name.{olive} Selecting a random match{yellow} (Hunter #{1}) [Hunter #{2}]{olive}."
 	}
 
 	"MultipleMatchesJockey"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"Multiple types matched that name.{olive} Selecting a random match{yellow} (Jockey #{1}) [Jockey #{2}]{olive}."
+		"#format"   "{1:i},{2:i}"
+		"en"        "Multiple types matched that name.{olive} Selecting a random match{yellow} (Jockey #{1}) [Jockey #{2}]{olive}."
 	}
 
 	"MultipleMatchesSmoker"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"Multiple types matched that name.{olive} Selecting a random match{yellow} (Smoker #{1}) [Smoker #{2}]{olive}."
+		"#format"   "{1:i},{2:i}"
+		"en"        "Multiple types matched that name.{olive} Selecting a random match{yellow} (Smoker #{1}) [Smoker #{2}]{olive}."
 	}
 
 	"MultipleMatchesSpitter"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"Multiple types matched that name.{olive} Selecting a random match{yellow} (Spitter #{1}) [Spitter #{2}]{olive}."
+		"#format"   "{1:i},{2:i}"
+		"en"        "Multiple types matched that name.{olive} Selecting a random match{yellow} (Spitter #{1}) [Spitter #{2}]{olive}."
 	}
 
 	"MultipleMatchesWitch"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"Multiple types matched that name.{olive} Selecting a random match{yellow} (Witch #{1}) [Witch #{2}]{olive}."
+		"#format"   "{1:i},{2:i}"
+		"en"        "Multiple types matched that name.{olive} Selecting a random match{yellow} (Witch #{1}) [Witch #{2}]{olive}."
 	}
 
 	"NoAbilities"
 	{
-		"en"			"No abilities were found."
+		"en"        "No abilities were found."
 	}
 
 	"NoCommandAccess"
 	{
-		"en"			"You do not have access to this command."
+		"en"        "You do not have access to this command."
 	}
 
 	"NoItems"
 	{
-		"en"			"There are no items available."
+		"en"        "There are no items available."
 	}
 
 	"NoName"
 	{
-		"en"			"Tank"
+		"en"        "Tank"
 	}
 
 	"NoNameBill"
 	{
-		"en"			"Bill"
+		"en"        "Bill"
 	}
 
 	"NoNameBoomer"
 	{
-		"en"			"Boomer"
+		"en"        "Boomer"
 	}
 
 	"NoNameCharger"
 	{
-		"en"			"Charger"
+		"en"        "Charger"
 	}
 
 	"NoNameCoach"
 	{
-		"en"			"Coach"
+		"en"        "Coach"
 	}
 
 	"NoNameCommon"
 	{
-		"en"			"Common"
+		"en"        "Common"
 	}
 
 	"NoNameEllis"
 	{
-		"en"			"Ellis"
+		"en"        "Ellis"
 	}
 
 	"NoNameFrancis"
 	{
-		"en"			"Francis"
+		"en"        "Francis"
 	}
 
 	"NoNameHunter"
 	{
-		"en"			"Hunter"
+		"en"        "Hunter"
 	}
 
 	"NoNameJockey"
 	{
-		"en"			"Jockey"
+		"en"        "Jockey"
 	}
 
 	"NoNameLouis"
 	{
-		"en"			"Louis"
+		"en"        "Louis"
 	}
 
 	"NoNameNick"
 	{
-		"en"			"Nick"
+		"en"        "Nick"
 	}
 
 	"NoNameRochelle"
 	{
-		"en"			"Rochelle"
+		"en"        "Rochelle"
 	}
 
 	"NoNameSmoker"
 	{
-		"en"			"Smoker"
+		"en"        "Smoker"
 	}
 
 	"NoNameSpitter"
 	{
-		"en"			"Spitter"
+		"en"        "Spitter"
 	}
 
 	"NoNameWitch"
 	{
-		"en"			"Witch"
+		"en"        "Witch"
 	}
 
 	"NoNameZoey"
 	{
-		"en"			"Zoey"
+		"en"        "Zoey"
 	}
 
 	"NoNote"
 	{
-		"en"			"No note found for this Mutant Tank."
+		"en"        "No note found for this Mutant Tank."
 	}
 
 	"NoNoteBoomer"
 	{
-		"en"			"No note found for this Mutant Boomer."
+		"en"        "No note found for this Mutant Boomer."
 	}
 
 	"NoNoteCharger"
 	{
-		"en"			"No note found for this Mutant Charger."
+		"en"        "No note found for this Mutant Charger."
 	}
 
 	"NoNoteHunter"
 	{
-		"en"			"No note found for this Mutant Hunter."
+		"en"        "No note found for this Mutant Hunter."
 	}
 
 	"NoNoteJockey"
 	{
-		"en"			"No note found for this Mutant Jockey."
+		"en"        "No note found for this Mutant Jockey."
 	}
 
 	"NoNoteSmoker"
 	{
-		"en"			"No note found for this Mutant Smoker."
+		"en"        "No note found for this Mutant Smoker."
 	}
 
 	"NoNoteSpitter"
 	{
-		"en"			"No note found for this Mutant Spitter."
+		"en"        "No note found for this Mutant Spitter."
 	}
 
 	"NoNoteWitch"
 	{
-		"en"			"No note found for this Mutant Witch."
+		"en"        "No note found for this Mutant Witch."
 	}
 
 	"NoTypeAccess"
 	{
-		"en"			"You do not have access to this Mutant Tank type."
+		"en"        "You do not have access to this Mutant Tank type."
 	}
 
 	"NoTypeAccessBoomer"
 	{
-		"en"			"You do not have access to this Mutant Boomer type."
+		"en"        "You do not have access to this Mutant Boomer type."
 	}
 
 	"NoTypeAccessCharger"
 	{
-		"en"			"You do not have access to this Mutant Charger type."
+		"en"        "You do not have access to this Mutant Charger type."
 	}
 
 	"NoTypeAccessHunter"
 	{
-		"en"			"You do not have access to this Mutant Hunter type."
+		"en"        "You do not have access to this Mutant Hunter type."
 	}
 
 	"NoTypeAccessJockey"
 	{
-		"en"			"You do not have access to this Mutant Jockey type."
+		"en"        "You do not have access to this Mutant Jockey type."
 	}
 
 	"NoTypeAccessSmoker"
 	{
-		"en"			"You do not have access to this Mutant Smoker type."
+		"en"        "You do not have access to this Mutant Smoker type."
 	}
 
 	"NoTypeAccessSpitter"
 	{
-		"en"			"You do not have access to this Mutant Spitter type."
+		"en"        "You do not have access to this Mutant Spitter type."
 	}
 
 	"NoTypeAccessWitch"
 	{
-		"en"			"You do not have access to this Mutant Witch type."
+		"en"        "You do not have access to this Mutant Witch type."
 	}
 
 	"OptionNo"
 	{
-		"en"			"No"
+		"en"        "No"
 	}
 
 	"OptionYes"
 	{
-		"en"			"Yes"
+		"en"        "Yes"
 	}
 
 	"ParticleVisualOn"
 	{
-		"en"			"Particle Effect Visual: ON"
+		"en"        "Particle Effect Visual: ON"
 	}
 
 	"ParticleVisualOff"
 	{
-		"en"			"Particle Effect Visual: OFF"
+		"en"        "Particle Effect Visual: OFF"
 	}
 
 	"PersonalType"
 	{
-		"#format"		"{1:t},{2:i},{3:i}"
-		"en"			"You will spawn as{olive} {1}{yellow} (Tank #{2}) [Tank #{3}]{default} when you take control of the{mint} Tank{default}."
+		"#format"   "{1:t},{2:i},{3:i}"
+		"en"        "You will spawn as{olive} {1}{yellow} (Tank #{2}) [Tank #{3}]{default} when you take control of the{mint} Tank{default}."
 	}
 
 	"PersonalTypeBoomer"
 	{
-		"#format"		"{1:t},{2:i},{3:i}"
-		"en"			"You will spawn as{olive} {1}{yellow} (Boomer #{2}) [Boomer #{3}]{default} when you take control of the{mint} Boomer{default}."
+		"#format"   "{1:t},{2:i},{3:i}"
+		"en"        "You will spawn as{olive} {1}{yellow} (Boomer #{2}) [Boomer #{3}]{default} when you take control of the{mint} Boomer{default}."
 	}
 
 	"PersonalTypeCharger"
 	{
-		"#format"		"{1:t},{2:i},{3:i}"
-		"en"			"You will spawn as{olive} {1}{yellow} (Charger #{2}) [Charger #{3}]{default} when you take control of the{mint} Charger{default}."
+		"#format"   "{1:t},{2:i},{3:i}"
+		"en"        "You will spawn as{olive} {1}{yellow} (Charger #{2}) [Charger #{3}]{default} when you take control of the{mint} Charger{default}."
 	}
 
 	"PersonalTypeHunter"
 	{
-		"#format"		"{1:t},{2:i},{3:i}"
-		"en"			"You will spawn as{olive} {1}{yellow} (Hunter #{2}) [Hunter #{3}]{default} when you take control of the{mint} Hunter{default}."
+		"#format"   "{1:t},{2:i},{3:i}"
+		"en"        "You will spawn as{olive} {1}{yellow} (Hunter #{2}) [Hunter #{3}]{default} when you take control of the{mint} Hunter{default}."
 	}
 
 	"PersonalTypeJockey"
 	{
-		"#format"		"{1:t},{2:i},{3:i}"
-		"en"			"You will spawn as{olive} {1}{yellow} (Jockey #{2}) [Jockey #{3}]{default} when you take control of the{mint} Jockey{default}."
+		"#format"   "{1:t},{2:i},{3:i}"
+		"en"        "You will spawn as{olive} {1}{yellow} (Jockey #{2}) [Jockey #{3}]{default} when you take control of the{mint} Jockey{default}."
 	}
 
 	"PersonalTypeSmoker"
 	{
-		"#format"		"{1:t},{2:i},{3:i}"
-		"en"			"You will spawn as{olive} {1}{yellow} (Smoker #{2}) [Smoker #{3}]{default} when you take control of the{mint} Smoker{default}."
+		"#format"   "{1:t},{2:i},{3:i}"
+		"en"        "You will spawn as{olive} {1}{yellow} (Smoker #{2}) [Smoker #{3}]{default} when you take control of the{mint} Smoker{default}."
 	}
 
 	"PersonalTypeSpitter"
 	{
-		"#format"		"{1:t},{2:i},{3:i}"
-		"en"			"You will spawn as{olive} {1}{yellow} (Spitter #{2}) [Spitter #{3}]{default} when you take control of the{mint} Spitter{default}."
+		"#format"   "{1:t},{2:i},{3:i}"
+		"en"        "You will spawn as{olive} {1}{yellow} (Spitter #{2}) [Spitter #{3}]{default} when you take control of the{mint} Spitter{default}."
 	}
 
 	"PersonalTypeWitch"
 	{
-		"#format"		"{1:t},{2:i},{3:i}"
-		"en"			"You will spawn as{olive} {1}{yellow} (Witch #{2}) [Witch #{3}]{default} when you take control of the{mint} Witch{default}."
+		"#format"   "{1:t},{2:i},{3:i}"
+		"en"        "You will spawn as{olive} {1}{yellow} (Witch #{2}) [Witch #{3}]{default} when you take control of the{mint} Witch{default}."
 	}
 
 	"PitchVisualOn"
 	{
-		"en"			"Voice Pitch Visual: ON"
+		"en"        "Voice Pitch Visual: ON"
 	}
 
 	"PitchVisualOff"
 	{
-		"en"			"Voice Pitch Visual: OFF"
+		"en"        "Voice Pitch Visual: OFF"
 	}
 
 	"PluginDisabled"
 	{
-		"en"			"Mutant Tanks{default} is disabled."
+		"en"        "Mutant Tanks{default} is disabled."
 	}
 
 	"Randomized"
 	{
-		"#format"		"{1:t},{2:t}"
-		"en"			"{olive}{1}{mint} randomized into{olive} {2}{mint}!"
+		"#format"   "{1:t},{2:t}"
+		"en"        "{olive}{1}{mint} randomized into{olive} {2}{mint}!"
 	}
 
 	"ReloadedConfig"
 	{
-		"en"			"All config files have been reloaded."
+		"en"        "All config files have been reloaded."
 	}
 
 	"ReloadingConfig"
 	{
-		"#format"		"{1:s}"
-		"en"			"Reloading config file \"{1}\" file..."
+		"#format"   "{1:s}"
+		"en"        "Reloading config file \"{1}\" file..."
 	}
 
 	"RequestFailed"
 	{
-		"en"			"No types matched that name.{olive} Request failed."
+		"en"        "No types matched that name.{olive} Request failed."
 	}
 
 	"RequestSucceeded"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"One type{yellow} (Tank #{1}) [Tank #{2}]{mint} matched that name.{olive} Request succeeded!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "One type{yellow} (Tank #{1}) [Tank #{2}]{mint} matched that name.{olive} Request succeeded!"
 	}
 
 	"RequestSucceededBoomer"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"One type{yellow} (Boomer #{1}) [Boomer #{2}]{mint} matched that name.{olive} Request succeeded!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "One type{yellow} (Boomer #{1}) [Boomer #{2}]{mint} matched that name.{olive} Request succeeded!"
 	}
 
 	"RequestSucceededCharger"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"One type{yellow} (Charger #{1}) [Charger #{2}]{mint} matched that name.{olive} Request succeeded!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "One type{yellow} (Charger #{1}) [Charger #{2}]{mint} matched that name.{olive} Request succeeded!"
 	}
 
 	"RequestSucceededHunter"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"One type{yellow} (Hunter #{1}) [Hunter #{2}]{mint} matched that name.{olive} Request succeeded!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "One type{yellow} (Hunter #{1}) [Hunter #{2}]{mint} matched that name.{olive} Request succeeded!"
 	}
 
 	"RequestSucceededJockey"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"One type{yellow} (Jockey #{1}) [Jockey #{2}]{mint} matched that name.{olive} Request succeeded!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "One type{yellow} (Jockey #{1}) [Jockey #{2}]{mint} matched that name.{olive} Request succeeded!"
 	}
 
 	"RequestSucceededSmoker"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"One type{yellow} (Smoker #{1}) [Smoker #{2}]{mint} matched that name.{olive} Request succeeded!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "One type{yellow} (Smoker #{1}) [Smoker #{2}]{mint} matched that name.{olive} Request succeeded!"
 	}
 
 	"RequestSucceededSpitter"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"One type{yellow} (Spitter #{1}) [Spitter #{2}]{mint} matched that name.{olive} Request succeeded!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "One type{yellow} (Spitter #{1}) [Spitter #{2}]{mint} matched that name.{olive} Request succeeded!"
 	}
 
 	"RequestSucceededWitch"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"One type{yellow} (Witch #{1}) [Witch #{2}]{mint} matched that name.{olive} Request succeeded!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "One type{yellow} (Witch #{1}) [Witch #{2}]{mint} matched that name.{olive} Request succeeded!"
 	}
 
 	"RestCountdown"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"Survivors{default} have{yellow} {1} minute(s) {2} second(s){default} to rest."
+		"#format"   "{1:i},{2:i}"
+		"en"        "Survivors{default} have{yellow} {1} minute(s) {2} second(s){default} to rest."
 	}
 
 	"RewardAmmo"
 	{
-		"en"			"ammunition boost"
+		"en"        "ammunition boost"
 	}
 
 	"RewardAttackBoost"
 	{
-		"en"			"attack boost"
+		"en"        "attack boost"
 	}
 
 	"RewardDamageBoost"
 	{
-		"en"			"damage boost"
+		"en"        "damage boost"
 	}
 
 	"RewardEnd"
 	{
-		"#format"		"{1:s}"
-		"en"			"Your{yellow} {1}{default} ended!"
+		"#format"   "{1:s}"
+		"en"        "Your{yellow} {1}{default} ended!"
 	}
 
 	"RewardGod"
 	{
-		"en"			"god mode"
+		"en"        "god mode"
 	}
 
 	"RewardHealth"
 	{
-		"en"			"health boost"
+		"en"        "health boost"
 	}
 
 	"RewardInfAmmo"
 	{
-		"en"			"infinite ammo"
+		"en"        "infinite ammo"
 	}
 
 	"RewardLadyKiller"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your{mint} Lady Killer{default} has{yellow} {1}{default} use(s) left."
+		"#format"   "{1:i}"
+		"en"        "Your{mint} Lady Killer{default} has{yellow} {1}{default} use(s) left."
 	}
 
 	"RewardList"
 	{
-		"#format"		"{1:s},{2:t}"
-		"en"			"You{default} received{yellow} {1}{default} for killing{olive} {2}{default}!"
+		"#format"   "{1:s},{2:t}"
+		"en"        "You{default} received{yellow} {1}{default} for killing{olive} {2}{default}!"
 	}
 
 	"RewardList2"
 	{
-		"#format"		"{1:s},{2:t}"
-		"en"			"You{default} received{yellow} {1}{default} for assisting the most against{olive} {2}{default}!"
+		"#format"   "{1:s},{2:t}"
+		"en"        "You{default} received{yellow} {1}{default} for assisting the most against{olive} {2}{default}!"
 	}
 
 	"RewardList3"
 	{
-		"#format"		"{1:s},{2:t}"
-		"en"			"You{default} received{yellow} {1}{default} for assisting against{olive} {2}{default}!"
+		"#format"   "{1:s},{2:t}"
+		"en"        "You{default} received{yellow} {1}{default} for assisting against{olive} {2}{default}!"
 	}
 
 	"RewardList4"
 	{
-		"#format"		"{1:s},{2:t}"
-		"en"			"You{default} received{yellow} {1}{default} for killing and assisting the most against{olive} {2}{default}!"
+		"#format"   "{1:s},{2:t}"
+		"en"        "You{default} received{yellow} {1}{default} for killing and assisting the most against{olive} {2}{default}!"
 	}
 
 	"RewardNone"
 	{
-		"#format"		"{1:t}"
-		"en"			"You{default} did not do enough damage to{olive} {1}{default} to receive any rewards."
+		"#format"   "{1:t}"
+		"en"        "You{default} did not do enough damage to{olive} {1}{default} to receive any rewards."
 	}
 
 	"RewardReceived"
 	{
-		"#format"		"{1:s}"
-		"en"			"You{default} received{yellow} {1}{default}."
+		"#format"   "{1:s}"
+		"en"        "You{default} received{yellow} {1}{default}."
 	}
 
 	"RewardRefill"
 	{
-		"en"			"health and ammunition"
+		"en"        "health and ammunition"
 	}
 
 	"RewardRespawn"
 	{
-		"en"			"respawn"
+		"en"        "respawn"
 	}
 
 	"RewardShared"
 	{
-		"#format"		"{1:N},{2:s}"
-		"en"			"{1}{default} shared their{yellow} {2}{default} with{mint} you{default}!"
+		"#format"   "{1:N},{2:s}"
+		"en"        "{1}{default} shared their{yellow} {2}{default} with{mint} you{default}!"
 	}
 
 	"RewardSolo"
 	{
-		"#format"		"{1:N},{2:t}"
-		"en"			"{1}{default} soloed{olive} {2}{default}!"
+		"#format"   "{1:N},{2:t}"
+		"en"        "{1}{default} soloed{olive} {2}{default}!"
 	}
 
 	"RewardSpeedBoost"
 	{
-		"en"			"speed boost"
+		"en"        "speed boost"
 	}
 
 	"Rush"
 	{
-		"en"			"Welcome to{yellow} Tank Rush{mint}!"
+		"en"        "Welcome to{yellow} Tank Rush{mint}!"
 	}
 
 	"RushAll"
 	{
-		"en"			"Welcome to{yellow} Special Arena{mint}!"
+		"en"        "Welcome to{yellow} Special Arena{mint}!"
 	}
 
 	"RushBoomer"
 	{
-		"en"			"Welcome to{yellow} Vomit Vault{mint}!"
+		"en"        "Welcome to{yellow} Vomit Vault{mint}!"
 	}
 
 	"RushCharger"
 	{
-		"en"			"Welcome to{yellow} Meat Grinder{mint}!"
+		"en"        "Welcome to{yellow} Meat Grinder{mint}!"
 	}
 
 	"RushHunter"
 	{
-		"en"			"Welcome to{yellow} Hunting Ground{mint}!"
+		"en"        "Welcome to{yellow} Hunting Ground{mint}!"
 	}
 
 	"RushJockey"
 	{
-		"en"			"Welcome to{yellow} Amusement Park{mint}!"
+		"en"        "Welcome to{yellow} Amusement Park{mint}!"
 	}
 
 	"RushSmoker"
 	{
-		"en"			"Welcome to{yellow} Gas Chamber{mint}!"
+		"en"        "Welcome to{yellow} Gas Chamber{mint}!"
 	}
 
 	"RushSpitter"
 	{
-		"en"			"Welcome to{yellow} Acid Rain{mint}!"
+		"en"        "Welcome to{yellow} Acid Rain{mint}!"
 	}
 
 	"RushWitch"
 	{
-		"en"			"Welcome to{yellow} Daycare Center{mint}!"
+		"en"        "Welcome to{yellow} Daycare Center{mint}!"
 	}
 
 	"RushWarning"
 	{
-		"#format"		"{1:i}"
-		"en"			"Tanks{default} will begin spawning in{yellow} {1} second(s){default}!"
+		"#format"   "{1:i}"
+		"en"        "Tanks{default} will begin spawning in{yellow} {1} second(s){default}!"
 	}
 
 	"RushWarningAll"
 	{
-		"#format"		"{1:i}"
-		"en"			"Special Infected{default} will begin spawning in{yellow} {1} second(s){default}!"
+		"#format"   "{1:i}"
+		"en"        "Special Infected{default} will begin spawning in{yellow} {1} second(s){default}!"
 	}
 
 	"RushWarningBoomer"
 	{
-		"#format"		"{1:i}"
-		"en"			"Boomers{default} will begin spawning in{yellow} {1} second(s){default}!"
+		"#format"   "{1:i}"
+		"en"        "Boomers{default} will begin spawning in{yellow} {1} second(s){default}!"
 	}
 
 	"RushWarningCharger"
 	{
-		"#format"		"{1:i}"
-		"en"			"Chargers{default} will begin spawning in{yellow} {1} second(s){default}!"
+		"#format"   "{1:i}"
+		"en"        "Chargers{default} will begin spawning in{yellow} {1} second(s){default}!"
 	}
 
 	"RushWarningHunter"
 	{
-		"#format"		"{1:i}"
-		"en"			"Hunters{default} will begin spawning in{yellow} {1} second(s){default}!"
+		"#format"   "{1:i}"
+		"en"        "Hunters{default} will begin spawning in{yellow} {1} second(s){default}!"
 	}
 
 	"RushWarningJockey"
 	{
-		"#format"		"{1:i}"
-		"en"			"Jockeys{default} will begin spawning in{yellow} {1} second(s){default}!"
+		"#format"   "{1:i}"
+		"en"        "Jockeys{default} will begin spawning in{yellow} {1} second(s){default}!"
 	}
 
 	"RushWarningSmoker"
 	{
-		"#format"		"{1:i}"
-		"en"			"Smokers{default} will begin spawning in{yellow} {1} second(s){default}!"
+		"#format"   "{1:i}"
+		"en"        "Smokers{default} will begin spawning in{yellow} {1} second(s){default}!"
 	}
 
 	"RushWarningSpitter"
 	{
-		"#format"		"{1:i}"
-		"en"			"Spitters{default} will begin spawning in{yellow} {1} second(s){default}!"
+		"#format"   "{1:i}"
+		"en"        "Spitters{default} will begin spawning in{yellow} {1} second(s){default}!"
 	}
 
 	"RushWarningWitch"
 	{
-		"#format"		"{1:i}"
-		"en"			"Witches{default} will begin spawning in{yellow} {1} second(s){default}!"
+		"#format"   "{1:i}"
+		"en"        "Witches{default} will begin spawning in{yellow} {1} second(s){default}!"
 	}
 
 	"ScreenVisualOn"
 	{
-		"en"			"Screen Visual: ON"
+		"en"        "Screen Visual: ON"
 	}
 
 	"ScreenVisualOff"
 	{
-		"en"			"Screen Visual: OFF"
+		"en"        "Screen Visual: OFF"
 	}
 
 	"SpawnManually"
 	{
-		"en"			"You will have to spawn manually."
+		"en"        "You will have to spawn manually."
 	}
 
 	"SpawnMessage"
 	{
-		"en"			"You spawned as a Mutant Tank! You can now use the following:"
+		"en"        "You spawned as a Mutant Tank! You can now use the following:"
 	}
 
 	"SpawnMessageBoomer"
 	{
-		"en"			"You spawned as a Mutant Boomer! You can now use the following:"
+		"en"        "You spawned as a Mutant Boomer! You can now use the following:"
 	}
 
 	"SpawnMessageCharger"
 	{
-		"en"			"You spawned as a Mutant Charger! You can now use the following:"
+		"en"        "You spawned as a Mutant Charger! You can now use the following:"
 	}
 
 	"SpawnMessageHunter"
 	{
-		"en"			"You spawned as a Mutant Hunter! You can now use the following:"
+		"en"        "You spawned as a Mutant Hunter! You can now use the following:"
 	}
 
 	"SpawnMessageJockey"
 	{
-		"en"			"You spawned as a Mutant Jockey! You can now use the following:"
+		"en"        "You spawned as a Mutant Jockey! You can now use the following:"
 	}
 
 	"SpawnMessageSmoker"
 	{
-		"en"			"You spawned as a Mutant Smoker! You can now use the following:"
+		"en"        "You spawned as a Mutant Smoker! You can now use the following:"
 	}
 
 	"SpawnMessageSpitter"
 	{
-		"en"			"You spawned as a Mutant Spitter! You can now use the following:"
+		"en"        "You spawned as a Mutant Spitter! You can now use the following:"
 	}
 
 	"SpawnMessageWitch"
 	{
-		"en"			"You spawned as a Mutant Witch! You can now use the following:"
+		"en"        "You spawned as a Mutant Witch! You can now use the following:"
 	}
 
 	"SpawnNow"
 	{
-		"en"			"You can now spawn!"
+		"en"        "You can now spawn!"
 	}
 
 	"SpawnTimer"
 	{
-		"#format"		"{1:i}"
-		"en"			"You will be able to spawn in {1} second(s)!"
+		"#format"   "{1:i}"
+		"en"        "You will be able to spawn in {1} second(s)!"
 	}
 
 	"SpawnWarning"
 	{
-		"en"			"Tanks are beginning to spawn..."
+		"en"        "Tanks are beginning to spawn..."
 	}
 
 	"SpawnWarningAll"
 	{
-		"en"			"Special Infected are beginning to spawn..."
+		"en"        "Special Infected are beginning to spawn..."
 	}
 
 	"SpawnWarningBoomer"
 	{
-		"en"			"Boomers are beginning to spawn..."
+		"en"        "Boomers are beginning to spawn..."
 	}
 
 	"SpawnWarningCharger"
 	{
-		"en"			"Chargers are beginning to spawn..."
+		"en"        "Chargers are beginning to spawn..."
 	}
 
 	"SpawnWarningHunter"
 	{
-		"en"			"Hunters are beginning to spawn..."
+		"en"        "Hunters are beginning to spawn..."
 	}
 
 	"SpawnWarningJockey"
 	{
-		"en"			"Jockeys are beginning to spawn..."
+		"en"        "Jockeys are beginning to spawn..."
 	}
 
 	"SpawnWarningSmoker"
 	{
-		"en"			"Smokers are beginning to spawn..."
+		"en"        "Smokers are beginning to spawn..."
 	}
 
 	"SpawnWarningSpitter"
 	{
-		"en"			"Spitters are beginning to spawn..."
+		"en"        "Spitters are beginning to spawn..."
 	}
 
 	"SpawnWarningWitch"
 	{
-		"en"			"Witches are beginning to spawn..."
+		"en"        "Witches are beginning to spawn..."
 	}
 
 	"StartParsing"
 	{
-		"en"			"Parsing the config file..."
+		"en"        "Parsing the config file..."
 	}
 
 	"StillParsing"
 	{
-		"en"			"The plugin is still parsing the config file."
+		"en"        "The plugin is still parsing the config file."
 	}
 
 	"TeammatesList"
 	{
-		"#format"		"{1:t},{2:s}"
-		"en"			"Total damage done to{olive} {1}{default}:{mint} {2}"
+		"#format"   "{1:t},{2:s}"
+		"en"        "Total damage done to{olive} {1}{default}:{mint} {2}"
 	}
 
 	"Transformed"
 	{
-		"#format"		"{1:t},{2:t}"
-		"en"			"{olive}{1}{mint} transformed into{olive} {2}{mint}!"
+		"#format"   "{1:t},{2:t}"
+		"en"        "{olive}{1}{mint} transformed into{olive} {2}{mint}!"
 	}
 
 	"Untransformed"
 	{
-		"#format"		"{1:t},{2:t}"
-		"en"			"{olive}{1}{mint} reverted back into{olive} {2}{mint}!"
+		"#format"   "{1:t},{2:t}"
+		"en"        "{olive}{1}{mint} reverted back into{olive} {2}{mint}!"
 	}
 
 	"VoicelineVisualOn"
 	{
-		"en"			"Looping Voiceline Visual: ON"
+		"en"        "Looping Voiceline Visual: ON"
 	}
 
 	"VoicelineVisualOff"
 	{
-		"en"			"Looping Voiceline Visual: OFF"
+		"en"        "Looping Voiceline Visual: OFF"
 	}
 
 	"AllTypes"
 	{
-		"en"			"All Types"
+		"en"        "All Types"
 	}
 
 	"Bot-dependentTypes"
 	{
-		"en"			"Bot-dependent Types"
+		"en"        "Bot-dependent Types"
 	}
 
 	"CompetitiveTypes"
 	{
-		"en"			"Competitive Types"
+		"en"        "Competitive Types"
 	}
 
 	"Human-dependentTypes"
 	{
-		"en"			"Human-dependent Types"
+		"en"        "Human-dependent Types"
 	}
 
 	"IndoorTypes"
 	{
-		"en"			"Indoor Types"
+		"en"        "Indoor Types"
 	}
 
 	"OutdoorTypes"
 	{
-		"en"			"Outdoor Types"
+		"en"        "Outdoor Types"
 	}
 
 	"SpawnableTypes"
 	{
-		"en"			"Spawnable Types"
+		"en"        "Spawnable Types"
 	}
 
 	"UnspawnableTypes"
 	{
-		"en"			"Unspawnable Types"
+		"en"        "Unspawnable Types"
 	}
 
 	"Absorb"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} is temporarily absorbing most of your damage!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} is temporarily absorbing most of your damage!"
 	}
 
 	"Absorb2"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} is no longer absorbing most of your damage!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} is no longer absorbing most of your damage!"
 	}
 
 	"AbsorbAmmo"
 	{
-		"en"			"You've used up all your absorption ability's ammo."
+		"en"        "You've used up all your absorption ability's ammo."
 	}
 
 	"AbsorbDetails"
 	{
-		"en"			"You absorb most of the damage you receive."
+		"en"        "You absorb most of the damage you receive."
 	}
 
 	"AbsorbHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your absorption ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your absorption ability!"
 	}
 
 	"AbsorbHuman2"
 	{
-		"en"			"Your absorption ability failed to activate. Try again."
+		"en"        "Your absorption ability failed to activate. Try again."
 	}
 
 	"AbsorbHuman3"
 	{
-		"en"			"You already activated your absorption ability."
+		"en"        "You already activated your absorption ability."
 	}
 
 	"AbsorbHuman4"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your absorption ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your absorption ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"AbsorbHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your absorption ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your absorption ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"AbsorbMenu"
 	{
-		"en"			"Absorb Ability Information"
+		"en"        "Absorb Ability Information"
 	}
 
 	"AbsorbMenu2"
 	{
-		"en"			"Absorb Ability"
+		"en"        "Absorb Ability"
 	}
 
 	"Acid"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} just created an acid puddle underneath{olive} {2}{mint}!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{mint} just created an acid puddle underneath{olive} {2}{mint}!"
 	}
 
 	"Acid2"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}'s{mint} rock created an acid puddle."
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}'s{mint} rock created an acid puddle."
 	}
 
 	"AcidAmmo"
 	{
-		"en"			"You've used up all your acid range ability's ammo."
+		"en"        "You've used up all your acid range ability's ammo."
 	}
 
 	"AcidDetails"
 	{
-		"en"			"You create acid puddles."
+		"en"        "You create acid puddles."
 	}
 
 	"AcidHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your acid ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your acid ability!"
 	}
 
 	"AcidHuman2"
 	{
-		"en"			"Your acid ability failed to activate. Try again."
+		"en"        "Your acid ability failed to activate. Try again."
 	}
 
 	"AcidHuman3"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your acid ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your acid ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"AcidHuman4"
 	{
-		"en"			"There are no survivors nearby to use your acid ability on."
+		"en"        "There are no survivors nearby to use your acid ability on."
 	}
 
 	"AcidHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your acid ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your acid ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"AcidMenu"
 	{
-		"en"			"Acid Ability Information"
+		"en"        "Acid Ability Information"
 	}
 
 	"AcidMenu2"
 	{
-		"en"			"Acid Ability"
+		"en"        "Acid Ability"
 	}
 
 	"Aimless"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} is preventing{olive} {2}{mint} from aiming!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{mint} is preventing{olive} {2}{mint} from aiming!"
 	}
 
 	"Aimless2"
 	{
-		"#format"		"{1:N}"
-		"en"			"{olive}{1}{mint} can aim again!"
+		"#format"   "{1:N}"
+		"en"        "{olive}{1}{mint} can aim again!"
 	}
 
 	"AimlessAmmo"
 	{
-		"en"			"You've used up all your aimless range ability's ammo."
+		"en"        "You've used up all your aimless range ability's ammo."
 	}
 
 	"AimlessDetails"
 	{
-		"en"			"You prevent survivors from aiming."
+		"en"        "You prevent survivors from aiming."
 	}
 
 	"AimlessHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your aimless ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your aimless ability!"
 	}
 
 	"AimlessHuman2"
 	{
-		"en"			"Your aimless ability failed to activate. Try again."
+		"en"        "Your aimless ability failed to activate. Try again."
 	}
 
 	"AimlessHuman3"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your aimless ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your aimless ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"AimlessHuman4"
 	{
-		"en"			"There are no survivors nearby to use your aimless ability on."
+		"en"        "There are no survivors nearby to use your aimless ability on."
 	}
 
 	"AimlessHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your aimless ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your aimless ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"AimlessMenu"
 	{
-		"en"			"Aimless Ability Information"
+		"en"        "Aimless Ability Information"
 	}
 
 	"AimlessMenu2"
 	{
-		"en"			"Aimless Ability"
+		"en"        "Aimless Ability"
 	}
 
 	"Ammo"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} took all of{olive} {2}'s{mint} ammunition!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{mint} took all of{olive} {2}'s{mint} ammunition!"
 	}
 
 	"AmmoAmmo"
 	{
-		"en"			"You've used up all your ammo range ability's ammo."
+		"en"        "You've used up all your ammo range ability's ammo."
 	}
 
 	"AmmoDetails"
 	{
-		"en"			"You take away survivors' ammunition."
+		"en"        "You take away survivors' ammunition."
 	}
 
 	"AmmoHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your ammo ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your ammo ability!"
 	}
 
 	"AmmoHuman2"
 	{
-		"en"			"Your ammo ability failed to activate. Try again."
+		"en"        "Your ammo ability failed to activate. Try again."
 	}
 
 	"AmmoHuman3"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your ammo ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your ammo ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"AmmoHuman4"
 	{
-		"en"			"There are no survivors nearby to use your ammo ability on."
+		"en"        "There are no survivors nearby to use your ammo ability on."
 	}
 
 	"AmmoHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your ammo ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your ammo ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"AmmoMenu"
 	{
-		"en"			"Ammo Ability Information"
+		"en"        "Ammo Ability Information"
 	}
 
 	"AmmoMenu2"
 	{
-		"en"			"Ammo Ability"
+		"en"        "Ammo Ability"
 	}
 
 	"Bomb"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} just created an explosion at{olive} {2}'s{mint} location!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{mint} just created an explosion at{olive} {2}'s{mint} location!"
 	}
 
 	"Bomb2"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}'s{mint} rock created an explosion."
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}'s{mint} rock created an explosion."
 	}
 
 	"BombAmmo"
 	{
-		"en"			"You've used up all your bomb range ability's ammo."
+		"en"        "You've used up all your bomb range ability's ammo."
 	}
 
 	"BombDetails"
 	{
-		"en"			"You create explosions."
+		"en"        "You create explosions."
 	}
 
 	"BombHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your bomb ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your bomb ability!"
 	}
 
 	"BombHuman2"
 	{
-		"en"			"Your bomb ability failed to activate. Try again."
+		"en"        "Your bomb ability failed to activate. Try again."
 	}
 
 	"BombHuman3"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your bomb ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your bomb ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"BombHuman4"
 	{
-		"en"			"There are no survivors nearby to use your bomb ability on."
+		"en"        "There are no survivors nearby to use your bomb ability on."
 	}
 
 	"BombHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your bomb ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your bomb ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"BombMenu"
 	{
-		"en"			"Bomb Ability Information"
+		"en"        "Bomb Ability Information"
 	}
 
 	"BombMenu2"
 	{
-		"en"			"Bomb Ability"
+		"en"        "Bomb Ability"
 	}
 
 	"Bury"
 	{
-		"#format"		"{1:t},{2:N},{3:.2f}"
-		"en"			"{olive}{1}{mint} buried{olive} {2}{yellow} {3}{mint} feet into the ground!"
+		"#format"   "{1:t},{2:N},{3:.2f}"
+		"en"        "{olive}{1}{mint} buried{olive} {2}{yellow} {3}{mint} feet into the ground!"
 	}
 
 	"Bury2"
 	{
-		"#format"		"{1:N}"
-		"en"			"{olive}{1}{mint} is no longer buried into the ground!"
+		"#format"   "{1:N}"
+		"en"        "{olive}{1}{mint} is no longer buried into the ground!"
 	}
 
 	"BuryAmmo"
 	{
-		"en"			"You've used up all your bury range ability's ammo."
+		"en"        "You've used up all your bury range ability's ammo."
 	}
 
 	"BuryDetails"
 	{
-		"en"			"You bury survivors."
+		"en"        "You bury survivors."
 	}
 
 	"BuryHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your bury ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your bury ability!"
 	}
 
 	"BuryHuman2"
 	{
-		"en"			"Your bury ability failed to activate. Try again."
+		"en"        "Your bury ability failed to activate. Try again."
 	}
 
 	"BuryHuman3"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your bury ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your bury ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"BuryHuman4"
 	{
-		"en"			"There are no survivors nearby to use your bury ability on."
+		"en"        "There are no survivors nearby to use your bury ability on."
 	}
 
 	"BuryHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your bury ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your bury ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"BuryMenu"
 	{
-		"en"			"Bury Ability Information"
+		"en"        "Bury Ability Information"
 	}
 
 	"BuryMenu2"
 	{
-		"en"			"Bury Ability"
+		"en"        "Bury Ability"
 	}
 
 	"Car"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} started a{yellow} car shower{mint}!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} started a{yellow} car shower{mint}!"
 	}
 
 	"Car2"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}'s{mint} car shower ended!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}'s{mint} car shower ended!"
 	}
 
 	"CarAmmo"
 	{
-		"en"			"You've used up all your car showers."
+		"en"        "You've used up all your car showers."
 	}
 
 	"CarDetails"
 	{
-		"en"			"You create car showers."
+		"en"        "You create car showers."
 	}
 
 	"CarHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your car showers!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your car showers!"
 	}
 
 	"CarHuman2"
 	{
-		"en"			"Your car shower failed to activate. Try again."
+		"en"        "Your car shower failed to activate. Try again."
 	}
 
 	"CarHuman3"
 	{
-		"en"			"You already activated your car shower."
+		"en"        "You already activated your car shower."
 	}
 
 	"CarHuman4"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your car shower still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your car shower still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"CarHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your car shower ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your car shower ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"CarMenu"
 	{
-		"en"			"Car Ability Information"
+		"en"        "Car Ability Information"
 	}
 
 	"CarMenu2"
 	{
-		"en"			"Car Ability"
+		"en"        "Car Ability"
 	}
 
 	"Choke"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} is choking{olive} {2}{mint} in the air!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{mint} is choking{olive} {2}{mint} in the air!"
 	}
 
 	"Choke2"
 	{
-		"#format"		"{1:N}"
-		"en"			"{olive}{1}{mint} is no longer being choked in the air!"
+		"#format"   "{1:N}"
+		"en"        "{olive}{1}{mint} is no longer being choked in the air!"
 	}
 
 	"ChokeAmmo"
 	{
-		"en"			"You've used up all your choke range ability's ammo."
+		"en"        "You've used up all your choke range ability's ammo."
 	}
 
 	"ChokeDetails"
 	{
-		"en"			"You choke survivors in midair."
+		"en"        "You choke survivors in midair."
 	}
 
 	"ChokeHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your choke ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your choke ability!"
 	}
 
 	"ChokeHuman2"
 	{
-		"en"			"Your choke ability failed to activate. Try again."
+		"en"        "Your choke ability failed to activate. Try again."
 	}
 
 	"ChokeHuman3"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your choke ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your choke ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"ChokeHuman4"
 	{
-		"en"			"There are no survivors nearby to use your choke ability on."
+		"en"        "There are no survivors nearby to use your choke ability on."
 	}
 
 	"ChokeHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your choke ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your choke ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"ChokeMenu"
 	{
-		"en"			"Choke Ability Information"
+		"en"        "Choke Ability Information"
 	}
 
 	"ChokeMenu2"
 	{
-		"en"			"Choke Ability"
+		"en"        "Choke Ability"
 	}
 
 	"Clone"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} created a clone of itself!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} created a clone of itself!"
 	}
 
 	"CloneAmmo"
 	{
-		"en"			"You've used up all your clones."
+		"en"        "You've used up all your clones."
 	}
 
 	"CloneDetails"
 	{
-		"en"			"You create clones of yourself."
+		"en"        "You create clones of yourself."
 	}
 
 	"CloneHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You created{olive} {1}{mint}/{olive}{2}{mint} clones!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You created{olive} {1}{mint}/{olive}{2}{mint} clones!"
 	}
 
 	"CloneHuman2"
 	{
-		"en"			"You failed to create a clone. Try again."
+		"en"        "You failed to create a clone. Try again."
 	}
 
 	"CloneHuman3"
 	{
-		"en"			"You cannot create clones as a clone."
+		"en"        "You cannot create clones as a clone."
 	}
 
 	"CloneHuman4"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your clone ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your clone ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"CloneHuman5"
 	{
-		"en"			"One of your clones just died."
+		"en"        "One of your clones just died."
 	}
 
 	"CloneHuman6"
 	{
-		"#format"		"{1:i}"
-		"en"			"All your clones died and your clone ability needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "All your clones died and your clone ability needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"CloneMenu"
 	{
-		"en"			"Clone Ability Information"
+		"en"        "Clone Ability Information"
 	}
 
 	"CloneMenu2"
 	{
-		"en"			"Clone Ability"
+		"en"        "Clone Ability"
 	}
 
 	"Cloud"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} is emitting clouds of smoke!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} is emitting clouds of smoke!"
 	}
 
 	"Cloud2"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} stopped emitting clouds of smoke!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} stopped emitting clouds of smoke!"
 	}
 
 	"CloudAmmo"
 	{
-		"en"			"You've used up all your cloud ability's ammo."
+		"en"        "You've used up all your cloud ability's ammo."
 	}
 
 	"CloudDetails"
 	{
-		"en"			"You constantly emit clouds of smoke that damage survivors caught in them."
+		"en"        "You constantly emit clouds of smoke that damage survivors caught in them."
 	}
 
 	"CloudHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your cloud ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your cloud ability!"
 	}
 
 	"CloudHuman2"
 	{
-		"en"			"Your cloud ability failed to activate. Try again."
+		"en"        "Your cloud ability failed to activate. Try again."
 	}
 
 	"CloudHuman3"
 	{
-		"en"			"You already activated your cloud ability."
+		"en"        "You already activated your cloud ability."
 	}
 
 	"CloudHuman4"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your cloud ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your cloud ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"CloudHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your cloud ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your cloud ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"CloudMenu"
 	{
-		"en"			"Cloud Ability Information"
+		"en"        "Cloud Ability Information"
 	}
 
 	"CloudMenu2"
 	{
-		"en"			"Cloud Ability"
+		"en"        "Cloud Ability"
 	}
 
 	"Drop"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} dropped a gun!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} dropped a gun!"
 	}
 
 	"Drop2"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} dropped a melee weapon!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} dropped a melee weapon!"
 	}
 
 	"Drop3"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} gave the survivors{yellow} items{mint}!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} gave the survivors{yellow} items{mint}!"
 	}
 
 	"DropDetails"
 	{
-		"en"			"You drop a weapon and give survivors items upon death."
+		"en"        "You drop a weapon and give survivors items upon death."
 	}
 
 	"DropHuman"
 	{
-		"en"			"You will give survivors items when you die!"
+		"en"        "You will give survivors items when you die!"
 	}
 
 	"DropHuman2"
 	{
-		"en"			"You will already give survivors items upon death."
+		"en"        "You will already give survivors items upon death."
 	}
 
 	"DropMenu"
 	{
-		"en"			"Drop Ability Information"
+		"en"        "Drop Ability Information"
 	}
 
 	"DropMenu2"
 	{
-		"en"			"Drop Ability"
+		"en"        "Drop Ability"
 	}
 
 	"Drug"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} drugged{olive} {2}{mint}!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{mint} drugged{olive} {2}{mint}!"
 	}
 
 	"Drug2"
 	{
-		"#format"		"{1:N}"
-		"en"			"{olive}{1}{mint} is no longer drugged!"
+		"#format"   "{1:N}"
+		"en"        "{olive}{1}{mint} is no longer drugged!"
 	}
 
 	"DrugAmmo"
 	{
-		"en"			"You've used up all your drug range ability's ammo."
+		"en"        "You've used up all your drug range ability's ammo."
 	}
 
 	"DrugDetails"
 	{
-		"en"			"You drug survivors."
+		"en"        "You drug survivors."
 	}
 
 	"DrugHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your drug ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your drug ability!"
 	}
 
 	"DrugHuman2"
 	{
-		"en"			"Your drug ability failed to activate. Try again."
+		"en"        "Your drug ability failed to activate. Try again."
 	}
 
 	"DrugHuman3"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your drug ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your drug ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"DrugHuman4"
 	{
-		"en"			"There are no survivors nearby to use your drug ability on."
+		"en"        "There are no survivors nearby to use your drug ability on."
 	}
 
 	"DrugHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your drug ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your drug ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"DrugMenu"
 	{
-		"en"			"Drug Ability Information"
+		"en"        "Drug Ability Information"
 	}
 
 	"DrugMenu2"
 	{
-		"en"			"Drug Ability"
+		"en"        "Drug Ability"
 	}
 
 	"Drunk"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} made{olive} {2}{mint} drunk!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{mint} made{olive} {2}{mint} drunk!"
 	}
 
 	"Drunk2"
 	{
-		"#format"		"{1:N}"
-		"en"			"{olive}{1}{mint} is no longer drunk!"
+		"#format"   "{1:N}"
+		"en"        "{olive}{1}{mint} is no longer drunk!"
 	}
 
 	"DrunkAmmo"
 	{
-		"en"			"You've used up all your drunk range ability's ammo."
+		"en"        "You've used up all your drunk range ability's ammo."
 	}
 
 	"DrunkDetails"
 	{
-		"en"			"You make survivors drunk."
+		"en"        "You make survivors drunk."
 	}
 
 	"DrunkHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your drunk ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your drunk ability!"
 	}
 
 	"DrunkHuman2"
 	{
-		"en"			"Your drunk ability failed to activate. Try again."
+		"en"        "Your drunk ability failed to activate. Try again."
 	}
 
 	"DrunkHuman3"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your drunk ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your drunk ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"DrunkHuman4"
 	{
-		"en"			"There are no survivors nearby to use your drunk ability on."
+		"en"        "There are no survivors nearby to use your drunk ability on."
 	}
 
 	"DrunkHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your drunk ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your drunk ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"DrunkMenu"
 	{
-		"en"			"Drunk Ability Information"
+		"en"        "Drunk Ability Information"
 	}
 
 	"DrunkMenu2"
 	{
-		"en"			"Drunk Ability"
+		"en"        "Drunk Ability"
 	}
 
 	"Electric"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} is electrocuting{olive} {2}{mint}!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{mint} is electrocuting{olive} {2}{mint}!"
 	}
 
 	"Electric2"
 	{
-		"#format"		"{1:N}"
-		"en"			"{olive}{1}{mint} is no longer being electrocuted!"
+		"#format"   "{1:N}"
+		"en"        "{olive}{1}{mint} is no longer being electrocuted!"
 	}
 
 	"ElectricAmmo"
 	{
-		"en"			"You've used up all your electric range ability's ammo."
+		"en"        "You've used up all your electric range ability's ammo."
 	}
 
 	"ElectricDetails"
 	{
-		"en"			"You electrocute survivors."
+		"en"        "You electrocute survivors."
 	}
 
 	"ElectricHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your electric ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your electric ability!"
 	}
 
 	"ElectricHuman2"
 	{
-		"en"			"Your electric ability failed to activate. Try again."
+		"en"        "Your electric ability failed to activate. Try again."
 	}
 
 	"ElectricHuman3"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your electric ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your electric ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"ElectricHuman4"
 	{
-		"en"			"There are no survivors nearby to use your electric ability on."
+		"en"        "There are no survivors nearby to use your electric ability on."
 	}
 
 	"ElectricHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your electric ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your electric ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"ElectricMenu"
 	{
-		"en"			"Electric Ability Information"
+		"en"        "Electric Ability Information"
 	}
 
 	"ElectricMenu2"
 	{
-		"en"			"Electric Ability"
+		"en"        "Electric Ability"
 	}
 
 	"Enforce"
 	{
-		"#format"		"{1:t},{2:N},{3:i}"
-		"en"			"{olive}{1}{mint} is forcing{olive} {2}{mint} to only use their weapon slot{yellow} #{3}{mint}!"
+		"#format"   "{1:t},{2:N},{3:i}"
+		"en"        "{olive}{1}{mint} is forcing{olive} {2}{mint} to only use their weapon slot{yellow} #{3}{mint}!"
 	}
 
 	"Enforce2"
 	{
-		"#format"		"{1:N}"
-		"en"			"{olive}{1}{mint} can use all weapon slots again!"
+		"#format"   "{1:N}"
+		"en"        "{olive}{1}{mint} can use all weapon slots again!"
 	}
 
 	"EnforceAmmo"
 	{
-		"en"			"You've used up all your enforce range ability's ammo."
+		"en"        "You've used up all your enforce range ability's ammo."
 	}
 
 	"EnforceDetails"
 	{
-		"en"			"You force survivors to only use a certain weapon slot."
+		"en"        "You force survivors to only use a certain weapon slot."
 	}
 
 	"EnforceHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your enforce ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your enforce ability!"
 	}
 
 	"EnforceHuman2"
 	{
-		"en"			"Your enforce ability failed to activate. Try again."
+		"en"        "Your enforce ability failed to activate. Try again."
 	}
 
 	"EnforceHuman3"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your enforce ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your enforce ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"EnforceHuman4"
 	{
-		"en"			"There are no survivors nearby to use your enforce ability on."
+		"en"        "There are no survivors nearby to use your enforce ability on."
 	}
 
 	"EnforceHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your enforce ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your enforce ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"EnforceMenu"
 	{
-		"en"			"Enforce Ability Information"
+		"en"        "Enforce Ability Information"
 	}
 
 	"EnforceMenu2"
 	{
-		"en"			"Enforce Ability"
+		"en"        "Enforce Ability"
 	}
 
 	"Fast"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}'s{mint} special speed activated!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}'s{mint} special speed activated!"
 	}
 
 	"Fast2"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}'s{mint} special speed deactivated!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}'s{mint} special speed deactivated!"
 	}
 
 	"FastAmmo"
 	{
-		"en"			"You've used up all your fast ability's ammo."
+		"en"        "You've used up all your fast ability's ammo."
 	}
 
 	"FastDetails"
 	{
-		"en"			"You run really fast like the Flash."
+		"en"        "You run really fast like the Flash."
 	}
 
 	"FastHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your fast ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your fast ability!"
 	}
 
 	"FastHuman2"
 	{
-		"en"			"Your fast ability failed to activate. Try again."
+		"en"        "Your fast ability failed to activate. Try again."
 	}
 
 	"FastHuman3"
 	{
-		"en"			"You already activated your fast ability."
+		"en"        "You already activated your fast ability."
 	}
 
 	"FastHuman4"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your fast ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your fast ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"FastHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your fast ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your fast ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"FastMenu"
 	{
-		"en"			"Fast Ability Information"
+		"en"        "Fast Ability Information"
 	}
 
 	"FastMenu2"
 	{
-		"en"			"Fast Ability"
+		"en"        "Fast Ability"
 	}
 
 	"Fire"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} just created a fire underneath{olive} {2}{mint}!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{mint} just created a fire underneath{olive} {2}{mint}!"
 	}
 
 	"Fire2"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}'s{mint} rock created a fire."
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}'s{mint} rock created a fire."
 	}
 
 	"FireAmmo"
 	{
-		"en"			"You've used up all your fire range ability's ammo."
+		"en"        "You've used up all your fire range ability's ammo."
 	}
 
 	"FireDetails"
 	{
-		"en"			"You create fires."
+		"en"        "You create fires."
 	}
 
 	"FireHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your fire ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your fire ability!"
 	}
 
 	"FireHuman2"
 	{
-		"en"			"Your fire ability failed to activate. Try again."
+		"en"        "Your fire ability failed to activate. Try again."
 	}
 
 	"FireHuman3"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your fire ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your fire ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"FireHuman4"
 	{
-		"en"			"There are no survivors nearby to use your fire ability on."
+		"en"        "There are no survivors nearby to use your fire ability on."
 	}
 
 	"FireHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your fire ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your fire ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"FireMenu"
 	{
-		"en"			"Fire Ability Information"
+		"en"        "Fire Ability Information"
 	}
 
 	"FireMenu2"
 	{
-		"en"			"Fire Ability"
+		"en"        "Fire Ability"
 	}
 
 	"Fling"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} flung{olive} {2}{mint} into the air!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{mint} flung{olive} {2}{mint} into the air!"
 	}
 
 	"FlingAmmo"
 	{
-		"en"			"You've used up all your fling range ability's ammo."
+		"en"        "You've used up all your fling range ability's ammo."
 	}
 
 	"FlingDetails"
 	{
-		"en"			"You fling survivors high into the air."
+		"en"        "You fling survivors high into the air."
 	}
 
 	"FlingHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your fling ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your fling ability!"
 	}
 
 	"FlingHuman2"
 	{
-		"en"			"Your fling ability failed to activate. Try again."
+		"en"        "Your fling ability failed to activate. Try again."
 	}
 
 	"FlingHuman3"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your fling ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your fling ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"FlingHuman4"
 	{
-		"en"			"There are no survivors nearby to use your fling ability on."
+		"en"        "There are no survivors nearby to use your fling ability on."
 	}
 
 	"FlingHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your fling ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your fling ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"FlingMenu"
 	{
-		"en"			"Fling Ability Information"
+		"en"        "Fling Ability Information"
 	}
 
 	"FlingMenu2"
 	{
-		"en"			"Fling Ability"
+		"en"        "Fling Ability"
 	}
 
 	"Fly"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} is flying!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} is flying!"
 	}
 
 	"Fly2"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} stopped flying!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} stopped flying!"
 	}
 
 	"FlyAmmo"
 	{
-		"en"			"You've used up all your flight ability's ammo."
+		"en"        "You've used up all your flight ability's ammo."
 	}
 
 	"FlyDetails"
 	{
-		"en"			"You can fly around."
+		"en"        "You can fly around."
 	}
 
 	"FlyHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your flight ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your flight ability!"
 	}
 
 	"FlyHuman2"
 	{
-		"en"			"Your flight ability failed to activate. Try again."
+		"en"        "Your flight ability failed to activate. Try again."
 	}
 
 	"FlyHuman3"
 	{
-		"en"			"You already activated your flight ability."
+		"en"        "You already activated your flight ability."
 	}
 
 	"FlyHuman4"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your flight ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your flight ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"FlyHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your flight ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your flight ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"FlyHuman6"
 	{
-		"en"			"The place you are in is too narrow for you to fly around."
+		"en"        "The place you are in is too narrow for you to fly around."
 	}
 
 	"FlyMenu"
 	{
-		"en"			"Fly Ability Information"
+		"en"        "Fly Ability Information"
 	}
 
 	"FlyMenu2"
 	{
-		"en"			"Fly Ability"
+		"en"        "Fly Ability"
 	}
 
 	"Fragile"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} is temporarily fragile to damage but can deal more damage and run faster!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} is temporarily fragile to damage but can deal more damage and run faster!"
 	}
 
 	"Fragile2"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} is no longer fragile to damage!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} is no longer fragile to damage!"
 	}
 
 	"FragileAmmo"
 	{
-		"en"			"You've used up all your fragility ability's ammo."
+		"en"        "You've used up all your fragility ability's ammo."
 	}
 
 	"FragileDetails"
 	{
-		"en"			"You take more damage while dealing more damage and running faster."
+		"en"        "You take more damage while dealing more damage and running faster."
 	}
 
 	"FragileHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your fragility ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your fragility ability!"
 	}
 
 	"FragileHuman2"
 	{
-		"en"			"Your fragility ability failed to activate. Try again."
+		"en"        "Your fragility ability failed to activate. Try again."
 	}
 
 	"FragileHuman3"
 	{
-		"en"			"You already activated your fragility ability."
+		"en"        "You already activated your fragility ability."
 	}
 
 	"FragileHuman4"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your fragility ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your fragility ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"FragileHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your fragility ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your fragility ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"FragileMenu"
 	{
-		"en"			"Fragile Ability Information"
+		"en"        "Fragile Ability Information"
 	}
 
 	"FragileMenu2"
 	{
-		"en"			"Fragile Ability"
+		"en"        "Fragile Ability"
 	}
 
 	"Ghost"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} disarmed{olive} {2}{mint}!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{mint} disarmed{olive} {2}{mint}!"
 	}
 
 	"Ghost2"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} is cloaking itself!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} is cloaking itself!"
 	}
 
 	"Ghost3"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} is visible again!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} is visible again!"
 	}
 
 	"GhostAmmo"
 	{
-		"en"			"You've used up all your cloaking ability's ammo."
+		"en"        "You've used up all your cloaking ability's ammo."
 	}
 
 	"GhostAmmo2"
 	{
-		"en"			"You've used up all your disarming range ability's ammo."
+		"en"        "You've used up all your disarming range ability's ammo."
 	}
 
 	"GhostDetails"
 	{
-		"en"			"You cloak yourself and disarm survivors."
+		"en"        "You cloak yourself and disarm survivors."
 	}
 
 	"GhostHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your cloaking ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your cloaking ability!"
 	}
 
 	"GhostHuman2"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your disarming ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your disarming ability!"
 	}
 
 	"GhostHuman3"
 	{
-		"en"			"Your disarming ability failed to activate. Try again."
+		"en"        "Your disarming ability failed to activate. Try again."
 	}
 
 	"GhostHuman4"
 	{
-		"en"			"You already activated your cloaking ability."
+		"en"        "You already activated your cloaking ability."
 	}
 
 	"GhostHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your cloaking ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your cloaking ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"GhostHuman6"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your disarming ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your disarming ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"GhostHuman7"
 	{
-		"en"			"There are no survivors nearby to use your disarming ability on."
+		"en"        "There are no survivors nearby to use your disarming ability on."
 	}
 
 	"GhostHuman8"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your cloaking ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your cloaking ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"GhostHuman9"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your disarming ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your disarming ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"GhostMenu"
 	{
-		"en"			"Ghost Ability Information"
+		"en"        "Ghost Ability Information"
 	}
 
 	"GhostMenu2"
 	{
-		"en"			"Ghost Ability"
+		"en"        "Ghost Ability"
 	}
 
 	"God"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} is temporarily invincible!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} is temporarily invincible!"
 	}
 
 	"God2"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} is no longer invincible!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} is no longer invincible!"
 	}
 
 	"GodAmmo"
 	{
-		"en"			"You've used up all your godlike ability's ammo."
+		"en"        "You've used up all your godlike ability's ammo."
 	}
 
 	"GodDetails"
 	{
-		"en"			"You gain temporary immunity to all types of damage."
+		"en"        "You gain temporary immunity to all types of damage."
 	}
 
 	"GodHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your godlike ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your godlike ability!"
 	}
 
 	"GodHuman2"
 	{
-		"en"			"Your godlike ability failed to activate. Try again."
+		"en"        "Your godlike ability failed to activate. Try again."
 	}
 
 	"GodHuman3"
 	{
-		"en"			"You already activated your godlike ability."
+		"en"        "You already activated your godlike ability."
 	}
 
 	"GodHuman4"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your godlike ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your godlike ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"GodHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your godlike ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your godlike ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"GodMenu"
 	{
-		"en"			"God Ability Information"
+		"en"        "God Ability Information"
 	}
 
 	"GodMenu2"
 	{
-		"en"			"God Ability"
+		"en"        "God Ability"
 	}
 
 	"Gravity"
 	{
-		"#format"		"{1:t},{2:N},{3:.2f}"
-		"en"			"{olive}{1}{mint} changed{olive} {2}'s{mint} gravity to{yellow} {3}{mint}!"
+		"#format"   "{1:t},{2:N},{3:.2f}"
+		"en"        "{olive}{1}{mint} changed{olive} {2}'s{mint} gravity to{yellow} {3}{mint}!"
 	}
 
 	"Gravity2"
 	{
-		"#format"		"{1:N}"
-		"en"			"{olive}{1}'s{mint} gravity is back to normal!"
+		"#format"   "{1:N}"
+		"en"        "{olive}{1}'s{mint} gravity is back to normal!"
 	}
 
 	"Gravity3"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} created a gravitational pull!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} created a gravitational pull!"
 	}
 
 	"Gravity4"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint}'s gravitational pull ended!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint}'s gravitational pull ended!"
 	}
 
 	"GravityAmmo"
 	{
-		"en"			"You've used up all your gravitational pull ability's ammo."
+		"en"        "You've used up all your gravitational pull ability's ammo."
 	}
 
 	"GravityAmmo2"
 	{
-		"en"			"You've used up all your low gravity range ability's ammo."
+		"en"        "You've used up all your low gravity range ability's ammo."
 	}
 
 	"GravityDetails"
 	{
-		"en"			"You pull in or push away survivors and any other nearby infected, and change the survivors' gravity."
+		"en"        "You pull in or push away survivors and any other nearby infected, and change the survivors' gravity."
 	}
 
 	"GravityHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your gravitational pull ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your gravitational pull ability!"
 	}
 
 	"GravityHuman2"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your low gravity ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your low gravity ability!"
 	}
 
 	"GravityHuman3"
 	{
-		"en"			"Your low gravity ability failed to activate. Try again."
+		"en"        "Your low gravity ability failed to activate. Try again."
 	}
 
 	"GravityHuman4"
 	{
-		"en"			"You already activated your gravitational pull ability."
+		"en"        "You already activated your gravitational pull ability."
 	}
 
 	"GravityHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your gravitational pull ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your gravitational pull ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"GravityHuman6"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your low gravity ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your low gravity ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"GravityHuman7"
 	{
-		"en"			"There are no survivors nearby to use your low gravity ability on."
+		"en"        "There are no survivors nearby to use your low gravity ability on."
 	}
 
 	"GravityHuman8"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your gravitational pull ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your gravitational pull ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"GravityHuman9"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your low gravity ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your low gravity ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"GravityMenu"
 	{
-		"en"			"Gravity Ability Information"
+		"en"        "Gravity Ability Information"
 	}
 
 	"GravityMenu2"
 	{
-		"en"			"Gravity Ability"
+		"en"        "Gravity Ability"
 	}
 
 	"Gunner"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} is firing gunshots!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} is firing gunshots!"
 	}
 
 	"Gunner2"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} is no longer firing gunshots!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} is no longer firing gunshots!"
 	}
 
 	"GunnerAmmo"
 	{
-		"en"			"You've used up all your gunner ability's ammo."
+		"en"        "You've used up all your gunner ability's ammo."
 	}
 
 	"GunnerDetails"
 	{
-		"en"			"You are armed with guns."
+		"en"        "You are armed with guns."
 	}
 
 	"GunnerHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your gunner ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your gunner ability!"
 	}
 
 	"GunnerHuman2"
 	{
-		"en"			"Your gunner ability failed to activate. Try again."
+		"en"        "Your gunner ability failed to activate. Try again."
 	}
 
 	"GunnerHuman3"
 	{
-		"en"			"You already activated your gunner ability."
+		"en"        "You already activated your gunner ability."
 	}
 
 	"GunnerHuman4"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your gunner ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your gunner ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"GunnerHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your gunner ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your gunner ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"GunnerMenu"
 	{
-		"en"			"Gunner Ability Information"
+		"en"        "Gunner Ability Information"
 	}
 
 	"GunnerMenu2"
 	{
-		"en"			"Gunner Ability"
+		"en"        "Gunner Ability"
 	}
 
 	"Heal"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} set{olive} {2}{mint} to temporary health who will die when their HP reaches 0!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{mint} set{olive} {2}{mint} to temporary health who will die when their HP reaches 0!"
 	}
 
 	"Heal2"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} is absorbing health from nearby infected!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} is absorbing health from nearby infected!"
 	}
 
 	"Heal3"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} is no longer absorbing health from nearby infected!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} is no longer absorbing health from nearby infected!"
 	}
 
 	"HealAmmo"
 	{
-		"en"			"You've used up all your healing ability's ammo."
+		"en"        "You've used up all your healing ability's ammo."
 	}
 
 	"HealAmmo2"
 	{
-		"en"			"You've used up all your bad-health range ability's ammo."
+		"en"        "You've used up all your bad-health range ability's ammo."
 	}
 
 	"HealDetails"
 	{
-		"en"			"You gain health from other nearby infected and set survivors to temporary health who will die when they reach 0 HP."
+		"en"        "You gain health from other nearby infected and set survivors to temporary health who will die when they reach 0 HP."
 	}
 
 	"HealHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your healing ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your healing ability!"
 	}
 
 	"HealHuman2"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your bad-health ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your bad-health ability!"
 	}
 
 	"HealHuman3"
 	{
-		"en"			"Your bad-health ability failed to activate. Try again."
+		"en"        "Your bad-health ability failed to activate. Try again."
 	}
 
 	"HealHuman4"
 	{
-		"en"			"You already activated your healing ability."
+		"en"        "You already activated your healing ability."
 	}
 
 	"HealHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your healing ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your healing ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"HealHuman6"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your bad-health ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your bad-health ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"HealHuman7"
 	{
-		"en"			"There are no survivors nearby to use your bad-health ability on."
+		"en"        "There are no survivors nearby to use your bad-health ability on."
 	}
 
 	"HealHuman8"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your healing ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your healing ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"HealHuman9"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your bad-health ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your bad-health ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"HealMenu"
 	{
-		"en"			"Heal Ability Information"
+		"en"        "Heal Ability Information"
 	}
 
 	"HealMenu2"
 	{
-		"en"			"Heal Ability"
+		"en"        "Heal Ability"
 	}
 
 	"Hurt"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} is hurting{olive} {2}{mint}!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{mint} is hurting{olive} {2}{mint}!"
 	}
 
 	"Hurt2"
 	{
-		"#format"		"{1:N}"
-		"en"			"{olive}{1}{mint} is no longer hurting!"
+		"#format"   "{1:N}"
+		"en"        "{olive}{1}{mint} is no longer hurting!"
 	}
 
 	"Hurt3"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} is pimp slapping{olive} {2}{mint}!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{mint} is pimp slapping{olive} {2}{mint}!"
 	}
 
 	"Hurt4"
 	{
-		"#format"		"{1:N}"
-		"en"			"{olive}{1}{mint} is no longer being pimp slapped!"
+		"#format"   "{1:N}"
+		"en"        "{olive}{1}{mint} is no longer being pimp slapped!"
 	}
 
 	"HurtAmmo"
 	{
-		"en"			"You've used up all your hurt range ability's ammo."
+		"en"        "You've used up all your hurt range ability's ammo."
 	}
 
 	"HurtDetails"
 	{
-		"en"			"You repeatedly hurt or pimp slap survivors."
+		"en"        "You repeatedly hurt or pimp slap survivors."
 	}
 
 	"HurtHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your hurt ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your hurt ability!"
 	}
 
 	"HurtHuman2"
 	{
-		"en"			"Your hurt ability failed to activate. Try again."
+		"en"        "Your hurt ability failed to activate. Try again."
 	}
 
 	"HurtHuman3"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your hurt ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your hurt ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"HurtHuman4"
 	{
-		"en"			"There are no survivors nearby to use your hurt ability on."
+		"en"        "There are no survivors nearby to use your hurt ability on."
 	}
 
 	"HurtHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your hurt ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your hurt ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"HurtMenu"
 	{
-		"en"			"Hurt Ability Information"
+		"en"        "Hurt Ability Information"
 	}
 
 	"HurtMenu2"
 	{
-		"en"			"Hurt Ability"
+		"en"        "Hurt Ability"
 	}
 
 	"Hypno"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} hypnotized{olive} {2}{mint}!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{mint} hypnotized{olive} {2}{mint}!"
 	}
 
 	"Hypno2"
 	{
-		"#format"		"{1:N}"
-		"en"			"{olive}{1}{mint} is no longer hypnotized!"
+		"#format"   "{1:N}"
+		"en"        "{olive}{1}{mint} is no longer hypnotized!"
 	}
 
 	"HypnoAmmo"
 	{
-		"en"			"You've used up all your hypno range ability's ammo."
+		"en"        "You've used up all your hypno range ability's ammo."
 	}
 
 	"HypnoDetails"
 	{
-		"en"			"You hypnotize survivors to damage themselves or their teammates."
+		"en"        "You hypnotize survivors to damage themselves or their teammates."
 	}
 
 	"HypnoHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your hypno ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your hypno ability!"
 	}
 
 	"HypnoHuman2"
 	{
-		"en"			"Your hypno ability failed to activate. Try again."
+		"en"        "Your hypno ability failed to activate. Try again."
 	}
 
 	"HypnoHuman3"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your hypno ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your hypno ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"HypnoHuman4"
 	{
-		"en"			"There are no survivors nearby to use your hypno ability on."
+		"en"        "There are no survivors nearby to use your hypno ability on."
 	}
 
 	"HypnoHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your hypno ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your hypno ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"HypnoMenu"
 	{
-		"en"			"Hypno Ability Information"
+		"en"        "Hypno Ability Information"
 	}
 
 	"HypnoMenu2"
 	{
-		"en"			"Hypno Ability"
+		"en"        "Hypno Ability"
 	}
 
 	"Ice"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} froze{olive} {2}{mint}!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{mint} froze{olive} {2}{mint}!"
 	}
 
 	"Ice2"
 	{
-		"#format"		"{1:N}"
-		"en"			"{olive}{1}{mint} is unfrozen!"
+		"#format"   "{1:N}"
+		"en"        "{olive}{1}{mint} is unfrozen!"
 	}
 
 	"IceAmmo"
 	{
-		"en"			"You've used up all your ice range ability's ammo."
+		"en"        "You've used up all your ice range ability's ammo."
 	}
 
 	"IceDetails"
 	{
-		"en"			"You freeze survivors."
+		"en"        "You freeze survivors."
 	}
 
 	"IceHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your ice ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your ice ability!"
 	}
 
 	"IceHuman2"
 	{
-		"en"			"Your ice ability failed to activate. Try again."
+		"en"        "Your ice ability failed to activate. Try again."
 	}
 
 	"IceHuman3"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your ice ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your ice ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"IceHuman4"
 	{
-		"en"			"There are no survivors nearby to use your ice ability on."
+		"en"        "There are no survivors nearby to use your ice ability on."
 	}
 
 	"IceHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your ice ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your ice ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"IceMenu"
 	{
-		"en"			"Ice Ability Information"
+		"en"        "Ice Ability Information"
 	}
 
 	"IceMenu2"
 	{
-		"en"			"Ice Ability"
+		"en"        "Ice Ability"
 	}
 
 	"Idle"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} made{olive} {2}{mint} go idle!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{mint} made{olive} {2}{mint} go idle!"
 	}
 
 	"IdleAmmo"
 	{
-		"en"			"You've used up all your idle range ability's ammo."
+		"en"        "You've used up all your idle range ability's ammo."
 	}
 
 	"IdleDetails"
 	{
-		"en"			"You force survivors to go idle."
+		"en"        "You force survivors to go idle."
 	}
 
 	"IdleHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your idle ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your idle ability!"
 	}
 
 	"IdleHuman2"
 	{
-		"en"			"Your idle ability failed to activate. Try again."
+		"en"        "Your idle ability failed to activate. Try again."
 	}
 
 	"IdleHuman3"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your idle ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your idle ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"IdleHuman4"
 	{
-		"en"			"There are no survivors nearby to use your idle ability on."
+		"en"        "There are no survivors nearby to use your idle ability on."
 	}
 
 	"IdleHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your idle ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your idle ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"IdleMenu"
 	{
-		"en"			"Idle Ability Information"
+		"en"        "Idle Ability Information"
 	}
 
 	"IdleMenu2"
 	{
-		"en"			"Idle Ability"
+		"en"        "Idle Ability"
 	}
 
 	"Invert"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} inverted{olive} {2}'s{mint} movement keys!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{mint} inverted{olive} {2}'s{mint} movement keys!"
 	}
 
 	"Invert2"
 	{
-		"#format"		"{1:N}"
-		"en"			"{olive}{1}'s{mint} keys are no longer inverted!"
+		"#format"   "{1:N}"
+		"en"        "{olive}{1}'s{mint} keys are no longer inverted!"
 	}
 
 	"InvertAmmo"
 	{
-		"en"			"You've used up all your invert range ability's ammo."
+		"en"        "You've used up all your invert range ability's ammo."
 	}
 
 	"InvertDetails"
 	{
-		"en"			"You invert the survivors' movement keys."
+		"en"        "You invert the survivors' movement keys."
 	}
 
 	"InvertHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your invert ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your invert ability!"
 	}
 
 	"InvertHuman2"
 	{
-		"en"			"Your invert ability failed to activate. Try again."
+		"en"        "Your invert ability failed to activate. Try again."
 	}
 
 	"InvertHuman3"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your invert ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your invert ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"InvertHuman4"
 	{
-		"en"			"There are no survivors nearby to use your invert ability on."
+		"en"        "There are no survivors nearby to use your invert ability on."
 	}
 
 	"InvertHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your invert ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your invert ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"InvertMenu"
 	{
-		"en"			"Invert Ability Information"
+		"en"        "Invert Ability Information"
 	}
 
 	"InvertMenu2"
 	{
-		"en"			"Invert Ability"
+		"en"        "Invert Ability"
 	}
 
 	"Jump"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} is forcing{olive} {2}{mint} to jump uncontrollably!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{mint} is forcing{olive} {2}{mint} to jump uncontrollably!"
 	}
 
 	"Jump2"
 	{
-		"#format"		"{1:N}"
-		"en"			"{olive}{1}{mint} is no longer being forced to jump!"
+		"#format"   "{1:N}"
+		"en"        "{olive}{1}{mint} is no longer being forced to jump!"
 	}
 
 	"Jump3"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} will jump periodically!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} will jump periodically!"
 	}
 
 	"JumpAmmo"
 	{
-		"en"			"You've used up all your periodical jumping ability's ammo."
+		"en"        "You've used up all your periodical jumping ability's ammo."
 	}
 
 	"JumpAmmo2"
 	{
-		"en"			"You've used up all your jump range ability's ammo."
+		"en"        "You've used up all your jump range ability's ammo."
 	}
 
 	"JumpDetails"
 	{
-		"en"			"You jump periodically or sporadically and make survivors jump uncontrollably."
+		"en"        "You jump periodically or sporadically and make survivors jump uncontrollably."
 	}
 
 	"JumpHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your periodical jumping ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your periodical jumping ability!"
 	}
 
 	"JumpHuman2"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your jump ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your jump ability!"
 	}
 
 	"JumpHuman3"
 	{
-		"en"			"Your jump ability failed to activate. Try again."
+		"en"        "Your jump ability failed to activate. Try again."
 	}
 
 	"JumpHuman4"
 	{
-		"en"			"You already activated your periodical jumping ability."
+		"en"        "You already activated your periodical jumping ability."
 	}
 
 	"JumpHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your periodical jumping ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your periodical jumping ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"JumpHuman6"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your jump ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your jump ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"JumpHuman7"
 	{
-		"en"			"There are no survivors nearby to use your jump ability on."
+		"en"        "There are no survivors nearby to use your jump ability on."
 	}
 
 	"JumpHuman8"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your periodical jumping ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your periodical jumping ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"JumpHuman9"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your jump ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your jump ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"JumpMenu"
 	{
-		"en"			"Jump Ability Information"
+		"en"        "Jump Ability Information"
 	}
 
 	"JumpMenu2"
 	{
-		"en"			"Jump Ability"
+		"en"        "Jump Ability"
 	}
 
 	"Lag"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} is making{olive} {2}{mint} lag!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{mint} is making{olive} {2}{mint} lag!"
 	}
 
 	"Lag2"
 	{
-		"#format"		"{1:N}"
-		"en"			"{olive}{1}{mint} is no longer lagging!"
+		"#format"   "{1:N}"
+		"en"        "{olive}{1}{mint} is no longer lagging!"
 	}
 
 	"LagAmmo"
 	{
-		"en"			"You've used up all your lag range ability's ammo."
+		"en"        "You've used up all your lag range ability's ammo."
 	}
 
 	"LagDetails"
 	{
-		"en"			"You make survivors lag."
+		"en"        "You make survivors lag."
 	}
 
 	"LagHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your lag ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your lag ability!"
 	}
 
 	"LagHuman2"
 	{
-		"en"			"Your lag ability failed to activate. Try again."
+		"en"        "Your lag ability failed to activate. Try again."
 	}
 
 	"LagHuman3"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your lag ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your lag ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"LagHuman4"
 	{
-		"en"			"There are no survivors nearby to use your lag ability on."
+		"en"        "There are no survivors nearby to use your lag ability on."
 	}
 
 	"LagHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your lag ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your lag ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"LagMenu"
 	{
-		"en"			"Lag Ability Information"
+		"en"        "Lag Ability Information"
 	}
 
 	"LagMenu2"
 	{
-		"en"			"Lag Ability"
+		"en"        "Lag Ability"
 	}
 
 	"Laser"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} is shooting a laser at{olive} {2}{mint}!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{mint} is shooting a laser at{olive} {2}{mint}!"
 	}
 
 	"Laser2"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} is no longer shooting a laser!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} is no longer shooting a laser!"
 	}
 
 	"LaserAmmo"
 	{
-		"en"			"You've used up all your laser ability's ammo."
+		"en"        "You've used up all your laser ability's ammo."
 	}
 
 	"LaserDetails"
 	{
-		"en"			"You shoot lasers at survivors."
+		"en"        "You shoot lasers at survivors."
 	}
 
 	"LaserHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your laser ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your laser ability!"
 	}
 
 	"LaserHuman2"
 	{
-		"en"			"Your laser ability failed to activate. Try again."
+		"en"        "Your laser ability failed to activate. Try again."
 	}
 
 	"LaserHuman3"
 	{
-		"en"			"You already activated your laser ability."
+		"en"        "You already activated your laser ability."
 	}
 
 	"LaserHuman4"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your laser ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your laser ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"LaserHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your laser ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your laser ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"LaserMenu"
 	{
-		"en"			"Laser Ability Information"
+		"en"        "Laser Ability Information"
 	}
 
 	"LaserMenu2"
 	{
-		"en"			"Laser Ability"
+		"en"        "Laser Ability"
 	}
 
 	"Lightning"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} started a{yellow} lightning storm{mint}!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} started a{yellow} lightning storm{mint}!"
 	}
 
 	"Lightning2"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}'s{mint} lightning storm ended!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}'s{mint} lightning storm ended!"
 	}
 
 	"LightningAmmo"
 	{
-		"en"			"You've used up all your lightning storms."
+		"en"        "You've used up all your lightning storms."
 	}
 
 	"LightningDetails"
 	{
-		"en"			"You create lightning storms."
+		"en"        "You create lightning storms."
 	}
 
 	"LightningHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your lightning storms!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your lightning storms!"
 	}
 
 	"LightningHuman2"
 	{
-		"en"			"Your lightning storm failed to activate. Try again."
+		"en"        "Your lightning storm failed to activate. Try again."
 	}
 
 	"LightningHuman3"
 	{
-		"en"			"You already activated your lightning storm."
+		"en"        "You already activated your lightning storm."
 	}
 
 	"LightningHuman4"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your lightning storm still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your lightning storm still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"LightningHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your lightning storm ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your lightning storm ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"LightningMenu"
 	{
-		"en"			"Lightning Ability Information"
+		"en"        "Lightning Ability Information"
 	}
 
 	"LightningMenu2"
 	{
-		"en"			"Lightning Ability"
+		"en"        "Lightning Ability"
 	}
 
 	"Medic"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} is healing nearby special infected!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} is healing nearby special infected!"
 	}
 
 	"Medic2"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} just healed{yellow} {2}{mint}!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{mint} just healed{yellow} {2}{mint}!"
 	}
 
 	"Medic3"
 	{
-		"#format"		"{1:t},{2:t}"
-		"en"			"{olive}{1}{mint} just healed{yellow} {2}{mint}!"
+		"#format"   "{1:t},{2:t}"
+		"en"        "{olive}{1}{mint} just healed{yellow} {2}{mint}!"
 	}
 
 	"Medic4"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} stopped healing nearby special infected!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} stopped healing nearby special infected!"
 	}
 
 	"MedicAmmo"
 	{
-		"en"			"You've used up all your medic ability's ammo."
+		"en"        "You've used up all your medic ability's ammo."
 	}
 
 	"MedicDetails"
 	{
-		"en"			"You heal nearby special infected only take damage on certain parts of your body."
+		"en"        "You heal nearby special infected only take damage on certain parts of your body."
 	}
 
 	"MedicHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your medic ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your medic ability!"
 	}
 
 	"MedicHuman2"
 	{
-		"en"			"Your medic ability failed to activate. Try again."
+		"en"        "Your medic ability failed to activate. Try again."
 	}
 
 	"MedicHuman3"
 	{
-		"en"			"You already activated your medic ability."
+		"en"        "You already activated your medic ability."
 	}
 
 	"MedicHuman4"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your medic ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your medic ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"MedicHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your medic ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your medic ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"MedicMenu"
 	{
-		"en"			"Medic Ability Information"
+		"en"        "Medic Ability Information"
 	}
 
 	"MedicMenu2"
 	{
-		"en"			"Medic Ability"
+		"en"        "Medic Ability"
 	}
 
 	"Meteor"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} started a{yellow} meteor shower{mint}!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} started a{yellow} meteor shower{mint}!"
 	}
 
 	"Meteor2"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}'s{mint} meteor shower ended!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}'s{mint} meteor shower ended!"
 	}
 
 	"MeteorAmmo"
 	{
-		"en"			"You've used up all your meteor showers."
+		"en"        "You've used up all your meteor showers."
 	}
 
 	"MeteorDetails"
 	{
-		"en"			"You create meteor showers."
+		"en"        "You create meteor showers."
 	}
 
 	"MeteorHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your meteor showers!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your meteor showers!"
 	}
 
 	"MeteorHuman2"
 	{
-		"en"			"Your meteor shower failed to activate. Try again."
+		"en"        "Your meteor shower failed to activate. Try again."
 	}
 
 	"MeteorHuman3"
 	{
-		"en"			"You already activated your meteor shower."
+		"en"        "You already activated your meteor shower."
 	}
 
 	"MeteorHuman4"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your meteor shower ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your meteor shower ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"MeteorHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your meteor shower ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your meteor shower ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"MeteorMenu"
 	{
-		"en"			"Meteor Ability Information"
+		"en"        "Meteor Ability Information"
 	}
 
 	"MeteorMenu2"
 	{
-		"en"			"Meteor Ability"
+		"en"        "Meteor Ability"
 	}
 
 	"Minion"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} summoned a{yellow} minion{mint}!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} summoned a{yellow} minion{mint}!"
 	}
 
 	"MinionAmmo"
 	{
-		"en"			"You've used up all your minions."
+		"en"        "You've used up all your minions."
 	}
 
 	"MinionDetails"
 	{
-		"en"			"You spawn minions."
+		"en"        "You spawn minions."
 	}
 
 	"MinionHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You created{olive} {1}{mint}/{olive}{2}{mint} minions!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You created{olive} {1}{mint}/{olive}{2}{mint} minions!"
 	}
 
 	"MinionHuman2"
 	{
-		"en"			"You failed to create a minion. Try again."
+		"en"        "You failed to create a minion. Try again."
 	}
 
 	"MinionHuman3"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your minion spawner ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your minion spawner ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"MinionHuman4"
 	{
-		"en"			"One of your minions just died."
+		"en"        "One of your minions just died."
 	}
 
 	"MinionHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"All your minions died and your minion spawner ability needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "All your minions died and your minion spawner ability needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"MinionMenu"
 	{
-		"en"			"Minion Ability Information"
+		"en"        "Minion Ability Information"
 	}
 
 	"MinionMenu2"
 	{
-		"en"			"Minion Ability"
+		"en"        "Minion Ability"
 	}
 
 	"Nullify"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} temporarily nullified all of{olive} {2}'s{mint} damage!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{mint} temporarily nullified all of{olive} {2}'s{mint} damage!"
 	}
 
 	"Nullify2"
 	{
-		"#format"		"{1:N}"
-		"en"			"{olive}{1}'s{mint} damage is no longer nullified!"
+		"#format"   "{1:N}"
+		"en"        "{olive}{1}'s{mint} damage is no longer nullified!"
 	}
 
 	"NullifyAmmo"
 	{
-		"en"			"You've used up all your damage nullifier range ability's ammo."
+		"en"        "You've used up all your damage nullifier range ability's ammo."
 	}
 
 	"NullifyDetails"
 	{
-		"en"			"You nullify all of the survivors' damage."
+		"en"        "You nullify all of the survivors' damage."
 	}
 
 	"NullifyHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your damage nullifier ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your damage nullifier ability!"
 	}
 
 	"NullifyHuman2"
 	{
-		"en"			"Your damage nullifier ability failed to activate. Try again."
+		"en"        "Your damage nullifier ability failed to activate. Try again."
 	}
 
 	"NullifyHuman3"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your damage nullifier ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your damage nullifier ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"NullifyHuman4"
 	{
-		"en"			"There are no survivors nearby to use your damage nullifier ability on."
+		"en"        "There are no survivors nearby to use your damage nullifier ability on."
 	}
 
 	"NullifyHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your damage nullifier ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your damage nullifier ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"NullifyMenu"
 	{
-		"en"			"Nullify Ability Information"
+		"en"        "Nullify Ability Information"
 	}
 
 	"NullifyMenu2"
 	{
-		"en"			"Nullify Ability"
+		"en"        "Nullify Ability"
 	}
 
 	"Omni"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}'s{mint} omni ability activated!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}'s{mint} omni ability activated!"
 	}
 
 	"Omni2"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}'s{mint} omni ability deactivated!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}'s{mint} omni ability deactivated!"
 	}
 
 	"OmniAmmo"
 	{
-		"en"			"You've used up all your omni ability's ammo."
+		"en"        "You've used up all your omni ability's ammo."
 	}
 
 	"OmniDetails"
 	{
-		"en"			"You have omni-level access to other nearby Mutant Tanks' abilities."
+		"en"        "You have omni-level access to other nearby Mutant Tanks' abilities."
 	}
 
 	"OmniHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your omni ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your omni ability!"
 	}
 
 	"OmniHuman2"
 	{
-		"en"			"Your omni ability failed to activate. Try again."
+		"en"        "Your omni ability failed to activate. Try again."
 	}
 
 	"OmniHuman3"
 	{
-		"en"			"You already activated your omni ability."
+		"en"        "You already activated your omni ability."
 	}
 
 	"OmniHuman4"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your omni ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your omni ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"OmniHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your omni ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your omni ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"OmniMenu"
 	{
-		"en"			"Omni Ability Information"
+		"en"        "Omni Ability Information"
 	}
 
 	"OmniMenu2"
 	{
-		"en"			"Omni Ability"
+		"en"        "Omni Ability"
 	}
 
 	"Panic"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} will start panic events periodically!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} will start panic events periodically!"
 	}
 
 	"Panic2"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} started a{yellow} panic event{mint}!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} started a{yellow} panic event{mint}!"
 	}
 
 	"PanicAmmo"
 	{
-		"en"			"You've used up all your panic ability's ammo."
+		"en"        "You've used up all your panic ability's ammo."
 	}
 
 	"PanicDetails"
 	{
-		"en"			"You start panic events and spawn zombies."
+		"en"        "You start panic events and spawn zombies."
 	}
 
 	"PanicHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your panic ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your panic ability!"
 	}
 
 	"PanicHuman2"
 	{
-		"en"			"Your panic ability failed to activate. Try again."
+		"en"        "Your panic ability failed to activate. Try again."
 	}
 
 	"PanicHuman3"
 	{
-		"en"			"You already activated your panic ability."
+		"en"        "You already activated your panic ability."
 	}
 
 	"PanicHuman4"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your panic ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your panic ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"PanicHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your panic ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your panic ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"PanicMenu"
 	{
-		"en"			"Panic Ability Information"
+		"en"        "Panic Ability Information"
 	}
 
 	"PanicMenu2"
 	{
-		"en"			"Panic Ability"
+		"en"        "Panic Ability"
 	}
 
 	"Puke"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} puked on{olive} {2}{mint}!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{mint} puked on{olive} {2}{mint}!"
 	}
 
 	"PukeAmmo"
 	{
-		"en"			"You've used up all your puke range ability's ammo."
+		"en"        "You've used up all your puke range ability's ammo."
 	}
 
 	"PukeDetails"
 	{
-		"en"			"You puke on survivors."
+		"en"        "You puke on survivors."
 	}
 
 	"PukeHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your puke ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your puke ability!"
 	}
 
 	"PukeHuman2"
 	{
-		"en"			"Your puke ability failed to activate. Try again."
+		"en"        "Your puke ability failed to activate. Try again."
 	}
 
 	"PukeHuman3"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your puke ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your puke ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"PukeHuman4"
 	{
-		"en"			"There are no survivors nearby to use your puke ability on."
+		"en"        "There are no survivors nearby to use your puke ability on."
 	}
 
 	"PukeHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your puke ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your puke ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"PukeMenu"
 	{
-		"en"			"Puke Ability Information"
+		"en"        "Puke Ability Information"
 	}
 
 	"PukeMenu2"
 	{
-		"en"			"Puke Ability"
+		"en"        "Puke Ability"
 	}
 
 	"Pyro"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} ignited itself!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} ignited itself!"
 	}
 
 	"Pyro2"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} is burning and running really fast!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} is burning and running really fast!"
 	}
 
 	"Pyro3"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} is no longer burning and is back to normal speed!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} is no longer burning and is back to normal speed!"
 	}
 
 	"PyroAmmo"
 	{
-		"en"			"You've used up all your pyro ability's ammo."
+		"en"        "You've used up all your pyro ability's ammo."
 	}
 
 	"PyroDetails"
 	{
-		"en"			"You ignite yourself and gain a speed boost when on fire."
+		"en"        "You ignite yourself and gain a speed boost when on fire."
 	}
 
 	"PyroHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your pyro ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your pyro ability!"
 	}
 
 	"PyroHuman2"
 	{
-		"en"			"Your pyro ability failed to activate. Try again."
+		"en"        "Your pyro ability failed to activate. Try again."
 	}
 
 	"PyroHuman3"
 	{
-		"en"			"You already activated your pyro ability."
+		"en"        "You already activated your pyro ability."
 	}
 
 	"PyroHuman4"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your pyro ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your pyro ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"PyroHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your pyro ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your pyro ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"PyroMenu"
 	{
-		"en"			"Pyro Ability Information"
+		"en"        "Pyro Ability Information"
 	}
 
 	"PyroMenu2"
 	{
-		"en"			"Pyro Ability"
+		"en"        "Pyro Ability"
 	}
 
 	"Quiet"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} silenced itself around{olive} {2}{mint}!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{mint} silenced itself around{olive} {2}{mint}!"
 	}
 
 	"Quiet2"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} is no longer quiet around{olive} {2}{mint}!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{mint} is no longer quiet around{olive} {2}{mint}!"
 	}
 
 	"QuietAmmo"
 	{
-		"en"			"You've used up all your quiet range ability's ammo."
+		"en"        "You've used up all your quiet range ability's ammo."
 	}
 
 	"QuietDetails"
 	{
-		"en"			"You silence yourself around survivors."
+		"en"        "You silence yourself around survivors."
 	}
 
 	"QuietHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your quiet ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your quiet ability!"
 	}
 
 	"QuietHuman2"
 	{
-		"en"			"Your quiet ability failed to activate. Try again."
+		"en"        "Your quiet ability failed to activate. Try again."
 	}
 
 	"QuietHuman3"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your quiet ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your quiet ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"QuietHuman4"
 	{
-		"en"			"There are no survivors nearby to use your quiet ability on."
+		"en"        "There are no survivors nearby to use your quiet ability on."
 	}
 
 	"QuietHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your quiet ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your quiet ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"QuietMenu"
 	{
-		"en"			"Quiet Ability Information"
+		"en"        "Quiet Ability Information"
 	}
 
 	"QuietMenu2"
 	{
-		"en"			"Quiet Ability"
+		"en"        "Quiet Ability"
 	}
 
 	"Recall"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} blinked to a random location!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} blinked to a random location!"
 	}
 
 	"Recall2"
 	{
-		"#format"		"{1:t},{2:i}"
-		"en"			"{olive}{1}{mint} recalled to{yellow} {2} second(s){mint} ago!"
+		"#format"   "{1:t},{2:i}"
+		"en"        "{olive}{1}{mint} recalled to{yellow} {2} second(s){mint} ago!"
 	}
 
 	"Recall3"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} is able to blink again!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} is able to blink again!"
 	}
 
 	"RecallAmmo"
 	{
-		"en"			"You've used up all your recall blink ability's ammo."
+		"en"        "You've used up all your recall blink ability's ammo."
 	}
 
 	"RecallAmmo2"
 	{
-		"en"			"You've used up all your recall rewind ability's ammo."
+		"en"        "You've used up all your recall rewind ability's ammo."
 	}
 
 	"RecallDetails"
 	{
-		"en"			"You time travel to annoy survivors."
+		"en"        "You time travel to annoy survivors."
 	}
 
 	"RecallHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your recall blink ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your recall blink ability!"
 	}
 
 	"RecallHuman2"
 	{
-		"en"			"Your recall blink ability failed to activate. Try again."
+		"en"        "Your recall blink ability failed to activate. Try again."
 	}
 
 	"RecallHuman3"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your recall rewind ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your recall rewind ability!"
 	}
 
 	"RecallHuman4"
 	{
-		"en"			"Your recall rewind ability failed to activate. Try again."
+		"en"        "Your recall rewind ability failed to activate. Try again."
 	}
 
 	"RecallHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your recall blink ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your recall blink ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"RecallHuman6"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your recall rewind ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your recall rewind ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"RecallHuman7"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your recall blink ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your recall blink ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"RecallHuman8"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your recall rewind ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your recall rewind ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"RecallMenu"
 	{
-		"en"			"Recall Ability Information"
+		"en"        "Recall Ability Information"
 	}
 
 	"RecallMenu2"
 	{
-		"en"			"Recall Ability"
+		"en"        "Recall Ability"
 	}
 
 	"Recoil"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} gave{olive} {2}{mint} strong recoil!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{mint} gave{olive} {2}{mint} strong recoil!"
 	}
 
 	"Recoil2"
 	{
-		"#format"		"{1:N}"
-		"en"			"{olive}{1}{mint} no longer has strong recoil!"
+		"#format"   "{1:N}"
+		"en"        "{olive}{1}{mint} no longer has strong recoil!"
 	}
 
 	"RecoilAmmo"
 	{
-		"en"			"You've used up all your recoil range ability's ammo."
+		"en"        "You've used up all your recoil range ability's ammo."
 	}
 
 	"RecoilDetails"
 	{
-		"en"			"You give survivors strong gun recoil."
+		"en"        "You give survivors strong gun recoil."
 	}
 
 	"RecoilHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your recoil ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your recoil ability!"
 	}
 
 	"RecoilHuman2"
 	{
-		"en"			"Your recoil ability failed to activate. Try again."
+		"en"        "Your recoil ability failed to activate. Try again."
 	}
 
 	"RecoilHuman3"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your recoil ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your recoil ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"RecoilHuman4"
 	{
-		"en"			"There are no survivors nearby to use your recoil ability on."
+		"en"        "There are no survivors nearby to use your recoil ability on."
 	}
 
 	"RecoilHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your recoil ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your recoil ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"RecoilMenu"
 	{
-		"en"			"Recoil Ability Information"
+		"en"        "Recoil Ability Information"
 	}
 
 	"RecoilMenu2"
 	{
-		"en"			"Recoil Ability"
+		"en"        "Recoil Ability"
 	}
 
 	"Regen"
 	{
-		"#format"		"{1:t},{2:.2f}"
-		"en"			"{olive}{1}{mint} is regenerating health every{yellow} {2}{mint} second(s)!"
+		"#format"   "{1:t},{2:.2f}"
+		"en"        "{olive}{1}{mint} is regenerating health every{yellow} {2}{mint} second(s)!"
 	}
 
 	"Regen2"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} stopped regenerating health!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} stopped regenerating health!"
 	}
 
 	"Regen3"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} stole some health from{olive} {2}{mint}!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{mint} stole some health from{olive} {2}{mint}!"
 	}
 
 	"Regen4"
 	{
-		"#format"		"{1:N},{2:t}"
-		"en"			"{olive}{1}{mint} stole some health from{olive} {2}{mint}!"
+		"#format"   "{1:N},{2:t}"
+		"en"        "{olive}{1}{mint} stole some health from{olive} {2}{mint}!"
 	}
 
 	"RegenAmmo"
 	{
-		"en"			"You've used up all your regen ability's ammo."
+		"en"        "You've used up all your regen ability's ammo."
 	}
 
 	"RegenDetails"
 	{
-		"en"			"You leech health off of survivors, regenerate health, gain health from hurting survivors, and can steal health from survivors and vice-versa."
+		"en"        "You leech health off of survivors, regenerate health, gain health from hurting survivors, and can steal health from survivors and vice-versa."
 	}
 
 	"RegenHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your regen ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your regen ability!"
 	}
 
 	"RegenHuman2"
 	{
-		"en"			"Your regen ability failed to activate. Try again."
+		"en"        "Your regen ability failed to activate. Try again."
 	}
 
 	"RegenHuman3"
 	{
-		"en"			"You already activated your regen ability."
+		"en"        "You already activated your regen ability."
 	}
 
 	"RegenHuman4"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your regen ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your regen ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"RegenHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your regen ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your regen ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"RegenMenu"
 	{
-		"en"			"Regen Ability Information"
+		"en"        "Regen Ability Information"
 	}
 
 	"RegenMenu2"
 	{
-		"en"			"Regen Ability"
+		"en"        "Regen Ability"
 	}
 
 	"Respawn"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} resurrected nearby special infected!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} resurrected nearby special infected!"
 	}
 
 	"Respawn2"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} just respawned itself!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} just respawned itself!"
 	}
 
 	"RespawnAmmo"
 	{
-		"en"			"You've used up all your necro ability's ammo."
+		"en"        "You've used up all your necro ability's ammo."
 	}
 
 	"RespawnAmmo2"
 	{
-		"en"			"You've used up all your respawns."
+		"en"        "You've used up all your respawns."
 	}
 
 	"RespawnDetails"
 	{
-		"en"			"You respawn upon death and resurrect nearby special infected that die."
+		"en"        "You respawn upon death and resurrect nearby special infected that die."
 	}
 
 	"RespawnHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your necro ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your necro ability!"
 	}
 
 	"RespawnHuman2"
 	{
-		"en"			"Your necro ability failed to activate. Try again."
+		"en"        "Your necro ability failed to activate. Try again."
 	}
 
 	"RespawnHuman3"
 	{
-		"en"			"You already activated your necro ability."
+		"en"        "You already activated your necro ability."
 	}
 
 	"RespawnHuman4"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your necro ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your necro ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"RespawnHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your necro ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your necro ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"RespawnHuman6"
 	{
-		"en"			"You will respawn when you die!"
+		"en"        "You will respawn when you die!"
 	}
 
 	"RespawnHuman7"
 	{
-		"en"			"You will already respawn upon death."
+		"en"        "You will already respawn upon death."
 	}
 
 	"RespawnHuman8"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your respawns!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your respawns!"
 	}
 
 	"RespawnMenu"
 	{
-		"en"			"Respawn Ability Information"
+		"en"        "Respawn Ability Information"
 	}
 
 	"RespawnMenu2"
 	{
-		"en"			"Respawn Ability"
+		"en"        "Respawn Ability"
 	}
 
 	"Restart"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} caused{olive} {2}{mint} to restart with a different loadout!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{mint} caused{olive} {2}{mint} to restart with a different loadout!"
 	}
 
 	"RestartAmmo"
 	{
-		"en"			"You've used up all your restart range ability's ammo."
+		"en"        "You've used up all your restart range ability's ammo."
 	}
 
 	"RestartDetails"
 	{
-		"en"			"You force survivors to restart at the beginning of the map or near a teammate with a new loadout."
+		"en"        "You force survivors to restart at the beginning of the map or near a teammate with a new loadout."
 	}
 
 	"RestartHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your restart ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your restart ability!"
 	}
 
 	"RestartHuman2"
 	{
-		"en"			"Your restart ability failed to activate. Try again."
+		"en"        "Your restart ability failed to activate. Try again."
 	}
 
 	"RestartHuman3"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your restart ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your restart ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"RestartHuman4"
 	{
-		"en"			"There are no survivors nearby to use your restart ability on."
+		"en"        "There are no survivors nearby to use your restart ability on."
 	}
 
 	"RestartHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your restart ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your restart ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"RestartMenu"
 	{
-		"en"			"Restart Ability Information"
+		"en"        "Restart Ability Information"
 	}
 
 	"RestartMenu2"
 	{
-		"en"			"Restart Ability"
+		"en"        "Restart Ability"
 	}
 
 	"Rock"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} is spamming rocks!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} is spamming rocks!"
 	}
 
 	"Rock2"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} is no longer spamming rocks!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} is no longer spamming rocks!"
 	}
 
 	"RockAmmo"
 	{
-		"en"			"You've used up all your rock showers."
+		"en"        "You've used up all your rock showers."
 	}
 
 	"RockDetails"
 	{
-		"en"			"You create rock showers and spam rocks at survivors."
+		"en"        "You create rock showers and spam rocks at survivors."
 	}
 
 	"RockHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your rock spammer ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your rock spammer ability!"
 	}
 
 	"RockHuman2"
 	{
-		"en"			"Your rock spammer ability failed to activate. Try again."
+		"en"        "Your rock spammer ability failed to activate. Try again."
 	}
 
 	"RockHuman3"
 	{
-		"en"			"You already activated your rock spammer ability."
+		"en"        "You already activated your rock spammer ability."
 	}
 
 	"RockHuman4"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your rock spammer ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your rock spammer ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"RockHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your rock spammer ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your rock spammer ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"RockMenu"
 	{
-		"en"			"Rock Ability Information"
+		"en"        "Rock Ability Information"
 	}
 
 	"RockMenu2"
 	{
-		"en"			"Rock Ability"
+		"en"        "Rock Ability"
 	}
 
 	"Shield"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}'s{mint} shield{yellow} activated{mint}!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}'s{mint} shield{yellow} activated{mint}!"
 	}
 
 	"Shield2"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}'s{mint} shield{yellow} deactivated{mint}!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}'s{mint} shield{yellow} deactivated{mint}!"
 	}
 
 	"ShieldAmmo"
 	{
-		"en"			"You've used up all your shields."
+		"en"        "You've used up all your shields."
 	}
 
 	"ShieldDetails"
 	{
-		"en"			"You protect yourself with a shield and throw propane tanks or gas cans."
+		"en"        "You protect yourself with a shield and throw propane tanks or gas cans."
 	}
 
 	"ShieldHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your shields!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your shields!"
 	}
 
 	"ShieldHuman2"
 	{
-		"en"			"Your shield failed to activate. Try again."
+		"en"        "Your shield failed to activate. Try again."
 	}
 
 	"ShieldHuman3"
 	{
-		"en"			"You already activated your shield."
+		"en"        "You already activated your shield."
 	}
 
 	"ShieldHuman4"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your shield still needs another{yellow} {1} second(s){mint} to regenerate."
+		"#format"   "{1:i}"
+		"en"        "Your shield still needs another{yellow} {1} second(s){mint} to regenerate."
 	}
 
 	"ShieldHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your shield broke and needs to regenerate for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your shield broke and needs to regenerate for{yellow} {1} second(s){mint}."
 	}
 
 	"ShieldMenu"
 	{
-		"en"			"Shield Ability Information"
+		"en"        "Shield Ability Information"
 	}
 
 	"ShieldMenu2"
 	{
-		"en"			"Shield Ability"
+		"en"        "Shield Ability"
 	}
 
 	"ShieldOwner"
 	{
-		"#format"		"{1:t}"
-		"en"			"{1}'s Shield"
+		"#format"   "{1:t}"
+		"en"        "{1}'s Shield"
 	}
 
 	"Shove"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} is shoving{olive} {2}{mint}!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{mint} is shoving{olive} {2}{mint}!"
 	}
 
 	"Shove2"
 	{
-		"#format"		"{1:N}"
-		"en"			"{olive}{1}{mint} is no longer being shoved!"
+		"#format"   "{1:N}"
+		"en"        "{olive}{1}{mint} is no longer being shoved!"
 	}
 
 	"ShoveAmmo"
 	{
-		"en"			"You've used up all your shove range ability's ammo."
+		"en"        "You've used up all your shove range ability's ammo."
 	}
 
 	"ShoveDetails"
 	{
-		"en"			"You repeatedly shove survivors."
+		"en"        "You repeatedly shove survivors."
 	}
 
 	"ShoveHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your shove ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your shove ability!"
 	}
 
 	"ShoveHuman2"
 	{
-		"en"			"Your shove ability failed to activate. Try again."
+		"en"        "Your shove ability failed to activate. Try again."
 	}
 
 	"ShoveHuman3"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your shove ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your shove ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"ShoveHuman4"
 	{
-		"en"			"There are no survivors nearby to use your shove ability on."
+		"en"        "There are no survivors nearby to use your shove ability on."
 	}
 
 	"ShoveHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your shove ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your shove ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"ShoveMenu"
 	{
-		"en"			"Shove Ability Information"
+		"en"        "Shove Ability Information"
 	}
 
 	"ShoveMenu2"
 	{
-		"en"			"Shove Ability"
+		"en"        "Shove Ability"
 	}
 
 	"Slow"
 	{
-		"#format"		"{1:t},{2:N},{3:.2f}"
-		"en"			"{olive}{1}{mint} slowed{olive} {2}{mint} down to{yellow} {3}{percent}{mint}!"
+		"#format"   "{1:t},{2:N},{3:.2f}"
+		"en"        "{olive}{1}{mint} slowed{olive} {2}{mint} down to{yellow} {3}{percent}{mint}!"
 	}
 
 	"Slow2"
 	{
-		"#format"		"{1:N}"
-		"en"			"{olive}{1}{mint} is no longer slowed down!"
+		"#format"   "{1:N}"
+		"en"        "{olive}{1}{mint} is no longer slowed down!"
 	}
 
 	"SlowAmmo"
 	{
-		"en"			"You've used up all your slow range ability's ammo."
+		"en"        "You've used up all your slow range ability's ammo."
 	}
 
 	"SlowDetails"
 	{
-		"en"			"You slow and slow survivors down."
+		"en"        "You slow and slow survivors down."
 	}
 
 	"SlowHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your slow ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your slow ability!"
 	}
 
 	"SlowHuman2"
 	{
-		"en"			"Your slow ability failed to activate. Try again."
+		"en"        "Your slow ability failed to activate. Try again."
 	}
 
 	"SlowHuman3"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your slow ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your slow ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"SlowHuman4"
 	{
-		"en"			"There are no survivors nearby to use your slow ability on."
+		"en"        "There are no survivors nearby to use your slow ability on."
 	}
 
 	"SlowHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your slow ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your slow ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"SlowMenu"
 	{
-		"en"			"Slow Ability Information"
+		"en"        "Slow Ability Information"
 	}
 
 	"SlowMenu2"
 	{
-		"en"			"Slow Ability"
+		"en"        "Slow Ability"
 	}
 
 	"Smash"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} smashed{olive} {2}{mint} to death!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{mint} smashed{olive} {2}{mint} to death!"
 	}
 
 	"Smash2"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} just went kamikaze on{olive} {2}{mint}!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{mint} just went kamikaze on{olive} {2}{mint}!"
 	}
 
 	"Smash3"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} sent{olive} {2}{mint} into space!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{mint} sent{olive} {2}{mint} into space!"
 	}
 
 	"Smash4"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} smited{olive} {2}{mint}!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{mint} smited{olive} {2}{mint}!"
 	}
 
 	"SmashAmmo"
 	{
-		"en"			"You've used up all your smash range ability's ammo."
+		"en"        "You've used up all your smash range ability's ammo."
 	}
 
 	"SmashDetails"
 	{
-		"en"			"You send survivors into space, smash survivors to death, smite survivors, and kill yourself along with a survivor victim."
+		"en"        "You send survivors into space, smash survivors to death, smite survivors, and kill yourself along with a survivor victim."
 	}
 
 	"SmashHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your smash ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your smash ability!"
 	}
 
 	"SmashHuman2"
 	{
-		"en"			"Your smash ability failed to activate. Try again."
+		"en"        "Your smash ability failed to activate. Try again."
 	}
 
 	"SmashHuman3"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your smash ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your smash ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"SmashHuman4"
 	{
-		"en"			"There are no survivors nearby to use your smash ability on."
+		"en"        "There are no survivors nearby to use your smash ability on."
 	}
 
 	"SmashHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your smash ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your smash ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"SmashMenu"
 	{
-		"en"			"Smash Ability Information"
+		"en"        "Smash Ability Information"
 	}
 
 	"SmashMenu2"
 	{
-		"en"			"Smash Ability"
+		"en"        "Smash Ability"
 	}
 
 	"Throw"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} threw a car!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} threw a car!"
 	}
 
 	"Throw2"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} threw a{yellow} special infected{mint}!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} threw a{yellow} special infected{mint}!"
 	}
 
 	"Throw3"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} threw itself!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} threw itself!"
 	}
 
 	"Throw4"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} threw a Witch!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} threw a Witch!"
 	}
 
 	"ThrowAmmo"
 	{
-		"en"			"You've used up all your throw ability's ammo."
+		"en"        "You've used up all your throw ability's ammo."
 	}
 
 	"ThrowDetails"
 	{
-		"en"			"You throw cars, special infected, Witches, or yourself."
+		"en"        "You throw cars, special infected, Witches, or yourself."
 	}
 
 	"ThrowHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your throw ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your throw ability!"
 	}
 
 	"ThrowHuman2"
 	{
-		"en"			"You already activated your throw ability."
+		"en"        "You already activated your throw ability."
 	}
 
 	"ThrowHuman3"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your throw ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your throw ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"ThrowHuman4"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your throw ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your throw ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"ThrowMenu"
 	{
-		"en"			"Throw Ability Information"
+		"en"        "Throw Ability Information"
 	}
 
 	"ThrowMenu2"
 	{
-		"en"			"Throw Ability"
+		"en"        "Throw Ability"
 	}
 
 	"Track"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}'s{mint} rock is{yellow} tracking{mint} a survivor!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}'s{mint} rock is{yellow} tracking{mint} a survivor!"
 	}
 
 	"TrackAmmo"
 	{
-		"en"			"You've used up all your track ability's ammo."
+		"en"        "You've used up all your track ability's ammo."
 	}
 
 	"TrackDetails"
 	{
-		"en"			"You throw heat-seeking rocks that will track down the nearest survivors."
+		"en"        "You throw heat-seeking rocks that will track down the nearest survivors."
 	}
 
 	"TrackHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your track ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your track ability!"
 	}
 
 	"TrackHuman2"
 	{
-		"en"			"You already activated your track ability."
+		"en"        "You already activated your track ability."
 	}
 
 	"TrackHuman3"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your track ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your track ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"TrackHuman4"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your track ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your track ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"TrackMenu"
 	{
-		"en"			"Track Ability Information"
+		"en"        "Track Ability Information"
 	}
 
 	"TrackMenu2"
 	{
-		"en"			"Track Ability"
+		"en"        "Track Ability"
 	}
 
 	"Ultimate"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} activated ultimate mode!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} activated ultimate mode!"
 	}
 
 	"Ultimate2"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} deactivated ultimate mode!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} deactivated ultimate mode!"
 	}
 
 	"Ultimate3"
 	{
-		"#format"		"{1:.2f},{2:.2f}"
-		"en"			"You have dealt{yellow} {1}{mint}/{yellow}{2}{mint} damage to the survivors to unlock ultimate mode."
+		"#format"   "{1:.2f},{2:.2f}"
+		"en"        "You have dealt{yellow} {1}{mint}/{yellow}{2}{mint} damage to the survivors to unlock ultimate mode."
 	}
 
 	"Ultimate4"
 	{
-		"en"			"You may now use ultimate mode!"
+		"en"        "You may now use ultimate mode!"
 	}
 
 	"UltimateAmmo"
 	{
-		"en"			"You've used up all your ultimate ability's ammo."
+		"en"        "You've used up all your ultimate ability's ammo."
 	}
 
 	"UltimateDetails"
 	{
-		"en"			"You activate ultimate mode when low on health to gain temporary god mode and damage boost."
+		"en"        "You activate ultimate mode when low on health to gain temporary god mode and damage boost."
 	}
 
 	"UltimateHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your ultimate ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your ultimate ability!"
 	}
 
 	"UltimateHuman2"
 	{
-		"en"			"Your ultimate ability isn't ready yet."
+		"en"        "Your ultimate ability isn't ready yet."
 	}
 
 	"UltimateHuman3"
 	{
-		"en"			"You already activated your ultimate ability."
+		"en"        "You already activated your ultimate ability."
 	}
 
 	"UltimateHuman4"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your ultimate ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your ultimate ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"UltimateHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your ultimate ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your ultimate ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"UltimateMenu"
 	{
-		"en"			"Ultimate Ability Information"
+		"en"        "Ultimate Ability Information"
 	}
 
 	"UltimateMenu2"
 	{
-		"en"			"Ultimate Ability"
+		"en"        "Ultimate Ability"
 	}
 
 	"Undead"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} increased its lifespan!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} increased its lifespan!"
 	}
 
 	"Undead2"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} is back to full health!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} is back to full health!"
 	}
 
 	"UndeadAmmo"
 	{
-		"en"			"You've used up all your undead ability's ammo."
+		"en"        "You've used up all your undead ability's ammo."
 	}
 
 	"UndeadDetails"
 	{
-		"en"			"You cannot die."
+		"en"        "You cannot die."
 	}
 
 	"UndeadHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your undead ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your undead ability!"
 	}
 
 	"UndeadHuman2"
 	{
-		"en"			"Your undead ability failed to activate. Try again."
+		"en"        "Your undead ability failed to activate. Try again."
 	}
 
 	"UndeadHuman3"
 	{
-		"en"			"You already activated your undead ability."
+		"en"        "You already activated your undead ability."
 	}
 
 	"UndeadHuman4"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your undead ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your undead ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"UndeadHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your undead ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your undead ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"UndeadMenu"
 	{
-		"en"			"Undead Ability Information"
+		"en"        "Undead Ability Information"
 	}
 
 	"UndeadMenu2"
 	{
-		"en"			"Undead Ability"
+		"en"        "Undead Ability"
 	}
 
 	"Vision"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} blinded{olive} {2}{mint}!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{mint} blinded{olive} {2}{mint}!"
 	}
 
 	"Vision2"
 	{
-		"#format"		"{1:N}"
-		"en"			"{olive}{1}{mint} is no longer blind!"
+		"#format"   "{1:N}"
+		"en"        "{olive}{1}{mint} is no longer blind!"
 	}
 
 	"Vision3"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} is shaking{olive} {2}{mint}!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{mint} is shaking{olive} {2}{mint}!"
 	}
 
 	"Vision4"
 	{
-		"#format"		"{1:N}"
-		"en"			"{olive}{1}{mint} is no longer shaking!"
+		"#format"   "{1:N}"
+		"en"        "{olive}{1}{mint} is no longer shaking!"
 	}
 
 	"Vision5"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} is splattering{olive} {2}'s{mint} screen!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{mint} is splattering{olive} {2}'s{mint} screen!"
 	}
 
 	"Vision6"
 	{
-		"#format"		"{1:N}"
-		"en"			"{olive}{1}'s{mint} screen is no longer being splattered{mint}!"
+		"#format"   "{1:N}"
+		"en"        "{olive}{1}'s{mint} screen is no longer being splattered{mint}!"
 	}
 
 	"Vision7"
 	{
-		"#format"		"{1:t},{2:N},{3:i}"
-		"en"			"{olive}{1}{mint} changed{olive} {2}'s{mint} vision to{yellow} {3}{mint} FOV!"
+		"#format"   "{1:t},{2:N},{3:i}"
+		"en"        "{olive}{1}{mint} changed{olive} {2}'s{mint} vision to{yellow} {3}{mint} FOV!"
 	}
 
 	"Vision8"
 	{
-		"#format"		"{1:N},{2:i}"
-		"en"			"{olive}{1}'s{mint} vision changed back to{yellow} {2}{mint} FOV!"
+		"#format"   "{1:N},{2:i}"
+		"en"        "{olive}{1}'s{mint} vision changed back to{yellow} {2}{mint} FOV!"
 	}
 
 	"VisionAmmo"
 	{
-		"en"			"You've used up all your visual range ability's ammo."
+		"en"        "You've used up all your visual range ability's ammo."
 	}
 
 	"VisionDetails"
 	{
-		"en"			"You blind survivors, shake the survivors' screens, splatter the survivors' screens, and change the survivors' field of view."
+		"en"        "You blind survivors, shake the survivors' screens, splatter the survivors' screens, and change the survivors' field of view."
 	}
 
 	"VisionHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your visual ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your visual ability!"
 	}
 
 	"VisionHuman2"
 	{
-		"en"			"Your visual ability failed to activate. Try again."
+		"en"        "Your visual ability failed to activate. Try again."
 	}
 
 	"VisionHuman3"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your visual ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your visual ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"VisionHuman4"
 	{
-		"en"			"There are no survivors nearby to use your visual ability on."
+		"en"        "There are no survivors nearby to use your visual ability on."
 	}
 
 	"VisionHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your visual ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your visual ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"VisionMenu"
 	{
-		"en"			"Vision Ability Information"
+		"en"        "Vision Ability Information"
 	}
 
 	"VisionMenu2"
 	{
-		"en"			"Vision Ability"
+		"en"        "Vision Ability"
 	}
 
 	"Warp"
 	{
-		"#format"		"{1:t},{2:N},{3:N}"
-		"en"			"{olive}{1}{mint} warped{olive} {2}{mint} to{olive} {3}{mint}!"
+		"#format"   "{1:t},{2:N},{3:N}"
+		"en"        "{olive}{1}{mint} warped{olive} {2}{mint} to{olive} {3}{mint}!"
 	}
 
 	"Warp2"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} will warp to a survivor periodically!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} will warp to a survivor periodically!"
 	}
 
 	"Warp3"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} warped to{olive} {2}{mint}!"
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{mint} warped to{olive} {2}{mint}!"
 	}
 
 	"Warp4"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} switched places with their{yellow} rock{mint}."
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} switched places with their{yellow} rock{mint}."
 	}
 
 	"WarpAmmo"
 	{
-		"en"			"You've used up all your periodical warping ability's ammo."
+		"en"        "You've used up all your periodical warping ability's ammo."
 	}
 
 	"WarpAmmo2"
 	{
-		"en"			"You've used up all your warp range ability's ammo."
+		"en"        "You've used up all your warp range ability's ammo."
 	}
 
 	"WarpDetails"
 	{
-		"en"			"You warp to survivors and warp survivors to random teammates."
+		"en"        "You warp to survivors and warp survivors to random teammates."
 	}
 
 	"WarpHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your periodical warping ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your periodical warping ability!"
 	}
 
 	"WarpHuman2"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your warp ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your warp ability!"
 	}
 
 	"WarpHuman3"
 	{
-		"en"			"Your warp ability failed to activate. Try again."
+		"en"        "Your warp ability failed to activate. Try again."
 	}
 
 	"WarpHuman4"
 	{
-		"en"			"You already activated your periodical warping ability."
+		"en"        "You already activated your periodical warping ability."
 	}
 
 	"WarpHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your periodical warping ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your periodical warping ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"WarpHuman6"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your warp ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your warp ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"WarpHuman7"
 	{
-		"en"			"There are no survivors nearby to use your warp ability on."
+		"en"        "There are no survivors nearby to use your warp ability on."
 	}
 
 	"WarpHuman8"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your periodical warping ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your periodical warping ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"WarpHuman9"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your warp ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your warp ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"WarpMenu"
 	{
-		"en"			"Warp Ability Information"
+		"en"        "Warp Ability Information"
 	}
 
 	"WarpMenu2"
 	{
-		"en"			"Warp Ability"
+		"en"        "Warp Ability"
 	}
 
 	"Whirl"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} is making{olive} {2}{mint} whirl."
+		"#format"   "{1:t},{2:N}"
+		"en"        "{olive}{1}{mint} is making{olive} {2}{mint} whirl."
 	}
 
 	"Whirl2"
 	{
-		"#format"		"{1:N}"
-		"en"			"{olive}{1}{mint} stopped whirling."
+		"#format"   "{1:N}"
+		"en"        "{olive}{1}{mint} stopped whirling."
 	}
 
 	"WhirlAmmo"
 	{
-		"en"			"You've used up all your whirl range ability's ammo."
+		"en"        "You've used up all your whirl range ability's ammo."
 	}
 
 	"WhirlDetails"
 	{
-		"en"			"You make survivors' screens whirl."
+		"en"        "You make survivors' screens whirl."
 	}
 
 	"WhirlHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your whirl ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your whirl ability!"
 	}
 
 	"WhirlHuman2"
 	{
-		"en"			"Your whirl ability failed to activate. Try again."
+		"en"        "Your whirl ability failed to activate. Try again."
 	}
 
 	"WhirlHuman3"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your whirl ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your whirl ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"WhirlHuman4"
 	{
-		"en"			"There are no survivors nearby to use your whirl ability on."
+		"en"        "There are no survivors nearby to use your whirl ability on."
 	}
 
 	"WhirlHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your whirl ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your whirl ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"WhirlMenu"
 	{
-		"en"			"Whirl Ability Information"
+		"en"        "Whirl Ability Information"
 	}
 
 	"WhirlMenu2"
 	{
-		"en"			"Whirl Ability"
+		"en"        "Whirl Ability"
 	}
 
 	"Witch"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} converted some common infected into{olive} Witch minions{mint}!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} converted some common infected into{olive} Witch minions{mint}!"
 	}
 
 	"WitchAmmo"
 	{
-		"en"			"You've used up all your witch spawner ability's ammo."
+		"en"        "You've used up all your witch spawner ability's ammo."
 	}
 
 	"WitchDetails"
 	{
-		"en"			"You convert nearby common infected into Witch minions."
+		"en"        "You convert nearby common infected into Witch minions."
 	}
 
 	"WitchHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your witch spawner ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your witch spawner ability!"
 	}
 
 	"WitchHuman2"
 	{
-		"en"			"Your witch spawner ability failed to activate. Try again."
+		"en"        "Your witch spawner ability failed to activate. Try again."
 	}
 
 	"WitchHuman3"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your witch spawner ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your witch spawner ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"WitchHuman4"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your witch spawner ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your witch spawner ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"WitchMenu"
 	{
-		"en"			"Witch Ability Information"
+		"en"        "Witch Ability Information"
 	}
 
 	"WitchMenu2"
 	{
-		"en"			"Witch Ability"
+		"en"        "Witch Ability"
 	}
 
 	"Yell"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} yelled at the survivors!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} yelled at the survivors!"
 	}
 
 	"Yell2"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} stopped yelling!"
+		"#format"   "{1:t}"
+		"en"        "{olive}{1}{mint} stopped yelling!"
 	}
 
 	"YellAmmo"
 	{
-		"en"			"You've used up all your yell ability's ammo."
+		"en"        "You've used up all your yell ability's ammo."
 	}
 
 	"YellDetails"
 	{
-		"en"			"You yell to deafen survivors."
+		"en"        "You yell to deafen survivors."
 	}
 
 	"YellHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your yell ability!"
+		"#format"   "{1:i},{2:i}"
+		"en"        "You activated{olive} {1}{mint}/{olive}{2}{mint} of your yell ability!"
 	}
 
 	"YellHuman2"
 	{
-		"en"			"Your yell ability failed to activate. Try again."
+		"en"        "Your yell ability failed to activate. Try again."
 	}
 
 	"YellHuman3"
 	{
-		"en"			"You already activated your yell ability."
+		"en"        "You already activated your yell ability."
 	}
 
 	"YellHuman4"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your yell ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"#format"   "{1:i}"
+		"en"        "Your yell ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"YellHuman5"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your yell ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"#format"   "{1:i}"
+		"en"        "Your yell ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"YellMenu"
 	{
-		"en"			"Yell Ability Information"
+		"en"        "Yell Ability Information"
 	}
 
 	"YellMenu2"
 	{
-		"en"			"Yell Ability"
+		"en"        "Yell Ability"
 	}
 }
