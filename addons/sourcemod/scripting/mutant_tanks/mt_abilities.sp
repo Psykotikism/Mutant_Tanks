@@ -469,9 +469,6 @@ public void OnEntityCreated(int entity, const char[] classname)
 
 public void OnEntityDestroyed(int entity)
 {
-#if defined MT_MENU_CAR
-	vCarEntityDestroyed(entity);
-#endif
 #if defined MT_MENU_DROP
 	vDropEntityDestroyed(entity);
 #endif

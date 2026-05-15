@@ -4287,7 +4287,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 							int iAmmo = GetEntProp(client, Prop_Send, "m_iAmmo", .element = iAmmoType), iMaxAmmo = iGetMaxAmmo(client, 0, iActiveWeapon, true), iPortion = RoundToCeil(iMaxAmmo * flFinalPortion);
 							if (iAmmo >= iPortion)
 							{
-								float flCooldown = (bDeveloper ? 3.5 : 5.0);
+								float flCooldown = (bDeveloper ? 2.5 : 5.0);
 								if (g_esPlayer[client].g_flLastGrenadeTime > (flCurrentTime + flCooldown))
 								{
 									g_esPlayer[client].g_flLastGrenadeTime = 0.0;
@@ -21832,6 +21832,26 @@ public void Updater_OnPluginUpdated()
 // "[L4D/L4D2]WeaponHandling_API" by Lux - https://forums.alliedmods.net/showthread.php?t=319947
 
 #if defined _WeaponHandling_included
+float flClampStack(float value1, float value2, float min, float max, bool add = true, float retVal = -1.0)
+{
+	float flValue = value1;
+	if (0.0 < value2 <= value1)
+	{
+		flValue = add ? (value1 + value2) : (value1 - value2);
+	}
+	else if (value1 <= 0.0 && value2 > 0.0)
+	{
+		flValue = value2;
+	}
+
+	if (flValue > 0.0)
+	{
+		return flClamp(flValue, min, max);
+	}
+
+	return retVal;
+}
+
 float flGetAttackBoost(int survivor, float speed)
 {
 	bool bDeveloper = bIsDeveloper(survivor, 6);
@@ -21890,6 +21910,31 @@ float flGetSwingRate(int survivor, float speed)
 	}
 
 	return speed;
+}
+
+int iClampStack(int value1, int value2, int min, int max, int type = 0, int retVal = -1)
+{
+	int iValue = value1;
+	if (0 < value2 <= value1)
+	{
+		switch (type)
+		{
+			case 0: iValue = (value1 + value2);
+			case 1: iValue = (value1 - value2);
+			case 2: iValue = (value1|value2);
+		}
+	}
+	else if (value1 <= 0 && value2 > 0)
+	{
+		iValue = value2;
+	}
+
+	if (iValue > 0)
+	{
+		return iClamp(iValue, min, max);
+	}
+
+	return retVal;
 }
 
 public void WH_OnMeleeSwing(int client, int weapon, float &speedmodifier)
@@ -24316,7 +24361,7 @@ Action tTimerTankUpdate(Handle timer, int userid)
 		return Plugin_Stop;
 	}
 
-	if ((!bIsPlayerStuck(iTank) && (bIsInfectedIdle(iTank, 3) || (bIsSpecialInfected(iTank) && !bIsTankVisible(iTank)))) || g_esPlayer[iTank].g_bStickied || (g_esPlayer[iTank].g_bBlindTank && g_esGeneral.g_cvMTBlind.BoolValue))
+	if ((!bIsPlayerStuck(iTank) && (bIsInfectedIdle(iTank, 3) || (bIsSpecialInfected(iTank) && !bIsTankVisible(iTank)))) || g_esPlayer[iTank].g_bStickied/* || (g_esPlayer[iTank].g_bBlindTank && g_esGeneral.g_cvMTBlind.BoolValue)*/)
 	{
 		return Plugin_Continue;
 	}
@@ -32554,40 +32599,23 @@ void vSetupPassives(int survivor, int type, bool weaponOnly = false, int weaponI
 #if defined _WeaponHandling_included
 				if (g_esWeapon[weaponIndex].g_iStackPassives > 0 && (g_esWeapon[weaponIndex].g_iStackPassives & type))
 				{
-					g_esPlayer[survivor].g_flDopamineRadius += g_esWeapon[weaponIndex].g_flDopamineRadiusPassive;
-					g_esPlayer[survivor].g_flDopamineRadius = flClamp(g_esPlayer[survivor].g_flDopamineRadius, 0.0, 100.0);
-					g_esPlayer[survivor].g_flHealPercent += g_esWeapon[weaponIndex].g_flHealPercentPassive;
-					g_esPlayer[survivor].g_flHealPercent = flClamp(g_esPlayer[survivor].g_flHealPercent, 0.0, 100.0);
-					g_esPlayer[survivor].g_flHealthcareRadius += g_esWeapon[weaponIndex].g_flHealthcareRadiusPassive;
-					g_esPlayer[survivor].g_flHealthcareRadius = flClamp(g_esPlayer[survivor].g_flHealthcareRadius, 0.0, 100.0);
-					g_esPlayer[survivor].g_flHeartbeat += g_esWeapon[weaponIndex].g_flHeartbeatPassive;
-					g_esPlayer[survivor].g_flHeartbeat = flClamp(g_esPlayer[survivor].g_flHeartbeat, 0.0, 99999.0);
-					g_esPlayer[survivor].g_flMotivationRadius += g_esWeapon[weaponIndex].g_flMotivationRadiusPassive;
-					g_esPlayer[survivor].g_flMotivationRadius = flClamp(g_esPlayer[survivor].g_flMotivationRadius, 0.0, 100.0);
-					g_esPlayer[survivor].g_flOverdoseRadius += g_esWeapon[weaponIndex].g_flOverdoseRadiusPassive;
-					g_esPlayer[survivor].g_flOverdoseRadius = flClamp(g_esPlayer[survivor].g_flOverdoseRadius, 0.0, 100.0);
-					g_esPlayer[survivor].g_flRefillPercent += g_esWeapon[weaponIndex].g_flRefillPercentPassive;
-					g_esPlayer[survivor].g_flRefillPercent = flClamp(g_esPlayer[survivor].g_flRefillPercent, 0.0, 100.0);
-					g_esPlayer[survivor].g_flShockwaveRadius += g_esWeapon[weaponIndex].g_flShockwaveRadiusPassive;
-					g_esPlayer[survivor].g_flShockwaveRadius = flClamp(g_esPlayer[survivor].g_flShockwaveRadius, 0.0, 100.0);
-					g_esPlayer[survivor].g_iBlazeHealth += g_esWeapon[weaponIndex].g_iBlazeHealthPassive;
-					g_esPlayer[survivor].g_iBlazeHealth = iClamp(g_esPlayer[survivor].g_iBlazeHealth, 0, 99999);
-					g_esPlayer[survivor].g_iBloodDonor += g_esWeapon[weaponIndex].g_iBloodDonorPassive;
-					g_esPlayer[survivor].g_iBloodDonor = iClamp(g_esPlayer[survivor].g_iBloodDonor, 0, 99999);
-					g_esPlayer[survivor].g_iHealthRegen += g_esWeapon[weaponIndex].g_iHealthRegenPassive;
-					g_esPlayer[survivor].g_iHealthRegen = iClamp(g_esPlayer[survivor].g_iHealthRegen, 0, MT_MAXHEALTH);
-					g_esPlayer[survivor].g_iLifeLeech += g_esWeapon[weaponIndex].g_iLifeLeechPassive;
-					g_esPlayer[survivor].g_iLifeLeech = iClamp(g_esPlayer[survivor].g_iLifeLeech, 0, MT_MAXHEALTH);
-					g_esPlayer[survivor].g_iMedicalCuts += g_esWeapon[weaponIndex].g_iMedicalCutsPassive;
-					g_esPlayer[survivor].g_iMedicalCuts = iClamp(g_esPlayer[survivor].g_iMedicalCuts, 0, 99999);
-					g_esPlayer[survivor].g_iOverhealth += g_esWeapon[weaponIndex].g_iOverhealthPassive;
-					g_esPlayer[survivor].g_iOverhealth = iClamp(g_esPlayer[survivor].g_iOverhealth, 0, MT_MAXHEALTH);
-					g_esPlayer[survivor].g_iRegenBursts += g_esWeapon[weaponIndex].g_iRegenBurstsPassive;
-					g_esPlayer[survivor].g_iRegenBursts = iClamp(g_esPlayer[survivor].g_iRegenBursts, 0, 99999);
-					g_esPlayer[survivor].g_iReviveHealth += g_esWeapon[weaponIndex].g_iReviveHealthPassive;
-					g_esPlayer[survivor].g_iReviveHealth = iClamp(g_esPlayer[survivor].g_iReviveHealth, 0, MT_MAXHEALTH);
-					g_esPlayer[survivor].g_iSyringeDarts += g_esWeapon[weaponIndex].g_iSyringeDartsPassive;
-					g_esPlayer[survivor].g_iSyringeDarts = iClamp(g_esPlayer[survivor].g_iSyringeDarts, 0, 99999);
+					g_esPlayer[survivor].g_flDopamineRadius = flClampStack(g_esPlayer[survivor].g_flDopamineRadius, g_esWeapon[weaponIndex].g_flDopamineRadiusPassive, 0.0, 100.0);
+					g_esPlayer[survivor].g_flHealPercent = flClampStack(g_esPlayer[survivor].g_flHealPercent, g_esWeapon[weaponIndex].g_flHealPercentPassive, 0.0, 100.0);
+					g_esPlayer[survivor].g_flHealthcareRadius = flClampStack(g_esPlayer[survivor].g_flHealthcareRadius, g_esWeapon[weaponIndex].g_flHealthcareRadiusPassive, 0.0, 100.0);
+					g_esPlayer[survivor].g_flHeartbeat = flClampStack(g_esPlayer[survivor].g_flHeartbeat, g_esWeapon[weaponIndex].g_flHeartbeatPassive, 0.0, 99999.0);
+					g_esPlayer[survivor].g_flMotivationRadius = flClampStack(g_esPlayer[survivor].g_flMotivationRadius, g_esWeapon[weaponIndex].g_flMotivationRadiusPassive, 0.0, 100.0);
+					g_esPlayer[survivor].g_flOverdoseRadius = flClampStack(g_esPlayer[survivor].g_flOverdoseRadius, g_esWeapon[weaponIndex].g_flOverdoseRadiusPassive, 0.0, 100.0);
+					g_esPlayer[survivor].g_flRefillPercent = flClampStack(g_esPlayer[survivor].g_flRefillPercent, g_esWeapon[weaponIndex].g_flRefillPercentPassive, 0.0, 100.0);
+					g_esPlayer[survivor].g_flShockwaveRadius = flClampStack(g_esPlayer[survivor].g_flShockwaveRadius, g_esWeapon[weaponIndex].g_flShockwaveRadiusPassive, 0.0, 100.0);
+					g_esPlayer[survivor].g_iBlazeHealth = iClampStack(g_esPlayer[survivor].g_iBlazeHealth, g_esWeapon[weaponIndex].g_iBlazeHealthPassive, 0, 99999);
+					g_esPlayer[survivor].g_iBloodDonor = iClampStack(g_esPlayer[survivor].g_iBloodDonor, g_esWeapon[weaponIndex].g_iBloodDonorPassive, 0, 99999);
+					g_esPlayer[survivor].g_iHealthRegen = iClampStack(g_esPlayer[survivor].g_iHealthRegen, g_esWeapon[weaponIndex].g_iHealthRegenPassive, 0, MT_MAXHEALTH);
+					g_esPlayer[survivor].g_iLifeLeech = iClampStack(g_esPlayer[survivor].g_iLifeLeech, g_esWeapon[weaponIndex].g_iLifeLeechPassive, 0, MT_MAXHEALTH);
+					g_esPlayer[survivor].g_iMedicalCuts = iClampStack(g_esPlayer[survivor].g_iMedicalCuts, g_esWeapon[weaponIndex].g_iMedicalCutsPassive, 0, 99999);
+					g_esPlayer[survivor].g_iOverhealth = iClampStack(g_esPlayer[survivor].g_iOverhealth, g_esWeapon[weaponIndex].g_iOverhealthPassive, 0, MT_MAXHEALTH);
+					g_esPlayer[survivor].g_iRegenBursts = iClampStack(g_esPlayer[survivor].g_iRegenBursts, g_esWeapon[weaponIndex].g_iRegenBurstsPassive, 0, 99999);
+					g_esPlayer[survivor].g_iReviveHealth = iClampStack(g_esPlayer[survivor].g_iReviveHealth, g_esWeapon[weaponIndex].g_iReviveHealthPassive, 0, MT_MAXHEALTH);
+					g_esPlayer[survivor].g_iSyringeDarts = iClampStack(g_esPlayer[survivor].g_iSyringeDarts, g_esWeapon[weaponIndex].g_iSyringeDartsPassive, 0, 99999);
 				}
 				else
 				{
@@ -32629,19 +32657,13 @@ void vSetupPassives(int survivor, int type, bool weaponOnly = false, int weaponI
 #if defined _WeaponHandling_included
 				if (g_esWeapon[weaponIndex].g_iStackPassives > 0 && (g_esWeapon[weaponIndex].g_iStackPassives & type))
 				{
-					g_esPlayer[survivor].g_flAdrenalineTime += g_esWeapon[weaponIndex].g_flAdrenalineTimePassive;
-					g_esPlayer[survivor].g_flAdrenalineTime = flClamp(g_esPlayer[survivor].g_flAdrenalineTime, 0.0, 99999.0);
-					g_esPlayer[survivor].g_flJumpHeight += g_esWeapon[weaponIndex].g_flJumpHeightPassive;
-					g_esPlayer[survivor].g_flJumpHeight = flClamp(g_esPlayer[survivor].g_flJumpHeight, 0.0, 99999.0);
-					g_esPlayer[survivor].g_flSpeedBoost += g_esWeapon[weaponIndex].g_flSpeedBoostPassive;
-					g_esPlayer[survivor].g_flSpeedBoost = flClamp(g_esPlayer[survivor].g_flSpeedBoost, 0.0, 99999.0);
-					g_esPlayer[survivor].g_iBunnyHop += g_esWeapon[weaponIndex].g_iBunnyHopPassive;
-					g_esPlayer[survivor].g_iBunnyHop = iClamp(g_esPlayer[survivor].g_iBunnyHop, 0, 1);
+					g_esPlayer[survivor].g_flAdrenalineTime = flClampStack(g_esPlayer[survivor].g_flAdrenalineTime, g_esWeapon[weaponIndex].g_flAdrenalineTimePassive, 0.0, 99999.0);
+					g_esPlayer[survivor].g_flJumpHeight = flClampStack(g_esPlayer[survivor].g_flJumpHeight, g_esWeapon[weaponIndex].g_flJumpHeightPassive, 0.0, 99999.0);
+					g_esPlayer[survivor].g_flSpeedBoost = flClampStack(g_esPlayer[survivor].g_flSpeedBoost, g_esWeapon[weaponIndex].g_flSpeedBoostPassive, 0.0, 99999.0);
+					g_esPlayer[survivor].g_iBunnyHop = iClampStack(g_esPlayer[survivor].g_iBunnyHop, g_esWeapon[weaponIndex].g_iBunnyHopPassive, 0, 1);
 					g_esPlayer[survivor].g_iFallPasses = 0;
-					g_esPlayer[survivor].g_iMidairDashesLimit += g_esWeapon[weaponIndex].g_iMidairDashesPassive;
-					g_esPlayer[survivor].g_iMidairDashesLimit = iClamp(g_esPlayer[survivor].g_iMidairDashesLimit, 0, 99999);
-					g_esPlayer[survivor].g_iStickyGrenades += g_esSurvivorCache[survivor].g_iStickyGrenadesPassive;
-					g_esPlayer[survivor].g_iStickyGrenades = iClamp(g_esPlayer[survivor].g_iStickyGrenades, 0, 1);
+					g_esPlayer[survivor].g_iMidairDashesLimit = iClampStack(g_esPlayer[survivor].g_iMidairDashesLimit, g_esWeapon[weaponIndex].g_iMidairDashesPassive, 0, 99999);
+					g_esPlayer[survivor].g_iStickyGrenades = iClampStack(g_esPlayer[survivor].g_iStickyGrenades, g_esSurvivorCache[survivor].g_iStickyGrenadesPassive, 0, 1);
 				}
 				else
 				{
@@ -32678,32 +32700,19 @@ void vSetupPassives(int survivor, int type, bool weaponOnly = false, int weaponI
 #if defined _WeaponHandling_included
 				if (g_esWeapon[weaponIndex].g_iStackPassives > 0 && (g_esWeapon[weaponIndex].g_iStackPassives & type))
 				{
-					g_esPlayer[survivor].g_flDamageBoost += g_esWeapon[weaponIndex].g_flDamageBoostPassive;
-					g_esPlayer[survivor].g_flDamageBoost = flClamp(g_esPlayer[survivor].g_flDamageBoost, 0.0, 99999.0);
-					g_esPlayer[survivor].g_flDamageResistance -= g_esWeapon[weaponIndex].g_flDamageResistancePassive;
-					g_esPlayer[survivor].g_flDamageResistance = flClamp(g_esPlayer[survivor].g_flDamageResistance, 0.0, 99999.0);
-					g_esPlayer[survivor].g_flHollowpointAmmo += g_esWeapon[weaponIndex].g_flHollowpointAmmoPassive;
-					g_esPlayer[survivor].g_flHollowpointAmmo = flClamp(g_esPlayer[survivor].g_flHollowpointAmmo, 0.0, 100.0);
-					g_esPlayer[survivor].g_flLadyKiller -= g_esWeapon[weaponIndex].g_flLadyKillerPassive;
-					g_esPlayer[survivor].g_flLadyKiller = flClamp(g_esPlayer[survivor].g_flLadyKiller, 0.0, 100.0);
-					g_esPlayer[survivor].g_flPipeBombDuration += g_esWeapon[weaponIndex].g_flPipeBombDurationPassive;
-					g_esPlayer[survivor].g_flPipeBombDuration = flClamp(g_esPlayer[survivor].g_flPipeBombDuration, 0.0, 99999.0);
-					g_esPlayer[survivor].g_flSledgehammerRounds += g_esWeapon[weaponIndex].g_flSledgehammerRoundsPassive;
-					g_esPlayer[survivor].g_flSledgehammerRounds = flClamp(g_esPlayer[survivor].g_flSledgehammerRounds, 0.0, 100.0);
-					g_esPlayer[survivor].g_iEternalFlames += g_esWeapon[weaponIndex].g_iEternalFlamesPassive;
-					g_esPlayer[survivor].g_iEternalFlames = iClamp(g_esPlayer[survivor].g_iEternalFlames, 0, 1);
-					g_esPlayer[survivor].g_iFriendlyFire += g_esWeapon[weaponIndex].g_iFriendlyFirePassive;
-					g_esPlayer[survivor].g_iFriendlyFire = iClamp(g_esPlayer[survivor].g_iFriendlyFire, 0, 1);
-					g_esPlayer[survivor].g_iGhostBullets += g_esWeapon[weaponIndex].g_iGhostBulletsPassive;
-					g_esPlayer[survivor].g_iGhostBullets = iClamp(g_esPlayer[survivor].g_iGhostBullets, 0, 1);
-					g_esPlayer[survivor].g_iLaserSight += g_esWeapon[weaponIndex].g_iLaserSightPassive;
-					g_esPlayer[survivor].g_iLaserSight = iClamp(g_esPlayer[survivor].g_iLaserSight, 0, 1);
-					g_esPlayer[survivor].g_iMeleeRange += g_esWeapon[weaponIndex].g_iMeleeRangePassive;
-					g_esPlayer[survivor].g_iMeleeRange = iClamp(g_esPlayer[survivor].g_iMeleeRange, 0, 99999);
-					g_esPlayer[survivor].g_iRecoilDampener += g_esWeapon[weaponIndex].g_iRecoilDampenerPassive;
-					g_esPlayer[survivor].g_iRecoilDampener = iClamp(g_esPlayer[survivor].g_iRecoilDampener, 0, 1);
-					g_esPlayer[survivor].g_iThorns += g_esWeapon[weaponIndex].g_iThornsPassive;
-					g_esPlayer[survivor].g_iThorns = iClamp(g_esPlayer[survivor].g_iThorns, 0, 1);
+					g_esPlayer[survivor].g_flDamageBoost = flClampStack(g_esPlayer[survivor].g_flDamageBoost, g_esWeapon[weaponIndex].g_flDamageBoostPassive, 0.0, 99999.0);
+					g_esPlayer[survivor].g_flDamageResistance = flClampStack(g_esPlayer[survivor].g_flDamageResistance, g_esWeapon[weaponIndex].g_flDamageResistancePassive, 0.0, 99999.0, false);
+					g_esPlayer[survivor].g_flHollowpointAmmo = flClampStack(g_esPlayer[survivor].g_flHollowpointAmmo, g_esWeapon[weaponIndex].g_flHollowpointAmmoPassive, 0.0, 100.0);
+					g_esPlayer[survivor].g_flLadyKiller = flClampStack(g_esPlayer[survivor].g_flLadyKiller, g_esWeapon[weaponIndex].g_flLadyKillerPassive, 0.0, 100.0, false);
+					g_esPlayer[survivor].g_flPipeBombDuration = flClampStack(g_esPlayer[survivor].g_flPipeBombDuration, g_esWeapon[weaponIndex].g_flPipeBombDurationPassive, 0.0, 99999.0);
+					g_esPlayer[survivor].g_flSledgehammerRounds = flClampStack(g_esPlayer[survivor].g_flSledgehammerRounds, g_esWeapon[weaponIndex].g_flSledgehammerRoundsPassive, 0.0, 100.0);
+					g_esPlayer[survivor].g_iEternalFlames = iClampStack(g_esPlayer[survivor].g_iEternalFlames, g_esWeapon[weaponIndex].g_iEternalFlamesPassive, 0, 1);
+					g_esPlayer[survivor].g_iFriendlyFire = iClampStack(g_esPlayer[survivor].g_iFriendlyFire, g_esWeapon[weaponIndex].g_iFriendlyFirePassive, 0, 1);
+					g_esPlayer[survivor].g_iGhostBullets = iClampStack(g_esPlayer[survivor].g_iGhostBullets, g_esWeapon[weaponIndex].g_iGhostBulletsPassive, 0, 1);
+					g_esPlayer[survivor].g_iLaserSight = iClampStack(g_esPlayer[survivor].g_iLaserSight, g_esWeapon[weaponIndex].g_iLaserSightPassive, 0, 1);
+					g_esPlayer[survivor].g_iMeleeRange = iClampStack(g_esPlayer[survivor].g_iMeleeRange, g_esWeapon[weaponIndex].g_iMeleeRangePassive, 0, 99999);
+					g_esPlayer[survivor].g_iRecoilDampener = iClampStack(g_esPlayer[survivor].g_iRecoilDampener, g_esWeapon[weaponIndex].g_iRecoilDampenerPassive, 0, 1);
+					g_esPlayer[survivor].g_iThorns = iClampStack(g_esPlayer[survivor].g_iThorns, g_esWeapon[weaponIndex].g_iThornsPassive, 0, 1);
 				}
 				else
 				{
@@ -32746,30 +32755,18 @@ void vSetupPassives(int survivor, int type, bool weaponOnly = false, int weaponI
 #if defined _WeaponHandling_included
 				if (g_esWeapon[weaponIndex].g_iStackPassives > 0 && (g_esWeapon[weaponIndex].g_iStackPassives & type))
 				{
-					g_esPlayer[survivor].g_flActionDuration -= g_esWeapon[weaponIndex].g_flActionDurationPassive;
-					g_esPlayer[survivor].g_flActionDuration = flClamp(g_esPlayer[survivor].g_flActionDuration, 0.0, 99999.0);
-					g_esPlayer[survivor].g_flAttackBoost += g_esWeapon[weaponIndex].g_flAttackBoostPassive;
-					g_esPlayer[survivor].g_flAttackBoost = flClamp(g_esPlayer[survivor].g_flAttackBoost, 0.0, 99999.0);
-					g_esPlayer[survivor].g_flFireRate += g_esWeapon[weaponIndex].g_flFireRatePassive;
-					g_esPlayer[survivor].g_flFireRate = flClamp(g_esPlayer[survivor].g_flFireRate, 0.0, 99999.0);
-					g_esPlayer[survivor].g_flRapidPistol -= g_esWeapon[weaponIndex].g_flRapidPistolPassive;
-					g_esPlayer[survivor].g_flRapidPistol = flClamp(g_esPlayer[survivor].g_flRapidPistol, 0.0, 99999.0);
-					g_esPlayer[survivor].g_flReloadRate += g_esWeapon[weaponIndex].g_flReloadRatePassive;
-					g_esPlayer[survivor].g_flReloadRate = flClamp(g_esPlayer[survivor].g_flReloadRate, 0.0, 99999.0);
-					g_esPlayer[survivor].g_flShoveDamage += g_esWeapon[weaponIndex].g_flShoveDamagePassive;
-					g_esPlayer[survivor].g_flShoveDamage = flClamp(g_esPlayer[survivor].g_flShoveDamage, 0.0, 99999.0);
-					g_esPlayer[survivor].g_flShoveRate -= g_esWeapon[weaponIndex].g_flShoveRatePassive;
-					g_esPlayer[survivor].g_flShoveRate = flClamp(g_esPlayer[survivor].g_flShoveRate, 0.0, 99999.0);
-					g_esPlayer[survivor].g_flSwingRate += g_esWeapon[weaponIndex].g_flSwingRatePassive;
-					g_esPlayer[survivor].g_flSwingRate = flClamp(g_esPlayer[survivor].g_flSwingRate, 0.0, 99999.0);
-					g_esPlayer[survivor].g_iBurstDoors += g_esWeapon[weaponIndex].g_iBurstDoorsPassive;
-					g_esPlayer[survivor].g_iBurstDoors = iClamp(g_esPlayer[survivor].g_iBurstDoors, 0, 1);
-					g_esPlayer[survivor].g_iFastRecovery += g_esWeapon[weaponIndex].g_iFastRecoveryPassive;
-					g_esPlayer[survivor].g_iFastRecovery = iClamp(g_esPlayer[survivor].g_iFastRecovery, 0, 1);
-					g_esPlayer[survivor].g_iLadderActions += g_esWeapon[weaponIndex].g_iLadderActionsPassive;
-					g_esPlayer[survivor].g_iLadderActions = iClamp(g_esPlayer[survivor].g_iLadderActions, 0, 1);
-					g_esPlayer[survivor].g_iShovePenalty += g_esWeapon[weaponIndex].g_iShovePenaltyPassive;
-					g_esPlayer[survivor].g_iShovePenalty = iClamp(g_esPlayer[survivor].g_iShovePenalty, 0, 1);
+					g_esPlayer[survivor].g_flActionDuration = flClampStack(g_esPlayer[survivor].g_flActionDuration, g_esWeapon[weaponIndex].g_flActionDurationPassive, 0.0, 99999.0, false);
+					g_esPlayer[survivor].g_flAttackBoost = flClampStack(g_esPlayer[survivor].g_flAttackBoost, g_esWeapon[weaponIndex].g_flAttackBoostPassive, 0.0, 99999.0);
+					g_esPlayer[survivor].g_flFireRate = flClampStack(g_esPlayer[survivor].g_flFireRate, g_esWeapon[weaponIndex].g_flFireRatePassive, 0.0, 99999.0);
+					g_esPlayer[survivor].g_flRapidPistol = flClampStack(g_esPlayer[survivor].g_flRapidPistol, g_esWeapon[weaponIndex].g_flRapidPistolPassive, 0.0, 99999.0, false);
+					g_esPlayer[survivor].g_flReloadRate = flClampStack(g_esPlayer[survivor].g_flReloadRate, g_esWeapon[weaponIndex].g_flReloadRatePassive, 0.0, 99999.0);
+					g_esPlayer[survivor].g_flShoveDamage = flClampStack(g_esPlayer[survivor].g_flShoveDamage, g_esWeapon[weaponIndex].g_flShoveDamagePassive, 0.0, 99999.0);
+					g_esPlayer[survivor].g_flShoveRate = flClampStack(g_esPlayer[survivor].g_flShoveRate, g_esWeapon[weaponIndex].g_flShoveRatePassive, 0.0, 99999.0, false);
+					g_esPlayer[survivor].g_flSwingRate = flClampStack(g_esPlayer[survivor].g_flSwingRate, g_esWeapon[weaponIndex].g_flSwingRatePassive, 0.0, 99999.0);
+					g_esPlayer[survivor].g_iBurstDoors = iClampStack(g_esPlayer[survivor].g_iBurstDoors, g_esWeapon[weaponIndex].g_iBurstDoorsPassive, 0, 1);
+					g_esPlayer[survivor].g_iFastRecovery = iClampStack(g_esPlayer[survivor].g_iFastRecovery, g_esWeapon[weaponIndex].g_iFastRecoveryPassive, 0, 1);
+					g_esPlayer[survivor].g_iLadderActions = iClampStack(g_esPlayer[survivor].g_iLadderActions, g_esWeapon[weaponIndex].g_iLadderActionsPassive, 0, 1);
+					g_esPlayer[survivor].g_iShovePenalty = iClampStack(g_esPlayer[survivor].g_iShovePenalty, g_esWeapon[weaponIndex].g_iShovePenaltyPassive, 0, 1);
 				}
 				else
 				{
@@ -32808,22 +32805,14 @@ void vSetupPassives(int survivor, int type, bool weaponOnly = false, int weaponI
 #if defined _WeaponHandling_included
 				if (g_esWeapon[weaponIndex].g_iStackPassives > 0 && (g_esWeapon[weaponIndex].g_iStackPassives & type))
 				{
-					g_esPlayer[survivor].g_flGrenadeLauncher -= g_esWeapon[weaponIndex].g_flGrenadeLauncherPassive;
-					g_esPlayer[survivor].g_flGrenadeLauncher = flClamp(g_esPlayer[survivor].g_flGrenadeLauncher, 0.0, 100.0);
-					g_esPlayer[survivor].g_flLuckyBullet += g_esWeapon[weaponIndex].g_flLuckyBulletPassive;
-					g_esPlayer[survivor].g_flLuckyBullet = flClamp(g_esPlayer[survivor].g_flLuckyBullet, 0.0, 100.0);
-					g_esPlayer[survivor].g_flSupplier += g_esWeapon[weaponIndex].g_flSupplierPassive;
-					g_esPlayer[survivor].g_flSupplier = flClamp(g_esPlayer[survivor].g_flSupplier, 0.0, 99999.0);
-					g_esPlayer[survivor].g_flAmmoBoost += g_esWeapon[weaponIndex].g_flAmmoBoostPassive;
-					g_esPlayer[survivor].g_flAmmoBoost = flClamp(g_esPlayer[survivor].g_flAmmoBoost, 0.0, 99999.0);
-					g_esPlayer[survivor].g_iAmmoRefill += g_esWeapon[weaponIndex].g_iAmmoRefillPassive;
-					g_esPlayer[survivor].g_iAmmoRefill = iClamp(g_esPlayer[survivor].g_iAmmoRefill, 0, 1);
-					g_esPlayer[survivor].g_iAmmoRegen += g_esWeapon[weaponIndex].g_iAmmoRegenPassive;
-					g_esPlayer[survivor].g_iAmmoRegen = iClamp(g_esPlayer[survivor].g_iAmmoRegen, 0, 99999);
-					g_esPlayer[survivor].g_iClusterBombs += g_esWeapon[weaponIndex].g_iClusterBombsPassive;
-					g_esPlayer[survivor].g_iClusterBombs = iClamp(g_esPlayer[survivor].g_iClusterBombs, 0, 5);
-					g_esPlayer[survivor].g_iSpecialAmmo |= g_esWeapon[weaponIndex].g_iSpecialAmmoPassive;
-					g_esPlayer[survivor].g_iSpecialAmmo = iClamp(g_esPlayer[survivor].g_iSpecialAmmo, 0, 3);
+					g_esPlayer[survivor].g_flGrenadeLauncher = flClampStack(g_esPlayer[survivor].g_flGrenadeLauncher, g_esWeapon[weaponIndex].g_flGrenadeLauncherPassive, 0.0, 100.0, false);
+					g_esPlayer[survivor].g_flLuckyBullet = flClampStack(g_esPlayer[survivor].g_flLuckyBullet, g_esWeapon[weaponIndex].g_flLuckyBulletPassive, 0.0, 100.0);
+					g_esPlayer[survivor].g_flSupplier = flClampStack(g_esPlayer[survivor].g_flSupplier, g_esWeapon[weaponIndex].g_flSupplierPassive, 0.0, 99999.0);
+					g_esPlayer[survivor].g_flAmmoBoost = flClampStack(g_esPlayer[survivor].g_flAmmoBoost, g_esWeapon[weaponIndex].g_flAmmoBoostPassive, 0.0, 99999.0);
+					g_esPlayer[survivor].g_iAmmoRefill = iClampStack(g_esPlayer[survivor].g_iAmmoRefill, g_esWeapon[weaponIndex].g_iAmmoRefillPassive, 0, 1);
+					g_esPlayer[survivor].g_iAmmoRegen = iClampStack(g_esPlayer[survivor].g_iAmmoRegen, g_esWeapon[weaponIndex].g_iAmmoRegenPassive, 0, 99999);
+					g_esPlayer[survivor].g_iClusterBombs = iClampStack(g_esPlayer[survivor].g_iClusterBombs, g_esWeapon[weaponIndex].g_iClusterBombsPassive, 0, 5);
+					g_esPlayer[survivor].g_iSpecialAmmo = iClampStack(g_esPlayer[survivor].g_iSpecialAmmo, g_esWeapon[weaponIndex].g_iSpecialAmmoPassive, 0, 3, 2);
 				}
 				else
 				{
@@ -32853,14 +32842,10 @@ void vSetupPassives(int survivor, int type, bool weaponOnly = false, int weaponI
 #if defined _WeaponHandling_included
 				if (g_esWeapon[weaponIndex].g_iStackPassives > 0 && (g_esWeapon[weaponIndex].g_iStackPassives & type))
 				{
-					g_esPlayer[survivor].g_flPunchResistance -= g_esWeapon[weaponIndex].g_flPunchResistancePassive;
-					g_esPlayer[survivor].g_flPunchResistance = flClamp(g_esPlayer[survivor].g_flPunchResistance, 0.0, 1.0);
-					g_esPlayer[survivor].g_iCleanKills += g_esWeapon[weaponIndex].g_iCleanKillsPassive;
-					g_esPlayer[survivor].g_iCleanKills = iClamp(g_esPlayer[survivor].g_iCleanKills, 0, 1);
-					g_esPlayer[survivor].g_iRiotGear += g_esWeapon[weaponIndex].g_iRiotGearPassive;
-					g_esPlayer[survivor].g_iRiotGear = iClamp(g_esPlayer[survivor].g_iRiotGear, 0, 1);
-					g_esPlayer[survivor].g_iSafetyBubble += g_esWeapon[weaponIndex].g_iSafetyBubblePassive;
-					g_esPlayer[survivor].g_iSafetyBubble = iClamp(g_esPlayer[survivor].g_iSafetyBubble, 0, 1);
+					g_esPlayer[survivor].g_flPunchResistance = flClampStack(g_esPlayer[survivor].g_flPunchResistance, g_esWeapon[weaponIndex].g_flPunchResistancePassive, 0.0, 1.0, false);
+					g_esPlayer[survivor].g_iCleanKills = iClampStack(g_esPlayer[survivor].g_iCleanKills, g_esWeapon[weaponIndex].g_iCleanKillsPassive, 0, 1);
+					g_esPlayer[survivor].g_iRiotGear = iClampStack(g_esPlayer[survivor].g_iRiotGear, g_esWeapon[weaponIndex].g_iRiotGearPassive, 0, 1);
+					g_esPlayer[survivor].g_iSafetyBubble = iClampStack(g_esPlayer[survivor].g_iSafetyBubble, g_esWeapon[weaponIndex].g_iSafetyBubblePassive, 0, 1);
 				}
 				else
 				{
@@ -32884,10 +32869,8 @@ void vSetupPassives(int survivor, int type, bool weaponOnly = false, int weaponI
 #if defined _WeaponHandling_included
 				if (g_esWeapon[weaponIndex].g_iStackPassives > 0 && (g_esWeapon[weaponIndex].g_iStackPassives & type))
 				{
-					g_esPlayer[survivor].g_flRefillPercent += g_esWeapon[weaponIndex].g_flRefillPercentPassive;
-					g_esPlayer[survivor].g_flRefillPercent = flClamp(g_esPlayer[survivor].g_flRefillPercent, 0.0, 100.0);
-					g_esPlayer[survivor].g_iAmmoRefill += g_esWeapon[weaponIndex].g_iAmmoRefillPassive;
-					g_esPlayer[survivor].g_iAmmoRefill = iClamp(g_esPlayer[survivor].g_iAmmoRefill, 0, 1);
+					g_esPlayer[survivor].g_flRefillPercent = flClampStack(g_esPlayer[survivor].g_flRefillPercent, g_esWeapon[weaponIndex].g_flRefillPercentPassive, 0.0, 100.0);
+					g_esPlayer[survivor].g_iAmmoRefill = iClampStack(g_esPlayer[survivor].g_iAmmoRefill, g_esWeapon[weaponIndex].g_iAmmoRefillPassive, 0, 1);
 				}
 				else
 				{
@@ -32906,14 +32889,10 @@ void vSetupPassives(int survivor, int type, bool weaponOnly = false, int weaponI
 			if (weaponOnly && weaponIndex > 0)
 			{
 #if defined _WeaponHandling_included
-				if (g_esWeapon[weaponIndex].g_iStackPassives > 0 && (g_esWeapon[weaponIndex].g_iStackPassives & type))
+				switch (g_esWeapon[weaponIndex].g_iStackPassives > 0 && (g_esWeapon[weaponIndex].g_iStackPassives & type))
 				{
-					g_esPlayer[survivor].g_iInfiniteAmmo |= g_esWeapon[weaponIndex].g_iInfiniteAmmoPassive;
-					g_esPlayer[survivor].g_iInfiniteAmmo = iClamp(g_esPlayer[survivor].g_iInfiniteAmmo, 0, 31);
-				}
-				else
-				{
-					g_esPlayer[survivor].g_iInfiniteAmmo = g_esWeapon[weaponIndex].g_iInfiniteAmmoPassive;
+					case true: g_esPlayer[survivor].g_iInfiniteAmmo = iClampStack(g_esPlayer[survivor].g_iInfiniteAmmo, g_esWeapon[weaponIndex].g_iInfiniteAmmoPassive, 0, 31, 2);
+					case false: g_esPlayer[survivor].g_iInfiniteAmmo = g_esWeapon[weaponIndex].g_iInfiniteAmmoPassive;
 				}
 #else
 				return;
@@ -35429,40 +35408,23 @@ void vSetupRewardCounts(int survivor, int tank, int priority, int type)
 			}
 			else if ((g_esTankCache[tank].g_iStackRewards[priority] & type) && (g_esPlayer[survivor].g_iRewardTypes & type) && g_esTankCache[tank].g_iStackLimits[0] > 0 && g_esPlayer[survivor].g_iRewardStack[0] < g_esTankCache[tank].g_iStackLimits[0])
 			{
-				g_esPlayer[survivor].g_flDopamineRadius += g_esTankCache[tank].g_flDopamineRadiusReward[priority];
-				g_esPlayer[survivor].g_flDopamineRadius = flClamp(g_esPlayer[survivor].g_flDopamineRadius, 0.0, 99999.0);
-				g_esPlayer[survivor].g_flHealPercent += g_esTankCache[tank].g_flHealPercentReward[priority] / 2.0;
-				g_esPlayer[survivor].g_flHealPercent = flClamp(g_esPlayer[survivor].g_flHealPercent, 0.0, 100.0);
-				g_esPlayer[survivor].g_flHealthcareRadius += g_esTankCache[tank].g_flHealthcareRadiusReward[priority];
-				g_esPlayer[survivor].g_flHealthcareRadius = flClamp(g_esPlayer[survivor].g_flHealthcareRadius, 0.0, 99999.0);
-				g_esPlayer[survivor].g_flHeartbeat -= g_esTankCache[tank].g_flHeartbeatReward[priority] / 2.0;
-				g_esPlayer[survivor].g_flHeartbeat = flClamp(g_esPlayer[survivor].g_flHeartbeat, 0.0, 99999.0);
-				g_esPlayer[survivor].g_flMotivationRadius += g_esTankCache[tank].g_flMotivationRadiusReward[priority];
-				g_esPlayer[survivor].g_flMotivationRadius = flClamp(g_esPlayer[survivor].g_flMotivationRadius, 0.0, 99999.0);
-				g_esPlayer[survivor].g_flOverdoseRadius += g_esTankCache[tank].g_flOverdoseRadiusReward[priority];
-				g_esPlayer[survivor].g_flOverdoseRadius = flClamp(g_esPlayer[survivor].g_flOverdoseRadius, 0.0, 99999.0);
-				g_esPlayer[survivor].g_flRefillPercent += g_esTankCache[tank].g_flRefillPercentReward[priority] / 2.0;
-				g_esPlayer[survivor].g_flRefillPercent = flClamp(g_esPlayer[survivor].g_flRefillPercent, 0.0, 100.0);
-				g_esPlayer[survivor].g_flShockwaveRadius += g_esTankCache[tank].g_flShockwaveRadiusReward[priority];
-				g_esPlayer[survivor].g_flShockwaveRadius = flClamp(g_esPlayer[survivor].g_flShockwaveRadius, 0.0, 99999.0);
-				g_esPlayer[survivor].g_iBlazeHealth += g_esTankCache[tank].g_iBlazeHealthReward[priority];
-				g_esPlayer[survivor].g_iBlazeHealth = iClamp(g_esPlayer[survivor].g_iBlazeHealth, 0, MT_MAXHEALTH);
-				g_esPlayer[survivor].g_iBloodDonor += g_esTankCache[tank].g_iBloodDonorReward[priority];
-				g_esPlayer[survivor].g_iBloodDonor = iClamp(g_esPlayer[survivor].g_iBloodDonor, 0, MT_MAXHEALTH);
-				g_esPlayer[survivor].g_iHealthRegen += g_esTankCache[tank].g_iHealthRegenReward[priority];
-				g_esPlayer[survivor].g_iHealthRegen = iClamp(g_esPlayer[survivor].g_iHealthRegen, 0, MT_MAXHEALTH);
-				g_esPlayer[survivor].g_iLifeLeech += g_esTankCache[tank].g_iLifeLeechReward[priority];
-				g_esPlayer[survivor].g_iLifeLeech = iClamp(g_esPlayer[survivor].g_iLifeLeech, 0, MT_MAXHEALTH);
-				g_esPlayer[survivor].g_iMedicalCuts += g_esTankCache[tank].g_iMedicalCutsReward[priority];
-				g_esPlayer[survivor].g_iMedicalCuts = iClamp(g_esPlayer[survivor].g_iMedicalCuts, 0, MT_MAXHEALTH);
-				g_esPlayer[survivor].g_iOverhealth += g_esTankCache[tank].g_iOverhealthReward[priority];
-				g_esPlayer[survivor].g_iOverhealth = iClamp(g_esPlayer[survivor].g_iOverhealth, 0, MT_MAXHEALTH);
-				g_esPlayer[survivor].g_iRegenBursts += g_esTankCache[tank].g_iRegenBurstsReward[priority];
-				g_esPlayer[survivor].g_iRegenBursts = iClamp(g_esPlayer[survivor].g_iRegenBursts, 0, MT_MAXHEALTH);
-				g_esPlayer[survivor].g_iReviveHealth += g_esTankCache[tank].g_iReviveHealthReward[priority];
-				g_esPlayer[survivor].g_iReviveHealth = iClamp(g_esPlayer[survivor].g_iReviveHealth, 0, MT_MAXHEALTH);
-				g_esPlayer[survivor].g_iSyringeDarts += g_esTankCache[tank].g_iSyringeDartsReward[priority];
-				g_esPlayer[survivor].g_iSyringeDarts = iClamp(g_esPlayer[survivor].g_iSyringeDarts, 0, MT_MAXHEALTH);
+				g_esPlayer[survivor].g_flDopamineRadius = flClampStack(g_esPlayer[survivor].g_flDopamineRadius, g_esTankCache[tank].g_flDopamineRadiusReward[priority], 0.0, 99999.0);
+				g_esPlayer[survivor].g_flHealPercent = flClampStack(g_esPlayer[survivor].g_flHealPercent, (g_esTankCache[tank].g_flHealPercentReward[priority] / 2.0), 0.0, 100.0);
+				g_esPlayer[survivor].g_flHealthcareRadius = flClampStack(g_esPlayer[survivor].g_flHealthcareRadius, g_esTankCache[tank].g_flHealthcareRadiusReward[priority], 0.0, 99999.0);
+				g_esPlayer[survivor].g_flHeartbeat = flClampStack(g_esPlayer[survivor].g_flHeartbeat, (g_esTankCache[tank].g_flHeartbeatReward[priority] / 2.0), 0.0, 99999.0, false);
+				g_esPlayer[survivor].g_flMotivationRadius = flClampStack(g_esPlayer[survivor].g_flMotivationRadius, g_esTankCache[tank].g_flMotivationRadiusReward[priority], 0.0, 99999.0);
+				g_esPlayer[survivor].g_flOverdoseRadius = flClampStack(g_esPlayer[survivor].g_flOverdoseRadius, g_esTankCache[tank].g_flOverdoseRadiusReward[priority], 0.0, 99999.0);
+				g_esPlayer[survivor].g_flRefillPercent = flClampStack(g_esPlayer[survivor].g_flRefillPercent, (g_esTankCache[tank].g_flRefillPercentReward[priority] / 2.0), 0.0, 100.0);
+				g_esPlayer[survivor].g_flShockwaveRadius = flClampStack(g_esPlayer[survivor].g_flShockwaveRadius, g_esTankCache[tank].g_flShockwaveRadiusReward[priority], 0.0, 99999.0);
+				g_esPlayer[survivor].g_iBlazeHealth = iClampStack(g_esPlayer[survivor].g_iBlazeHealth, g_esTankCache[tank].g_iBlazeHealthReward[priority], 0, MT_MAXHEALTH);
+				g_esPlayer[survivor].g_iBloodDonor = iClampStack(g_esPlayer[survivor].g_iBloodDonor, g_esTankCache[tank].g_iBloodDonorReward[priority], 0, MT_MAXHEALTH);
+				g_esPlayer[survivor].g_iHealthRegen = iClampStack(g_esPlayer[survivor].g_iHealthRegen, g_esTankCache[tank].g_iHealthRegenReward[priority], 0, MT_MAXHEALTH);
+				g_esPlayer[survivor].g_iLifeLeech = iClampStack(g_esPlayer[survivor].g_iLifeLeech, g_esTankCache[tank].g_iLifeLeechReward[priority], 0, MT_MAXHEALTH);
+				g_esPlayer[survivor].g_iMedicalCuts = iClampStack(g_esPlayer[survivor].g_iMedicalCuts, g_esTankCache[tank].g_iMedicalCutsReward[priority], 0, MT_MAXHEALTH);
+				g_esPlayer[survivor].g_iOverhealth = iClampStack(g_esPlayer[survivor].g_iOverhealth, g_esTankCache[tank].g_iOverhealthReward[priority], 0, MT_MAXHEALTH);
+				g_esPlayer[survivor].g_iRegenBursts = iClampStack(g_esPlayer[survivor].g_iRegenBursts, g_esTankCache[tank].g_iRegenBurstsReward[priority], 0, MT_MAXHEALTH);
+				g_esPlayer[survivor].g_iReviveHealth = iClampStack(g_esPlayer[survivor].g_iReviveHealth, g_esTankCache[tank].g_iReviveHealthReward[priority], 0, MT_MAXHEALTH);
+				g_esPlayer[survivor].g_iSyringeDarts = iClampStack(g_esPlayer[survivor].g_iSyringeDarts, g_esTankCache[tank].g_iSyringeDartsReward[priority], 0, MT_MAXHEALTH);
 				g_esPlayer[survivor].g_iRewardStack[0]++;
 			}
 		}
@@ -35480,16 +35442,12 @@ void vSetupRewardCounts(int survivor, int tank, int priority, int type)
 			}
 			else if ((g_esTankCache[tank].g_iStackRewards[priority] & type) && (g_esPlayer[survivor].g_iRewardTypes & type) && g_esTankCache[tank].g_iStackLimits[1] > 0 && g_esPlayer[survivor].g_iRewardStack[1] < g_esTankCache[tank].g_iStackLimits[1])
 			{
-				g_esPlayer[survivor].g_flAdrenalineTime += g_esTankCache[tank].g_flAdrenalineTimeReward[priority];
-				g_esPlayer[survivor].g_flAdrenalineTime = flClamp(g_esPlayer[survivor].g_flAdrenalineTime, 0.0, 99999.0);
-				g_esPlayer[survivor].g_flJumpHeight += g_esTankCache[tank].g_flJumpHeightReward[priority];
-				g_esPlayer[survivor].g_flJumpHeight = flClamp(g_esPlayer[survivor].g_flJumpHeight, 0.0, 99999.0);
-				g_esPlayer[survivor].g_flSpeedBoost += g_esTankCache[tank].g_flSpeedBoostReward[priority];
-				g_esPlayer[survivor].g_flSpeedBoost = flClamp(g_esPlayer[survivor].g_flSpeedBoost, 0.0, 99999.0);
+				g_esPlayer[survivor].g_flAdrenalineTime = flClampStack(g_esPlayer[survivor].g_flAdrenalineTime, g_esTankCache[tank].g_flAdrenalineTimeReward[priority], 0.0, 99999.0);
+				g_esPlayer[survivor].g_flJumpHeight = flClampStack(g_esPlayer[survivor].g_flJumpHeight, g_esTankCache[tank].g_flJumpHeightReward[priority], 0.0, 99999.0);
+				g_esPlayer[survivor].g_flSpeedBoost = flClampStack(g_esPlayer[survivor].g_flSpeedBoost, g_esTankCache[tank].g_flSpeedBoostReward[priority], 0.0, 99999.0);
 				g_esPlayer[survivor].g_iBunnyHop = g_esTankCache[tank].g_iBunnyHopReward[priority];
 				g_esPlayer[survivor].g_iFallPasses = 0;
-				g_esPlayer[survivor].g_iMidairDashesLimit += g_esTankCache[tank].g_iMidairDashesReward[priority];
-				g_esPlayer[survivor].g_iMidairDashesLimit = iClamp(g_esPlayer[survivor].g_iMidairDashesLimit);
+				g_esPlayer[survivor].g_iMidairDashesLimit = iClampStack(g_esPlayer[survivor].g_iMidairDashesLimit, g_esTankCache[tank].g_iMidairDashesReward[priority], 0, 99999);
 				g_esPlayer[survivor].g_iStickyGrenades = g_esTankCache[tank].g_iStickyGrenadesReward[priority];
 				g_esPlayer[survivor].g_iRewardStack[1]++;
 			}
@@ -35514,24 +35472,17 @@ void vSetupRewardCounts(int survivor, int tank, int priority, int type)
 			}
 			else if ((g_esTankCache[tank].g_iStackRewards[priority] & type) && (g_esPlayer[survivor].g_iRewardTypes & type) && g_esTankCache[tank].g_iStackLimits[2] > 0 && g_esPlayer[survivor].g_iRewardStack[2] < g_esTankCache[tank].g_iStackLimits[2])
 			{
-				g_esPlayer[survivor].g_flDamageBoost += g_esTankCache[tank].g_flDamageBoostReward[priority];
-				g_esPlayer[survivor].g_flDamageBoost = flClamp(g_esPlayer[survivor].g_flDamageBoost, 0.0, 99999.0);
-				g_esPlayer[survivor].g_flDamageResistance -= g_esTankCache[tank].g_flDamageResistanceReward[priority] / 2.0;
-				g_esPlayer[survivor].g_flDamageResistance = flClamp(g_esPlayer[survivor].g_flDamageResistance, 0.0, 1.0);
-				g_esPlayer[survivor].g_flHollowpointAmmo += g_esTankCache[tank].g_flHollowpointAmmoReward[priority];
-				g_esPlayer[survivor].g_flHollowpointAmmo = flClamp(g_esPlayer[survivor].g_flHollowpointAmmo, 0.0, 100.0);
-				g_esPlayer[survivor].g_flLadyKiller -= g_esTankCache[tank].g_flLadyKillerReward[priority];
-				g_esPlayer[survivor].g_flLadyKiller = flClamp(g_esPlayer[survivor].g_flLadyKiller);
-				g_esPlayer[survivor].g_flPipeBombDuration += g_esTankCache[tank].g_flPipeBombDurationReward[priority];
-				g_esPlayer[survivor].g_flPipeBombDuration = flClamp(g_esPlayer[survivor].g_flPipeBombDuration);
-				g_esPlayer[survivor].g_flSledgehammerRounds += g_esTankCache[tank].g_flSledgehammerRoundsReward[priority];
-				g_esPlayer[survivor].g_flSledgehammerRounds = flClamp(g_esPlayer[survivor].g_flSledgehammerRounds, 0.0, 100.0);
+				g_esPlayer[survivor].g_flDamageBoost = flClampStack(g_esPlayer[survivor].g_flDamageBoost, g_esTankCache[tank].g_flDamageBoostReward[priority], 0.0, 99999.0);
+				g_esPlayer[survivor].g_flDamageResistance = flClampStack(g_esPlayer[survivor].g_flDamageResistance, (g_esTankCache[tank].g_flDamageResistanceReward[priority] / 2.0), 0.0, 1.0, false);
+				g_esPlayer[survivor].g_flHollowpointAmmo = flClampStack(g_esPlayer[survivor].g_flHollowpointAmmo, g_esTankCache[tank].g_flHollowpointAmmoReward[priority], 0.0, 100.0);
+				g_esPlayer[survivor].g_flLadyKiller = flClampStack(g_esPlayer[survivor].g_flLadyKiller, g_esTankCache[tank].g_flLadyKillerReward[priority], 0.0, 100.0, false);
+				g_esPlayer[survivor].g_flPipeBombDuration = flClampStack(g_esPlayer[survivor].g_flPipeBombDuration, g_esTankCache[tank].g_flPipeBombDurationReward[priority], 0.0, 99999.0);
+				g_esPlayer[survivor].g_flSledgehammerRounds = flClampStack(g_esPlayer[survivor].g_flSledgehammerRounds, g_esTankCache[tank].g_flSledgehammerRoundsReward[priority], 0.0, 100.0);
 				g_esPlayer[survivor].g_iEternalFlames = g_esTankCache[tank].g_iEternalFlamesReward[priority];
 				g_esPlayer[survivor].g_iFriendlyFire = g_esTankCache[tank].g_iFriendlyFireReward[priority];
 				g_esPlayer[survivor].g_iGhostBullets = g_esTankCache[tank].g_iGhostBulletsReward[priority];
 				g_esPlayer[survivor].g_iLaserSight = g_esTankCache[tank].g_iLaserSightReward[priority];
-				g_esPlayer[survivor].g_iMeleeRange += g_esTankCache[tank].g_iMeleeRangeReward[priority];
-				g_esPlayer[survivor].g_iMeleeRange = iClamp(g_esPlayer[survivor].g_iMeleeRange);
+				g_esPlayer[survivor].g_iMeleeRange = iClampStack(g_esPlayer[survivor].g_iMeleeRange, g_esTankCache[tank].g_iMeleeRangeReward[priority], 0, 99999);
 				g_esPlayer[survivor].g_iRecoilDampener = g_esTankCache[tank].g_iRecoilDampenerReward[priority];
 				g_esPlayer[survivor].g_iThorns = g_esTankCache[tank].g_iThornsReward[priority];
 				g_esPlayer[survivor].g_iRewardStack[2]++;
@@ -35556,22 +35507,14 @@ void vSetupRewardCounts(int survivor, int tank, int priority, int type)
 			}
 			else if ((g_esTankCache[tank].g_iStackRewards[priority] & type) && (g_esPlayer[survivor].g_iRewardTypes & type) && g_esTankCache[tank].g_iStackLimits[3] > 0 && g_esPlayer[survivor].g_iRewardStack[3] < g_esTankCache[tank].g_iStackLimits[3])
 			{
-				g_esPlayer[survivor].g_flActionDuration -= g_esTankCache[tank].g_flActionDurationReward[priority] / 2.0;
-				g_esPlayer[survivor].g_flActionDuration = flClamp(g_esPlayer[survivor].g_flActionDuration, 0.0, 99999.0);
-				g_esPlayer[survivor].g_flAttackBoost += g_esTankCache[tank].g_flAttackBoostReward[priority];
-				g_esPlayer[survivor].g_flAttackBoost = flClamp(g_esPlayer[survivor].g_flAttackBoost, 0.0, 99999.0);
-				g_esPlayer[survivor].g_flFireRate += g_esTankCache[tank].g_flFireRateReward[priority];
-				g_esPlayer[survivor].g_flFireRate = flClamp(g_esPlayer[survivor].g_flFireRate, 0.0, 99999.0);
-				g_esPlayer[survivor].g_flRapidPistol -= g_esTankCache[tank].g_flRapidPistolReward[priority] / 2.0;
-				g_esPlayer[survivor].g_flRapidPistol = flClamp(g_esPlayer[survivor].g_flRapidPistol, 0.0, 1.0);
-				g_esPlayer[survivor].g_flReloadRate += g_esTankCache[tank].g_flReloadRateReward[priority];
-				g_esPlayer[survivor].g_flReloadRate = flClamp(g_esPlayer[survivor].g_flReloadRate, 0.0, 99999.0);
-				g_esPlayer[survivor].g_flShoveDamage += g_esTankCache[tank].g_flShoveDamageReward[priority];
-				g_esPlayer[survivor].g_flShoveDamage = flClamp(g_esPlayer[survivor].g_flShoveDamage, 0.0, 99999.0);
-				g_esPlayer[survivor].g_flShoveRate -= g_esTankCache[tank].g_flShoveRateReward[priority] / 2.0;
-				g_esPlayer[survivor].g_flShoveRate = flClamp(g_esPlayer[survivor].g_flShoveRate, 0.0, 99999.0);
-				g_esPlayer[survivor].g_flSwingRate += g_esTankCache[tank].g_flSwingRateReward[priority];
-				g_esPlayer[survivor].g_flSwingRate = flClamp(g_esPlayer[survivor].g_flSwingRate, 0.0, 99999.0);
+				g_esPlayer[survivor].g_flActionDuration = flClampStack(g_esPlayer[survivor].g_flActionDuration, (g_esTankCache[tank].g_flActionDurationReward[priority] / 2.0), 0.0, 99999.0, false);
+				g_esPlayer[survivor].g_flAttackBoost = flClampStack(g_esPlayer[survivor].g_flAttackBoost, g_esTankCache[tank].g_flAttackBoostReward[priority], 0.0, 99999.0);
+				g_esPlayer[survivor].g_flFireRate = flClampStack(g_esPlayer[survivor].g_flFireRate, g_esTankCache[tank].g_flFireRateReward[priority], 0.0, 99999.0);
+				g_esPlayer[survivor].g_flRapidPistol = flClampStack(g_esPlayer[survivor].g_flRapidPistol, (g_esTankCache[tank].g_flRapidPistolReward[priority] / 2.0), 0.0, 1.0, false);
+				g_esPlayer[survivor].g_flReloadRate = flClampStack(g_esPlayer[survivor].g_flReloadRate, g_esTankCache[tank].g_flReloadRateReward[priority], 0.0, 99999.0);
+				g_esPlayer[survivor].g_flShoveDamage = flClampStack(g_esPlayer[survivor].g_flShoveDamage, g_esTankCache[tank].g_flShoveDamageReward[priority], 0.0, 99999.0);
+				g_esPlayer[survivor].g_flShoveRate = flClampStack(g_esPlayer[survivor].g_flShoveRate, (g_esTankCache[tank].g_flShoveRateReward[priority] / 2.0), 0.0, 99999.0, false);
+				g_esPlayer[survivor].g_flSwingRate = flClampStack(g_esPlayer[survivor].g_flSwingRate, g_esTankCache[tank].g_flSwingRateReward[priority], 0.0, 99999.0);
 				g_esPlayer[survivor].g_iBurstDoors = g_esTankCache[tank].g_iBurstDoorsReward[priority];
 				g_esPlayer[survivor].g_iFastRecovery = g_esTankCache[tank].g_iFastRecoveryReward[priority];
 				g_esPlayer[survivor].g_iLadderActions = g_esTankCache[tank].g_iLadderActionsReward[priority];
@@ -35595,20 +35538,14 @@ void vSetupRewardCounts(int survivor, int tank, int priority, int type)
 			}
 			else if ((g_esTankCache[tank].g_iStackRewards[priority] & type) && (g_esPlayer[survivor].g_iRewardTypes & type) && g_esTankCache[tank].g_iStackLimits[4] > 0 && g_esPlayer[survivor].g_iRewardStack[4] < g_esTankCache[tank].g_iStackLimits[4])
 			{
-				g_esPlayer[survivor].g_flGrenadeLauncher -= g_esTankCache[tank].g_flGrenadeLauncherReward[priority];
-				g_esPlayer[survivor].g_flGrenadeLauncher = flClamp(g_esPlayer[survivor].g_flGrenadeLauncher, 0.0, 100.0);
-				g_esPlayer[survivor].g_flLuckyBullet += g_esTankCache[tank].g_flLuckyBulletReward[priority];
-				g_esPlayer[survivor].g_flLuckyBullet = flClamp(g_esPlayer[survivor].g_flLuckyBullet, 0.0, 100.0);
-				g_esPlayer[survivor].g_flSupplier += g_esTankCache[tank].g_flSupplierReward[priority];
-				g_esPlayer[survivor].g_flSupplier = flClamp(g_esPlayer[survivor].g_flSupplier, 0.0, 99999.0);
+				g_esPlayer[survivor].g_flGrenadeLauncher = flClampStack(g_esPlayer[survivor].g_flGrenadeLauncher, g_esTankCache[tank].g_flGrenadeLauncherReward[priority], 0.0, 100.0, false);
+				g_esPlayer[survivor].g_flLuckyBullet = flClampStack(g_esPlayer[survivor].g_flLuckyBullet, g_esTankCache[tank].g_flLuckyBulletReward[priority], 0.0, 100.0);
+				g_esPlayer[survivor].g_flSupplier = flClampStack(g_esPlayer[survivor].g_flSupplier, g_esTankCache[tank].g_flSupplierReward[priority], 0.0, 99999.0);
 				g_esPlayer[survivor].g_flAmmoBoost = g_esTankCache[tank].g_flAmmoBoostReward[priority];
 				g_esPlayer[survivor].g_iAmmoRefill = g_esTankCache[tank].g_iAmmoRefillReward[priority];
-				g_esPlayer[survivor].g_iAmmoRegen += g_esTankCache[tank].g_iAmmoRegenReward[priority];
-				g_esPlayer[survivor].g_iAmmoRegen = iClamp(g_esPlayer[survivor].g_iAmmoRegen, 0, 99999);
-				g_esPlayer[survivor].g_iClusterBombs += g_esTankCache[tank].g_iClusterBombsReward[priority];
-				g_esPlayer[survivor].g_iClusterBombs = iClamp(g_esPlayer[survivor].g_iClusterBombs, 0, 5);
-				g_esPlayer[survivor].g_iSpecialAmmo |= g_esTankCache[tank].g_iSpecialAmmoReward[priority];
-				g_esPlayer[survivor].g_iSpecialAmmo = iClamp(g_esPlayer[survivor].g_iSpecialAmmo, 0, 3);
+				g_esPlayer[survivor].g_iAmmoRegen = iClampStack(g_esPlayer[survivor].g_iAmmoRegen, g_esTankCache[tank].g_iAmmoRegenReward[priority], 0, 99999);
+				g_esPlayer[survivor].g_iClusterBombs = iClampStack(g_esPlayer[survivor].g_iClusterBombs, g_esTankCache[tank].g_iClusterBombsReward[priority], 0, 5);
+				g_esPlayer[survivor].g_iSpecialAmmo = iClampStack(g_esPlayer[survivor].g_iSpecialAmmo, g_esTankCache[tank].g_iSpecialAmmoReward[priority], 0, 3, 2);
 				g_esPlayer[survivor].g_iRewardStack[4]++;
 			}
 		}
@@ -35623,8 +35560,7 @@ void vSetupRewardCounts(int survivor, int tank, int priority, int type)
 			}
 			else if ((g_esTankCache[tank].g_iStackRewards[priority] & type) && (g_esPlayer[survivor].g_iRewardTypes & type) && g_esTankCache[tank].g_iStackLimits[5] > 0 && g_esPlayer[survivor].g_iRewardStack[5] < g_esTankCache[tank].g_iStackLimits[5])
 			{
-				g_esPlayer[survivor].g_flPunchResistance -= g_esTankCache[tank].g_flPunchResistanceReward[priority] / 2.0;
-				g_esPlayer[survivor].g_flPunchResistance = flClamp(g_esPlayer[survivor].g_flPunchResistance, 0.0, 1.0);
+				g_esPlayer[survivor].g_flPunchResistance = flClampStack(g_esPlayer[survivor].g_flPunchResistance, (g_esTankCache[tank].g_flPunchResistanceReward[priority] / 2.0), 0.0, 1.0, false);
 				g_esPlayer[survivor].g_iCleanKills = g_esTankCache[tank].g_iCleanKillsReward[priority];
 				g_esPlayer[survivor].g_iRiotGear = g_esTankCache[tank].g_iRiotGearReward[priority];
 				g_esPlayer[survivor].g_iSafetyBubble = g_esTankCache[tank].g_iSafetyBubbleReward[priority];
@@ -35640,8 +35576,7 @@ void vSetupRewardCounts(int survivor, int tank, int priority, int type)
 			}
 			else if ((g_esTankCache[tank].g_iStackRewards[priority] & type) && (g_esPlayer[survivor].g_iRewardTypes & type) && g_esTankCache[tank].g_iStackLimits[6] > 0 && g_esPlayer[survivor].g_iRewardStack[6] < g_esTankCache[tank].g_iStackLimits[6])
 			{
-				g_esPlayer[survivor].g_flRefillPercent += g_esTankCache[tank].g_flRefillPercentReward[priority] / 2.0;
-				g_esPlayer[survivor].g_flRefillPercent = flClamp(g_esPlayer[survivor].g_flRefillPercent, 0.0, 100.0);
+				g_esPlayer[survivor].g_flRefillPercent = flClampStack(g_esPlayer[survivor].g_flRefillPercent, (g_esTankCache[tank].g_flRefillPercentReward[priority] / 2.0), 0.0, 100.0);
 				g_esPlayer[survivor].g_iAmmoRefill = g_esTankCache[tank].g_iAmmoRefillReward[priority];
 			}
 		}
@@ -35653,8 +35588,7 @@ void vSetupRewardCounts(int survivor, int tank, int priority, int type)
 			}
 			else if ((g_esTankCache[tank].g_iStackRewards[priority] & type) && (g_esPlayer[survivor].g_iRewardTypes & type) && g_esTankCache[tank].g_iStackLimits[7] > 0 && g_esPlayer[survivor].g_iRewardStack[7] < g_esTankCache[tank].g_iStackLimits[7])
 			{
-				g_esPlayer[survivor].g_iInfiniteAmmo |= g_esTankCache[tank].g_iInfiniteAmmoReward[priority];
-				g_esPlayer[survivor].g_iInfiniteAmmo = iClamp(g_esPlayer[survivor].g_iInfiniteAmmo, 0, 31);
+				g_esPlayer[survivor].g_iInfiniteAmmo = iClampStack(g_esPlayer[survivor].g_iInfiniteAmmo, g_esTankCache[tank].g_iInfiniteAmmoReward[priority], 0, 31, 2);
 				g_esPlayer[survivor].g_iRewardStack[7]++;
 			}
 		}
@@ -36691,10 +36625,8 @@ void vSetupLadyKillerReminder(int survivor, float portion, bool check)
 		int iAmmoType = GetEntProp(iSlot, Prop_Send, "m_iPrimaryAmmoType");
 		if (iAmmoType > 0)
 		{
-			int iAmmo = GetEntProp(survivor, Prop_Send, "m_iAmmo", .element = iAmmoType),
-				iMaxAmmo = iGetMaxAmmo(survivor, 0, iSlot, true), iPortion = RoundToCeil(iMaxAmmo * portion);
-
-			if (check && portion > 0.0)
+			int iAmmo = GetEntProp(survivor, Prop_Send, "m_iAmmo", .element = iAmmoType), iMaxAmmo = iGetMaxAmmo(survivor, 0, iSlot, true), iPortion = RoundToCeil(iMaxAmmo * portion);
+			if (check && portion > 0.0 && iAmmo >= iPortion)
 			{
 				MT_PrintToChat(survivor, "%s %t", MT_TAG2, "RewardLadyKiller", RoundToFloor(float(iAmmo) / float(iPortion)));
 			}

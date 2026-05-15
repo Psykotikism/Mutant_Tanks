@@ -446,13 +446,6 @@ public void OnEntityCreated(int entity, const char[] classname)
 	vSmashEntityCreated(entity, classname);
 #endif
 }
-
-public void OnEntityDestroyed(int entity)
-{
-#if defined MT_MENU_THROW
-	vThrowEntityDestroyed(entity);
-#endif
-}
 #if ((MT_INCLUDE_COMMANDS == 1 && MT_INCLUDE_MENUS == 1) || MT_INCLUDE_ALL == 1) && MT_INCLUDE_NONE == 0
 Action cmdAbilityInfo2(int client, int args)
 {

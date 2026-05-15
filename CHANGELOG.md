@@ -13,15 +13,18 @@
 - Fixed the array index errors caused by the `Boss` feature. (Thanks to `BenLH` for reporting!)
 - Fixed the `Shockwave Radius` passive/reward reviving infected survivors (carriers). (Thanks to `Angelace113` for testing and reporting!)
 - Fixed the regular wave spawner not working. (Thanks to `Hajitek Majitek` for reporting!)
+- Fixed the issue with stacking passives/rewards causing certain passives/rewards to not work.
 
 #### Config Files
 - Fixed comments causing parsing errors in some config file formats. (Thanks to `Mi.Cura` for reporting!)
 
 #### Abilities
+- Car: Removed the `Car Damage` setting. (Cannot get it to work.)
 - Gunner: Fixed the ability not working. (Thanks to everyone that tested and reported!)
 - Smash (Thanks to `Mi.Cura` for testing and reporting!):
 	- Fixed the issue with some of the options for the `Smash Mode` setting not working.
 	- Fixed the issue with some of the options for the `Smash Type` setting not working.
+- Throw: Removed the `Throw Car Damage` setting. (Cannot get it to work.)
 
 ### Changes
 
