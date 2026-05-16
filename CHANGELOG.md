@@ -59,6 +59,7 @@
 > You must toggle `MT_INCLUDE_NEWCONTENT` along with their corresponding switches inside the `scripting/include/mutant_tanks.inc` file and recompile all the plugins to access these new settings.
 - Bury: Added the `Bury Type` setting.
 - Choke: Added the `Choke Type` setting.
+- Clone: Added the `Clone Split` setting. (Thanks to `edshot99` for the idea and code!)
 - Ice: Added the `Ice Type` setting. (Requested by `Mi.Cura`.)
 - Regen: Added more options for the `Ability Enabled` setting to address issues with the legacy `Vampire` and `Xiphos` abilities. (Thanks to `Mi.Cura` for reporting!) [Does not require `MT_INCLUDE_NEWCONTENT` to be set to `1`.]
 
@@ -141,6 +142,7 @@
 	- `Collector Tank`
 	- `Timewalker Tank`
 	- `Speed Demon Tank`
+	- `Ravager Tank`
 	- `Ramattra Tank`
 	- `Sigma Tank`
 	- `Zarya Tank`

@@ -24361,7 +24361,7 @@ Action tTimerTankUpdate(Handle timer, int userid)
 		return Plugin_Stop;
 	}
 
-	if ((!bIsPlayerStuck(iTank) && (bIsInfectedIdle(iTank, 3) || (bIsSpecialInfected(iTank) && !bIsTankVisible(iTank)))) || g_esPlayer[iTank].g_bStickied/* || (g_esPlayer[iTank].g_bBlindTank && g_esGeneral.g_cvMTBlind.BoolValue)*/)
+	if ((!bIsPlayerStuck(iTank) && (bIsInfectedIdle(iTank, 3) || (bIsSpecialInfected(iTank) && !bIsTankVisible(iTank)))) || g_esPlayer[iTank].g_bStickied || (g_esPlayer[iTank].g_bBlindTank && g_esGeneral.g_cvMTBlind.BoolValue))
 	{
 		return Plugin_Continue;
 	}

@@ -2870,6 +2870,8 @@ Set the values in `Execute Config Types`.
 
 **Carl Sagan** - For the [[L4D2] Tank Rush 2](https://forums.alliedmods.net/showthread.php?t=234840) plugin.
 
+**edshot99** - For the [[L4D L4D2] Tank Splitting](https://forums.alliedmods.net/showthread.php?t=350046) plugin.
+
 **Silvers (Silvershot)** - For his plugins which make good references, helping with gamedata signatures, and helping to optimize/fix various parts of the code.
 
 **epz/epzminion** - For helping with gamedata signatures, offsets, addresses, and invaluable input.

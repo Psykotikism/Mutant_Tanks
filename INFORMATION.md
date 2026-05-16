@@ -13505,6 +13505,13 @@
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Clone Replace"				"1"
 
+			// The number of clones to split the Mutant Tank's health into after taking damage.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 1
+			// Maximum: 4
+			"Clone Split"				"0"
+
 			// The Mutant Tank swaps places with one of its clones every time this many seconds passes.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -13567,6 +13574,7 @@
 				"Clone Mode"				"0"
 				"Clone Remove"				"1"
 				"Clone Replace"				"1"
+				"Clone Split"				"0"
 				"Clone Swap"				"5.0"
 				"Clone Type"				"0-0"
 			}

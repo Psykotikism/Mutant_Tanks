@@ -2870,6 +2870,8 @@ Overrides
 
 **Carl Sagan** - За плагин [[L4D2] Tank Rush 2](https://forums.alliedmods.net/showthread.php?t=234840).
 
+**edshot99** - За плагин [[L4D L4D2] Tank Splitting](https://forums.alliedmods.net/showthread.php?t=350046).
+
 **Silvers (Silvershot)** - За его плагины в которых хорошие отсылки, помощь с подписями игровых данных и помощь оптимизировать/исправить различные части кода.
 
 **epz/epzminion** - За помощь с подписями, смещениями, адресами игровых данных и бесценным вводом.
